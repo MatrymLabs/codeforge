@@ -1,0 +1,15 @@
+id: errand_riverbend
+name: 'Errand: Greenhold'
+start: posted
+reward_xp: 15
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: greenhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Greenhold (15 XP).
+  done: You bring word to Greenhold. It is gratefully received.

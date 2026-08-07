@@ -1,0 +1,70 @@
+id: cull_thalorin_zone_avian_12
+name: 'A standing Purge: the avian-kind of Thalorin'
+start: s0
+reward_xp: 552
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: thalorin_zone|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: thalorin_zone|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: thalorin_zone|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: thalorin_zone|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: thalorin_zone|avian
+- state: s5
+  event: cull
+  to: s6
+  on_cull: thalorin_zone|avian
+- state: s6
+  event: cull
+  to: s7
+  on_cull: thalorin_zone|avian
+- state: s7
+  event: cull
+  to: s8
+  on_cull: thalorin_zone|avian
+- state: s8
+  event: cull
+  to: s9
+  on_cull: thalorin_zone|avian
+- state: s9
+  event: cull
+  to: s10
+  on_cull: thalorin_zone|avian
+- state: s10
+  event: cull
+  to: s11
+  on_cull: thalorin_zone|avian
+- state: s11
+  event: cull
+  to: done
+  on_cull: thalorin_zone|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the avian-kind of Thalorin: 0/12 down (552 XP).'
+  s1: 'Purge the avian-kind of Thalorin: 1/12 down (552 XP).'
+  s2: 'Purge the avian-kind of Thalorin: 2/12 down (552 XP).'
+  s3: 'Purge the avian-kind of Thalorin: 3/12 down (552 XP).'
+  s4: 'Purge the avian-kind of Thalorin: 4/12 down (552 XP).'
+  s5: 'Purge the avian-kind of Thalorin: 5/12 down (552 XP).'
+  s6: 'Purge the avian-kind of Thalorin: 6/12 down (552 XP).'
+  s7: 'Purge the avian-kind of Thalorin: 7/12 down (552 XP).'
+  s8: 'Purge the avian-kind of Thalorin: 8/12 down (552 XP).'
+  s9: 'Purge the avian-kind of Thalorin: 9/12 down (552 XP).'
+  s10: 'Purge the avian-kind of Thalorin: 10/12 down (552 XP).'
+  s11: 'Purge the avian-kind of Thalorin: 11/12 down (552 XP).'
+  done: The avian-kind of Thalorin are purged. The region breathes easier.

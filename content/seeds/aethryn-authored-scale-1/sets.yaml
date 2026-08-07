@@ -1,0 +1,223 @@
+emberhide:
+  name: the Emberhide set
+  pieces:
+  - emberhide_hood
+  - emberhide_jerkin
+  - emberhide_wraps
+  bonus:
+    EVA: 3
+hollowiron:
+  name: the Hollowiron set
+  pieces:
+  - hollowiron_mask
+  - cindershell_plate
+  - hollowiron_gauntlets
+  bonus:
+    DEF: 4
+brinescale:
+  name: the Brinescale set
+  pieces:
+  - brinescale_hood
+  - brinescale_coat
+  - brinescale_bracers
+  bonus:
+    DEF: 4
+    MAG DEF: 3
+verdant:
+  name: the Verdant set
+  pieces:
+  - verdant_hood
+  - verdant_mantle
+  - verdant_vambraces
+  bonus:
+    DEF: 4
+    EVA: 3
+rimeplate:
+  name: the Rimeplate set
+  pieces:
+  - rimeplate_helm
+  - rimeplate_hauberk
+  - rimeplate_gauntlets
+  bonus:
+    DEF: 6
+    MAG DEF: 4
+emberforged:
+  name: the Emberforged set
+  pieces:
+  - vent_crown
+  - emberforged_plate
+  - emberforged_gauntlets
+  bonus:
+    ATK: 5
+    DEF: 5
+stormward:
+  name: the Stormward set
+  pieces:
+  - stormward_helm
+  - stormward_cuirass
+  - stormward_vambraces
+  bonus:
+    DEF: 8
+    EVA: 5
+delveset_the_sunken_barrow:
+  name: The Sunken Barrow set
+  pieces:
+  - delveset_the_sunken_barrow_head
+  - delveset_the_sunken_barrow_body
+  - delveset_the_sunken_barrow_arm
+  bonus:
+    DEF: 3
+    EVA: 1
+delveset_the_black_hollow:
+  name: The Black Hollow set
+  pieces:
+  - delveset_the_black_hollow_head
+  - delveset_the_black_hollow_body
+  - delveset_the_black_hollow_arm
+  bonus:
+    DEF: 5
+    EVA: 2
+delveset_starfall_temple:
+  name: the Starfall Temple set
+  pieces:
+  - delveset_starfall_temple_head
+  - delveset_starfall_temple_body
+  - delveset_starfall_temple_arm
+  bonus:
+    DEF: 6
+    EVA: 3
+delveset_rotwood_deep:
+  name: the Rotwood Deep set
+  pieces:
+  - delveset_rotwood_deep_head
+  - delveset_rotwood_deep_body
+  - delveset_rotwood_deep_arm
+  bonus:
+    DEF: 8
+    EVA: 4
+delveset_glacial_bastion:
+  name: the Glacial Bastion set
+  pieces:
+  - delveset_glacial_bastion_head
+  - delveset_glacial_bastion_body
+  - delveset_glacial_bastion_arm
+  bonus:
+    DEF: 9
+    EVA: 4
+delveset_the_obsidian_pit:
+  name: The Obsidian Pit set
+  pieces:
+  - delveset_the_obsidian_pit_head
+  - delveset_the_obsidian_pit_body
+  - delveset_the_obsidian_pit_arm
+  bonus:
+    DEF: 13
+    EVA: 6
+delveset_scorchstone_keep:
+  name: the Scorchstone Keep set
+  pieces:
+  - delveset_scorchstone_keep_head
+  - delveset_scorchstone_keep_body
+  - delveset_scorchstone_keep_arm
+  bonus:
+    DEF: 13
+    EVA: 6
+delveset_heart_of_xilnath:
+  name: the Heart of Xil'nath set
+  pieces:
+  - delveset_heart_of_xilnath_head
+  - delveset_heart_of_xilnath_body
+  - delveset_heart_of_xilnath_arm
+  bonus:
+    DEF: 15
+    EVA: 7
+delveset_dreadmaw_hold:
+  name: the Dreadmaw Hold set
+  pieces:
+  - delveset_dreadmaw_hold_head
+  - delveset_dreadmaw_hold_body
+  - delveset_dreadmaw_hold_arm
+  bonus:
+    DEF: 14
+    EVA: 7
+delveset_irondeep_mines:
+  name: the Irondeep Mines set
+  pieces:
+  - delveset_irondeep_mines_head
+  - delveset_irondeep_mines_body
+  - delveset_irondeep_mines_arm
+  bonus:
+    DEF: 14
+    EVA: 7
+delveset_the_flamewrought_forge:
+  name: The Flamewrought Forge set
+  pieces:
+  - delveset_the_flamewrought_forge_head
+  - delveset_the_flamewrought_forge_body
+  - delveset_the_flamewrought_forge_arm
+  bonus:
+    DEF: 17
+    EVA: 8
+delveset_the_scorched_gate:
+  name: The Scorched Gate set
+  pieces:
+  - delveset_the_scorched_gate_head
+  - delveset_the_scorched_gate_body
+  - delveset_the_scorched_gate_arm
+  bonus:
+    DEF: 17
+    EVA: 8
+delveset_korvash_crater:
+  name: the Korvash Crater set
+  pieces:
+  - delveset_korvash_crater_head
+  - delveset_korvash_crater_body
+  - delveset_korvash_crater_arm
+  bonus:
+    DEF: 20
+    EVA: 10
+delveset_blackreef_citadel:
+  name: the Blackreef Citadel set
+  pieces:
+  - delveset_blackreef_citadel_head
+  - delveset_blackreef_citadel_body
+  - delveset_blackreef_citadel_arm
+  bonus:
+    DEF: 23
+    EVA: 11
+delveset_the_spire_nexus:
+  name: The Spire Nexus set
+  pieces:
+  - delveset_the_spire_nexus_head
+  - delveset_the_spire_nexus_body
+  - delveset_the_spire_nexus_arm
+  bonus:
+    DEF: 25
+    EVA: 12
+delveset_the_crystal_labyrinth:
+  name: The Crystal Labyrinth set
+  pieces:
+  - delveset_the_crystal_labyrinth_head
+  - delveset_the_crystal_labyrinth_body
+  - delveset_the_crystal_labyrinth_arm
+  bonus:
+    DEF: 25
+    EVA: 12
+delveset_netharions_throne:
+  name: the Netharion's Throne set
+  pieces:
+  - delveset_netharions_throne_head
+  - delveset_netharions_throne_body
+  - delveset_netharions_throne_arm
+  bonus:
+    DEF: 30
+    EVA: 15
+delveset_the_rifted_abyss:
+  name: The Rifted Abyss set
+  pieces:
+  - delveset_the_rifted_abyss_head
+  - delveset_the_rifted_abyss_body
+  - delveset_the_rifted_abyss_arm
+  bonus:
+    DEF: 30
+    EVA: 15

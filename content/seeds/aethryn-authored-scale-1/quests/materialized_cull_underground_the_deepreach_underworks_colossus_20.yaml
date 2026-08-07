@@ -1,0 +1,131 @@
+id: cull_underground_the_deepreach_underworks_colossus_20
+name: 'A great Purge: the colossus-kind of The Crystal Labyrinth Approach'
+start: s0
+reward_xp: 1720
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_the_deepreach_underworks|colossus
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_the_deepreach_underworks|colossus
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 0/20 down (1720
+    XP).'
+  s1: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 1/20 down (1720
+    XP).'
+  s2: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 2/20 down (1720
+    XP).'
+  s3: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 3/20 down (1720
+    XP).'
+  s4: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 4/20 down (1720
+    XP).'
+  s5: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 5/20 down (1720
+    XP).'
+  s6: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 6/20 down (1720
+    XP).'
+  s7: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 7/20 down (1720
+    XP).'
+  s8: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 8/20 down (1720
+    XP).'
+  s9: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 9/20 down (1720
+    XP).'
+  s10: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 10/20 down (1720
+    XP).'
+  s11: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 11/20 down (1720
+    XP).'
+  s12: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 12/20 down (1720
+    XP).'
+  s13: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 13/20 down (1720
+    XP).'
+  s14: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 14/20 down (1720
+    XP).'
+  s15: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 15/20 down (1720
+    XP).'
+  s16: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 16/20 down (1720
+    XP).'
+  s17: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 17/20 down (1720
+    XP).'
+  s18: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 18/20 down (1720
+    XP).'
+  s19: 'Purge the colossus-kind of The Crystal Labyrinth Approach: 19/20 down (1720
+    XP).'
+  done: The colossus-kind of The Crystal Labyrinth Approach are purged. The ash-tracks
+    are a shade safer.

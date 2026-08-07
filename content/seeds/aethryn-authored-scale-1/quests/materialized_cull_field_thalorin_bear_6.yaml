@@ -1,0 +1,41 @@
+id: cull_field_thalorin_bear_6
+name: 'A small Thinning: the bear-kind of The Thalorin Wilds'
+start: s0
+reward_xp: 276
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_thalorin|bear
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_thalorin|bear
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_thalorin|bear
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_thalorin|bear
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_thalorin|bear
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_thalorin|bear
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the bear-kind of The Thalorin Wilds: 0/6 down (276 XP).'
+  s1: 'Thin out the bear-kind of The Thalorin Wilds: 1/6 down (276 XP).'
+  s2: 'Thin out the bear-kind of The Thalorin Wilds: 2/6 down (276 XP).'
+  s3: 'Thin out the bear-kind of The Thalorin Wilds: 3/6 down (276 XP).'
+  s4: 'Thin out the bear-kind of The Thalorin Wilds: 4/6 down (276 XP).'
+  s5: 'Thin out the bear-kind of The Thalorin Wilds: 5/6 down (276 XP).'
+  done: The bear-kind of The Thalorin Wilds are thinned back. The region breathes
+    easier.

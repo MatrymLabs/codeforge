@@ -1,0 +1,61 @@
+id: forage_underground_duskwood_vale_underworks_fernshade_10
+name: 'A standing Gleaning: fernshade of The Black Root Below'
+start: s0
+reward_xp: 140
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_duskwood_vale_underworks|fernshade
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_duskwood_vale_underworks|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean fernshade in The Black Root Below: 0/10 (140 XP).'
+  s1: 'Glean fernshade in The Black Root Below: 1/10 (140 XP).'
+  s2: 'Glean fernshade in The Black Root Below: 2/10 (140 XP).'
+  s3: 'Glean fernshade in The Black Root Below: 3/10 (140 XP).'
+  s4: 'Glean fernshade in The Black Root Below: 4/10 (140 XP).'
+  s5: 'Glean fernshade in The Black Root Below: 5/10 (140 XP).'
+  s6: 'Glean fernshade in The Black Root Below: 6/10 (140 XP).'
+  s7: 'Glean fernshade in The Black Root Below: 7/10 (140 XP).'
+  s8: 'Glean fernshade in The Black Root Below: 8/10 (140 XP).'
+  s9: 'Glean fernshade in The Black Root Below: 9/10 (140 XP).'
+  done: You have gleaned fernshade enough for The Black Root Below. The wood's craftfolk
+    have what they need.

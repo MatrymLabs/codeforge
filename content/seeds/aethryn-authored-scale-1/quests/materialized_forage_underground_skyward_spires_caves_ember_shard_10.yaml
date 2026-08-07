@@ -1,0 +1,61 @@
+id: forage_underground_skyward_spires_caves_ember_shard_10
+name: 'A standing Requisition: ember shard of The Broken Skychain Hollows'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_skyward_spires_caves|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_skyward_spires_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in The Broken Skychain Hollows: 0/10 (600 XP).'
+  s1: 'Bring in ember shard in The Broken Skychain Hollows: 1/10 (600 XP).'
+  s2: 'Bring in ember shard in The Broken Skychain Hollows: 2/10 (600 XP).'
+  s3: 'Bring in ember shard in The Broken Skychain Hollows: 3/10 (600 XP).'
+  s4: 'Bring in ember shard in The Broken Skychain Hollows: 4/10 (600 XP).'
+  s5: 'Bring in ember shard in The Broken Skychain Hollows: 5/10 (600 XP).'
+  s6: 'Bring in ember shard in The Broken Skychain Hollows: 6/10 (600 XP).'
+  s7: 'Bring in ember shard in The Broken Skychain Hollows: 7/10 (600 XP).'
+  s8: 'Bring in ember shard in The Broken Skychain Hollows: 8/10 (600 XP).'
+  s9: 'Bring in ember shard in The Broken Skychain Hollows: 9/10 (600 XP).'
+  done: You have requisitioned ember shard enough for The Broken Skychain Hollows.
+    The region's makers will put it to use.

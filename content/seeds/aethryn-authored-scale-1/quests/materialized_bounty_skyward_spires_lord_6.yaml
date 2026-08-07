@@ -1,0 +1,16 @@
+id: bounty_skyward_spires_lord_6
+name: 'Bounty: Thaneaya the Scree Tyrant'
+start: posted
+reward_xp: 2520
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: skyward_spires_lord_6
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Thaneaya the Scree Tyrant (level 210). Fell it for 2520
+    XP.
+  collected: 'Bounty collected: Thaneaya the Scree Tyrant is felled. Well hunted.'

@@ -1,0 +1,36 @@
+id: forage_frostspire_peaks_zone_frostmoss_5
+name: 'A small Draw: frostmoss of Frostspire Peaks'
+start: s0
+reward_xp: 110
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s1
+  event: forage
+  to: s2
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s2
+  event: forage
+  to: s3
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s3
+  event: forage
+  to: s4
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s4
+  event: forage
+  to: done
+  on_forage: frostspire_peaks_zone|frostmoss
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw frostmoss in Frostspire Peaks: 0/5 (110 XP).'
+  s1: 'Draw frostmoss in Frostspire Peaks: 1/5 (110 XP).'
+  s2: 'Draw frostmoss in Frostspire Peaks: 2/5 (110 XP).'
+  s3: 'Draw frostmoss in Frostspire Peaks: 3/5 (110 XP).'
+  s4: 'Draw frostmoss in Frostspire Peaks: 4/5 (110 XP).'
+  done: You have drawn frostmoss enough for Frostspire Peaks. The hold's smiths will
+    not want for it.

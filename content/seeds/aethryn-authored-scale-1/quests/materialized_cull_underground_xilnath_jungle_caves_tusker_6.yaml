@@ -1,0 +1,41 @@
+id: cull_underground_xilnath_jungle_caves_tusker_6
+name: 'A small Reckoning: the tusker-kind of Xil''nath''s Green Tunnels'
+start: s0
+reward_xp: 276
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_xilnath_jungle_caves|tusker
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_xilnath_jungle_caves|tusker
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_xilnath_jungle_caves|tusker
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_xilnath_jungle_caves|tusker
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_xilnath_jungle_caves|tusker
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_xilnath_jungle_caves|tusker
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 0/6 down (276 XP).'
+  s1: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 1/6 down (276 XP).'
+  s2: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 2/6 down (276 XP).'
+  s3: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 3/6 down (276 XP).'
+  s4: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 4/6 down (276 XP).'
+  s5: 'Reckon with the tusker-kind of Xil''nath''s Green Tunnels: 5/6 down (276 XP).'
+  done: The tusker-kind of Xil'nath's Green Tunnels are settled with. The physic-paths
+    are a shade clearer.

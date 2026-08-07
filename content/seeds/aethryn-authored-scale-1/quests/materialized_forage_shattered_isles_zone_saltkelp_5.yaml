@@ -1,0 +1,36 @@
+id: forage_shattered_isles_zone_saltkelp_5
+name: 'A small Gleaning: saltkelp of The Shattered Isles'
+start: s0
+reward_xp: 285
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: shattered_isles_zone|saltkelp
+- state: s1
+  event: forage
+  to: s2
+  on_forage: shattered_isles_zone|saltkelp
+- state: s2
+  event: forage
+  to: s3
+  on_forage: shattered_isles_zone|saltkelp
+- state: s3
+  event: forage
+  to: s4
+  on_forage: shattered_isles_zone|saltkelp
+- state: s4
+  event: forage
+  to: done
+  on_forage: shattered_isles_zone|saltkelp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean saltkelp in The Shattered Isles: 0/5 (285 XP).'
+  s1: 'Glean saltkelp in The Shattered Isles: 1/5 (285 XP).'
+  s2: 'Glean saltkelp in The Shattered Isles: 2/5 (285 XP).'
+  s3: 'Glean saltkelp in The Shattered Isles: 3/5 (285 XP).'
+  s4: 'Glean saltkelp in The Shattered Isles: 4/5 (285 XP).'
+  done: You have gleaned saltkelp enough for The Shattered Isles. The harbour makers
+    are glad of it.

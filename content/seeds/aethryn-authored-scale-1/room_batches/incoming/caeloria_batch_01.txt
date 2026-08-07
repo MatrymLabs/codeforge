@@ -1,0 +1,593 @@
+Caeloria High Square
+[City Square]
+Broad flagstones of pale gray stone form the central square of Caeloria City. A tall statue of a crowned figure stands at the center, its base carved with the names of past rulers. Tall buildings of stone and timber surround the open space.
+The air carries the mixed scents of the city — cooking, horses, incense, and distant sea. Voices and the clatter of carts fill the square.
+A pair of city guards stand near the statue.
+A public notice board is fixed to the base of the monument.
+Street musicians play near the northern edge of the square.
+Obvious exits: north, south, east, west.
+
+Royal Avenue
+[City Street]
+A wide, well-paved avenue runs north from the High Square toward the upper districts. Stone buildings with ornate facades line both sides and iron lanterns hang at regular intervals.
+The air is cleaner here than in the lower markets. The sound of the city is present but less chaotic.
+A well-dressed merchant walks with purpose.
+A city official carries a sealed scroll case.
+Flower boxes brighten many of the upper windows.
+Obvious exits: north, south, east, west.
+
+Merchant's Row
+[Market District]
+This long street is lined with permanent shops and open-fronted stalls selling goods from across the region and beyond. Cloth, spices, tools, and finished goods are all on display.
+The air is thick with the competing smells of spices, leather, and fresh bread.
+A spice merchant calls out prices from behind a low counter.
+Stacks of colorful cloth are arranged under an awning.
+A pair of porters move a heavy crate between them.
+Obvious exits: north, south, east, west.
+
+Temple District
+[Sacred]
+Wide steps lead up to a cluster of temples and shrines. The largest is dedicated to the city's patron, but smaller houses of worship stand nearby. The stone here is lighter and better kept than in the lower city.
+The air is quieter and carries the scent of incense and old stone.
+An acolyte sweeps the steps of the main temple.
+Offerings of flowers and coins sit on low altars.
+A bronze collection box is fixed near the main entrance.
+Obvious exits: south, east, west, north.
+
+Guard Barracks Courtyard
+[Military]
+A large paved courtyard sits between the main barracks buildings. Weapon racks stand under covered walks and a training circle is marked in the center of the yard.
+The air smells of oil, leather, and stone. The sound of drills carries at times.
+A sergeant inspects a line of recruits.
+A water trough and several benches stand along one wall.
+Practice weapons are stacked neatly near the training circle.
+Obvious exits: north, south, east, west.
+
+Lower Market
+[Market]
+A busier, more crowded market occupies the lower part of the city nearer the gates. The stalls are denser and the goods more everyday — food, simple tools, second-hand clothing, and livestock on market days.
+The air is heavier with the smells of food, animals, and people.
+A vegetable seller arranges produce on a low table.
+A live chicken flaps in a wicker cage.
+A town crier reads notices from a small raised platform.
+Obvious exits: north, south, east, west.
+
+River Gate
+[City Gate]
+The River Gate opens toward the water and the roads that lead south and west. The gatehouse is solid stone with heavy timber doors that stand open during the day. Guards check the larger wagons.
+The air carries the scent of the river and the open land beyond.
+A pair of guards inspect a merchant's papers.
+A toll chest sits inside the gatehouse.
+Muddy tracks lead both into and out of the city.
+Obvious exits: north, south, east, west.
+
+North Gate
+[City Gate]
+The North Gate is the main land entrance for traffic coming from the higher lands and the roads toward Thalorin. The gate is larger and more heavily fortified than the others.
+The air is cooler and carries less of the city smell.
+A squad of guards stands ready near the gate.
+A large notice board lists current regulations and tariffs.
+The road beyond rises gently into open country.
+Obvious exits: south, north, east, west.
+
+East Gate
+[City Gate]
+The East Gate faces toward the Central Sea and the coastal roads. The stonework shows more weathering from the salt air and the gates are reinforced against the stronger winds.
+The air carries a faint salt tang even this far inland.
+A guard leans on a spear watching the road.
+A small shrine to safe sea travel stands just inside the gate.
+Wagon ruts deepen immediately beyond the threshold.
+Obvious exits: west, east, north, south.
+
+West Gate
+[City Gate]
+The West Gate opens onto the roads that lead toward Veridia and the lower lands. It is busy with traffic in both directions and the gatehouse is well staffed.
+The air mixes the city scents with the cleaner air of the open road.
+A caravan master argues mildly with a gate guard over fees.
+A water trough stands just inside for arriving animals.
+The road beyond is wide and well maintained.
+Obvious exits: east, west, north, south.
+
+Artisan's Quarter
+[Craft District]
+Narrow streets of workshops fill this part of the city. Smiths, leatherworkers, carpenters, and other craftsmen work behind open fronts or in small enclosed yards. The sounds of hammering and sawing are constant.
+The air smells of hot metal, wood shavings, and leather.
+A smith works a glowing piece of iron on an anvil.
+Finished tools hang from the beams of an open workshop.
+A young apprentice sweeps shavings into a pile.
+Obvious exits: north, south, east, west.
+
+Old Stone Court
+[Residential]
+A quiet residential court of older stone houses surrounds a small central garden. The buildings are well maintained and the atmosphere is calmer than the main streets.
+The air is still and carries the scent of flowers and old stone.
+A wooden bench sits beneath a small tree in the garden.
+Clay pots of bright flowers stand near several doors.
+A cat sleeps in a patch of sun on a windowsill.
+Obvious exits: north, south, east, west.
+
+Harbor Approach
+[City Street]
+The street slopes gently downward toward the river and the small harbor district. The buildings become more practical and the smell of the water grows stronger.
+The air is cooler and carries the scent of wet wood and river.
+A fishmonger pushes a cart of iced fish up the slope.
+Ropes and netting hang from several upper windows.
+The sound of the river becomes clearer ahead.
+Obvious exits: north, south, east, west.
+
+Harbor Front
+[Harbor]
+A short stretch of stone quay runs along the river within the city. Small boats and barges are moored alongside and warehouses stand behind the quay. The water moves steadily past.
+The air smells of river, tar, and wet rope. Gulls call overhead.
+A boatman coils rope on the quay.
+Crates and barrels are stacked under a covered area.
+A wooden crane stands ready for unloading.
+Obvious exits: west, north, south, east.
+
+Upper Terrace
+[Overlook]
+A raised terrace on the northern side of the city offers views across the rooftops and out toward the open country. Stone benches line the low wall and the air is clearer here.
+The city spreads out below. Distant landmarks are visible on clear days.
+A pair of older citizens sit talking on a bench.
+Flower boxes brighten the terrace wall.
+A narrow stair leads down to the streets below.
+Obvious exits: south, east, west, down.
+
+Library Steps
+[Civic]
+Broad stone steps lead up to the city's main library and archive. The building is of pale stone with tall narrow windows. Iron lanterns flank the heavy wooden doors.
+The air is quiet and carries the faint scent of old paper and wax.
+A clerk adjusts a notice board beside the entrance.
+A stone bench sits on the landing.
+A small collection box for the library is fixed to the wall.
+Obvious exits: south, east, west.
+
+Candle Street
+[Craft Street]
+The smell of beeswax and tallow is strong along this street of candle makers and lamp sellers. Windows display rows of finished candles and lanterns of many designs.
+Warm light spills from several open workshops.
+An apprentice dips wicks into melted wax.
+Racks of cooling candles stand in neat rows.
+A large iron cauldron of wax simmers over a low fire.
+Obvious exits: north, south, east, west.
+
+Quiet Alley
+[Side Alley]
+A narrow alley runs between higher buildings, always in shadow. The ground is clean and the walls show less of the city's wear. It is used mainly by those who know the back ways.
+The air is still and cooler. City sounds are muffled.
+A wooden door set deep in the wall leads into a private court.
+Moss grows in the damper cracks between stones.
+A thin cat watches from a high ledge.
+Obvious exits: north, south, east.
+
+North Outer Market
+[Outer Market]
+Just inside the North Gate an open market serves traffic arriving from the higher lands. Stalls offer food, fodder, simple repairs, and information about the road ahead.
+The air mixes city and open-road scents.
+A farrier checks a horse's shoe at the edge of the market.
+Bales of hay and sacks of grain sit under a canvas shelter.
+A board lists current prices for common goods.
+Obvious exits: south, north, east, west.
+
+South Outer Yard
+[Outer Yard]
+An open yard just inside the River Gate is used for wagons and caravans preparing to leave or rest after arrival. Several large wagons stand with their teams.
+The air smells of horses, dust, and woodsmoke from small cookfires.
+A caravan guard sits on a wagon bed cleaning a blade.
+Water barrels and feed sacks are stacked under a lean-to.
+Spare wheels lean against the wall in a neat row.
+Obvious exits: north, south, east, west.
+
+East Outer Paddock
+[Paddock]
+A grassy paddock outside the East Gate is used for horses and sometimes for small livestock markets. The fence is solid and the grass is kept short by regular grazing.
+The air smells of grass and animals. The road toward the coast continues east.
+A horse grazes near the fence line.
+A wooden gate opens onto the road.
+Manure has been collected into a neat pile at one end.
+Obvious exits: west, east, north, south.
+
+West Approach Road
+[Trade Road]
+The main road west from Caeloria City is wide and well maintained. It runs through open land with scattered farms and the occasional roadside shrine. Traffic is steady in both directions.
+The air is cleaner than in the city. The walls of Caeloria are still visible behind.
+A milestone marks the distance back to the city.
+A wayside shrine of stacked stones holds a few flowers.
+Wagon tracks are deep and continuous.
+Obvious exits: east, west, north, south.
+
+North Approach Road
+[Trade Road]
+The northern road climbs gently into higher country. The land is more open and the farms are larger. The air is cooler and the views begin to open out.
+The road surface is firm and well used.
+A stone marker shows distances to the next settlements.
+A small lean-to offers limited shelter.
+The first low hills are visible ahead.
+Obvious exits: south, north, east, west.
+
+Brightwater Gate
+[Town Gate]
+A solid timber gate set in a low stone wall marks the entrance to Brightwater. The town sits near a clear tributary that feeds into the larger river system. The gate stands open during the day.
+The air smells of woodsmoke and clean water.
+A guard nods to known faces and watches strangers.
+A wooden sign welcomes travelers to Brightwater.
+Wagon ruts deepen as they pass through the gate.
+Obvious exits: west, east, north, south.
+
+Brightwater Square
+[Town Square]
+The central square of Brightwater is open and well kept. A large stone well stands in the center and timber buildings surround the space. The sound of the nearby stream is constant.
+The air is quieter than the city and carries the scent of water and wood.
+Locals gather near the well to talk.
+A notice board is fixed to a post near the well.
+Benches of rough timber sit in the shade.
+Obvious exits: north, south, east, west.
+
+Brightwater Inn
+[Inn]
+A two-story timber inn with a steep roof stands on the north side of the square. The painted sign shows a leaping fish in clear water. The smell of cooking and ale drifts from the open door.
+Travelers and locals move in and out through the day.
+A stablehand takes horses around to the rear yard.
+Wooden tables and benches stand outside in good weather.
+A water trough sits near the stable entrance.
+Obvious exits: south, east, west, north.
+
+Brightwater Mill
+[Mill]
+A working water mill stands on the stream that gives the town its name. The large wheel turns steadily and the sound of grinding is constant during the day. Sacks of grain and flour are stacked nearby.
+The air smells of flour, water, and wood.
+A miller checks the flow of grain.
+A wooden walkway runs alongside the wheel for maintenance.
+The stream runs clear and strong past the mill.
+Obvious exits: west, east, north, south.
+
+Streamside Path
+[Town Edge]
+A pleasant path follows the clear stream through the edge of Brightwater. Willows and alders grow along the banks and the water runs bright over pale stones.
+The air is cool and clean. The sound of the stream is constant and pleasant.
+A simple wooden bridge crosses the stream at one point.
+Children sometimes play along the banks.
+The path continues both into town and out toward the open land.
+Obvious exits: north, south, east, west.
+
+Brightwater Market
+[Market]
+A small open market operates along one side of the square and into a short side street. Local produce, fish from the stream, and simple crafts are offered.
+The air smells of fresh bread, fish, and wood.
+A woman sells honey and beeswax from a small stall.
+Baskets of early vegetables sit on a table.
+A woodcarver displays simple spoons and bowls.
+Obvious exits: west, east, north, south.
+
+Fishers' Row
+[Residential]
+A short street of smaller houses runs down toward the stream. Nets and fishing gear hang near several doors and the smell of the water is strong.
+The air is damp and carries the constant sound of the stream.
+A fisherman mends a net on his doorstep.
+Fish racks stand in several small yards.
+A narrow path leads down to a private landing.
+Obvious exits: north, south, east, west.
+
+Brightwater Temple
+[Sacred]
+A modest stone temple stands near the eastern edge of town. The entrance faces the stream and a simple fountain of clear water plays in the small courtyard.
+The air is cooler and quieter. The sound of the fountain is calming.
+An acolyte tends the fountain and sweeps the courtyard.
+Offerings of small carved fish and river stones sit on a low altar.
+A wooden collection box is fixed beside the door.
+Obvious exits: west, north, south.
+
+Silverwatch Gate
+[Town Gate]
+The gate of Silverwatch is of solid timber bound with iron. The town sits on slightly higher ground and the walls are better maintained than many smaller settlements. Guards are more alert here.
+The air is cooler and carries a faint mineral scent from the nearby hills.
+A guard checks papers more carefully than in the lower towns.
+A wooden sign names the town and lists basic regulations.
+The road beyond continues toward the higher lands.
+Obvious exits: south, north, east, west.
+
+Silverwatch Square
+[Town Square]
+The central square is paved with darker stone and feels more formal than Brightwater. A tall post holds the town's banner and a stone well stands to one side.
+The air is quieter and the buildings are of better construction.
+Locals move with purpose across the square.
+A notice board is fixed to the banner post.
+Stone benches sit in the shade of the larger buildings.
+Obvious exits: north, south, east, west.
+
+Silverwatch Keep Approach
+[Military]
+A short road leads from the square up to the small keep that overlooks the town. The keep is of solid stone and serves as both strongpoint and administrative center.
+The air is cooler and the view opens out as the ground rises.
+A pair of guards stand at the base of the keep steps.
+The banner of Silverwatch flies from the highest tower.
+The stonework is clean and well maintained.
+Obvious exits: south, north, east, west.
+
+Silverwatch Market
+[Market]
+The market here is smaller but the goods are of higher average quality. Local metalwork, better cloth, and goods from the higher lands are more common.
+The air smells of metal, leather, and cooking.
+A smith displays finished tools and simple weapons.
+Baskets of mountain herbs sit on a low table.
+A trader from the north haggles over a length of cloth.
+Obvious exits: west, east, north, south.
+
+Watch Hill Path
+[Town Edge]
+A path climbs the low hill on which Silverwatch sits. From higher points the surrounding country is visible — the roads, the distant city, and the first true hills to the north.
+The air is clearer and the wind stronger.
+A wooden bench sits at a good viewpoint.
+The town roofs lie below to the south.
+The path continues both up to the higher slopes and back down to town.
+Obvious exits: south, north, east, west.
+
+Silverwatch Inn
+[Inn]
+A solid three-story inn of stone and timber stands near the square. The painted sign shows a silver watchman's lantern. The common room is larger and quieter than in the lower towns.
+The air inside carries the scent of good cooking and woodsmoke.
+A stable yard sits behind the inn.
+Wooden tables and benches stand outside in good weather.
+A water trough sits near the stable entrance.
+Obvious exits: south, east, west, north.
+
+Smiths' Lane
+[Craft Street]
+The sound of hammer on anvil is common along this short street. Several smiths work here, producing tools, fittings, and the occasional weapon for the local watch.
+The air smells of hot metal and coal smoke.
+A burly smith works a glowing billet on a large anvil.
+Finished work hangs from the beams of an open forge.
+A water trough for quenching stands outside the nearest workshop.
+Obvious exits: north, south, east, west.
+
+Westgate Entrance
+[Town Gate]
+Westgate is the smallest of the three satellite towns and sits closest to the main road toward Veridia. The gate is simple but solid and the town is clearly oriented toward road traffic.
+The air mixes the scents of the road with those of a small settlement.
+A guard leans on a spear watching the road.
+A wooden sign names the town and offers basic services.
+Wagon traffic is steady through the gate.
+Obvious exits: east, west, north, south.
+
+Westgate Yard
+[Town Yard]
+An open yard just inside the gate serves as a resting and trading place for travelers. Several wagons stand here between journeys and a small open-sided shelter provides cover.
+The air smells of horses, dust, and woodsmoke.
+A carter checks the bindings on a load.
+Water barrels and feed sacks are stacked under the shelter.
+Spare wheels lean against the wall.
+Obvious exits: east, west, north, south.
+
+Westgate Inn
+[Inn]
+A practical two-story inn stands near the yard. The painted sign shows an open gate and a road stretching away. The common room is busy with road traffic.
+The air carries the scent of cooking, ale, and the road.
+A stablehand takes horses around to the rear.
+Wooden tables and benches stand outside in good weather.
+A water trough sits near the stable entrance.
+Obvious exits: south, east, west, north.
+
+Westgate Market
+[Market]
+A small market caters mainly to travelers and local farmers. Food, simple repairs, fodder, and information about the road are the main goods.
+The air smells of food, leather, and dust.
+A farrier works on a horse at the edge of the market.
+Bales of hay sit under a canvas shelter.
+A board lists current tolls and road conditions.
+Obvious exits: west, east, north, south.
+
+Roadside Shrine
+[Sacred]
+A small stone shrine stands just outside Westgate on the main road. Travelers often leave small offerings for safe journeys. The shrine is simple but well tended.
+The air is open and the road stretches away in both directions.
+A few coins and flowers sit on the low altar stone.
+A wooden bench allows travelers to rest.
+The walls of Westgate are visible a short distance away.
+Obvious exits: east, west, north, south.
+
+Starfall Approach Road
+[Trade Road]
+The road to Starfall Temple is quieter and better kept than many. It climbs gently through open land with scattered stands of trees. The temple itself is visible as a pale structure on a low rise ahead.
+The air is cleaner and carries a faint scent of incense on the wind at times.
+A milestone marks the remaining distance to the temple.
+A wayside shrine of stacked stones holds fresh flowers.
+The road surface is firm and well maintained.
+Obvious exits: south, north, east, west.
+
+Starfall Outer Court
+[Sacred]
+A broad outer court of pale stone lies before the main temple buildings. Low walls enclose the space and carefully tended trees grow in regular rows. The atmosphere is quiet and ordered.
+The air is still and carries the scent of incense and clean stone.
+An acolyte sweeps the court with a long broom.
+Clay bowls of water sit on low plinths.
+Visitors move quietly across the open space.
+Obvious exits: south, north, east, west.
+
+Starfall Temple Entrance
+[Sacred]
+Wide steps of pale stone lead up to the main doors of Starfall Temple. The facade is simple but well proportioned and the doors are of dark wood bound with bronze. The carvings above the doors show stars and a falling light.
+The air is cooler and quieter. Soft chanting drifts from within at times.
+A senior acolyte stands near the doors to greet visitors.
+Offerings of flowers and small carved stars sit on the steps.
+A bronze collection box is fixed beside the entrance.
+Obvious exits: south, north, east, west.
+
+Starfall Inner Garden
+[Sacred Garden]
+A quiet enclosed garden lies within the temple grounds. Paths of pale gravel wind between beds of white flowers and low evergreen shrubs. A central fountain sends a thin stream of water into a clear basin.
+The air is still and scented with flowers and water.
+A wooden bench sits in the shade of a small tree.
+The sound of the fountain is soft and constant.
+The walls of the temple buildings rise on all sides.
+Obvious exits: south, east, west.
+
+Starfall Observation Terrace
+[Overlook]
+A raised terrace on the northern side of the temple offers clear views of the night sky and the surrounding country. Stone benches are arranged for watching the stars and the parapet is low.
+The air is clear and the wind is stronger here. On clear nights the view of the heavens is excellent.
+A simple brass instrument for measuring angles sits on a stone pedestal.
+Several small cairns have been left by previous visitors.
+The temple roofs lie below to the south.
+Obvious exits: south, east, west, down.
+
+Caeloria to Veridia Road 1
+[Trade Road]
+The main road south and west toward Veridia is wide and heavily traveled. Farms and small holdings line the route and the land is open and fertile.
+The air is clean and the traffic is steady in both directions.
+A milestone marks the distance back to Caeloria City.
+A wayside shrine holds a few wilted flowers.
+Wagon tracks are deep and continuous.
+Obvious exits: northeast, southwest, north, south.
+
+Caeloria to Veridia Road 2
+[Trade Road]
+Further along the road the land becomes a little more rolling. The farms continue and the occasional stand of trees breaks the open country. The road remains in good condition.
+The air is warm and full of the sound of insects and distant birds.
+A second milestone stands beside the road.
+A small lean-to offers limited shelter.
+A track leads off toward a visible farmhouse.
+Obvious exits: northeast, southwest, north, south.
+
+Caeloria to Veridia Road 3
+[Trade Road]
+The road continues through more open land with fewer immediate farms. The sense of the lower country grows stronger and the first hints of the Veridian landscape begin to appear.
+The air is open and clean. Distant landmarks are visible on clear days.
+A stone marker shows the remaining distance toward the Veridian border.
+A rough track leads off toward higher ground to the north.
+The surface of the road remains firm.
+Obvious exits: northeast, southwest, east, west.
+
+Brightwater Connector
+[Trade Road]
+A well-used road links Brightwater to the main Caeloria road system. The surface is good and the land on both sides is a mix of pasture and cultivated fields.
+The air smells of the surrounding farmland and the nearby stream.
+A milestone marks distances to Brightwater and the main road.
+A wayside bench sits under a large tree.
+Wagon tracks show regular traffic.
+Obvious exits: east, west, north, south.
+
+Silverwatch Connector
+[Trade Road]
+The road to Silverwatch climbs more noticeably as it approaches the higher ground. The land becomes less fertile and the farms fewer. The air is cooler.
+The road surface is still good but the gradient is steady.
+A stone marker shows the remaining climb to Silverwatch.
+A small shrine stands at a bend in the road.
+The views back toward the lower country improve with height.
+Obvious exits: south, north, east, west.
+
+Westgate Connector
+[Trade Road]
+The short road linking Westgate to the main route is busy with through traffic. The land is open and the road is wide enough for wagons to pass easily.
+The air mixes the scents of the road and the small town.
+A simple wooden post marks the junction.
+Deep ruts show the volume of traffic.
+The walls of Westgate are visible a short distance away.
+Obvious exits: east, west, north, south.
+
+Open Pasture North
+[Open Field]
+Wide grazing land north of the main roads supports mixed herds of cattle and sheep. Low stone walls divide the larger pastures and the grass is kept short by regular use.
+The air is clean and full of the sound of wind and distant bells.
+A solitary tree stands in the middle of one pasture.
+A wooden stile crosses the nearest wall.
+Rabbit holes pock the softer ground near the walls.
+Obvious exits: south, north, east, west.
+
+Open Pasture South
+[Open Field]
+The southern pastures are a little richer and more closely managed. The walls are better maintained and the herds are larger. The road system is never far away.
+The air smells of warm grass and animals.
+A herd of cattle grazes slowly across the open ground.
+A stone water trough stands in the shade of a large oak.
+The walls run in long straight lines across the land.
+Obvious exits: north, south, east, west.
+
+River Meadow East
+[River Meadow]
+Open meadow runs down toward a tributary of the larger river system. The grass is lush and the ground is soft near the water. Willows grow along the banks.
+The air is cooler and carries the scent of water and wet earth.
+A low stone wall marks the edge of the meadow.
+Cattle stand knee-deep in the shallows at times.
+A simple stile crosses the wall toward the water.
+Obvious exits: west, east, north, south.
+
+Hill Edge Track
+[Hills]
+A track runs along the edge of the higher ground north of Silverwatch. The land drops away to the south and the views across Caeloria are wide. The air is clearer and the wind stronger.
+Rocky outcrops break the grass in places.
+A large flat boulder offers a natural resting place.
+Sheep tracks cross the main track frequently.
+The track continues both higher into the hills and back down toward the settled lands.
+Obvious exits: south, north, east, west.
+
+Caeloria South Ward
+[Residential]
+A quieter residential ward on the southern side of the city. The houses are of mixed stone and timber and the streets are less crowded than the central districts.
+The air is stiller and carries more of the domestic scents of cooking and woodsmoke.
+A woman sweeps her doorstep while talking to a neighbor.
+Clay pots of herbs sit on several sunny windowsills.
+A thin cat watches from a fence post.
+Obvious exits: north, south, east, west.
+
+Caeloria East Ward
+[Residential]
+The eastern residential streets feel the influence of the nearby sea roads. The buildings show a little more weathering and the occasional net or rope hangs from upper windows.
+The air carries a faint salt tang at times.
+Children play in a small open court.
+Laundry hangs between upper windows in the breeze.
+A wooden bench sits against a sunny wall.
+Obvious exits: west, east, north, south.
+
+Farmer's Track North
+[Farm Track]
+A narrower track leaves the main road and runs toward a cluster of farm buildings visible in the distance. The surface is rougher and the ruts are deeper.
+The air smells of the surrounding fields and animals.
+A wooden gate stands open across the track.
+A scarecrow leans at an angle in a nearby field.
+The track continues toward the farm and back to the main road.
+Obvious exits: south, north, east, west.
+
+Farmer's Track South
+[Farm Track]
+Another farm track leads south from the main road into a cluster of well-kept fields and buildings. The land here is fertile and carefully managed.
+The air smells of turned earth and growing crops.
+A wooden gate opens onto the farm track.
+Irrigation ditches run in straight lines across the fields.
+The farm buildings are visible ahead.
+Obvious exits: north, south, east, west.
+
+Orchard Road
+[Farm Road]
+A pleasant road runs between two large orchards. The trees are mature and the air is sweet with the scent of blossom or fruit according to the season. Bees move steadily among the trees.
+The road surface is good and the shade is welcome on hot days.
+A wooden ladder leans against one of the taller trees.
+Wicker baskets are stacked under a lean-to at the roadside.
+A stone bench sits in the shade at the end of a row.
+Obvious exits: east, west, north, south.
+
+Mill Stream Crossing
+[Bridge]
+A solid wooden bridge crosses a clear stream that feeds the local mills. The water runs bright over pale stones and the banks are green with water plants.
+The sound of the water is constant and pleasant. The air is cooler over the stream.
+A simple wooden railing runs along both sides of the bridge.
+Moss grows on the lower supports.
+The road continues on both sides into open land.
+Obvious exits: east, west, north, south.
+
+Wayside Inn Ruin
+[Ruin]
+The remains of an older wayside inn stand beside the road. Only the stone foundations and parts of the lower walls remain. Travelers sometimes rest among the ruins.
+The air is open and the road stretches away in both directions.
+A few stones have been arranged into a rough fire ring.
+Grass grows thickly among the old foundations.
+A faded milestone stands nearby.
+Obvious exits: east, west, north, south.
+
+Border Marker Stone
+[Boundary]
+A tall stone pillar marks the approximate boundary between the more settled Caelorian lands and the approaches to Veridia. Carved letters give distances in both directions.
+The air is open and the landscape begins to show more of the lower country's character.
+A small shrine of stacked stones sits at the base of the pillar.
+Fresh tracks show recent traffic in both directions.
+The land continues open and green on both sides.
+Obvious exits: northeast, southwest, north, south.

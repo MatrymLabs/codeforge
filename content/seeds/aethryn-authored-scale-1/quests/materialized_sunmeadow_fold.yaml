@@ -1,0 +1,24 @@
+id: sunmeadow_fold
+name: The Ridge-Stalker
+start: offered
+reward_xp: 42
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: sunmeadow_fold
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:20
+  on_defeat: sunmeadow_beast
+terminal:
+- done
+labels:
+  offered: Shepherd Isolde says a beast comes off the ridge to take her flock. Go
+    EAST past the high pasture to the drystone fold and see for yourself.
+  hunting: The ridge-stalker is here among the broken hurdles of the fold. Put it
+    down.
+  done: '*** The ridge-stalker is dead and the fold is safe. Shepherd Isolde can bring
+    the flock up again, and she tells the whole valley who it was that made it so.
+    ***'

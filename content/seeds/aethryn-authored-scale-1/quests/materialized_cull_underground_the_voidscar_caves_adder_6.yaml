@@ -1,0 +1,41 @@
+id: cull_underground_the_voidscar_caves_adder_6
+name: 'A small Cull: the adder-kind of Voidscar Fracture Caves'
+start: s0
+reward_xp: 582
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_voidscar_caves|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_voidscar_caves|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_voidscar_caves|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_voidscar_caves|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_voidscar_caves|adder
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_the_voidscar_caves|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the adder-kind of Voidscar Fracture Caves: 0/6 down (582 XP).'
+  s1: 'Cull the adder-kind of Voidscar Fracture Caves: 1/6 down (582 XP).'
+  s2: 'Cull the adder-kind of Voidscar Fracture Caves: 2/6 down (582 XP).'
+  s3: 'Cull the adder-kind of Voidscar Fracture Caves: 3/6 down (582 XP).'
+  s4: 'Cull the adder-kind of Voidscar Fracture Caves: 4/6 down (582 XP).'
+  s5: 'Cull the adder-kind of Voidscar Fracture Caves: 5/6 down (582 XP).'
+  done: The adder-kind of Voidscar Fracture Caves are thinned. The ash-tracks are
+    a shade safer.

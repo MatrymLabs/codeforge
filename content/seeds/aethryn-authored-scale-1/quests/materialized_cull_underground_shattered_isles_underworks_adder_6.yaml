@@ -1,0 +1,41 @@
+id: cull_underground_shattered_isles_underworks_adder_6
+name: 'A small Clearance: the adder-kind of The Blackreef Gateworks'
+start: s0
+reward_xp: 474
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_shattered_isles_underworks|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_shattered_isles_underworks|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_shattered_isles_underworks|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_shattered_isles_underworks|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_shattered_isles_underworks|adder
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_shattered_isles_underworks|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the adder-kind of The Blackreef Gateworks: 0/6 down (474 XP).'
+  s1: 'Clear out the adder-kind of The Blackreef Gateworks: 1/6 down (474 XP).'
+  s2: 'Clear out the adder-kind of The Blackreef Gateworks: 2/6 down (474 XP).'
+  s3: 'Clear out the adder-kind of The Blackreef Gateworks: 3/6 down (474 XP).'
+  s4: 'Clear out the adder-kind of The Blackreef Gateworks: 4/6 down (474 XP).'
+  s5: 'Clear out the adder-kind of The Blackreef Gateworks: 5/6 down (474 XP).'
+  done: The adder-kind of The Blackreef Gateworks are cleared out. The tide-roads
+    are the safer for it.

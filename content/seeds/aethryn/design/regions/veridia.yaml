@@ -1,0 +1,8 @@
+id: veridia
+display_name: Veridia
+canon_status: CANON_LOCKED
+threat_range: [1, 30]
+source_canon_id: veridia
+topology_source: content/seeds/aethryn/world_graph.yaml
+world_purpose: starter region where ordinary settlement life sits above surviving old infrastructure
+unknowns: [authoring_required]

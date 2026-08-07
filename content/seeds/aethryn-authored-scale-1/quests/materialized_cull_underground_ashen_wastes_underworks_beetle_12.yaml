@@ -1,0 +1,83 @@
+id: cull_underground_ashen_wastes_underworks_beetle_12
+name: 'A standing Contract: the beetle-kind of The Flamewrought Service Depths'
+start: s0
+reward_xp: 708
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_ashen_wastes_underworks|beetle
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_ashen_wastes_underworks|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    0/12 down (708 XP).'
+  s1: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    1/12 down (708 XP).'
+  s2: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    2/12 down (708 XP).'
+  s3: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    3/12 down (708 XP).'
+  s4: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    4/12 down (708 XP).'
+  s5: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    5/12 down (708 XP).'
+  s6: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    6/12 down (708 XP).'
+  s7: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    7/12 down (708 XP).'
+  s8: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    8/12 down (708 XP).'
+  s9: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    9/12 down (708 XP).'
+  s10: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    10/12 down (708 XP).'
+  s11: 'Fulfil the contract on the beetle-kind of The Flamewrought Service Depths:
+    11/12 down (708 XP).'
+  done: The beetle-kind of The Flamewrought Service Depths are put down. The ash-tracks
+    are a shade safer.

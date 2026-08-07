@@ -1,0 +1,20 @@
+id: delivery_westgate
+name: 'Delivery: Westgate to Eldryn City'
+start: posted
+reward_xp: 360
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_westgate
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: eldryn_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Westgate is bound for Eldryn City. Take it up (360 XP).
+  carrying: Carry the parcel to Eldryn City.
+  done: The parcel is delivered to Eldryn City. The road keeps its promise.

@@ -1,0 +1,21 @@
+id: crawl_glacial_bastion
+name: 'Descent: Glacial Bastion'
+start: above
+reward_xp: 1800
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: glacial_bastion
+- state: delving
+  event: reach
+  to: done
+  on_enter: glacial_bastion_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Glacial Bastion. Cross its mouth and
+    descend.
+  delving: You are within Glacial Bastion. Press on to its deepest chamber.
+  done: You have reached the heart of Glacial Bastion and lived. Few can (1800 XP).

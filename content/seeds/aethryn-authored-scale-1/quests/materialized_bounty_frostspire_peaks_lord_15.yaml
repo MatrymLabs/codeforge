@@ -1,0 +1,16 @@
+id: bounty_frostspire_peaks_lord_15
+name: 'Bounty: Grathka the Glaze Tyrant'
+start: posted
+reward_xp: 816
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: frostspire_peaks_lord_15
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathka the Glaze Tyrant (level 68). Fell it for 816
+    XP.
+  collected: 'Bounty collected: Grathka the Glaze Tyrant is felled. Well hunted.'

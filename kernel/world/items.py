@@ -45,6 +45,20 @@ def register_prototypes(new: dict[str, Item]) -> None:
         PROTOTYPES[label] = copy.deepcopy(item)
 
 
+def register_material_culture_catalog() -> None:
+    """Project the optional Aethryn material catalog into the existing prototype registry.
+
+    The catalog is optional for other seeds.  A malformed catalog is intentionally allowed to
+    raise during offline/bootstrap validation rather than silently creating partial prototypes.
+    """
+    from kernel.world.material_culture import legacy_items, load_catalog
+
+    catalog = load_catalog()
+    if not catalog.prototypes:
+        return
+    register_prototypes(legacy_items(catalog))
+
+
 def prototype_of(iid: str) -> str:
     """The prototype label an item is an instance of (its own id if it declares none). Callers
     match items by prototype -- a door's key, a quest's pickup -- so a clone counts as the real
@@ -78,14 +92,10 @@ def restore_instance(iid: str, prototype: str, location: str) -> None:
     template = PROTOTYPES.get(prototype)
     if template is None:
         raise ItemError(f"cannot restore instance {iid!r}: unknown prototype {prototype!r}")
-    ITEMS[iid] = Item(
-        name=template["name"],
-        keywords=list(template["keywords"]),
-        location=location,
-        slot=template["slot"],
-        mods=dict(template["mods"]),
-        prototype=prototype,
-    )
+    restored = copy.deepcopy(template)
+    restored["location"] = location
+    restored["prototype"] = prototype
+    ITEMS[iid] = restored
 
 
 def _mint_instance_id(prototype: str) -> str:
@@ -119,16 +129,55 @@ def clone(prototype: str, location: str) -> str:
         tagged = location
     else:
         tagged = f"room:{location.removeprefix('room:')}"
-    ITEMS[iid] = Item(
-        name=template["name"],
-        keywords=list(template["keywords"]),
-        location=tagged,
-        slot=template["slot"],
-        mods=dict(template["mods"]),
-        prototype=prototype,
+    instance = copy.deepcopy(template)
+    instance["location"] = tagged
+    instance["prototype"] = prototype
+    ITEMS[iid] = instance
+    return iid
+
+
+def create_instance(
+    prototype: str,
+    location: str,
+    *,
+    owner: str = "",
+    quantity: int = 1,
+    condition: str = "sound",
+    durability: int | None = None,
+    charges: int | None = None,
+    quality: str = "standard",
+    maker: str = "",
+    custody: str = "unowned",
+    stolen: bool = False,
+    provenance: dict[str, object] | None = None,
+) -> str:
+    """Mint an existing prototype and attach structured instance state.
+
+    Prototype prose and mechanics remain in the registry.  Only facts that can differ between two
+    copies are stored on the instance, which keeps the existing clone/persistence architecture
+    compatible with richer item records.
+    """
+    if quantity < 1:
+        raise ItemError("item instance quantity must be positive")
+    iid = clone(prototype, location)
+    item = ITEMS[iid]
+    item.update(
+        {
+            "owner": owner,
+            "quantity": quantity,
+            "condition": condition,
+            "quality": quality,
+            "maker": maker,
+            "custody": custody,
+            "stolen": bool(stolen),
+        }
     )
-    if template.get("consume"):  # a cloned potion keeps its one-shot effect
-        ITEMS[iid]["consume"] = dict(template["consume"])
+    if durability is not None:
+        item["durability"] = int(durability)
+    if charges is not None:
+        item["charges"] = int(charges)
+    if provenance:
+        item["instance_provenance"] = copy.deepcopy(provenance)
     return iid
 
 
@@ -226,3 +275,8 @@ def room_items_text(room_id: str) -> str:
     if not here:
         return ""
     return "\n".join(f"You see {ITEMS[iid]['name']} here." for iid in here)
+
+
+# Keep this at the bottom so the existing seed loader and registry are fully initialized before
+# the optional Aethryn catalog is projected into them.
+register_material_culture_catalog()

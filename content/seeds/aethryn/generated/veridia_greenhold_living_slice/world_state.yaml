@@ -1,0 +1,21 @@
+greenhold.cistern_status:
+  initial_value: low
+  reversible_values:
+  - low
+  - flowing
+  visible_projection: civic cistern gauge and public water description
+  persistence_scope: character_and_world_package
+  room_id: veridia_living_cistern_court
+  actions:
+  - command: maintain
+    target: cistern
+    aliases:
+    - fountain
+    - valve
+    required_item: greenhold_valve_key
+    from: low
+    to: flowing
+    success_message: You seat the recovered valve-key and the old cistern answers
+      with a clear rising flow.
+    already_message: The Greenhold cistern is already flowing and the public channel
+      runs clear.

@@ -1,0 +1,36 @@
+id: forage_underground_frostspire_peaks_underworks_hollow_ingot_5
+name: 'A small Forage: hollow ingot of The Glacial Bastion Foundations'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_underworks|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_underworks|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_underworks|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_underworks|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_underworks|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather hollow ingot in The Glacial Bastion Foundations: 0/5 (120 XP).'
+  s1: 'Gather hollow ingot in The Glacial Bastion Foundations: 1/5 (120 XP).'
+  s2: 'Gather hollow ingot in The Glacial Bastion Foundations: 2/5 (120 XP).'
+  s3: 'Gather hollow ingot in The Glacial Bastion Foundations: 3/5 (120 XP).'
+  s4: 'Gather hollow ingot in The Glacial Bastion Foundations: 4/5 (120 XP).'
+  done: You have gathered hollow ingot enough for The Glacial Bastion Foundations.
+    The hold's smiths will not want for it.

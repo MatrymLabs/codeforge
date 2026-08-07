@@ -1,0 +1,15 @@
+id: bounty_ravenwatch_wight
+name: 'Bounty: a barrow-wight'
+start: posted
+reward_xp: 216
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: ravenwatch_wight
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a barrow-wight (level 18). Fell it for 216 XP.
+  collected: 'Bounty collected: a barrow-wight is felled. Well hunted.'

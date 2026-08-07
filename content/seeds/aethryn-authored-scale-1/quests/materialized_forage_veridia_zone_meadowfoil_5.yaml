@@ -1,0 +1,36 @@
+id: forage_veridia_zone_meadowfoil_5
+name: 'A small Gleaning: meadowfoil of Veridia'
+start: s0
+reward_xp: 35
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: veridia_zone|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: veridia_zone|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: veridia_zone|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: veridia_zone|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: veridia_zone|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean meadowfoil in Veridia: 0/5 (35 XP).'
+  s1: 'Glean meadowfoil in Veridia: 1/5 (35 XP).'
+  s2: 'Glean meadowfoil in Veridia: 2/5 (35 XP).'
+  s3: 'Glean meadowfoil in Veridia: 3/5 (35 XP).'
+  s4: 'Glean meadowfoil in Veridia: 4/5 (35 XP).'
+  done: You have gleaned meadowfoil enough for Veridia. The village makers will put
+    it to use.

@@ -1,0 +1,41 @@
+id: cull_underground_frostspire_peaks_caves_brute_6
+name: 'A small Purge: the brute-kind of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 168
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_frostspire_peaks_caves|brute
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_frostspire_peaks_caves|brute
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_frostspire_peaks_caves|brute
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_frostspire_peaks_caves|brute
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_frostspire_peaks_caves|brute
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_frostspire_peaks_caves|brute
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 0/6 down (168 XP).'
+  s1: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 1/6 down (168 XP).'
+  s2: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 2/6 down (168 XP).'
+  s3: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 3/6 down (168 XP).'
+  s4: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 4/6 down (168 XP).'
+  s5: 'Purge the brute-kind of Frostspire Blue-Ice Caves: 5/6 down (168 XP).'
+  done: The brute-kind of Frostspire Blue-Ice Caves are purged. The high passes will
+    hold a little longer.

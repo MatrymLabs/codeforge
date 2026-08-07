@@ -1,0 +1,20 @@
+id: delivery_greenmist
+name: 'Delivery: Greenmist to The Great Tree'
+start: posted
+reward_xp: 600
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_greenmist
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: the_great_tree
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Greenmist is bound for The Great Tree. Take it up (600 XP).
+  carrying: Carry the parcel to The Great Tree.
+  done: The parcel is delivered to The Great Tree. The road keeps its promise.

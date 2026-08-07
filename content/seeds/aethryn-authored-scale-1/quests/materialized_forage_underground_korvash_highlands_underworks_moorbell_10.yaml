@@ -1,0 +1,61 @@
+id: forage_underground_korvash_highlands_underworks_moorbell_10
+name: 'A standing Collection: moorbell of The Measured Throne Below'
+start: s0
+reward_xp: 520
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_korvash_highlands_underworks|moorbell
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_korvash_highlands_underworks|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect moorbell in The Measured Throne Below: 0/10 (520 XP).'
+  s1: 'Collect moorbell in The Measured Throne Below: 1/10 (520 XP).'
+  s2: 'Collect moorbell in The Measured Throne Below: 2/10 (520 XP).'
+  s3: 'Collect moorbell in The Measured Throne Below: 3/10 (520 XP).'
+  s4: 'Collect moorbell in The Measured Throne Below: 4/10 (520 XP).'
+  s5: 'Collect moorbell in The Measured Throne Below: 5/10 (520 XP).'
+  s6: 'Collect moorbell in The Measured Throne Below: 6/10 (520 XP).'
+  s7: 'Collect moorbell in The Measured Throne Below: 7/10 (520 XP).'
+  s8: 'Collect moorbell in The Measured Throne Below: 8/10 (520 XP).'
+  s9: 'Collect moorbell in The Measured Throne Below: 9/10 (520 XP).'
+  done: You have brought in moorbell enough for The Measured Throne Below. The region's
+    makers will put it to use.

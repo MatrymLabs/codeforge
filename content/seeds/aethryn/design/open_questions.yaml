@@ -1,0 +1,33 @@
+id: aethryn_open_questions
+canon_status: CANON_LOCKED
+source: content/seeds/aethryn/canon.yaml
+policy: unresolved_questions_may_not_be_objectively_answered
+questions:
+  - id: gods_justified
+    text: Whether the gods' fear was justified.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: netharion_motive
+    text: Whether Netharion was benevolent, dangerous, or both.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: netharion_survival
+    text: Whether Netharion survived.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: divine_alignment
+    text: Whether all gods supported the destruction.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: divine_observation
+    text: Whether some gods still monitor technological progress.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: reality_damage
+    text: Whether the old civilization was about to damage reality.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only
+  - id: divine_motive
+    text: Whether the gods acted to preserve creation, preserve authority, or both.
+    status: intentionally_unresolved
+    allowed_expression: rumor_only

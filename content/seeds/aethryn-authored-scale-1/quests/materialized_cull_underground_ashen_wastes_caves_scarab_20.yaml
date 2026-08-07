@@ -1,0 +1,111 @@
+id: cull_underground_ashen_wastes_caves_scarab_20
+name: 'A great Thinning: the scarab-kind of Ashen Slag Hollows'
+start: s0
+reward_xp: 1060
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_ashen_wastes_caves|scarab
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_ashen_wastes_caves|scarab
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the scarab-kind of Ashen Slag Hollows: 0/20 down (1060 XP).'
+  s1: 'Thin out the scarab-kind of Ashen Slag Hollows: 1/20 down (1060 XP).'
+  s2: 'Thin out the scarab-kind of Ashen Slag Hollows: 2/20 down (1060 XP).'
+  s3: 'Thin out the scarab-kind of Ashen Slag Hollows: 3/20 down (1060 XP).'
+  s4: 'Thin out the scarab-kind of Ashen Slag Hollows: 4/20 down (1060 XP).'
+  s5: 'Thin out the scarab-kind of Ashen Slag Hollows: 5/20 down (1060 XP).'
+  s6: 'Thin out the scarab-kind of Ashen Slag Hollows: 6/20 down (1060 XP).'
+  s7: 'Thin out the scarab-kind of Ashen Slag Hollows: 7/20 down (1060 XP).'
+  s8: 'Thin out the scarab-kind of Ashen Slag Hollows: 8/20 down (1060 XP).'
+  s9: 'Thin out the scarab-kind of Ashen Slag Hollows: 9/20 down (1060 XP).'
+  s10: 'Thin out the scarab-kind of Ashen Slag Hollows: 10/20 down (1060 XP).'
+  s11: 'Thin out the scarab-kind of Ashen Slag Hollows: 11/20 down (1060 XP).'
+  s12: 'Thin out the scarab-kind of Ashen Slag Hollows: 12/20 down (1060 XP).'
+  s13: 'Thin out the scarab-kind of Ashen Slag Hollows: 13/20 down (1060 XP).'
+  s14: 'Thin out the scarab-kind of Ashen Slag Hollows: 14/20 down (1060 XP).'
+  s15: 'Thin out the scarab-kind of Ashen Slag Hollows: 15/20 down (1060 XP).'
+  s16: 'Thin out the scarab-kind of Ashen Slag Hollows: 16/20 down (1060 XP).'
+  s17: 'Thin out the scarab-kind of Ashen Slag Hollows: 17/20 down (1060 XP).'
+  s18: 'Thin out the scarab-kind of Ashen Slag Hollows: 18/20 down (1060 XP).'
+  s19: 'Thin out the scarab-kind of Ashen Slag Hollows: 19/20 down (1060 XP).'
+  done: The scarab-kind of Ashen Slag Hollows are thinned back. The ash-tracks are
+    a shade safer.

@@ -1,0 +1,18 @@
+id: greenhold_undercroft_site
+display_name: The Granary Undercroft
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+parent_zone: veridia_zone
+source_design_ids: [greenhold, greenhold_intro]
+built_by: unknown
+original_purpose: water infrastructure beneath a later granary
+historical_layer: successor_era
+failure: seized valve and interrupted water service
+current_occupants: [cellar_vermin]
+why_not_reclaimed: cramped access, old machinery, and recurring vermin
+entrance_logic: greenhold_granary down to greenhold_undercroft
+traversal_grammar: [threshold, orientation, escalation, revelation, choice, aftermath]
+gameplay_purpose: restore local water access and expose a deeper old-world thread
+revelation: the fountain-head is older than the town structure above it
+aftermath: greenhold_water_status_can_be_restored
+state_change: reversible

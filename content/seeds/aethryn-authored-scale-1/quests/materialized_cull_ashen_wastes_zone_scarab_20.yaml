@@ -1,0 +1,111 @@
+id: cull_ashen_wastes_zone_scarab_20
+name: 'A great Warrant: the scarab-kind of Ashen Wastes'
+start: s0
+reward_xp: 1120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: ashen_wastes_zone|scarab
+- state: s1
+  event: cull
+  to: s2
+  on_cull: ashen_wastes_zone|scarab
+- state: s2
+  event: cull
+  to: s3
+  on_cull: ashen_wastes_zone|scarab
+- state: s3
+  event: cull
+  to: s4
+  on_cull: ashen_wastes_zone|scarab
+- state: s4
+  event: cull
+  to: s5
+  on_cull: ashen_wastes_zone|scarab
+- state: s5
+  event: cull
+  to: s6
+  on_cull: ashen_wastes_zone|scarab
+- state: s6
+  event: cull
+  to: s7
+  on_cull: ashen_wastes_zone|scarab
+- state: s7
+  event: cull
+  to: s8
+  on_cull: ashen_wastes_zone|scarab
+- state: s8
+  event: cull
+  to: s9
+  on_cull: ashen_wastes_zone|scarab
+- state: s9
+  event: cull
+  to: s10
+  on_cull: ashen_wastes_zone|scarab
+- state: s10
+  event: cull
+  to: s11
+  on_cull: ashen_wastes_zone|scarab
+- state: s11
+  event: cull
+  to: s12
+  on_cull: ashen_wastes_zone|scarab
+- state: s12
+  event: cull
+  to: s13
+  on_cull: ashen_wastes_zone|scarab
+- state: s13
+  event: cull
+  to: s14
+  on_cull: ashen_wastes_zone|scarab
+- state: s14
+  event: cull
+  to: s15
+  on_cull: ashen_wastes_zone|scarab
+- state: s15
+  event: cull
+  to: s16
+  on_cull: ashen_wastes_zone|scarab
+- state: s16
+  event: cull
+  to: s17
+  on_cull: ashen_wastes_zone|scarab
+- state: s17
+  event: cull
+  to: s18
+  on_cull: ashen_wastes_zone|scarab
+- state: s18
+  event: cull
+  to: s19
+  on_cull: ashen_wastes_zone|scarab
+- state: s19
+  event: cull
+  to: done
+  on_cull: ashen_wastes_zone|scarab
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the scarab-kind of Ashen Wastes: 0/20 down (1120 XP).'
+  s1: 'Answer the warrant on the scarab-kind of Ashen Wastes: 1/20 down (1120 XP).'
+  s2: 'Answer the warrant on the scarab-kind of Ashen Wastes: 2/20 down (1120 XP).'
+  s3: 'Answer the warrant on the scarab-kind of Ashen Wastes: 3/20 down (1120 XP).'
+  s4: 'Answer the warrant on the scarab-kind of Ashen Wastes: 4/20 down (1120 XP).'
+  s5: 'Answer the warrant on the scarab-kind of Ashen Wastes: 5/20 down (1120 XP).'
+  s6: 'Answer the warrant on the scarab-kind of Ashen Wastes: 6/20 down (1120 XP).'
+  s7: 'Answer the warrant on the scarab-kind of Ashen Wastes: 7/20 down (1120 XP).'
+  s8: 'Answer the warrant on the scarab-kind of Ashen Wastes: 8/20 down (1120 XP).'
+  s9: 'Answer the warrant on the scarab-kind of Ashen Wastes: 9/20 down (1120 XP).'
+  s10: 'Answer the warrant on the scarab-kind of Ashen Wastes: 10/20 down (1120 XP).'
+  s11: 'Answer the warrant on the scarab-kind of Ashen Wastes: 11/20 down (1120 XP).'
+  s12: 'Answer the warrant on the scarab-kind of Ashen Wastes: 12/20 down (1120 XP).'
+  s13: 'Answer the warrant on the scarab-kind of Ashen Wastes: 13/20 down (1120 XP).'
+  s14: 'Answer the warrant on the scarab-kind of Ashen Wastes: 14/20 down (1120 XP).'
+  s15: 'Answer the warrant on the scarab-kind of Ashen Wastes: 15/20 down (1120 XP).'
+  s16: 'Answer the warrant on the scarab-kind of Ashen Wastes: 16/20 down (1120 XP).'
+  s17: 'Answer the warrant on the scarab-kind of Ashen Wastes: 17/20 down (1120 XP).'
+  s18: 'Answer the warrant on the scarab-kind of Ashen Wastes: 18/20 down (1120 XP).'
+  s19: 'Answer the warrant on the scarab-kind of Ashen Wastes: 19/20 down (1120 XP).'
+  done: The scarab-kind of Ashen Wastes are answered for. The ash-tracks are a shade
+    safer.

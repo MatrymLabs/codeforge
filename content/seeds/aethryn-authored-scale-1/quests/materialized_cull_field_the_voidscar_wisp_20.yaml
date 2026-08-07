@@ -1,0 +1,111 @@
+id: cull_field_the_voidscar_wisp_20
+name: 'A great Bounty: the wisp-kind of The Voidscar Wilds'
+start: s0
+reward_xp: 2000
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_the_voidscar|wisp
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_the_voidscar|wisp
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_the_voidscar|wisp
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_the_voidscar|wisp
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_the_voidscar|wisp
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_the_voidscar|wisp
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_the_voidscar|wisp
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_the_voidscar|wisp
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_the_voidscar|wisp
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_the_voidscar|wisp
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_the_voidscar|wisp
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_the_voidscar|wisp
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_the_voidscar|wisp
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_the_voidscar|wisp
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_the_voidscar|wisp
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_the_voidscar|wisp
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_the_voidscar|wisp
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_the_voidscar|wisp
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_the_voidscar|wisp
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_the_voidscar|wisp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the wisp-kind of The Voidscar Wilds: 0/20 down (2000 XP).'
+  s1: 'Bring down the wisp-kind of The Voidscar Wilds: 1/20 down (2000 XP).'
+  s2: 'Bring down the wisp-kind of The Voidscar Wilds: 2/20 down (2000 XP).'
+  s3: 'Bring down the wisp-kind of The Voidscar Wilds: 3/20 down (2000 XP).'
+  s4: 'Bring down the wisp-kind of The Voidscar Wilds: 4/20 down (2000 XP).'
+  s5: 'Bring down the wisp-kind of The Voidscar Wilds: 5/20 down (2000 XP).'
+  s6: 'Bring down the wisp-kind of The Voidscar Wilds: 6/20 down (2000 XP).'
+  s7: 'Bring down the wisp-kind of The Voidscar Wilds: 7/20 down (2000 XP).'
+  s8: 'Bring down the wisp-kind of The Voidscar Wilds: 8/20 down (2000 XP).'
+  s9: 'Bring down the wisp-kind of The Voidscar Wilds: 9/20 down (2000 XP).'
+  s10: 'Bring down the wisp-kind of The Voidscar Wilds: 10/20 down (2000 XP).'
+  s11: 'Bring down the wisp-kind of The Voidscar Wilds: 11/20 down (2000 XP).'
+  s12: 'Bring down the wisp-kind of The Voidscar Wilds: 12/20 down (2000 XP).'
+  s13: 'Bring down the wisp-kind of The Voidscar Wilds: 13/20 down (2000 XP).'
+  s14: 'Bring down the wisp-kind of The Voidscar Wilds: 14/20 down (2000 XP).'
+  s15: 'Bring down the wisp-kind of The Voidscar Wilds: 15/20 down (2000 XP).'
+  s16: 'Bring down the wisp-kind of The Voidscar Wilds: 16/20 down (2000 XP).'
+  s17: 'Bring down the wisp-kind of The Voidscar Wilds: 17/20 down (2000 XP).'
+  s18: 'Bring down the wisp-kind of The Voidscar Wilds: 18/20 down (2000 XP).'
+  s19: 'Bring down the wisp-kind of The Voidscar Wilds: 19/20 down (2000 XP).'
+  done: The wisp-kind of The Voidscar Wilds are hunted down. The ash-tracks are a
+    shade safer.

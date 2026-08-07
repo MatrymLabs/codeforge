@@ -1,0 +1,27 @@
+id: story_caeloria_city
+name: The Tale of Caeloria City
+start: afoot
+reward_xp: 1500
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: starfall_temple
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: starfall_temple_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: caeloria_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Caeloria: Starfall Temple festers, and Caeloria City lives in
+    its shadow.'
+  at_heart: You stand within Starfall Temple. Its deep terror waits below. Fell it.
+  homeward: The terror of Starfall Temple is slain. Bear word to Caeloria City (1500
+    XP).
+  done: '*** Caeloria City breathes free. Caeloria will remember you. ***'

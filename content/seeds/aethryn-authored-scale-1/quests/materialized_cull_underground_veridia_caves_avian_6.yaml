@@ -1,0 +1,41 @@
+id: cull_underground_veridia_caves_avian_6
+name: 'A small Cull: the avian-kind of Veridia''s River Caves'
+start: s0
+reward_xp: 48
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_veridia_caves|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_veridia_caves|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_veridia_caves|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_veridia_caves|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_veridia_caves|avian
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_veridia_caves|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the avian-kind of Veridia''s River Caves: 0/6 down (48 XP).'
+  s1: 'Cull the avian-kind of Veridia''s River Caves: 1/6 down (48 XP).'
+  s2: 'Cull the avian-kind of Veridia''s River Caves: 2/6 down (48 XP).'
+  s3: 'Cull the avian-kind of Veridia''s River Caves: 3/6 down (48 XP).'
+  s4: 'Cull the avian-kind of Veridia''s River Caves: 4/6 down (48 XP).'
+  s5: 'Cull the avian-kind of Veridia''s River Caves: 5/6 down (48 XP).'
+  done: The avian-kind of Veridia's River Caves are thinned. The farm-roads are the
+    safer for it.

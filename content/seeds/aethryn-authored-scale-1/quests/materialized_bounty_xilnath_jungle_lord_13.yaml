@@ -1,0 +1,15 @@
+id: bounty_xilnath_jungle_lord_13
+name: 'Bounty: Vexen the Root Herald'
+start: posted
+reward_xp: 1248
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: xilnath_jungle_lord_13
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Vexen the Root Herald (level 104). Fell it for 1248 XP.
+  collected: 'Bounty collected: Vexen the Root Herald is felled. Well hunted.'

@@ -1,0 +1,41 @@
+id: cull_underground_skyward_spires_caves_avian_6
+name: 'A small Thinning: the avian-kind of The Broken Skychain Hollows'
+start: s0
+reward_xp: 480
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_caves|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_caves|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_caves|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_caves|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_caves|avian
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_caves|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the avian-kind of The Broken Skychain Hollows: 0/6 down (480 XP).'
+  s1: 'Thin out the avian-kind of The Broken Skychain Hollows: 1/6 down (480 XP).'
+  s2: 'Thin out the avian-kind of The Broken Skychain Hollows: 2/6 down (480 XP).'
+  s3: 'Thin out the avian-kind of The Broken Skychain Hollows: 3/6 down (480 XP).'
+  s4: 'Thin out the avian-kind of The Broken Skychain Hollows: 4/6 down (480 XP).'
+  s5: 'Thin out the avian-kind of The Broken Skychain Hollows: 5/6 down (480 XP).'
+  done: The avian-kind of The Broken Skychain Hollows are thinned back. The region
+    breathes easier.

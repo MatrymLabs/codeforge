@@ -1,0 +1,831 @@
+batch:
+  id: aethryn_duskwood_black_hollow_0010
+  sequence: 10
+  status: ready
+  size: 34
+  final: true
+  link_inference: ordered_route
+  source: Aethryn_Duskwood_BlackHollow_Batch01.txt
+  imported_rooms: 33
+  anchor_room: the_black_hollow
+  anchor_exit: fringe
+rooms:
+  duskwood_black_hollow_duskwood_fringe_path:
+    name: Duskwood Fringe Path
+    room_type: Forest Edge
+    desc: 'The open meadows end and the true edge of Duskwood begins. The trees here
+      are older and closer together, their canopy already dimming the light. A rough
+      path continues into the shadows.
+
+
+      The air is cooler and smells of deep leaf mold and damp earth. Birdsong changes
+      character under the first real trees.'
+    exits:
+      north: duskwood_black_hollow_gloaming_trail
+      south: duskwood_black_hollow_duskwood_fringe_path
+      east: duskwood_black_hollow_gloaming_trail
+      west: duskwood_black_hollow_duskwood_fringe_path
+      out: the_black_hollow
+    occupants: []
+    objects:
+    - A wooden boundary marker stands just outside the denser growth
+    - Game trails lead into the darker interior at several points
+    - Fallen leaves carpet the ground in thick layers
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_gloaming_trail:
+    name: Gloaming Trail
+    room_type: Forest Path
+    desc: 'The path narrows as the canopy thickens. Light filters through in shifting,
+      muted patches. The undergrowth is dense with brambles and ferns, and the air
+      carries a faint, cool weight.
+
+
+      The scent of wet earth and old leaves is strong. Distant root-creaks can sometimes
+      be heard.'
+    exits:
+      northeast: duskwood_black_hollow_twilight_approach
+      southwest: duskwood_black_hollow_duskwood_fringe_path
+      north: duskwood_black_hollow_twilight_approach
+      south: duskwood_black_hollow_duskwood_fringe_path
+    occupants: []
+    objects:
+    - A large fallen trunk lies beside the path, its bark covered in cold blue-green
+      moss
+    - Animal tracks of several kinds cross the trail
+    - The feeling of being observed is mild but already present
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_twilight_approach:
+    name: Twilight Approach
+    room_type: Forest Path
+    desc: 'The trees close in further and the light takes on a permanent twilight
+      quality even when the sun is high. The path winds between massive trunks and
+      the roots begin to show above the soil in thick, knotted ridges.
+
+
+      The air is still and carries a soft pressure against the senses.'
+    exits:
+      southwest: duskwood_black_hollow_root_bound_marker
+      northeast: duskwood_black_hollow_root_bound_marker
+      east: duskwood_black_hollow_root_bound_marker
+      west: duskwood_black_hollow_gloaming_trail
+    occupants: []
+    objects:
+    - Cold luminous moss glows faintly in the deeper shade
+    - A low root arch forms a natural gateway ahead
+    - Soft whispers seem to rise from the ground when one stands still
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_root_bound_marker:
+    name: Root-Bound Marker
+    room_type: Forest
+    desc: 'An old, half-buried stone marker stands where several faint trails meet.
+      The carvings on it are worn almost smooth, but the feeling of the place is heavier
+      than the surrounding wood.
+
+
+      The air is cooler here. The moss on the nearby roots glows a pale violet.'
+    exits:
+      north: duskwood_black_hollow_outer_root_field
+      south: duskwood_black_hollow_twilight_approach
+      east: duskwood_black_hollow_outer_root_field
+      west: duskwood_black_hollow_twilight_approach
+    occupants: []
+    objects:
+    - A few offerings of small stones and faded flowers have been left at the base
+      of the marker
+    - The trails lead deeper toward the Hollow and back toward the fringe
+    - The sense of attention from the roots is clearer
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_outer_root_field:
+    name: Outer Root Field
+    room_type: Forest Floor
+    desc: 'The ground here is a tangled mat of thick surface roots. Walking requires
+      care. The canopy overhead is nearly continuous and the light is dim and green-blue.
+
+
+      The air smells strongly of earth and slow decay. Small sounds are muffled.'
+    exits:
+      north: duskwood_black_hollow_hollow_mouth_north
+      south: duskwood_black_hollow_root_bound_marker
+      east: duskwood_black_hollow_hollow_mouth_north
+      west: duskwood_black_hollow_root_bound_marker
+      down: duskwood_black_hollow_hollow_mouth_north
+    occupants: []
+    objects:
+    - Cold luminous moss grows in irregular patches between the roots
+    - Several low openings between the larger roots suggest possible entrances
+    - The pressure of the place settles more firmly on the mind
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_hollow_mouth_north:
+    name: Hollow Mouth North
+    room_type: Cave Entrance
+    desc: 'A wide depression in the forest floor opens between two massive root buttresses.
+      Cool air breathes from the darkness below. The moss around the rim glows with
+      a cold blue-green light.
+
+
+      The scent of wet earth and stone is strong. Soft root-creaks echo from within.'
+    exits:
+      out: duskwood_black_hollow_outer_root_field
+      down: duskwood_black_hollow_hollow_mouth_south
+      south: duskwood_black_hollow_outer_root_field
+      east: duskwood_black_hollow_hollow_mouth_south
+    occupants: []
+    objects:
+    - Scratches and old boot marks show that others have entered here before
+    - A faint draft carries the sound of distant whispers
+    - The entrance slopes downward into deeper shadow
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_hollow_mouth_south:
+    name: Hollow Mouth South
+    room_type: Cave Entrance
+    desc: 'A narrower but deeper opening descends between thick, interlocking roots.
+      The air that rises from it is colder and carries a stronger sense of weight.
+
+
+      Luminous moss frames the entrance in pale violet patches.'
+    exits:
+      out: duskwood_black_hollow_hollow_mouth_north
+      down: duskwood_black_hollow_hollow_mouth_east
+      north: duskwood_black_hollow_hollow_mouth_east
+      west: duskwood_black_hollow_hollow_mouth_north
+    occupants:
+    - The ground near the rim is soft and marked with many tracks
+    objects:
+    - A low, almost sub-audible hum seems to come from the roots themselves
+    - The passage beyond is low and requires a slight stoop
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_hollow_mouth_east:
+    name: Hollow Mouth East
+    room_type: Cave Entrance
+    desc: 'This entrance is half-hidden by a curtain of hanging roots and ferns. Once
+      pushed aside, a sloping tunnel of packed earth and living wood leads inward.
+
+
+      The air is damp and cool. The light from outside dies quickly.'
+    exits:
+      out: duskwood_black_hollow_hollow_mouth_south
+      down: duskwood_black_hollow_threshold_chamber
+      west: duskwood_black_hollow_hollow_mouth_south
+    occupants: []
+    objects:
+    - Cold moss glows along the first few paces of the tunnel wall
+    - The sensation of being noticed begins as soon as one steps inside
+    - A faint mineral scent mixes with the smell of earth
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_threshold_chamber:
+    name: Threshold Chamber
+    room_type: Root Chamber
+    desc: 'Just inside the main northern entrance the passage opens into a low, irregular
+      chamber. Thick roots form the walls and ceiling. The floor is soft leaf litter
+      over packed earth.
+
+
+      The air is still and cool. Outside light is only a distant memory.'
+    exits:
+      north: duskwood_black_hollow_root_corridor_north
+      south: duskwood_black_hollow_hollow_mouth_east
+      east: duskwood_black_hollow_root_corridor_north
+      west: duskwood_black_hollow_hollow_mouth_east
+      down: duskwood_black_hollow_root_corridor_north
+    occupants: []
+    objects:
+    - Patches of cold luminous moss provide a dim, blue-green glow
+    - Soft whispers rise and fall at the edge of hearing
+    - A dry ledge of interwoven roots offers a place to stand clear of the softest
+      ground
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_root_corridor_north:
+    name: Root Corridor North
+    room_type: Root Tunnel
+    desc: 'A low, winding corridor runs between massive living roots. The walls are
+      a mix of wood, earth, and pale stone. The ceiling is low enough that taller
+      travelers must watch their heads.
+
+
+      The air is cool and carries the constant soft pressure of the Hollow.'
+    exits:
+      north: duskwood_black_hollow_root_corridor_south
+      south: duskwood_black_hollow_threshold_chamber
+      east: duskwood_black_hollow_root_corridor_south
+      west: duskwood_black_hollow_threshold_chamber
+    occupants: []
+    objects:
+    - Cold moss glows in scattered patches, enough to see by if one moves slowly
+    - Whispers drift along the corridor, never quite forming clear words
+    - The floor is uneven with smaller roots and soft hollows
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_root_corridor_south:
+    name: Root Corridor South
+    room_type: Root Tunnel
+    desc: 'This stretch of corridor is narrower and the roots more tightly woven.
+      In places the living wood has grown into natural arches and low doorways.
+
+
+      The air feels heavier. Sound travels strangely.'
+    exits:
+      north: duskwood_black_hollow_moss_carpet_chamber
+      south: duskwood_black_hollow_root_corridor_north
+      east: duskwood_black_hollow_moss_carpet_chamber
+      west: duskwood_black_hollow_root_corridor_north
+    occupants: []
+    objects:
+    - Luminous moss grows more thickly here, casting a cold violet-tinged light
+    - The sensation of being observed is stronger and more focused
+    - Occasional slow shifts in the larger roots can be felt rather than seen
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_moss_carpet_chamber:
+    name: Moss Carpet Chamber
+    room_type: Root Chamber
+    desc: 'A wider chamber opens where the roots have drawn back. The floor is covered
+      in a thick, soft carpet of cold luminous moss that glows with a steady blue-green
+      light.
+
+
+      The air is still and cool. The moss seems almost to attend to those who enter.'
+    exits:
+      north: duskwood_black_hollow_whisper_gallery
+      south: duskwood_black_hollow_root_corridor_south
+      east: duskwood_black_hollow_whisper_gallery
+      west: duskwood_black_hollow_root_corridor_south
+    occupants: []
+    objects:
+    - Whispers are clearer here, sometimes brushing close to recognizable sounds
+    - A few dry root platforms rise above the moss in places
+    - Prolonged staring at the moss brings a mild drowsiness
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_whisper_gallery:
+    name: Whisper Gallery
+    room_type: Root Chamber
+    desc: 'The walls of this long, low chamber are lined with fine root hairs that
+      seem to tremble without any breeze. The air is full of soft, overlapping whispers.
+
+
+      The light is dim and comes only from scattered patches of pale violet moss.'
+    exits:
+      east: duskwood_black_hollow_root_arch_passage
+      west: duskwood_black_hollow_moss_carpet_chamber
+      north: duskwood_black_hollow_root_arch_passage
+      south: duskwood_black_hollow_moss_carpet_chamber
+    occupants: []
+    objects:
+    - Standing still for more than a few moments makes the whispers feel directed
+    - A narrow ledge runs along one wall, slightly drier than the rest of the floor
+    - The pressure of attention is constant and unmistakable
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_root_arch_passage:
+    name: Root Arch Passage
+    room_type: Root Tunnel
+    desc: 'Massive roots have grown together overhead to form a series of natural
+      arches. The passage dips and rises with the shape of the root system.
+
+
+      The air is cooler under the thicker arches. Sound is muffled.'
+    exits:
+      northeast: duskwood_black_hollow_side_hollow
+      southwest: duskwood_black_hollow_whisper_gallery
+      down: duskwood_black_hollow_side_hollow
+    occupants: []
+    objects:
+    - Cold moss clings to the undersides of the larger roots
+    - Faint vibrations sometimes run through the wood when one places a hand on it
+    - The passage continues deeper into the network
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_side_hollow:
+    name: Side Hollow
+    room_type: Root Chamber
+    desc: 'A small side chamber opens off the main corridors. The ceiling is lower
+      and the roots denser. A single large patch of luminous moss provides the only
+      light.
+
+
+      The air is very still. Whispers are softer but feel closer.'
+    exits:
+      out: duskwood_black_hollow_central_root_nexus
+      west: duskwood_black_hollow_root_arch_passage
+    occupants: []
+    objects:
+    - A dry pocket among the roots offers a place to sit
+    - The sense of being alone is weaker here than it should be
+    - Occasional slow movements in the surrounding wood can be felt
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_central_root_nexus:
+    name: Central Root Nexus
+    room_type: Root Chamber
+    desc: 'Several corridors meet in this larger chamber. Thick roots descend from
+      above and rise from below, creating a tangled but navigable space. The air is
+      noticeably heavier.
+
+
+      Cold luminous moss grows in broad, irregular bands.'
+    exits:
+      north: duskwood_black_hollow_listening_chamber
+      south: duskwood_black_hollow_side_hollow
+      east: duskwood_black_hollow_listening_chamber
+      west: duskwood_black_hollow_side_hollow
+      down: duskwood_black_hollow_listening_chamber
+      up: duskwood_black_hollow_side_hollow
+    occupants: []
+    objects:
+    - Whispers come from multiple directions at once
+    - A raised platform of interwoven roots sits near the center, slightly clearer
+      of the softest ground
+    - The presence of the Hollow feels focused and patient
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_listening_chamber:
+    name: Listening Chamber
+    room_type: Root Chamber
+    desc: 'This chamber is quieter than most, yet the sense of attention is stronger.
+      The roots here are smoother and darker. The moss glows a deeper violet.
+
+
+      The air is cool and carries a faint mineral scent.'
+    exits:
+      south: duskwood_black_hollow_central_root_nexus
+      east: duskwood_black_hollow_bloodroot_alcove
+      west: duskwood_black_hollow_central_root_nexus
+    occupants: []
+    objects:
+    - Whispers are less frequent but clearer when they come
+    - A flat expanse of root wood forms a natural sitting place
+    - Those who rest here often report vivid, root-filled dreams
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_bloodroot_alcove:
+    name: Bloodroot Alcove
+    room_type: Root Chamber
+    desc: 'A small alcove where the moss grows especially thick and dark. Old stains
+      on the root wood suggest that blood has been spilled here more than once and
+      absorbed.
+
+
+      The air is colder. The whispers take on a slightly hungrier tone.'
+    exits:
+      out: duskwood_black_hollow_overgrown_crawl
+    occupants: []
+    objects:
+    - Luminous patches pulse slowly, almost in time with a heartbeat
+    - A low root shelf runs along the back wall
+    - The pressure of the place is more intimate and less diffuse
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_overgrown_crawl:
+    name: Overgrown Crawl
+    room_type: Root Tunnel
+    desc: 'The passage becomes very low and requires crawling in places. Fine root
+      hairs brush against skin and clothing. The air is close and damp.
+
+
+      Light is almost non-existent except for occasional flecks of cold moss.'
+    exits:
+      north: duskwood_black_hollow_echoing_hollow
+      south: duskwood_black_hollow_bloodroot_alcove
+    occupants: []
+    objects:
+    - Whispers seem to come from directly beside the ear
+    - Progress is slow and the sense of enclosure is strong
+    - The crawl eventually opens into a slightly larger space
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_echoing_hollow:
+    name: Echoing Hollow
+    room_type: Root Chamber
+    desc: 'A rounded chamber where sound behaves strangely. Even soft footsteps produce
+      faint, delayed echoes that do not quite match the original noise.
+
+
+      The air is still. The moss light is pale and steady.'
+    exits:
+      west: duskwood_black_hollow_overgrown_crawl
+      east: duskwood_black_hollow_root_platform
+      north: duskwood_black_hollow_root_platform
+    occupants: []
+    objects:
+    - Whispers sometimes answer the echoes, or seem to
+    - A few scattered bones of small animals lie near the edges
+    - The feeling of layered time is stronger here than elsewhere
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_root_platform:
+    name: Root Platform
+    room_type: Root Chamber
+    desc: 'A broad, relatively dry platform of thick, interwoven roots rises above
+      the softer floor of the surrounding chamber. It offers a slight relief from
+      the heaviest ambient pressure.
+
+
+      The air is a little clearer. The whispers are more distant.'
+    exits:
+      down: duskwood_black_hollow_lower_root_descent
+      north: duskwood_black_hollow_lower_root_descent
+      south: duskwood_black_hollow_echoing_hollow
+      east: duskwood_black_hollow_lower_root_descent
+    occupants: []
+    objects:
+    - Cold moss still grows at the edges but less thickly on the platform itself
+    - A natural seat has been worn into one of the larger roots
+    - From here several lower passages are visible
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_lower_root_descent:
+    name: Lower Root Descent
+    room_type: Root Tunnel
+    desc: 'The passage slopes more steeply downward. The roots are thicker and older,
+      and the air grows colder and heavier with every step.
+
+
+      Luminous moss becomes scarcer and shifts further toward pale violet.'
+    exits:
+      up: duskwood_black_hollow_root_platform
+      down: duskwood_black_hollow_deep_moss_hall
+      east: duskwood_black_hollow_deep_moss_hall
+    occupants: []
+    objects:
+    - Whispers are less frequent but carry more weight when they occur
+    - The sense of vast, patient attention is constant
+    - The descent continues into deeper shadow
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_deep_moss_hall:
+    name: Deep Moss Hall
+    room_type: Root Chamber
+    desc: 'A long, low hall where the floor, walls, and even parts of the ceiling
+      are covered in thick, cold luminous moss. The glow is steady and violet-tinged.
+
+
+      The air is very still and cool. Sound is heavily muffled.'
+    exits:
+      north: duskwood_black_hollow_heartroot_chamber
+      south: duskwood_black_hollow_lower_root_descent
+      west: duskwood_black_hollow_lower_root_descent
+      down: duskwood_black_hollow_heartroot_chamber
+    occupants: []
+    objects:
+    - Whispers rise from the moss itself in soft, overlapping waves
+    - Walking across the moss produces almost no sound
+    - The presence feels closer and more focused than in the upper levels
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_heartroot_chamber:
+    name: Heartroot Chamber
+    room_type: Root Chamber
+    desc: 'The deepest commonly reached chamber of the Black Hollow. Enormous roots
+      converge here from all directions, forming a natural cathedral of living wood.
+      The air is heavy and cold.
+
+
+      Only scattered patches of deep violet moss provide light.'
+    exits:
+      up: duskwood_black_hollow_deep_moss_hall
+      north: duskwood_black_hollow_the_listening_seat
+      south: duskwood_black_hollow_deep_moss_hall
+      east: duskwood_black_hollow_the_listening_seat
+      west: duskwood_black_hollow_deep_moss_hall
+    occupants: []
+    objects:
+    - Whispers are clear and sometimes form almost-recognizable words or names
+    - The pressure of attention is strong enough to feel like a physical weight
+    - A slightly raised root platform at the center offers the only relatively clear
+      ground
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_the_listening_seat:
+    name: The Listening Seat
+    room_type: Root Chamber
+    desc: 'A natural throne-like formation of smoothed roots sits against the far
+      wall of a side chamber off the Heartroot. The wood here is darker and almost
+      polished by time or touch.
+
+
+      The air is colder. The whispers fall nearly silent, as if waiting.'
+    exits:
+      out: duskwood_black_hollow_rootbound_nook
+    occupants: []
+    objects:
+    - Luminous moss frames the seat in a pale violet halo
+    - Sitting here for more than a few moments brings a powerful sense of being examined
+    - Those who remain too long often leave with vivid, lingering dreams
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_rootbound_nook:
+    name: Rootbound Nook
+    room_type: Root Chamber
+    desc: 'A small, almost private nook formed by a curl of massive roots. The space
+      is just large enough for one or two people to sit. The air is close and intimate.
+
+
+      The moss glow is soft and steady.'
+    exits:
+      out: duskwood_black_hollow_sealed_root_passage
+    occupants: []
+    objects:
+    - Whispers come infrequently but feel personal when they do
+    - The sense of the older presence is strong yet oddly calm
+    - A few small offerings (stones, faded cloth, carved scraps) have been left here
+      by previous visitors
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_sealed_root_passage:
+    name: Sealed Root Passage
+    room_type: Root Tunnel
+    desc: 'A narrower passage that appears to continue deeper still, but is partially
+      blocked by a dense lattice of living roots. The roots do not appear recently
+      grown; they have the look of long, deliberate closure.
+
+
+      The air beyond the lattice is even colder.'
+    exits:
+      back: duskwood_black_hollow_eastern_root_exit
+    occupants: []
+    objects:
+    - Faint violet light and distant whispers come from the far side
+    - Forcing a way through would require significant effort and would almost certainly
+      draw stronger attention
+    - The lattice itself feels faintly aware
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_eastern_root_exit:
+    name: Eastern Root Exit
+    room_type: Root Tunnel
+    desc: 'A long, gradually rising passage leads toward a secondary exit on the eastern
+      side of the Hollow. The roots thin slowly and the air grows less heavy.
+
+
+      Cold moss becomes greener and less violet as one climbs.'
+    exits:
+      west: duskwood_black_hollow_southern_crawl_exit
+      out: duskwood_black_hollow_sealed_root_passage
+      up: duskwood_black_hollow_sealed_root_passage
+    occupants: []
+    objects:
+    - Whispers fade with distance from the deeper chambers
+    - A faint draft of outside air eventually becomes detectable
+    - The passage opens into a smaller entrance hollow
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_southern_crawl_exit:
+    name: Southern Crawl Exit
+    room_type: Root Tunnel
+    desc: 'A low, winding crawl leads south and eventually upward. Progress is slow
+      and the sense of enclosure remains until the final stretch.
+
+
+      The air gradually lightens. The pressure eases.'
+    exits:
+      north: duskwood_black_hollow_high_root_gallery
+      out: duskwood_black_hollow_eastern_root_exit
+    occupants: []
+    objects:
+    - Traces of colder moss give way to more ordinary forest growth near the end
+    - The crawl opens into a narrow depression screened by ferns and hanging roots
+    - Outside light and sound return with almost startling clarity
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_high_root_gallery:
+    name: High Root Gallery
+    room_type: Root Chamber
+    desc: 'A higher chamber connected by a steep root climb. The air is slightly clearer
+      and the ambient pressure less intense than in the depths.
+
+
+      Patches of moss still glow, but the light is less oppressive.'
+    exits:
+      down: duskwood_black_hollow_black_hollow_overlook
+      north: duskwood_black_hollow_black_hollow_overlook
+      east: duskwood_black_hollow_black_hollow_overlook
+    occupants: []
+    objects:
+    - Whispers are distant and easier to ignore
+    - A broad root ledge offers a view down into parts of the mid-level network
+    - This gallery is sometimes used as a temporary resting place by those who know
+      the Hollow
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_black_hollow_overlook:
+    name: Black Hollow Overlook
+    room_type: Forest
+    desc: 'A low rise near the main entrances offers a partial view of the depressions
+      and root fields that mark the Hollow. The canopy is still thick but the sense
+      of weight is less immediate.
+
+
+      The air is cooler than the surrounding wood but no longer heavy.'
+    exits:
+      north: duskwood_black_hollow_ravenwatch_path_link
+      south: duskwood_black_hollow_high_root_gallery
+      east: duskwood_black_hollow_ravenwatch_path_link
+      west: duskwood_black_hollow_high_root_gallery
+      down: duskwood_black_hollow_ravenwatch_path_link
+    occupants: []
+    objects:
+    - Cold moss is visible in patches on the lower ground
+    - Trails lead both toward the entrances and back into the wider Vale
+    - The feeling of attention fades with distance from the openings
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_ravenwatch_path_link:
+    name: Ravenwatch Path Link
+    room_type: Forest Path
+    desc: 'A clearer path leads away from the Hollow toward the direction of Ravenwatch.
+      The trees remain old and close, but the specific pressure of the root node diminishes
+      steadily.
+
+
+      The air smells more of ordinary deep forest.'
+    exits:
+      southwest: duskwood_black_hollow_moonshade_fringe
+      northeast: duskwood_black_hollow_moonshade_fringe
+      north: duskwood_black_hollow_moonshade_fringe
+      south: duskwood_black_hollow_black_hollow_overlook
+    occupants: []
+    objects:
+    - Game trails and older wagon tracks mark the route
+    - A wooden marker, more recent than the ones near the Hollow, points toward Ravenwatch
+    - The whispers of the roots are no longer audible
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  duskwood_black_hollow_moonshade_fringe:
+    name: Moonshade Fringe
+    room_type: Forest
+    desc: 'The forest here shows the influence of both the Black Hollow and the more
+      open distortions near Moonshade. The light is dim and the undergrowth thick,
+      but the root pressure is milder.
+
+
+      Cold moss appears only in scattered patches.'
+    exits:
+      east: duskwood_black_hollow_moonshade_fringe
+      west: duskwood_black_hollow_ravenwatch_path_link
+      north: duskwood_black_hollow_moonshade_fringe
+      south: duskwood_black_hollow_ravenwatch_path_link
+    occupants: []
+    objects:
+    - The air carries a faint reflective quality, as if surfaces might show more than
+      they should
+    - Trails continue toward Moonshade and back toward the Hollow
+    - The sense of being observed is present but diffuse
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - black_hollow
+    - imported_text_drop
+  the_black_hollow:
+    name: The Black Hollow
+    desc: A lightless hollow beneath a split oak, mouth of a dungeon of the deep wood.
+      It lies within Duskwood Vale (levels 20-50); the zone road runs back out to
+      the wider land.
+    exits:
+      out: duskwood_vale
+      side_depths: duskwood_vale_underworks_r0
+      down: the_black_hollow_delve_1
+      fringe: duskwood_black_hollow_duskwood_fringe_path
+    replace: true
+    tags:
+    - aethryn
+    - room_drop_anchor
+    notes: Adds fringe -> duskwood_black_hollow_duskwood_fringe_path to enter the
+      imported drop.

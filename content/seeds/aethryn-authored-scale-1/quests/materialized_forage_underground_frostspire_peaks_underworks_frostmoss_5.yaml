@@ -1,0 +1,36 @@
+id: forage_underground_frostspire_peaks_underworks_frostmoss_5
+name: 'A small Requisition: frostmoss of The Glacial Bastion Foundations'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_underworks|frostmoss
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_underworks|frostmoss
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_underworks|frostmoss
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_underworks|frostmoss
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_underworks|frostmoss
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in frostmoss in The Glacial Bastion Foundations: 0/5 (120 XP).'
+  s1: 'Bring in frostmoss in The Glacial Bastion Foundations: 1/5 (120 XP).'
+  s2: 'Bring in frostmoss in The Glacial Bastion Foundations: 2/5 (120 XP).'
+  s3: 'Bring in frostmoss in The Glacial Bastion Foundations: 3/5 (120 XP).'
+  s4: 'Bring in frostmoss in The Glacial Bastion Foundations: 4/5 (120 XP).'
+  done: You have requisitioned frostmoss enough for The Glacial Bastion Foundations.
+    The hold's smiths will not want for it.

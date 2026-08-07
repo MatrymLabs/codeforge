@@ -11,6 +11,15 @@ forge_wrench:
   keywords: [wrench, tool, forge, modular]
   location: nowhere
 
+duskwood_lantern_salver:
+  name: a warden lantern salve
+  keywords: [lantern-salve, salve, lantern, fernshade]
+  location: ravenwatch
+  lore: >-
+    A sealed clay cup of fernshade oil, wax, and ash. Lantern Keeper Sela keeps enough for one
+    repair at the Hollow threshold, and no more. It is ordinary maintenance made precious by the
+    distance between Ravenwatch and the dark.
+
 warm_cloak:
   name: a warm traveller's cloak
   keywords: [cloak, warm, travel]

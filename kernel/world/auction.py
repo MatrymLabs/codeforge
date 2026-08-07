@@ -16,6 +16,15 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from kernel.world.aethryn_models import content_digest
+from kernel.world.economy_transactions import (
+    CurrencyTransfer,
+    EconomyTransactionService,
+    ItemTransfer,
+    SqlTransactionStore,
+    TransactionError,
+    TransactionRequest,
+)
 from kernel.world.session import Session, sentence_case
 
 AUCTION_BEATS = 500  # how many world beats a listing lives before it lapses and is mailed back
@@ -48,8 +57,29 @@ def list_item(session: Session, arg: str) -> str:
     if snapshot is None:
         return "You aren't carrying that."
     name = ITEMS[iid]["name"]
-    auction_store.create(session.player_id, snapshot, price, climate.now() + AUCTION_BEATS)
-    ITEMS.pop(iid, None)  # escrowed: it leaves the world until sold or returned
+    listing_id = auction_store.create(
+        session.player_id, snapshot, price, climate.now() + AUCTION_BEATS
+    )
+    escrow = f"auction:{listing_id}"
+    owners = {item_id: item.get("location", "") for item_id, item in ITEMS.items()}
+    request_id = content_digest(
+        {"kind": "auction_list", "seller": session.player_id, "item": iid, "listing": listing_id}
+    )[:32]
+    request = TransactionRequest(
+        transaction_id=f"auction-list-{request_id}",
+        idempotency_key=f"auction-list-{request_id}",
+        actor=session.player_id,
+        reason="auction_escrow",
+        item_transfers=(ItemTransfer(iid, carrier(session.player_id), escrow),),
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets={}, item_owners=owners
+        )
+    except TransactionError as exc:
+        auction_store.remove(listing_id)
+        return f"The listing fails: {exc}."
+    ITEMS.pop(iid, None)  # escrowed: it leaves the world after the receipt is durable
     return f"You list {name} on the auction house for {price} coins."
 
 
@@ -73,7 +103,7 @@ def buy(session: Session, id_word: str) -> str:
     """`auction buy <#>`: buy a listing. Pays the seller (online or not) and re-clones the item into
     your bag. Refused for a bad number, your own listing, or too little coin."""
     from kernel.world import auction_store
-    from kernel.world.characters import _default_store, reclone_item, save_character
+    from kernel.world.characters import _default_store, load_character, reclone_item, save_character
     from kernel.world.events import announce_to
     from kernel.world.items import carrier
     from kernel.world.session import SESSIONS, display_name
@@ -92,11 +122,36 @@ def buy(session: Session, id_word: str) -> str:
     sold = auction_store.buy(listing_id)  # atomic remove: nobody else can win it now
     if sold is None:
         return "That listing was just taken."
-    session.coins -= sold.price  # the buyer pays
-    save_character(session)
     seller_session = SESSIONS.get(sold.seller)  # the seller is paid, online or not
+    seller_record = load_character(sold.seller) or {"coins": 0}
+    seller_coins = seller_session.coins if seller_session is not None else seller_record["coins"]
+    escrow = f"auction:{listing_id}"
+    escrow_item = f"auction_item:{listing_id}"
+    wallets = {session.player_id: session.coins, sold.seller: seller_coins}
+    owners = {escrow_item: escrow}
+    request_id = content_digest(
+        {"kind": "auction_buy", "buyer": session.player_id, "listing": listing_id}
+    )[:32]
+    request = TransactionRequest(
+        transaction_id=f"auction-buy-{request_id}",
+        idempotency_key=f"auction-buy-{request_id}",
+        actor=session.player_id,
+        reason="auction_sale",
+        currency_transfers=(
+            CurrencyTransfer(session.player_id, sold.seller, sold.price, "auction_sale"),
+        ),
+        item_transfers=(ItemTransfer(escrow_item, escrow, carrier(session.player_id)),),
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets=wallets, item_owners=owners
+        )
+    except TransactionError as exc:
+        return f"The purchase fails: {exc}."
+    session.coins = wallets[session.player_id]
+    save_character(session)
     if seller_session is not None:
-        seller_session.coins += sold.price
+        seller_session.coins = wallets[sold.seller]
         save_character(seller_session)
         announce_to(
             [sold.seller],

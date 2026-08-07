@@ -69,10 +69,10 @@ Engine metrics use the command noted at each row (for example, test count is
 > cohort-scaled raid reward (#711) and a second boss unleash kind, `mend` (#709) -- leaving a gear
 > ilvl ceiling, raid difficulty-scaling, and more mechanic kinds.
 
-> **Runtime re-baseline (2026-08-05).** A clean Aethryn boot currently assembles **52,832 rooms,
-> 53,040 NPC records, 52,586 combatants, 51 bosses, 548 items, 14 zones, 18 dungeons, 45
-> settlements, and 1,832 registered quests**. Authored source remains much smaller: **80 rooms, 81
-> NPC records, 187 item definitions, 41 authored quest files, and 154 abilities**. Runtime breadth
+> **Runtime re-baseline (2026-08-06).** A clean Aethryn boot currently assembles **27,698 rooms,
+> 27,620 NPC records, 27,132 combatants, 64 bosses, 686 items, 14 base zones, 18 dungeons, 45
+> settlements, and 3,394 registered quests**. Authored source remains much smaller: **202 explicit
+> rooms, 79 NPC records, 186 item definitions, 42 authored quest files, and 154 abilities**. Runtime breadth
 > proves the world can be entered; authored breadth predicts whether it feels specific and memorable.
 > Reproduce with `PYTHONPATH=. .venv/bin/python tools/census.py`; `[runtime]` is the authoritative
 > assembled-world measure.
@@ -94,7 +94,7 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
 | **Combat systems** | ~40% | ~55% | 154 abilities across **10 ability kinds** (strike/heal/brand/daze/weaken/taunt/cleanse/buff + lifesteal `drain` + heal-over-time `regen`), 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711). A **kit-density pass** brought EVERY calling to a full 5-ability kit (all 30 callings, coherent role identities) that wields the deep kinds (DoT/control/lifesteal). A raid boss now scales its DIFFICULTY with the co-located cohort too (harder blows per extra hero, not just a bigger bounty). Gaps: deeper boss-mechanic variety (3 kinds: strike, mend, vampiric drain), dungeon group mechanics. |
-| **Content scale (world)** | ~15% | ~40% | **52,832 assembled rooms** at default scale, 45 settlements, 18 dungeons. Authored depth thin (80 hand rooms, 41 authored quest files). |
+| **Content scale (world)** | ~15% | ~40% | **27,698 assembled rooms** at default scale, 14 fields, 28 underground areas, 45 settlements, and 18 six-stage dungeons. Authored depth remains thin (202 explicit rooms, 42 authored quest files). |
 | **Content scale (items/NPCs)** | ~10% | ~35% | **187 item definitions, 81 authored NPC records, 53,040 assembled NPC records**, and 38 recipes. Runtime breadth is high; authored encounter density remains below launch scale. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, **Aethryn level cap 300** (first-forge compatibility remains 255), ember-coin currency. Broad skeleton, shallow per-system depth. |
 | **Social / multiplayer** | ~38% | ~25% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat, GMCP panels, and a raid reward that scales with the co-located cohort (#711). Gaps: no LFG/matchmaking, no housing, and packaged cross-repository proof is pending. |
@@ -128,8 +128,8 @@ slices shipped in #709/#711) and authored content density.
    gear, but there is no stored ilvl), raid *difficulty*-scaling (only the reward scales so far), and
    more mechanic kinds. Still the shallowest dimension relative to AAA, but no longer empty.
 2. **Content density far below launch scale.** 187 item definitions and 81 authored NPC records
-   cannot sustain a 1-to-300 curve; 1,832 registered quests are mostly generated from a smaller set
-   of authored arcs (wide, not deep). The 52,832-room runtime is breadth, not authored encounter
+   cannot sustain a 1-to-300 curve; 3,394 registered quests are mostly generated from a smaller set
+   of authored arcs (wide, not deep). The 27,698-room runtime is breadth, not authored encounter
    density.
    Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
 3. **No live event-stream telemetry at population.** The economy sink/faucet **macro-model now
@@ -197,7 +197,7 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Rooms | Engine: generator scales one seed 1x to ~1M (`CODEFORGE_WILD_SCALE`) | **52,832 assembled** (80 authored source rooms) | [Pass 2] | [Pass 2] (DikuMUD-era worlds often 5k-15k rooms) | Current: **Measured** | census runtime block |
+| Rooms | Engine: generator scales one seed 1x to ~1M generated field cells (`CODEFORGE_WILD_SCALE=38`) | **27,698 assembled** (202 explicit authored rooms) | [Pass 2] | [Pass 2] (DikuMUD-era worlds often 5k-15k rooms) | Current: **Measured** | census runtime block |
 | Regions / zones | Data-driven zones | 14 zones, 14 wildlands regions | [Pass 2] | [Pass 2] | Measured | census |
 | Settlements (cities/villages) | Seed-defined | 45 settlements | [Pass 2] | [Pass 2] | Measured | census |
 | Dungeons | Seed-defined | 18 dungeons | [Pass 2] | [Pass 2] | Measured | census |
@@ -244,7 +244,7 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Authored quests | State-machine quests | **41 authored quest files**; 1,832 registered at runtime | [Pass 2] | [Pass 2] | Measured | census |
+| Authored quests | State-machine quests | **42 authored quest files**; 3,394 registered at runtime | [Pass 2] | [Pass 2] | Measured | census |
 | Procedural quests | errands / bounties / deliveries / rumors / storylines generators | scales (14 zone storylines) | [Pass 2] | [Pass 2] | Measured (mechanism) | census, storylines.py |
 | Dialogue | Per-NPC dialogue trees | **81 authored NPC records** carry dialogue; 53,040 NPC records assemble at runtime | [Pass 2] | [Pass 2] | Measured | census |
 | Achievements / titles | `title` verb; classroom achievements | game achievements not a system | [Pass 2] | [Pass 2] | Partial | titles.py |

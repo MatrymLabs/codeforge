@@ -1,0 +1,36 @@
+id: forage_zhaar_desert_zone_hollow_ingot_5
+name: 'A small Provision: hollow ingot of Zhaar Desert'
+start: s0
+reward_xp: 160
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: zhaar_desert_zone|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: zhaar_desert_zone|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: zhaar_desert_zone|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: zhaar_desert_zone|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: zhaar_desert_zone|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in hollow ingot in Zhaar Desert: 0/5 (160 XP).'
+  s1: 'Lay in hollow ingot in Zhaar Desert: 1/5 (160 XP).'
+  s2: 'Lay in hollow ingot in Zhaar Desert: 2/5 (160 XP).'
+  s3: 'Lay in hollow ingot in Zhaar Desert: 3/5 (160 XP).'
+  s4: 'Lay in hollow ingot in Zhaar Desert: 4/5 (160 XP).'
+  done: You have laid in hollow ingot enough for Zhaar Desert. The caravan traders
+    will pay well for it.

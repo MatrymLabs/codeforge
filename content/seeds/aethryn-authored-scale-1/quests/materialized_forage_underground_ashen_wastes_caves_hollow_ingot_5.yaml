@@ -1,0 +1,36 @@
+id: forage_underground_ashen_wastes_caves_hollow_ingot_5
+name: 'A small Draw: hollow ingot of Ashen Slag Hollows'
+start: s0
+reward_xp: 200
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_ashen_wastes_caves|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_ashen_wastes_caves|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_ashen_wastes_caves|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_ashen_wastes_caves|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_ashen_wastes_caves|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw hollow ingot in Ashen Slag Hollows: 0/5 (200 XP).'
+  s1: 'Draw hollow ingot in Ashen Slag Hollows: 1/5 (200 XP).'
+  s2: 'Draw hollow ingot in Ashen Slag Hollows: 2/5 (200 XP).'
+  s3: 'Draw hollow ingot in Ashen Slag Hollows: 3/5 (200 XP).'
+  s4: 'Draw hollow ingot in Ashen Slag Hollows: 4/5 (200 XP).'
+  done: You have drawn hollow ingot enough for Ashen Slag Hollows. The forge-crews
+    can feed the fires now.

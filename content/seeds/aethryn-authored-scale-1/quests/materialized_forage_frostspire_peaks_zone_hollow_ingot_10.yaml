@@ -1,0 +1,61 @@
+id: forage_frostspire_peaks_zone_hollow_ingot_10
+name: 'A standing Provision: hollow ingot of Frostspire Peaks'
+start: s0
+reward_xp: 220
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s4
+  event: forage
+  to: s5
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s5
+  event: forage
+  to: s6
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s6
+  event: forage
+  to: s7
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s7
+  event: forage
+  to: s8
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s8
+  event: forage
+  to: s9
+  on_forage: frostspire_peaks_zone|hollow_ingot
+- state: s9
+  event: forage
+  to: done
+  on_forage: frostspire_peaks_zone|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in hollow ingot in Frostspire Peaks: 0/10 (220 XP).'
+  s1: 'Lay in hollow ingot in Frostspire Peaks: 1/10 (220 XP).'
+  s2: 'Lay in hollow ingot in Frostspire Peaks: 2/10 (220 XP).'
+  s3: 'Lay in hollow ingot in Frostspire Peaks: 3/10 (220 XP).'
+  s4: 'Lay in hollow ingot in Frostspire Peaks: 4/10 (220 XP).'
+  s5: 'Lay in hollow ingot in Frostspire Peaks: 5/10 (220 XP).'
+  s6: 'Lay in hollow ingot in Frostspire Peaks: 6/10 (220 XP).'
+  s7: 'Lay in hollow ingot in Frostspire Peaks: 7/10 (220 XP).'
+  s8: 'Lay in hollow ingot in Frostspire Peaks: 8/10 (220 XP).'
+  s9: 'Lay in hollow ingot in Frostspire Peaks: 9/10 (220 XP).'
+  done: You have laid in hollow ingot enough for Frostspire Peaks. The hold's smiths
+    will not want for it.

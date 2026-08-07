@@ -76,11 +76,7 @@ class SqlAuditStore:
         except (TypeError, ValueError) as exc:
             raise AuditStoreError(f"audit payload is not JSON-serializable: {exc}") from exc
         with self.session_factory() as session, session.begin():
-            previous = (
-                session.query(AuditEventRow)
-                .order_by(AuditEventRow.sequence.desc())
-                .first()
-            )
+            previous = session.query(AuditEventRow).order_by(AuditEventRow.sequence.desc()).first()
             sequence = 0 if previous is None else previous.sequence + 1
             prior_hash = hashchain.GENESIS if previous is None else previous.content_hash
             content_hash = hashchain.content_hash(
@@ -108,11 +104,7 @@ class SqlAuditStore:
         if not self.verify():
             raise AuditStoreError("audit chain is corrupt")
         with self.session_factory() as session:
-            rows = (
-                session.query(AuditEventRow)
-                .order_by(AuditEventRow.sequence)
-                .all()
-            )
+            rows = session.query(AuditEventRow).order_by(AuditEventRow.sequence).all()
         return [self._decode(row) for row in rows]
 
     def verify(self) -> bool:

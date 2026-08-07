@@ -1,0 +1,16 @@
+id: bounty_shattered_isles_lord_10
+name: 'Bounty: Balaoth the Wrack Warden'
+start: posted
+reward_xp: 2304
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: shattered_isles_lord_10
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Balaoth the Wrack Warden (level 192). Fell it for 2304
+    XP.
+  collected: 'Bounty collected: Balaoth the Wrack Warden is felled. Well hunted.'

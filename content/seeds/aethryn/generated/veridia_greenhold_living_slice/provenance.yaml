@@ -1,0 +1,14 @@
+source_design_ids:
+- veridia
+- greenhold
+- veridia_greenhold_economy
+- veridia_greenhold_ecology
+source_paths:
+- content/seeds/aethryn/design
+- content/seeds/aethryn/authored/greenhold.yaml
+packet_id: veridia_greenhold_living_slice
+generation_seed: 41017
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+authority: AUTHORED_LOCAL
+note: offline deterministic compiler output

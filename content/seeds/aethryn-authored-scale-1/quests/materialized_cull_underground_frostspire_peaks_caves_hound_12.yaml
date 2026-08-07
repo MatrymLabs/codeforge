@@ -1,0 +1,71 @@
+id: cull_underground_frostspire_peaks_caves_hound_12
+name: 'A standing Reckoning: the hound-kind of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 336
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_frostspire_peaks_caves|hound
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_frostspire_peaks_caves|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 0/12 down (336 XP).'
+  s1: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 1/12 down (336 XP).'
+  s2: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 2/12 down (336 XP).'
+  s3: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 3/12 down (336 XP).'
+  s4: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 4/12 down (336 XP).'
+  s5: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 5/12 down (336 XP).'
+  s6: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 6/12 down (336 XP).'
+  s7: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 7/12 down (336 XP).'
+  s8: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 8/12 down (336 XP).'
+  s9: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 9/12 down (336 XP).'
+  s10: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 10/12 down (336 XP).'
+  s11: 'Reckon with the hound-kind of Frostspire Blue-Ice Caves: 11/12 down (336 XP).'
+  done: The hound-kind of Frostspire Blue-Ice Caves are settled with. The high passes
+    will hold a little longer.

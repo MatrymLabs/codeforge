@@ -1,0 +1,23 @@
+id: stonehelm_ramparts
+name: The Storm-Rider
+start: offered
+reward_xp: 135
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: stonehelm_ramparts
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:making:38
+  on_defeat: stonehelm_stormrider
+terminal:
+- done
+labels:
+  offered: Storm-Captain Ilsa says a storm-thing walks the broken ramparts. Go EAST
+    from the market onto the old walls and see.
+  hunting: The storm-walking wraith steps down from the lightning. Put it down so
+    the salvage-crews can work the old metal again.
+  done: '*** The storm-rider is scattered and the ramparts can be salvaged again.
+    Stonehelm''s garrison call you one of their own now, and Ilsa says so. ***'

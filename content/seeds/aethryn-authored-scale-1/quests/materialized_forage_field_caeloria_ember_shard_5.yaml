@@ -1,0 +1,36 @@
+id: forage_field_caeloria_ember_shard_5
+name: 'A small Draw: ember shard of The Caeloria Wilds'
+start: s0
+reward_xp: 75
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_caeloria|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_caeloria|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_caeloria|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_caeloria|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_caeloria|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw ember shard in The Caeloria Wilds: 0/5 (75 XP).'
+  s1: 'Draw ember shard in The Caeloria Wilds: 1/5 (75 XP).'
+  s2: 'Draw ember shard in The Caeloria Wilds: 2/5 (75 XP).'
+  s3: 'Draw ember shard in The Caeloria Wilds: 3/5 (75 XP).'
+  s4: 'Draw ember shard in The Caeloria Wilds: 4/5 (75 XP).'
+  done: You have drawn ember shard enough for The Caeloria Wilds. The village makers
+    will put it to use.

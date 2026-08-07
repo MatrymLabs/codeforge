@@ -1,0 +1,27 @@
+id: story_sunscar_city
+name: The Tale of Sunscar City
+start: afoot
+reward_xp: 3250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_obsidian_pit
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_obsidian_pit_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: sunscar_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Zhaar Desert: The Obsidian Pit festers, and Sunscar City lives
+    in its shadow.'
+  at_heart: You stand within The Obsidian Pit. Its deep terror waits below. Fell it.
+  homeward: The terror of The Obsidian Pit is slain. Bear word to Sunscar City (3250
+    XP).
+  done: '*** Sunscar City breathes free. Zhaar Desert will remember you. ***'

@@ -1,0 +1,15 @@
+id: errand_stormreach
+name: 'Errand: Eldryn City'
+start: posted
+reward_xp: 2700
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: eldryn_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Eldryn City (2700 XP).
+  done: You bring word to Eldryn City. It is gratefully received.

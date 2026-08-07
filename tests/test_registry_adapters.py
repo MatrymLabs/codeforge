@@ -20,9 +20,7 @@ def test_api_and_gateway_share_sql_seed_registry(monkeypatch, tmp_path: Path) ->
     gateway_kernel = _GateHandler._workspace_kernel(object.__new__(_GateHandler))
 
     assert gateway_kernel.get(created.identity.seed_id) == created
-    assert [record.identity.seed_id for record in gateway_kernel.list_seeds()] == [
-        "seed-adapter"
-    ]
+    assert [record.identity.seed_id for record in gateway_kernel.list_seeds()] == ["seed-adapter"]
     assert not (tmp_path / ".seedlab" / "seeds" / "seed-adapter.json").exists()
 
 

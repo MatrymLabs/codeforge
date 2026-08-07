@@ -1,0 +1,41 @@
+id: cull_field_eldryn_forest_lynx_6
+name: 'A small Thinning: the lynx-kind of The Eldryn Forest Wilds'
+start: s0
+reward_xp: 156
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_eldryn_forest|lynx
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_eldryn_forest|lynx
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_eldryn_forest|lynx
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_eldryn_forest|lynx
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_eldryn_forest|lynx
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_eldryn_forest|lynx
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 0/6 down (156 XP).'
+  s1: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 1/6 down (156 XP).'
+  s2: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 2/6 down (156 XP).'
+  s3: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 3/6 down (156 XP).'
+  s4: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 4/6 down (156 XP).'
+  s5: 'Thin out the lynx-kind of The Eldryn Forest Wilds: 5/6 down (156 XP).'
+  done: The lynx-kind of The Eldryn Forest Wilds are thinned back. The wardens of
+    the wood send their thanks.

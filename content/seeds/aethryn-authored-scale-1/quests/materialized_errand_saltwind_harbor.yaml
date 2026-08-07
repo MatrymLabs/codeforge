@@ -1,0 +1,15 @@
+id: errand_saltwind_harbor
+name: 'Errand: Korvash Crater'
+start: posted
+reward_xp: 2700
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: korvash_crater
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Korvash Crater (2700 XP).
+  done: You reach Korvash Crater and mark the way. Well scouted.

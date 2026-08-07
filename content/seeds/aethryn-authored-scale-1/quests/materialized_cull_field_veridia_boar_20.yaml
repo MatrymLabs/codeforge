@@ -1,0 +1,111 @@
+id: cull_field_veridia_boar_20
+name: 'A great Purge: the boar-kind of The Veridia Wilds'
+start: s0
+reward_xp: 200
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_veridia|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_veridia|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_veridia|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_veridia|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_veridia|boar
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_veridia|boar
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_veridia|boar
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_veridia|boar
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_veridia|boar
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_veridia|boar
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_veridia|boar
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_veridia|boar
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_veridia|boar
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_veridia|boar
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_veridia|boar
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_veridia|boar
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_veridia|boar
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_veridia|boar
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_veridia|boar
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_veridia|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the boar-kind of The Veridia Wilds: 0/20 down (200 XP).'
+  s1: 'Purge the boar-kind of The Veridia Wilds: 1/20 down (200 XP).'
+  s2: 'Purge the boar-kind of The Veridia Wilds: 2/20 down (200 XP).'
+  s3: 'Purge the boar-kind of The Veridia Wilds: 3/20 down (200 XP).'
+  s4: 'Purge the boar-kind of The Veridia Wilds: 4/20 down (200 XP).'
+  s5: 'Purge the boar-kind of The Veridia Wilds: 5/20 down (200 XP).'
+  s6: 'Purge the boar-kind of The Veridia Wilds: 6/20 down (200 XP).'
+  s7: 'Purge the boar-kind of The Veridia Wilds: 7/20 down (200 XP).'
+  s8: 'Purge the boar-kind of The Veridia Wilds: 8/20 down (200 XP).'
+  s9: 'Purge the boar-kind of The Veridia Wilds: 9/20 down (200 XP).'
+  s10: 'Purge the boar-kind of The Veridia Wilds: 10/20 down (200 XP).'
+  s11: 'Purge the boar-kind of The Veridia Wilds: 11/20 down (200 XP).'
+  s12: 'Purge the boar-kind of The Veridia Wilds: 12/20 down (200 XP).'
+  s13: 'Purge the boar-kind of The Veridia Wilds: 13/20 down (200 XP).'
+  s14: 'Purge the boar-kind of The Veridia Wilds: 14/20 down (200 XP).'
+  s15: 'Purge the boar-kind of The Veridia Wilds: 15/20 down (200 XP).'
+  s16: 'Purge the boar-kind of The Veridia Wilds: 16/20 down (200 XP).'
+  s17: 'Purge the boar-kind of The Veridia Wilds: 17/20 down (200 XP).'
+  s18: 'Purge the boar-kind of The Veridia Wilds: 18/20 down (200 XP).'
+  s19: 'Purge the boar-kind of The Veridia Wilds: 19/20 down (200 XP).'
+  done: The boar-kind of The Veridia Wilds are purged. The farm-roads are the safer
+    for it.

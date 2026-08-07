@@ -1,0 +1,71 @@
+id: cull_zhaar_desert_zone_wolf_12
+name: 'A standing Reckoning: the wolf-kind of Zhaar Desert'
+start: s0
+reward_xp: 516
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: zhaar_desert_zone|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: zhaar_desert_zone|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: zhaar_desert_zone|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: zhaar_desert_zone|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: zhaar_desert_zone|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: zhaar_desert_zone|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: zhaar_desert_zone|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: zhaar_desert_zone|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: zhaar_desert_zone|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: zhaar_desert_zone|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: zhaar_desert_zone|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: zhaar_desert_zone|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the wolf-kind of Zhaar Desert: 0/12 down (516 XP).'
+  s1: 'Reckon with the wolf-kind of Zhaar Desert: 1/12 down (516 XP).'
+  s2: 'Reckon with the wolf-kind of Zhaar Desert: 2/12 down (516 XP).'
+  s3: 'Reckon with the wolf-kind of Zhaar Desert: 3/12 down (516 XP).'
+  s4: 'Reckon with the wolf-kind of Zhaar Desert: 4/12 down (516 XP).'
+  s5: 'Reckon with the wolf-kind of Zhaar Desert: 5/12 down (516 XP).'
+  s6: 'Reckon with the wolf-kind of Zhaar Desert: 6/12 down (516 XP).'
+  s7: 'Reckon with the wolf-kind of Zhaar Desert: 7/12 down (516 XP).'
+  s8: 'Reckon with the wolf-kind of Zhaar Desert: 8/12 down (516 XP).'
+  s9: 'Reckon with the wolf-kind of Zhaar Desert: 9/12 down (516 XP).'
+  s10: 'Reckon with the wolf-kind of Zhaar Desert: 10/12 down (516 XP).'
+  s11: 'Reckon with the wolf-kind of Zhaar Desert: 11/12 down (516 XP).'
+  done: The wolf-kind of Zhaar Desert are settled with. The caravan roads breathe
+    easier.

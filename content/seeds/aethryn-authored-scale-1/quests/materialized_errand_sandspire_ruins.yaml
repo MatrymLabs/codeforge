@@ -1,0 +1,15 @@
+id: errand_sandspire_ruins
+name: 'Errand: Twilight Grove'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: twilight_grove
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Twilight Grove (1200 XP).
+  done: You bring word to Twilight Grove. It is gratefully received.

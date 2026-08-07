@@ -1,0 +1,28 @@
+id: story_voidspire
+name: The Tale of Voidspire
+start: afoot
+reward_xp: 7500
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: netharions_throne
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: netharions_throne_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: voidspire
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of The Voidscar: Netharion''s Throne festers, and Voidspire lives
+    in its shadow.'
+  at_heart: You stand within Netharion's Throne. Its deep terror waits below. Fell
+    it.
+  homeward: The terror of Netharion's Throne is slain. Bear word to Voidspire (7500
+    XP).
+  done: '*** Voidspire breathes free. The Voidscar will remember you. ***'

@@ -1,0 +1,15 @@
+id: errand_highreach
+name: 'Errand: The Shattered Isles'
+start: posted
+reward_xp: 2250
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: shattered_isles
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to The Shattered Isles (2250 XP).
+  done: You set the token at The Shattered Isles. The stone answers.

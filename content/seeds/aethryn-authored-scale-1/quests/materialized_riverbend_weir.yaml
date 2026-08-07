@@ -1,0 +1,29 @@
+id: riverbend_weir
+name: The Jammed Weir
+start: offered
+reward_xp: 44
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: riverbend_ferryhouse
+- state: accepted
+  event: take
+  to: recovered
+  on_take: riverbend_lock_lever
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:making:20
+  on_enter: riverbend_ferryhouse
+terminal:
+- done
+labels:
+  offered: Somewhere in Riverbend, a ferrymaster needs a strong arm. Step into the
+    ferry-house and hear him out.
+  accepted: Ferrymaster Coll needs the weir freed. Go DOWN into the flooded vault
+    and take the old lock-lever (mind the pale thing nesting there).
+  recovered: Carry the lock-lever back UP to Ferrymaster Coll in the ferry-house.
+  done: '*** The lever throws, the seized gears grind back into their track, and the
+    weir eases the river off the landing. The ferry can run again, and Riverbend crosses
+    dry. Coll waves you across for free. ***'

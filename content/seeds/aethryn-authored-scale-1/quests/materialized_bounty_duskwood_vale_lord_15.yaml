@@ -1,0 +1,16 @@
+id: bounty_duskwood_vale_lord_15
+name: 'Bounty: Grathka the Timber Tyrant'
+start: posted
+reward_xp: 372
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: duskwood_vale_lord_15
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathka the Timber Tyrant (level 31). Fell it for 372
+    XP.
+  collected: 'Bounty collected: Grathka the Timber Tyrant is felled. Well hunted.'

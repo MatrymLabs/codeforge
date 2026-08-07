@@ -1,0 +1,36 @@
+id: forage_underground_caeloria_underworks_ember_shard_5
+name: 'A small Requisition: ember shard of The Starfall Sublevels'
+start: s0
+reward_xp: 80
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_caeloria_underworks|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_caeloria_underworks|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_caeloria_underworks|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_caeloria_underworks|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_caeloria_underworks|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in The Starfall Sublevels: 0/5 (80 XP).'
+  s1: 'Bring in ember shard in The Starfall Sublevels: 1/5 (80 XP).'
+  s2: 'Bring in ember shard in The Starfall Sublevels: 2/5 (80 XP).'
+  s3: 'Bring in ember shard in The Starfall Sublevels: 3/5 (80 XP).'
+  s4: 'Bring in ember shard in The Starfall Sublevels: 4/5 (80 XP).'
+  done: You have requisitioned ember shard enough for The Starfall Sublevels. The
+    village makers will put it to use.

@@ -1,0 +1,20 @@
+id: delivery_moltenhold
+name: 'Delivery: Moltenhold to Ancient Overlook'
+start: posted
+reward_xp: 1440
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_moltenhold
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: ancient_overlook
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Moltenhold is bound for Ancient Overlook. Take it up (1440 XP).
+  carrying: Carry the parcel to Ancient Overlook.
+  done: The parcel is delivered to Ancient Overlook. The road keeps its promise.

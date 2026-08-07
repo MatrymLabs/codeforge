@@ -1,0 +1,15 @@
+id: bounty_eldryn_forest_lord_13
+name: 'Bounty: Vexen the Thorn Herald'
+start: posted
+reward_xp: 696
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: eldryn_forest_lord_13
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Vexen the Thorn Herald (level 58). Fell it for 696 XP.
+  collected: 'Bounty collected: Vexen the Thorn Herald is felled. Well hunted.'

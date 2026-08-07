@@ -1,0 +1,111 @@
+id: cull_underground_skyward_spires_caves_undead_20
+name: 'A great Cull: the undead-kind of The Broken Skychain Hollows'
+start: s0
+reward_xp: 1600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_caves|undead
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_caves|undead
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_caves|undead
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_caves|undead
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_caves|undead
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_skyward_spires_caves|undead
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_skyward_spires_caves|undead
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_skyward_spires_caves|undead
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_skyward_spires_caves|undead
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_skyward_spires_caves|undead
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_skyward_spires_caves|undead
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_skyward_spires_caves|undead
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_skyward_spires_caves|undead
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_skyward_spires_caves|undead
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_skyward_spires_caves|undead
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_skyward_spires_caves|undead
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_skyward_spires_caves|undead
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_skyward_spires_caves|undead
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_skyward_spires_caves|undead
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_caves|undead
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the undead-kind of The Broken Skychain Hollows: 0/20 down (1600 XP).'
+  s1: 'Cull the undead-kind of The Broken Skychain Hollows: 1/20 down (1600 XP).'
+  s2: 'Cull the undead-kind of The Broken Skychain Hollows: 2/20 down (1600 XP).'
+  s3: 'Cull the undead-kind of The Broken Skychain Hollows: 3/20 down (1600 XP).'
+  s4: 'Cull the undead-kind of The Broken Skychain Hollows: 4/20 down (1600 XP).'
+  s5: 'Cull the undead-kind of The Broken Skychain Hollows: 5/20 down (1600 XP).'
+  s6: 'Cull the undead-kind of The Broken Skychain Hollows: 6/20 down (1600 XP).'
+  s7: 'Cull the undead-kind of The Broken Skychain Hollows: 7/20 down (1600 XP).'
+  s8: 'Cull the undead-kind of The Broken Skychain Hollows: 8/20 down (1600 XP).'
+  s9: 'Cull the undead-kind of The Broken Skychain Hollows: 9/20 down (1600 XP).'
+  s10: 'Cull the undead-kind of The Broken Skychain Hollows: 10/20 down (1600 XP).'
+  s11: 'Cull the undead-kind of The Broken Skychain Hollows: 11/20 down (1600 XP).'
+  s12: 'Cull the undead-kind of The Broken Skychain Hollows: 12/20 down (1600 XP).'
+  s13: 'Cull the undead-kind of The Broken Skychain Hollows: 13/20 down (1600 XP).'
+  s14: 'Cull the undead-kind of The Broken Skychain Hollows: 14/20 down (1600 XP).'
+  s15: 'Cull the undead-kind of The Broken Skychain Hollows: 15/20 down (1600 XP).'
+  s16: 'Cull the undead-kind of The Broken Skychain Hollows: 16/20 down (1600 XP).'
+  s17: 'Cull the undead-kind of The Broken Skychain Hollows: 17/20 down (1600 XP).'
+  s18: 'Cull the undead-kind of The Broken Skychain Hollows: 18/20 down (1600 XP).'
+  s19: 'Cull the undead-kind of The Broken Skychain Hollows: 19/20 down (1600 XP).'
+  done: The undead-kind of The Broken Skychain Hollows are thinned. The region breathes
+    easier.

@@ -1,0 +1,16 @@
+id: bounty_stonehelm_sentinel
+name: 'Bounty: an oath-bound sentinel'
+start: posted
+reward_xp: 1776
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: stonehelm_sentinel
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on an oath-bound sentinel (level 148). Fell it for 1776
+    XP.
+  collected: 'Bounty collected: an oath-bound sentinel is felled. Well hunted.'

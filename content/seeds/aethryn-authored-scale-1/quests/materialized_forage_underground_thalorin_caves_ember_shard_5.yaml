@@ -1,0 +1,36 @@
+id: forage_underground_thalorin_caves_ember_shard_5
+name: 'A small Collection: ember shard of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 165
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_caves|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_thalorin_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect ember shard in Thalorin''s Moor Mines: 0/5 (165 XP).'
+  s1: 'Collect ember shard in Thalorin''s Moor Mines: 1/5 (165 XP).'
+  s2: 'Collect ember shard in Thalorin''s Moor Mines: 2/5 (165 XP).'
+  s3: 'Collect ember shard in Thalorin''s Moor Mines: 3/5 (165 XP).'
+  s4: 'Collect ember shard in Thalorin''s Moor Mines: 4/5 (165 XP).'
+  done: You have brought in ember shard enough for Thalorin's Moor Mines. The region's
+    makers will put it to use.

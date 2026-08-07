@@ -1,0 +1,47 @@
+id: cull_underground_the_deepreach_underworks_scarab_6
+name: 'A small Warrant: the scarab-kind of The Crystal Labyrinth Approach'
+start: s0
+reward_xp: 516
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_deepreach_underworks|scarab
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_deepreach_underworks|scarab
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_deepreach_underworks|scarab
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_deepreach_underworks|scarab
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_deepreach_underworks|scarab
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_the_deepreach_underworks|scarab
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 0/6
+    down (516 XP).'
+  s1: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 1/6
+    down (516 XP).'
+  s2: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 2/6
+    down (516 XP).'
+  s3: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 3/6
+    down (516 XP).'
+  s4: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 4/6
+    down (516 XP).'
+  s5: 'Answer the warrant on the scarab-kind of The Crystal Labyrinth Approach: 5/6
+    down (516 XP).'
+  done: The scarab-kind of The Crystal Labyrinth Approach are answered for. The ash-tracks
+    are a shade safer.

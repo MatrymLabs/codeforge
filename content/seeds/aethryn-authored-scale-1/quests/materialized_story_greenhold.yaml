@@ -1,0 +1,28 @@
+id: story_greenhold
+name: The Tale of Greenhold
+start: afoot
+reward_xp: 750
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_sunken_barrow
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_sunken_barrow_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: greenhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Veridia: The Sunken Barrow festers, and Greenhold lives in its
+    shadow.'
+  at_heart: You stand within The Sunken Barrow. Its deep terror waits below. Fell
+    it.
+  homeward: The terror of The Sunken Barrow is slain. Bear word to Greenhold (750
+    XP).
+  done: '*** Greenhold breathes free. Veridia will remember you. ***'

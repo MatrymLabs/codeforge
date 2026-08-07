@@ -43,6 +43,11 @@ SEEDS_ROOT = Path(os.environ.get("CODEFORGE_SEEDS_ROOT", str(_default_seeds_root
 DEFAULT_SEED = "first-forge"
 SEED_NAME = os.environ.get("FORGE_SEED", DEFAULT_SEED)
 SEED_DIR = SEEDS_ROOT / SEED_NAME
+_authoring_snapshot = os.environ.get("FORGE_AUTHORING_SNAPSHOT", "").strip()
+if _authoring_snapshot:
+    SEED_DIR = Path(_authoring_snapshot).expanduser().resolve()
+    SEED_NAME = SEED_DIR.name
+PURE_AUTHORING = bool(_authoring_snapshot)
 
 
 def available_seeds() -> list[str]:
@@ -102,6 +107,35 @@ class Room(TypedDict):
     # "wayshrine" restores a share of HP/MP). Renews on a long cooldown (kernel.world.shrine).
     # Absent = no shrine here.
     shrine: NotRequired[str]
+    # Editorial metadata carried by imported room batches. The renderer does not require these,
+    # but authoring tools and clients can use them to group rooms by function and local vocabulary.
+    room_type: NotRequired[str]
+    tags: NotRequired[list[str]]
+    # Aethryn room-presentation fields are optional for legacy seed rooms and required for
+    # compiler-produced batches that declare presentation_version.
+    presentation_version: NotRequired[str]
+    area_name: NotRequired[str]
+    primary_purpose: NotRequired[list[str]]
+    short_description: NotRequired[str]
+    long_description: NotRequired[str]
+    points_of_interest: NotRequired[list[dict[str, Any]]]
+    conditions: NotRequired[list[dict[str, Any]]]
+    prose_status: NotRequired[str]
+    prose_source: NotRequired[str]
+    canon_status: NotRequired[str]
+    parent_region: NotRequired[str]
+    parent_zone: NotRequired[str]
+    source_design_ids: NotRequired[list[str]]
+    generation_seed: NotRequired[int]
+    generator_name: NotRequired[str]
+    generator_version: NotRequired[str]
+    provenance: NotRequired[dict[str, Any]]
+    content_digest: NotRequired[str]
+    occupant_refs: NotRequired[list[str]]
+    object_refs: NotRequired[list[str]]
+    population_refs: NotRequired[list[str]]
+    crowd_refs: NotRequired[list[str]]
+    ambient_evidence_refs: NotRequired[list[str]]
 
 
 class Item(TypedDict):
@@ -150,6 +184,47 @@ class Item(TypedDict):
     # appear in. Absent = every season. Read against the world's climate at reset time
     # (kernel.world.zones._spawn_wanderers), so a spring bloom or winter relic only shows in season.
     seasons: NotRequired[list[str]]
+    # Optional rich Aethryn projection fields.  They remain prototype metadata; instance facts are
+    # attached by kernel.world.items.create_instance and persisted separately.
+    material_ids: NotRequired[list[str]]
+    family_id: NotRequired[str]
+    category: NotRequired[str]
+    short_description: NotRequired[str]
+    ground_description: NotRequired[str]
+    examine_description: NotRequired[str]
+    equipped_description: NotRequired[str]
+    damaged_description: NotRequired[str]
+    broken_description: NotRequired[str]
+    use_feedback: NotRequired[str]
+    repair_feedback: NotRequired[str]
+    crafting_feedback: NotRequired[str]
+    consumption_feedback: NotRequired[str]
+    salvage_feedback: NotRequired[str]
+    maker_tradition: NotRequired[str]
+    source_regions: NotRequired[list[str]]
+    ownership_default: NotRequired[str]
+    weight: NotRequired[float]
+    stackable: NotRequired[bool]
+    stack_limit: NotRequired[int]
+    value: NotRequired[int]
+    level_band: NotRequired[list[int]]
+    quality_profile: NotRequired[str]
+    durability_profile: NotRequired[str]
+    repair_profile: NotRequired[str]
+    salvage_profile: NotRequired[str]
+    merchant_eligible: NotRequired[bool]
+    loot_eligible: NotRequired[bool]
+    unique: NotRequired[bool]
+    provenance: NotRequired[dict[str, Any]]
+    owner: NotRequired[str]
+    quantity: NotRequired[int]
+    condition: NotRequired[str]
+    charges: NotRequired[int]
+    quality: NotRequired[str]
+    maker: NotRequired[str]
+    custody: NotRequired[str]
+    stolen: NotRequired[bool]
+    instance_provenance: NotRequired[dict[str, Any]]
 
 
 class Npc(TypedDict):
@@ -429,6 +504,9 @@ class Zone(TypedDict):
     level_min: NotRequired[int]  # recommended minimum level (>= 1)
     level_max: NotRequired[int]  # recommended maximum level (>= level_min, <= 300)
     biome: NotRequired[str]  # primary biome (e.g. "temperate-coast", "glacier", "volcanic")
+    template: NotRequired[str]  # authored/materialized area family
+    canon_status: NotRequired[str]  # canon tier carried by a materialized area
+    provenance: NotRequired[dict[str, Any]]  # generation/authorship audit trail
 
 
 class SeedError(Exception):
@@ -1079,12 +1157,15 @@ def load_quest(path: Path) -> QuestSpec | None:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise SeedError(f"quest file must be a mapping: {path}")
-    for key in ("id", "start", "steps"):
+    for key in ("id",):
         if key not in data:
             raise SeedError(f"{path}: quest needs '{key}'")
-    steps = data["steps"]
-    if not isinstance(steps, list) or not steps:
-        raise SeedError(f"{path}: quest 'steps' must be a non-empty list")
+    if "start" not in data and "start_state" not in data:
+        raise SeedError(f"{path}: quest needs 'start' or 'start_state'")
+    steps = data.get("steps", [])
+    transitions = data.get("transitions", [])
+    if not isinstance(steps, list) or (not steps and not isinstance(transitions, list)):
+        raise SeedError(f"{path}: quest 'steps' or 'transitions' must be a list")
     clean_steps: list[QuestStep] = []
     for raw in steps:
         if not isinstance(raw, dict) or not all(k in raw for k in ("state", "event", "to")):
@@ -1114,15 +1195,45 @@ def load_quest(path: Path) -> QuestSpec | None:
     labels = data.get("labels", {})
     if not isinstance(terminal, list) or not isinstance(labels, dict):
         raise SeedError(f"{path}: 'terminal' must be a list and 'labels' a mapping")
-    return QuestSpec(
+    result = QuestSpec(
         id=str(data["id"]),
         name=str(data.get("name", _phrase(str(data["id"])).title())),
-        start=str(data["start"]),
+        start=str(data.get("start", data.get("start_state"))),
         reward_xp=reward,
         steps=clean_steps,
-        terminal=[str(t) for t in terminal],
+        terminal=[str(t.get("id")) if isinstance(t, dict) else str(t) for t in terminal],
         labels={str(k): str(v) for k, v in labels.items()},
     )
+    # Extended quest records are carried through the legacy loader unchanged.  The workflow
+    # adapter consumes these optional fields, while old save records still see the same id/state
+    # names and reward_xp.  This is an adapter, not a second loader or state machine.
+    for key in (
+        "display_name",
+        "canon_status",
+        "quest_type",
+        "scope",
+        "region",
+        "zone",
+        "pressure_id",
+        "start_state",
+        "terminal_states",
+        "states",
+        "transitions",
+        "objectives",
+        "triggers",
+        "failures",
+        "rewards",
+        "consequences",
+        "prose",
+        "source_design_ids",
+        "provenance",
+        "generation_seed",
+        "generator_version",
+        "repeatability",
+    ):
+        if key in data:
+            result[key] = data[key]  # type: ignore[literal-required]
+    return result
 
 
 def load_doors(path: Path) -> dict[str, Door]:
@@ -1526,3 +1637,14 @@ def _attach_zone_metadata(label: str, merged: dict[str, Any], zone: Zone) -> Non
         if not isinstance(biome, str) or not biome.strip():
             raise SeedError(f"zone '{label}': 'biome' must be a non-empty string.")
         zone["biome"] = biome
+    for key in ("template", "canon_status"):
+        value = merged.get(key)
+        if value is not None:
+            if not isinstance(value, str) or not value.strip():
+                raise SeedError(f"zone '{label}': '{key}' must be a non-empty string.")
+            zone[key] = value  # type: ignore[literal-required]
+    provenance = merged.get("provenance")
+    if provenance is not None:
+        if not isinstance(provenance, dict):
+            raise SeedError(f"zone '{label}': 'provenance' must be a mapping.")
+        zone["provenance"] = dict(provenance)

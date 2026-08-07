@@ -1,0 +1,36 @@
+id: forage_underground_shattered_isles_underworks_ember_shard_5
+name: 'A small Gleaning: ember shard of The Blackreef Gateworks'
+start: s0
+reward_xp: 295
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_shattered_isles_underworks|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_shattered_isles_underworks|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_shattered_isles_underworks|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_shattered_isles_underworks|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_shattered_isles_underworks|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean ember shard in The Blackreef Gateworks: 0/5 (295 XP).'
+  s1: 'Glean ember shard in The Blackreef Gateworks: 1/5 (295 XP).'
+  s2: 'Glean ember shard in The Blackreef Gateworks: 2/5 (295 XP).'
+  s3: 'Glean ember shard in The Blackreef Gateworks: 3/5 (295 XP).'
+  s4: 'Glean ember shard in The Blackreef Gateworks: 4/5 (295 XP).'
+  done: You have gleaned ember shard enough for The Blackreef Gateworks. The harbour
+    makers are glad of it.

@@ -1,0 +1,61 @@
+id: forage_underground_eldryn_forest_underworks_fernshade_10
+name: 'A standing Draw: fernshade of The Rotwood Root-Chambers'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_eldryn_forest_underworks|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw fernshade in The Rotwood Root-Chambers: 0/10 (210 XP).'
+  s1: 'Draw fernshade in The Rotwood Root-Chambers: 1/10 (210 XP).'
+  s2: 'Draw fernshade in The Rotwood Root-Chambers: 2/10 (210 XP).'
+  s3: 'Draw fernshade in The Rotwood Root-Chambers: 3/10 (210 XP).'
+  s4: 'Draw fernshade in The Rotwood Root-Chambers: 4/10 (210 XP).'
+  s5: 'Draw fernshade in The Rotwood Root-Chambers: 5/10 (210 XP).'
+  s6: 'Draw fernshade in The Rotwood Root-Chambers: 6/10 (210 XP).'
+  s7: 'Draw fernshade in The Rotwood Root-Chambers: 7/10 (210 XP).'
+  s8: 'Draw fernshade in The Rotwood Root-Chambers: 8/10 (210 XP).'
+  s9: 'Draw fernshade in The Rotwood Root-Chambers: 9/10 (210 XP).'
+  done: You have drawn fernshade enough for The Rotwood Root-Chambers. The wood's
+    craftfolk have what they need.

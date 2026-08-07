@@ -1,0 +1,28 @@
+id: wildgrowth_root
+name: The Deep Tally
+start: offered
+reward_xp: 70
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: wildgrowth_lodge
+- state: accepted
+  event: take
+  to: recovered
+  on_take: wildgrowth_tally_stone
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:gathering:25
+  on_enter: wildgrowth_lodge
+terminal:
+- done
+labels:
+  offered: In Wildgrowth, the forest compact needs a steady hand. Step into the Wardens'
+    Lodge and hear the warden.
+  accepted: Descend into the root deep and free the compact's tally-stone from the
+    roots (mind the spore-hound).
+  recovered: Carry the tally-stone back UP to Warden Sela in the lodge.
+  done: '*** The tally-stone is home, and the pact with the wood holds another year.
+    The forest-folk will remember it. ***'

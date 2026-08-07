@@ -1,0 +1,36 @@
+id: forage_underground_skyward_spires_underworks_hollow_ingot_5
+name: 'A small Gleaning: hollow ingot of The Spire Nexus Foundations'
+start: s0
+reward_xp: 320
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_skyward_spires_underworks|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_skyward_spires_underworks|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_skyward_spires_underworks|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_skyward_spires_underworks|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_skyward_spires_underworks|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean hollow ingot in The Spire Nexus Foundations: 0/5 (320 XP).'
+  s1: 'Glean hollow ingot in The Spire Nexus Foundations: 1/5 (320 XP).'
+  s2: 'Glean hollow ingot in The Spire Nexus Foundations: 2/5 (320 XP).'
+  s3: 'Glean hollow ingot in The Spire Nexus Foundations: 3/5 (320 XP).'
+  s4: 'Glean hollow ingot in The Spire Nexus Foundations: 4/5 (320 XP).'
+  done: You have gleaned hollow ingot enough for The Spire Nexus Foundations. The
+    region's makers will put it to use.

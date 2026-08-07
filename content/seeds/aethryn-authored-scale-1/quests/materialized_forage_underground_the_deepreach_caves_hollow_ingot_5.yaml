@@ -1,0 +1,36 @@
+id: forage_underground_the_deepreach_caves_hollow_ingot_5
+name: 'A small Requisition: hollow ingot of Deepreach Memory Grottos'
+start: s0
+reward_xp: 275
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_deepreach_caves|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_deepreach_caves|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_deepreach_caves|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_deepreach_caves|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_the_deepreach_caves|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in hollow ingot in Deepreach Memory Grottos: 0/5 (275 XP).'
+  s1: 'Bring in hollow ingot in Deepreach Memory Grottos: 1/5 (275 XP).'
+  s2: 'Bring in hollow ingot in Deepreach Memory Grottos: 2/5 (275 XP).'
+  s3: 'Bring in hollow ingot in Deepreach Memory Grottos: 3/5 (275 XP).'
+  s4: 'Bring in hollow ingot in Deepreach Memory Grottos: 4/5 (275 XP).'
+  done: You have requisitioned hollow ingot enough for Deepreach Memory Grottos. The
+    forge-crews can feed the fires now.

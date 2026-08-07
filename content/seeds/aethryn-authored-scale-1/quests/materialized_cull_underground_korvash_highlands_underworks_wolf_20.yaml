@@ -1,0 +1,111 @@
+id: cull_underground_korvash_highlands_underworks_wolf_20
+name: 'A great Thinning: the wolf-kind of The Measured Throne Below'
+start: s0
+reward_xp: 1380
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_underworks|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the wolf-kind of The Measured Throne Below: 0/20 down (1380 XP).'
+  s1: 'Thin out the wolf-kind of The Measured Throne Below: 1/20 down (1380 XP).'
+  s2: 'Thin out the wolf-kind of The Measured Throne Below: 2/20 down (1380 XP).'
+  s3: 'Thin out the wolf-kind of The Measured Throne Below: 3/20 down (1380 XP).'
+  s4: 'Thin out the wolf-kind of The Measured Throne Below: 4/20 down (1380 XP).'
+  s5: 'Thin out the wolf-kind of The Measured Throne Below: 5/20 down (1380 XP).'
+  s6: 'Thin out the wolf-kind of The Measured Throne Below: 6/20 down (1380 XP).'
+  s7: 'Thin out the wolf-kind of The Measured Throne Below: 7/20 down (1380 XP).'
+  s8: 'Thin out the wolf-kind of The Measured Throne Below: 8/20 down (1380 XP).'
+  s9: 'Thin out the wolf-kind of The Measured Throne Below: 9/20 down (1380 XP).'
+  s10: 'Thin out the wolf-kind of The Measured Throne Below: 10/20 down (1380 XP).'
+  s11: 'Thin out the wolf-kind of The Measured Throne Below: 11/20 down (1380 XP).'
+  s12: 'Thin out the wolf-kind of The Measured Throne Below: 12/20 down (1380 XP).'
+  s13: 'Thin out the wolf-kind of The Measured Throne Below: 13/20 down (1380 XP).'
+  s14: 'Thin out the wolf-kind of The Measured Throne Below: 14/20 down (1380 XP).'
+  s15: 'Thin out the wolf-kind of The Measured Throne Below: 15/20 down (1380 XP).'
+  s16: 'Thin out the wolf-kind of The Measured Throne Below: 16/20 down (1380 XP).'
+  s17: 'Thin out the wolf-kind of The Measured Throne Below: 17/20 down (1380 XP).'
+  s18: 'Thin out the wolf-kind of The Measured Throne Below: 18/20 down (1380 XP).'
+  s19: 'Thin out the wolf-kind of The Measured Throne Below: 19/20 down (1380 XP).'
+  done: The wolf-kind of The Measured Throne Below are thinned back. The region breathes
+    easier.

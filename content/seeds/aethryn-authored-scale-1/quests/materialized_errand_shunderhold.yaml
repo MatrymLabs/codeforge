@@ -1,0 +1,15 @@
+id: errand_shunderhold
+name: 'Errand: The Scorched Gate'
+start: posted
+reward_xp: 2250
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_scorched_gate
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Scorched Gate (2250 XP).
+  done: You reach The Scorched Gate and mark the way. Well scouted.

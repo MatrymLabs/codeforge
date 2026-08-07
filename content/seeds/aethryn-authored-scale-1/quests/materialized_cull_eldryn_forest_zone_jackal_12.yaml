@@ -1,0 +1,71 @@
+id: cull_eldryn_forest_zone_jackal_12
+name: 'A standing Bounty: the jackal-kind of Eldryn Forest'
+start: s0
+reward_xp: 312
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: eldryn_forest_zone|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: eldryn_forest_zone|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: eldryn_forest_zone|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: eldryn_forest_zone|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: eldryn_forest_zone|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: eldryn_forest_zone|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: eldryn_forest_zone|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: eldryn_forest_zone|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: eldryn_forest_zone|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: eldryn_forest_zone|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: eldryn_forest_zone|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: eldryn_forest_zone|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the jackal-kind of Eldryn Forest: 0/12 down (312 XP).'
+  s1: 'Bring down the jackal-kind of Eldryn Forest: 1/12 down (312 XP).'
+  s2: 'Bring down the jackal-kind of Eldryn Forest: 2/12 down (312 XP).'
+  s3: 'Bring down the jackal-kind of Eldryn Forest: 3/12 down (312 XP).'
+  s4: 'Bring down the jackal-kind of Eldryn Forest: 4/12 down (312 XP).'
+  s5: 'Bring down the jackal-kind of Eldryn Forest: 5/12 down (312 XP).'
+  s6: 'Bring down the jackal-kind of Eldryn Forest: 6/12 down (312 XP).'
+  s7: 'Bring down the jackal-kind of Eldryn Forest: 7/12 down (312 XP).'
+  s8: 'Bring down the jackal-kind of Eldryn Forest: 8/12 down (312 XP).'
+  s9: 'Bring down the jackal-kind of Eldryn Forest: 9/12 down (312 XP).'
+  s10: 'Bring down the jackal-kind of Eldryn Forest: 10/12 down (312 XP).'
+  s11: 'Bring down the jackal-kind of Eldryn Forest: 11/12 down (312 XP).'
+  done: The jackal-kind of Eldryn Forest are hunted down. The wardens of the wood
+    send their thanks.

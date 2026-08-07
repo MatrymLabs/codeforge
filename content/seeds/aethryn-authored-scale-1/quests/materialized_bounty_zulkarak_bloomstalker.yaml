@@ -1,0 +1,15 @@
+id: bounty_zulkarak_bloomstalker
+name: 'Bounty: a wild bloom-stalker'
+start: posted
+reward_xp: 1092
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zulkarak_bloomstalker
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a wild bloom-stalker (level 91). Fell it for 1092 XP.
+  collected: 'Bounty collected: a wild bloom-stalker is felled. Well hunted.'

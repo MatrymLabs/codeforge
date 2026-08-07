@@ -1,0 +1,20 @@
+id: ravenwatch
+display_name: Ravenwatch
+canon_status: AUTHORED_LOCAL
+parent_region: duskwood_vale
+parent_zone: duskwood_vale
+source_design_ids: [duskwood_vale, authored_ravenwatch]
+population_band: small timber settlement and warden outpost
+government: local wardens, chapel custom, and negotiated forester obligation
+food_sources: [forest game, root crops, gathered fernshade, trade from Veridia]
+water_source: spring-fed cisterns and rain collection
+fuel_source: managed deadfall and charcoal pits
+labor_base: [forestry, warding, hunting, gathering, carpentry, lantern maintenance]
+waste_handling: ash pits and marked forest compost clearings
+economy: timber, fernshade, lantern oil, warden services, and safe route guidance
+architecture: close timber houses, grey chapel stone, covered walkways, and raven roosts
+culture: memory-keeping, practical mourning, and careful boundary marking
+services: [market, chapel, warden reports, lantern repair, route guidance]
+external_connections: [duskwood_vale, the_black_hollow]
+active_conflicts: [black_hollow_lantern_shortage, displaced_forest_creatures, disputed_hollow_access]
+daily_rhythm: dawn boundary walk, midday timber and gathering work, dusk lantern check, night watch

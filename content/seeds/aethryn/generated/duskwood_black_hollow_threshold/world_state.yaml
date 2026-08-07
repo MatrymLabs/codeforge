@@ -1,0 +1,20 @@
+duskwood.hollow_lantern:
+  initial_value: dim
+  reversible_values:
+  - dim
+  - lit
+  visible_projection: The warden lantern burns {value} along the return markers.
+  persistence_scope: character_and_world_package
+  room_id: duskwood_hollow_warden_camp
+  actions:
+  - command: maintain
+    target: lantern
+    aliases:
+    - warden lantern
+    - return light
+    required_item: duskwood_lantern_salver
+    from: dim
+    to: lit
+    success_message: You work the fernshade salve into the wick and the warden lantern
+      catches along the return markers.
+    already_message: The warden lantern is already lit along the return markers.

@@ -1,0 +1,36 @@
+id: forage_duskwood_vale_zone_ember_shard_5
+name: 'A small Gleaning: ember shard of Duskwood Vale'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: duskwood_vale_zone|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: duskwood_vale_zone|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: duskwood_vale_zone|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: duskwood_vale_zone|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: duskwood_vale_zone|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean ember shard in Duskwood Vale: 0/5 (60 XP).'
+  s1: 'Glean ember shard in Duskwood Vale: 1/5 (60 XP).'
+  s2: 'Glean ember shard in Duskwood Vale: 2/5 (60 XP).'
+  s3: 'Glean ember shard in Duskwood Vale: 3/5 (60 XP).'
+  s4: 'Glean ember shard in Duskwood Vale: 4/5 (60 XP).'
+  done: You have gleaned ember shard enough for Duskwood Vale. The wood's craftfolk
+    have what they need.

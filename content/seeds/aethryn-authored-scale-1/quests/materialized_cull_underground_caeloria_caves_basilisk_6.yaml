@@ -1,0 +1,47 @@
+id: cull_underground_caeloria_caves_basilisk_6
+name: 'A small Reckoning: the basilisk-kind of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 108
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_caves|basilisk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_caves|basilisk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_caves|basilisk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_caves|basilisk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_caves|basilisk
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_caeloria_caves|basilisk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 0/6 down (108
+    XP).'
+  s1: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 1/6 down (108
+    XP).'
+  s2: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 2/6 down (108
+    XP).'
+  s3: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 3/6 down (108
+    XP).'
+  s4: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 4/6 down (108
+    XP).'
+  s5: 'Reckon with the basilisk-kind of Caeloria''s Sealed Aqueducts: 5/6 down (108
+    XP).'
+  done: The basilisk-kind of Caeloria's Sealed Aqueducts are settled with. The farm-roads
+    are the safer for it.

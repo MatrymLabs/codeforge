@@ -1,0 +1,29 @@
+id: sunmeadow_channel
+name: The Stopped Sun
+start: offered
+reward_xp: 44
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: sunmeadow_channelhouse
+- state: accepted
+  event: take
+  to: recovered
+  on_take: sunmeadow_sun_key
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:making:20
+  on_enter: sunmeadow_green
+terminal:
+- done
+labels:
+  offered: Grange-Elder Aldwin says the old sun-channel under the green has stopped.
+    Go DOWN the shaft into the channel-house and see the stilled gnomon-wheel.
+  accepted: The sun-wheel is seized. Draw the old-world sun-key from the gnomon so
+    the channel can run again.
+  recovered: Carry the sun-key back UP to Grange-Elder Aldwin on the green.
+  done: '*** The sun-key turns, the gnomon-wheel catches the light and begins to creep,
+    and deep below the ducts wake and run. The high pasture will stay green, and Aldwin
+    marks the day in the grange-record with a hand that shakes only a little. ***'

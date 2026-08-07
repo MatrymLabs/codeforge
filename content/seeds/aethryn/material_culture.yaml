@@ -1,0 +1,896 @@
+# Aethryn material-culture catalog.  This is an authored local extension of the existing item
+# registry; it does not replace items.yaml, recipes.yaml, professions.yaml, sets.yaml, or NPC shops.
+# Runtime uses the same prototype/clone, recipe, profession, shop, loot, equipment, and persistence
+# paths.  All records are local to the Veridia proof slice and remain AUTHORED_LOCAL or GENERATED_LOCAL.
+
+metadata:
+  packet_id: veridia_greenhold_living_slice
+  parent_region: veridia
+  parent_zone: veridia_zone
+  canon_status: AUTHORED_LOCAL
+  generation_seed: 41017
+  generator_name: aethryn_material_culture
+  generator_version: 1.0.0
+  source_design_ids: [veridia, greenhold, veridia_greenhold_economy, veridia_greenhold_ecology]
+  source_paths: [content/seeds/aethryn/material_culture.yaml, content/seeds/aethryn/authored/greenhold.yaml]
+  provenance_note: restrained Veridia material lifecycle; no unresolved global history is answered
+
+materials:
+  veridian_iron_ore:
+    display_name: Veridian iron ore
+    material_class: metal
+    source_regions: [veridia]
+    source_habitats: [managed field margins, shallow road cuts]
+    gathering_method: hand sorting and shallow pick work
+    gathering_profession: mining
+    refinement_chain: [veridian_iron_ore, wrought_veridian_iron, veridian_iron_fitting]
+    common_uses: [farm tools, buckler rims, spear heads, repair plates]
+    scarcity: common
+    weight_factor: 1.2
+    durability_factor: 1.0
+    value_factor: 1.0
+    repair_compatibility: [veridian_iron, wrought_iron]
+    cultural_interpretation: Greenhold treats the ore as a dependable local resource, not a relic.
+  alder_wood:
+    display_name: Alder wood
+    material_class: wood
+    source_regions: [veridia]
+    source_habitats: [hedgerows, managed ditch banks]
+    gathering_method: coppicing and seasonal trimming
+    gathering_profession: woodcutting
+    refinement_chain: [alder_wood, alder_haft]
+    common_uses: [tool handles, spear shafts, market frames, household shelves]
+    scarcity: common
+    weight_factor: 0.7
+    durability_factor: 0.85
+    value_factor: 0.8
+    repair_compatibility: [alder_wood]
+    cultural_interpretation: Alder is cut on a rotation because the ditch banks need living roots.
+  meadowfoil:
+    display_name: Meadowfoil
+    material_class: herb
+    source_regions: [veridia]
+    source_habitats: [damp field margins, hedgerows]
+    gathering_method: hand gathering after rain
+    gathering_profession: herbalism
+    refinement_chain: [meadowfoil, meadowfoil_reagent]
+    common_uses: [dye, poultice, traveler tonic]
+    scarcity: seasonal_surplus
+    weight_factor: 0.1
+    durability_factor: 1.0
+    value_factor: 1.1
+    repair_compatibility: []
+    cultural_interpretation: Meadowfoil is a crop-side plant whose dye value helps a small farm survive a poor barley season.
+  boar_hide:
+    display_name: Field-boar hide
+    material_class: hide
+    source_regions: [veridia]
+    source_habitats: [damaged barley margins, hedgerows]
+    gathering_method: field dressing after a lawful cull
+    gathering_profession: leatherworking
+    refinement_chain: [boar_hide, cured_boar_leather]
+    common_uses: [work gloves, tool sheaths, travel straps]
+    scarcity: pressure_limited
+    weight_factor: 0.9
+    durability_factor: 1.05
+    value_factor: 1.2
+    repair_compatibility: [boar_leather]
+    cultural_interpretation: The hide is a byproduct of protecting crops, not a reason to breed danger.
+  rabbit_fur:
+    display_name: Field-rabbit fur
+    material_class: fur
+    source_regions: [veridia]
+    source_habitats: [damp meadow margins, uncut hedgerows]
+    gathering_method: careful field dressing after a lawful harvest
+    gathering_profession: leatherworking
+    refinement_chain: [rabbit_fur, felted_rabbit_fur]
+    common_uses: [lining, winter caps, small tool wraps]
+    scarcity: population_limited
+    weight_factor: 0.3
+    durability_factor: 0.7
+    value_factor: 1.0
+    repair_compatibility: [rabbit_fur]
+    cultural_interpretation: Rabbit fur is a minor household byproduct; the living prey population is more valuable than its pelt.
+  riverstone:
+    display_name: Riverstone
+    material_class: stone
+    source_regions: [veridia]
+    source_habitats: [river margins, old road foundations]
+    gathering_method: quarrying loose stone from maintained banks
+    gathering_profession: masonry
+    refinement_chain: [riverstone, riverstone_tile]
+    common_uses: [household weights, paving, buckler bosses, sluice repairs]
+    scarcity: common
+    weight_factor: 1.5
+    durability_factor: 1.1
+    value_factor: 0.7
+    repair_compatibility: [riverstone]
+    cultural_interpretation: Riverstone is useful precisely because Greenhold keeps it ordinary and replaceable.
+  imported_tideglass:
+    display_name: Imported tideglass
+    material_class: glass
+    source_regions: [shattered_isles]
+    source_habitats: [maritime cargo route]
+    gathering_method: imported by cart-and-river caravan
+    gathering_profession: trade
+    refinement_chain: [imported_tideglass]
+    common_uses: [sealed vials, gauge lenses, merchant display goods]
+    scarcity: imported
+    weight_factor: 0.4
+    durability_factor: 0.65
+    value_factor: 2.0
+    repair_compatibility: [imported_tideglass]
+    cultural_interpretation: Greenhold buys small quantities from a documented southern caravan route.
+
+families:
+  ingredient:
+    display_name: Ingredient
+    category: ingredient
+    allowed_material_classes: [metal, wood, stone, herb, hide, fur, leather, glass, textile, plant_fiber, food, liquid]
+    allowed_slots: []
+    construction_methods: [gathered, imported, prepared]
+    regional_traditions: [local gathering, local household work]
+    role: material or provision used by another system
+    tradeoffs: [not equipment]
+  component:
+    display_name: Component
+    category: ingredient
+    allowed_material_classes: [metal, wood, stone, herb, hide, leather, glass, textile, plant_fiber]
+    allowed_slots: []
+    construction_methods: [forged, shaped, seasoned, prepared]
+    regional_traditions: [local workshop]
+    role: intermediate part in a reachable production chain
+    tradeoffs: [requires a finished recipe]
+  key_item:
+    display_name: Key item
+    category: key_item
+    allowed_material_classes: [metal, wood, leather, hide, textile]
+    allowed_slots: []
+    construction_methods: [cut, filed, bound]
+    regional_traditions: [local repair bench]
+    role: bounded local access or quest custody
+    tradeoffs: [not ordinary stock]
+  arming_sword:
+    display_name: Arming sword
+    category: weapon
+    allowed_material_classes: [metal, wood, leather, hide]
+    allowed_slots: [weapon]
+    construction_methods: [forge, grind, haft]
+    regional_traditions: [greenhold_market_smithing]
+    supported_damage_types: [slash, thrust]
+    handedness: one
+    role: reliable militia sidearm
+    tradeoffs: [moderate reach, moderate cadence, no special property]
+  field_spear:
+    display_name: Field spear
+    category: weapon
+    allowed_material_classes: [metal, wood, leather, hide]
+    allowed_slots: [weapon]
+    construction_methods: [forge, haft, bind]
+    regional_traditions: [greenhold_roadwardens]
+    supported_damage_types: [thrust]
+    handedness: two
+    role: road control and formation reach
+    tradeoffs: [long reach, slower cadence, two-handed]
+  roadwarden_bow:
+    display_name: Road-warden bow
+    category: weapon
+    allowed_material_classes: [wood, leather, hide, plant_fiber]
+    allowed_slots: [weapon]
+    construction_methods: [season, tiller, string]
+    regional_traditions: [greenhold_roadwardens]
+    supported_damage_types: [pierce]
+    handedness: two
+    role: watch patrol ranged pressure
+    tradeoffs: [ranged reach, ammunition required, light damage]
+  farm_tool:
+    display_name: Farm tool
+    category: tool
+    allowed_material_classes: [metal, wood]
+    allowed_slots: []
+    construction_methods: [forge, haft]
+    regional_traditions: [greenhold_fieldcraft]
+    role: field and ditch maintenance
+    tradeoffs: [wears during work, improvised weapon only]
+  light_workwear:
+    display_name: Light workwear
+    category: armor
+    allowed_material_classes: [hide, leather, textile, wood]
+    allowed_slots: [body]
+    construction_methods: [cut, stitch, rivet]
+    regional_traditions: [greenhold_fieldcraft]
+    role: protection that does not slow field labor
+    tradeoffs: [low coverage, low movement cost]
+  buckler:
+    display_name: Buckler
+    category: shield
+    allowed_material_classes: [metal, wood, stone, leather, hide]
+    allowed_slots: [arm]
+    construction_methods: [forge, carve, rivet]
+    regional_traditions: [greenhold_roadwardens]
+    role: compact protection for carts and gates
+    tradeoffs: [occupies arm slot, limited coverage]
+  traveler_cloak:
+    display_name: Traveler cloak
+    category: wearable
+    allowed_material_classes: [textile, hide, leather]
+    allowed_slots: [body]
+    construction_methods: [cut, stitch, wax]
+    regional_traditions: [greenhold_market_tailoring]
+    role: weather protection and visible road identity
+    tradeoffs: [no combat defense, durable against rain only]
+
+qualities:
+  standard:
+    display_name: standard
+    durability_factor: 1.0
+    value_factor: 1.0
+    modifier_budget: 0
+    salvage_factor: 1.0
+    source_causes: [ordinary material, competent workshop]
+  sound:
+    display_name: sound
+    durability_factor: 1.05
+    value_factor: 1.1
+    modifier_budget: 1
+    salvage_factor: 1.0
+    source_causes: [seasoned material, careful inspection]
+
+prototypes:
+  veridian_iron_ore:
+    display_name: a chunk of Veridian iron ore
+    keywords: [ore, iron, veridia, material]
+    family_id: ingredient
+    category: ingredient
+    short_description: A palm-sized ore chunk gathered from the shallow road cuts outside Greenhold.
+    ground_description: Dark iron-flecked stone rests among the field grit, marked for sorting rather than display.
+    examine_description: The ore carries red-brown iron through a grey matrix. It is heavy for its size and still rough from shallow picking; the Greenhold smiths sort pieces like this before smelting.
+    primary_use: smelting into wrought Veridian iron
+    materials: [veridian_iron_ore]
+    construction_method: gathered
+    maker_tradition: Greenhold field prospecting
+    source_regions: [veridia]
+    ownership_default: unowned
+    weight: 1.2
+    stackable: true
+    stack_limit: 20
+    value: 2
+    rarity: common
+    merchant_eligible: true
+    loot_eligible: false
+    recipe_ids: [smelt_veridian_iron]
+  wrought_veridian_iron:
+    display_name: a wrought Veridian iron bar
+    keywords: [bar, iron, wrought, material]
+    family_id: component
+    category: ingredient
+    short_description: A narrow bar of locally smelted iron, ready for a smith's bench.
+    ground_description: A warm-grey iron bar lies beside the work surface, its scale hammered flat.
+    examine_description: The bar is not elegant, but its grain is even and its edges are squared for measuring. Greenhold smiths value this consistency because farm repairs must be repeatable.
+    primary_use: forging fittings, spearheads, and sword blanks
+    materials: [veridian_iron_ore]
+    construction_method: smelted and hammered
+    maker_tradition: Greenhold market smithing
+    source_regions: [veridia]
+    ownership_default: communal_use
+    weight: 1.0
+    stackable: true
+    stack_limit: 20
+    value: 7
+    rarity: common
+    merchant_eligible: true
+    recipe_ids: [forge_veridian_fitting, forge_greenhold_field_spear, forge_greenhold_arming_sword]
+  alder_haft:
+    display_name: a seasoned alder haft
+    keywords: [haft, alder, handle, wood, material]
+    family_id: component
+    category: ingredient
+    short_description: A straight alder handle seasoned above a Greenhold cookfire.
+    ground_description: A pale alder haft leans against the bench, shaved smooth where a hand will grip it.
+    examine_description: The wood is light, springy, and sealed at the grain. Its maker left enough flex for a field tool without making it soft at the socket.
+    primary_use: fitting tools, spears, and bucklers
+    materials: [alder_wood]
+    construction_method: coppiced, seasoned, and shaved
+    maker_tradition: Greenhold fieldcraft
+    source_regions: [veridia]
+    ownership_default: communal_use
+    weight: 0.5
+    stackable: true
+    stack_limit: 10
+    value: 4
+    rarity: common
+    merchant_eligible: true
+    recipe_ids: [shape_alder_haft]
+  veridian_iron_fitting:
+    display_name: a Veridian iron fitting
+    keywords: [fitting, bracket, iron, component]
+    family_id: component
+    category: ingredient
+    short_description: A drilled iron fitting used to bind local wood and metal into working goods.
+    ground_description: A small iron bracket sits in a tray of filings, its holes aligned for a repairer's rivets.
+    examine_description: "The fitting is deliberately plain: two drilled holes, one squared shoulder, and a face filed smooth enough not to split a leather strap. It is the sort of part a settlement keeps making because carts keep breaking."
+    primary_use: assembling tools and bucklers
+    materials: [veridian_iron_ore, alder_wood]
+    construction_method: forged and drilled
+    maker_tradition: Greenhold repair benches
+    source_regions: [veridia]
+    ownership_default: communal_use
+    weight: 0.3
+    stackable: true
+    stack_limit: 20
+    value: 10
+    rarity: common
+    merchant_eligible: true
+    recipe_ids: [assemble_riverstone_buckler]
+  greenhold_field_spear:
+    display_name: a Greenhold field spear
+    keywords: [spear, field, militia, greenhold, weapon]
+    family_id: field_spear
+    category: weapon
+    short_description: A two-handed spear issued to field guards and road wardens.
+    ground_description: A long alder shaft carries a leaf-shaped iron head, kept ready beside the gate rather than scattered as loot.
+    examine_description: The spearhead is narrow enough for a boar charge and broad enough to discourage a rush through a cartway. The shaft is alder, the socket is iron, and a blue-green cord identifies Greenhold road service. Its reach buys space at the cost of a slower recovery.
+    equipped_description: The long alder shaft extends the wielder's line while the Greenhold cord marks a tool of organized road work.
+    damaged_description: The iron head is still true, but the alder shaft has begun to splinter near the socket.
+    broken_description: The split haft can no longer hold a thrust; the head is salvageable but the spear is unsafe.
+    use_feedback: You set the Greenhold spear and hold the cartway at reach.
+    repair_feedback: A new haft and two rivets return the spear to service.
+    crafting_feedback: The smith seats the iron head into a seasoned alder haft.
+    salvage_feedback: The head can be recovered as iron; the split haft returns as kindling.
+    materials: [wrought_veridian_iron, alder_haft, boar_hide]
+    construction_method: forged, hafted, and leather-bound
+    maker_tradition: Greenhold road wardens
+    source_regions: [veridia]
+    ownership_default: military_issue
+    weight: 3.0
+    stackable: false
+    value: 38
+    rarity: common
+    level_band: [1, 8]
+    quality_profile: standard
+    durability_profile: field_gear
+    repair_profile: field_spear_repair
+    salvage_profile: field_spear_salvage
+    merchant_eligible: true
+    loot_eligible: true
+    equipment_slot: weapon
+    weapon:
+      handedness: two
+      damage_type: thrust
+      reach: 2
+      cadence: 2
+      accuracy: 1
+      base_damage_budget: 7
+      operating_cost: 0
+      special_properties: []
+  greenhold_arming_sword:
+    display_name: a Greenhold arming sword
+    keywords: [sword, arming, militia, greenhold, weapon]
+    family_id: arming_sword
+    category: weapon
+    short_description: A balanced one-handed sword made for militia patrols and caravan escorts.
+    ground_description: A service sword rests in a plain leather scabbard, its brass-free iron fittings chosen for easy replacement.
+    examine_description: The blade is a practical length for a gate or wagon lane. Its iron core is locally worked, its grip is alder wrapped in boar leather, and its modest balance favors a quick second cut over a single heavy blow.
+    equipped_description: The Greenhold sword sits close to the body, ready for a second cut in a crowded lane.
+    damaged_description: The edge has rolled in two places and the leather grip is loosening.
+    broken_description: The blade is too warped for safe work, though its iron can still return to the smith.
+    use_feedback: You draw the Greenhold sword for close work.
+    repair_feedback: The smith straightens the edge and rebinds the grip.
+    crafting_feedback: The blade is ground, balanced, and fitted to an alder grip.
+    salvage_feedback: The blade yields iron; the grip yields a small leather strap.
+    materials: [wrought_veridian_iron, alder_haft, boar_hide]
+    construction_method: forged, ground, and grip-bound
+    maker_tradition: Greenhold market smithing
+    source_regions: [veridia]
+    ownership_default: merchant_stock
+    weight: 1.8
+    stackable: false
+    value: 42
+    rarity: common
+    level_band: [1, 8]
+    durability_profile: field_gear
+    repair_profile: sword_repair
+    salvage_profile: sword_salvage
+    merchant_eligible: true
+    loot_eligible: true
+    equipment_slot: weapon
+    weapon:
+      handedness: one
+      damage_type: slash
+      reach: 1
+      cadence: 1
+      accuracy: 2
+      base_damage_budget: 7
+      operating_cost: 0
+      special_properties: []
+  greenhold_roadwarden_bow:
+    display_name: a Greenhold road-warden bow
+    keywords: [bow, roadwarden, patrol, greenhold, weapon]
+    family_id: roadwarden_bow
+    category: weapon
+    short_description: A short patrol bow built from seasoned alder and a replaceable cord.
+    ground_description: A compact bow lies in a waxed cloth sleeve, kept dry for the road watch.
+    examine_description: The bow is short enough for a hedge path and strong enough for a warning shot. Its alder limbs are backed with cured hide; the design accepts local repairs, but it expects arrows and space rather than close combat.
+    equipped_description: The road-warden bow stays light in the hand, made for hedges and watch platforms.
+    damaged_description: One limb has lost its spring and the bowstring is dry-cracked.
+    broken_description: The limb is split; it cannot be drawn until a bowyer replaces the backing.
+    use_feedback: You nock an arrow and keep the road at distance.
+    repair_feedback: The bowyer replaces the cord and backs the tired limb.
+    crafting_feedback: The alder limbs are tillered until both bends agree.
+    salvage_feedback: The bow yields a usable cord and a short alder stave.
+    materials: [alder_haft, boar_hide]
+    construction_method: seasoned, tillered, and hide-backed
+    maker_tradition: Greenhold road wardens
+    source_regions: [veridia]
+    ownership_default: military_issue
+    weight: 1.0
+    stackable: false
+    value: 35
+    rarity: common
+    level_band: [1, 8]
+    durability_profile: field_gear
+    repair_profile: bow_repair
+    salvage_profile: bow_salvage
+    merchant_eligible: false
+    loot_eligible: true
+    equipment_slot: weapon
+    weapon:
+      handedness: two
+      damage_type: pierce
+      reach: 3
+      cadence: 2
+      accuracy: 1
+      base_damage_budget: 5
+      operating_cost: 1
+      special_properties: [requires_ammunition]
+  riverstone_buckler:
+    display_name: a riverstone buckler
+    keywords: [buckler, shield, riverstone, guard]
+    family_id: buckler
+    category: shield
+    short_description: A compact wood-and-riverstone shield for carts, gates, and narrow lanes.
+    ground_description: A round buckler shows a riverstone boss and a fresh leather hand strap.
+    examine_description: The buckler's alder core is faced with a thin riverstone disk and bound in boar hide. It turns a glancing blow without making a gate worker carry a wall, though it occupies the arm that might otherwise hold a tool.
+    equipped_description: The riverstone boss sits forward as a small, dependable line of cover.
+    damaged_description: The leather rim is scuffed and one stone-facing rivet has loosened.
+    broken_description: The core has split around the boss; it is no longer safe to trust in a charge.
+    use_feedback: You bring the riverstone buckler up and close the gap.
+    repair_feedback: The rim is re-laced and the boss riveted back into the alder core.
+    crafting_feedback: The smith seats riverstone into an alder disk and binds the rim.
+    salvage_feedback: The stone boss and iron fittings survive the broken core.
+    materials: [alder_haft, riverstone, boar_hide, veridian_iron_fitting]
+    construction_method: carved, faced, riveted, and bound
+    maker_tradition: Greenhold road wardens
+    source_regions: [veridia]
+    ownership_default: militia_issue
+    weight: 1.9
+    stackable: false
+    value: 30
+    rarity: common
+    level_band: [1, 8]
+    durability_profile: field_gear
+    repair_profile: buckler_repair
+    salvage_profile: buckler_salvage
+    merchant_eligible: true
+    loot_eligible: true
+    equipment_slot: arm
+    armor:
+      defense_budget: 3
+      magic_defense_budget: 0
+      evasion: 0
+      movement_cost: 0
+      coverage: forearm
+    shield:
+      block_budget: 2
+      offensive_use: false
+  ditchwarden_jacket:
+    display_name: a ditchwarden's work jacket
+    keywords: [jacket, workwear, ditchwarden, armor]
+    family_id: light_workwear
+    category: armor
+    short_description: Waxed field cloth reinforced at the elbows for wet maintenance work.
+    ground_description: A waxed jacket hangs from a peg beside the ditch map, its elbows dark from honest use.
+    examine_description: The jacket is layered linen with cured boar-leather elbow patches and a strip of alder toggles. It sheds rain and protects against tools, but it is not plate and does not pretend to be.
+    equipped_description: The waxed jacket carries the smell of rain, leather, and the ditch bank.
+    damaged_description: Water has lifted the wax at one shoulder and the elbow patch is thinning.
+    broken_description: The seams have opened enough that it no longer keeps rain or tools out.
+    use_feedback: You settle into the jacket's familiar work fit.
+    repair_feedback: Fresh wax and a leather patch restore the jacket's weatherproof seams.
+    crafting_feedback: The tailor cuts field cloth around a reinforced work pattern.
+    salvage_feedback: The leather patches and sound cloth are separated for reuse.
+    materials: [boar_hide, alder_wood]
+    construction_method: cut, stitched, and waxed
+    maker_tradition: Greenhold fieldcraft
+    source_regions: [veridia]
+    ownership_default: civic_property
+    weight: 1.2
+    stackable: false
+    value: 24
+    rarity: common
+    level_band: [1, 8]
+    durability_profile: field_gear
+    repair_profile: jacket_repair
+    salvage_profile: jacket_salvage
+    merchant_eligible: true
+    loot_eligible: false
+    equipment_slot: body
+    armor:
+      defense_budget: 2
+      magic_defense_budget: 0
+      evasion: 1
+      movement_cost: 0
+      coverage: torso_and_elbows
+  field_hoe:
+    display_name: a Greenhold field hoe
+    keywords: [hoe, tool, field, farm]
+    family_id: farm_tool
+    category: tool
+    short_description: A replaceable iron hoe head fitted to a seasoned alder handle.
+    ground_description: A field hoe rests blade-down by the furrow, too useful to be mistaken for loose loot.
+    examine_description: The hoe's iron head is narrow for working between barley rows and its alder handle is long enough to save a farmer's back. The socket is a standard Greenhold size, so a farm can repair it without waiting for a traveling maker.
+    damaged_description: The edge is blunted and the handle has a shallow split.
+    broken_description: The head has pulled from the socket; field work must stop until it is fitted again.
+    use_feedback: You turn the soil with the field hoe.
+    repair_feedback: A new fitting and a trimmed haft return the hoe to the furrow.
+    crafting_feedback: The iron head is socketed onto a seasoned alder handle.
+    salvage_feedback: The head is retained for reforging and the haft becomes kindling.
+    materials: [wrought_veridian_iron, alder_haft]
+    construction_method: forged and hafted
+    maker_tradition: Greenhold fieldcraft
+    source_regions: [veridia]
+    ownership_default: household_property
+    weight: 2.2
+    stackable: false
+    value: 16
+    rarity: common
+    durability_profile: field_tool
+    repair_profile: tool_repair
+    salvage_profile: tool_salvage
+    merchant_eligible: true
+    loot_eligible: false
+    tool:
+      gathering_profession: farming
+      uses: [tilling, ditch_edge_work]
+  ditch_spade:
+    display_name: a Greenhold ditch spade
+    keywords: [spade, tool, ditch, maintenance]
+    family_id: farm_tool
+    category: tool
+    short_description: A narrow iron spade made for clearing Greenhold drainage channels.
+    ground_description: A ditch spade leans against the channel wall, its narrow blade still wet with field mud.
+    examine_description: The spade is narrower than a field shovel so it can work between a ditch wall and its living alder roots. Its iron blade and replaceable haft are standard civic maintenance stock.
+    damaged_description: Mud has packed the socket and the blade edge is rolled.
+    broken_description: The haft has split below the socket; the channel must wait for a replacement.
+    use_feedback: You clear a measured strip of silt with the ditch spade.
+    repair_feedback: The socket is cleaned, the edge dressed, and the haft replaced.
+    crafting_feedback: The narrow iron blade is fitted to a seasoned alder haft.
+    salvage_feedback: The iron blade is kept for reforging and the broken haft is discarded.
+    materials: [wrought_veridian_iron, alder_haft]
+    construction_method: forged, narrowed, and hafted
+    maker_tradition: Greenhold ditchwarden tradition
+    source_regions: [veridia]
+    ownership_default: civic_property
+    weight: 2.0
+    stackable: false
+    value: 18
+    rarity: common
+    durability_profile: field_tool
+    repair_profile: tool_repair
+    salvage_profile: tool_salvage
+    merchant_eligible: true
+    loot_eligible: false
+    tool:
+      gathering_profession: farming
+      uses: [ditch_clearing, drainage_maintenance]
+  repair_oil:
+    display_name: a small flask of repair oil
+    keywords: [oil, repair, flask, maintenance]
+    family_id: ingredient
+    category: consumable
+    short_description: Linseed oil and fine ash for keeping hinges, leather, and tool sockets moving.
+    ground_description: A stoppered glass flask of dark oil sits beside the repair ledger.
+    examine_description: The oil is ordinary linseed cut with a little ash and stored in imported tideglass. It is not a potion; it keeps a socket from seizing and makes a small amount of maintenance possible on the road.
+    primary_use: field maintenance of tools and light gear
+    materials: [meadowfoil, imported_tideglass]
+    construction_method: pressed, mixed, and bottled
+    maker_tradition: Greenhold repair benches
+    source_regions: [veridia, shattered_isles]
+    ownership_default: merchant_stock
+    weight: 0.2
+    stackable: true
+    stack_limit: 10
+    value: 9
+    rarity: common
+    merchant_eligible: true
+    loot_eligible: false
+    consumption_feedback: You work a few drops into the stiff joint and the tool moves again.
+    consumable: {charges: 1, effect: {maintenance: 1}}
+  meadowfoil_tonic:
+    display_name: a meadowfoil travel tonic
+    keywords: [tonic, meadowfoil, travel, healing]
+    family_id: ingredient
+    category: consumable
+    short_description: A mild local tonic for tired travelers and field hands.
+    ground_description: A corked ceramic vial holds a green-gold meadowfoil tonic.
+    examine_description: Meadowfoil leaves are steeped, strained, and sealed with a little honey. The tonic restores a small amount of vigor, tastes bitter, and is common enough to be a household preparation rather than a miracle.
+    primary_use: restore a small amount of health while traveling
+    materials: [meadowfoil, imported_tideglass]
+    construction_method: gathered, steeped, and bottled
+    maker_tradition: Greenhold field kitchens
+    source_regions: [veridia, shattered_isles]
+    ownership_default: merchant_stock
+    weight: 0.2
+    stackable: true
+    stack_limit: 10
+    value: 12
+    rarity: common
+    merchant_eligible: true
+    loot_eligible: true
+    consumption_feedback: The bitter meadowfoil warms your throat and steadies your hands.
+    consumable: {charges: 1, effect: {hp: 18}}
+  barley_ration:
+    display_name: a wrapped barley ration
+    keywords: [barley, ration, food, traveler]
+    family_id: ingredient
+    category: household_good
+    short_description: A compact barley cake wrapped for a day on the road.
+    ground_description: A cloth-wrapped barley ration rests beside the cart manifest.
+    examine_description: The ration is coarse barley meal baked with salt and dried apple. It is inexpensive, durable for a short journey, and tied to Greenhold's fields rather than imported adventure fare.
+    primary_use: ordinary travel food
+    materials: [meadowfoil]
+    construction_method: milled, baked, and wrapped
+    maker_tradition: Greenhold household baking
+    source_regions: [veridia]
+    ownership_default: merchant_stock
+    weight: 0.3
+    stackable: true
+    stack_limit: 20
+    value: 3
+    rarity: common
+    merchant_eligible: true
+    loot_eligible: false
+  imported_tideglass_vial:
+    display_name: an imported tideglass vial
+    keywords: [vial, tideglass, imported, trade]
+    family_id: ingredient
+    category: trade_good
+    short_description: A clear small vial carried inland from the southern maritime route.
+    ground_description: A thin clear vial catches the market light, packed in straw against the cart road.
+    examine_description: The glass is faintly blue at the lip and too consistent for Greenhold's small kilns. Trader Pell records it as southern cargo; the route, not mystery, explains its price.
+    primary_use: container for oils, tonics, and gauge samples
+    materials: [imported_tideglass]
+    construction_method: imported cargo
+    maker_tradition: southern maritime glassmakers
+    source_regions: [shattered_isles]
+    ownership_default: merchant_stock
+    weight: 0.1
+    stackable: true
+    stack_limit: 20
+    value: 8
+    rarity: uncommon
+    merchant_eligible: true
+    loot_eligible: false
+    trade_good: {source: maritime caravan, route_id: greenhold_southern_caravan}
+  greenhold_valve_key:
+    display_name: the Greenhold valve key
+    keywords: [key, valve, cistern, greenhold]
+    family_id: key_item
+    category: key_item
+    short_description: A locally cut maintenance key held for the Greenhold cistern work.
+    ground_description: A short iron key with a blue-green cord lies in the repairer's locked tool chest.
+    examine_description: The key is a recent Greenhold copy made to fit the seized service assembly. Its teeth are practical, its cord marks civic custody, and its purpose is limited to the local cistern work.
+    primary_use: operate the Greenhold sluice maintenance action
+    materials: [wrought_veridian_iron, boar_hide]
+    construction_method: cut, filed, and cord-bound
+    maker_tradition: Greenhold repair benches
+    source_regions: [veridia]
+    ownership_default: civic_property
+    weight: 0.1
+    stackable: false
+    value: 20
+    rarity: uncommon
+    merchant_eligible: false
+    loot_eligible: false
+    unique: true
+    key_item: {unlocks: [greenhold.cistern_status], unique: true}
+  greenhold_roadwarden_cloak:
+    display_name: a Greenhold road-warden cloak
+    keywords: [cloak, roadwarden, traveler, greenhold]
+    family_id: traveler_cloak
+    category: wearable
+    short_description: A weathered blue-grey cloak that identifies a road warden without making a uniform of them.
+    ground_description: A blue-grey cloak hangs from a peg, its hem repaired for wet roads.
+    examine_description: The cloak is waxed field cloth with a narrow greenhold braid at the shoulder. It keeps rain off a traveler and signals who may ask after a road, but it carries no secret authority beyond the local watch.
+    equipped_description: The road-warden braid sits at your shoulder and sheds the first rain.
+    damaged_description: The wax has thinned along the hem and one braid stitch has pulled loose.
+    broken_description: The cloak is torn through the shoulder and no longer reads as serviceable road gear.
+    use_feedback: You draw the road-warden cloak around your shoulders.
+    repair_feedback: The tailor rewaxes the hem and restores the shoulder braid.
+    crafting_feedback: The field cloth is cut, waxed, and marked with the local braid.
+    salvage_feedback: The braid and sound cloth are saved for another cloak.
+    materials: [boar_hide]
+    construction_method: cut, waxed, and braided
+    maker_tradition: Greenhold market tailoring
+    source_regions: [veridia]
+    ownership_default: military_issue
+    weight: 0.8
+    stackable: false
+    value: 18
+    rarity: common
+    durability_profile: field_gear
+    repair_profile: cloak_repair
+    salvage_profile: cloak_salvage
+    merchant_eligible: false
+    loot_eligible: true
+    equipment_slot: body
+    armor: {defense_budget: 1, magic_defense_budget: 0, evasion: 1, movement_cost: 0, coverage: shoulders}
+
+durability_profiles:
+  field_gear: {maximum: 100, wear_rate: 1, damaged_threshold: 50, broken_threshold: 0}
+  field_tool: {maximum: 80, wear_rate: 2, damaged_threshold: 35, broken_threshold: 0}
+
+repair_profiles:
+  field_spear_repair: {materials: {wrought_veridian_iron: 1, alder_haft: 1}, profession: smithing, station: repair_bench, cost_per_point: 1, feedback: Replace the haft and rivet the head before returning the spear to the road.}
+  sword_repair: {materials: {wrought_veridian_iron: 1, boar_hide: 1}, profession: smithing, station: repair_bench, cost_per_point: 1, feedback: Straighten the edge and rebind the grip.}
+  bow_repair: {materials: {alder_haft: 1, boar_hide: 1}, profession: woodcraft, station: repair_bench, cost_per_point: 1, feedback: Replace the cord and back the tired limb.}
+  buckler_repair: {materials: {veridian_iron_fitting: 1, boar_hide: 1}, profession: smithing, station: repair_bench, cost_per_point: 1, feedback: Re-lace the rim and seat the boss.}
+  jacket_repair: {materials: {boar_hide: 1}, profession: tailoring, station: repair_bench, cost_per_point: 1, feedback: Wax the seam and patch the elbow.}
+  tool_repair: {materials: {wrought_veridian_iron: 1, alder_haft: 1}, profession: smithing, station: repair_bench, cost_per_point: 1, feedback: Fit the head and trim the haft.}
+  cloak_repair: {materials: {boar_hide: 1}, profession: tailoring, station: repair_bench, cost_per_point: 1, feedback: Rewax the hem and restore the braid.}
+
+salvage_profiles:
+  field_spear_salvage: {source_items: [greenhold_field_spear], profession: smithing, outputs: {wrought_veridian_iron: [1, 1], alder_haft: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  sword_salvage: {source_items: [greenhold_arming_sword], profession: smithing, outputs: {wrought_veridian_iron: [1, 1], boar_hide: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  bow_salvage: {source_items: [greenhold_roadwarden_bow], profession: woodcraft, outputs: {alder_haft: [1, 1], boar_hide: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  buckler_salvage: {source_items: [riverstone_buckler], profession: smithing, outputs: {riverstone: [1, 1], veridian_iron_fitting: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  jacket_salvage: {source_items: [ditchwarden_jacket], profession: tailoring, outputs: {boar_hide: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  tool_salvage: {source_items: [field_hoe, ditch_spade], profession: smithing, outputs: {wrought_veridian_iron: [1, 1], alder_haft: [0, 1]}, quality_loss: 1, prohibited_items: []}
+  cloak_salvage: {source_items: [greenhold_roadwarden_cloak], profession: tailoring, outputs: {boar_hide: [0, 1]}, quality_loss: 1, prohibited_items: []}
+
+recipes:
+  shape_alder_haft: {display_name: shape an alder haft, output_prototype: alder_haft, requirements: [{prototype_id: alder_wood, quantity: 2}], profession: woodcraft, station: woodworking_bench, time_cost: 3, output_quantity: 1, quality_logic: material_and_skill}
+  smelt_veridian_iron: {display_name: smelt Veridian iron, output_prototype: wrought_veridian_iron, requirements: [{prototype_id: veridian_iron_ore, quantity: 3}], profession: smithing, station: smelter, time_cost: 5, output_quantity: 1, quality_logic: material_and_skill}
+  forge_veridian_fitting: {display_name: forge a Veridian iron fitting, output_prototype: veridian_iron_fitting, requirements: [{prototype_id: wrought_veridian_iron, quantity: 2}], profession: smithing, station: anvil, time_cost: 4, output_quantity: 1, quality_logic: material_and_skill}
+  forge_greenhold_field_spear: {display_name: forge a Greenhold field spear, output_prototype: greenhold_field_spear, requirements: [{prototype_id: wrought_veridian_iron, quantity: 1}, {prototype_id: alder_haft, quantity: 1}, {prototype_id: boar_hide, quantity: 1}], profession: smithing, station: anvil, time_cost: 8, output_quantity: 1, quality_logic: material_and_skill}
+  forge_greenhold_arming_sword: {display_name: forge a Greenhold arming sword, output_prototype: greenhold_arming_sword, requirements: [{prototype_id: wrought_veridian_iron, quantity: 2}, {prototype_id: alder_haft, quantity: 1}, {prototype_id: boar_hide, quantity: 1}], profession: smithing, station: anvil, time_cost: 10, output_quantity: 1, quality_logic: material_and_skill}
+  forge_ditch_spade: {display_name: forge a Greenhold ditch spade, output_prototype: ditch_spade, requirements: [{prototype_id: wrought_veridian_iron, quantity: 1}, {prototype_id: alder_haft, quantity: 1}], profession: smithing, station: anvil, time_cost: 6, output_quantity: 1, quality_logic: material_and_skill}
+  assemble_riverstone_buckler: {display_name: assemble a riverstone buckler, output_prototype: riverstone_buckler, requirements: [{prototype_id: alder_haft, quantity: 1}, {prototype_id: riverstone, quantity: 1}, {prototype_id: boar_hide, quantity: 1}, {prototype_id: veridian_iron_fitting, quantity: 1}], profession: smithing, station: repair_bench, time_cost: 7, output_quantity: 1, quality_logic: material_and_skill}
+  brew_meadowfoil_tonic: {display_name: brew a meadowfoil travel tonic, output_prototype: meadowfoil_tonic, requirements: [{prototype_id: meadowfoil, quantity: 2}, {prototype_id: imported_tideglass_vial, quantity: 1}], profession: alchemy, station: alchemical_bench, time_cost: 3, output_quantity: 1, quality_logic: material_and_skill}
+
+stations:
+  smelter: {display_name: Greenhold smelter, supported_recipe_families: [component], rooms: [greenhold_store], ownership: civic_property, fuel_requirements: {alder_wood: 1}, availability: working, condition: sound, repair_requirements: {wrought_veridian_iron: 1}, interaction_text: A low charcoal smelter holds enough heat for local iron, not for heroic spectacle.}
+  anvil: {display_name: Greenhold smith anvil, supported_recipe_families: [weapon, shield, tool], rooms: [greenhold_store], ownership: privately_owned, availability: working, condition: sound, repair_requirements: {wrought_veridian_iron: 1}, interaction_text: The anvil is scarred by farm repairs and sized for repeatable work.}
+  repair_bench: {display_name: Greenhold repair bench, supported_recipe_families: [weapon, shield, armor, tool, wearable], rooms: [greenhold_store, veridia_living_waste_yard], ownership: communal_use, availability: working, condition: sound, repair_requirements: {alder_haft: 1}, interaction_text: A low bench keeps replacement parts, oil, cord, and a ledger within reach.}
+  woodworking_bench: {display_name: Alder Farm woodworking bench, supported_recipe_families: [component], rooms: [veridia_living_farmstead], ownership: household_property, availability: working, condition: sound, interaction_text: The bench is scarred by handles and pegs, with a rack for drying alder.}
+  alchemical_bench: {display_name: Greenhold field kitchen bench, supported_recipe_families: [consumable], rooms: [veridia_living_farmstead], ownership: household_property, availability: working, condition: sound, interaction_text: Ceramic cups, strainers, and a tideglass vial rack turn gathered plants into travel provisions.}
+
+merchant_stock:
+  greenhold_field_merchant_stock:
+    merchant_id: greenhold_trader
+    settlement: greenhold_living_settlement
+    shop_type: field_and_travel
+    ordinary_stock:
+      field_hoe: [1, 3]
+      ditch_spade: [1, 2]
+      barley_ration: [4, 12]
+      meadowfoil_tonic: [1, 4]
+      imported_tideglass_vial: [1, 3]
+      wrought_veridian_iron: [1, 3]
+    conditional_stock:
+      greenhold_arming_sword: {condition: militia_surplus, quantity: [0, 1]}
+    restock_interval: 3
+    supply_sources: {field_hoe: local_smith, ditch_spade: local_smith, barley_ration: alder_farmstead, meadowfoil_tonic: alder_farmstead, imported_tideglass_vial: greenhold_southern_caravan, wrought_veridian_iron: greenhold_smithy, greenhold_arming_sword: greenhold_smithy}
+    imported_goods: {imported_tideglass_vial: greenhold_southern_caravan}
+    scarcity_behavior: damaged barley reduces rations and meadowfoil tonics before tools.
+    buy_rules: {barley_ration: 1, meadowfoil_tonic: 6, boar_hide: 5, veridian_iron_ore: 1}
+    sell_rules: {markup: 1.25, labor_charge: true}
+    markup: 1.25
+  greenhold_warden_stock:
+    merchant_id: greenhold_warden_quartermaster
+    settlement: greenhold_living_settlement
+    shop_type: civic_and_militia
+    ordinary_stock:
+      greenhold_field_spear: [1, 2]
+      riverstone_buckler: [1, 2]
+      repair_oil: [2, 6]
+      greenhold_roadwarden_cloak: [0, 1]
+    conditional_stock:
+      greenhold_roadwarden_bow: {condition: road_watch_funded, quantity: [0, 1]}
+    restock_interval: 7
+    supply_sources: {greenhold_field_spear: greenhold_smithy, riverstone_buckler: greenhold_smithy, repair_oil: greenhold_repair_bench, greenhold_roadwarden_cloak: greenhold_tailor, greenhold_roadwarden_bow: greenhold_roadwarden_bowyer}
+    imported_goods: {}
+    scarcity_behavior: militia issue is reduced when road repairs consume the same iron and labor.
+    buy_rules: {boar_hide: 6, broken_field_tool: 2}
+    sell_rules: {markup: 1.15, reputation_required: civic_trust}
+    markup: 1.15
+
+loot_profiles:
+  living_field_boar_loot:
+    source_id: living_field_boar
+    source_class: biological
+    body_class: boar
+    guaranteed: []
+    weighted: {boar_hide: 3, nothing: 7}
+    quantity_ranges: {boar_hide: [1, 1]}
+    rarity: common
+    threat_band: [2, 8]
+    ownership: salvage_rights
+    regional_restrictions: [veridia]
+    production_reason: a field-dressed hide is a byproduct of protecting the barley crop.
+    respawn_behavior: population_recurrence
+    unique_restrictions: []
+  living_hollow_vermin_loot:
+    source_id: living_hollow_vermin
+    source_class: biological
+    body_class: small_mammal
+    guaranteed: []
+    weighted: {boar_hide: 1, nothing: 9}
+    quantity_ranges: {boar_hide: [0, 1]}
+    rarity: common
+    threat_band: [1, 3]
+    ownership: unowned
+    regional_restrictions: [veridia]
+    production_reason: most vermin yield no portable material; occasional usable hide is incidental.
+    respawn_behavior: population_recurrence
+    unique_restrictions: []
+  living_field_rabbit_loot:
+    source_id: living_field_rabbit
+    source_class: biological
+    body_class: rabbit
+    guaranteed: []
+    weighted: {rabbit_fur: 2, nothing: 8}
+    quantity_ranges: {rabbit_fur: [1, 1]}
+    rarity: common
+    threat_band: [1, 2]
+    ownership: salvage_rights
+    regional_restrictions: [veridia]
+    production_reason: a carefully dressed pelt is an occasional household byproduct of lawful small-game harvest.
+    respawn_behavior: population_recurrence
+    unique_restrictions: []
+  greenhold_road_bandit_loot:
+    source_id: greenhold_road_bandit
+    source_class: humanoid
+    body_class: humanoid
+    guaranteed: []
+    weighted: {repair_oil: 2, barley_ration: 3, nothing: 5}
+    quantity_ranges: {repair_oil: [1, 1], barley_ration: [1, 2]}
+    rarity: common
+    threat_band: [3, 10]
+    ownership: stolen
+    regional_restrictions: [veridia]
+    production_reason: road thieves carry used supplies taken from local traffic.
+    respawn_behavior: encounter_reset
+    unique_restrictions: [greenhold_valve_key]
+
+placements:
+  greenhold_workshop_ambient:
+    layer: environmental
+    rooms: [greenhold_store]
+    quantity: [1, 1]
+    ownership: privately_owned
+    portable: false
+    interaction: Examine the bench, anvil, hanging tools, and labeled repair trays.
+  greenhold_farm_goods:
+    layer: ambient_goods
+    rooms: [veridia_living_farmstead]
+    quantity: [3, 6]
+    ownership: household_property
+    portable: false
+    interaction: Search the drying rack or inspect the baskets without taking the working stock.
+  greenhold_travel_supplies:
+    layer: portable
+    rooms: [greenhold]
+    quantity: [1, 2]
+    ownership: merchant_stock
+    portable: true
+    interaction: Buy or examine the provisions; they are not loose public loot.
+
+equipment_sets:
+  greenhold_roadwardens:
+    display_name: Greenhold Road Wardens
+    pieces: [greenhold_field_spear, riverstone_buckler, greenhold_roadwarden_cloak]
+    slots: [weapon, arm, body]
+    bonuses: {DEF: 2}
+    partial_behavior: none
+    tradition: A practical issue set shared by gate crews and road patrols.
+    canon_status: GENERATED_LOCAL

@@ -1,0 +1,36 @@
+id: forage_field_skyward_spires_hollow_ingot_5
+name: 'A small Collection: hollow ingot of The Skyward Spires Wilds'
+start: s0
+reward_xp: 310
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_skyward_spires|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_skyward_spires|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_skyward_spires|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_skyward_spires|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_skyward_spires|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect hollow ingot in The Skyward Spires Wilds: 0/5 (310 XP).'
+  s1: 'Collect hollow ingot in The Skyward Spires Wilds: 1/5 (310 XP).'
+  s2: 'Collect hollow ingot in The Skyward Spires Wilds: 2/5 (310 XP).'
+  s3: 'Collect hollow ingot in The Skyward Spires Wilds: 3/5 (310 XP).'
+  s4: 'Collect hollow ingot in The Skyward Spires Wilds: 4/5 (310 XP).'
+  done: You have brought in hollow ingot enough for The Skyward Spires Wilds. The
+    region's makers will put it to use.

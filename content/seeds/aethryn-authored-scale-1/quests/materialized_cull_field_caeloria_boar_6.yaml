@@ -1,0 +1,41 @@
+id: cull_field_caeloria_boar_6
+name: 'A small Reckoning: the boar-kind of The Caeloria Wilds'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_caeloria|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_caeloria|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_caeloria|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_caeloria|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_caeloria|boar
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_caeloria|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the boar-kind of The Caeloria Wilds: 0/6 down (120 XP).'
+  s1: 'Reckon with the boar-kind of The Caeloria Wilds: 1/6 down (120 XP).'
+  s2: 'Reckon with the boar-kind of The Caeloria Wilds: 2/6 down (120 XP).'
+  s3: 'Reckon with the boar-kind of The Caeloria Wilds: 3/6 down (120 XP).'
+  s4: 'Reckon with the boar-kind of The Caeloria Wilds: 4/6 down (120 XP).'
+  s5: 'Reckon with the boar-kind of The Caeloria Wilds: 5/6 down (120 XP).'
+  done: The boar-kind of The Caeloria Wilds are settled with. The farm-roads are the
+    safer for it.

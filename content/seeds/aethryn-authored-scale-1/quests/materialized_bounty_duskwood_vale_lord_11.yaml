@@ -1,0 +1,15 @@
+id: bounty_duskwood_vale_lord_11
+name: 'Bounty: Kaelaya the Wood Matron'
+start: posted
+reward_xp: 336
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: duskwood_vale_lord_11
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Kaelaya the Wood Matron (level 28). Fell it for 336 XP.
+  collected: 'Bounty collected: Kaelaya the Wood Matron is felled. Well hunted.'

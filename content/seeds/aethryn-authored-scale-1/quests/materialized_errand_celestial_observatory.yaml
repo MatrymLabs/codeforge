@@ -1,0 +1,15 @@
+id: errand_celestial_observatory
+name: 'Errand: Blackreef Citadel'
+start: posted
+reward_xp: 3000
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: blackreef_citadel
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Blackreef Citadel (3000 XP).
+  done: You reach Blackreef Citadel and mark the way. Well scouted.

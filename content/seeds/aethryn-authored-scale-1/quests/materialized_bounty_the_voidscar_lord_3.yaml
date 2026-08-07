@@ -1,0 +1,15 @@
+id: bounty_the_voidscar_lord_3
+name: 'Bounty: Hrothka the Char Maw'
+start: posted
+reward_xp: 3048
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_voidscar_lord_3
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothka the Char Maw (level 254). Fell it for 3048 XP.
+  collected: 'Bounty collected: Hrothka the Char Maw is felled. Well hunted.'

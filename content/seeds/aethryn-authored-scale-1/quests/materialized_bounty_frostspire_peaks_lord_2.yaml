@@ -1,0 +1,15 @@
+id: bounty_frostspire_peaks_lord_2
+name: 'Bounty: Vexar the Rime Matron'
+start: posted
+reward_xp: 732
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: frostspire_peaks_lord_2
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Vexar the Rime Matron (level 61). Fell it for 732 XP.
+  collected: 'Bounty collected: Vexar the Rime Matron is felled. Well hunted.'

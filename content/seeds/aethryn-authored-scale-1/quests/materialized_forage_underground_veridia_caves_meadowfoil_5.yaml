@@ -1,0 +1,36 @@
+id: forage_underground_veridia_caves_meadowfoil_5
+name: 'A small Forage: meadowfoil of Veridia''s River Caves'
+start: s0
+reward_xp: 30
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_veridia_caves|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather meadowfoil in Veridia''s River Caves: 0/5 (30 XP).'
+  s1: 'Gather meadowfoil in Veridia''s River Caves: 1/5 (30 XP).'
+  s2: 'Gather meadowfoil in Veridia''s River Caves: 2/5 (30 XP).'
+  s3: 'Gather meadowfoil in Veridia''s River Caves: 3/5 (30 XP).'
+  s4: 'Gather meadowfoil in Veridia''s River Caves: 4/5 (30 XP).'
+  done: You have gathered meadowfoil enough for Veridia's River Caves. The village
+    makers will put it to use.

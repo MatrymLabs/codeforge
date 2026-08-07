@@ -12,6 +12,7 @@ from typing import cast
 import pytest
 
 from kernel.world.fieldzone import (
+    _REVERSE,
     FieldZone,
     FieldZoneError,
     _gate_cell,
@@ -59,6 +60,20 @@ def test_a_valid_fields_file_loads_with_ids_injected(tmp_path) -> None:
 
 def test_a_missing_fields_file_is_none_not_an_error(tmp_path) -> None:
     assert load_field_configs(tmp_path / "absent.yaml") is None
+
+
+def test_field_scale_grows_area_without_reauthoring_the_manifest(monkeypatch, tmp_path) -> None:
+    p = tmp_path / "fields.yaml"
+    p.write_text(
+        "probe:\n  name: Probe\n  region: Testreach\n  biome: temperate-meadow\n"
+        "  attach: probe_hub\n  attach_dir: west\n  level_min: 1\n  level_max: 30\n"
+        "  width: 20\n  height: 12\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CODEFORGE_WILD_SCALE", "4")
+    config = load_field_configs(p)
+    assert config is not None
+    assert config[0]["width"] == 40 and config[0]["height"] == 24
 
 
 def test_a_non_mapping_fields_file_is_refused(tmp_path) -> None:
@@ -155,3 +170,19 @@ def test_gate_cell_finds_a_free_edge_slot() -> None:
         },
     )
     assert _gate_cell(rooms, "west") == "z_0_0"  # lowest id whose `west` slot is open
+
+
+def test_the_shipped_aethryn_surface_covers_all_canon_regions() -> None:
+    from pathlib import Path
+
+    from kernel.world import canon
+
+    seed_dir = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+    configs = load_field_configs(seed_dir / "fields.yaml")
+    assert configs is not None
+    assert {cfg["region"] for cfg in configs} == {r["name"] for r in canon.regions()}
+    for cfg in configs:
+        field = build_field_zone(cfg, taken=set())
+        assert field.zone["rooms"] == list(field.rooms)
+        assert field.rooms[field.gate]["exits"].get(_REVERSE[cfg["attach_dir"]]) == cfg["attach"]
+        assert field.npcs

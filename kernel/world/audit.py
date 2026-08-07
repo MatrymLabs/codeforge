@@ -111,9 +111,7 @@ def record(actor: str, action: str, detail: str = "", *, ts: str | None = None) 
             encoded = json.dumps(entry, sort_keys=True, separators=(",", ":"))
             with open_archive_session() as session, session.begin():
                 previous = (
-                    session.query(AuditEventRow)
-                    .order_by(AuditEventRow.sequence.desc())
-                    .first()
+                    session.query(AuditEventRow).order_by(AuditEventRow.sequence.desc()).first()
                 )
                 sequence = 0 if previous is None else previous.sequence + 1
                 prior_hash = hashchain.GENESIS if previous is None else previous.content_hash

@@ -1,0 +1,131 @@
+id: cull_shattered_isles_zone_avian_20
+name: 'A great Contract: the avian-kind of The Shattered Isles'
+start: s0
+reward_xp: 1520
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|avian
+- state: s5
+  event: cull
+  to: s6
+  on_cull: shattered_isles_zone|avian
+- state: s6
+  event: cull
+  to: s7
+  on_cull: shattered_isles_zone|avian
+- state: s7
+  event: cull
+  to: s8
+  on_cull: shattered_isles_zone|avian
+- state: s8
+  event: cull
+  to: s9
+  on_cull: shattered_isles_zone|avian
+- state: s9
+  event: cull
+  to: s10
+  on_cull: shattered_isles_zone|avian
+- state: s10
+  event: cull
+  to: s11
+  on_cull: shattered_isles_zone|avian
+- state: s11
+  event: cull
+  to: s12
+  on_cull: shattered_isles_zone|avian
+- state: s12
+  event: cull
+  to: s13
+  on_cull: shattered_isles_zone|avian
+- state: s13
+  event: cull
+  to: s14
+  on_cull: shattered_isles_zone|avian
+- state: s14
+  event: cull
+  to: s15
+  on_cull: shattered_isles_zone|avian
+- state: s15
+  event: cull
+  to: s16
+  on_cull: shattered_isles_zone|avian
+- state: s16
+  event: cull
+  to: s17
+  on_cull: shattered_isles_zone|avian
+- state: s17
+  event: cull
+  to: s18
+  on_cull: shattered_isles_zone|avian
+- state: s18
+  event: cull
+  to: s19
+  on_cull: shattered_isles_zone|avian
+- state: s19
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the avian-kind of The Shattered Isles: 0/20 down (1520
+    XP).'
+  s1: 'Fulfil the contract on the avian-kind of The Shattered Isles: 1/20 down (1520
+    XP).'
+  s2: 'Fulfil the contract on the avian-kind of The Shattered Isles: 2/20 down (1520
+    XP).'
+  s3: 'Fulfil the contract on the avian-kind of The Shattered Isles: 3/20 down (1520
+    XP).'
+  s4: 'Fulfil the contract on the avian-kind of The Shattered Isles: 4/20 down (1520
+    XP).'
+  s5: 'Fulfil the contract on the avian-kind of The Shattered Isles: 5/20 down (1520
+    XP).'
+  s6: 'Fulfil the contract on the avian-kind of The Shattered Isles: 6/20 down (1520
+    XP).'
+  s7: 'Fulfil the contract on the avian-kind of The Shattered Isles: 7/20 down (1520
+    XP).'
+  s8: 'Fulfil the contract on the avian-kind of The Shattered Isles: 8/20 down (1520
+    XP).'
+  s9: 'Fulfil the contract on the avian-kind of The Shattered Isles: 9/20 down (1520
+    XP).'
+  s10: 'Fulfil the contract on the avian-kind of The Shattered Isles: 10/20 down (1520
+    XP).'
+  s11: 'Fulfil the contract on the avian-kind of The Shattered Isles: 11/20 down (1520
+    XP).'
+  s12: 'Fulfil the contract on the avian-kind of The Shattered Isles: 12/20 down (1520
+    XP).'
+  s13: 'Fulfil the contract on the avian-kind of The Shattered Isles: 13/20 down (1520
+    XP).'
+  s14: 'Fulfil the contract on the avian-kind of The Shattered Isles: 14/20 down (1520
+    XP).'
+  s15: 'Fulfil the contract on the avian-kind of The Shattered Isles: 15/20 down (1520
+    XP).'
+  s16: 'Fulfil the contract on the avian-kind of The Shattered Isles: 16/20 down (1520
+    XP).'
+  s17: 'Fulfil the contract on the avian-kind of The Shattered Isles: 17/20 down (1520
+    XP).'
+  s18: 'Fulfil the contract on the avian-kind of The Shattered Isles: 18/20 down (1520
+    XP).'
+  s19: 'Fulfil the contract on the avian-kind of The Shattered Isles: 19/20 down (1520
+    XP).'
+  done: The avian-kind of The Shattered Isles are put down. The tide-roads are the
+    safer for it.

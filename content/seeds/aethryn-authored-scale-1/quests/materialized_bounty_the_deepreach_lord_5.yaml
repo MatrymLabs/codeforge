@@ -1,0 +1,16 @@
+id: bounty_the_deepreach_lord_5
+name: 'Bounty: Voroth the Ash Sovereign'
+start: posted
+reward_xp: 1344
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_deepreach_lord_5
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Voroth the Ash Sovereign (level 112). Fell it for 1344
+    XP.
+  collected: 'Bounty collected: Voroth the Ash Sovereign is felled. Well hunted.'

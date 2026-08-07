@@ -1,0 +1,3341 @@
+AETHRYN — VERIDIA MAXIMUM QUALITY BATCH 02
+250 new room designs
+10 Veridian subzones · 25 rooms each
+
+========================================================================
+GREENHOLD INNER WARDS
+========================================================================
+
+Alder Court
+[Town Street]
+
+You stand on pale riverstone cobbles between timber houses with painted shutters, where a carved public fountain sends a thin stream into a circular basin.
+
+The air carries lamp oil, wool, and rain, and a smith's measured hammering drifts between the roofs. The town wall rises above the houses to the west.
+
+A lampwright's apprentice waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath the sheltering eaves.
+
+Obvious exits: east, south.
+
+------------------------------------------------------------------------
+
+Copper Square
+[Market Lane]
+
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a mosaic of the River Verin winds across the paving.
+
+Children calling across the lane echoes through the district while roasted roots and chimney smoke lingers near the open doorways. The road toward Riverbend begins beyond the southern wards.
+
+A retired watchman sorts a stack of delivery tags.
+A painted notice board stands near the nearest doorway.
+Freshly cut flowers have been arranged beneath a striped awning.
+
+Obvious exits: east, south, west.
+
+------------------------------------------------------------------------
+
+Lantern Walk
+[Civic Square]
+
+A narrow way opens between workshops whose doors stand open to the street. Beneath your feet, well-worn flagstones curves around a shallow channel carries clear water toward the southern drains.
+
+Light filters down in broken bands from the narrow sky above. A line of orchard trees is visible through the northern gap. The smell of sawdust and beeswax settles over the street.
+
+A young cooper counts copper coins into a leather purse.
+A brass route marker stands near the drainage channel.
+Three sealed crates have been arranged beneath a tiled lean-to.
+
+Obvious exits: east, south, southwest, west.
+
+------------------------------------------------------------------------
+
+Mill Terrace
+[Residential Court]
+
+The street widens here into a small public space bordered by shops beneath overhanging upper floors. At its center, a bronze town bell hangs beneath a tiled shelter.
+
+The district feels busy without being hurried. The chiming of shop bells rises and fades around you, and The market square lies somewhere to the east.
+
+A town courier studies a notice pinned to the wall.
+A rack of walking staffs stands near the nearest doorway.
+Rows of clay jars have been arranged beneath a timber arcade.
+
+Obvious exits: east, south, west.
+
+------------------------------------------------------------------------
+
+Garden Row
+[Artisan Quarter]
+
+This part of Greenhold is built in orderly tiers, with whitewashed homes with steep roofs overlooking moss-lined cobbles and a weathered statue watches over the crossing.
+
+The air carries herbs drying beneath the eaves, and the clatter of handcarts drifts between the roofs. Greenhold's northern gate can be glimpsed beyond the rooftops.
+
+A bread seller sweeps rainwater toward the gutter.
+A painted notice board stands near the drainage channel.
+Freshly cut flowers have been arranged beneath a patched canvas sheet.
+
+Obvious exits: south, west.
+
+------------------------------------------------------------------------
+
+Bell Crossing
+[Town Street]
+
+You stand on pale riverstone cobbles between timber houses with painted shutters, where an alder tree rises from a low ring of stones.
+
+A smith's measured hammering echoes through the district while lamp oil, wool, and rain lingers near the open doorways. The town wall rises above the houses to the west.
+
+A herbalist checks a row of sealed parcels.
+A brass route marker stands near the nearest doorway.
+Three sealed crates have been arranged beneath the sheltering eaves.
+
+Obvious exits: north, northeast, east, south.
+
+------------------------------------------------------------------------
+
+Willow Street
+[Market Lane]
+
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a roofed well stands beside a row of message boxes.
+
+Light filters down in broken bands from the narrow sky above. The road toward Riverbend begins beyond the southern wards. The smell of roasted roots and chimney smoke settles over the street.
+
+A market porter waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath a striped awning.
+
+Obvious exits: north, east, southwest, south, west.
+
+------------------------------------------------------------------------
+
+Hearth Lane
+[Civic Square]
+
+A narrow way opens between workshops whose doors stand open to the street. Beneath your feet, well-worn flagstones curves around a carved public fountain sends a thin stream into a circular basin.
+
+The district feels busy without being hurried. Quiet conversation rises and fades around you, and A line of orchard trees is visible through the northern gap.
+
+A traveling scribe sorts a stack of delivery tags.
+A painted notice board stands near the nearest doorway.
+Freshly cut flowers have been arranged beneath a tiled lean-to.
+
+Obvious exits: north, east, south, west.
+
+------------------------------------------------------------------------
+
+Clover Ward
+[Residential Court]
+
+The street widens here into a small public space bordered by shops beneath overhanging upper floors. At its center, a mosaic of the River Verin winds across the paving.
+
+The air carries fresh bread and damp wood, and the chiming of shop bells drifts between the roofs. The market square lies somewhere to the east.
+
+A lampwright's apprentice counts copper coins into a leather purse.
+A brass route marker stands near the drainage channel.
+Three sealed crates have been arranged beneath a timber arcade.
+
+Obvious exits: north, east, south, west.
+
+------------------------------------------------------------------------
+
+Stone Yard
+[Artisan Quarter]
+
+This part of Greenhold is built in orderly tiers, with whitewashed homes with steep roofs overlooking moss-lined cobbles and a shallow channel carries clear water toward the southern drains.
+
+The clatter of handcarts echoes through the district while herbs drying beneath the eaves lingers near the open doorways. Greenhold's northern gate can be glimpsed beyond the rooftops.
+
+A retired watchman studies a notice pinned to the wall.
+A rack of walking staffs stands near the nearest doorway.
+Rows of clay jars have been arranged beneath a patched canvas sheet.
+
+Obvious exits: north, south, west.
+
+------------------------------------------------------------------------
+
+Alder Lane
+[Town Street]
+
+You stand on pale riverstone cobbles between timber houses with painted shutters, where a bronze town bell hangs beneath a tiled shelter.
+
+Light filters down in broken bands from the narrow sky above. The town wall rises above the houses to the west. The smell of lamp oil, wool, and rain settles over the street.
+
+A young cooper sweeps rainwater toward the gutter.
+A painted notice board stands near the drainage channel.
+Freshly cut flowers have been arranged beneath the sheltering eaves.
+
+Obvious exits: north, east, south.
+
+------------------------------------------------------------------------
+
+Copper Ward
+[Market Lane]
+
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a weathered statue watches over the crossing.
+
+The district feels busy without being hurried. Children calling across the lane rises and fades around you, and The road toward Riverbend begins beyond the southern wards.
+
+A town courier checks a row of sealed parcels.
+A brass route marker stands near the nearest doorway.
+Three sealed crates have been arranged beneath a striped awning.
+
+Obvious exits: north, east, south, west.
+
+------------------------------------------------------------------------
+
+Lantern Yard
+[Civic Square]
+
+A narrow way opens between workshops whose doors stand open to the street. Beneath your feet, well-worn flagstones curves around an alder tree rises from a low ring of stones.
+
+The air carries sawdust and beeswax, and quiet conversation drifts between the roofs. A line of orchard trees is visible through the northern gap.
+
+A bread seller waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath a tiled lean-to.
+
+Obvious exits: north, east, south, west.
+
+------------------------------------------------------------------------
+
+Mill Court
+[Residential Court]
+
+The street widens here into a small public space bordered by shops beneath overhanging upper floors. At its center, a roofed well stands beside a row of message boxes.
+
+The chiming of shop bells echoes through the district while fresh bread and damp wood lingers near the open doorways. The market square lies somewhere to the east.
+
+A herbalist sorts a stack of delivery tags.
+A painted notice board stands near the nearest doorway.
+Freshly cut flowers have been arranged beneath a timber arcade.
+
+Obvious exits: north, northeast, east, south, west.
+
+------------------------------------------------------------------------
+
+Garden Square
+[Artisan Quarter]
+
+This part of Greenhold is built in orderly tiers, with whitewashed homes with steep roofs overlooking moss-lined cobbles and a carved public fountain sends a thin stream into a circular basin.
+
+Light filters down in broken bands from the narrow sky above. Greenhold's northern gate can be glimpsed beyond the rooftops. The smell of herbs drying beneath the eaves settles over the street.
+
+A market porter counts copper coins into a leather purse.
+A brass route marker stands near the drainage channel.
+Three sealed crates have been arranged beneath a patched canvas sheet.
+
+Obvious exits: north, south, southwest, west.
+
+------------------------------------------------------------------------
+
+Bell Walk
+[Town Street]
+
+You stand on pale riverstone cobbles between timber houses with painted shutters, where a mosaic of the River Verin winds across the paving.
+
+The district feels busy without being hurried. A smith's measured hammering rises and fades around you, and The town wall rises above the houses to the west.
+
+A traveling scribe studies a notice pinned to the wall.
+A rack of walking staffs stands near the nearest doorway.
+Rows of clay jars have been arranged beneath the sheltering eaves.
+
+Obvious exits: north, east, south.
+
+------------------------------------------------------------------------
+
+Willow Terrace
+[Market Lane]
+
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a shallow channel carries clear water toward the southern drains.
+
+The air carries roasted roots and chimney smoke, and children calling across the lane drifts between the roofs. The road toward Riverbend begins beyond the southern wards.
+
+A lampwright's apprentice sweeps rainwater toward the gutter.
+A painted notice board stands near the drainage channel.
+Freshly cut flowers have been arranged beneath a striped awning.
+
+Obvious exits: north, east, south, west.
+
+------------------------------------------------------------------------
+
+Hearth Row
+[Civic Square]
+
+A narrow way opens between workshops whose doors stand open to the street. Beneath your feet, well-worn flagstones curves around a bronze town bell hangs beneath a tiled shelter.
+
+Quiet conversation echoes through the district while sawdust and beeswax lingers near the open doorways. A line of orchard trees is visible through the northern gap.
+
+A retired watchman checks a row of sealed parcels.
+A brass route marker stands near the nearest doorway.
+Three sealed crates have been arranged beneath a tiled lean-to.
+
+Obvious exits: north, northeast, east, south, west.
+
+------------------------------------------------------------------------
+
+Clover Crossing
+[Residential Court]
+
+The street widens here into a small public space bordered by shops beneath overhanging upper floors. At its center, a weathered statue watches over the crossing.
+
+Light filters down in broken bands from the narrow sky above. The market square lies somewhere to the east. The smell of fresh bread and damp wood settles over the street.
+
+A young cooper waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath a timber arcade.
+
+Obvious exits: north, east, southwest, south, west.
+
+------------------------------------------------------------------------
+
+Stone Street
+[Artisan Quarter]
+
+This part of Greenhold is built in orderly tiers, with whitewashed homes with steep roofs overlooking moss-lined cobbles and an alder tree rises from a low ring of stones.
+
+The district feels busy without being hurried. The clatter of handcarts rises and fades around you, and Greenhold's northern gate can be glimpsed beyond the rooftops.
+
+A town courier sorts a stack of delivery tags.
+A painted notice board stands near the nearest doorway.
+Freshly cut flowers have been arranged beneath a patched canvas sheet.
+
+Obvious exits: north, south, west.
+
+------------------------------------------------------------------------
+
+Alder Row
+[Town Street]
+
+You stand on pale riverstone cobbles between timber houses with painted shutters, where a roofed well stands beside a row of message boxes.
+
+The air carries lamp oil, wool, and rain, and a smith's measured hammering drifts between the roofs. The town wall rises above the houses to the west.
+
+A bread seller counts copper coins into a leather purse.
+A brass route marker stands near the drainage channel.
+Three sealed crates have been arranged beneath the sheltering eaves.
+
+Obvious exits: north, east.
+
+------------------------------------------------------------------------
+
+Copper Crossing
+[Market Lane]
+
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a carved public fountain sends a thin stream into a circular basin.
+
+Children calling across the lane echoes through the district while roasted roots and chimney smoke lingers near the open doorways. The road toward Riverbend begins beyond the southern wards.
+
+A herbalist studies a notice pinned to the wall.
+A rack of walking staffs stands near the nearest doorway.
+Rows of clay jars have been arranged beneath a striped awning.
+
+Obvious exits: north, northeast, east, west.
+
+------------------------------------------------------------------------
+
+Lantern Street
+[Civic Square]
+
+A narrow way opens between workshops whose doors stand open to the street. Beneath your feet, well-worn flagstones curves around a mosaic of the River Verin winds across the paving.
+
+Light filters down in broken bands from the narrow sky above. A line of orchard trees is visible through the northern gap. The smell of sawdust and beeswax settles over the street.
+
+A market porter sweeps rainwater toward the gutter.
+A painted notice board stands near the drainage channel.
+Freshly cut flowers have been arranged beneath a tiled lean-to.
+
+Obvious exits: north, east, west.
+
+------------------------------------------------------------------------
+
+Mill Lane
+[Residential Court]
+
+The street widens here into a small public space bordered by shops beneath overhanging upper floors. At its center, a shallow channel carries clear water toward the southern drains.
+
+The district feels busy without being hurried. The chiming of shop bells rises and fades around you, and The market square lies somewhere to the east.
+
+A traveling scribe checks a row of sealed parcels.
+A brass route marker stands near the nearest doorway.
+Three sealed crates have been arranged beneath a timber arcade.
+
+Obvious exits: north, east, west.
+
+------------------------------------------------------------------------
+
+Garden Ward
+[Artisan Quarter]
+
+This part of Greenhold is built in orderly tiers, with whitewashed homes with steep roofs overlooking moss-lined cobbles and a bronze town bell hangs beneath a tiled shelter.
+
+The air carries herbs drying beneath the eaves, and the clatter of handcarts drifts between the roofs. Greenhold's northern gate can be glimpsed beyond the rooftops.
+
+A lampwright's apprentice waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath a patched canvas sheet.
+
+Obvious exits: north, west.
+
+========================================================================
+NORTHERN VERIDIA
+========================================================================
+
+North Road
+[Northern Crossing]
+
+The northern road climbs through wind-bent trees above narrow valleys, where a line of frost-cracked stones marks an old boundary.
+
+Sheep bells ring below the path moves across the hills while rain on stone follows the colder wind. Elderwatch's tower stands east across the fields.
+
+A ridge scout fills a flask at the cold spring.
+A stone spring basin stands near the signal post.
+Three water skins have been arranged beneath the shelter roof.
+
+Obvious exits: east, south.
+
+Pine Path
+[Wooded Rise]
+
+You stand on a stony upland road above the lower farms. Nearby, a watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. The western hills descend toward Duskwood Vale. Nearby, loose stones click down the slope.
+
+A traveling hunter watches the northern horizon.
+A watcher's cairn stands near the spring.
+Stacks of flat wall stone have been arranged beneath a hide sheet.
+
+Obvious exits: east, south, west.
+
+Coldwater Way
+[Watch Path]
+
+A cool upland path winds between upland farms protected by stone walls, its edge marked by a line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. A narrow track continues toward isolated farmsteads. A trace of juniper and damp earth clings to the rocks.
+
+A stone gatherer studies tracks in the gravel.
+A boundary pillar stands near the signal post.
+Bundles of pine kindling have been arranged beneath a stone overhang.
+
+Obvious exits: east, south, southwest, west.
+
+High Reach
+[Upland Road]
+
+Wind-scoured track rises toward scattered pines and rocky pasture. A watcher's cairn stands on the highest ground.
+
+The air smells of pine resin and cold grass, and water runs through the ravine carries from the higher ground. Greenhold lies far below to the south.
+
+A boundary keeper rests beside a cairn.
+A stone spring basin stands near the spring.
+Three water skins have been arranged beneath a canvas windbreak.
+
+Obvious exits: east, south, west.
+
+Wind Track
+[Hill Track]
+
+The land gathers into long hills around small woods broken by open ridges, broken by a line of frost-cracked stones marks an old boundary.
+
+Wind strains against the signal frame moves across the hills while woodsmoke from an upland farm follows the colder wind. The Frostspire Peaks rise beyond the northern horizon.
+
+A signal warden checks the ropes on a signal frame.
+A watcher's cairn stands near the signal post.
+Stacks of flat wall stone have been arranged beneath a low pine.
+
+Obvious exits: south, west.
+
+Frost Mile
+[Northern Crossing]
+
+The northern road climbs through wind-bent trees above narrow valleys, where a watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. Elderwatch's tower stands east across the fields. Nearby, sheep bells ring below the path.
+
+A upland shepherd repairs a gap in the stone wall.
+A boundary pillar stands near the spring.
+Bundles of pine kindling have been arranged beneath the shelter roof.
+
+Obvious exits: north, northeast, east, south.
+
+Ridge Lookout
+[Wooded Rise]
+
+You stand on a stony upland road above the lower farms. Nearby, a line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. The western hills descend toward Duskwood Vale. A trace of frosted moss clings to the rocks.
+
+A spring tender fills a flask at the cold spring.
+A stone spring basin stands near the signal post.
+Three water skins have been arranged beneath a hide sheet.
+
+Obvious exits: north, east, southwest, south, west.
+
+Stone Rise
+[Watch Path]
+
+A cool upland path winds between upland farms protected by stone walls, its edge marked by a watcher's cairn stands on the highest ground.
+
+The air smells of juniper and damp earth, and a hawk cries above the ridge carries from the higher ground. A narrow track continues toward isolated farmsteads.
+
+A goat herder watches the northern horizon.
+A watcher's cairn stands near the spring.
+Stacks of flat wall stone have been arranged beneath a stone overhang.
+
+Obvious exits: north, east, south, west.
+
+Cloud Crossing
+[Upland Road]
+
+Wind-scoured track rises toward scattered pines and rocky pasture. A line of frost-cracked stones marks an old boundary.
+
+Water runs through the ravine moves across the hills while pine resin and cold grass follows the colder wind. Greenhold lies far below to the south.
+
+A ridge scout studies tracks in the gravel.
+A boundary pillar stands near the signal post.
+Bundles of pine kindling have been arranged beneath a canvas windbreak.
+
+Obvious exits: north, east, south, west.
+
+Watcher's Bend
+[Hill Track]
+
+The land gathers into long hills around small woods broken by open ridges, broken by a watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. The Frostspire Peaks rise beyond the northern horizon. Nearby, wind strains against the signal frame.
+
+A traveling hunter rests beside a cairn.
+A stone spring basin stands near the spring.
+Three water skins have been arranged beneath a low pine.
+
+Obvious exits: north, south, west.
+
+North Rise
+[Northern Crossing]
+
+The northern road climbs through wind-bent trees above narrow valleys, where a line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. Elderwatch's tower stands east across the fields. A trace of rain on stone clings to the rocks.
+
+A stone gatherer checks the ropes on a signal frame.
+A watcher's cairn stands near the signal post.
+Stacks of flat wall stone have been arranged beneath the shelter roof.
+
+Obvious exits: north, east, south.
+
+Pine Crossing
+[Wooded Rise]
+
+You stand on a stony upland road above the lower farms. Nearby, a watcher's cairn stands on the highest ground.
+
+The air smells of frosted moss, and loose stones click down the slope carries from the higher ground. The western hills descend toward Duskwood Vale.
+
+A boundary keeper repairs a gap in the stone wall.
+A boundary pillar stands near the spring.
+Bundles of pine kindling have been arranged beneath a hide sheet.
+
+Obvious exits: north, east, south, west.
+
+Coldwater Bend
+[Watch Path]
+
+A cool upland path winds between upland farms protected by stone walls, its edge marked by a line of frost-cracked stones marks an old boundary.
+
+A hawk cries above the ridge moves across the hills while juniper and damp earth follows the colder wind. A narrow track continues toward isolated farmsteads.
+
+A signal warden fills a flask at the cold spring.
+A stone spring basin stands near the signal post.
+Three water skins have been arranged beneath a stone overhang.
+
+Obvious exits: north, east, south, west.
+
+High Road
+[Upland Road]
+
+Wind-scoured track rises toward scattered pines and rocky pasture. A watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. Greenhold lies far below to the south. Nearby, water runs through the ravine.
+
+A upland shepherd watches the northern horizon.
+A watcher's cairn stands near the spring.
+Stacks of flat wall stone have been arranged beneath a canvas windbreak.
+
+Obvious exits: north, northeast, east, south, west.
+
+Wind Path
+[Hill Track]
+
+The land gathers into long hills around small woods broken by open ridges, broken by a line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. The Frostspire Peaks rise beyond the northern horizon. A trace of woodsmoke from an upland farm clings to the rocks.
+
+A spring tender studies tracks in the gravel.
+A boundary pillar stands near the signal post.
+Bundles of pine kindling have been arranged beneath a low pine.
+
+Obvious exits: north, south, southwest, west.
+
+Frost Way
+[Northern Crossing]
+
+The northern road climbs through wind-bent trees above narrow valleys, where a watcher's cairn stands on the highest ground.
+
+The air smells of rain on stone, and sheep bells ring below the path carries from the higher ground. Elderwatch's tower stands east across the fields.
+
+A goat herder rests beside a cairn.
+A stone spring basin stands near the spring.
+Three water skins have been arranged beneath the shelter roof.
+
+Obvious exits: north, east, south.
+
+Ridge Reach
+[Wooded Rise]
+
+You stand on a stony upland road above the lower farms. Nearby, a line of frost-cracked stones marks an old boundary.
+
+Loose stones click down the slope moves across the hills while frosted moss follows the colder wind. The western hills descend toward Duskwood Vale.
+
+A ridge scout checks the ropes on a signal frame.
+A watcher's cairn stands near the signal post.
+Stacks of flat wall stone have been arranged beneath a hide sheet.
+
+Obvious exits: north, east, south, west.
+
+Stone Track
+[Watch Path]
+
+A cool upland path winds between upland farms protected by stone walls, its edge marked by a watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. A narrow track continues toward isolated farmsteads. Nearby, a hawk cries above the ridge.
+
+A traveling hunter repairs a gap in the stone wall.
+A boundary pillar stands near the spring.
+Bundles of pine kindling have been arranged beneath a stone overhang.
+
+Obvious exits: north, northeast, east, south, west.
+
+Cloud Mile
+[Upland Road]
+
+Wind-scoured track rises toward scattered pines and rocky pasture. A line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. Greenhold lies far below to the south. A trace of pine resin and cold grass clings to the rocks.
+
+A stone gatherer fills a flask at the cold spring.
+A stone spring basin stands near the signal post.
+Three water skins have been arranged beneath a canvas windbreak.
+
+Obvious exits: north, east, southwest, south, west.
+
+Watcher's Lookout
+[Hill Track]
+
+The land gathers into long hills around small woods broken by open ridges, broken by a watcher's cairn stands on the highest ground.
+
+The air smells of woodsmoke from an upland farm, and wind strains against the signal frame carries from the higher ground. The Frostspire Peaks rise beyond the northern horizon.
+
+A boundary keeper watches the northern horizon.
+A watcher's cairn stands near the spring.
+Stacks of flat wall stone have been arranged beneath a low pine.
+
+Obvious exits: north, south, west.
+
+North Track
+[Northern Crossing]
+
+The northern road climbs through wind-bent trees above narrow valleys, where a line of frost-cracked stones marks an old boundary.
+
+Sheep bells ring below the path moves across the hills while rain on stone follows the colder wind. Elderwatch's tower stands east across the fields.
+
+A signal warden studies tracks in the gravel.
+A boundary pillar stands near the signal post.
+Bundles of pine kindling have been arranged beneath the shelter roof.
+
+Obvious exits: north, east.
+
+Pine Mile of Northern Veridia
+[Wooded Rise]
+
+You stand on a stony upland road above the lower farms. Nearby, a watcher's cairn stands on the highest ground.
+
+The view opens south across much of Veridia. The western hills descend toward Duskwood Vale. Nearby, loose stones click down the slope.
+
+A upland shepherd rests beside a cairn.
+A stone spring basin stands near the spring.
+Three water skins have been arranged beneath a hide sheet.
+
+Obvious exits: north, northeast, east, west.
+
+Coldwater Lookout
+[Watch Path]
+
+A cool upland path winds between upland farms protected by stone walls, its edge marked by a line of frost-cracked stones marks an old boundary.
+
+Cloud shadows travel quickly over the slopes. A narrow track continues toward isolated farmsteads. A trace of juniper and damp earth clings to the rocks.
+
+A spring tender checks the ropes on a signal frame.
+A watcher's cairn stands near the signal post.
+Stacks of flat wall stone have been arranged beneath a stone overhang.
+
+Obvious exits: north, east, west.
+
+High Rise
+[Upland Road]
+
+Wind-scoured track rises toward scattered pines and rocky pasture. A watcher's cairn stands on the highest ground.
+
+The air smells of pine resin and cold grass, and water runs through the ravine carries from the higher ground. Greenhold lies far below to the south.
+
+A goat herder repairs a gap in the stone wall.
+A boundary pillar stands near the spring.
+Bundles of pine kindling have been arranged beneath a canvas windbreak.
+
+Obvious exits: north, east, west.
+
+Wind Crossing
+[Hill Track]
+
+The land gathers into long hills around small woods broken by open ridges, broken by a line of frost-cracked stones marks an old boundary.
+
+Wind strains against the signal frame moves across the hills while woodsmoke from an upland farm follows the colder wind. The Frostspire Peaks rise beyond the northern horizon.
+
+A ridge scout fills a flask at the cold spring.
+A stone spring basin stands near the signal post.
+Three water skins have been arranged beneath a low pine.
+
+Obvious exits: north, west.
+
+========================================================================
+OLD VERIDIAN ROADS
+========================================================================
+
+King's Mile
+[Ruined Highway]
+
+The ancient road continues between rolling country dotted with foundation stones, where a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. Elderwatch's tower can be seen on the horizon. A trace of rain in old mortar clings to the old stones.
+
+A boundary warden measures the width of the old paving.
+A roadside shrine stands near the milestone.
+A cluster of pottery shards have been arranged beneath the shadow of a broken arch.
+
+Obvious exits: east, south.
+
+Old Crossing
+[Forgotten Crossing]
+
+You stand on a cracked imperial road laid long before the surrounding farms. Nearby, a broken statue faces east.
+
+The air carries sun-heated stone, and larks call over the fields follows the road from far away. Duskwood Vale darkens the western distance.
+
+A pilgrim traces a mason mark with one finger.
+A broken milestone stands near the collapsed arch.
+Pieces of rusted iron have been arranged beneath a mat of grass.
+
+Obvious exits: east, south, west.
+
+Broken Rise
+[Stone Causeway]
+
+A broad old way crosses abandoned fields reclaimed by grass, its course preserved by a collapsed arch lies beside the road.
+
+Wind moves through broken masonry echoes faintly across the open ground while wild thyme and dust gathers in the cracks between stones. The causeway continues north into quieter country.
+
+A caravan scout watches a distant wagon approach.
+A survey tripod stands near the milestone.
+Several loose paving slabs have been arranged beneath a growth of ivy.
+
+Obvious exits: east, south, southwest, west.
+
+White Stone Passage
+[Boundary Road]
+
+Road of fitted limestone slabs emerges from the earth in broken sections through small farms built around older ruins. A broken statue faces east.
+
+Grass grows through the joints in pale seams. Greenhold lies somewhere east of the old route. Nearby, water drips beneath the causeway.
+
+A road mason checks a crack in the causeway.
+A roadside shrine stands near the collapsed arch.
+A cluster of pottery shards have been arranged beneath a low stone shelf.
+
+Obvious exits: east, south, west.
+
+Founder's Road
+[Ancient Road]
+
+The road rises above low meadows and drainage channels, marked by a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. The road bends south toward Riverbend. A trace of moss and standing water clings to the old stones.
+
+A survey clerk copies an inscription into a notebook.
+A broken milestone stands near the milestone.
+Pieces of rusted iron have been arranged beneath a waxed survey cloth.
+
+Obvious exits: south, west.
+
+Crown Approach
+[Ruined Highway]
+
+The ancient road continues between rolling country dotted with foundation stones, where a broken statue faces east.
+
+The air carries rain in old mortar, and a distant bell carries from settled land follows the road from far away. Elderwatch's tower can be seen on the horizon.
+
+A wandering priest rests beside a weathered milestone.
+A survey tripod stands near the collapsed arch.
+Several loose paving slabs have been arranged beneath the shadow of a broken arch.
+
+Obvious exits: north, northeast, east, south.
+
+Pilgrim Reach
+[Forgotten Crossing]
+
+You stand on a cracked imperial road laid long before the surrounding farms. Nearby, a collapsed arch lies beside the road.
+
+Larks call over the fields echoes faintly across the open ground while sun-heated stone gathers in the cracks between stones. Duskwood Vale darkens the western distance.
+
+A traveling antiquarian measures the width of the old paving.
+A roadside shrine stands near the milestone.
+A cluster of pottery shards have been arranged beneath a mat of grass.
+
+Obvious exits: north, east, southwest, south, west.
+
+Mason Causeway
+[Stone Causeway]
+
+A broad old way crosses abandoned fields reclaimed by grass, its course preserved by a broken statue faces east.
+
+Grass grows through the joints in pale seams. The causeway continues north into quieter country. Nearby, wind moves through broken masonry.
+
+A stone cutter traces a mason mark with one finger.
+A broken milestone stands near the collapsed arch.
+Pieces of rusted iron have been arranged beneath a growth of ivy.
+
+Obvious exits: north, east, south, west.
+
+Weathered Way
+[Boundary Road]
+
+Road of fitted limestone slabs emerges from the earth in broken sections through small farms built around older ruins. A collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. Greenhold lies somewhere east of the old route. A trace of warm limestone and grass clings to the old stones.
+
+A boundary warden watches a distant wagon approach.
+A survey tripod stands near the milestone.
+Several loose paving slabs have been arranged beneath a low stone shelf.
+
+Obvious exits: north, east, south, west.
+
+Long Bend
+[Ancient Road]
+
+The road rises above low meadows and drainage channels, marked by a broken statue faces east.
+
+The air carries moss and standing water, and wagon wheels strike the slabs in a slow rhythm follows the road from far away. The road bends south toward Riverbend.
+
+A pilgrim checks a crack in the causeway.
+A roadside shrine stands near the collapsed arch.
+A cluster of pottery shards have been arranged beneath a waxed survey cloth.
+
+Obvious exits: north, south, west.
+
+King's Causeway
+[Ruined Highway]
+
+The ancient road continues between rolling country dotted with foundation stones, where a collapsed arch lies beside the road.
+
+A distant bell carries from settled land echoes faintly across the open ground while rain in old mortar gathers in the cracks between stones. Elderwatch's tower can be seen on the horizon.
+
+A caravan scout copies an inscription into a notebook.
+A broken milestone stands near the milestone.
+Pieces of rusted iron have been arranged beneath the shadow of a broken arch.
+
+Obvious exits: north, east, south.
+
+Old Way
+[Forgotten Crossing]
+
+You stand on a cracked imperial road laid long before the surrounding farms. Nearby, a broken statue faces east.
+
+Grass grows through the joints in pale seams. Duskwood Vale darkens the western distance. Nearby, larks call over the fields.
+
+A road mason rests beside a weathered milestone.
+A survey tripod stands near the collapsed arch.
+Several loose paving slabs have been arranged beneath a mat of grass.
+
+Obvious exits: north, east, south, west.
+
+Broken Bend
+[Stone Causeway]
+
+A broad old way crosses abandoned fields reclaimed by grass, its course preserved by a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. The causeway continues north into quieter country. A trace of wild thyme and dust clings to the old stones.
+
+A survey clerk measures the width of the old paving.
+A roadside shrine stands near the milestone.
+A cluster of pottery shards have been arranged beneath a growth of ivy.
+
+Obvious exits: north, east, south, west.
+
+White Stone Mile
+[Boundary Road]
+
+Road of fitted limestone slabs emerges from the earth in broken sections through small farms built around older ruins. A broken statue faces east.
+
+The air carries warm limestone and grass, and water drips beneath the causeway follows the road from far away. Greenhold lies somewhere east of the old route.
+
+A wandering priest traces a mason mark with one finger.
+A broken milestone stands near the collapsed arch.
+Pieces of rusted iron have been arranged beneath a low stone shelf.
+
+Obvious exits: north, northeast, east, south, west.
+
+Founder's Crossing
+[Ancient Road]
+
+The road rises above low meadows and drainage channels, marked by a collapsed arch lies beside the road.
+
+Wagon wheels strike the slabs in a slow rhythm echoes faintly across the open ground while moss and standing water gathers in the cracks between stones. The road bends south toward Riverbend.
+
+A traveling antiquarian watches a distant wagon approach.
+A survey tripod stands near the milestone.
+Several loose paving slabs have been arranged beneath a waxed survey cloth.
+
+Obvious exits: north, south, southwest, west.
+
+Crown Rise
+[Ruined Highway]
+
+The ancient road continues between rolling country dotted with foundation stones, where a broken statue faces east.
+
+Grass grows through the joints in pale seams. Elderwatch's tower can be seen on the horizon. Nearby, a distant bell carries from settled land.
+
+A stone cutter checks a crack in the causeway.
+A roadside shrine stands near the collapsed arch.
+A cluster of pottery shards have been arranged beneath the shadow of a broken arch.
+
+Obvious exits: north, east, south.
+
+Pilgrim Passage
+[Forgotten Crossing]
+
+You stand on a cracked imperial road laid long before the surrounding farms. Nearby, a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. Duskwood Vale darkens the western distance. A trace of sun-heated stone clings to the old stones.
+
+A boundary warden copies an inscription into a notebook.
+A broken milestone stands near the milestone.
+Pieces of rusted iron have been arranged beneath a mat of grass.
+
+Obvious exits: north, east, south, west.
+
+Mason Road
+[Stone Causeway]
+
+A broad old way crosses abandoned fields reclaimed by grass, its course preserved by a broken statue faces east.
+
+The air carries wild thyme and dust, and wind moves through broken masonry follows the road from far away. The causeway continues north into quieter country.
+
+A pilgrim rests beside a weathered milestone.
+A survey tripod stands near the collapsed arch.
+Several loose paving slabs have been arranged beneath a growth of ivy.
+
+Obvious exits: north, northeast, east, south, west.
+
+Weathered Approach
+[Boundary Road]
+
+Road of fitted limestone slabs emerges from the earth in broken sections through small farms built around older ruins. A collapsed arch lies beside the road.
+
+Water drips beneath the causeway echoes faintly across the open ground while warm limestone and grass gathers in the cracks between stones. Greenhold lies somewhere east of the old route.
+
+A caravan scout measures the width of the old paving.
+A roadside shrine stands near the milestone.
+A cluster of pottery shards have been arranged beneath a low stone shelf.
+
+Obvious exits: north, east, southwest, south, west.
+
+Long Reach
+[Ancient Road]
+
+The road rises above low meadows and drainage channels, marked by a broken statue faces east.
+
+Grass grows through the joints in pale seams. The road bends south toward Riverbend. Nearby, wagon wheels strike the slabs in a slow rhythm.
+
+A road mason traces a mason mark with one finger.
+A broken milestone stands near the collapsed arch.
+Pieces of rusted iron have been arranged beneath a waxed survey cloth.
+
+Obvious exits: north, south, west.
+
+King's Road
+[Ruined Highway]
+
+The ancient road continues between rolling country dotted with foundation stones, where a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. Elderwatch's tower can be seen on the horizon. A trace of rain in old mortar clings to the old stones.
+
+A survey clerk watches a distant wagon approach.
+A survey tripod stands near the milestone.
+Several loose paving slabs have been arranged beneath the shadow of a broken arch.
+
+Obvious exits: north, east.
+
+Old Approach
+[Forgotten Crossing]
+
+You stand on a cracked imperial road laid long before the surrounding farms. Nearby, a broken statue faces east.
+
+The air carries sun-heated stone, and larks call over the fields follows the road from far away. Duskwood Vale darkens the western distance.
+
+A wandering priest checks a crack in the causeway.
+A roadside shrine stands near the collapsed arch.
+A cluster of pottery shards have been arranged beneath a mat of grass.
+
+Obvious exits: north, northeast, east, west.
+
+Broken Reach
+[Stone Causeway]
+
+A broad old way crosses abandoned fields reclaimed by grass, its course preserved by a collapsed arch lies beside the road.
+
+Wind moves through broken masonry echoes faintly across the open ground while wild thyme and dust gathers in the cracks between stones. The causeway continues north into quieter country.
+
+A traveling antiquarian copies an inscription into a notebook.
+A broken milestone stands near the milestone.
+Pieces of rusted iron have been arranged beneath a growth of ivy.
+
+Obvious exits: north, east, west.
+
+White Stone Causeway
+[Boundary Road]
+
+Road of fitted limestone slabs emerges from the earth in broken sections through small farms built around older ruins. A broken statue faces east.
+
+Grass grows through the joints in pale seams. Greenhold lies somewhere east of the old route. Nearby, water drips beneath the causeway.
+
+A stone cutter rests beside a weathered milestone.
+A survey tripod stands near the collapsed arch.
+Several loose paving slabs have been arranged beneath a low stone shelf.
+
+Obvious exits: north, east, west.
+
+Founder's Way
+[Ancient Road]
+
+The road rises above low meadows and drainage channels, marked by a collapsed arch lies beside the road.
+
+The road is quiet but unmistakably deliberate in its construction. The road bends south toward Riverbend. A trace of moss and standing water clings to the old stones.
+
+A boundary warden measures the width of the old paving.
+A roadside shrine stands near the milestone.
+A cluster of pottery shards have been arranged beneath a waxed survey cloth.
+
+Obvious exits: north, west.
+
+========================================================================
+VERIDIAN RUINS
+========================================================================
+
+Fallen Court
+[Buried Foundation]
+
+The ruins open around roofless chambers open to the sky, where a sealed stone door is set into the northern wall.
+
+The air smells of ivy and rainwater. A dark tree line marks the approach to Duskwood Vale. Somewhere within the ruin, wind hums through a cracked doorway.
+
+A ruin surveyor clears ivy from a carved panel.
+A sealed stone door stands near the old stair.
+A row of old iron nails lie beneath a mat of ivy.
+
+Obvious exits: east, south.
+
+Ivy Foundation
+[Ruined Courtyard]
+
+You stand among collapsed walls and ivy-covered columns. Nearby, an inscription survives beneath a layer of moss.
+
+Insects buzz above the grass moves through the empty spaces while stagnant water in a carved basin gathers beneath the stones. The old highway can be reached to the north.
+
+A stone conservator copies an inscription onto thin paper.
+A carved stone basin stands near the center of the court.
+Fragments of painted plaster lie beneath a linen sheet.
+
+Obvious exits: east, south, west.
+
+Silent Gallery
+[Collapsed Hall]
+
+An overgrown enclosure contains an old courtyard filled with saplings, its silence broken by a sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. Riverbend's mills are faintly audible in clear weather. A trace of cold earth beneath broken paving hangs in the sheltered corners.
+
+A watchful scout waits beside the old basin.
+A survey chest stands near the old stair.
+Pieces of colored glass lie beneath a low stone ledge.
+
+Obvious exits: east, south, southwest, west.
+
+Moss Terrace
+[Overgrown Ruin]
+
+Weed-covered paving leads into a low mound of buried masonry. An inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. The nearest farm road lies east of the ruin. From below the broken floor comes loose stones settle somewhere below.
+
+A traveling scholar sorts pottery fragments on a cloth.
+A sealed stone door stands near the center of the court.
+A row of old iron nails lie beneath a waxed field cloth.
+
+Obvious exits: east, south, west.
+
+Broken Hall
+[Ancient Shrine]
+
+The remains of an old structure rise from foundation stones beneath tall grass, centered on a sealed stone door is set into the northern wall.
+
+The air smells of wildflowers growing through mortar. Greenhold's lands begin beyond the southern fields. Somewhere within the ruin, water drips into an unseen hollow.
+
+A herb gatherer studies the sealed stone door.
+A carved stone basin stands near the old stair.
+Fragments of painted plaster lie beneath the shadow of a fallen column.
+
+Obvious exits: south, west.
+
+Sunken Steps
+[Buried Foundation]
+
+The ruins open around roofless chambers open to the sky, where an inscription survives beneath a layer of moss.
+
+Wind hums through a cracked doorway moves through the empty spaces while ivy and rainwater gathers beneath the stones. A dark tree line marks the approach to Duskwood Vale.
+
+A young antiquarian measures a collapsed doorway.
+A survey chest stands near the center of the court.
+Pieces of colored glass lie beneath a mat of ivy.
+
+Obvious exits: north, northeast, east, south.
+
+Forgotten Chamber
+[Ruined Courtyard]
+
+You stand among collapsed walls and ivy-covered columns. Nearby, a sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. The old highway can be reached to the north. A trace of stagnant water in a carved basin hangs in the sheltered corners.
+
+A local guide clears ivy from a carved panel.
+A sealed stone door stands near the old stair.
+A row of old iron nails lie beneath a linen sheet.
+
+Obvious exits: north, east, southwest, south, west.
+
+Gray Shrine
+[Collapsed Hall]
+
+An overgrown enclosure contains an old courtyard filled with saplings, its silence broken by an inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. Riverbend's mills are faintly audible in clear weather. From below the broken floor comes small birds move among the columns.
+
+A quiet pilgrim copies an inscription onto thin paper.
+A carved stone basin stands near the center of the court.
+Fragments of painted plaster lie beneath a low stone ledge.
+
+Obvious exits: north, east, south, west.
+
+Warden's Vault
+[Overgrown Ruin]
+
+Weed-covered paving leads into a low mound of buried masonry. A sealed stone door is set into the northern wall.
+
+The air smells of moss, damp stone, and old dust. The nearest farm road lies east of the ruin. Somewhere within the ruin, loose stones settle somewhere below.
+
+A ruin surveyor waits beside the old basin.
+A survey chest stands near the old stair.
+Pieces of colored glass lie beneath a waxed field cloth.
+
+Obvious exits: north, east, south, west.
+
+Hollow Enclosure
+[Ancient Shrine]
+
+The remains of an old structure rise from foundation stones beneath tall grass, centered on an inscription survives beneath a layer of moss.
+
+Water drips into an unseen hollow moves through the empty spaces while wildflowers growing through mortar gathers beneath the stones. Greenhold's lands begin beyond the southern fields.
+
+A stone conservator sorts pottery fragments on a cloth.
+A sealed stone door stands near the center of the court.
+A row of old iron nails lie beneath the shadow of a fallen column.
+
+Obvious exits: north, south, west.
+
+Fallen Shrine
+[Buried Foundation]
+
+The ruins open around roofless chambers open to the sky, where a sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. A dark tree line marks the approach to Duskwood Vale. A trace of ivy and rainwater hangs in the sheltered corners.
+
+A watchful scout studies the sealed stone door.
+A carved stone basin stands near the old stair.
+Fragments of painted plaster lie beneath a mat of ivy.
+
+Obvious exits: north, east, south.
+
+Ivy Vault
+[Ruined Courtyard]
+
+You stand among collapsed walls and ivy-covered columns. Nearby, an inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. The old highway can be reached to the north. From below the broken floor comes insects buzz above the grass.
+
+A traveling scholar measures a collapsed doorway.
+A survey chest stands near the center of the court.
+Pieces of colored glass lie beneath a linen sheet.
+
+Obvious exits: north, east, south, west.
+
+Silent Enclosure
+[Collapsed Hall]
+
+An overgrown enclosure contains an old courtyard filled with saplings, its silence broken by a sealed stone door is set into the northern wall.
+
+The air smells of cold earth beneath broken paving. Riverbend's mills are faintly audible in clear weather. Somewhere within the ruin, small birds move among the columns.
+
+A herb gatherer clears ivy from a carved panel.
+A sealed stone door stands near the old stair.
+A row of old iron nails lie beneath a low stone ledge.
+
+Obvious exits: north, east, south, west.
+
+Moss Court
+[Overgrown Ruin]
+
+Weed-covered paving leads into a low mound of buried masonry. An inscription survives beneath a layer of moss.
+
+Loose stones settle somewhere below moves through the empty spaces while moss, damp stone, and old dust gathers beneath the stones. The nearest farm road lies east of the ruin.
+
+A young antiquarian copies an inscription onto thin paper.
+A carved stone basin stands near the center of the court.
+Fragments of painted plaster lie beneath a waxed field cloth.
+
+Obvious exits: north, northeast, east, south, west.
+
+Broken Foundation
+[Ancient Shrine]
+
+The remains of an old structure rise from foundation stones beneath tall grass, centered on a sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. Greenhold's lands begin beyond the southern fields. A trace of wildflowers growing through mortar hangs in the sheltered corners.
+
+A local guide waits beside the old basin.
+A survey chest stands near the old stair.
+Pieces of colored glass lie beneath the shadow of a fallen column.
+
+Obvious exits: north, south, southwest, west.
+
+Sunken Gallery
+[Buried Foundation]
+
+The ruins open around roofless chambers open to the sky, where an inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. A dark tree line marks the approach to Duskwood Vale. From below the broken floor comes wind hums through a cracked doorway.
+
+A quiet pilgrim sorts pottery fragments on a cloth.
+A sealed stone door stands near the center of the court.
+A row of old iron nails lie beneath a mat of ivy.
+
+Obvious exits: north, east, south.
+
+Forgotten Terrace
+[Ruined Courtyard]
+
+You stand among collapsed walls and ivy-covered columns. Nearby, a sealed stone door is set into the northern wall.
+
+The air smells of stagnant water in a carved basin. The old highway can be reached to the north. Somewhere within the ruin, insects buzz above the grass.
+
+A ruin surveyor studies the sealed stone door.
+A carved stone basin stands near the old stair.
+Fragments of painted plaster lie beneath a linen sheet.
+
+Obvious exits: north, east, south, west.
+
+Gray Hall
+[Collapsed Hall]
+
+An overgrown enclosure contains an old courtyard filled with saplings, its silence broken by an inscription survives beneath a layer of moss.
+
+Small birds move among the columns moves through the empty spaces while cold earth beneath broken paving gathers beneath the stones. Riverbend's mills are faintly audible in clear weather.
+
+A stone conservator measures a collapsed doorway.
+A survey chest stands near the center of the court.
+Pieces of colored glass lie beneath a low stone ledge.
+
+Obvious exits: north, northeast, east, south, west.
+
+Warden's Steps
+[Overgrown Ruin]
+
+Weed-covered paving leads into a low mound of buried masonry. A sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. The nearest farm road lies east of the ruin. A trace of moss, damp stone, and old dust hangs in the sheltered corners.
+
+A watchful scout clears ivy from a carved panel.
+A sealed stone door stands near the old stair.
+A row of old iron nails lie beneath a waxed field cloth.
+
+Obvious exits: north, east, southwest, south, west.
+
+Hollow Chamber
+[Ancient Shrine]
+
+The remains of an old structure rise from foundation stones beneath tall grass, centered on an inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. Greenhold's lands begin beyond the southern fields. From below the broken floor comes water drips into an unseen hollow.
+
+A traveling scholar copies an inscription onto thin paper.
+A carved stone basin stands near the center of the court.
+Fragments of painted plaster lie beneath the shadow of a fallen column.
+
+Obvious exits: north, south, west.
+
+Fallen Hall
+[Buried Foundation]
+
+The ruins open around roofless chambers open to the sky, where a sealed stone door is set into the northern wall.
+
+The air smells of ivy and rainwater. A dark tree line marks the approach to Duskwood Vale. Somewhere within the ruin, wind hums through a cracked doorway.
+
+A herb gatherer waits beside the old basin.
+A survey chest stands near the old stair.
+Pieces of colored glass lie beneath a mat of ivy.
+
+Obvious exits: north, east.
+
+Ivy Steps
+[Ruined Courtyard]
+
+You stand among collapsed walls and ivy-covered columns. Nearby, an inscription survives beneath a layer of moss.
+
+Insects buzz above the grass moves through the empty spaces while stagnant water in a carved basin gathers beneath the stones. The old highway can be reached to the north.
+
+A young antiquarian sorts pottery fragments on a cloth.
+A sealed stone door stands near the center of the court.
+A row of old iron nails lie beneath a linen sheet.
+
+Obvious exits: north, northeast, east, west.
+
+Silent Chamber
+[Collapsed Hall]
+
+An overgrown enclosure contains an old courtyard filled with saplings, its silence broken by a sealed stone door is set into the northern wall.
+
+Sunlight falls through gaps where the roof once stood. Riverbend's mills are faintly audible in clear weather. A trace of cold earth beneath broken paving hangs in the sheltered corners.
+
+A local guide studies the sealed stone door.
+A carved stone basin stands near the old stair.
+Fragments of painted plaster lie beneath a low stone ledge.
+
+Obvious exits: north, east, west.
+
+Moss Shrine
+[Overgrown Ruin]
+
+Weed-covered paving leads into a low mound of buried masonry. An inscription survives beneath a layer of moss.
+
+The place feels abandoned rather than forgotten. The nearest farm road lies east of the ruin. From below the broken floor comes loose stones settle somewhere below.
+
+A quiet pilgrim measures a collapsed doorway.
+A survey chest stands near the center of the court.
+Pieces of colored glass lie beneath a waxed field cloth.
+
+Obvious exits: north, east, west.
+
+Broken Vault
+[Ancient Shrine]
+
+The remains of an old structure rise from foundation stones beneath tall grass, centered on a sealed stone door is set into the northern wall.
+
+The air smells of wildflowers growing through mortar. Greenhold's lands begin beyond the southern fields. Somewhere within the ruin, water drips into an unseen hollow.
+
+A ruin surveyor clears ivy from a carved panel.
+A sealed stone door stands near the old stair.
+A row of old iron nails lie beneath the shadow of a fallen column.
+
+Obvious exits: north, west.
+
+========================================================================
+SUNMEADOW
+========================================================================
+
+Sun Green
+[Hill Path]
+
+The village lane winds between orchards and bee yards, where bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. Elderwatch's tower is visible to the northeast. A trace of cut wheat and wildflowers hangs around the gardens.
+
+A flower seller hangs fresh ribbons from a gatepost.
+A whitewashed milestone stands near the cottage fence.
+Bundles of cut wheat have been arranged beneath the cottage eaves.
+
+Obvious exits: east, south.
+
+Honey Walk
+[Village Lane]
+
+You stand beside cottages with yellow doors. Nearby, a painted wind vane turns above a tiled roof.
+
+The air carries fresh hay and apple preserves, and a distant hammer taps against wood drifts from the nearby homes. The southern fields fade into rolling pasture.
+
+A wheelwright checks a row of honey jars.
+A painted village map stands near the village gate.
+Clay pots of herbs have been arranged beneath a linen shade.
+
+Obvious exits: east, south, west.
+
+Wheat Way
+[Farmstead Road]
+
+A sunlit path crosses wheat fields broken by stone walls, its edge marked by bright cloth ribbons flutter from a festival pole.
+
+A mill wheel creaks on the ridge rises above the fields while the smell of rosemary and woodsmoke follows the breeze. Greenhold lies beyond the distant northwest road.
+
+A village clerk rests beneath the shade of an oak.
+A bee skep stands near the cottage fence.
+Several flour sacks have been arranged beneath a low timber shelter.
+
+Obvious exits: east, south, southwest, west.
+
+Flower Terrace
+[Garden Walk]
+
+Soft earthen path passes through the heart of Sunmeadow between low farms beneath broad sky. A painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. The River Verin glints beyond the northern fields. Somewhere nearby, children laugh near the village green.
+
+A farmhand repairs a cracked wooden wheel.
+A whitewashed milestone stands near the village gate.
+Bundles of cut wheat have been arranged beneath the old oak.
+
+Obvious exits: east, south, west.
+
+Mill Rise
+[Village Green]
+
+The ground rises gently toward gardens bright with sunflowers. Along the way, bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. Riverbend lies along the western road. A trace of sun-warmed earth hangs around the gardens.
+
+A young shepherd waters a bed of herbs.
+A painted village map stands near the cottage fence.
+Clay pots of herbs have been arranged beneath a striped market awning.
+
+Obvious exits: south, west.
+
+Golden Court
+[Hill Path]
+
+The village lane winds between orchards and bee yards, where a painted wind vane turns above a tiled roof.
+
+The air carries cut wheat and wildflowers, and hens call from a fenced yard drifts from the nearby homes. Elderwatch's tower is visible to the northeast.
+
+A miller loads flour sacks onto a cart.
+A bee skep stands near the village gate.
+Several flour sacks have been arranged beneath the cottage eaves.
+
+Obvious exits: north, northeast, east, south.
+
+Cottage Bend
+[Village Lane]
+
+You stand beside cottages with yellow doors. Nearby, bright cloth ribbons flutter from a festival pole.
+
+A distant hammer taps against wood rises above the fields while the smell of fresh hay and apple preserves follows the breeze. The southern fields fade into rolling pasture.
+
+A innkeeper hangs fresh ribbons from a gatepost.
+A whitewashed milestone stands near the cottage fence.
+Bundles of cut wheat have been arranged beneath a linen shade.
+
+Obvious exits: north, east, southwest, south, west.
+
+Oak Lane
+[Farmstead Road]
+
+A sunlit path crosses wheat fields broken by stone walls, its edge marked by a painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. Greenhold lies beyond the distant northwest road. Somewhere nearby, a mill wheel creaks on the ridge.
+
+A beekeeper checks a row of honey jars.
+A painted village map stands near the village gate.
+Clay pots of herbs have been arranged beneath a low timber shelter.
+
+Obvious exits: north, east, south, west.
+
+Harvest Road
+[Garden Walk]
+
+Soft earthen path passes through the heart of Sunmeadow between low farms beneath broad sky. Bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. The River Verin glints beyond the northern fields. A trace of honey and warm bread hangs around the gardens.
+
+A flower seller rests beneath the shade of an oak.
+A bee skep stands near the cottage fence.
+Several flour sacks have been arranged beneath the old oak.
+
+Obvious exits: north, east, south, west.
+
+Bright Field
+[Village Green]
+
+The ground rises gently toward gardens bright with sunflowers. Along the way, a painted wind vane turns above a tiled roof.
+
+The air carries sun-warmed earth, and wind chimes ring softly drifts from the nearby homes. Riverbend lies along the western road.
+
+A wheelwright repairs a cracked wooden wheel.
+A whitewashed milestone stands near the village gate.
+Bundles of cut wheat have been arranged beneath a striped market awning.
+
+Obvious exits: north, south, west.
+
+Sun Lane
+[Hill Path]
+
+The village lane winds between orchards and bee yards, where bright cloth ribbons flutter from a festival pole.
+
+Hens call from a fenced yard rises above the fields while the smell of cut wheat and wildflowers follows the breeze. Elderwatch's tower is visible to the northeast.
+
+A village clerk waters a bed of herbs.
+A painted village map stands near the cottage fence.
+Clay pots of herbs have been arranged beneath the cottage eaves.
+
+Obvious exits: north, east, south.
+
+Honey Road
+[Village Lane]
+
+You stand beside cottages with yellow doors. Nearby, a painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. The southern fields fade into rolling pasture. Somewhere nearby, a distant hammer taps against wood.
+
+A farmhand loads flour sacks onto a cart.
+A bee skep stands near the village gate.
+Several flour sacks have been arranged beneath a linen shade.
+
+Obvious exits: north, east, south, west.
+
+Wheat Field
+[Farmstead Road]
+
+A sunlit path crosses wheat fields broken by stone walls, its edge marked by bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. Greenhold lies beyond the distant northwest road. A trace of rosemary and woodsmoke hangs around the gardens.
+
+A young shepherd hangs fresh ribbons from a gatepost.
+A whitewashed milestone stands near the cottage fence.
+Bundles of cut wheat have been arranged beneath a low timber shelter.
+
+Obvious exits: north, east, south, west.
+
+Flower Green
+[Garden Walk]
+
+Soft earthen path passes through the heart of Sunmeadow between low farms beneath broad sky. A painted wind vane turns above a tiled roof.
+
+The air carries honey and warm bread, and children laugh near the village green drifts from the nearby homes. The River Verin glints beyond the northern fields.
+
+A miller checks a row of honey jars.
+A painted village map stands near the village gate.
+Clay pots of herbs have been arranged beneath the old oak.
+
+Obvious exits: north, northeast, east, south, west.
+
+Mill Walk of Sunmeadow
+[Village Green]
+
+The ground rises gently toward gardens bright with sunflowers. Along the way, bright cloth ribbons flutter from a festival pole.
+
+Wind chimes ring softly rises above the fields while the smell of sun-warmed earth follows the breeze. Riverbend lies along the western road.
+
+A innkeeper rests beneath the shade of an oak.
+A bee skep stands near the cottage fence.
+Several flour sacks have been arranged beneath a striped market awning.
+
+Obvious exits: north, south, southwest, west.
+
+Golden Way
+[Hill Path]
+
+The village lane winds between orchards and bee yards, where a painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. Elderwatch's tower is visible to the northeast. Somewhere nearby, hens call from a fenced yard.
+
+A beekeeper repairs a cracked wooden wheel.
+A whitewashed milestone stands near the village gate.
+Bundles of cut wheat have been arranged beneath the cottage eaves.
+
+Obvious exits: north, east, south.
+
+Cottage Terrace
+[Village Lane]
+
+You stand beside cottages with yellow doors. Nearby, bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. The southern fields fade into rolling pasture. A trace of fresh hay and apple preserves hangs around the gardens.
+
+A flower seller waters a bed of herbs.
+A painted village map stands near the cottage fence.
+Clay pots of herbs have been arranged beneath a linen shade.
+
+Obvious exits: north, east, south, west.
+
+Oak Rise
+[Farmstead Road]
+
+A sunlit path crosses wheat fields broken by stone walls, its edge marked by a painted wind vane turns above a tiled roof.
+
+The air carries rosemary and woodsmoke, and a mill wheel creaks on the ridge drifts from the nearby homes. Greenhold lies beyond the distant northwest road.
+
+A wheelwright loads flour sacks onto a cart.
+A bee skep stands near the village gate.
+Several flour sacks have been arranged beneath a low timber shelter.
+
+Obvious exits: north, northeast, east, south, west.
+
+Harvest Court
+[Garden Walk]
+
+Soft earthen path passes through the heart of Sunmeadow between low farms beneath broad sky. Bright cloth ribbons flutter from a festival pole.
+
+Children laugh near the village green rises above the fields while the smell of honey and warm bread follows the breeze. The River Verin glints beyond the northern fields.
+
+A village clerk hangs fresh ribbons from a gatepost.
+A whitewashed milestone stands near the cottage fence.
+Bundles of cut wheat have been arranged beneath the old oak.
+
+Obvious exits: north, east, southwest, south, west.
+
+Bright Bend
+[Village Green]
+
+The ground rises gently toward gardens bright with sunflowers. Along the way, a painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. Riverbend lies along the western road. Somewhere nearby, wind chimes ring softly.
+
+A farmhand checks a row of honey jars.
+A painted village map stands near the village gate.
+Clay pots of herbs have been arranged beneath a striped market awning.
+
+Obvious exits: north, south, west.
+
+Sun Rise
+[Hill Path]
+
+The village lane winds between orchards and bee yards, where bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. Elderwatch's tower is visible to the northeast. A trace of cut wheat and wildflowers hangs around the gardens.
+
+A young shepherd rests beneath the shade of an oak.
+A bee skep stands near the village gate.
+Several flour sacks have been arranged beneath the cottage eaves.
+
+Obvious exits: north, east.
+
+Honey Court
+[Village Lane]
+
+You stand beside cottages with yellow doors. Nearby, a painted wind vane turns above a tiled roof.
+
+The air carries fresh hay and apple preserves, and a distant hammer taps against wood drifts from the nearby homes. The southern fields fade into rolling pasture.
+
+A miller repairs a cracked wooden wheel.
+A whitewashed milestone stands near the village gate.
+Bundles of cut wheat have been arranged beneath a linen shade.
+
+Obvious exits: north, northeast, east, west.
+
+Wheat Bend
+[Farmstead Road]
+
+A sunlit path crosses wheat fields broken by stone walls, its edge marked by bright cloth ribbons flutter from a festival pole.
+
+A mill wheel creaks on the ridge rises above the fields while the smell of rosemary and woodsmoke follows the breeze. Greenhold lies beyond the distant northwest road.
+
+A innkeeper waters a bed of herbs.
+A painted village map stands near the cottage fence.
+Clay pots of herbs have been arranged beneath a low timber shelter.
+
+Obvious exits: north, east, west.
+
+Flower Lane
+[Garden Walk]
+
+Soft earthen path passes through the heart of Sunmeadow between low farms beneath broad sky. A painted wind vane turns above a tiled roof.
+
+Sunlight lies warm across the lane. The River Verin glints beyond the northern fields. Somewhere nearby, children laugh near the village green.
+
+A beekeeper loads flour sacks onto a cart.
+A bee skep stands near the village gate.
+Several flour sacks have been arranged beneath the old oak.
+
+Obvious exits: north, east, west.
+
+Mill Road
+[Village Green]
+
+The ground rises gently toward gardens bright with sunflowers. Along the way, bright cloth ribbons flutter from a festival pole.
+
+The village feels open and unhurried. Riverbend lies along the western road. A trace of sun-warmed earth hangs around the gardens.
+
+A flower seller hangs fresh ribbons from a gatepost.
+A whitewashed milestone stands near the cottage fence.
+Bundles of cut wheat have been arranged beneath a striped market awning.
+
+Obvious exits: north, west.
+
+========================================================================
+ELDERWATCH
+========================================================================
+
+Watch Court
+[Barracks Lane]
+
+The way passes beneath low administrative halls, where a narrow tower stair climbs toward the upper gallery.
+
+The air smells of horse tack and lamp smoke, and stable doors open and close carries sharply between the walls. Open farmland stretches east beyond the wall.
+
+A patrol scout checks the straps on a traveler's pack.
+A sealed supply chest stands near the signal mast.
+Bundles of signal poles have been arranged beneath the gatehouse roof.
+
+Obvious exits: east, south.
+
+Signal Square
+[Fortified Gate]
+
+You stand on a dark stone paving inside Elderwatch's defenses. Nearby, a rack of colored warning flags stands beneath an awning.
+
+Signal panels click in the wind echoes through the watchtown while the smell of pine tar from the palisade lingers near the barracks. The watchtower dominates the northern skyline.
+
+A messenger reviews a patrol roster.
+A route map case stands near the barracks door.
+A stack of patrol ledgers have been arranged beneath a military awning.
+
+Obvious exits: east, south, west.
+
+Tower Approach
+[Signal Court]
+
+A disciplined street runs between orderly rows of stables and armories. At its center, a narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. The old causeway begins beyond the western gate. From the tower comes boots cross the upper walk.
+
+A stable master waits beside a saddled horse.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath a canvas lean-to.
+
+Obvious exits: east, south, southwest, west.
+
+Guard Post
+[Watchtown Street]
+
+Broad flagstone lane leads toward the watchtower through stone barracks and supply houses. A rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. The western gate leads toward Greenhold. A trace of oiled leather and rain-dark stone hangs in the cool air.
+
+A quartermaster tests the edge of a short spear.
+A sealed supply chest stands near the barracks door.
+Bundles of signal poles have been arranged beneath the watchtower eaves.
+
+Obvious exits: east, south, west.
+
+Banner Road
+[Patrol Road]
+
+The fortified district opens around signal buildings with mirrored panels, its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+The air smells of stew from the barracks kitchens, and a patrol bell marks the hour carries sharply between the walls. The southern patrol road descends toward Sunmeadow.
+
+A watch captain records arrivals in a thick ledger.
+A route map case stands near the signal mast.
+A stack of patrol ledgers have been arranged beneath a timber shelter.
+
+Obvious exits: south, west.
+
+Stone Walk
+[Barracks Lane]
+
+The way passes beneath low administrative halls, where a rack of colored warning flags stands beneath an awning.
+
+Stable doors open and close echoes through the watchtown while the smell of horse tack and lamp smoke lingers near the barracks. Open farmland stretches east beyond the wall.
+
+A signal clerk polishes a brass signal mirror.
+A weapon inspection table stands near the barracks door.
+Rows of practice shields have been arranged beneath the gatehouse roof.
+
+Obvious exits: north, northeast, east, south.
+
+Horn Terrace
+[Fortified Gate]
+
+You stand on a dark stone paving inside Elderwatch's defenses. Nearby, a narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. The watchtower dominates the northern skyline. From the tower comes signal panels click in the wind.
+
+A gate sergeant checks the straps on a traveler's pack.
+A sealed supply chest stands near the signal mast.
+Bundles of signal poles have been arranged beneath a military awning.
+
+Obvious exits: north, east, southwest, south, west.
+
+Patrol Gate
+[Signal Court]
+
+A disciplined street runs between orderly rows of stables and armories. At its center, a rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. The old causeway begins beyond the western gate. A trace of waxed wood and iron hangs in the cool air.
+
+A young warden reviews a patrol roster.
+A route map case stands near the barracks door.
+A stack of patrol ledgers have been arranged beneath a canvas lean-to.
+
+Obvious exits: north, east, south, west.
+
+Beacon Lane
+[Watchtown Street]
+
+Broad flagstone lane leads toward the watchtower through stone barracks and supply houses. A narrow tower stair climbs toward the upper gallery.
+
+The air smells of oiled leather and rain-dark stone, and a drill sergeant calls a cadence carries sharply between the walls. The western gate leads toward Greenhold.
+
+A patrol scout waits beside a saddled horse.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath the watchtower eaves.
+
+Obvious exits: north, east, south, west.
+
+Ward Yard
+[Patrol Road]
+
+The fortified district opens around signal buildings with mirrored panels, its order reinforced by a rack of colored warning flags stands beneath an awning.
+
+A patrol bell marks the hour echoes through the watchtown while the smell of stew from the barracks kitchens lingers near the barracks. The southern patrol road descends toward Sunmeadow.
+
+A messenger tests the edge of a short spear.
+A sealed supply chest stands near the barracks door.
+Bundles of signal poles have been arranged beneath a timber shelter.
+
+Obvious exits: north, south, west.
+
+Watch Gate
+[Barracks Lane]
+
+The way passes beneath low administrative halls, where a narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. Open farmland stretches east beyond the wall. From the tower comes stable doors open and close.
+
+A stable master records arrivals in a thick ledger.
+A route map case stands near the signal mast.
+A stack of patrol ledgers have been arranged beneath the gatehouse roof.
+
+Obvious exits: north, east, south.
+
+Signal Lane
+[Fortified Gate]
+
+You stand on a dark stone paving inside Elderwatch's defenses. Nearby, a rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. The watchtower dominates the northern skyline. A trace of pine tar from the palisade hangs in the cool air.
+
+A quartermaster polishes a brass signal mirror.
+A weapon inspection table stands near the barracks door.
+Rows of practice shields have been arranged beneath a military awning.
+
+Obvious exits: north, east, south, west.
+
+Tower Yard
+[Signal Court]
+
+A disciplined street runs between orderly rows of stables and armories. At its center, a narrow tower stair climbs toward the upper gallery.
+
+The air smells of waxed wood and iron, and boots cross the upper walk carries sharply between the walls. The old causeway begins beyond the western gate.
+
+A watch captain checks the straps on a traveler's pack.
+A sealed supply chest stands near the signal mast.
+Bundles of signal poles have been arranged beneath a canvas lean-to.
+
+Obvious exits: north, east, south, west.
+
+Guard Court
+[Watchtown Street]
+
+Broad flagstone lane leads toward the watchtower through stone barracks and supply houses. A rack of colored warning flags stands beneath an awning.
+
+A drill sergeant calls a cadence echoes through the watchtown while the smell of oiled leather and rain-dark stone lingers near the barracks. The western gate leads toward Greenhold.
+
+A signal clerk reviews a patrol roster.
+A route map case stands near the barracks door.
+A stack of patrol ledgers have been arranged beneath the watchtower eaves.
+
+Obvious exits: north, northeast, east, south, west.
+
+Banner Square
+[Patrol Road]
+
+The fortified district opens around signal buildings with mirrored panels, its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. The southern patrol road descends toward Sunmeadow. From the tower comes a patrol bell marks the hour.
+
+A gate sergeant waits beside a saddled horse.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath a timber shelter.
+
+Obvious exits: north, south, southwest, west.
+
+Stone Approach
+[Barracks Lane]
+
+The way passes beneath low administrative halls, where a rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. Open farmland stretches east beyond the wall. A trace of horse tack and lamp smoke hangs in the cool air.
+
+A young warden tests the edge of a short spear.
+A sealed supply chest stands near the barracks door.
+Bundles of signal poles have been arranged beneath the gatehouse roof.
+
+Obvious exits: north, east, south.
+
+Horn Post
+[Fortified Gate]
+
+You stand on a dark stone paving inside Elderwatch's defenses. Nearby, a narrow tower stair climbs toward the upper gallery.
+
+The air smells of pine tar from the palisade, and signal panels click in the wind carries sharply between the walls. The watchtower dominates the northern skyline.
+
+A patrol scout records arrivals in a thick ledger.
+A route map case stands near the signal mast.
+A stack of patrol ledgers have been arranged beneath a military awning.
+
+Obvious exits: north, east, south, west.
+
+Patrol Road
+[Signal Court]
+
+A disciplined street runs between orderly rows of stables and armories. At its center, a rack of colored warning flags stands beneath an awning.
+
+Boots cross the upper walk echoes through the watchtown while the smell of waxed wood and iron lingers near the barracks. The old causeway begins beyond the western gate.
+
+A messenger polishes a brass signal mirror.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath a canvas lean-to.
+
+Obvious exits: north, northeast, east, south, west.
+
+Beacon Walk
+[Watchtown Street]
+
+Broad flagstone lane leads toward the watchtower through stone barracks and supply houses. A narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. The western gate leads toward Greenhold. From the tower comes a drill sergeant calls a cadence.
+
+A stable master checks the straps on a traveler's pack.
+A sealed supply chest stands near the signal mast.
+Bundles of signal poles have been arranged beneath the watchtower eaves.
+
+Obvious exits: north, east, southwest, south, west.
+
+Ward Terrace
+[Patrol Road]
+
+The fortified district opens around signal buildings with mirrored panels, its order reinforced by a rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. The southern patrol road descends toward Sunmeadow. A trace of stew from the barracks kitchens hangs in the cool air.
+
+A quartermaster reviews a patrol roster.
+A route map case stands near the barracks door.
+A stack of patrol ledgers have been arranged beneath a timber shelter.
+
+Obvious exits: north, south, west.
+
+Watch Road
+[Barracks Lane]
+
+The way passes beneath low administrative halls, where a narrow tower stair climbs toward the upper gallery.
+
+The air smells of horse tack and lamp smoke, and stable doors open and close carries sharply between the walls. Open farmland stretches east beyond the wall.
+
+A watch captain waits beside a saddled horse.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath the gatehouse roof.
+
+Obvious exits: north, east.
+
+Signal Walk
+[Fortified Gate]
+
+You stand on a dark stone paving inside Elderwatch's defenses. Nearby, a rack of colored warning flags stands beneath an awning.
+
+Signal panels click in the wind echoes through the watchtown while the smell of pine tar from the palisade lingers near the barracks. The watchtower dominates the northern skyline.
+
+A signal clerk tests the edge of a short spear.
+A sealed supply chest stands near the barracks door.
+Bundles of signal poles have been arranged beneath a military awning.
+
+Obvious exits: north, northeast, east, west.
+
+Tower Terrace
+[Signal Court]
+
+A disciplined street runs between orderly rows of stables and armories. At its center, a narrow tower stair climbs toward the upper gallery.
+
+Everything here appears measured and maintained. The old causeway begins beyond the western gate. From the tower comes boots cross the upper walk.
+
+A gate sergeant records arrivals in a thick ledger.
+A route map case stands near the signal mast.
+A stack of patrol ledgers have been arranged beneath a canvas lean-to.
+
+Obvious exits: north, east, west.
+
+Guard Gate
+[Watchtown Street]
+
+Broad flagstone lane leads toward the watchtower through stone barracks and supply houses. A rack of colored warning flags stands beneath an awning.
+
+The district feels prepared for trouble even in quiet weather. The western gate leads toward Greenhold. A trace of oiled leather and rain-dark stone hangs in the cool air.
+
+A young warden polishes a brass signal mirror.
+A weapon inspection table stands near the signal mast.
+Rows of practice shields have been arranged beneath the watchtower eaves.
+
+Obvious exits: north, east, west.
+
+Banner Lane
+[Patrol Road]
+
+The fortified district opens around signal buildings with mirrored panels, its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+The air smells of stew from the barracks kitchens, and a patrol bell marks the hour carries sharply between the walls. The southern patrol road descends toward Sunmeadow.
+
+A patrol scout checks the straps on a traveler's pack.
+A sealed supply chest stands near the signal mast.
+Bundles of signal poles have been arranged beneath a timber shelter.
+
+Obvious exits: north, west.
+
+========================================================================
+GREENHOLD OUTSKIRTS
+========================================================================
+
+Apple Road
+[Orchard Path]
+
+The road passes between clover fields and clipped hedges, where a narrow plank bridge crosses an irrigation ditch.
+
+The air smells of apple blossom and cut grass. Wooded hills rise faintly along the northern horizon. Above the hedges, sheep bells on the western slope comes and goes with the wind.
+
+A farmhand repairs a broken fence rail.
+A stone mile marker stands near the field wall.
+Three cider barrels have been arranged beneath the orchard eaves.
+
+Obvious exits: east, south.
+
+Pear Lane
+[Pasture Lane]
+
+You stand along a grass-centered cartway bordered by open sheep pasture. Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. The River Verin lies somewhere beyond the southern fields. The only nearby sound is a woodpecker tapping beyond the fields.
+
+A hedge cutter checks a row of grafted saplings.
+A wooden ladder stands near the orchard gate.
+Coils of orchard rope have been arranged beneath a canvas tarp.
+
+Obvious exits: east, south, west.
+
+Hawthorn Way
+[Country Road]
+
+A gently rising track cuts through rows of apple and pear trees. At the roadside, a narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. A watchtower breaks the skyline far to the east. A trace of fresh hay hangs in the air.
+
+A field warden rests beside a stone boundary marker.
+A weathered scarecrow stands near the field wall.
+A row of milk cans have been arranged beneath a leaning shed roof.
+
+Obvious exits: east, south, southwest, west.
+
+Meadow Reach
+[Farm Track]
+
+Raised farm road continues through the northern farms, winding between barley plots edged by drainage ditches and an abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while wagon wheels on stone carries from a distant farmstead. Greenhold's rooftops remain visible to the south.
+
+A shepherd loads baskets onto a narrow cart.
+A stone mile marker stands near the orchard gate.
+Three cider barrels have been arranged beneath an alder tree.
+
+Obvious exits: east, south, west.
+
+Orchard Track
+[Hedgerow Road]
+
+The country opens into small farms beneath alder windbreaks, divided by ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+The air smells of woodsmoke from a distant farmhouse. The road toward Elderwatch stretches eastward. Above the hedges, a farmer calling to a mule comes and goes with the wind.
+
+A traveling peddler sharpens a pruning knife.
+A wooden ladder stands near the field wall.
+Coils of orchard rope have been arranged beneath a low timber shelter.
+
+Obvious exits: south, west.
+
+Beech Bend
+[Orchard Path]
+
+The road passes between clover fields and clipped hedges, where an abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. Wooded hills rise faintly along the northern horizon. The only nearby sound is sheep bells on the western slope.
+
+A orchard keeper guides a small flock across the lane.
+A weathered scarecrow stands near the orchard gate.
+A row of milk cans have been arranged beneath the orchard eaves.
+
+Obvious exits: north, northeast, east, south.
+
+Barley Crossing
+[Pasture Lane]
+
+You stand along a grass-centered cartway bordered by open sheep pasture. Nearby, a narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. The River Verin lies somewhere beyond the southern fields. A trace of rain on warm earth hangs in the air.
+
+A miller's boy repairs a broken fence rail.
+A stone mile marker stands near the field wall.
+Three cider barrels have been arranged beneath a canvas tarp.
+
+Obvious exits: north, east, southwest, south, west.
+
+Cider Rise
+[Country Road]
+
+A gently rising track cuts through rows of apple and pear trees. At the roadside, an abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while the creak of orchard ladders carries from a distant farmstead. A watchtower breaks the skyline far to the east.
+
+A bee keeper checks a row of grafted saplings.
+A wooden ladder stands near the orchard gate.
+Coils of orchard rope have been arranged beneath a leaning shed roof.
+
+Obvious exits: north, east, south, west.
+
+Brook Mile
+[Farm Track]
+
+Raised farm road continues through the northern farms, winding between barley plots edged by drainage ditches and a narrow plank bridge crosses an irrigation ditch.
+
+The air smells of crushed clover and damp soil. Greenhold's rooftops remain visible to the south. Above the hedges, wagon wheels on stone comes and goes with the wind.
+
+A farmhand rests beside a stone boundary marker.
+A weathered scarecrow stands near the field wall.
+A row of milk cans have been arranged beneath an alder tree.
+
+Obvious exits: north, east, south, west.
+
+Boundary Path
+[Hedgerow Road]
+
+The country opens into small farms beneath alder windbreaks, divided by ditches and low fences. An abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. The road toward Elderwatch stretches eastward. The only nearby sound is a farmer calling to a mule.
+
+A hedge cutter loads baskets onto a narrow cart.
+A stone mile marker stands near the orchard gate.
+Three cider barrels have been arranged beneath a low timber shelter.
+
+Obvious exits: north, south, west.
+
+Apple Rise
+[Orchard Path]
+
+The road passes between clover fields and clipped hedges, where a narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. Wooded hills rise faintly along the northern horizon. A trace of apple blossom and cut grass hangs in the air.
+
+A field warden sharpens a pruning knife.
+A wooden ladder stands near the field wall.
+Coils of orchard rope have been arranged beneath the orchard eaves.
+
+Obvious exits: north, east, south.
+
+Pear Mile
+[Pasture Lane]
+
+You stand along a grass-centered cartway bordered by open sheep pasture. Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while a woodpecker tapping beyond the fields carries from a distant farmstead. The River Verin lies somewhere beyond the southern fields.
+
+A shepherd guides a small flock across the lane.
+A weathered scarecrow stands near the orchard gate.
+A row of milk cans have been arranged beneath a canvas tarp.
+
+Obvious exits: north, east, south, west.
+
+Hawthorn Path
+[Country Road]
+
+A gently rising track cuts through rows of apple and pear trees. At the roadside, a narrow plank bridge crosses an irrigation ditch.
+
+The air smells of fresh hay. A watchtower breaks the skyline far to the east. Above the hedges, the creak of orchard ladders comes and goes with the wind.
+
+A traveling peddler repairs a broken fence rail.
+A stone mile marker stands near the field wall.
+Three cider barrels have been arranged beneath a leaning shed roof.
+
+Obvious exits: north, east, south, west.
+
+Meadow Road
+[Farm Track]
+
+Raised farm road continues through the northern farms, winding between barley plots edged by drainage ditches and an abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. Greenhold's rooftops remain visible to the south. The only nearby sound is wagon wheels on stone.
+
+A orchard keeper checks a row of grafted saplings.
+A wooden ladder stands near the orchard gate.
+Coils of orchard rope have been arranged beneath an alder tree.
+
+Obvious exits: north, northeast, east, south, west.
+
+Orchard Lane
+[Hedgerow Road]
+
+The country opens into small farms beneath alder windbreaks, divided by ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. The road toward Elderwatch stretches eastward. A trace of woodsmoke from a distant farmhouse hangs in the air.
+
+A miller's boy rests beside a stone boundary marker.
+A weathered scarecrow stands near the field wall.
+A row of milk cans have been arranged beneath a low timber shelter.
+
+Obvious exits: north, south, southwest, west.
+
+Beech Way
+[Orchard Path]
+
+The road passes between clover fields and clipped hedges, where an abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while sheep bells on the western slope carries from a distant farmstead. Wooded hills rise faintly along the northern horizon.
+
+A bee keeper loads baskets onto a narrow cart.
+A stone mile marker stands near the orchard gate.
+Three cider barrels have been arranged beneath the orchard eaves.
+
+Obvious exits: north, east, south.
+
+Barley Reach
+[Pasture Lane]
+
+You stand along a grass-centered cartway bordered by open sheep pasture. Nearby, a narrow plank bridge crosses an irrigation ditch.
+
+The air smells of rain on warm earth. The River Verin lies somewhere beyond the southern fields. Above the hedges, a woodpecker tapping beyond the fields comes and goes with the wind.
+
+A farmhand sharpens a pruning knife.
+A wooden ladder stands near the field wall.
+Coils of orchard rope have been arranged beneath a canvas tarp.
+
+Obvious exits: north, east, south, west.
+
+Cider Track
+[Country Road]
+
+A gently rising track cuts through rows of apple and pear trees. At the roadside, an abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. A watchtower breaks the skyline far to the east. The only nearby sound is the creak of orchard ladders.
+
+A hedge cutter guides a small flock across the lane.
+A weathered scarecrow stands near the orchard gate.
+A row of milk cans have been arranged beneath a leaning shed roof.
+
+Obvious exits: north, northeast, east, south, west.
+
+Brook Bend
+[Farm Track]
+
+Raised farm road continues through the northern farms, winding between barley plots edged by drainage ditches and a narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. Greenhold's rooftops remain visible to the south. A trace of crushed clover and damp soil hangs in the air.
+
+A field warden repairs a broken fence rail.
+A stone mile marker stands near the field wall.
+Three cider barrels have been arranged beneath an alder tree.
+
+Obvious exits: north, east, southwest, south, west.
+
+Boundary Crossing
+[Hedgerow Road]
+
+The country opens into small farms beneath alder windbreaks, divided by ditches and low fences. An abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while a farmer calling to a mule carries from a distant farmstead. The road toward Elderwatch stretches eastward.
+
+A shepherd checks a row of grafted saplings.
+A wooden ladder stands near the orchard gate.
+Coils of orchard rope have been arranged beneath a low timber shelter.
+
+Obvious exits: north, south, west.
+
+Apple Track
+[Orchard Path]
+
+The road passes between clover fields and clipped hedges, where a narrow plank bridge crosses an irrigation ditch.
+
+The air smells of apple blossom and cut grass. Wooded hills rise faintly along the northern horizon. Above the hedges, sheep bells on the western slope comes and goes with the wind.
+
+A traveling peddler rests beside a stone boundary marker.
+A weathered scarecrow stands near the field wall.
+A row of milk cans have been arranged beneath the orchard eaves.
+
+Obvious exits: north, east.
+
+Pear Bend
+[Pasture Lane]
+
+You stand along a grass-centered cartway bordered by open sheep pasture. Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+Cloud shadows move slowly across the fields. The River Verin lies somewhere beyond the southern fields. The only nearby sound is a woodpecker tapping beyond the fields.
+
+A orchard keeper loads baskets onto a narrow cart.
+A stone mile marker stands near the orchard gate.
+Three cider barrels have been arranged beneath a canvas tarp.
+
+Obvious exits: north, northeast, east, west.
+
+Hawthorn Crossing
+[Country Road]
+
+A gently rising track cuts through rows of apple and pear trees. At the roadside, a narrow plank bridge crosses an irrigation ditch.
+
+The road bears the marks of steady travel rather than heavy traffic. A watchtower breaks the skyline far to the east. A trace of fresh hay hangs in the air.
+
+A miller's boy sharpens a pruning knife.
+A wooden ladder stands near the field wall.
+Coils of orchard rope have been arranged beneath a leaning shed roof.
+
+Obvious exits: north, east, west.
+
+Meadow Rise
+[Farm Track]
+
+Raised farm road continues through the northern farms, winding between barley plots edged by drainage ditches and an abandoned cider press rests beneath a roofed shelter.
+
+Bees move among the blossoms while wagon wheels on stone carries from a distant farmstead. Greenhold's rooftops remain visible to the south.
+
+A bee keeper guides a small flock across the lane.
+A weathered scarecrow stands near the orchard gate.
+A row of milk cans have been arranged beneath an alder tree.
+
+Obvious exits: north, east, west.
+
+Orchard Mile
+[Hedgerow Road]
+
+The country opens into small farms beneath alder windbreaks, divided by ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+The air smells of woodsmoke from a distant farmhouse. The road toward Elderwatch stretches eastward. Above the hedges, a farmer calling to a mule comes and goes with the wind.
+
+A farmhand repairs a broken fence rail.
+A stone mile marker stands near the field wall.
+Three cider barrels have been arranged beneath a low timber shelter.
+
+Obvious exits: north, west.
+
+========================================================================
+RIVERBEND AND THE VERIN
+========================================================================
+
+River Walk
+[Bridge Approach]
+
+The River Verin curves past grain mills built close to the bank, its surface broken by a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. Greenhold lies beyond the northern meadows. From downstream comes ferrymen calling across the channel.
+
+A grain trader checks the depth marks beside the bank.
+A flat-bottomed skiff stands near the water's edge.
+A row of sealed barrels have been arranged beneath a patched awning.
+
+Obvious exits: east, south.
+
+Willow Quay
+[Levee Road]
+
+You stand on a willow-shaded path above the river, where a flight of stone steps descends to a landing.
+
+The river current moves with patient force. The river continues east toward Elderwatch's lands. A cool trace of reeds and cold stone clings to the bank.
+
+A fish seller coils a heavy mooring line.
+A painted depth marker stands near the bridge pier.
+Stacks of river crates have been arranged beneath a damp cloth.
+
+Obvious exits: east, south, west.
+
+Ferry Approach
+[Riverside Path]
+
+A riverside way runs between reeds beneath leaning willows and the dark green water. A mill wheel turns with a steady wooden groan.
+
+The air smells of rainwater and mill dust, and the creak of mill machinery travels clearly across the water. A line of warehouses follows the bank downstream.
+
+A ferryman repairs a split oar.
+A grain scale stands near the water's edge.
+Three grain sacks have been arranged beneath a low canvas roof.
+
+Obvious exits: east, south, southwest, west.
+
+Mill Way
+[Quayside]
+
+Raised stone levee follows the river's bend through low houses with river-facing doors. Below, a flight of stone steps descends to a landing.
+
+Water rushing beneath the bridge mingles with the smell of wet rope, fish, and grain. Riverbend's bridge rises to the west.
+
+A mill worker waits for a barge to clear the channel.
+A flat-bottomed skiff stands near the bridge pier.
+A row of sealed barrels have been arranged beneath a warehouse overhang.
+
+Obvious exits: east, south, west.
+
+Quay Reach
+[River Town]
+
+The river broadens here beside warehouses and mooring posts. Near the bank, a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. The road toward Sunmeadow leaves the southern bank. From downstream comes the knock of hulls against pilings.
+
+A bridge keeper scrapes riverweed from a landing step.
+A painted depth marker stands near the water's edge.
+Stacks of river crates have been arranged beneath the bridge keeper's shelter.
+
+Obvious exits: south, west.
+
+Reed Lane
+[Bridge Approach]
+
+The River Verin curves past grain mills built close to the bank, its surface broken by a flight of stone steps descends to a landing.
+
+The river current moves with patient force. Greenhold lies beyond the northern meadows. A cool trace of river mud and cut timber clings to the bank.
+
+A river ranger counts sacks beneath a warehouse awning.
+A grain scale stands near the bridge pier.
+Three grain sacks have been arranged beneath a patched awning.
+
+Obvious exits: north, northeast, east, south.
+
+Bridge Landing
+[Levee Road]
+
+You stand on a willow-shaded path above the river, where a mill wheel turns with a steady wooden groan.
+
+The air smells of reeds and cold stone, and gulls crying over the quay travels clearly across the water. The river continues east toward Elderwatch's lands.
+
+A barge hand checks the depth marks beside the bank.
+A flat-bottomed skiff stands near the water's edge.
+A row of sealed barrels have been arranged beneath a damp cloth.
+
+Obvious exits: north, east, southwest, south, west.
+
+Lock Crossing
+[Riverside Path]
+
+A riverside way runs between reeds beneath leaning willows and the dark green water. A flight of stone steps descends to a landing.
+
+The creak of mill machinery mingles with the smell of rainwater and mill dust. A line of warehouses follows the bank downstream.
+
+A rope maker coils a heavy mooring line.
+A painted depth marker stands near the bridge pier.
+Stacks of river crates have been arranged beneath a low canvas roof.
+
+Obvious exits: north, east, south, west.
+
+Barge Bank
+[Quayside]
+
+Raised stone levee follows the river's bend through low houses with river-facing doors. Below, a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. Riverbend's bridge rises to the west. From downstream comes water rushing beneath the bridge.
+
+A grain trader repairs a split oar.
+A grain scale stands near the water's edge.
+Three grain sacks have been arranged beneath a warehouse overhang.
+
+Obvious exits: north, east, south, west.
+
+Water Bend
+[River Town]
+
+The river broadens here beside warehouses and mooring posts. Near the bank, a flight of stone steps descends to a landing.
+
+The river current moves with patient force. The road toward Sunmeadow leaves the southern bank. A cool trace of tarred planks clings to the bank.
+
+A fish seller waits for a barge to clear the channel.
+A flat-bottomed skiff stands near the bridge pier.
+A row of sealed barrels have been arranged beneath the bridge keeper's shelter.
+
+Obvious exits: north, south, west.
+
+River Crossing
+[Bridge Approach]
+
+The River Verin curves past grain mills built close to the bank, its surface broken by a mill wheel turns with a steady wooden groan.
+
+The air smells of river mud and cut timber, and ferrymen calling across the channel travels clearly across the water. Greenhold lies beyond the northern meadows.
+
+A ferryman scrapes riverweed from a landing step.
+A painted depth marker stands near the water's edge.
+Stacks of river crates have been arranged beneath a patched awning.
+
+Obvious exits: north, east, south.
+
+Willow Bank
+[Levee Road]
+
+You stand on a willow-shaded path above the river, where a flight of stone steps descends to a landing.
+
+Gulls crying over the quay mingles with the smell of reeds and cold stone. The river continues east toward Elderwatch's lands.
+
+A mill worker counts sacks beneath a warehouse awning.
+A grain scale stands near the bridge pier.
+Three grain sacks have been arranged beneath a damp cloth.
+
+Obvious exits: north, east, south, west.
+
+Ferry Bend
+[Riverside Path]
+
+A riverside way runs between reeds beneath leaning willows and the dark green water. A mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. A line of warehouses follows the bank downstream. From downstream comes the creak of mill machinery.
+
+A bridge keeper checks the depth marks beside the bank.
+A flat-bottomed skiff stands near the water's edge.
+A row of sealed barrels have been arranged beneath a low canvas roof.
+
+Obvious exits: north, east, south, west.
+
+Mill Walk
+[Quayside]
+
+Raised stone levee follows the river's bend through low houses with river-facing doors. Below, a flight of stone steps descends to a landing.
+
+The river current moves with patient force. Riverbend's bridge rises to the west. A cool trace of wet rope, fish, and grain clings to the bank.
+
+A river ranger coils a heavy mooring line.
+A painted depth marker stands near the bridge pier.
+Stacks of river crates have been arranged beneath a warehouse overhang.
+
+Obvious exits: north, northeast, east, south, west.
+
+Quay Quay
+[River Town]
+
+The river broadens here beside warehouses and mooring posts. Near the bank, a mill wheel turns with a steady wooden groan.
+
+The air smells of tarred planks, and the knock of hulls against pilings travels clearly across the water. The road toward Sunmeadow leaves the southern bank.
+
+A barge hand repairs a split oar.
+A grain scale stands near the water's edge.
+Three grain sacks have been arranged beneath the bridge keeper's shelter.
+
+Obvious exits: north, south, southwest, west.
+
+Reed Approach
+[Bridge Approach]
+
+The River Verin curves past grain mills built close to the bank, its surface broken by a flight of stone steps descends to a landing.
+
+Ferrymen calling across the channel mingles with the smell of river mud and cut timber. Greenhold lies beyond the northern meadows.
+
+A rope maker waits for a barge to clear the channel.
+A flat-bottomed skiff stands near the bridge pier.
+A row of sealed barrels have been arranged beneath a patched awning.
+
+Obvious exits: north, east, south.
+
+Bridge Way
+[Levee Road]
+
+You stand on a willow-shaded path above the river, where a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. The river continues east toward Elderwatch's lands. From downstream comes gulls crying over the quay.
+
+A grain trader scrapes riverweed from a landing step.
+A painted depth marker stands near the water's edge.
+Stacks of river crates have been arranged beneath a damp cloth.
+
+Obvious exits: north, east, south, west.
+
+Lock Reach
+[Riverside Path]
+
+A riverside way runs between reeds beneath leaning willows and the dark green water. A flight of stone steps descends to a landing.
+
+The river current moves with patient force. A line of warehouses follows the bank downstream. A cool trace of rainwater and mill dust clings to the bank.
+
+A fish seller counts sacks beneath a warehouse awning.
+A grain scale stands near the bridge pier.
+Three grain sacks have been arranged beneath a low canvas roof.
+
+Obvious exits: north, northeast, east, south, west.
+
+Barge Lane
+[Quayside]
+
+Raised stone levee follows the river's bend through low houses with river-facing doors. Below, a mill wheel turns with a steady wooden groan.
+
+The air smells of wet rope, fish, and grain, and water rushing beneath the bridge travels clearly across the water. Riverbend's bridge rises to the west.
+
+A ferryman checks the depth marks beside the bank.
+A flat-bottomed skiff stands near the water's edge.
+A row of sealed barrels have been arranged beneath a warehouse overhang.
+
+Obvious exits: north, east, southwest, south, west.
+
+Water Landing
+[River Town]
+
+The river broadens here beside warehouses and mooring posts. Near the bank, a flight of stone steps descends to a landing.
+
+The knock of hulls against pilings mingles with the smell of tarred planks. The road toward Sunmeadow leaves the southern bank.
+
+A mill worker coils a heavy mooring line.
+A painted depth marker stands near the bridge pier.
+Stacks of river crates have been arranged beneath the bridge keeper's shelter.
+
+Obvious exits: north, south, west.
+
+River Reach
+[Bridge Approach]
+
+The River Verin curves past grain mills built close to the bank, its surface broken by a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. Greenhold lies beyond the northern meadows. From downstream comes ferrymen calling across the channel.
+
+A bridge keeper repairs a split oar.
+A grain scale stands near the water's edge.
+Three grain sacks have been arranged beneath a patched awning.
+
+Obvious exits: north, east.
+
+Willow Lane
+[Levee Road]
+
+You stand on a willow-shaded path above the river, where a flight of stone steps descends to a landing.
+
+The river current moves with patient force. The river continues east toward Elderwatch's lands. A cool trace of reeds and cold stone clings to the bank.
+
+A river ranger waits for a barge to clear the channel.
+A flat-bottomed skiff stands near the bridge pier.
+A row of sealed barrels have been arranged beneath a damp cloth.
+
+Obvious exits: north, northeast, east, west.
+
+Ferry Landing
+[Riverside Path]
+
+A riverside way runs between reeds beneath leaning willows and the dark green water. A mill wheel turns with a steady wooden groan.
+
+The air smells of rainwater and mill dust, and the creak of mill machinery travels clearly across the water. A line of warehouses follows the bank downstream.
+
+A barge hand scrapes riverweed from a landing step.
+A painted depth marker stands near the water's edge.
+Stacks of river crates have been arranged beneath a low canvas roof.
+
+Obvious exits: north, east, west.
+
+Mill Crossing
+[Quayside]
+
+Raised stone levee follows the river's bend through low houses with river-facing doors. Below, a flight of stone steps descends to a landing.
+
+Water rushing beneath the bridge mingles with the smell of wet rope, fish, and grain. Riverbend's bridge rises to the west.
+
+A rope maker counts sacks beneath a warehouse awning.
+A grain scale stands near the bridge pier.
+Three grain sacks have been arranged beneath a warehouse overhang.
+
+Obvious exits: north, east, west.
+
+Quay Bank
+[River Town]
+
+The river broadens here beside warehouses and mooring posts. Near the bank, a mill wheel turns with a steady wooden groan.
+
+Ripples scatter reflections of the clouds and nearby roofs. The road toward Sunmeadow leaves the southern bank. From downstream comes the knock of hulls against pilings.
+
+A grain trader checks the depth marks beside the bank.
+A flat-bottomed skiff stands near the water's edge.
+A row of sealed barrels have been arranged beneath the bridge keeper's shelter.
+
+Obvious exits: north, west.
+
+========================================================================
+WESTERN FARMS
+========================================================================
+
+Flax Road
+[Farm Road]
+
+The road crosses flax fields and grazing pasture, where a line of white stones marks the edge of the common pasture.
+
+A cart axle complains on the road drifts across the fields while turned soil and clover settles along the road. Riverbend can be reached by the southern lanes.
+
+A field hand checks the depth of a drainage cut.
+A roofed threshing floor stands near the brook crossing.
+Three wool bales have been arranged beneath a timber lean-to.
+
+Obvious exits: east, south.
+
+Clover Lane
+[Pasture Track]
+
+You stand along a grass-grown cart track between fallow land bright with weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. The northern country rises toward wooded hills. A faint trace of grain dust lingers in the breeze.
+
+A farm steward repairs a stone wall.
+A hay cart stands near the pasture entrance.
+Bundles of flax have been arranged beneath a weighted canvas.
+
+Obvious exits: east, south, west.
+
+Stonewall Bend
+[Rural Crossing]
+
+A quiet farm track follows broad hay meadows, its edge marked by a line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. A narrow road branches east toward the main cartway. From a distant farm comes cattle low beyond a stone wall.
+
+A thresher ties a new rope around a grain bundle.
+A stone drinking trough stands near the brook crossing.
+Rows of empty milk cans have been arranged beneath a patched tarpaulin.
+
+Obvious exits: east, south, southwest, west.
+
+Pasture Mile
+[Field Path]
+
+Chalky farm path bends through low stone walls and drainage ditches. A pair of weathered gateposts frame a field entrance.
+
+The air smells of hay and damp wool. Greenhold's western wall lies beyond the eastern fields. Nearby, sheep bells ring on the far slope.
+
+A wagoner rests beside a loaded wagon.
+A roofed threshing floor stands near the pasture entrance.
+Three wool bales have been arranged beneath a low barn roof.
+
+Obvious exits: east, south, west.
+
+Threshing Crossing
+[Boundary Lane]
+
+The fields open widely around small farms beneath wind-bent trees, broken only by a line of white stones marks the edge of the common pasture.
+
+A threshing flail strikes in steady rhythm drifts across the fields while rainwater in the ditches settles along the road. Duskwood Vale darkens the horizon to the west.
+
+A shepherd turns hay with a wooden fork.
+A hay cart stands near the brook crossing.
+Bundles of flax have been arranged beneath the branches of an old oak.
+
+Obvious exits: south, west.
+
+Moss Way
+[Farm Road]
+
+The road crosses flax fields and grazing pasture, where a pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. Riverbend can be reached by the southern lanes. A faint trace of turned soil and clover lingers in the breeze.
+
+A cattle drover guides cattle toward a pasture gate.
+A stone drinking trough stands near the pasture entrance.
+Rows of empty milk cans have been arranged beneath a timber lean-to.
+
+Obvious exits: north, northeast, east, south.
+
+Shepherd Path
+[Pasture Track]
+
+You stand along a grass-grown cart track between fallow land bright with weeds. Nearby, a line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. The northern country rises toward wooded hills. From a distant farm comes a dog barks from a distant yard.
+
+A hedge keeper checks the depth of a drainage cut.
+A roofed threshing floor stands near the brook crossing.
+Three wool bales have been arranged beneath a weighted canvas.
+
+Obvious exits: north, east, southwest, south, west.
+
+Rain Track
+[Rural Crossing]
+
+A quiet farm track follows broad hay meadows, its edge marked by a pair of weathered gateposts frame a field entrance.
+
+The air smells of woodsmoke and manure. A narrow road branches east toward the main cartway. Nearby, cattle low beyond a stone wall.
+
+A ditch worker repairs a stone wall.
+A hay cart stands near the pasture entrance.
+Bundles of flax have been arranged beneath a patched tarpaulin.
+
+Obvious exits: north, east, south, west.
+
+Fallow Field
+[Field Path]
+
+Chalky farm path bends through low stone walls and drainage ditches. A line of white stones marks the edge of the common pasture.
+
+Sheep bells ring on the far slope drifts across the fields while hay and damp wool settles along the road. Greenhold's western wall lies beyond the eastern fields.
+
+A field hand ties a new rope around a grain bundle.
+A stone drinking trough stands near the brook crossing.
+Rows of empty milk cans have been arranged beneath a low barn roof.
+
+Obvious exits: north, east, south, west.
+
+Brook Rise
+[Boundary Lane]
+
+The fields open widely around small farms beneath wind-bent trees, broken only by a pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. Duskwood Vale darkens the horizon to the west. A faint trace of rainwater in the ditches lingers in the breeze.
+
+A farm steward rests beside a loaded wagon.
+A roofed threshing floor stands near the pasture entrance.
+Three wool bales have been arranged beneath the branches of an old oak.
+
+Obvious exits: north, south, west.
+
+Flax Track
+[Farm Road]
+
+The road crosses flax fields and grazing pasture, where a line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. Riverbend can be reached by the southern lanes. From a distant farm comes a cart axle complains on the road.
+
+A thresher turns hay with a wooden fork.
+A hay cart stands near the brook crossing.
+Bundles of flax have been arranged beneath a timber lean-to.
+
+Obvious exits: north, east, south.
+
+Clover Field
+[Pasture Track]
+
+You stand along a grass-grown cart track between fallow land bright with weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+The air smells of grain dust. The northern country rises toward wooded hills. Nearby, a dog barks from a distant yard.
+
+A wagoner guides cattle toward a pasture gate.
+A stone drinking trough stands near the pasture entrance.
+Rows of empty milk cans have been arranged beneath a weighted canvas.
+
+Obvious exits: north, east, south, west.
+
+Stonewall Rise
+[Rural Crossing]
+
+A quiet farm track follows broad hay meadows, its edge marked by a line of white stones marks the edge of the common pasture.
+
+Cattle low beyond a stone wall drifts across the fields while woodsmoke and manure settles along the road. A narrow road branches east toward the main cartway.
+
+A shepherd checks the depth of a drainage cut.
+A roofed threshing floor stands near the brook crossing.
+Three wool bales have been arranged beneath a patched tarpaulin.
+
+Obvious exits: north, east, south, west.
+
+Pasture Road
+[Field Path]
+
+Chalky farm path bends through low stone walls and drainage ditches. A pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. Greenhold's western wall lies beyond the eastern fields. A faint trace of hay and damp wool lingers in the breeze.
+
+A cattle drover repairs a stone wall.
+A hay cart stands near the pasture entrance.
+Bundles of flax have been arranged beneath a low barn roof.
+
+Obvious exits: north, northeast, east, south, west.
+
+Threshing Lane
+[Boundary Lane]
+
+The fields open widely around small farms beneath wind-bent trees, broken only by a line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. Duskwood Vale darkens the horizon to the west. From a distant farm comes a threshing flail strikes in steady rhythm.
+
+A hedge keeper ties a new rope around a grain bundle.
+A stone drinking trough stands near the brook crossing.
+Rows of empty milk cans have been arranged beneath the branches of an old oak.
+
+Obvious exits: north, south, southwest, west.
+
+Moss Bend
+[Farm Road]
+
+The road crosses flax fields and grazing pasture, where a pair of weathered gateposts frame a field entrance.
+
+The air smells of turned soil and clover. Riverbend can be reached by the southern lanes. Nearby, a cart axle complains on the road.
+
+A ditch worker rests beside a loaded wagon.
+A roofed threshing floor stands near the pasture entrance.
+Three wool bales have been arranged beneath a timber lean-to.
+
+Obvious exits: north, east, south.
+
+Shepherd Mile
+[Pasture Track]
+
+You stand along a grass-grown cart track between fallow land bright with weeds. Nearby, a line of white stones marks the edge of the common pasture.
+
+A dog barks from a distant yard drifts across the fields while grain dust settles along the road. The northern country rises toward wooded hills.
+
+A field hand turns hay with a wooden fork.
+A hay cart stands near the brook crossing.
+Bundles of flax have been arranged beneath a weighted canvas.
+
+Obvious exits: north, east, south, west.
+
+Rain Crossing
+[Rural Crossing]
+
+A quiet farm track follows broad hay meadows, its edge marked by a pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. A narrow road branches east toward the main cartway. A faint trace of woodsmoke and manure lingers in the breeze.
+
+A farm steward guides cattle toward a pasture gate.
+A stone drinking trough stands near the pasture entrance.
+Rows of empty milk cans have been arranged beneath a patched tarpaulin.
+
+Obvious exits: north, northeast, east, south, west.
+
+Fallow Way
+[Field Path]
+
+Chalky farm path bends through low stone walls and drainage ditches. A line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. Greenhold's western wall lies beyond the eastern fields. From a distant farm comes sheep bells ring on the far slope.
+
+A thresher checks the depth of a drainage cut.
+A roofed threshing floor stands near the brook crossing.
+Three wool bales have been arranged beneath a low barn roof.
+
+Obvious exits: north, east, southwest, south, west.
+
+Brook Path
+[Boundary Lane]
+
+The fields open widely around small farms beneath wind-bent trees, broken only by a pair of weathered gateposts frame a field entrance.
+
+The air smells of rainwater in the ditches. Duskwood Vale darkens the horizon to the west. Nearby, a threshing flail strikes in steady rhythm.
+
+A wagoner repairs a stone wall.
+A hay cart stands near the pasture entrance.
+Bundles of flax have been arranged beneath the branches of an old oak.
+
+Obvious exits: north, south, west.
+
+Flax Crossing
+[Farm Road]
+
+The road crosses flax fields and grazing pasture, where a line of white stones marks the edge of the common pasture.
+
+A cart axle complains on the road drifts across the fields while turned soil and clover settles along the road. Riverbend can be reached by the southern lanes.
+
+A shepherd ties a new rope around a grain bundle.
+A stone drinking trough stands near the brook crossing.
+Rows of empty milk cans have been arranged beneath a timber lean-to.
+
+Obvious exits: north, east.
+
+Clover Way
+[Pasture Track]
+
+You stand along a grass-grown cart track between fallow land bright with weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+Clouds move slowly over the open country. The northern country rises toward wooded hills. A faint trace of grain dust lingers in the breeze.
+
+A cattle drover rests beside a loaded wagon.
+A roofed threshing floor stands near the pasture entrance.
+Three wool bales have been arranged beneath a weighted canvas.
+
+Obvious exits: north, northeast, east, west.
+
+Stonewall Path
+[Rural Crossing]
+
+A quiet farm track follows broad hay meadows, its edge marked by a line of white stones marks the edge of the common pasture.
+
+The land here feels worked but not crowded. A narrow road branches east toward the main cartway. From a distant farm comes cattle low beyond a stone wall.
+
+A hedge keeper turns hay with a wooden fork.
+A hay cart stands near the brook crossing.
+Bundles of flax have been arranged beneath a patched tarpaulin.
+
+Obvious exits: north, east, west.
+
+Pasture Track
+[Field Path]
+
+Chalky farm path bends through low stone walls and drainage ditches. A pair of weathered gateposts frame a field entrance.
+
+The air smells of hay and damp wool. Greenhold's western wall lies beyond the eastern fields. Nearby, sheep bells ring on the far slope.
+
+A ditch worker guides cattle toward a pasture gate.
+A stone drinking trough stands near the pasture entrance.
+Rows of empty milk cans have been arranged beneath a low barn roof.
+
+Obvious exits: north, east, west.
+
+Threshing Field
+[Boundary Lane]
+
+The fields open widely around small farms beneath wind-bent trees, broken only by a line of white stones marks the edge of the common pasture.
+
+A threshing flail strikes in steady rhythm drifts across the fields while rainwater in the ditches settles along the road. Duskwood Vale darkens the horizon to the west.
+
+A field hand checks the depth of a drainage cut.
+A roofed threshing floor stands near the brook crossing.
+Three wool bales have been arranged beneath the branches of an old oak.
+
+Obvious exits: north, west.
+
+========================================================================
+DUSKWOOD FRINGE
+========================================================================
+
+Raven Path
+[Woodland Path]
+
+The road enters old oaks draped in moss, where a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. Moonshade lies somewhere beyond the deeper woods. Somewhere ahead, water runs unseen over stone.
+
+A mushroom picker ties a strip of cloth to a branch.
+A moss-covered milestone stands near the broken shrine.
+A row of small animal traps lie beneath the roots of an oak.
+
+Obvious exits: east, south.
+
+Moss Hollow
+[Shadowed Lane]
+
+You stand on a mossy timber track beneath dense undergrowth and leaning trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. Greenhold is no longer visible from the trail. A cool trace of crushed fern hangs beneath the trees.
+
+A charcoal burner studies tracks beside the road.
+A warding post stands near the old stump.
+Stacks of cut pine lie beneath a waxed cloth.
+
+Obvious exits: east, south, west.
+
+Twilight Way
+[Forest Road]
+
+A dim woodland path winds through close pines and blackthorn, its edge marked by a weathered warding post stands beside the road.
+
+The air smells of leaf mold and smoke, and branches knock together in the wind comes from deeper among the trees. The land falls away toward a hidden stream valley.
+
+A traveling hunter watches the deeper forest without moving.
+A iron trail lantern stands near the broken shrine.
+Bundles of drying herbs lie beneath a low branch.
+
+Obvious exits: east, south, southwest, west.
+
+Blackthorn Descent
+[Border Track]
+
+Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging marker bears three deep axe cuts.
+
+Something small moves through the brush carries beneath the canopy while wet bark and mushrooms clings to the damp ground. Open farmland remains visible through the eastern trees.
+
+A raven keeper sorts herbs into a waxed satchel.
+A moss-covered milestone stands near the old stump.
+A row of small animal traps lie beneath a mossy overhang.
+
+Obvious exits: east, south, west.
+
+Hollow Bend
+[Old Timber Road]
+
+The cultivated country gives way to the first shadowed trees of Duskwood Vale, broken by a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. The road toward Ravenswatch continues west. Somewhere ahead, a raven calls once and falls silent.
+
+A herb gatherer rests a wood axe against one shoulder.
+A warding post stands near the broken shrine.
+Stacks of cut pine lie beneath a leaning timber shelter.
+
+Obvious exits: south, west.
+
+Moon Crossing
+[Woodland Path]
+
+The road enters old oaks draped in moss, where an old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. Moonshade lies somewhere beyond the deeper woods. A cool trace of pine resin and cold earth hangs beneath the trees.
+
+A border scout checks the carving on a warding post.
+A iron trail lantern stands near the old stump.
+Bundles of drying herbs lie beneath the roots of an oak.
+
+Obvious exits: north, northeast, east, south.
+
+Pine Mile
+[Shadowed Lane]
+
+You stand on a mossy timber track beneath dense undergrowth and leaning trunks. Nearby, a weathered warding post stands beside the road.
+
+The air smells of crushed fern, and a distant woodcutter's axe echoes comes from deeper among the trees. Greenhold is no longer visible from the trail.
+
+A forest warden ties a strip of cloth to a branch.
+A moss-covered milestone stands near the broken shrine.
+A row of small animal traps lie beneath a waxed cloth.
+
+Obvious exits: north, east, southwest, south, west.
+
+Root Road
+[Forest Road]
+
+A dim woodland path winds through close pines and blackthorn, its edge marked by an old logging marker bears three deep axe cuts.
+
+Branches knock together in the wind carries beneath the canopy while leaf mold and smoke clings to the damp ground. The land falls away toward a hidden stream valley.
+
+A woodcutter studies tracks beside the road.
+A warding post stands near the old stump.
+Stacks of cut pine lie beneath a low branch.
+
+Obvious exits: north, east, south, west.
+
+Fern Reach
+[Border Track]
+
+Dark earth trail narrows beneath ferns beneath a dim canopy. A weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. Open farmland remains visible through the eastern trees. Somewhere ahead, something small moves through the brush.
+
+A mushroom picker watches the deeper forest without moving.
+A iron trail lantern stands near the broken shrine.
+Bundles of drying herbs lie beneath a mossy overhang.
+
+Obvious exits: north, east, south, west.
+
+Gloam Trail
+[Old Timber Road]
+
+The cultivated country gives way to the first shadowed trees of Duskwood Vale, broken by an old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. The road toward Ravenswatch continues west. A cool trace of moss and stagnant water hangs beneath the trees.
+
+A charcoal burner sorts herbs into a waxed satchel.
+A moss-covered milestone stands near the old stump.
+A row of small animal traps lie beneath a leaning timber shelter.
+
+Obvious exits: north, south, west.
+
+Raven Road
+[Woodland Path]
+
+The road enters old oaks draped in moss, where a weathered warding post stands beside the road.
+
+The air smells of pine resin and cold earth, and water runs unseen over stone comes from deeper among the trees. Moonshade lies somewhere beyond the deeper woods.
+
+A traveling hunter rests a wood axe against one shoulder.
+A warding post stands near the broken shrine.
+Stacks of cut pine lie beneath the roots of an oak.
+
+Obvious exits: north, east, south.
+
+Moss Reach
+[Shadowed Lane]
+
+You stand on a mossy timber track beneath dense undergrowth and leaning trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+A distant woodcutter's axe echoes carries beneath the canopy while crushed fern clings to the damp ground. Greenhold is no longer visible from the trail.
+
+A raven keeper checks the carving on a warding post.
+A iron trail lantern stands near the old stump.
+Bundles of drying herbs lie beneath a waxed cloth.
+
+Obvious exits: north, east, south, west.
+
+Twilight Trail
+[Forest Road]
+
+A dim woodland path winds through close pines and blackthorn, its edge marked by a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. The land falls away toward a hidden stream valley. Somewhere ahead, branches knock together in the wind.
+
+A herb gatherer ties a strip of cloth to a branch.
+A moss-covered milestone stands near the broken shrine.
+A row of small animal traps lie beneath a low branch.
+
+Obvious exits: north, east, south, west.
+
+Blackthorn Path
+[Border Track]
+
+Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. Open farmland remains visible through the eastern trees. A cool trace of wet bark and mushrooms hangs beneath the trees.
+
+A border scout studies tracks beside the road.
+A warding post stands near the old stump.
+Stacks of cut pine lie beneath a mossy overhang.
+
+Obvious exits: north, northeast, east, south, west.
+
+Hollow Hollow
+[Old Timber Road]
+
+The cultivated country gives way to the first shadowed trees of Duskwood Vale, broken by a weathered warding post stands beside the road.
+
+The air smells of moss and stagnant water, and a raven calls once and falls silent comes from deeper among the trees. The road toward Ravenswatch continues west.
+
+A forest warden watches the deeper forest without moving.
+A iron trail lantern stands near the broken shrine.
+Bundles of drying herbs lie beneath a leaning timber shelter.
+
+Obvious exits: north, south, southwest, west.
+
+Moon Way
+[Woodland Path]
+
+The road enters old oaks draped in moss, where an old logging marker bears three deep axe cuts.
+
+Water runs unseen over stone carries beneath the canopy while pine resin and cold earth clings to the damp ground. Moonshade lies somewhere beyond the deeper woods.
+
+A woodcutter sorts herbs into a waxed satchel.
+A moss-covered milestone stands near the old stump.
+A row of small animal traps lie beneath the roots of an oak.
+
+Obvious exits: north, east, south.
+
+Pine Descent
+[Shadowed Lane]
+
+You stand on a mossy timber track beneath dense undergrowth and leaning trunks. Nearby, a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. Greenhold is no longer visible from the trail. Somewhere ahead, a distant woodcutter's axe echoes.
+
+A mushroom picker rests a wood axe against one shoulder.
+A warding post stands near the broken shrine.
+Stacks of cut pine lie beneath a waxed cloth.
+
+Obvious exits: north, east, south, west.
+
+Root Bend
+[Forest Road]
+
+A dim woodland path winds through close pines and blackthorn, its edge marked by an old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. The land falls away toward a hidden stream valley. A cool trace of leaf mold and smoke hangs beneath the trees.
+
+A charcoal burner checks the carving on a warding post.
+A iron trail lantern stands near the old stump.
+Bundles of drying herbs lie beneath a low branch.
+
+Obvious exits: north, northeast, east, south, west.
+
+Fern Crossing
+[Border Track]
+
+Dark earth trail narrows beneath ferns beneath a dim canopy. A weathered warding post stands beside the road.
+
+The air smells of wet bark and mushrooms, and something small moves through the brush comes from deeper among the trees. Open farmland remains visible through the eastern trees.
+
+A traveling hunter ties a strip of cloth to a branch.
+A moss-covered milestone stands near the broken shrine.
+A row of small animal traps lie beneath a mossy overhang.
+
+Obvious exits: north, east, southwest, south, west.
+
+Gloam Mile
+[Old Timber Road]
+
+The cultivated country gives way to the first shadowed trees of Duskwood Vale, broken by an old logging marker bears three deep axe cuts.
+
+A raven calls once and falls silent carries beneath the canopy while moss and stagnant water clings to the damp ground. The road toward Ravenswatch continues west.
+
+A raven keeper studies tracks beside the road.
+A warding post stands near the old stump.
+Stacks of cut pine lie beneath a leaning timber shelter.
+
+Obvious exits: north, south, west.
+
+Raven Bend
+[Woodland Path]
+
+The road enters old oaks draped in moss, where a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. Moonshade lies somewhere beyond the deeper woods. Somewhere ahead, water runs unseen over stone.
+
+A herb gatherer watches the deeper forest without moving.
+A iron trail lantern stands near the broken shrine.
+Bundles of drying herbs lie beneath the roots of an oak.
+
+Obvious exits: north, east.
+
+Moss Crossing
+[Shadowed Lane]
+
+You stand on a mossy timber track beneath dense undergrowth and leaning trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+The road feels older than the farms behind it. Greenhold is no longer visible from the trail. A cool trace of crushed fern hangs beneath the trees.
+
+A border scout sorts herbs into a waxed satchel.
+A moss-covered milestone stands near the old stump.
+A row of small animal traps lie beneath a waxed cloth.
+
+Obvious exits: north, northeast, east, west.
+
+Twilight Mile
+[Forest Road]
+
+A dim woodland path winds through close pines and blackthorn, its edge marked by a weathered warding post stands beside the road.
+
+The air smells of leaf mold and smoke, and branches knock together in the wind comes from deeper among the trees. The land falls away toward a hidden stream valley.
+
+A forest warden rests a wood axe against one shoulder.
+A warding post stands near the broken shrine.
+Stacks of cut pine lie beneath a low branch.
+
+Obvious exits: north, east, west.
+
+Blackthorn Road
+[Border Track]
+
+Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging marker bears three deep axe cuts.
+
+Something small moves through the brush carries beneath the canopy while wet bark and mushrooms clings to the damp ground. Open farmland remains visible through the eastern trees.
+
+A woodcutter checks the carving on a warding post.
+A iron trail lantern stands near the old stump.
+Bundles of drying herbs lie beneath a mossy overhang.
+
+Obvious exits: north, east, west.
+
+Hollow Reach
+[Old Timber Road]
+
+The cultivated country gives way to the first shadowed trees of Duskwood Vale, broken by a weathered warding post stands beside the road.
+
+Little sunlight reaches the forest floor. The road toward Ravenswatch continues west. Somewhere ahead, a raven calls once and falls silent.
+
+A mushroom picker ties a strip of cloth to a branch.
+A moss-covered milestone stands near the broken shrine.
+A row of small animal traps lie beneath a leaning timber shelter.
+
+Obvious exits: north, west.

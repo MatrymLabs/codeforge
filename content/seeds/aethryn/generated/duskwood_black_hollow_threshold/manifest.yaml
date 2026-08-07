@@ -1,0 +1,42 @@
+packet_id: duskwood_black_hollow_threshold
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+generation_seed: 52023
+input_digest: cef95fa450d59f78bf36fe89a50083f34703ffac0a6fa8ae76e47eff02ae6710
+output_digest: 0d5c25018a147beeb3a5b9a20f1464425a2a59e58ff3bd3570a0a9f8d6424486
+records:
+  settlements: 1
+  districts: 1
+  neighborhoods: 2
+  wilderness: 1
+  rooms: 7
+  npcs: 2
+  creatures: 2
+  items: 2
+  resource_nodes: 1
+  economy_flows: 2
+  ecology_flows: 2
+  quest_pressures: 2
+  state_changes: 1
+  dungeons: 1
+output_paths:
+- content/seeds/aethryn/room_batches/duskwood_black_hollow_threshold.yaml
+- content/seeds/aethryn/generated/duskwood_black_hollow_threshold/manifest.yaml
+- content/seeds/aethryn/generated/duskwood_black_hollow_threshold/provenance.yaml
+provenance:
+  source_design_ids:
+  - duskwood_vale
+  - ravenwatch
+  - duskwood_black_hollow_ecology
+  - duskwood_ravenwatch_economy
+  source_paths:
+  - content/seeds/aethryn/design
+  - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+  packet_id: duskwood_black_hollow_threshold
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  authority: AUTHORED_LOCAL
+  note: offline deterministic compiler output
+validation_verdict: CLEAN
+previous_package: ''

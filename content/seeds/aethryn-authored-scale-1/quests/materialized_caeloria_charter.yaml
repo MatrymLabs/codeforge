@@ -1,0 +1,29 @@
+id: caeloria_charter
+name: The Twelfth Page
+start: offered
+reward_xp: 46
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: caeloria_archive
+- state: accepted
+  event: take
+  to: recovered
+  on_take: caeloria_ledger_key
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:28
+  on_enter: caeloria_archive
+terminal:
+- done
+labels:
+  offered: In Caeloria City, the archivist frets over a page of the heartland charter.
+    Step into the royal archive and hear her.
+  accepted: The ledger-key that unlocks the charter's cradle was carried to the high
+    court. Take it up from behind the unsealed judgements.
+  recovered: Carry the brass ledger-key back to Archivist Meridia in the royal archive.
+  done: '*** The ledger-key is back in Meridia''s hand, the twelfth charter-page is
+    sealed again, and the heartland''s season of judgements can be written. Who carried
+    the key to the court, the record does not say. ***'

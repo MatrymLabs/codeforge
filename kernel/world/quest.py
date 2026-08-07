@@ -14,10 +14,12 @@ whichever quest declares that trigger; the `quest` verb is always the fallback.
 from __future__ import annotations
 
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from typing import Any
 
 from kernel.shelf.statemachine import Fired
 from kernel.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
+from kernel.world.aethryn_quests import normalize_quest_record
 from kernel.world.seed import SEED_DIR, Npc, QuestSpec, load_quest
 from kernel.world.session import Session
 
@@ -45,15 +47,67 @@ def _built_in_quest() -> tuple[Workflow, str, int]:
 
 def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
     """Build a quest workflow from a seed's quest spec -- the arc is data, not Python."""
-    steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in spec["steps"]]
+    row = normalize_quest_record(spec)
+    transitions = row.get("transitions") or []
+    steps = []
+    for transition in transitions:
+        if not isinstance(transition, dict):
+            continue
+        source = transition.get("from", transition.get("source_state", transition.get("state")))
+        destination = transition.get("to", transition.get("destination_state"))
+        event = transition.get("event", transition.get("event_type"))
+        if source and destination and event:
+            effect = transition.get("effect")
+            if not effect and transition.get("effect_ids"):
+                effect = ";".join(str(value) for value in transition["effect_ids"])
+            steps.append(Step(str(source), str(event), str(destination), effect=effect))
+    if not steps:
+        steps = [
+            Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in spec["steps"]
+        ]
     workflow = build_workflow(
-        spec["id"],
-        start=spec["start"],
+        str(row["id"]),
+        start=str(row.get("start_state", row.get("start"))),
         steps=steps,
-        terminal=spec["terminal"],
-        labels=spec["labels"],
+        terminal=[
+            str(value.get("id")) if isinstance(value, dict) else str(value)
+            for value in row.get("terminal_states", row.get("terminal", []))
+        ],
+        labels=_labels_for(row),
     )
-    return workflow, spec["name"], spec["reward_xp"]
+    rewards = row.get("rewards", [])
+    xp = int(row.get("reward_xp", 0))
+    for reward in rewards:
+        if isinstance(reward, dict) and reward.get("type") == "xp":
+            xp = int(reward.get("amount", xp))
+            break
+    return workflow, str(row["display_name"]), xp
+
+
+def _labels_for(row: Mapping[str, Any]) -> dict[str, str]:
+    labels = {str(key): str(value) for key, value in row.get("labels", {}).items()}
+    state_rows = row.get("states", []) or []
+    for state in state_rows:
+        if isinstance(state, dict):
+            state_id = state.get("id", state.get("stable_id"))
+            text = state.get("label", state.get("description", state.get("display_name")))
+            if state_id and text:
+                labels.setdefault(str(state_id), str(text))
+    prose = row.get("prose", {})
+    if isinstance(prose, Mapping):
+        aliases = {
+            "offered": "discovery",
+            "accepted": "acceptance",
+            "active": "current_objective",
+            "underway": "current_objective",
+            "done": "success",
+            "resolved": "success",
+            "failed": "failure",
+        }
+        for state, field_name in aliases.items():
+            if prose.get(field_name):
+                labels.setdefault(state, str(prose[field_name]))
+    return labels
 
 
 def _load_specs() -> list[QuestSpec]:
@@ -76,19 +130,40 @@ def _load_specs() -> list[QuestSpec]:
 class _Quest:
     """One loaded quest: its workflow, display name, XP reward, engine, and world-event triggers."""
 
-    def __init__(self, workflow: Workflow, name: str, xp: int, spec: QuestSpec | None) -> None:
+    def __init__(
+        self, workflow: Workflow, name: str, xp: int, spec: QuestSpec | Mapping[str, Any] | None
+    ) -> None:
         self.workflow = workflow
         self.name = name
         self.xp = xp
+        self.spec = spec
         self.engine = WorkflowEngine(workflow)
         self.events = {event for (_state, event) in workflow.roles}  # every event this quest knows
         # (kind, target label) -> the event that world action fires in THIS quest.
         self.triggers: dict[tuple[str, str], str] = {}
-        for step in spec["steps"] if spec else []:
-            for key, kind in _TRIGGER_KEYS.items():
-                target = step.get(key)
-                if target:
-                    self.triggers[(kind, str(target))] = step["event"]
+        if spec:
+            row = normalize_quest_record(spec)
+            for step in row.get("steps", []):
+                for key, kind in _TRIGGER_KEYS.items():
+                    target = step.get(key)
+                    if target:
+                        self.triggers[(kind, str(target))] = step["event"]
+            for transition in row.get("transitions", []):
+                if not isinstance(transition, dict):
+                    continue
+                event_type = transition.get("event_type")
+                target = transition.get("target_id")
+                event = transition.get("event", event_type)
+                if event_type and target and event:
+                    self.triggers[(str(event_type), str(target))] = str(event)
+            for trigger in row.get("triggers", []):
+                if not isinstance(trigger, dict):
+                    continue
+                event_type = trigger.get("event_type", trigger.get("event"))
+                target = trigger.get("target_id", trigger.get("target"))
+                event = trigger.get("transition_event", trigger.get("transition", event_type))
+                if event_type and target and event:
+                    self.triggers[(str(event_type), str(target))] = str(event)
 
 
 # step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
@@ -197,6 +272,15 @@ def all_ids() -> list[str]:
     """Every registered quest id (read-only). Lets other modules survey the board without reaching
     into the private registry -- e.g. zone_story counting a zone's culls, or analytics."""
     return list(_QUESTS)
+
+
+def all_specs() -> list[QuestSpec]:
+    """Return the authored/materialized quest definitions currently registered.
+
+    The offline authoring pass uses this to turn generated contracts into ordinary seed files. The
+    built-in fallback quest has no source spec and is intentionally omitted.
+    """
+    return [quest.spec for quest in _QUESTS.values() if quest.spec is not None]
 
 
 def hook_of(quest_id: str) -> str | None:
@@ -488,6 +572,27 @@ def on_event(session: Session, kind: str, target: str) -> str | None:
         if isinstance(outcome, Fired):
             extra = _apply_effect(quest, outcome.effect, session)
             lines.append(f"{_line(quest, run)}{extra}")
+    return "\n".join(lines) if lines else None
+
+
+def on_party_event(session: Session, kind: str, target: str, room: str | None = None) -> str | None:
+    """Apply one natural event to every co-located party member using their own quest runs.
+
+    This keeps the existing per-player workflow and persistence model while making credit explicit;
+    a caller can layer contribution requirements on top for public events.
+    """
+    from kernel.world.party import members_in_room
+    from kernel.world.session import SESSIONS
+
+    location = room or session.location
+    lines: list[str] = []
+    for player_id in members_in_room(session.player_id, location):
+        member = SESSIONS.get(player_id)
+        if member is None:
+            continue
+        result = on_event(member, kind, target)
+        if result:
+            lines.append(result)
     return "\n".join(lines) if lines else None
 
 

@@ -1,0 +1,16 @@
+id: bounty_shattered_isles_lord_13
+name: 'Bounty: Vexen the Wrack Herald'
+start: posted
+reward_xp: 2352
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: shattered_isles_lord_13
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Vexen the Wrack Herald (level 196). Fell it for 2352
+    XP.
+  collected: 'Bounty collected: Vexen the Wrack Herald is felled. Well hunted.'

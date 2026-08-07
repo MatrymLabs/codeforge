@@ -1,0 +1,16 @@
+id: bounty_caeloria_lord_15
+name: 'Bounty: Grathka the Upland Tyrant'
+start: posted
+reward_xp: 516
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: caeloria_lord_15
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathka the Upland Tyrant (level 43). Fell it for 516
+    XP.
+  collected: 'Bounty collected: Grathka the Upland Tyrant is felled. Well hunted.'

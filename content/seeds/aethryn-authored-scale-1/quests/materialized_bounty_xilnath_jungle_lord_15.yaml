@@ -1,0 +1,16 @@
+id: bounty_xilnath_jungle_lord_15
+name: 'Bounty: Grathka the Sap Tyrant'
+start: posted
+reward_xp: 1272
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: xilnath_jungle_lord_15
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathka the Sap Tyrant (level 106). Fell it for 1272
+    XP.
+  collected: 'Bounty collected: Grathka the Sap Tyrant is felled. Well hunted.'

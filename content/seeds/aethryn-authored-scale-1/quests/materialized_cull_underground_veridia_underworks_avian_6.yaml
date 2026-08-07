@@ -1,0 +1,41 @@
+id: cull_underground_veridia_underworks_avian_6
+name: 'A small Clearance: the avian-kind of The Cradle Underworks'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_veridia_underworks|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_veridia_underworks|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_veridia_underworks|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_veridia_underworks|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_veridia_underworks|avian
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_veridia_underworks|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the avian-kind of The Cradle Underworks: 0/6 down (60 XP).'
+  s1: 'Clear out the avian-kind of The Cradle Underworks: 1/6 down (60 XP).'
+  s2: 'Clear out the avian-kind of The Cradle Underworks: 2/6 down (60 XP).'
+  s3: 'Clear out the avian-kind of The Cradle Underworks: 3/6 down (60 XP).'
+  s4: 'Clear out the avian-kind of The Cradle Underworks: 4/6 down (60 XP).'
+  s5: 'Clear out the avian-kind of The Cradle Underworks: 5/6 down (60 XP).'
+  done: The avian-kind of The Cradle Underworks are cleared out. The farm-roads are
+    the safer for it.

@@ -97,9 +97,10 @@ def test_dual_read_model_store_writes_sql_and_reads_legacy(tmp_path: Path) -> No
     assert store.load("seed-1", model_id) == model
     replacement = _model("Replacement")
     store.save("seed-1", model_id_for(replacement), replacement)
-    assert SqlModelStore(lambda: Session(engine)).load(
-        "seed-1", model_id_for(replacement)
-    ) == replacement
+    assert (
+        SqlModelStore(lambda: Session(engine)).load("seed-1", model_id_for(replacement))
+        == replacement
+    )
 
 
 def test_model_labels_lists_all_for_a_seed() -> None:

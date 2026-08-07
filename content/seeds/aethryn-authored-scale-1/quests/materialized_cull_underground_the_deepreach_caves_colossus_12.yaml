@@ -1,0 +1,73 @@
+id: cull_underground_the_deepreach_caves_colossus_12
+name: 'A standing Bounty: the colossus-kind of Deepreach Memory Grottos'
+start: s0
+reward_xp: 876
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_deepreach_caves|colossus
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_the_deepreach_caves|colossus
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the colossus-kind of Deepreach Memory Grottos: 0/12 down (876 XP).'
+  s1: 'Bring down the colossus-kind of Deepreach Memory Grottos: 1/12 down (876 XP).'
+  s2: 'Bring down the colossus-kind of Deepreach Memory Grottos: 2/12 down (876 XP).'
+  s3: 'Bring down the colossus-kind of Deepreach Memory Grottos: 3/12 down (876 XP).'
+  s4: 'Bring down the colossus-kind of Deepreach Memory Grottos: 4/12 down (876 XP).'
+  s5: 'Bring down the colossus-kind of Deepreach Memory Grottos: 5/12 down (876 XP).'
+  s6: 'Bring down the colossus-kind of Deepreach Memory Grottos: 6/12 down (876 XP).'
+  s7: 'Bring down the colossus-kind of Deepreach Memory Grottos: 7/12 down (876 XP).'
+  s8: 'Bring down the colossus-kind of Deepreach Memory Grottos: 8/12 down (876 XP).'
+  s9: 'Bring down the colossus-kind of Deepreach Memory Grottos: 9/12 down (876 XP).'
+  s10: 'Bring down the colossus-kind of Deepreach Memory Grottos: 10/12 down (876
+    XP).'
+  s11: 'Bring down the colossus-kind of Deepreach Memory Grottos: 11/12 down (876
+    XP).'
+  done: The colossus-kind of Deepreach Memory Grottos are hunted down. The ash-tracks
+    are a shade safer.

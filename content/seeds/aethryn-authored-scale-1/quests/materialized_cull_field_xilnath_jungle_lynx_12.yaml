@@ -1,0 +1,71 @@
+id: cull_field_xilnath_jungle_lynx_12
+name: 'A standing Clearance: the lynx-kind of The Xil''nath Jungle Wilds'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_xilnath_jungle|lynx
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_xilnath_jungle|lynx
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_xilnath_jungle|lynx
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_xilnath_jungle|lynx
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_xilnath_jungle|lynx
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_xilnath_jungle|lynx
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_xilnath_jungle|lynx
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_xilnath_jungle|lynx
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_xilnath_jungle|lynx
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_xilnath_jungle|lynx
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_xilnath_jungle|lynx
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_xilnath_jungle|lynx
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 0/12 down (600 XP).'
+  s1: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 1/12 down (600 XP).'
+  s2: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 2/12 down (600 XP).'
+  s3: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 3/12 down (600 XP).'
+  s4: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 4/12 down (600 XP).'
+  s5: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 5/12 down (600 XP).'
+  s6: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 6/12 down (600 XP).'
+  s7: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 7/12 down (600 XP).'
+  s8: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 8/12 down (600 XP).'
+  s9: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 9/12 down (600 XP).'
+  s10: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 10/12 down (600 XP).'
+  s11: 'Clear out the lynx-kind of The Xil''nath Jungle Wilds: 11/12 down (600 XP).'
+  done: The lynx-kind of The Xil'nath Jungle Wilds are cleared out. The physic-paths
+    are a shade clearer.

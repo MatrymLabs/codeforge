@@ -1,0 +1,28 @@
+id: ravenwatch_barrow
+name: The Mourning-Book
+start: offered
+reward_xp: 32
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: ravenwatch_chapel
+- state: accepted
+  event: take
+  to: recovered
+  on_take: ravenwatch_grave_token
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:20
+  on_enter: ravenwatch_chapel
+terminal:
+- done
+labels:
+  offered: In Ravenwatch, the wardens keep the memory of the dead. Step into the chapel
+    and hear the warden.
+  accepted: Descend into the old barrow and take up the lost grave-token gently (mind
+    the barrow-dead, and do not lie down).
+  recovered: Carry the grave-token back UP to Warden Mabb in the chapel.
+  done: '*** The token is back in its cradle and the mourning-book is closed. The
+    dead of Ravenwatch are remembered rightly, another season. ***'

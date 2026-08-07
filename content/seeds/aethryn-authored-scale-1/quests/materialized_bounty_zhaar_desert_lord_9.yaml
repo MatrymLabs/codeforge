@@ -1,0 +1,15 @@
+id: bounty_zhaar_desert_lord_9
+name: 'Bounty: Urok the Scour Bane'
+start: posted
+reward_xp: 1056
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zhaar_desert_lord_9
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Urok the Scour Bane (level 88). Fell it for 1056 XP.
+  collected: 'Bounty collected: Urok the Scour Bane is felled. Well hunted.'

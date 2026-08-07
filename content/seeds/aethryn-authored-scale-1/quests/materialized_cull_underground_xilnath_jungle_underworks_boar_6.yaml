@@ -1,0 +1,41 @@
+id: cull_underground_xilnath_jungle_underworks_boar_6
+name: 'A small Reckoning: the boar-kind of The Verdant Loom Below'
+start: s0
+reward_xp: 312
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_xilnath_jungle_underworks|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the boar-kind of The Verdant Loom Below: 0/6 down (312 XP).'
+  s1: 'Reckon with the boar-kind of The Verdant Loom Below: 1/6 down (312 XP).'
+  s2: 'Reckon with the boar-kind of The Verdant Loom Below: 2/6 down (312 XP).'
+  s3: 'Reckon with the boar-kind of The Verdant Loom Below: 3/6 down (312 XP).'
+  s4: 'Reckon with the boar-kind of The Verdant Loom Below: 4/6 down (312 XP).'
+  s5: 'Reckon with the boar-kind of The Verdant Loom Below: 5/6 down (312 XP).'
+  done: The boar-kind of The Verdant Loom Below are settled with. The physic-paths
+    are a shade clearer.

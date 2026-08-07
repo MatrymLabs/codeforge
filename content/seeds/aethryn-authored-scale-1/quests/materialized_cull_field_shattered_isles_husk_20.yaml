@@ -1,0 +1,111 @@
+id: cull_field_shattered_isles_husk_20
+name: 'A great Bounty: the husk-kind of The Shattered Isles Wilds'
+start: s0
+reward_xp: 1520
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_shattered_isles|husk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_shattered_isles|husk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_shattered_isles|husk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_shattered_isles|husk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_shattered_isles|husk
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_shattered_isles|husk
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_shattered_isles|husk
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_shattered_isles|husk
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_shattered_isles|husk
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_shattered_isles|husk
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_shattered_isles|husk
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_shattered_isles|husk
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_shattered_isles|husk
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_shattered_isles|husk
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_shattered_isles|husk
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_shattered_isles|husk
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_shattered_isles|husk
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_shattered_isles|husk
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_shattered_isles|husk
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_shattered_isles|husk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the husk-kind of The Shattered Isles Wilds: 0/20 down (1520 XP).'
+  s1: 'Bring down the husk-kind of The Shattered Isles Wilds: 1/20 down (1520 XP).'
+  s2: 'Bring down the husk-kind of The Shattered Isles Wilds: 2/20 down (1520 XP).'
+  s3: 'Bring down the husk-kind of The Shattered Isles Wilds: 3/20 down (1520 XP).'
+  s4: 'Bring down the husk-kind of The Shattered Isles Wilds: 4/20 down (1520 XP).'
+  s5: 'Bring down the husk-kind of The Shattered Isles Wilds: 5/20 down (1520 XP).'
+  s6: 'Bring down the husk-kind of The Shattered Isles Wilds: 6/20 down (1520 XP).'
+  s7: 'Bring down the husk-kind of The Shattered Isles Wilds: 7/20 down (1520 XP).'
+  s8: 'Bring down the husk-kind of The Shattered Isles Wilds: 8/20 down (1520 XP).'
+  s9: 'Bring down the husk-kind of The Shattered Isles Wilds: 9/20 down (1520 XP).'
+  s10: 'Bring down the husk-kind of The Shattered Isles Wilds: 10/20 down (1520 XP).'
+  s11: 'Bring down the husk-kind of The Shattered Isles Wilds: 11/20 down (1520 XP).'
+  s12: 'Bring down the husk-kind of The Shattered Isles Wilds: 12/20 down (1520 XP).'
+  s13: 'Bring down the husk-kind of The Shattered Isles Wilds: 13/20 down (1520 XP).'
+  s14: 'Bring down the husk-kind of The Shattered Isles Wilds: 14/20 down (1520 XP).'
+  s15: 'Bring down the husk-kind of The Shattered Isles Wilds: 15/20 down (1520 XP).'
+  s16: 'Bring down the husk-kind of The Shattered Isles Wilds: 16/20 down (1520 XP).'
+  s17: 'Bring down the husk-kind of The Shattered Isles Wilds: 17/20 down (1520 XP).'
+  s18: 'Bring down the husk-kind of The Shattered Isles Wilds: 18/20 down (1520 XP).'
+  s19: 'Bring down the husk-kind of The Shattered Isles Wilds: 19/20 down (1520 XP).'
+  done: The husk-kind of The Shattered Isles Wilds are hunted down. The tide-roads
+    are the safer for it.

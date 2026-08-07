@@ -1,0 +1,15 @@
+id: errand_zulkarak
+name: 'Errand: Heart of Xil''nath'
+start: posted
+reward_xp: 1350
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: heart_of_xilnath
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Heart of Xil'nath (1350 XP).
+  done: You reach Heart of Xil'nath and mark the way. Well scouted.

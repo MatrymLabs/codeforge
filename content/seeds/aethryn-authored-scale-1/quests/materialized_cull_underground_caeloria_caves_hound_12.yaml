@@ -1,0 +1,71 @@
+id: cull_underground_caeloria_caves_hound_12
+name: 'A standing Purge: the hound-kind of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 216
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_caves|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_caves|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_caves|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_caves|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_caves|hound
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_caeloria_caves|hound
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_caeloria_caves|hound
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_caeloria_caves|hound
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_caeloria_caves|hound
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_caeloria_caves|hound
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_caeloria_caves|hound
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_caeloria_caves|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 0/12 down (216 XP).'
+  s1: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 1/12 down (216 XP).'
+  s2: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 2/12 down (216 XP).'
+  s3: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 3/12 down (216 XP).'
+  s4: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 4/12 down (216 XP).'
+  s5: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 5/12 down (216 XP).'
+  s6: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 6/12 down (216 XP).'
+  s7: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 7/12 down (216 XP).'
+  s8: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 8/12 down (216 XP).'
+  s9: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 9/12 down (216 XP).'
+  s10: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 10/12 down (216 XP).'
+  s11: 'Purge the hound-kind of Caeloria''s Sealed Aqueducts: 11/12 down (216 XP).'
+  done: The hound-kind of Caeloria's Sealed Aqueducts are purged. The farm-roads are
+    the safer for it.

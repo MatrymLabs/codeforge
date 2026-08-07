@@ -1,0 +1,61 @@
+id: forage_underground_duskwood_vale_caves_fernshade_10
+name: 'A standing Provision: fernshade of Duskwood Root Hollows'
+start: s0
+reward_xp: 110
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_duskwood_vale_caves|fernshade
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_duskwood_vale_caves|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in fernshade in Duskwood Root Hollows: 0/10 (110 XP).'
+  s1: 'Lay in fernshade in Duskwood Root Hollows: 1/10 (110 XP).'
+  s2: 'Lay in fernshade in Duskwood Root Hollows: 2/10 (110 XP).'
+  s3: 'Lay in fernshade in Duskwood Root Hollows: 3/10 (110 XP).'
+  s4: 'Lay in fernshade in Duskwood Root Hollows: 4/10 (110 XP).'
+  s5: 'Lay in fernshade in Duskwood Root Hollows: 5/10 (110 XP).'
+  s6: 'Lay in fernshade in Duskwood Root Hollows: 6/10 (110 XP).'
+  s7: 'Lay in fernshade in Duskwood Root Hollows: 7/10 (110 XP).'
+  s8: 'Lay in fernshade in Duskwood Root Hollows: 8/10 (110 XP).'
+  s9: 'Lay in fernshade in Duskwood Root Hollows: 9/10 (110 XP).'
+  done: You have laid in fernshade enough for Duskwood Root Hollows. The wood's craftfolk
+    have what they need.

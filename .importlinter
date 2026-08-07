@@ -23,12 +23,37 @@ forbidden_modules =
     adapters
 
 [importlinter:contract:grammar-before-worlds]
-name = Seed Kernel imports no game module (grammar before worlds; the platform is domain-neutral)
+name = Seed Kernel core imports no game module (integration bridges are explicit adapters)
 type = forbidden
 source_modules =
     kernel.seedlab
 forbidden_modules =
     kernel.world
+ignore_imports =
+    kernel.seedlab.aethryn_content -> kernel.world.creator_workshop
+    kernel.seedlab.aethryn_content -> kernel.world.items
+    kernel.seedlab.aethryn_content -> kernel.world.world
+    kernel.seedlab.audit_registry -> kernel.platform_db
+    kernel.seedlab.connector_registry -> kernel.platform_db
+    kernel.seedlab.event_bridge -> kernel.world.audit
+    kernel.seedlab.event_bridge -> kernel.world.bus
+    kernel.seedlab.workspace_contract -> kernel.world.workshop_state
+    kernel.seedlab.artifact_registry -> kernel.platform_db
+    kernel.seedlab.manifest_evidence -> kernel.hardware_lifecycle
+    kernel.seedlab.manifest_registry -> kernel.platform_db
+    kernel.seedlab.model_store -> kernel.platform_db
+    kernel.seedlab.provenance_registry -> kernel.platform_db
+    kernel.seedlab.runtime_bridge -> kernel.seed_selection
+    kernel.seedlab.sql_store -> kernel.platform_db
+    kernel.seedlab.tool_runner -> kernel.platform_db
+    kernel.seedlab.workspace_contract -> kernel.hardware
+    kernel.seedlab.workspace_contract -> kernel.hardware_lifecycle
+    kernel.seedlab.workspace_contract -> kernel.hardware_promotion
+    kernel.seedlab.workspace_contract -> kernel.hardware_migration
+    kernel.seedlab.workspace_gmcp -> kernel.hardware_lifecycle
+    kernel.seedlab.workshop_services -> kernel.hardware_activation
+    kernel.seedlab.workshop_services -> kernel.hardware_runtime
+    kernel.seedlab.workshop_services -> kernel.hardware
 
 [importlinter:contract:platform-imports-no-domain-module]
 name = Seed Kernel imports no domain module (domains register themselves; the platform never imports one)

@@ -1,0 +1,70 @@
+id: cull_skyward_spires_zone_wolf_12
+name: 'A standing Contract: the wolf-kind of Skyward Spires'
+start: s0
+reward_xp: 996
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: skyward_spires_zone|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: skyward_spires_zone|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: skyward_spires_zone|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: skyward_spires_zone|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: skyward_spires_zone|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: skyward_spires_zone|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: skyward_spires_zone|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: skyward_spires_zone|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: skyward_spires_zone|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: skyward_spires_zone|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: skyward_spires_zone|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: skyward_spires_zone|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the wolf-kind of Skyward Spires: 0/12 down (996 XP).'
+  s1: 'Fulfil the contract on the wolf-kind of Skyward Spires: 1/12 down (996 XP).'
+  s2: 'Fulfil the contract on the wolf-kind of Skyward Spires: 2/12 down (996 XP).'
+  s3: 'Fulfil the contract on the wolf-kind of Skyward Spires: 3/12 down (996 XP).'
+  s4: 'Fulfil the contract on the wolf-kind of Skyward Spires: 4/12 down (996 XP).'
+  s5: 'Fulfil the contract on the wolf-kind of Skyward Spires: 5/12 down (996 XP).'
+  s6: 'Fulfil the contract on the wolf-kind of Skyward Spires: 6/12 down (996 XP).'
+  s7: 'Fulfil the contract on the wolf-kind of Skyward Spires: 7/12 down (996 XP).'
+  s8: 'Fulfil the contract on the wolf-kind of Skyward Spires: 8/12 down (996 XP).'
+  s9: 'Fulfil the contract on the wolf-kind of Skyward Spires: 9/12 down (996 XP).'
+  s10: 'Fulfil the contract on the wolf-kind of Skyward Spires: 10/12 down (996 XP).'
+  s11: 'Fulfil the contract on the wolf-kind of Skyward Spires: 11/12 down (996 XP).'
+  done: The wolf-kind of Skyward Spires are put down. The region breathes easier.

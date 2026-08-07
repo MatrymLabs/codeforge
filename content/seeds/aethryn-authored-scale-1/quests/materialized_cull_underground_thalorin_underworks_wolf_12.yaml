@@ -1,0 +1,71 @@
+id: cull_underground_thalorin_underworks_wolf_12
+name: 'A standing Cull: the wolf-kind of The Irondeep Command Vaults'
+start: s0
+reward_xp: 588
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_thalorin_underworks|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_thalorin_underworks|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_thalorin_underworks|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_thalorin_underworks|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_thalorin_underworks|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_thalorin_underworks|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_thalorin_underworks|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_thalorin_underworks|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_thalorin_underworks|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_thalorin_underworks|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_thalorin_underworks|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_thalorin_underworks|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the wolf-kind of The Irondeep Command Vaults: 0/12 down (588 XP).'
+  s1: 'Cull the wolf-kind of The Irondeep Command Vaults: 1/12 down (588 XP).'
+  s2: 'Cull the wolf-kind of The Irondeep Command Vaults: 2/12 down (588 XP).'
+  s3: 'Cull the wolf-kind of The Irondeep Command Vaults: 3/12 down (588 XP).'
+  s4: 'Cull the wolf-kind of The Irondeep Command Vaults: 4/12 down (588 XP).'
+  s5: 'Cull the wolf-kind of The Irondeep Command Vaults: 5/12 down (588 XP).'
+  s6: 'Cull the wolf-kind of The Irondeep Command Vaults: 6/12 down (588 XP).'
+  s7: 'Cull the wolf-kind of The Irondeep Command Vaults: 7/12 down (588 XP).'
+  s8: 'Cull the wolf-kind of The Irondeep Command Vaults: 8/12 down (588 XP).'
+  s9: 'Cull the wolf-kind of The Irondeep Command Vaults: 9/12 down (588 XP).'
+  s10: 'Cull the wolf-kind of The Irondeep Command Vaults: 10/12 down (588 XP).'
+  s11: 'Cull the wolf-kind of The Irondeep Command Vaults: 11/12 down (588 XP).'
+  done: The wolf-kind of The Irondeep Command Vaults are thinned. The region breathes
+    easier.

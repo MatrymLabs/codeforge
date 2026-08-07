@@ -1,0 +1,16 @@
+id: bounty_korvash_highlands_lord_12
+name: 'Bounty: Draumune the Scree Maw'
+start: posted
+reward_xp: 1932
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: korvash_highlands_lord_12
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumune the Scree Maw (level 161). Fell it for 1932
+    XP.
+  collected: 'Bounty collected: Draumune the Scree Maw is felled. Well hunted.'

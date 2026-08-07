@@ -1,0 +1,27 @@
+id: story_ravenwatch
+name: The Tale of Ravenwatch
+start: afoot
+reward_xp: 1250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_black_hollow
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_black_hollow_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: ravenwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Duskwood Vale: The Black Hollow festers, and Ravenwatch lives
+    in its shadow.'
+  at_heart: You stand within The Black Hollow. Its deep terror waits below. Fell it.
+  homeward: The terror of The Black Hollow is slain. Bear word to Ravenwatch (1250
+    XP).
+  done: '*** Ravenwatch breathes free. Duskwood Vale will remember you. ***'

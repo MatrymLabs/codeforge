@@ -1,0 +1,21 @@
+id: delivery_shadowfissure
+name: 'Delivery: Shadowfissure to Stonefang Keep'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_shadowfissure
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: stonefang_keep
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Shadowfissure is bound for Stonefang Keep. Take it up (1200
+    XP).
+  carrying: Carry the parcel to Stonefang Keep.
+  done: The parcel is delivered to Stonefang Keep. The road keeps its promise.

@@ -1,0 +1,16 @@
+id: bounty_shattered_isles_lord_15
+name: 'Bounty: Grathka the Salt Tyrant'
+start: posted
+reward_xp: 2376
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: shattered_isles_lord_15
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathka the Salt Tyrant (level 198). Fell it for 2376
+    XP.
+  collected: 'Bounty collected: Grathka the Salt Tyrant is felled. Well hunted.'

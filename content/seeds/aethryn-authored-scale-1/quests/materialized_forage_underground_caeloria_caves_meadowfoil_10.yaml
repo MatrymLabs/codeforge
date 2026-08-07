@@ -1,0 +1,61 @@
+id: forage_underground_caeloria_caves_meadowfoil_10
+name: 'A standing Provision: meadowfoil of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 130
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_caeloria_caves|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 0/10 (130 XP).'
+  s1: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 1/10 (130 XP).'
+  s2: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 2/10 (130 XP).'
+  s3: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 3/10 (130 XP).'
+  s4: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 4/10 (130 XP).'
+  s5: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 5/10 (130 XP).'
+  s6: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 6/10 (130 XP).'
+  s7: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 7/10 (130 XP).'
+  s8: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 8/10 (130 XP).'
+  s9: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 9/10 (130 XP).'
+  done: You have laid in meadowfoil enough for Caeloria's Sealed Aqueducts. The village
+    makers will put it to use.

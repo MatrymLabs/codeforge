@@ -1,0 +1,36 @@
+id: forage_xilnath_jungle_zone_ember_shard_5
+name: 'A small Requisition: ember shard of Xil''nath Jungle'
+start: s0
+reward_xp: 185
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: xilnath_jungle_zone|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in Xil''nath Jungle: 0/5 (185 XP).'
+  s1: 'Bring in ember shard in Xil''nath Jungle: 1/5 (185 XP).'
+  s2: 'Bring in ember shard in Xil''nath Jungle: 2/5 (185 XP).'
+  s3: 'Bring in ember shard in Xil''nath Jungle: 3/5 (185 XP).'
+  s4: 'Bring in ember shard in Xil''nath Jungle: 4/5 (185 XP).'
+  done: You have requisitioned ember shard enough for Xil'nath Jungle. The physicians
+    can work with this.

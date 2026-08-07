@@ -277,6 +277,7 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
             )
         # Wrap every accepted socket in TLS when configured; None keeps the plaintext transport.
         self._tls = _tls_context()
+
         # World delivery remains authoritative independently; the active governed Event Ledger is
         # an observation sink reached through the injected runtime seam.
         def _publish_world_event(event: object) -> None:
@@ -1163,9 +1164,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     if not verify_account(who, secret.strip()):
                         response = "That account and password do not align."
                     else:
-                        response = self._account_character_selection(
-                            session, who, secret.strip()
-                        )
+                        response = self._account_character_selection(session, who, secret.strip())
                         if response is None:
                             return False
                 else:

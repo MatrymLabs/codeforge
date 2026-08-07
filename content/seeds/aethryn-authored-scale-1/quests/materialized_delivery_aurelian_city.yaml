@@ -1,0 +1,21 @@
+id: delivery_aurelian_city
+name: 'Delivery: Aurelian City to Celestial Observatory'
+start: posted
+reward_xp: 2400
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_aurelian_city
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: celestial_observatory
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Aurelian City is bound for Celestial Observatory. Take it up
+    (2400 XP).
+  carrying: Carry the parcel to Celestial Observatory.
+  done: The parcel is delivered to Celestial Observatory. The road keeps its promise.

@@ -1,0 +1,36 @@
+id: forage_the_voidscar_zone_cinderroot_5
+name: 'A small Draw: cinderroot of The Voidscar'
+start: s0
+reward_xp: 375
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: the_voidscar_zone|cinderroot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: the_voidscar_zone|cinderroot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: the_voidscar_zone|cinderroot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: the_voidscar_zone|cinderroot
+- state: s4
+  event: forage
+  to: done
+  on_forage: the_voidscar_zone|cinderroot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw cinderroot in The Voidscar: 0/5 (375 XP).'
+  s1: 'Draw cinderroot in The Voidscar: 1/5 (375 XP).'
+  s2: 'Draw cinderroot in The Voidscar: 2/5 (375 XP).'
+  s3: 'Draw cinderroot in The Voidscar: 3/5 (375 XP).'
+  s4: 'Draw cinderroot in The Voidscar: 4/5 (375 XP).'
+  done: You have drawn cinderroot enough for The Voidscar. The forge-crews can feed
+    the fires now.

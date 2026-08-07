@@ -1,0 +1,20 @@
+id: delivery_ancient_overlook
+name: 'Delivery: Ancient Overlook to Highreach'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_ancient_overlook
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: highreach
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Ancient Overlook is bound for Highreach. Take it up (1800 XP).
+  carrying: Carry the parcel to Highreach.
+  done: The parcel is delivered to Highreach. The road keeps its promise.

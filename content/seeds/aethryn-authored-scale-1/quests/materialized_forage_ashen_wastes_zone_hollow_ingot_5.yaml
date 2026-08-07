@@ -1,0 +1,36 @@
+id: forage_ashen_wastes_zone_hollow_ingot_5
+name: 'A small Haul: hollow ingot of Ashen Wastes'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: ashen_wastes_zone|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: ashen_wastes_zone|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: ashen_wastes_zone|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: ashen_wastes_zone|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: ashen_wastes_zone|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in hollow ingot in Ashen Wastes: 0/5 (210 XP).'
+  s1: 'Haul in hollow ingot in Ashen Wastes: 1/5 (210 XP).'
+  s2: 'Haul in hollow ingot in Ashen Wastes: 2/5 (210 XP).'
+  s3: 'Haul in hollow ingot in Ashen Wastes: 3/5 (210 XP).'
+  s4: 'Haul in hollow ingot in Ashen Wastes: 4/5 (210 XP).'
+  done: You have hauled in hollow ingot enough for Ashen Wastes. The forge-crews can
+    feed the fires now.

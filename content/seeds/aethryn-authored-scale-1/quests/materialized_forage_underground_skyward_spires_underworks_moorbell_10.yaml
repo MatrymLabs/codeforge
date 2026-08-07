@@ -1,0 +1,61 @@
+id: forage_underground_skyward_spires_underworks_moorbell_10
+name: 'A standing Haul: moorbell of The Spire Nexus Foundations'
+start: s0
+reward_xp: 640
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_skyward_spires_underworks|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in moorbell in The Spire Nexus Foundations: 0/10 (640 XP).'
+  s1: 'Haul in moorbell in The Spire Nexus Foundations: 1/10 (640 XP).'
+  s2: 'Haul in moorbell in The Spire Nexus Foundations: 2/10 (640 XP).'
+  s3: 'Haul in moorbell in The Spire Nexus Foundations: 3/10 (640 XP).'
+  s4: 'Haul in moorbell in The Spire Nexus Foundations: 4/10 (640 XP).'
+  s5: 'Haul in moorbell in The Spire Nexus Foundations: 5/10 (640 XP).'
+  s6: 'Haul in moorbell in The Spire Nexus Foundations: 6/10 (640 XP).'
+  s7: 'Haul in moorbell in The Spire Nexus Foundations: 7/10 (640 XP).'
+  s8: 'Haul in moorbell in The Spire Nexus Foundations: 8/10 (640 XP).'
+  s9: 'Haul in moorbell in The Spire Nexus Foundations: 9/10 (640 XP).'
+  done: You have hauled in moorbell enough for The Spire Nexus Foundations. The region's
+    makers will put it to use.

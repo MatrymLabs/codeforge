@@ -1,0 +1,41 @@
+id: cull_duskwood_vale_zone_panther_6
+name: 'A small Warrant: the panther-kind of Duskwood Vale'
+start: s0
+reward_xp: 96
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: duskwood_vale_zone|panther
+- state: s1
+  event: cull
+  to: s2
+  on_cull: duskwood_vale_zone|panther
+- state: s2
+  event: cull
+  to: s3
+  on_cull: duskwood_vale_zone|panther
+- state: s3
+  event: cull
+  to: s4
+  on_cull: duskwood_vale_zone|panther
+- state: s4
+  event: cull
+  to: s5
+  on_cull: duskwood_vale_zone|panther
+- state: s5
+  event: cull
+  to: done
+  on_cull: duskwood_vale_zone|panther
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the panther-kind of Duskwood Vale: 0/6 down (96 XP).'
+  s1: 'Answer the warrant on the panther-kind of Duskwood Vale: 1/6 down (96 XP).'
+  s2: 'Answer the warrant on the panther-kind of Duskwood Vale: 2/6 down (96 XP).'
+  s3: 'Answer the warrant on the panther-kind of Duskwood Vale: 3/6 down (96 XP).'
+  s4: 'Answer the warrant on the panther-kind of Duskwood Vale: 4/6 down (96 XP).'
+  s5: 'Answer the warrant on the panther-kind of Duskwood Vale: 5/6 down (96 XP).'
+  done: The panther-kind of Duskwood Vale are answered for. The wardens of the wood
+    send their thanks.

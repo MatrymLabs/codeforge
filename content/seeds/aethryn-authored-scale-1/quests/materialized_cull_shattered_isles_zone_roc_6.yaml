@@ -1,0 +1,41 @@
+id: cull_shattered_isles_zone_roc_6
+name: 'A small Clearance: the roc-kind of The Shattered Isles'
+start: s0
+reward_xp: 456
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|roc
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|roc
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|roc
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|roc
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|roc
+- state: s5
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|roc
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the roc-kind of The Shattered Isles: 0/6 down (456 XP).'
+  s1: 'Clear out the roc-kind of The Shattered Isles: 1/6 down (456 XP).'
+  s2: 'Clear out the roc-kind of The Shattered Isles: 2/6 down (456 XP).'
+  s3: 'Clear out the roc-kind of The Shattered Isles: 3/6 down (456 XP).'
+  s4: 'Clear out the roc-kind of The Shattered Isles: 4/6 down (456 XP).'
+  s5: 'Clear out the roc-kind of The Shattered Isles: 5/6 down (456 XP).'
+  done: The roc-kind of The Shattered Isles are cleared out. The tide-roads are the
+    safer for it.

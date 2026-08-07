@@ -1,0 +1,20 @@
+id: delivery_the_great_tree
+name: 'Delivery: The Great Tree to Wildgrowth'
+start: posted
+reward_xp: 600
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_the_great_tree
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: wildgrowth
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in The Great Tree is bound for Wildgrowth. Take it up (600 XP).
+  carrying: Carry the parcel to Wildgrowth.
+  done: The parcel is delivered to Wildgrowth. The road keeps its promise.

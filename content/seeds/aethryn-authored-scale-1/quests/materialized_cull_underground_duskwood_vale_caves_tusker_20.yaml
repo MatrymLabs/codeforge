@@ -1,0 +1,111 @@
+id: cull_underground_duskwood_vale_caves_tusker_20
+name: 'A great Clearance: the tusker-kind of Duskwood Root Hollows'
+start: s0
+reward_xp: 280
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_duskwood_vale_caves|tusker
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_duskwood_vale_caves|tusker
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the tusker-kind of Duskwood Root Hollows: 0/20 down (280 XP).'
+  s1: 'Clear out the tusker-kind of Duskwood Root Hollows: 1/20 down (280 XP).'
+  s2: 'Clear out the tusker-kind of Duskwood Root Hollows: 2/20 down (280 XP).'
+  s3: 'Clear out the tusker-kind of Duskwood Root Hollows: 3/20 down (280 XP).'
+  s4: 'Clear out the tusker-kind of Duskwood Root Hollows: 4/20 down (280 XP).'
+  s5: 'Clear out the tusker-kind of Duskwood Root Hollows: 5/20 down (280 XP).'
+  s6: 'Clear out the tusker-kind of Duskwood Root Hollows: 6/20 down (280 XP).'
+  s7: 'Clear out the tusker-kind of Duskwood Root Hollows: 7/20 down (280 XP).'
+  s8: 'Clear out the tusker-kind of Duskwood Root Hollows: 8/20 down (280 XP).'
+  s9: 'Clear out the tusker-kind of Duskwood Root Hollows: 9/20 down (280 XP).'
+  s10: 'Clear out the tusker-kind of Duskwood Root Hollows: 10/20 down (280 XP).'
+  s11: 'Clear out the tusker-kind of Duskwood Root Hollows: 11/20 down (280 XP).'
+  s12: 'Clear out the tusker-kind of Duskwood Root Hollows: 12/20 down (280 XP).'
+  s13: 'Clear out the tusker-kind of Duskwood Root Hollows: 13/20 down (280 XP).'
+  s14: 'Clear out the tusker-kind of Duskwood Root Hollows: 14/20 down (280 XP).'
+  s15: 'Clear out the tusker-kind of Duskwood Root Hollows: 15/20 down (280 XP).'
+  s16: 'Clear out the tusker-kind of Duskwood Root Hollows: 16/20 down (280 XP).'
+  s17: 'Clear out the tusker-kind of Duskwood Root Hollows: 17/20 down (280 XP).'
+  s18: 'Clear out the tusker-kind of Duskwood Root Hollows: 18/20 down (280 XP).'
+  s19: 'Clear out the tusker-kind of Duskwood Root Hollows: 19/20 down (280 XP).'
+  done: The tusker-kind of Duskwood Root Hollows are cleared out. The wardens of the
+    wood send their thanks.

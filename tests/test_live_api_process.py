@@ -33,8 +33,7 @@ def _get_authenticated(url: str, account: str, password: str) -> dict[str, objec
     request = urllib.request.Request(
         url,
         headers={
-            "Authorization": "Basic "
-            + base64.b64encode(f"{account}:{password}".encode()).decode()
+            "Authorization": "Basic " + base64.b64encode(f"{account}:{password}".encode()).decode()
         },
     )
     with urllib.request.urlopen(request, timeout=3) as response:  # nosec B310 - fixed loopback URL
@@ -91,9 +90,7 @@ def test_live_uvicorn_process_serves_authoritative_workspace_contract(tmp_path: 
                 time.sleep(0.1)
         assert health == {"status": "alive", "engine": "codeforge"}
 
-        contract = _get(
-            f"http://127.0.0.1:{port}/api/seedlab/workspaces/seed-live-process"
-        )
+        contract = _get(f"http://127.0.0.1:{port}/api/seedlab/workspaces/seed-live-process")
         assert contract["contract_version"] == "seedlab.workspace/1"
         seed = contract["seed"]
         assert isinstance(seed, dict) and seed["name"] == "Live API Seed"

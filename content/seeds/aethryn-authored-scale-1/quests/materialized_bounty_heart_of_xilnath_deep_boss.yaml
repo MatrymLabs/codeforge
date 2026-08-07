@@ -1,0 +1,16 @@
+id: bounty_heart_of_xilnath_deep_boss
+name: 'Bounty: the Keeper of Heart of Xil''nath'
+start: posted
+reward_xp: 1884
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: heart_of_xilnath_deep_boss
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the Keeper of Heart of Xil'nath (level 157). Fell it
+    for 1884 XP.
+  collected: 'Bounty collected: the Keeper of Heart of Xil''nath is felled. Well hunted.'

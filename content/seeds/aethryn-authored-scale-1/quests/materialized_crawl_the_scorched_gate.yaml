@@ -1,0 +1,21 @@
+id: crawl_the_scorched_gate
+name: 'Descent: The Scorched Gate'
+start: above
+reward_xp: 3400
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: the_scorched_gate
+- state: delving
+  event: reach
+  to: done
+  on_enter: the_scorched_gate_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of The Scorched Gate. Cross its mouth and
+    descend.
+  delving: You are within The Scorched Gate. Press on to its deepest chamber.
+  done: You have reached the heart of The Scorched Gate and lived. Few can (3400 XP).

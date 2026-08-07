@@ -1,0 +1,16 @@
+id: bounty_the_crystal_labyrinth_vault_guard
+name: 'Bounty: Hrothune the Cinder Scourge'
+start: posted
+reward_xp: 3036
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_crystal_labyrinth_vault_guard
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothune the Cinder Scourge (level 253). Fell it for
+    3036 XP.
+  collected: 'Bounty collected: Hrothune the Cinder Scourge is felled. Well hunted.'

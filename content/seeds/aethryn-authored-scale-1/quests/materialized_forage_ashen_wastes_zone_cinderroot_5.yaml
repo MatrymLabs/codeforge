@@ -1,0 +1,36 @@
+id: forage_ashen_wastes_zone_cinderroot_5
+name: 'A small Harvest: cinderroot of Ashen Wastes'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: ashen_wastes_zone|cinderroot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: ashen_wastes_zone|cinderroot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: ashen_wastes_zone|cinderroot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: ashen_wastes_zone|cinderroot
+- state: s4
+  event: forage
+  to: done
+  on_forage: ashen_wastes_zone|cinderroot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest cinderroot in Ashen Wastes: 0/5 (210 XP).'
+  s1: 'Harvest cinderroot in Ashen Wastes: 1/5 (210 XP).'
+  s2: 'Harvest cinderroot in Ashen Wastes: 2/5 (210 XP).'
+  s3: 'Harvest cinderroot in Ashen Wastes: 3/5 (210 XP).'
+  s4: 'Harvest cinderroot in Ashen Wastes: 4/5 (210 XP).'
+  done: You have harvested cinderroot enough for Ashen Wastes. The forge-crews can
+    feed the fires now.

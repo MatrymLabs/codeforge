@@ -1,0 +1,20 @@
+id: delivery_saltwind_harbor
+name: 'Delivery: Saltwind Harbor to Stormreach'
+start: posted
+reward_xp: 2160
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_saltwind_harbor
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: stormreach
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Saltwind Harbor is bound for Stormreach. Take it up (2160 XP).
+  carrying: Carry the parcel to Stormreach.
+  done: The parcel is delivered to Stormreach. The road keeps its promise.

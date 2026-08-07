@@ -1,0 +1,47 @@
+id: cull_underground_skyward_spires_underworks_roc_6
+name: 'A small Contract: the roc-kind of The Spire Nexus Foundations'
+start: s0
+reward_xp: 516
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_underworks|roc
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_underworks|roc
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_underworks|roc
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_underworks|roc
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_underworks|roc
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_underworks|roc
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 0/6 down
+    (516 XP).'
+  s1: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 1/6 down
+    (516 XP).'
+  s2: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 2/6 down
+    (516 XP).'
+  s3: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 3/6 down
+    (516 XP).'
+  s4: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 4/6 down
+    (516 XP).'
+  s5: 'Fulfil the contract on the roc-kind of The Spire Nexus Foundations: 5/6 down
+    (516 XP).'
+  done: The roc-kind of The Spire Nexus Foundations are put down. The region breathes
+    easier.

@@ -1,0 +1,36 @@
+id: forage_the_deepreach_zone_ember_shard_5
+name: 'A small Forage: ember shard of The Deepreach'
+start: s0
+reward_xp: 310
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: the_deepreach_zone|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: the_deepreach_zone|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: the_deepreach_zone|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: the_deepreach_zone|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: the_deepreach_zone|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather ember shard in The Deepreach: 0/5 (310 XP).'
+  s1: 'Gather ember shard in The Deepreach: 1/5 (310 XP).'
+  s2: 'Gather ember shard in The Deepreach: 2/5 (310 XP).'
+  s3: 'Gather ember shard in The Deepreach: 3/5 (310 XP).'
+  s4: 'Gather ember shard in The Deepreach: 4/5 (310 XP).'
+  done: You have gathered ember shard enough for The Deepreach. The forge-crews can
+    feed the fires now.

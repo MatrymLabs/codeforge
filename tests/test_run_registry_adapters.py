@@ -80,9 +80,7 @@ def test_api_and_workspace_contract_share_sql_run_evidence(monkeypatch, tmp_path
     assert not (home / "runs" / "seed-sql-runs.jsonl").exists()
 
 
-def test_workspace_contract_dual_reads_legacy_run_evidence(
-    monkeypatch, tmp_path: Path
-) -> None:
+def test_workspace_contract_dual_reads_legacy_run_evidence(monkeypatch, tmp_path: Path) -> None:
     home = tmp_path / ".seedlab"
     monkeypatch.setenv("SEEDLAB_HOME", str(home))
     monkeypatch.setenv("CODEFORGE_SEED_REGISTRY", "sql-dual-read")

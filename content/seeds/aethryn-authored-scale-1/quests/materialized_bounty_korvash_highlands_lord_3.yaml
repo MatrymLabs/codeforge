@@ -1,0 +1,15 @@
+id: bounty_korvash_highlands_lord_3
+name: 'Bounty: Hrothka the Scree Maw'
+start: posted
+reward_xp: 1836
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: korvash_highlands_lord_3
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothka the Scree Maw (level 153). Fell it for 1836 XP.
+  collected: 'Bounty collected: Hrothka the Scree Maw is felled. Well hunted.'

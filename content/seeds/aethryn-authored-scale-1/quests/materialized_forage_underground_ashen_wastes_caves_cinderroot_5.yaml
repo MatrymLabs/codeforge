@@ -1,0 +1,36 @@
+id: forage_underground_ashen_wastes_caves_cinderroot_5
+name: 'A small Requisition: cinderroot of Ashen Slag Hollows'
+start: s0
+reward_xp: 200
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_ashen_wastes_caves|cinderroot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_ashen_wastes_caves|cinderroot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_ashen_wastes_caves|cinderroot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_ashen_wastes_caves|cinderroot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_ashen_wastes_caves|cinderroot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in cinderroot in Ashen Slag Hollows: 0/5 (200 XP).'
+  s1: 'Bring in cinderroot in Ashen Slag Hollows: 1/5 (200 XP).'
+  s2: 'Bring in cinderroot in Ashen Slag Hollows: 2/5 (200 XP).'
+  s3: 'Bring in cinderroot in Ashen Slag Hollows: 3/5 (200 XP).'
+  s4: 'Bring in cinderroot in Ashen Slag Hollows: 4/5 (200 XP).'
+  done: You have requisitioned cinderroot enough for Ashen Slag Hollows. The forge-crews
+    can feed the fires now.

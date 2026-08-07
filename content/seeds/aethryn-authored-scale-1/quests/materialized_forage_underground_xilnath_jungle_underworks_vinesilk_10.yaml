@@ -1,0 +1,61 @@
+id: forage_underground_xilnath_jungle_underworks_vinesilk_10
+name: 'A standing Forage: vinesilk of The Verdant Loom Below'
+start: s0
+reward_xp: 390
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather vinesilk in The Verdant Loom Below: 0/10 (390 XP).'
+  s1: 'Gather vinesilk in The Verdant Loom Below: 1/10 (390 XP).'
+  s2: 'Gather vinesilk in The Verdant Loom Below: 2/10 (390 XP).'
+  s3: 'Gather vinesilk in The Verdant Loom Below: 3/10 (390 XP).'
+  s4: 'Gather vinesilk in The Verdant Loom Below: 4/10 (390 XP).'
+  s5: 'Gather vinesilk in The Verdant Loom Below: 5/10 (390 XP).'
+  s6: 'Gather vinesilk in The Verdant Loom Below: 6/10 (390 XP).'
+  s7: 'Gather vinesilk in The Verdant Loom Below: 7/10 (390 XP).'
+  s8: 'Gather vinesilk in The Verdant Loom Below: 8/10 (390 XP).'
+  s9: 'Gather vinesilk in The Verdant Loom Below: 9/10 (390 XP).'
+  done: You have gathered vinesilk enough for The Verdant Loom Below. The physicians
+    can work with this.

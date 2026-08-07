@@ -1,0 +1,26 @@
+id: story_frosthold
+name: The Tale of Frosthold
+start: afoot
+reward_xp: 2250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: glacial_bastion
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: glacial_bastion_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: frosthold
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Frostspire Peaks: Glacial Bastion festers, and Frosthold lives
+    in its shadow.'
+  at_heart: You stand within Glacial Bastion. Its deep terror waits below. Fell it.
+  homeward: The terror of Glacial Bastion is slain. Bear word to Frosthold (2250 XP).
+  done: '*** Frosthold breathes free. Frostspire Peaks will remember you. ***'

@@ -1,0 +1,33 @@
+id: aethryn_terminology
+canon_status: CANON_WORKING
+terms:
+  - id: seven_crowns
+    display_name: The Seven Crowns
+    canon_status: CANON_LOCKED
+    usage: neutral or scholarly
+  - id: seven_wounds
+    display_name: The Seven Wounds
+    canon_status: CANON_LOCKED
+    usage: common modern
+  - id: divine_strike
+    display_name: The Divine Strike
+    canon_status: CANON_LOCKED
+    usage: intentional celestial attack
+  - id: netharion
+    display_name: Netharion
+    canon_status: CANON_LOCKED
+    usage: first artificial god
+  - id: cinderfire
+    display_name: Cinderfire
+    canon_status: CANON_WORKING
+    aliases: [Cragfire]
+    note: Cinderfire is the approved public display name; Cragfire remains a reconciled legacy or poster label.
+  - id: red_dune
+    display_name: Red Dunes
+    canon_status: CANON_WORKING
+    aliases: [Red Dune]
+    note: Red Dunes is the approved public display name; Red Dune remains a reconciled legacy label.
+  - id: deepreach
+    display_name: The Deepreach
+    canon_status: CANON_LOCKED
+    note: Underground diagrammatic inset, not a southern surface island.

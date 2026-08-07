@@ -1,0 +1,20 @@
+id: delivery_silverwatch
+name: 'Delivery: Silverwatch to Westgate'
+start: posted
+reward_xp: 360
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_silverwatch
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: westgate
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Silverwatch is bound for Westgate. Take it up (360 XP).
+  carrying: Carry the parcel to Westgate.
+  done: The parcel is delivered to Westgate. The road keeps its promise.

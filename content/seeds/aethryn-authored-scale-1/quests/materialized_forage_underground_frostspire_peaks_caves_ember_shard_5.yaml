@@ -1,0 +1,36 @@
+id: forage_underground_frostspire_peaks_caves_ember_shard_5
+name: 'A small Haul: ember shard of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 105
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_caves|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in ember shard in Frostspire Blue-Ice Caves: 0/5 (105 XP).'
+  s1: 'Haul in ember shard in Frostspire Blue-Ice Caves: 1/5 (105 XP).'
+  s2: 'Haul in ember shard in Frostspire Blue-Ice Caves: 2/5 (105 XP).'
+  s3: 'Haul in ember shard in Frostspire Blue-Ice Caves: 3/5 (105 XP).'
+  s4: 'Haul in ember shard in Frostspire Blue-Ice Caves: 4/5 (105 XP).'
+  done: You have hauled in ember shard enough for Frostspire Blue-Ice Caves. The hold's
+    smiths will not want for it.

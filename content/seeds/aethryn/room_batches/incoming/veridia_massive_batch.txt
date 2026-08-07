@@ -1,0 +1,1158 @@
+AETHRYN - THE WORLD OF ENDLESS JOURNEY
+VERIDIA MASSIVE OPEN-WORLD ROOM DROP
+
+================================================================================
+GREENHOLD - INNER WARDS
+================================================================================
+
+Alder Court
+[Town Street]
+You stand on pale riverstone cobbles between timber houses with painted shutters, where a carved public fountain sends a thin stream into a circular basin.
+The air carries lamp oil, wool, and rain, and a smith's measured hammering drifts between the roofs. The town wall rises above the houses to the west.
+A lampwright's apprentice waits beside a loaded handcart.
+A rack of walking staffs stands near the drainage channel.
+Rows of clay jars have been arranged beneath the sheltering eaves.
+Obvious exits: east, south, west, north.
+
+--------------------------------------------------------------------------------
+
+Copper Square
+[Market Lane]
+Dark brick paving runs through a close district of old guildhalls faced in gray stone, its course marked by a mosaic of the River Verin that winds across the paving.
+Children calling across the lane echoes through the district while roasted roots and chimney smoke lingers near the open doorways.
+A retired watchman sorts a stack of delivery tags.
+A painted notice board stands near the nearest doorway.
+Freshly cut flowers have been arranged beneath a striped awning.
+Obvious exits: east, south, west, north.
+
+--------------------------------------------------------------------------------
+
+Lantern Walk
+[Civic Square]
+Wide flagstones of river-worn slate form a quiet civic square lit by hanging iron lanterns that sway gently even in still air. Tall alder trees grow in iron cages at each corner, their leaves whispering against the stone.
+The air is cooler here and carries the faint scent of beeswax and old parchment.
+A young clerk carries a ledger under one arm.
+A pair of street musicians tune a fiddle and a small drum.
+Stacks of folded pamphlets rest on a public table.
+Obvious exits: north, east, south, west.
+
+--------------------------------------------------------------------------------
+
+Riverstone Gate
+[Town Gate]
+Massive double doors of iron-banded oak stand open within a deep arch of pale riverstone. The gatehouse towers rise on either side, their arrow slits dark and watchful.
+The smell of wet wool and horse sweat mixes with the cleaner air of the open fields.
+A toll chest sits bolted to the gatehouse wall.
+A weather-stained map of Veridia is pinned beside the postern door.
+Muddy boot prints track in both directions across the threshold.
+Obvious exits: north, south, east, west.
+
+================================================================================
+ROADS, PATHS AND CONNECTORS
+================================================================================
+
+Sunmeadow Road 1
+[Trade Road]
+A broad packed-earth road runs east-west between low grassy banks. Wildflowers grow thick along the margins and the occasional milestone of pale riverstone marks the distance to Greenhold.
+The road smells of dust and warm grass. A light breeze keeps the air moving.
+A broken cartwheel leans against a milestone.
+A wayside shrine of stacked stones holds a few wilted flowers.
+Fresh wagon tracks run in both directions.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+Sunmeadow Road 2
+[Trade Road]
+The road continues through more open land. The milestones are regular and the surface is well maintained by local traffic. Meadows stretch away on both sides.
+The air is warm and full of the sound of insects and distant birds.
+A second wayside shrine stands under a small tree.
+Deep ruts show where carts have passed in wetter weather.
+A narrow footpath leads off toward a nearby farm.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+Elder Path 1
+[Forest Edge Road]
+The road narrows as it enters the first trees of the eastern woods. Old oaks and beeches rise on either side, their canopy filtering the light into shifting green and gold.
+The air cools and grows damp. The smell of leaf mold and wet bark replaces the open meadow scents.
+A wooden signpost points east toward Elderwatch and west back to Greenhold.
+A large flat stone serves as a natural resting place beside the path.
+Fresh deer tracks cross the road and disappear into the undergrowth.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+Elder Path 2
+[Forest Edge Road]
+Deeper into the edge of the wood the trees grow closer and the undergrowth thicker. The road remains clear but the feeling of the forest is stronger. Moss covers many of the stones and roots.
+The light is dimmer and greener. Birdsong is constant but the birds themselves are hard to see.
+A fallen tree has been cut through to keep the road open.
+A small spring rises beside the path and forms a tiny clear pool.
+The path continues both deeper into the wood and back toward the open land.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+River Road North 1
+[Trade Road]
+The well-traveled road follows the western bank of the River Verin. Willows and alders line the water while open pasture stretches inland. Wagon ruts are deep and the road is wide enough for two carts to pass.
+The river runs close on the right, its surface bright. The smell of water and wet earth is constant.
+A stone milestone marks the remaining distance to Riverbend.
+A pair of otters play in the shallows near the bank.
+A simple wooden bench has been placed under a large willow for travelers.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Road North 2
+[Trade Road]
+The river road continues northward with the Verin always close on one side. The land on the inland side is a mix of pasture and small cultivated plots.
+The air is cool near the water. Occasional fishing platforms jut out over the current.
+A second milestone stands beside the road.
+A narrow track leads down to a private fishing spot.
+The roofs of Riverbend are not yet visible but the traffic has increased.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Road South 1
+[Trade Road]
+Further south the river road climbs a low rise before dropping again toward the southern meadows. The Verin is visible through gaps in the trees and the land opens into broader pasture.
+The road surface is firmer here, packed by long use. The air smells of warm dust and distant woodsmoke.
+A roadside well stands under a small wooden roof.
+A weathered wooden sign points toward Riverbend and Greenhold.
+Deep wagon ruts show where carts have struggled in wet weather.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Road South 2
+[Trade Road]
+The southern stretch of the river road runs through more open country. The river is sometimes close, sometimes a short distance away through a belt of trees. Farms appear more frequently.
+The air is warmer and the smell of the land is stronger than the river.
+A small roadside shrine stands under an oak.
+A track leads off toward a visible farmhouse.
+The road remains wide and well used.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend Approach
+[Trade Road]
+The road drops gently toward the river town of Riverbend. The River Verin glints between the trees to the south. Small farms and orchards begin to appear on either side of the road.
+The air carries woodsmoke and the faint sweetness of apple blossom. A dog barks in the distance.
+A roadside well stands under a small wooden roof.
+A child sits on a fence post watching travelers pass.
+Stacks of cut firewood are piled beside the nearest farm gate.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Crossroads Marker
+[Crossroads]
+Four roads meet at a broad open space marked by a tall riverstone pillar. Carved letters on the pillar give distances to Greenhold, Riverbend, Elderwatch, and the southern meadows.
+The wind moves freely here. The air smells of dust and warm grass.
+A low stone bench has been built against the base of the pillar.
+A small shrine of stacked stones holds a few coins and flowers.
+Fresh tracks show recent traffic on all four roads.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Duskwood Boundary
+[Forest Edge]
+The open meadows end abruptly at the edge of denser woodland. The trees here are older and closer together, their canopy thicker. A rough path continues into the shadows while a clearer track runs along the tree line.
+The air cools and the light dims. The smell of leaf mold and damp earth is strong.
+A wooden boundary marker stands at the edge of the wood.
+A game trail crosses the path and disappears into the undergrowth.
+Fallen leaves carpet the ground in thick layers.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Elderwatch Road Marker
+[Road]
+A tall milestone of pale stone stands where the road to Elderwatch becomes more distinct. The carving is clear and the distances are marked in the local measure.
+The surrounding land is a mix of meadow and the first true trees of the eastern wood.
+A small lean-to of rough timber offers shelter from rain.
+Wagon tracks continue strongly eastward.
+The air carries the scent of both open land and forest.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Farm Track North
+[Farm Track]
+A narrower track leaves the main road and runs toward a cluster of farm buildings visible in the distance. The surface is rougher and the ruts are deeper.
+The air smells of the surrounding fields and animals.
+A wooden gate stands open across the track.
+A scarecrow leans at an angle in a nearby field.
+The track continues toward the farm and back to the main road.
+Obvious exits: south, north, east, west.
+
+================================================================================
+FOREST EDGE, LIGHT FOREST AND STARTER UNDERGROUND
+================================================================================
+
+Hill Path 1
+[Rolling Hills]
+The ground rises into low green hills dotted with outcrops of pale gray stone. Sheep trails wind between the rocks and the wind is stronger here.
+The air is clear and carries the scent of thyme and sun-warmed stone. Hawks circle high overhead.
+A narrow goat track climbs toward a dark cleft in the nearest outcrop.
+A single standing stone leans at a slight angle on the hilltop.
+Scattered white bones of a long-dead sheep lie in a hollow.
+Obvious exits: north, south, east, west, down.
+
+--------------------------------------------------------------------------------
+
+Hill Path 2
+[Rolling Hills]
+The hills continue with more frequent rocky outcrops and thinner soil. The grass is shorter and mixed with low herbs. The view from the higher points is wide.
+The wind is constant. The river and Greenhold are visible to the west on clear days.
+A second dark cleft suggests another cave entrance.
+A large flat boulder makes a natural lookout point.
+Sheep have worn clear paths between the better grazing spots.
+Obvious exits: north, south, east, west, down.
+
+--------------------------------------------------------------------------------
+
+Moss Cave Mouth
+[Cave Entrance]
+A low, wide opening in the hillside is half-hidden by hanging moss and ferns. Cool air breathes from the darkness within. The stone around the entrance is smooth and damp.
+The smell of wet rock and earth is strong. Water drips steadily somewhere inside.
+A small pile of dry wood has been left just inside the entrance by previous travelers.
+Scratches on the stone suggest something has used this cave as a den.
+A faint green glow is visible deeper in the passage.
+Obvious exits: out, down, east, west.
+
+--------------------------------------------------------------------------------
+
+Moss Cave
+[Shallow Cave]
+The passage opens into a low chamber whose floor is soft with centuries of leaf mold and moss. Pale roots hang from the ceiling and a thin stream of water runs along one wall into a clear pool.
+The air is cool and still. The only light comes from the entrance and a faint green phosphorescence on the damp walls.
+A flat stone near the pool shows signs of old campfires.
+A few scattered animal bones lie in a far corner.
+The stream continues into a narrower passage leading deeper.
+Obvious exits: west, down, out, east.
+
+--------------------------------------------------------------------------------
+
+Lower Moss Passage
+[Cave]
+The passage narrows and slopes downward. The green glow grows stronger, coming from patches of luminous moss on the walls. The air is colder and the sound of running water is louder ahead.
+The floor is uneven and slick in places. Roots still hang from the ceiling but they are thicker and older here.
+A small side alcove contains a nest of dried grass and fur.
+Water seeps from a crack in the wall and joins the main stream.
+The passage continues both downward and slightly to the east.
+Obvious exits: up, down, east, west.
+
+--------------------------------------------------------------------------------
+
+Glowing Pool Chamber
+[Cave]
+The passage opens into a rounded chamber dominated by a clear pool that glows with the same soft green light as the moss. The water is cold and still. Stalactites hang from the ceiling and the walls are slick with moisture.
+The air is very still and carries only the smell of wet stone and mineral. The glow is strong enough to read by.
+A flat ledge of stone runs along one side of the pool.
+Small pale fish move slowly in the glowing water.
+A narrow crack in the far wall suggests a possible continuation.
+Obvious exits: west, up, north.
+
+--------------------------------------------------------------------------------
+
+Side Alcove
+[Cave]
+A small dry alcove opens off the main passage. The floor is higher and the air is a little less damp. Someone has used this space as a temporary camp in the past.
+The green glow from the main passage provides dim light.
+A ring of stones forms an old fire pit.
+A few pieces of dry wood and some discarded bones remain.
+The alcove offers a place to rest out of the main draft.
+Obvious exits: out.
+
+--------------------------------------------------------------------------------
+
+Forest Edge Clearing
+[Forest Edge]
+A small natural clearing opens among the first true trees of the eastern wood. Sunlight reaches the ground here in shifting patches. The undergrowth is thick around the edges but the center is open and grassy.
+The air is cooler and smells strongly of leaf mold and growing things.
+A fallen oak provides a natural seat and table.
+A faint trail continues deeper into the wood to the east.
+Animal tracks of several kinds cross the clearing.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Old Oak Grove
+[Light Forest]
+Several massive oaks grow close together here, their branches interlocking overhead. The ground is thick with centuries of leaf litter and soft moss. Little undergrowth survives in the deep shade.
+The air is still and cool. The only sounds are the occasional creak of old wood and the drip of water from the canopy after rain.
+A hollow in the largest oak shows signs of old use as a shelter.
+A scatter of acorn shells and small bones lies near the hollow.
+Faint paths lead outward between the trunks in several directions.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Deer Trail 1
+[Light Forest]
+A narrow but clear game trail winds between the trees. The ground is soft and marked with many hoofprints. The canopy is high and the undergrowth is thinner along the trail itself.
+The air smells of damp earth and green leaves. Occasional shafts of light reach the forest floor.
+A large patch of disturbed earth shows where deer have been bedding.
+A broken branch hangs at head height where a large animal passed.
+Birds fall silent as travelers move along the trail.
+Obvious exits: northeast, southwest, northwest, southeast.
+
+--------------------------------------------------------------------------------
+
+Deer Trail 2
+[Light Forest]
+The game trail continues deeper into the wood, becoming slightly less distinct in places where the undergrowth closes in. The trees are older and the light is dimmer.
+The smell of the forest is strong and complex. Distant bird calls echo among the trunks.
+A large fallen tree creates a natural obstacle that the trail detours around.
+Moss-covered stones break the surface of the ground in several places.
+The trail shows signs of regular use by both animals and the occasional human.
+Obvious exits: southwest, northeast, north, south.
+
+--------------------------------------------------------------------------------
+
+Beech Hollow
+[Light Forest]
+A shallow hollow among mature beech trees holds a thicker carpet of leaf litter and a few scattered boulders. The light that reaches the ground is soft and green.
+The air is still and quiet. The beech mast underfoot is thick in places.
+A large boulder offers a place to sit and rest.
+Animal paths cross the hollow in several directions.
+The surrounding trees form a natural shelter from wind and light rain.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Stream Crossing (Forest)
+[Light Forest]
+A small clear stream runs through the eastern wood, its banks soft and muddy. Stepping stones have been placed at the best crossing point and the trail continues on the far side.
+The sound of running water is pleasant and constant. The air is cooler near the stream.
+Moss and ferns grow thickly along the banks.
+A fallen log provides an alternative crossing a short distance upstream.
+Animal tracks are thick in the soft ground near the water.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+Deep Thicket
+[Dense Undergrowth]
+The undergrowth here is thick with brambles, young trees, and tangled vines. Progress is slow and the trail is faint. The canopy overhead is almost continuous.
+The air is still and humid. Visibility is limited to a few paces in any direction.
+Thorns catch at clothing and skin with every movement.
+A few clearer animal tunnels run through the denser growth.
+The sound of the wider forest is muffled by the thickness of the plants.
+Obvious exits: north, south, east, west.
+
+================================================================================
+ADDITIONAL STARTER UNDERGROUND AND HILLS
+================================================================================
+
+Second Cave Mouth
+[Cave Entrance]
+A narrower opening in a different rocky outcrop leads into another small cave system. The entrance is partially blocked by a fallen stone and the air that issues from it is cool and slightly musty.
+Ferns grow thickly around the entrance. The smell of earth and stone is strong.
+Scratches on the rock suggest regular use by small animals.
+A faint draft indicates the cave continues some distance.
+Loose stones make the first steps into the darkness careful work.
+Obvious exits: out, down, east.
+
+--------------------------------------------------------------------------------
+
+Second Cave Chamber
+[Cave]
+A low, irregular chamber opens beyond the entrance. The floor is uneven rock and the ceiling is low enough that taller travelers must stoop. A few bones and scraps of fur litter one corner.
+The air is still and cool. Only faint light reaches this far from the entrance.
+A narrow passage continues deeper into the hill.
+Water seeps slowly down one wall, leaving a dark stain.
+The chamber has the feeling of a place used more by animals than by people.
+Obvious exits: out, down, west.
+
+--------------------------------------------------------------------------------
+
+Root Chamber
+[Cave]
+Thick tree roots push through the ceiling and walls of this small chamber, creating a tangle of living wood and stone. The air is damp and smells strongly of earth and growing things.
+A thin stream of water runs among the roots and disappears into a crack in the floor.
+The green glow of luminous moss is present but weaker here.
+A small dry ledge offers a place to sit out of the worst of the damp.
+The roots form natural handholds and obstacles.
+Obvious exits: up, east, west.
+
+--------------------------------------------------------------------------------
+
+Overlook Crag
+[Hills]
+A rocky crag rises above the surrounding hills, offering a wide view across Veridia. The top is mostly bare stone with a few hardy plants growing in cracks. The wind is strong and constant.
+From here Greenhold, the river, the meadows, and the edge of the eastern wood are all clearly visible on a clear day.
+A natural seat has been worn into the stone by weather and use.
+A small cairn of stones stands at the highest point.
+The path down is steep but manageable with care.
+Obvious exits: down, north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Woolwright's Row
+[Craft Lane]
+Narrow timber houses lean toward one another over a lane paved with uneven river cobbles. Every doorway displays a hanging sign of spun wool or dyed cloth. Steam rises from open vats behind the houses.
+The air is thick with the smell of lanolin, woodsmoke, and wet fleece.
+A woman cards wool on a low stool outside her door.
+Bales of raw fleece are stacked under a canvas lean-to.
+A length of bright green cloth has been stretched on a wooden frame to dry.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+Temple Court
+[Sacred Ground]
+Smooth gray flagstones form a quiet courtyard before the Temple of the Verdant. Tall white-barked birches grow in careful rows, their leaves casting shifting green light across the stones.
+The air is cooler here and carries the faint scent of crushed mint and old incense.
+A young acolyte sweeps the courtyard with a birch-twig broom.
+Clay bowls of spring water rest on the altar steps.
+A wooden collection box is bolted to the temple wall.
+Obvious exits: east, south, west, north.
+
+--------------------------------------------------------------------------------
+
+Guard Barracks Yard
+[Military]
+A square of hard-packed earth lies between the town wall and a long stone building with narrow windows. Weapon racks stand under a sloping roof and a pair of practice dummies lean against the wall.
+The smell of oil, leather, and damp stone is strong.
+A young recruit sits on a bench polishing a helmet.
+A water barrel and a dipper stand near the door.
+A notice board lists watch rotations in neat handwriting.
+Obvious exits: south, west, east, north.
+
+--------------------------------------------------------------------------------
+
+Baker's Alley
+[Side Street]
+This narrow alley smells strongly of fresh bread and woodsmoke. Low timber buildings lean close overhead and the cobbles are scattered with flour dust and fallen crumbs.
+Warm light spills from an open bakery door.
+A flour-dusted apprentice carries a tray of cooling loaves.
+A small cat sleeps on a windowsill above a stack of empty flour sacks.
+A wooden bench has been placed against the warm bakery wall.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Tannery Lane
+[Craft District]
+The air here is sharp with the smell of curing hides and woodsmoke. Low stone buildings with wide open doors line a sloping lane that drains toward the river. Stretched hides hang on wooden frames.
+A tanner works a hide over a wooden beam.
+Bundles of bark and vats of dark liquid stand under a rough shelter.
+A large wooden drying rack holds several finished pieces of leather.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+Harbor Watch Steps
+[River Access]
+Wide stone steps lead down from the town level toward a small wooden landing on the River Verin. Mooring posts stand in the water and a pair of small boats are tied alongside.
+The river smells clean and cold. Gulls call overhead.
+A fisherman mends a net on the lowest step.
+A coil of rope and a wooden bucket sit near the posts.
+A simple sign warns of the current's strength after heavy rain.
+Obvious exits: up, north, south, east.
+
+--------------------------------------------------------------------------------
+
+Civic Hall Entrance
+[Civic]
+Broad stone steps rise to the heavy oak doors of Greenhold's civic hall. Carved river stones form the lintel and two iron lanterns flank the entrance.
+The air smells of old wood and beeswax.
+A clerk stands just inside the doorway with a ledger.
+A pair of stone benches face each other across the steps.
+A bronze plaque records the founding year of the current hall.
+Obvious exits: south, east, west, north.
+
+--------------------------------------------------------------------------------
+
+Old Well Court
+[Residential]
+A quiet residential court centers on an ancient stone well whose wooden cover is worn smooth by generations of hands. Timber houses with flower boxes surround the space.
+The air is still and carries the scent of cooking herbs and damp stone.
+A child turns the well handle while an older woman holds a bucket.
+Clay pots of herbs grow along the sunny side of the court.
+A wooden bench circles part of the well.
+Obvious exits: north, east, south, west.
+
+--------------------------------------------------------------------------------
+
+Smithy Lane
+[Craft Street]
+The ringing of hammer on anvil is constant here. Open-fronted forges line both sides of a short, soot-stained street. Sparks fly into the air with every strike and the heat is noticeable even from the middle of the lane.
+The air smells of hot metal, coal smoke, and quenched iron.
+A burly smith works a glowing billet on a large anvil.
+Tongs, hammers, and unfinished tools hang from the forge walls.
+A water trough for quenching stands outside the nearest forge.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Herbalist's Row
+[Quiet Street]
+Narrow timber houses with green-painted shutters line this quieter street. Bundles of drying herbs hang from almost every eave and the air is thick with the scent of mint, yarrow, and dried lavender.
+A small garden of medicinal plants grows in a fenced plot beside one house.
+An older woman sorts dried leaves on a long wooden table.
+Clay jars and small cloth bags are arranged neatly on a shelf under the eaves.
+A wooden sign shaped like a mortar and pestle hangs above the nearest door.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Candlewright Street
+[Craft Street]
+The smell of beeswax and tallow is strong along this short street of candle makers. Windows display rows of finished candles in many sizes and the occasional colored taper.
+Warm yellow light spills from several open workshops even in daylight.
+A young apprentice dips wicks into a pot of melted wax.
+Racks of cooling candles stand in neat rows under a lean-to.
+A large iron cauldron of wax simmers over a low fire.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+River View Terrace
+[Overlook]
+A short row of houses stands on a slight rise with clear views down to the River Verin. The street is paved with the same pale riverstone as the rest of the inner wards and a low stone wall runs along the river side.
+The air is fresher here and carries the scent of the water below.
+A woman sits on the wall sewing while watching the river.
+Clay flower pots line several windowsills.
+A narrow set of steps leads down toward the harbor landing.
+Obvious exits: north, south, east, down.
+
+--------------------------------------------------------------------------------
+
+Market Lane East
+[Market]
+This continuation of the market district is narrower and more crowded with permanent stalls. Cloth awnings create a patchwork of shade and the ground is littered with discarded vegetable leaves and straw.
+The mixed smells of produce, cheese, and fresh bread fill the air.
+A cheese seller cuts samples from a large wheel.
+Baskets of early apples and root vegetables sit on low tables.
+A small boy tries to interest passersby in wooden whistles.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Quiet Court
+[Residential]
+A small, almost hidden court opens off the main streets. The cobbles are cleaner here and a single young tree grows in the center. The surrounding houses are modest but well-kept.
+The air is still and quiet. Only distant town sounds reach this place.
+A wooden bench sits beneath the tree.
+A pair of laundry lines stretch between upper windows.
+A cat watches from a sunny windowsill.
+Obvious exits: west, south.
+
+--------------------------------------------------------------------------------
+
+Wallside Alley
+[Side Alley]
+This narrow alley runs hard against the inner face of the town wall. The stones of the wall are cool and damp and the alley itself is always in shadow. Drainage channels run along the base of the wall.
+The air smells of wet stone and moss.
+A stack of firewood has been piled against the wall.
+A narrow wooden door set into the wall leads to a postern.
+Moss and small ferns grow in the cracks between the wall stones.
+Obvious exits: north, south, east.
+
+--------------------------------------------------------------------------------
+
+Fountain Square
+[Civic]
+A larger public fountain dominates this open square. Water spills from the mouths of carved river fish into a wide circular basin. Benches of pale stone surround the fountain and the square is popular at most hours.
+The sound of falling water is constant and pleasant. The air is cooler near the basin.
+Children sail small wooden boats in the fountain.
+A street vendor sells roasted nuts from a small cart.
+Pigeons strut around the basin edge looking for scraps.
+Obvious exits: north, south, east, west.
+
+================================================================================
+GREENHOLD - OUTER WARDS AND GATES
+================================================================================
+
+North Market
+[Outer Market]
+Open-air stalls of rough timber and canvas fill a broad packed-earth square just inside the northern wall. Merchants call their wares while carts rattle in from the river road.
+The mixed smells of fresh bread, smoked fish, and horse dung hang in the air.
+A spice merchant arranges clay jars on a low table.
+A boy sells roasted chestnuts from a handcart.
+A pair of dogs sleep beneath an empty stall.
+Obvious exits: south, east, west, north.
+
+--------------------------------------------------------------------------------
+
+South Pasture Gate
+[Town Edge]
+A simple wooden gate stands open in the low stone wall that marks the southern edge of Greenhold. Beyond it the land falls away into rolling green pasture dotted with sheep.
+The wind carries the clean smell of grass and damp earth.
+A shepherd leans on the gatepost chewing a stem of grass.
+A half-empty water trough stands just inside the wall.
+Fresh hoofprints and sheep droppings mark the track.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+East Wall Path
+[Town Wall]
+A narrow path of packed earth runs along the inside of Greenhold's eastern wall. Arrow slits open at regular intervals and the wall walk can be reached by wooden ladders.
+The wind is stronger here and carries the scent of the open fields beyond the wall.
+A ladder leans against the wall leading up to the walk.
+A stack of spare spears rests under a small shelter.
+Moss grows thick on the lower stones of the wall.
+Obvious exits: north, south, west, up.
+
+--------------------------------------------------------------------------------
+
+West Wall Path
+[Town Wall]
+This stretch of wall path runs along the western side of Greenhold where the land drops more sharply toward the river. The stones are darker with age and damp.
+The river can be heard faintly below. The air smells of wet stone and willow.
+A guard leans on the parapet looking westward.
+A small iron-bound chest is bolted near the postern.
+Ivy has begun to climb the lower courses of the wall.
+Obvious exits: north, south, east, down.
+
+--------------------------------------------------------------------------------
+
+Stable Yard
+[Outer Ward]
+A wide yard of hard earth and scattered straw stands beside a long timber stable. Horses shift in their stalls and the smell of hay, manure, and leather is strong.
+A stablehand brushes down a bay mare.
+Bales of hay are stacked against the stable wall.
+A wooden mounting block stands near the yard entrance.
+Obvious exits: north, east, south, west.
+
+--------------------------------------------------------------------------------
+
+Carters' Rest
+[Outer Yard]
+An open yard just inside the southern gate serves as a resting place for wagons and carters. Several carts stand with their shafts raised and horses crop grass along the wall.
+The air smells of dust, horse, and woodsmoke from a small cookfire.
+A carter sits on a wagon bed eating bread and cheese.
+A water barrel and dipper stand under a lean-to.
+Spare wagon wheels lean against the wall in a neat row.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+North Gate Approach
+[Outer Gate]
+The northern gate of Greenhold is smaller than the main riverstone gate but still solid. Two guard towers flank a heavy wooden door that stands open during daylight hours. The road beyond leads into the northern pastures.
+The air is cooler and carries the scent of open grassland.
+A pair of guards check the occasional cart.
+A wooden board lists current tolls and notices.
+Mud from the road has been tracked across the threshold.
+Obvious exits: south, north, east, west.
+
+--------------------------------------------------------------------------------
+
+East Gate Path
+[Outer Gate]
+A secondary gate opens eastward toward the meadows and the road to Elderwatch. The gate is simpler, with a single tower and a reinforced wooden door. Outside, the land opens quickly into pasture.
+The wind carries the smell of grass and distant forest.
+A guard sits on a stool just inside the gate.
+A small shrine to safe travel stands beside the gatepost.
+Wagon ruts deepen immediately beyond the threshold.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Wall Walk North
+[Town Wall]
+The wall walk here offers a clear view northward across the pastures. The stone parapet is chest-high and worn smooth by years of weather and watchmen. Ladders lead down to the outer wards at intervals.
+The wind is strong and clean. Greenhold's rooftops spread out to the south.
+A guard paces slowly along the walk.
+A covered signal fire pit sits ready but unlit.
+Arrow slits look outward across the open land.
+Obvious exits: south, east, west, down.
+
+--------------------------------------------------------------------------------
+
+Wall Walk South
+[Town Wall]
+From this section of the wall the southern meadows and the distant tree line of Duskwood are visible. The stones underfoot are uneven in places where repairs have been made over the years.
+The air smells of the open fields. A hawk circles high above the meadows.
+A spare quiver of arrows hangs from a peg on the parapet.
+A wooden shelter offers brief protection from rain.
+The town roofs fall away to the north.
+Obvious exits: north, east, west, down.
+
+--------------------------------------------------------------------------------
+
+Outer Stable Paddock
+[Paddock]
+A larger paddock of open grass lies just outside the stable yard, enclosed by a solid wooden fence. Several horses graze here during the day. A water trough and a hay rack stand at one end.
+The air smells of grass and horse. Flies buzz around the trough.
+A stablehand moves among the horses with a halter.
+Manure has been piled neatly in one corner for later removal.
+The fence gate opens back toward the stable yard.
+Obvious exits: west, east, north.
+
+================================================================================
+RIVERBEND - FULL TOWN
+================================================================================
+
+Riverbend Outer Market
+[Town Edge]
+The first stalls of Riverbend appear along the road as it enters the town. Fishmongers, net-makers, and boatwrights display their goods under canvas awnings. The river is only a short walk to the east.
+The air smells strongly of fish, tar, and wet rope. Gulls cry overhead.
+A net-mender works on a large fishing net stretched between two posts.
+Barrels of salted fish are stacked under an open shed.
+A small shrine to the river spirits stands at the edge of the market.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend Docks
+[Harbor]
+A long wooden dock extends into the River Verin. Several fishing boats and a pair of small cargo barges are moored alongside. The planks underfoot are worn smooth and stained with tar.
+The river moves steadily past. The air is full of the smell of water, fish, and wet wood.
+A boatman coils rope on the dock.
+Fish crates are stacked near the shore end of the dock.
+A wooden crane stands ready for unloading heavier cargo.
+Obvious exits: west, north, south, east.
+
+--------------------------------------------------------------------------------
+
+Riverbend Market Square
+[Market]
+A broad open square forms the commercial heart of Riverbend. Stalls and permanent shops surround a central space where carts can turn. The river is visible between buildings to the east.
+The mixed smells of fish, bread, and river mud fill the air. Voices call constantly.
+A fishwife gutting fish works at a long table.
+Baskets of smoked eels hang from a stall frame.
+A public notice board is covered with local messages and job offers.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Boatwright's Yard
+[Craft Yard]
+An open yard beside the river is filled with the skeletons of boats under construction or repair. Wood shavings cover the ground and the smell of fresh-cut timber and tar is strong.
+The sound of saws and hammers is constant during daylight.
+A boatwright shapes a curved timber with an adze.
+Stacks of seasoned planks lean against a long shed.
+A pot of hot tar simmers over a small fire.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Net Makers' Row
+[Craft Street]
+This short street is lined with workshops where fishing nets are made and repaired. Large nets hang drying between buildings and the air smells of hemp, tar, and river water.
+An old net maker sits in a doorway splicing rope.
+Coils of heavy line are stacked under the eaves.
+A finished net hangs from a high beam for final inspection.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend Inn Yard
+[Inn]
+A spacious yard in front of a three-story timber inn offers space for wagons and horses. A painted sign showing a leaping fish hangs above the main door. The smell of cooking and ale drifts from within.
+Travelers and locals move in and out of the inn at all hours.
+A stablehand takes a horse's reins from a newly arrived rider.
+Benches and tables stand under a large oak in the yard.
+A water trough sits near the stable entrance.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Fishermen's Quarters
+[Residential]
+Narrow streets of small timber houses run down toward the river. Nets hang drying from almost every wall and the smell of fish is permanent here. Children play between the houses.
+The air is damp and carries the constant sound of the river.
+A woman mends a net on her doorstep.
+Fish racks stand in several small yards.
+A narrow alley leads down to a private landing.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend Temple
+[Sacred]
+A modest stone temple dedicated to the river and the cycle of water stands near the center of town. The entrance faces the river and a simple fountain of clear water plays in the courtyard.
+The air is cooler and quieter here. The sound of the fountain is calming.
+An acolyte tends the fountain and sweeps the courtyard.
+Offerings of small carved fish and river stones sit on a low altar.
+A wooden collection box is fixed beside the door.
+Obvious exits: south, east, west, north.
+
+--------------------------------------------------------------------------------
+
+Upper Riverbend
+[Residential]
+The ground rises slightly as the town moves away from the river. The houses here are a little larger and the streets a little wider. Gardens and small orchards appear between the buildings.
+The air is cleaner and carries less of the river smell.
+A gardener works among rows of vegetables.
+Laundry hangs between houses in the breeze.
+A stone well stands at a small crossroads.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend South Gate
+[Town Gate]
+The southern gate of Riverbend is a simple but solid timber structure with a single guard post. Beyond it the road continues south along the river toward the lower meadows.
+The air carries the scent of the open land beyond.
+A guard leans on a spear watching the road.
+A small toll box sits on a post beside the gate.
+Wagon tracks lead both into and out of town.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Riverbend North Gate
+[Town Gate]
+The northern approach to Riverbend is marked by a low stone arch and a wooden gate that stands open. The road from Greenhold arrives here after following the river.
+The smell of the town and the river mixes with the cleaner air of the road.
+A pair of children sit on the wall watching travelers.
+A weathered sign welcomes visitors to Riverbend.
+Muddy ruts show the volume of recent traffic.
+Obvious exits: south, north, east, west.
+
+--------------------------------------------------------------------------------
+
+Tanner's Bend
+[Craft District]
+On a slight bend of the river just outside the main docks, a small tanning operation processes hides and nets. The smell is strong and the ground is stained.
+Workers move between vats and drying racks.
+Stretched hides hang on frames facing the sun.
+A wooden walkway keeps feet out of the worst of the mud.
+Obvious exits: north, south, west.
+
+================================================================================
+RIVER VERIN - EXTENDED BANKS AND CROSSINGS
+================================================================================
+
+River Verin Bank West 1
+[Riverbank]
+The River Verin runs broad and clear, its surface broken by slow eddies around half-submerged stones. Willows lean far out over the water, their long leaves trailing in the current.
+The air smells of wet earth, willow, and cold water. Dragonflies skim the surface.
+A flat-bottomed ferry boat is tied to a leaning post.
+A fisherman sits on a large flat stone with a simple line in the water.
+A path of packed earth follows the bank both north and south.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Verin Bank West 2
+[Riverbank]
+Further along the western bank the willows grow thicker and the current is a little stronger. A natural shelf of stone provides a good place to sit above the water.
+The smell of the river is clean and constant. Birds move in the branches overhead.
+A discarded fishing line is tangled in the roots of a willow.
+Smooth stones have been stacked into a small cairn by previous travelers.
+The path continues clearly in both directions.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Verin Bank West 3
+[Riverbank]
+The bank opens into a small grassy clearing beside the water. The river is wider here and the far bank is clearly visible. A few large boulders sit half in the water.
+The air is warm in the clearing. The sound of the current is steady and soothing.
+A simple fire ring of stones shows signs of recent use.
+A log has been dragged close to the water to serve as a seat.
+Otter tracks mark the soft mud at the water's edge.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+River Verin Bank East 1
+[Riverbank]
+The eastern bank is steeper and rockier. Pale stones form a natural landing in places and the current runs a little faster here. Tall reeds grow in the shallows.
+The smell of river water and crushed reed is strong.
+A narrow path climbs the bank toward the eastern meadows.
+A half-sunken log serves as a rough seat near the water.
+Fresh otter tracks mark the mud at the water's edge.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+River Verin Bank East 2
+[Riverbank]
+Reeds and sedges grow thick along this stretch of the eastern bank. The ground is softer and the path is narrower, sometimes almost disappearing among the plants.
+The air is still and full of the smell of water plants. Hidden birds call from the reeds.
+A narrow channel of open water winds through the denser growth.
+A wooden stake marks a safe place to step down to the water.
+Dragonflies hover in the warmer air above the reeds.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+Willow Crossing
+[Ford]
+Here the River Verin shallows over a bed of pale stones, forming a natural ford. Willow trees grow thick on both banks, their roots tangled in the water. Wagon ruts and hoofprints mark the crossing clearly.
+The water runs cold and clear around the ankles of anyone who wades.
+A simple wooden post marks the safest line across the stones.
+A pair of herons stand motionless in the shallows downstream.
+Driftwood has been piled on the western bank by previous travelers.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+North River Bend
+[Riverbank]
+The river curves gently northward, creating a broad shallow eddy on the western side. Large smooth stones form natural seats and the bank is thick with wild mint and watercress.
+The current is quieter in the bend. The air is cool and smells of mint and clean water.
+A small wooden fishing platform extends a few feet over the water.
+Someone has left a clay jug cooling in the shallows.
+A narrow footpath continues along the bank in both directions.
+Obvious exits: south, north, east, west.
+
+--------------------------------------------------------------------------------
+
+South River Meadow Bank
+[River Meadow]
+Open meadow runs right down to the river's edge. The grass is rich and green, kept short by regular grazing. The Verin moves past in slow silver curves.
+The air smells of warm grass and river. Bees work the clover.
+A low stone wall marks the edge of a nearby farm's pasture.
+A pair of cows stand knee-deep in the shallows drinking.
+A simple stile crosses the wall toward the farm track.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Ferry Landing North
+[River Crossing]
+A solid wooden landing juts into the river where the current is moderate. Heavy posts and thick ropes secure a larger flat-bottomed ferry. A small hut of weathered timber stands on the bank.
+The smell of wet wood, rope, and river is constant.
+A ferry keeper sits on a stool mending a rope.
+A brass bell hangs from a post to summon the ferry.
+A painted board lists the crossing fee in neat letters.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Ferry Landing South
+[River Crossing]
+A second ferry point serves the southern stretches of the river. The landing is simpler, with a single large boat and a lean-to for the keeper. The current is a little stronger here.
+The air smells of the river and wet rope.
+A heavy rope is used to help guide the ferry across.
+A wooden bench sits under the lean-to for waiting passengers.
+Deep water runs close to the eastern side of the landing.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Reed Beds North
+[River Edge]
+Dense beds of tall green reeds stretch along a quiet stretch of the Verin. Narrow channels of open water wind through them and the ground underfoot is soft and springy.
+The air is still and full of the smell of water and crushed stems.
+A narrow path of packed mud winds through the denser stands.
+A half-hidden duck blind of woven reeds stands near the water.
+Scattered feathers float in the still channels.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+Reed Beds South
+[River Edge]
+The reed beds continue southward, growing even thicker in places. The main river current is only a short distance away but is almost hidden by the dense growth.
+The air is humid and full of insect life. Birds call constantly from cover.
+A clearer channel has been cut through the reeds by regular use.
+A small wooden platform sits just above the water for fishing.
+The path becomes less distinct further south.
+Obvious exits: north, south, west, east.
+
+--------------------------------------------------------------------------------
+
+River Island Approach
+[River]
+A low, willow-covered island sits in the middle of a wider stretch of the Verin. A shallow ford or a short swim is required to reach it. The island is small but offers privacy and good fishing.
+The current splits around the island. The air is cooler over the water.
+A half-submerged log forms a natural bridge at the shallowest point.
+Birds nest in the dense willows on the island.
+Smooth stones line the island's small beaches.
+Obvious exits: west, east, north, south.
+
+================================================================================
+OPEN FIELDS, MEADOWS AND FARMS
+================================================================================
+
+North Pasture 1
+[Open Field]
+Wide green pasture rolls gently northward, broken only by low stone walls and the occasional solitary oak. Sheep graze in scattered groups while a pair of black-and-white dogs keep watch.
+The wind is strong and clean, carrying the scent of crushed grass and distant rain.
+A weathered wooden stile crosses the nearest wall.
+A stone watering trough stands half-sunk in the earth.
+A shepherd's hut of turf and timber sits against a low rise.
+Obvious exits: south, east, west, northeast, northwest.
+
+--------------------------------------------------------------------------------
+
+North Pasture 2
+[Open Field]
+The pasture continues northward with fewer walls and more open grazing. The ground rises slightly and the wind is stronger. A few scattered thorn bushes break the green expanse.
+Skylarks sing high overhead. The air smells of grass and open land.
+A lone shepherd moves slowly among a large flock.
+A dry stone wall runs along the eastern edge of the pasture.
+Rabbit holes pock the softer ground near the bushes.
+Obvious exits: south, north, east, west.
+
+--------------------------------------------------------------------------------
+
+South Meadow 1
+[Open Field]
+Rolling grassland stretches south toward the distant tree line of Duskwood. The grass is knee-high and rich, broken by low thickets of gorse and the occasional standing stone.
+The air is full of the smell of warm grass and wild thyme. Bees move steadily among the flowers.
+A circle of standing stones rises on a low knoll.
+A flock of sheep grazes near a solitary thorn tree.
+A half-buried plowshare lies rusting in the grass.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+South Meadow 2
+[Open Field]
+Further south the meadow becomes more uneven, with low rises and shallow hollows. Gorse grows thicker and the standing stones are left behind. The tree line of Duskwood is closer and darker.
+The wind carries the first scents of the forest. The grass is longer here.
+A faint track winds through the taller grass toward the south.
+A large flat stone offers a place to rest.
+A pair of deer raise their heads and watch from a distance.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+East Meadow 1
+[Open Field]
+Open grassland slopes gently eastward toward the first trees of the Elderwood. The grass is mixed with clover and small yellow flowers. Low stone walls divide the land into irregular pastures.
+The wind carries the scent of the approaching forest.
+A lone oak stands in the middle of the largest pasture.
+A wooden gate opens onto a farm track leading further east.
+Rabbit holes pock the softer ground near the walls.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+East Meadow 2
+[Open Field]
+The eastern meadows continue with more frequent stone walls and the occasional small farm building visible in the distance. The grass is shorter where it has been grazed more heavily.
+The air is warm and full of the sound of insects.
+A stile crosses a particularly high wall.
+A flock of geese grazes near a small pond.
+The first trees of the eastern wood are clearly visible ahead.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+West Fields 1
+[Open Field]
+These western fields lie between Greenhold and the river. The soil is darker and richer here. Neat rows of vegetables and grain grow in the nearer plots while the farther land remains open pasture.
+The air smells of turned earth and growing crops.
+A farmer works a hoe between rows of young plants.
+A low stone barn stands near the field edge.
+Irrigation ditches run in straight lines toward the river.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+West Fields 2
+[Open Field]
+Further west the fields give way more completely to open pasture as the land approaches the river. The soil remains good and the grass is lush. A few isolated trees provide shade.
+The river is visible ahead. The air is fresher and carries the scent of water.
+A herd of cattle grazes slowly across the pasture.
+A wooden fence runs along the river side of the fields.
+A narrow track leads down toward the river bank.
+Obvious exits: east, west, north, south.
+
+--------------------------------------------------------------------------------
+
+Sunmeadow 1
+[Open Meadow]
+A broad, sunny meadow opens where the land levels after the river hills. The grass is short and thick, kept by regular grazing, and scattered with ox-eye daisies and buttercups. A clear stream crosses the meadow.
+The air is warm and full of the scent of flowers and warm earth.
+A small wooden bridge crosses the stream.
+A circle of flat stones forms a natural resting place.
+Cattle graze peacefully in the southern half of the meadow.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Sunmeadow 2
+[Open Meadow]
+The meadow continues eastward, becoming slightly more rolling. The stream winds through it and the flowers are even thicker in the damper ground near the water.
+Bees and butterflies move constantly among the blossoms. The air is sweet.
+A second, smaller bridge crosses a narrow side channel of the stream.
+A large solitary oak stands near the northern edge.
+A faint path leads toward the eastern woods.
+Obvious exits: west, east, north, south.
+
+--------------------------------------------------------------------------------
+
+Oakfarm Pasture
+[Farmland]
+This well-kept pasture belongs to Oakfarm. The grass is rich and the stone walls are carefully maintained. A small herd of cattle and a few sheep share the space. The farm buildings are visible to the north.
+The air smells of grass, dung, and woodsmoke from the farmhouse.
+A wooden gate opens onto the farm track.
+A stone water trough stands in the shade of a large oak.
+A broken plow has been left near the wall for repair.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Oakfarm Yard
+[Farm]
+The central yard of Oakfarm is enclosed by the farmhouse, a barn, and a pair of smaller outbuildings. Chickens scratch in the dirt and a dog lies in the shade of the house.
+The smell of woodsmoke, animals, and cooking is strong.
+A farmer mends a piece of harness on a bench.
+A well with a wooden cover stands in the center of the yard.
+Stacks of firewood are piled against the barn wall.
+Obvious exits: south, east, west, north.
+
+--------------------------------------------------------------------------------
+
+Willowfarm Orchard
+[Orchard]
+Rows of apple and pear trees stand in neat lines on a gentle south-facing slope. The ground beneath is short grass mixed with fallen blossom and early fruit. Beehives sit in a sunny corner.
+The air is sweet with the scent of blossom and honey.
+A wooden ladder leans against one of the taller trees.
+Wicker baskets are stacked under a lean-to.
+A stone bench sits in the shade at the end of a row.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Willowfarm House
+[Farm]
+A solid timber farmhouse with a thatched roof stands at the edge of the orchard. A kitchen garden of herbs and vegetables grows beside the house and a small barn sits a short distance away.
+The air smells of cooking and the orchard.
+A woman works in the kitchen garden.
+A cat sleeps on a sunny windowsill.
+A wooden fence encloses a small yard for poultry.
+Obvious exits: south, east, west, north.
+
+--------------------------------------------------------------------------------
+
+Standing Stone Field
+[Open Field]
+A single tall standing stone rises from the center of this open field. The stone is pale gray and covered on its north face with soft green lichen. The surrounding grass is shorter, as if the area is often visited.
+The wind moves freely across the open ground. The air feels slightly cooler near the stone.
+Offerings of flowers and small stones have been left at the base of the standing stone.
+A faint path circles the stone and continues south.
+Rabbits have made a warren in the softer ground nearby.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Low Knoll
+[Open Field]
+A gentle rise in the land offers a slightly better view of the surrounding countryside. The grass is shorter on the top of the knoll and a few scattered stones break the surface.
+The wind is stronger here. Greenhold, the river, and the distant woods are all visible.
+A flat stone near the top makes a natural seat.
+A small cairn of stones has been built by previous travelers.
+Sheep tracks cross the knoll in several directions.
+Obvious exits: north, south, east, west.
+
+--------------------------------------------------------------------------------
+
+Gorse Thicket
+[Rough Ground]
+A dense thicket of gorse and low thorn bushes occupies a shallow depression in the meadows. The yellow flowers are bright against the green and the spines are sharp.
+The air is still inside the thicket and smells strongly of the flowers. Small birds move constantly in the cover.
+A narrow animal path winds through the denser growth.
+A few open pockets of grass exist within the thicket.
+The spines catch at clothing and skin.
+Obvious exits: north, south, east, west.

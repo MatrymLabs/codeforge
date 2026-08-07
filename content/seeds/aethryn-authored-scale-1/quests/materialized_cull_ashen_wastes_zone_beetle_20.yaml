@@ -1,0 +1,111 @@
+id: cull_ashen_wastes_zone_beetle_20
+name: 'A great Bounty: the beetle-kind of Ashen Wastes'
+start: s0
+reward_xp: 1120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: ashen_wastes_zone|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: ashen_wastes_zone|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: ashen_wastes_zone|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: ashen_wastes_zone|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: ashen_wastes_zone|beetle
+- state: s5
+  event: cull
+  to: s6
+  on_cull: ashen_wastes_zone|beetle
+- state: s6
+  event: cull
+  to: s7
+  on_cull: ashen_wastes_zone|beetle
+- state: s7
+  event: cull
+  to: s8
+  on_cull: ashen_wastes_zone|beetle
+- state: s8
+  event: cull
+  to: s9
+  on_cull: ashen_wastes_zone|beetle
+- state: s9
+  event: cull
+  to: s10
+  on_cull: ashen_wastes_zone|beetle
+- state: s10
+  event: cull
+  to: s11
+  on_cull: ashen_wastes_zone|beetle
+- state: s11
+  event: cull
+  to: s12
+  on_cull: ashen_wastes_zone|beetle
+- state: s12
+  event: cull
+  to: s13
+  on_cull: ashen_wastes_zone|beetle
+- state: s13
+  event: cull
+  to: s14
+  on_cull: ashen_wastes_zone|beetle
+- state: s14
+  event: cull
+  to: s15
+  on_cull: ashen_wastes_zone|beetle
+- state: s15
+  event: cull
+  to: s16
+  on_cull: ashen_wastes_zone|beetle
+- state: s16
+  event: cull
+  to: s17
+  on_cull: ashen_wastes_zone|beetle
+- state: s17
+  event: cull
+  to: s18
+  on_cull: ashen_wastes_zone|beetle
+- state: s18
+  event: cull
+  to: s19
+  on_cull: ashen_wastes_zone|beetle
+- state: s19
+  event: cull
+  to: done
+  on_cull: ashen_wastes_zone|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the beetle-kind of Ashen Wastes: 0/20 down (1120 XP).'
+  s1: 'Bring down the beetle-kind of Ashen Wastes: 1/20 down (1120 XP).'
+  s2: 'Bring down the beetle-kind of Ashen Wastes: 2/20 down (1120 XP).'
+  s3: 'Bring down the beetle-kind of Ashen Wastes: 3/20 down (1120 XP).'
+  s4: 'Bring down the beetle-kind of Ashen Wastes: 4/20 down (1120 XP).'
+  s5: 'Bring down the beetle-kind of Ashen Wastes: 5/20 down (1120 XP).'
+  s6: 'Bring down the beetle-kind of Ashen Wastes: 6/20 down (1120 XP).'
+  s7: 'Bring down the beetle-kind of Ashen Wastes: 7/20 down (1120 XP).'
+  s8: 'Bring down the beetle-kind of Ashen Wastes: 8/20 down (1120 XP).'
+  s9: 'Bring down the beetle-kind of Ashen Wastes: 9/20 down (1120 XP).'
+  s10: 'Bring down the beetle-kind of Ashen Wastes: 10/20 down (1120 XP).'
+  s11: 'Bring down the beetle-kind of Ashen Wastes: 11/20 down (1120 XP).'
+  s12: 'Bring down the beetle-kind of Ashen Wastes: 12/20 down (1120 XP).'
+  s13: 'Bring down the beetle-kind of Ashen Wastes: 13/20 down (1120 XP).'
+  s14: 'Bring down the beetle-kind of Ashen Wastes: 14/20 down (1120 XP).'
+  s15: 'Bring down the beetle-kind of Ashen Wastes: 15/20 down (1120 XP).'
+  s16: 'Bring down the beetle-kind of Ashen Wastes: 16/20 down (1120 XP).'
+  s17: 'Bring down the beetle-kind of Ashen Wastes: 17/20 down (1120 XP).'
+  s18: 'Bring down the beetle-kind of Ashen Wastes: 18/20 down (1120 XP).'
+  s19: 'Bring down the beetle-kind of Ashen Wastes: 19/20 down (1120 XP).'
+  done: The beetle-kind of Ashen Wastes are hunted down. The ash-tracks are a shade
+    safer.

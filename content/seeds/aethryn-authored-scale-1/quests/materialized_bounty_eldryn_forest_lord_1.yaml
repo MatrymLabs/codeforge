@@ -1,0 +1,16 @@
+id: bounty_eldryn_forest_lord_1
+name: 'Bounty: Draumur the Thorn Warden'
+start: posted
+reward_xp: 612
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: eldryn_forest_lord_1
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumur the Thorn Warden (level 51). Fell it for 612
+    XP.
+  collected: 'Bounty collected: Draumur the Thorn Warden is felled. Well hunted.'

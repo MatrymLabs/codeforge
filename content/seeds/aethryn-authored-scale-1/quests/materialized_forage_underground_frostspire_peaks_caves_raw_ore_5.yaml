@@ -1,0 +1,36 @@
+id: forage_underground_frostspire_peaks_caves_raw_ore_5
+name: 'A small Forage: raw ore of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 105
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather raw ore in Frostspire Blue-Ice Caves: 0/5 (105 XP).'
+  s1: 'Gather raw ore in Frostspire Blue-Ice Caves: 1/5 (105 XP).'
+  s2: 'Gather raw ore in Frostspire Blue-Ice Caves: 2/5 (105 XP).'
+  s3: 'Gather raw ore in Frostspire Blue-Ice Caves: 3/5 (105 XP).'
+  s4: 'Gather raw ore in Frostspire Blue-Ice Caves: 4/5 (105 XP).'
+  done: You have gathered raw ore enough for Frostspire Blue-Ice Caves. The hold's
+    smiths will not want for it.

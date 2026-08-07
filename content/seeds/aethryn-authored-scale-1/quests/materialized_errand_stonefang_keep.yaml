@@ -1,0 +1,15 @@
+id: errand_stonefang_keep
+name: 'Errand: Dreadmaw Hold'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: dreadmaw_hold
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Dreadmaw Hold (1500 XP).
+  done: You reach Dreadmaw Hold and mark the way. Well scouted.

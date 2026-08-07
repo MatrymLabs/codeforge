@@ -1,0 +1,36 @@
+id: forage_zhaar_desert_zone_dustbloom_5
+name: 'A small Forage: dustbloom of Zhaar Desert'
+start: s0
+reward_xp: 160
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: zhaar_desert_zone|dustbloom
+- state: s1
+  event: forage
+  to: s2
+  on_forage: zhaar_desert_zone|dustbloom
+- state: s2
+  event: forage
+  to: s3
+  on_forage: zhaar_desert_zone|dustbloom
+- state: s3
+  event: forage
+  to: s4
+  on_forage: zhaar_desert_zone|dustbloom
+- state: s4
+  event: forage
+  to: done
+  on_forage: zhaar_desert_zone|dustbloom
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather dustbloom in Zhaar Desert: 0/5 (160 XP).'
+  s1: 'Gather dustbloom in Zhaar Desert: 1/5 (160 XP).'
+  s2: 'Gather dustbloom in Zhaar Desert: 2/5 (160 XP).'
+  s3: 'Gather dustbloom in Zhaar Desert: 3/5 (160 XP).'
+  s4: 'Gather dustbloom in Zhaar Desert: 4/5 (160 XP).'
+  done: You have gathered dustbloom enough for Zhaar Desert. The caravan traders will
+    pay well for it.

@@ -1,0 +1,36 @@
+id: forage_underground_thalorin_caves_hollow_ingot_5
+name: 'A small Requisition: hollow ingot of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 165
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_caves|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_caves|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_caves|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_caves|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_thalorin_caves|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in hollow ingot in Thalorin''s Moor Mines: 0/5 (165 XP).'
+  s1: 'Bring in hollow ingot in Thalorin''s Moor Mines: 1/5 (165 XP).'
+  s2: 'Bring in hollow ingot in Thalorin''s Moor Mines: 2/5 (165 XP).'
+  s3: 'Bring in hollow ingot in Thalorin''s Moor Mines: 3/5 (165 XP).'
+  s4: 'Bring in hollow ingot in Thalorin''s Moor Mines: 4/5 (165 XP).'
+  done: You have requisitioned hollow ingot enough for Thalorin's Moor Mines. The
+    region's makers will put it to use.

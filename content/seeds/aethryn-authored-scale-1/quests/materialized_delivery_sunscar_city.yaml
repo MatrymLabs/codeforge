@@ -1,0 +1,20 @@
+id: delivery_sunscar_city
+name: 'Delivery: Sunscar City to Mistvale'
+start: posted
+reward_xp: 960
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_sunscar_city
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: mistvale
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Sunscar City is bound for Mistvale. Take it up (960 XP).
+  carrying: Carry the parcel to Mistvale.
+  done: The parcel is delivered to Mistvale. The road keeps its promise.

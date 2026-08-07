@@ -1,0 +1,110 @@
+id: cull_thalorin_zone_brute_20
+name: 'A great Thinning: the brute-kind of Thalorin'
+start: s0
+reward_xp: 920
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: thalorin_zone|brute
+- state: s1
+  event: cull
+  to: s2
+  on_cull: thalorin_zone|brute
+- state: s2
+  event: cull
+  to: s3
+  on_cull: thalorin_zone|brute
+- state: s3
+  event: cull
+  to: s4
+  on_cull: thalorin_zone|brute
+- state: s4
+  event: cull
+  to: s5
+  on_cull: thalorin_zone|brute
+- state: s5
+  event: cull
+  to: s6
+  on_cull: thalorin_zone|brute
+- state: s6
+  event: cull
+  to: s7
+  on_cull: thalorin_zone|brute
+- state: s7
+  event: cull
+  to: s8
+  on_cull: thalorin_zone|brute
+- state: s8
+  event: cull
+  to: s9
+  on_cull: thalorin_zone|brute
+- state: s9
+  event: cull
+  to: s10
+  on_cull: thalorin_zone|brute
+- state: s10
+  event: cull
+  to: s11
+  on_cull: thalorin_zone|brute
+- state: s11
+  event: cull
+  to: s12
+  on_cull: thalorin_zone|brute
+- state: s12
+  event: cull
+  to: s13
+  on_cull: thalorin_zone|brute
+- state: s13
+  event: cull
+  to: s14
+  on_cull: thalorin_zone|brute
+- state: s14
+  event: cull
+  to: s15
+  on_cull: thalorin_zone|brute
+- state: s15
+  event: cull
+  to: s16
+  on_cull: thalorin_zone|brute
+- state: s16
+  event: cull
+  to: s17
+  on_cull: thalorin_zone|brute
+- state: s17
+  event: cull
+  to: s18
+  on_cull: thalorin_zone|brute
+- state: s18
+  event: cull
+  to: s19
+  on_cull: thalorin_zone|brute
+- state: s19
+  event: cull
+  to: done
+  on_cull: thalorin_zone|brute
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the brute-kind of Thalorin: 0/20 down (920 XP).'
+  s1: 'Thin out the brute-kind of Thalorin: 1/20 down (920 XP).'
+  s2: 'Thin out the brute-kind of Thalorin: 2/20 down (920 XP).'
+  s3: 'Thin out the brute-kind of Thalorin: 3/20 down (920 XP).'
+  s4: 'Thin out the brute-kind of Thalorin: 4/20 down (920 XP).'
+  s5: 'Thin out the brute-kind of Thalorin: 5/20 down (920 XP).'
+  s6: 'Thin out the brute-kind of Thalorin: 6/20 down (920 XP).'
+  s7: 'Thin out the brute-kind of Thalorin: 7/20 down (920 XP).'
+  s8: 'Thin out the brute-kind of Thalorin: 8/20 down (920 XP).'
+  s9: 'Thin out the brute-kind of Thalorin: 9/20 down (920 XP).'
+  s10: 'Thin out the brute-kind of Thalorin: 10/20 down (920 XP).'
+  s11: 'Thin out the brute-kind of Thalorin: 11/20 down (920 XP).'
+  s12: 'Thin out the brute-kind of Thalorin: 12/20 down (920 XP).'
+  s13: 'Thin out the brute-kind of Thalorin: 13/20 down (920 XP).'
+  s14: 'Thin out the brute-kind of Thalorin: 14/20 down (920 XP).'
+  s15: 'Thin out the brute-kind of Thalorin: 15/20 down (920 XP).'
+  s16: 'Thin out the brute-kind of Thalorin: 16/20 down (920 XP).'
+  s17: 'Thin out the brute-kind of Thalorin: 17/20 down (920 XP).'
+  s18: 'Thin out the brute-kind of Thalorin: 18/20 down (920 XP).'
+  s19: 'Thin out the brute-kind of Thalorin: 19/20 down (920 XP).'
+  done: The brute-kind of Thalorin are thinned back. The region breathes easier.

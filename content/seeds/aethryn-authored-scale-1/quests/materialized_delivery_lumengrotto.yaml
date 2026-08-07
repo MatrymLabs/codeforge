@@ -1,0 +1,20 @@
+id: delivery_lumengrotto
+name: 'Delivery: Lumengrotto to Shadowfissure'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_lumengrotto
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: shadowfissure
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Lumengrotto is bound for Shadowfissure. Take it up (1200 XP).
+  carrying: Carry the parcel to Shadowfissure.
+  done: The parcel is delivered to Shadowfissure. The road keeps its promise.

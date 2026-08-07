@@ -1,0 +1,20 @@
+id: delivery_mistvale
+name: 'Delivery: Mistvale to Shifting Canopy'
+start: posted
+reward_xp: 1080
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_mistvale
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: shifting_canopy
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Mistvale is bound for Shifting Canopy. Take it up (1080 XP).
+  carrying: Carry the parcel to Shifting Canopy.
+  done: The parcel is delivered to Shifting Canopy. The road keeps its promise.

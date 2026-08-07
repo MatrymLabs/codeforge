@@ -1,0 +1,20 @@
+id: delivery_ashen_monoliths
+name: 'Delivery: Ashen Monoliths to Cinderfire'
+start: posted
+reward_xp: 1440
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_ashen_monoliths
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: cragfire
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Ashen Monoliths is bound for Cinderfire. Take it up (1440 XP).
+  carrying: Carry the parcel to Cinderfire.
+  done: The parcel is delivered to Cinderfire. The road keeps its promise.

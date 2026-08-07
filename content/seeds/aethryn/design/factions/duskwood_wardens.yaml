@@ -1,0 +1,8 @@
+id: duskwood_wardens_dispute
+canon_status: AUTHORED_LOCAL
+parent_region: duskwood_vale
+faction: wardens_scars
+pressure_type: disputed_authority
+pressure: Ravenwatch wardens disagree whether the Black Hollow threshold should be opened for study or kept closed.
+counterpressure: gatherers and lantern keepers need the route for ordinary work.
+resolution_status: intentionally_reversible

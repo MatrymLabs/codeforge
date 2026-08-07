@@ -1,0 +1,61 @@
+id: forage_underground_frostspire_peaks_caves_raw_ore_10
+name: 'A standing Forage: raw ore of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather raw ore in Frostspire Blue-Ice Caves: 0/10 (210 XP).'
+  s1: 'Gather raw ore in Frostspire Blue-Ice Caves: 1/10 (210 XP).'
+  s2: 'Gather raw ore in Frostspire Blue-Ice Caves: 2/10 (210 XP).'
+  s3: 'Gather raw ore in Frostspire Blue-Ice Caves: 3/10 (210 XP).'
+  s4: 'Gather raw ore in Frostspire Blue-Ice Caves: 4/10 (210 XP).'
+  s5: 'Gather raw ore in Frostspire Blue-Ice Caves: 5/10 (210 XP).'
+  s6: 'Gather raw ore in Frostspire Blue-Ice Caves: 6/10 (210 XP).'
+  s7: 'Gather raw ore in Frostspire Blue-Ice Caves: 7/10 (210 XP).'
+  s8: 'Gather raw ore in Frostspire Blue-Ice Caves: 8/10 (210 XP).'
+  s9: 'Gather raw ore in Frostspire Blue-Ice Caves: 9/10 (210 XP).'
+  done: You have gathered raw ore enough for Frostspire Blue-Ice Caves. The hold's
+    smiths will not want for it.

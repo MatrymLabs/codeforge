@@ -1,0 +1,16 @@
+id: bounty_veridia_lord_8
+name: 'Bounty: Skarnen the Meadow Scourge'
+start: posted
+reward_xp: 216
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: veridia_lord_8
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Skarnen the Meadow Scourge (level 18). Fell it for 216
+    XP.
+  collected: 'Bounty collected: Skarnen the Meadow Scourge is felled. Well hunted.'

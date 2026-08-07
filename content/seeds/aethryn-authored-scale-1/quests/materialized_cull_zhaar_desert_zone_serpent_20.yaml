@@ -1,0 +1,110 @@
+id: cull_zhaar_desert_zone_serpent_20
+name: 'A great Cull: the serpent-kind of Zhaar Desert'
+start: s0
+reward_xp: 860
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: zhaar_desert_zone|serpent
+- state: s1
+  event: cull
+  to: s2
+  on_cull: zhaar_desert_zone|serpent
+- state: s2
+  event: cull
+  to: s3
+  on_cull: zhaar_desert_zone|serpent
+- state: s3
+  event: cull
+  to: s4
+  on_cull: zhaar_desert_zone|serpent
+- state: s4
+  event: cull
+  to: s5
+  on_cull: zhaar_desert_zone|serpent
+- state: s5
+  event: cull
+  to: s6
+  on_cull: zhaar_desert_zone|serpent
+- state: s6
+  event: cull
+  to: s7
+  on_cull: zhaar_desert_zone|serpent
+- state: s7
+  event: cull
+  to: s8
+  on_cull: zhaar_desert_zone|serpent
+- state: s8
+  event: cull
+  to: s9
+  on_cull: zhaar_desert_zone|serpent
+- state: s9
+  event: cull
+  to: s10
+  on_cull: zhaar_desert_zone|serpent
+- state: s10
+  event: cull
+  to: s11
+  on_cull: zhaar_desert_zone|serpent
+- state: s11
+  event: cull
+  to: s12
+  on_cull: zhaar_desert_zone|serpent
+- state: s12
+  event: cull
+  to: s13
+  on_cull: zhaar_desert_zone|serpent
+- state: s13
+  event: cull
+  to: s14
+  on_cull: zhaar_desert_zone|serpent
+- state: s14
+  event: cull
+  to: s15
+  on_cull: zhaar_desert_zone|serpent
+- state: s15
+  event: cull
+  to: s16
+  on_cull: zhaar_desert_zone|serpent
+- state: s16
+  event: cull
+  to: s17
+  on_cull: zhaar_desert_zone|serpent
+- state: s17
+  event: cull
+  to: s18
+  on_cull: zhaar_desert_zone|serpent
+- state: s18
+  event: cull
+  to: s19
+  on_cull: zhaar_desert_zone|serpent
+- state: s19
+  event: cull
+  to: done
+  on_cull: zhaar_desert_zone|serpent
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the serpent-kind of Zhaar Desert: 0/20 down (860 XP).'
+  s1: 'Cull the serpent-kind of Zhaar Desert: 1/20 down (860 XP).'
+  s2: 'Cull the serpent-kind of Zhaar Desert: 2/20 down (860 XP).'
+  s3: 'Cull the serpent-kind of Zhaar Desert: 3/20 down (860 XP).'
+  s4: 'Cull the serpent-kind of Zhaar Desert: 4/20 down (860 XP).'
+  s5: 'Cull the serpent-kind of Zhaar Desert: 5/20 down (860 XP).'
+  s6: 'Cull the serpent-kind of Zhaar Desert: 6/20 down (860 XP).'
+  s7: 'Cull the serpent-kind of Zhaar Desert: 7/20 down (860 XP).'
+  s8: 'Cull the serpent-kind of Zhaar Desert: 8/20 down (860 XP).'
+  s9: 'Cull the serpent-kind of Zhaar Desert: 9/20 down (860 XP).'
+  s10: 'Cull the serpent-kind of Zhaar Desert: 10/20 down (860 XP).'
+  s11: 'Cull the serpent-kind of Zhaar Desert: 11/20 down (860 XP).'
+  s12: 'Cull the serpent-kind of Zhaar Desert: 12/20 down (860 XP).'
+  s13: 'Cull the serpent-kind of Zhaar Desert: 13/20 down (860 XP).'
+  s14: 'Cull the serpent-kind of Zhaar Desert: 14/20 down (860 XP).'
+  s15: 'Cull the serpent-kind of Zhaar Desert: 15/20 down (860 XP).'
+  s16: 'Cull the serpent-kind of Zhaar Desert: 16/20 down (860 XP).'
+  s17: 'Cull the serpent-kind of Zhaar Desert: 17/20 down (860 XP).'
+  s18: 'Cull the serpent-kind of Zhaar Desert: 18/20 down (860 XP).'
+  s19: 'Cull the serpent-kind of Zhaar Desert: 19/20 down (860 XP).'
+  done: The serpent-kind of Zhaar Desert are thinned. The caravan roads breathe easier.

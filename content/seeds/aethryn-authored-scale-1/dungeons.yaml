@@ -1,0 +1,90 @@
+the_sunken_barrow:
+  name: The Sunken Barrow
+  zone: Veridia
+  level: 30
+  biome: temperate-meadow
+the_black_hollow:
+  name: The Black Hollow
+  zone: Duskwood Vale
+  level: 50
+  biome: wild-forest
+starfall_temple:
+  name: Starfall Temple
+  zone: Caeloria
+  level: 60
+  biome: temperate-meadow
+rotwood_deep:
+  name: Rotwood Deep
+  zone: Eldryn Forest
+  level: 80
+  biome: wild-forest
+glacial_bastion:
+  name: Glacial Bastion
+  zone: Frostspire Peaks
+  level: 90
+  biome: glacier-waste
+the_obsidian_pit:
+  name: The Obsidian Pit
+  zone: Zhaar Desert
+  level: 130
+  biome: salt-desert
+scorchstone_keep:
+  name: Scorchstone Keep
+  zone: Zhaar Desert
+  level: 130
+  biome: salt-desert
+heart_of_xilnath:
+  name: Heart of Xil'nath
+  zone: Xil'nath Jungle
+  level: 150
+  biome: living-jungle
+dreadmaw_hold:
+  name: Dreadmaw Hold
+  zone: Thalorin
+  level: 140
+  biome: highland-moor
+irondeep_mines:
+  name: Irondeep Mines
+  zone: Thalorin
+  level: 140
+  biome: highland-moor
+the_flamewrought_forge:
+  name: The Flamewrought Forge
+  zone: Ashen Wastes
+  level: 170
+  biome: volcanic-flats
+the_scorched_gate:
+  name: The Scorched Gate
+  zone: Ashen Wastes
+  level: 170
+  biome: volcanic-flats
+korvash_crater:
+  name: Korvash Crater
+  zone: Korvash Highlands
+  level: 200
+  biome: highland-moor
+blackreef_citadel:
+  name: Blackreef Citadel
+  zone: The Shattered Isles
+  level: 230
+  biome: coastal-strand
+the_spire_nexus:
+  name: The Spire Nexus
+  zone: Skyward Spires
+  level: 250
+  biome: highland-moor
+the_crystal_labyrinth:
+  name: The Crystal Labyrinth
+  zone: The Deepreach
+  level: 250
+  biome: volcanic-flats
+netharions_throne:
+  name: Netharion's Throne
+  zone: The Voidscar
+  level: 300
+  biome: volcanic-flats
+the_rifted_abyss:
+  name: The Rifted Abyss
+  zone: The Voidscar
+  level: 300
+  biome: volcanic-flats

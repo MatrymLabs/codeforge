@@ -1,0 +1,71 @@
+id: cull_underground_zhaar_desert_caves_wraith_12
+name: 'A standing Cull: the wraith-kind of The Red Dune Sinkholes'
+start: s0
+reward_xp: 480
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_zhaar_desert_caves|wraith
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_zhaar_desert_caves|wraith
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the wraith-kind of The Red Dune Sinkholes: 0/12 down (480 XP).'
+  s1: 'Cull the wraith-kind of The Red Dune Sinkholes: 1/12 down (480 XP).'
+  s2: 'Cull the wraith-kind of The Red Dune Sinkholes: 2/12 down (480 XP).'
+  s3: 'Cull the wraith-kind of The Red Dune Sinkholes: 3/12 down (480 XP).'
+  s4: 'Cull the wraith-kind of The Red Dune Sinkholes: 4/12 down (480 XP).'
+  s5: 'Cull the wraith-kind of The Red Dune Sinkholes: 5/12 down (480 XP).'
+  s6: 'Cull the wraith-kind of The Red Dune Sinkholes: 6/12 down (480 XP).'
+  s7: 'Cull the wraith-kind of The Red Dune Sinkholes: 7/12 down (480 XP).'
+  s8: 'Cull the wraith-kind of The Red Dune Sinkholes: 8/12 down (480 XP).'
+  s9: 'Cull the wraith-kind of The Red Dune Sinkholes: 9/12 down (480 XP).'
+  s10: 'Cull the wraith-kind of The Red Dune Sinkholes: 10/12 down (480 XP).'
+  s11: 'Cull the wraith-kind of The Red Dune Sinkholes: 11/12 down (480 XP).'
+  done: The wraith-kind of The Red Dune Sinkholes are thinned. The caravan roads breathe
+    easier.

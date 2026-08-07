@@ -1,0 +1,36 @@
+id: forage_underground_thalorin_caves_raw_ore_5
+name: 'A small Haul: raw ore of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 165
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_thalorin_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in raw ore in Thalorin''s Moor Mines: 0/5 (165 XP).'
+  s1: 'Haul in raw ore in Thalorin''s Moor Mines: 1/5 (165 XP).'
+  s2: 'Haul in raw ore in Thalorin''s Moor Mines: 2/5 (165 XP).'
+  s3: 'Haul in raw ore in Thalorin''s Moor Mines: 3/5 (165 XP).'
+  s4: 'Haul in raw ore in Thalorin''s Moor Mines: 4/5 (165 XP).'
+  done: You have hauled in raw ore enough for Thalorin's Moor Mines. The region's
+    makers will put it to use.

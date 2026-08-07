@@ -1,0 +1,203 @@
+veridia_zone:
+  name: Veridia
+  rooms:
+  - veridia
+  - greenhold
+  - elderwatch
+  - riverbend
+  - sunmeadow
+  - the_sunken_barrow
+  reset_mode: empty_only
+  beats_between: 14
+  region: Veridia
+  level_min: 1
+  level_max: 30
+  biome: temperate-meadow
+duskwood_vale_zone:
+  name: Duskwood Vale
+  rooms:
+  - duskwood_vale
+  - ravenwatch
+  - moonshade
+  - twilight_grove
+  - the_black_hollow
+  reset_mode: empty_only
+  beats_between: 14
+  region: Duskwood Vale
+  level_min: 20
+  level_max: 50
+  biome: wild-forest
+caeloria_zone:
+  name: Caeloria
+  rooms:
+  - caeloria
+  - caeloria_city
+  - brightwater
+  - silverwatch
+  - westgate
+  - starfall_temple
+  reset_mode: empty_only
+  beats_between: 14
+  region: Caeloria
+  level_min: 30
+  level_max: 60
+  biome: temperate-meadow
+eldryn_forest_zone:
+  name: Eldryn Forest
+  rooms:
+  - eldryn_forest
+  - eldryn_city
+  - wildgrowth
+  - greenmist
+  - the_great_tree
+  - rotwood_deep
+  reset_mode: empty_only
+  beats_between: 14
+  region: Eldryn Forest
+  level_min: 50
+  level_max: 80
+  biome: wild-forest
+frostspire_peaks_zone:
+  name: Frostspire Peaks
+  rooms:
+  - frostspire_peaks
+  - frosthold
+  - winters_grasp
+  - ironwall_pass
+  - glacial_bastion
+  reset_mode: empty_only
+  beats_between: 14
+  region: Frostspire Peaks
+  level_min: 60
+  level_max: 90
+  biome: glacier-waste
+zhaar_desert_zone:
+  name: Zhaar Desert
+  rooms:
+  - zhaar_desert
+  - sunscar_city
+  - red_dunes
+  - sandspire_ruins
+  - the_obsidian_pit
+  - scorchstone_keep
+  reset_mode: empty_only
+  beats_between: 14
+  region: Zhaar Desert
+  level_min: 80
+  level_max: 130
+  biome: salt-desert
+xilnath_jungle_zone:
+  name: Xil'nath Jungle
+  rooms:
+  - xilnath_jungle
+  - zulkarak
+  - mistvale
+  - shifting_canopy
+  - heart_of_xilnath
+  reset_mode: empty_only
+  beats_between: 14
+  region: Xil'nath Jungle
+  level_min: 90
+  level_max: 150
+  biome: living-jungle
+thalorin_zone:
+  name: Thalorin
+  rooms:
+  - thalorin
+  - stonefang_keep
+  - boulderfall
+  - khazgor_peaks
+  - dreadmaw_hold
+  - irondeep_mines
+  reset_mode: empty_only
+  beats_between: 14
+  region: Thalorin
+  level_min: 100
+  level_max: 140
+  biome: highland-moor
+ashen_wastes_zone:
+  name: Ashen Wastes
+  rooms:
+  - ashen_wastes
+  - moltenhold
+  - cragfire
+  - ashen_monoliths
+  - the_flamewrought_forge
+  - the_scorched_gate
+  reset_mode: empty_only
+  beats_between: 14
+  region: Ashen Wastes
+  level_min: 120
+  level_max: 170
+  biome: volcanic-flats
+korvash_highlands_zone:
+  name: Korvash Highlands
+  rooms:
+  - korvash_highlands
+  - stonehelm
+  - highreach
+  - thunderhold
+  - shunderhold
+  - ancient_overlook
+  - korvash_crater
+  reset_mode: empty_only
+  beats_between: 14
+  region: Korvash Highlands
+  level_min: 150
+  level_max: 200
+  biome: highland-moor
+shattered_isles_zone:
+  name: The Shattered Isles
+  rooms:
+  - shattered_isles
+  - stormreach
+  - saltwind_harbor
+  - blackreef_citadel
+  - the_maelstrom_rise
+  reset_mode: empty_only
+  beats_between: 14
+  region: The Shattered Isles
+  level_min: 180
+  level_max: 230
+  biome: coastal-strand
+skyward_spires_zone:
+  name: Skyward Spires
+  rooms:
+  - skyward_spires
+  - aurelian_city
+  - celestial_observatory
+  - the_spire_nexus
+  reset_mode: empty_only
+  beats_between: 14
+  region: Skyward Spires
+  level_min: 200
+  level_max: 250
+  biome: highland-moor
+the_deepreach_zone:
+  name: The Deepreach
+  rooms:
+  - the_deepreach
+  - deepforge_city
+  - lumengrotto
+  - shadowfissure
+  - the_crystal_labyrinth
+  reset_mode: empty_only
+  beats_between: 14
+  region: The Deepreach
+  level_min: 100
+  level_max: 250
+  biome: volcanic-flats
+the_voidscar_zone:
+  name: The Voidscar
+  rooms:
+  - the_voidscar
+  - voidspire
+  - dark_expanse
+  - netharions_throne
+  - the_rifted_abyss
+  reset_mode: empty_only
+  beats_between: 14
+  region: The Voidscar
+  level_min: 250
+  level_max: 300
+  biome: volcanic-flats

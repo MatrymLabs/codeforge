@@ -1,0 +1,41 @@
+id: cull_field_veridia_reptile_6
+name: 'A small Warrant: the reptile-kind of The Veridia Wilds'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_veridia|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_veridia|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_veridia|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_veridia|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_veridia|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_veridia|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 0/6 down (60 XP).'
+  s1: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 1/6 down (60 XP).'
+  s2: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 2/6 down (60 XP).'
+  s3: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 3/6 down (60 XP).'
+  s4: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 4/6 down (60 XP).'
+  s5: 'Answer the warrant on the reptile-kind of The Veridia Wilds: 5/6 down (60 XP).'
+  done: The reptile-kind of The Veridia Wilds are answered for. The farm-roads are
+    the safer for it.

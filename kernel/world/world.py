@@ -6,6 +6,8 @@ resolve_move is the only function that changes a player's location.
 
 from itertools import zip_longest
 
+from kernel.world.aethryn_runtime import configured_runtime, project_runtime_context
+from kernel.world.aethryn_state import configured_store, project_room_text
 from kernel.world.armory import arm_guardians
 from kernel.world.authored_towns import install_authored_towns
 from kernel.world.campaign import validate as validate_campaign
@@ -20,26 +22,42 @@ from kernel.world.items import ITEMS, register_prototypes
 from kernel.world.landmarks import raise_landmarks
 from kernel.world.npcs import NPCS
 from kernel.world.relics import arm_deep_bosses
+from kernel.world.room_batches import apply_room_batches
 from kernel.world.rumors import seed_rumors
-from kernel.world.seed import SEED_DIR, Npc, Room, Zone, inspect_world_links, load_rooms
+from kernel.world.seed import (
+    PURE_AUTHORING,
+    SEED_DIR,
+    SEED_NAME,
+    Npc,
+    Room,
+    SeedError,
+    Zone,
+    inspect_world_links,
+    load_rooms,
+)
 from kernel.world.spiral import extend_world_with_road, load_spiral_config
 from kernel.world.townsfolk import load_settlements, populate_settlements
 from kernel.world.travel import load_waystones
+from kernel.world.underground import UndergroundZone, build_underground, load_underground_configs
 from kernel.world.wardens import name_wardens
 from kernel.world.wildlands import (
     generate_wildlands,
     load_wildlands_config,
     wire_attach_exits,
+    without_field_backed,
 )
 
 SEED_PATH = SEED_DIR / "rooms.yaml"
 
 WORLD: dict[str, Room] = load_rooms(SEED_PATH)
+_AETHRYN_STATE = configured_store(SEED_NAME)
+_AETHRYN_RUNTIME = configured_runtime(SEED_NAME)
+_field_configs = load_field_configs(SEED_DIR / "fields.yaml")
 # Procedurally extend the Forgeward Road outward across the wilds if the seed opts in (spiral.yaml).
 # The generated marches are seed-shaped data, merged BEFORE validation so the same loader gates
 # check them, and the seed's attach room grows an `east` exit onto the first march (flat, no climb).
 _spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
-if _spiral_config is not None:
+if _spiral_config is not None and not PURE_AUTHORING:
     extend_world_with_road(WORLD, NPCS, _spiral_config)
 
 # Procedurally grow wilderness REGIONS if the seed opts in (wildlands.yaml): a compact config per
@@ -48,7 +66,9 @@ if _spiral_config is not None:
 # room (kernel.world.wildlands, a sibling of the Spiral). Merged BEFORE validation, so a bad config
 # fails loud; each region's attach room grows one exit onto its trail-head.
 _wildlands_configs = load_wildlands_config(SEED_DIR / "wildlands.yaml")
-if _wildlands_configs is not None:
+if _wildlands_configs is not None and not PURE_AUTHORING:
+    _wildlands_configs = without_field_backed(_wildlands_configs, _field_configs)
+if _wildlands_configs is not None and not PURE_AUTHORING:
     _wild_rooms, _wild_npcs = generate_wildlands(_wildlands_configs, set(WORLD))
     WORLD.update(_wild_rooms)
     NPCS.update(_wild_npcs)
@@ -66,8 +86,7 @@ if _wildlands_configs is not None:
 # trail-to-field upgrade of the World Topology Doctrine; each field's AREA metadata is published in
 # FIELD_ZONES so kernel.world.zones registers it for the scheduler + zone_of, exactly like a trail.
 FIELD_ZONES: dict[str, Zone] = {}
-_field_configs = load_field_configs(SEED_DIR / "fields.yaml")
-if _field_configs is not None:
+if _field_configs is not None and not PURE_AUTHORING:
     for _cfg in _field_configs:
         _fz: FieldZone = build_field_zone(_cfg, set(WORLD))
         WORLD.update(_fz.rooms)
@@ -76,11 +95,29 @@ if _field_configs is not None:
         register_prototypes(arm_guardians(_fz.npcs))
         FIELD_ZONES[_fz.label] = _fz.zone
 
+# Expand the region's underground plan after its surface is present. These generated local areas
+# are attached through named thresholds so caves and deep underzones are playable content, not
+# disconnected generator output. The compact manifest is the authoring surface; provenance stays
+# on the area metadata and every generated room still crosses the world link gate.
+UNDERGROUND_ZONES: dict[str, Zone] = {}
+_underground_configs = load_underground_configs(SEED_DIR / "underground.yaml")
+if _underground_configs is not None and not PURE_AUTHORING:
+    _underground: UndergroundZone = build_underground(_underground_configs, set(WORLD))
+    WORLD.update(_underground.rooms)
+    NPCS.update(_underground.npcs)
+    UNDERGROUND_ZONES.update(_underground.zones)
+    for _zone in UNDERGROUND_ZONES.values():
+        _anchor = str(_zone["attach"])
+        _exit = str(_zone["attach_exit"])
+        if _exit in WORLD[_anchor]["exits"]:
+            raise SeedError(f"underground threshold {_anchor}/{_exit} is already occupied")
+        WORLD[_anchor]["exits"][_exit] = str(_zone["entrance"])
+
 # Sink a multi-room delve below every dungeon mouth (seeds/<world>/dungeons.yaml): a descent of
 # escalating foes ending in a named deep boss (kernel.world.delve). The bosses are armed with gear
 # like the wildlands guardians. Merged before the link audit so the new rooms/drops pass its gate.
 _dungeons = load_dungeons(SEED_DIR / "dungeons.yaml")
-if _dungeons is not None:
+if _dungeons is not None and not PURE_AUTHORING:
     _delve_rooms, _delve_npcs = generate_delves(_dungeons)
     WORLD.update(_delve_rooms)
     NPCS.update(_delve_npcs)
@@ -106,7 +143,7 @@ if _dungeons is not None:
 # before the link audit, so each merchant's shop wares are cross-checked like an authored shop.
 _settlements = load_settlements(SEED_DIR / "settlements.yaml")
 _town_npcs: dict[str, Npc] = {}
-if _settlements is not None:
+if _settlements is not None and not PURE_AUTHORING:
     _town_npcs = populate_settlements(_settlements)
     NPCS.update(_town_npcs)
     # Give every settlement an inn to step into (kernel.world.inns): a warm interior and its keeper,
@@ -133,19 +170,27 @@ if _settlements is not None:
 # town is a file in seeds/aethryn/authored/. A no-op for any town whose hub this world lacks (only
 # aethryn has them), so other seeds are untouched. Merged before the link audit, so every authored
 # room/NPC/item passes the same gate as the generated world.
-register_prototypes(install_authored_towns(WORLD, NPCS))
+if not PURE_AUTHORING:
+    register_prototypes(install_authored_towns(WORLD, NPCS))
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross
 # (kernel.world.workshop). Installed after the seed and generators, before the link audit, so the
 # canonical rooms pass the same gates as authored ones.
-install_workshop(WORLD)
+if not PURE_AUTHORING:
+    install_workshop(WORLD)
 
 # Reapply only the owner's explicitly published Workshop overlay. The shipped Seed package remains
 # immutable and the overlay is validated before it reaches the canonical runtime maps.
 from kernel.world.creator_workshop import restore_published_changes  # noqa: E402
 
-restore_published_changes()
+if not PURE_AUTHORING:
+    restore_published_changes()
+
+# Apply the author's checked-in prose overlays after topology and generated rooms exist. This is the
+# handoff gate for 100-room content drops: a typo or stale room ID fails the boot before it reaches
+# the engine, while the room graph itself remains owned by the map/generator layers.
+ROOM_BATCH_REPORT = apply_room_batches(WORLD, NPCS, ITEMS)
 
 inspect_world_links(WORLD, ITEMS, NPCS)
 
@@ -161,7 +206,8 @@ from kernel.world.quest import (  # noqa: E402 -- after NPCS ready
     register_storylines,
 )
 
-register_bounties(NPCS)
+if not PURE_AUTHORING:
+    register_bounties(NPCS)
 
 # Arm the auction house's recurring expiry sweep on the scheduler, so a lapsed listing is mailed
 # back to its seller (kernel.world.auction). Registered once at world assembly, off any thread.
@@ -197,7 +243,7 @@ _errand_destinations = _interleave(
     [{"room": room, "name": cfg["name"], "kind": "hub"} for room, cfg in WAYSTONES.items()],
     [{"room": c["room"], "name": c["name"], "kind": "town"} for c in (_settlements or [])],
 )
-if _settlements:
+if _settlements and not PURE_AUTHORING:
     register_errands(_settlements, _errand_destinations)
 
 # Delivery contracts: carry a parcel from one town to its trade-partner (kernel.world.delivery) -- a
@@ -206,7 +252,7 @@ if _settlements:
 from kernel.world.delivery import generate_deliveries  # noqa: E402
 from kernel.world.quest import register_specs  # noqa: E402
 
-if _settlements:
+if _settlements and not PURE_AUTHORING:
     _delivery_specs, _parcels = generate_deliveries(_settlements)
     ITEMS.update(_parcels)
     register_specs(_delivery_specs)
@@ -220,12 +266,12 @@ from kernel.world.seed import load_zones  # noqa: E402 -- WORLD must exist for t
 
 _story_zone_map = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
 _story_zones = [dict(z, label=label) for label, z in _story_zone_map.items()]
-if _settlements and _dungeons:
+if _settlements and _dungeons and not PURE_AUTHORING:
     register_storylines(_story_zones, _settlements, _dungeons)
 
 # Dungeon-crawl contracts: one descent per dungeon, rewarding reaching the deep boss's chamber
 # (kernel.world.dungeon_crawl) -- an exploration archetype over the delve geography.
-if _dungeons:
+if _dungeons and not PURE_AUTHORING:
     register_crawls(_dungeons)
 
 # Cull contracts: 'fell N of a kind HERE' at volume, the MMO's most common quest (kernel.world.cull)
@@ -238,31 +284,35 @@ from kernel.world.spiral import spiral_zones  # noqa: E402 -- same builder zones
 from kernel.world.wildlands import wildlands_zones  # noqa: E402 -- same builder zones.py uses
 
 _all_zones = dict(load_zones(SEED_DIR / "zones.yaml", set(WORLD)))
-if _spiral_config is not None:
+if _spiral_config is not None and not PURE_AUTHORING:
     _all_zones.update(spiral_zones(_spiral_config))
-if _wildlands_configs is not None:
+if _wildlands_configs is not None and not PURE_AUTHORING:
     _all_zones.update(wildlands_zones(_wildlands_configs))
 _all_zones.update(FIELD_ZONES)  # field-backed zones live where their creatures do, too
+_all_zones.update(UNDERGROUND_ZONES)
 _cull_zones: list[dict[str, object]] = [
     {"label": lbl, "name": z["name"], "biome": z.get("biome", ""), "level_max": z.get("level_max")}
     for lbl, z in _all_zones.items()
 ]
-register_culls(_cull_zones)
+if not PURE_AUTHORING:
+    register_culls(_cull_zones)
 
 # Forage contracts: 'gather N of a material HERE' at volume (kernel.world.forage) -- the non-combat
 # twin of the cull board, one per zone x material its biome yields x count-tier, reusing the same
 # zone-scoped keys the gather action fires.
-register_forages(_cull_zones)
+if not PURE_AUTHORING:
+    register_forages(_cull_zones)
 
 # Zone landmarks: a readable monument in each zone's hub naming the region, its level band, and any
 # dungeon within (kernel.world.landmarks) -- surface storytelling, the twin of the depths' lore.
-if _dungeons is not None:
+if _dungeons is not None and not PURE_AUTHORING:
     ITEMS.update(raise_landmarks(_story_zones, _dungeons))
 
 # The world spine: one main-road campaign quest (the Forgeward Road) that guides a player through
 # the zones in level order, giving the sprawling world a through-line (kernel.world.spine). It lives
 # in the `quest` log, not the notice board -- the spine the side-content hangs on.
-register_spine(_story_zones)
+if not PURE_AUTHORING:
+    register_spine(_story_zones)
 
 # Campaign-wide content gate: Aethryn's zones, dungeons, enemies, NPCs, and quests are generated
 # from several independent seams, so validate the assembled result as one level 1-300 product after
@@ -281,7 +331,7 @@ validate_campaign(
 # Living rumours: give each town resident gossip that NAMES the zone's dungeon and the relic it
 # guards (kernel.world.rumors), so plaza becomes a signpost toward content, not just flavour. The
 # NPCs are already in NPCS (same objects), so mutating them here after the link audit is safe.
-if _town_npcs and _dungeons:
+if _town_npcs and _dungeons and not PURE_AUTHORING:
     seed_rumors(_town_npcs, _story_zones, _dungeons)
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
@@ -319,7 +369,7 @@ DIRECTIONS: dict[str, str] = {
 }
 
 
-def render_room(room_id: str) -> str:
+def render_room(room_id: str, *, verbose: bool = False) -> str:
     """Render the room's stable, scannable presentation.
 
     Room prose remains authored by the Seed. The engine owns the hierarchy around it so a long
@@ -328,7 +378,55 @@ def render_room(room_id: str) -> str:
     retained for thresholds and portals, while compass exits always display their canonical words.
     """
     room = WORLD[room_id]
-    lines = [f"\n== {room['name']} ==", "", "DESCRIPTION", f"  {room['desc']}", "", "EXITS"]
+    rich_presentation = room.get("presentation_version") == "aethryn-room-v1"
+    if rich_presentation:
+        area_name = str(room.get("area_name", "")).strip()
+        room_name = str(room["name"])
+        description = str(
+            room.get("long_description" if verbose else "short_description", room["desc"])
+        )
+    else:
+        area_name = ""
+        room_name = str(room["name"])
+        description = str(room["desc"])
+    if _AETHRYN_STATE is not None:
+        description = project_room_text(room_id, description, _AETHRYN_STATE)
+    state_values = _AETHRYN_STATE.values() if _AETHRYN_STATE is not None else None
+    runtime_context = project_runtime_context(
+        room_id, _world_beat(), _AETHRYN_RUNTIME, state_values
+    )
+    if runtime_context:
+        description = f"{description}\n\n{runtime_context}"
+    if rich_presentation:
+        lines = [f"\n{area_name} - {room_name}", "", "DESCRIPTION"]
+        lines.append(f"  {description}")
+        conditions = room.get("conditions", [])
+        state_values = _AETHRYN_STATE.values() if _AETHRYN_STATE is not None else {}
+        visible_conditions: list[str] = []
+        for condition in conditions:
+            if not isinstance(condition, dict) or condition.get("kind") != "state":
+                continue
+            display = str(condition.get("display", "")).strip()
+            key = str(condition.get("state_key", ""))
+            if display and key:
+                visible_conditions.append(
+                    display.replace("{value}", str(state_values.get(key, "")))
+                )
+        if visible_conditions:
+            lines.extend(["", "CONDITIONS"])
+            lines.extend(f"  {value}" for value in visible_conditions)
+        points = room.get("points_of_interest", [])
+        if points:
+            lines.extend(["", "POINTS OF INTEREST"])
+            for point in points:
+                if isinstance(point, dict):
+                    display = str(point.get("display", point.get("id", "object")))
+                    actions = ", ".join(str(action) for action in point.get("actions", []))
+                    suffix = f" ({actions})" if actions else ""
+                    lines.append(f"  {display}{suffix}")
+        lines.extend(["", "EXITS"])
+    else:
+        lines = [f"\n== {room['name']} ==", "", "DESCRIPTION", f"  {description}", "", "EXITS"]
     exits = room.get("exits", {})
     if not exits:
         lines.append("  none")
@@ -342,6 +440,13 @@ def render_room(room_id: str) -> str:
             )
             lines.append(f"  {label:<10} — {destination_name}")
     return "\n".join(lines)
+
+
+def _world_beat() -> int:
+    """Read the shared world clock lazily so world assembly stays free of clock side effects."""
+    from kernel.world.climate import now
+
+    return now()
 
 
 def dynamic_capability(room_id: str) -> str:

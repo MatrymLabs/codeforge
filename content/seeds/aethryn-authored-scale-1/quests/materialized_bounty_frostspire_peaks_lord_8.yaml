@@ -1,0 +1,16 @@
+id: bounty_frostspire_peaks_lord_8
+name: 'Bounty: Skarnen the Rime Scourge'
+start: posted
+reward_xp: 768
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: frostspire_peaks_lord_8
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Skarnen the Rime Scourge (level 64). Fell it for 768
+    XP.
+  collected: 'Bounty collected: Skarnen the Rime Scourge is felled. Well hunted.'

@@ -1,0 +1,61 @@
+id: forage_field_zhaar_desert_raw_ore_10
+name: 'A standing Gleaning: raw ore of The Zhaar Desert Wilds'
+start: s0
+reward_xp: 320
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_zhaar_desert|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_zhaar_desert|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_zhaar_desert|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_zhaar_desert|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: field_zhaar_desert|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: field_zhaar_desert|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: field_zhaar_desert|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: field_zhaar_desert|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: field_zhaar_desert|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: field_zhaar_desert|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean raw ore in The Zhaar Desert Wilds: 0/10 (320 XP).'
+  s1: 'Glean raw ore in The Zhaar Desert Wilds: 1/10 (320 XP).'
+  s2: 'Glean raw ore in The Zhaar Desert Wilds: 2/10 (320 XP).'
+  s3: 'Glean raw ore in The Zhaar Desert Wilds: 3/10 (320 XP).'
+  s4: 'Glean raw ore in The Zhaar Desert Wilds: 4/10 (320 XP).'
+  s5: 'Glean raw ore in The Zhaar Desert Wilds: 5/10 (320 XP).'
+  s6: 'Glean raw ore in The Zhaar Desert Wilds: 6/10 (320 XP).'
+  s7: 'Glean raw ore in The Zhaar Desert Wilds: 7/10 (320 XP).'
+  s8: 'Glean raw ore in The Zhaar Desert Wilds: 8/10 (320 XP).'
+  s9: 'Glean raw ore in The Zhaar Desert Wilds: 9/10 (320 XP).'
+  done: You have gleaned raw ore enough for The Zhaar Desert Wilds. The caravan traders
+    will pay well for it.

@@ -1,0 +1,15 @@
+id: errand_moltenhold
+name: 'Errand: Irondeep Mines'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: irondeep_mines
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Irondeep Mines (1800 XP).
+  done: You reach Irondeep Mines and mark the way. Well scouted.

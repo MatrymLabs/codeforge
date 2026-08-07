@@ -1,0 +1,24 @@
+id: ravenwatch_hollow
+name: The Hollow Man
+start: offered
+reward_xp: 34
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: ravenwatch_eaves
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:gathering:20
+  on_defeat: ravenwatch_hollow
+terminal:
+- done
+labels:
+  offered: The Widow Enna grieves a thing under the black eaves. Go EAST into the
+    eaves and see what walks there.
+  hunting: The hollow man is here in the mist, wearing sorrow like a face. Give it
+    rest.
+  done: '*** The hollow man is laid to rest, and whatever grief wore it is quiet at
+    last. Ravenwatch will walk after dusk again, and the Widow Enna weeps, this time
+    with something like relief. ***'

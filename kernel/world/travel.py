@@ -21,7 +21,9 @@ from typing import Any
 
 import yaml
 
+from kernel.world.aethryn_models import content_digest
 from kernel.world.coinage import purse
+from kernel.world.economy_transactions import TransactionError, move_currency
 from kernel.world.seed import SeedError
 from kernel.world.session import Session
 
@@ -82,7 +84,24 @@ def travel(session: Session, arg: str, stones: dict[str, dict[str, Any]]) -> str
     if session.coins < cost:
         return f"The waystone demands {purse(cost)}; your purse holds only {purse(session.coins)}."
 
-    session.coins -= cost
+    wallets = {session.player_id: session.coins}
+    token = content_digest(
+        {"kind": "travel", "player": session.player_id, "source": here, "destination": dest}
+    )[:32]
+    try:
+        move_currency(
+            transaction_id=f"travel-{token}",
+            idempotency_key=f"travel-{token}",
+            actor=session.player_id,
+            source=session.player_id,
+            destination="",
+            amount=cost,
+            reason="waystone_fare",
+            wallets=wallets,
+        )
+    except TransactionError as exc:
+        return f"Travel fails: {exc}."
+    session.coins = wallets[session.player_id]
     session.location = dest
     if session.named:
         from kernel.world.characters import save_character

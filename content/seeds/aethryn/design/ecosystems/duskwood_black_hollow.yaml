@@ -1,0 +1,9 @@
+id: duskwood_black_hollow_ecology
+canon_status: AUTHORED_LOCAL
+parent_region: duskwood_vale
+parent_zone: duskwood_vale
+habitats: [black_hollow_fringe, root_loop, mirror_pool]
+creatures: [duskwood_hollow_stag, duskwood_root_moths]
+pressure: lantern loss and altered roots push creatures toward the warden route
+recurrence: ordinary seasonal movement plus persistent shelter in the Hollow margin
+civilization_relation: local route safety depends on reading creature pressure instead of erasing it

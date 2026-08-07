@@ -1,0 +1,36 @@
+id: forage_underground_xilnath_jungle_caves_vinesilk_5
+name: 'A small Gleaning: vinesilk of Xil''nath''s Green Tunnels'
+start: s0
+reward_xp: 175
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_xilnath_jungle_caves|vinesilk
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_xilnath_jungle_caves|vinesilk
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_xilnath_jungle_caves|vinesilk
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_xilnath_jungle_caves|vinesilk
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_xilnath_jungle_caves|vinesilk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean vinesilk in Xil''nath''s Green Tunnels: 0/5 (175 XP).'
+  s1: 'Glean vinesilk in Xil''nath''s Green Tunnels: 1/5 (175 XP).'
+  s2: 'Glean vinesilk in Xil''nath''s Green Tunnels: 2/5 (175 XP).'
+  s3: 'Glean vinesilk in Xil''nath''s Green Tunnels: 3/5 (175 XP).'
+  s4: 'Glean vinesilk in Xil''nath''s Green Tunnels: 4/5 (175 XP).'
+  done: You have gleaned vinesilk enough for Xil'nath's Green Tunnels. The physicians
+    can work with this.

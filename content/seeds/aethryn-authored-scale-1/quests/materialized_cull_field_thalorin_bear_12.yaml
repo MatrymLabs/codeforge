@@ -1,0 +1,71 @@
+id: cull_field_thalorin_bear_12
+name: 'A standing Thinning: the bear-kind of The Thalorin Wilds'
+start: s0
+reward_xp: 552
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_thalorin|bear
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_thalorin|bear
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_thalorin|bear
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_thalorin|bear
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_thalorin|bear
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_thalorin|bear
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_thalorin|bear
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_thalorin|bear
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_thalorin|bear
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_thalorin|bear
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_thalorin|bear
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_thalorin|bear
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the bear-kind of The Thalorin Wilds: 0/12 down (552 XP).'
+  s1: 'Thin out the bear-kind of The Thalorin Wilds: 1/12 down (552 XP).'
+  s2: 'Thin out the bear-kind of The Thalorin Wilds: 2/12 down (552 XP).'
+  s3: 'Thin out the bear-kind of The Thalorin Wilds: 3/12 down (552 XP).'
+  s4: 'Thin out the bear-kind of The Thalorin Wilds: 4/12 down (552 XP).'
+  s5: 'Thin out the bear-kind of The Thalorin Wilds: 5/12 down (552 XP).'
+  s6: 'Thin out the bear-kind of The Thalorin Wilds: 6/12 down (552 XP).'
+  s7: 'Thin out the bear-kind of The Thalorin Wilds: 7/12 down (552 XP).'
+  s8: 'Thin out the bear-kind of The Thalorin Wilds: 8/12 down (552 XP).'
+  s9: 'Thin out the bear-kind of The Thalorin Wilds: 9/12 down (552 XP).'
+  s10: 'Thin out the bear-kind of The Thalorin Wilds: 10/12 down (552 XP).'
+  s11: 'Thin out the bear-kind of The Thalorin Wilds: 11/12 down (552 XP).'
+  done: The bear-kind of The Thalorin Wilds are thinned back. The region breathes
+    easier.

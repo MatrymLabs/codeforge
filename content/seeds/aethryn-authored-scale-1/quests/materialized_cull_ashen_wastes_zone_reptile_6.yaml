@@ -1,0 +1,41 @@
+id: cull_ashen_wastes_zone_reptile_6
+name: 'A small Contract: the reptile-kind of Ashen Wastes'
+start: s0
+reward_xp: 336
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: ashen_wastes_zone|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: ashen_wastes_zone|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: ashen_wastes_zone|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: ashen_wastes_zone|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: ashen_wastes_zone|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: ashen_wastes_zone|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 0/6 down (336 XP).'
+  s1: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 1/6 down (336 XP).'
+  s2: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 2/6 down (336 XP).'
+  s3: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 3/6 down (336 XP).'
+  s4: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 4/6 down (336 XP).'
+  s5: 'Fulfil the contract on the reptile-kind of Ashen Wastes: 5/6 down (336 XP).'
+  done: The reptile-kind of Ashen Wastes are put down. The ash-tracks are a shade
+    safer.

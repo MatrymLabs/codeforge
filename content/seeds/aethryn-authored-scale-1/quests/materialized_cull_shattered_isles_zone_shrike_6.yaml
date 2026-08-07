@@ -1,0 +1,47 @@
+id: cull_shattered_isles_zone_shrike_6
+name: 'A small Warrant: the shrike-kind of The Shattered Isles'
+start: s0
+reward_xp: 456
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|shrike
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|shrike
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|shrike
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|shrike
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|shrike
+- state: s5
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|shrike
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the shrike-kind of The Shattered Isles: 0/6 down (456
+    XP).'
+  s1: 'Answer the warrant on the shrike-kind of The Shattered Isles: 1/6 down (456
+    XP).'
+  s2: 'Answer the warrant on the shrike-kind of The Shattered Isles: 2/6 down (456
+    XP).'
+  s3: 'Answer the warrant on the shrike-kind of The Shattered Isles: 3/6 down (456
+    XP).'
+  s4: 'Answer the warrant on the shrike-kind of The Shattered Isles: 4/6 down (456
+    XP).'
+  s5: 'Answer the warrant on the shrike-kind of The Shattered Isles: 5/6 down (456
+    XP).'
+  done: The shrike-kind of The Shattered Isles are answered for. The tide-roads are
+    the safer for it.

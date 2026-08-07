@@ -1,0 +1,71 @@
+id: cull_zhaar_desert_zone_insectoid_12
+name: 'A standing Bounty: the insectoid-kind of Zhaar Desert'
+start: s0
+reward_xp: 516
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: zhaar_desert_zone|insectoid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: zhaar_desert_zone|insectoid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: zhaar_desert_zone|insectoid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: zhaar_desert_zone|insectoid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: zhaar_desert_zone|insectoid
+- state: s5
+  event: cull
+  to: s6
+  on_cull: zhaar_desert_zone|insectoid
+- state: s6
+  event: cull
+  to: s7
+  on_cull: zhaar_desert_zone|insectoid
+- state: s7
+  event: cull
+  to: s8
+  on_cull: zhaar_desert_zone|insectoid
+- state: s8
+  event: cull
+  to: s9
+  on_cull: zhaar_desert_zone|insectoid
+- state: s9
+  event: cull
+  to: s10
+  on_cull: zhaar_desert_zone|insectoid
+- state: s10
+  event: cull
+  to: s11
+  on_cull: zhaar_desert_zone|insectoid
+- state: s11
+  event: cull
+  to: done
+  on_cull: zhaar_desert_zone|insectoid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the insectoid-kind of Zhaar Desert: 0/12 down (516 XP).'
+  s1: 'Bring down the insectoid-kind of Zhaar Desert: 1/12 down (516 XP).'
+  s2: 'Bring down the insectoid-kind of Zhaar Desert: 2/12 down (516 XP).'
+  s3: 'Bring down the insectoid-kind of Zhaar Desert: 3/12 down (516 XP).'
+  s4: 'Bring down the insectoid-kind of Zhaar Desert: 4/12 down (516 XP).'
+  s5: 'Bring down the insectoid-kind of Zhaar Desert: 5/12 down (516 XP).'
+  s6: 'Bring down the insectoid-kind of Zhaar Desert: 6/12 down (516 XP).'
+  s7: 'Bring down the insectoid-kind of Zhaar Desert: 7/12 down (516 XP).'
+  s8: 'Bring down the insectoid-kind of Zhaar Desert: 8/12 down (516 XP).'
+  s9: 'Bring down the insectoid-kind of Zhaar Desert: 9/12 down (516 XP).'
+  s10: 'Bring down the insectoid-kind of Zhaar Desert: 10/12 down (516 XP).'
+  s11: 'Bring down the insectoid-kind of Zhaar Desert: 11/12 down (516 XP).'
+  done: The insectoid-kind of Zhaar Desert are hunted down. The caravan roads breathe
+    easier.

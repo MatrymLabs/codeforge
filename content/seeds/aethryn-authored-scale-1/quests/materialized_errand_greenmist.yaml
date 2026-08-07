@@ -1,0 +1,15 @@
+id: errand_greenmist
+name: 'Errand: Frostspire Peaks'
+start: posted
+reward_xp: 750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: frostspire_peaks
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Frostspire Peaks (750 XP).
+  done: You set the token at Frostspire Peaks. The stone answers.

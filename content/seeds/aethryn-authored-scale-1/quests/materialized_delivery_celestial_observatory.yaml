@@ -1,0 +1,21 @@
+id: delivery_celestial_observatory
+name: 'Delivery: Celestial Observatory to Dark Expanse'
+start: posted
+reward_xp: 2400
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_celestial_observatory
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: dark_expanse
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Celestial Observatory is bound for Dark Expanse. Take it up
+    (2400 XP).
+  carrying: Carry the parcel to Dark Expanse.
+  done: The parcel is delivered to Dark Expanse. The road keeps its promise.

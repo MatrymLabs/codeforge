@@ -1,0 +1,73 @@
+id: cull_field_korvash_highlands_wraith_12
+name: 'A standing Bounty: the wraith-kind of The Korvash Highlands Wilds'
+start: s0
+reward_xp: 792
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_korvash_highlands|wraith
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_korvash_highlands|wraith
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_korvash_highlands|wraith
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_korvash_highlands|wraith
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_korvash_highlands|wraith
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_korvash_highlands|wraith
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_korvash_highlands|wraith
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_korvash_highlands|wraith
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_korvash_highlands|wraith
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_korvash_highlands|wraith
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_korvash_highlands|wraith
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_korvash_highlands|wraith
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 0/12 down (792 XP).'
+  s1: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 1/12 down (792 XP).'
+  s2: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 2/12 down (792 XP).'
+  s3: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 3/12 down (792 XP).'
+  s4: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 4/12 down (792 XP).'
+  s5: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 5/12 down (792 XP).'
+  s6: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 6/12 down (792 XP).'
+  s7: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 7/12 down (792 XP).'
+  s8: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 8/12 down (792 XP).'
+  s9: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 9/12 down (792 XP).'
+  s10: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 10/12 down (792
+    XP).'
+  s11: 'Bring down the wraith-kind of The Korvash Highlands Wilds: 11/12 down (792
+    XP).'
+  done: The wraith-kind of The Korvash Highlands Wilds are hunted down. The region
+    breathes easier.

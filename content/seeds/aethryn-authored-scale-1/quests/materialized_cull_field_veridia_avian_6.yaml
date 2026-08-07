@@ -1,0 +1,41 @@
+id: cull_field_veridia_avian_6
+name: 'A small Thinning: the avian-kind of The Veridia Wilds'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_veridia|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_veridia|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_veridia|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_veridia|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_veridia|avian
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_veridia|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the avian-kind of The Veridia Wilds: 0/6 down (60 XP).'
+  s1: 'Thin out the avian-kind of The Veridia Wilds: 1/6 down (60 XP).'
+  s2: 'Thin out the avian-kind of The Veridia Wilds: 2/6 down (60 XP).'
+  s3: 'Thin out the avian-kind of The Veridia Wilds: 3/6 down (60 XP).'
+  s4: 'Thin out the avian-kind of The Veridia Wilds: 4/6 down (60 XP).'
+  s5: 'Thin out the avian-kind of The Veridia Wilds: 5/6 down (60 XP).'
+  done: The avian-kind of The Veridia Wilds are thinned back. The farm-roads are the
+    safer for it.

@@ -1,0 +1,16 @@
+id: bounty_stonefang_golem
+name: 'Bounty: a drift-collapsed golem'
+start: posted
+reward_xp: 1176
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: stonefang_golem
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a drift-collapsed golem (level 98). Fell it for 1176
+    XP.
+  collected: 'Bounty collected: a drift-collapsed golem is felled. Well hunted.'

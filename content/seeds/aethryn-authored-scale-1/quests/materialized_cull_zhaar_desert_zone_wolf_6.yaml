@@ -1,0 +1,41 @@
+id: cull_zhaar_desert_zone_wolf_6
+name: 'A small Reckoning: the wolf-kind of Zhaar Desert'
+start: s0
+reward_xp: 258
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: zhaar_desert_zone|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: zhaar_desert_zone|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: zhaar_desert_zone|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: zhaar_desert_zone|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: zhaar_desert_zone|wolf
+- state: s5
+  event: cull
+  to: done
+  on_cull: zhaar_desert_zone|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the wolf-kind of Zhaar Desert: 0/6 down (258 XP).'
+  s1: 'Reckon with the wolf-kind of Zhaar Desert: 1/6 down (258 XP).'
+  s2: 'Reckon with the wolf-kind of Zhaar Desert: 2/6 down (258 XP).'
+  s3: 'Reckon with the wolf-kind of Zhaar Desert: 3/6 down (258 XP).'
+  s4: 'Reckon with the wolf-kind of Zhaar Desert: 4/6 down (258 XP).'
+  s5: 'Reckon with the wolf-kind of Zhaar Desert: 5/6 down (258 XP).'
+  done: The wolf-kind of Zhaar Desert are settled with. The caravan roads breathe
+    easier.

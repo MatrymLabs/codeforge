@@ -1,0 +1,15 @@
+id: errand_stonehelm
+name: 'Errand: The Flamewrought Forge'
+start: posted
+reward_xp: 2250
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_flamewrought_forge
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Flamewrought Forge (2250 XP).
+  done: You reach The Flamewrought Forge and mark the way. Well scouted.

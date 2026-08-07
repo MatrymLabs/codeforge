@@ -1,0 +1,41 @@
+id: cull_field_the_voidscar_colossus_6
+name: 'A small Bounty: the colossus-kind of The Voidscar Wilds'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_the_voidscar|colossus
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_the_voidscar|colossus
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_the_voidscar|colossus
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_the_voidscar|colossus
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_the_voidscar|colossus
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_the_voidscar|colossus
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the colossus-kind of The Voidscar Wilds: 0/6 down (600 XP).'
+  s1: 'Bring down the colossus-kind of The Voidscar Wilds: 1/6 down (600 XP).'
+  s2: 'Bring down the colossus-kind of The Voidscar Wilds: 2/6 down (600 XP).'
+  s3: 'Bring down the colossus-kind of The Voidscar Wilds: 3/6 down (600 XP).'
+  s4: 'Bring down the colossus-kind of The Voidscar Wilds: 4/6 down (600 XP).'
+  s5: 'Bring down the colossus-kind of The Voidscar Wilds: 5/6 down (600 XP).'
+  done: The colossus-kind of The Voidscar Wilds are hunted down. The ash-tracks are
+    a shade safer.

@@ -1,0 +1,36 @@
+id: forage_underground_korvash_highlands_caves_hollow_ingot_5
+name: 'A small Harvest: hollow ingot of Korvash Oath-Caves'
+start: s0
+reward_xp: 235
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest hollow ingot in Korvash Oath-Caves: 0/5 (235 XP).'
+  s1: 'Harvest hollow ingot in Korvash Oath-Caves: 1/5 (235 XP).'
+  s2: 'Harvest hollow ingot in Korvash Oath-Caves: 2/5 (235 XP).'
+  s3: 'Harvest hollow ingot in Korvash Oath-Caves: 3/5 (235 XP).'
+  s4: 'Harvest hollow ingot in Korvash Oath-Caves: 4/5 (235 XP).'
+  done: You have harvested hollow ingot enough for Korvash Oath-Caves. The region's
+    makers will put it to use.

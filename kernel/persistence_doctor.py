@@ -128,7 +128,9 @@ def _target(url: str) -> tuple[str, Path | None, str]:
     return backend, None, parsed.render_as_string(hide_password=True)
 
 
-def _migration_check(connection, present_tables: set[str], repo_root: Path | None) -> PersistenceCheck:
+def _migration_check(
+    connection, present_tables: set[str], repo_root: Path | None
+) -> PersistenceCheck:
     try:
         from alembic.migration import MigrationContext
 
@@ -140,16 +142,23 @@ def _migration_check(connection, present_tables: set[str], repo_root: Path | Non
 
     if not present_tables and not current:
         return PersistenceCheck(
-            "migrations", "new", f"database is uninitialized; expected head {', '.join(sorted(expected))}"
+            "migrations",
+            "new",
+            f"database is uninitialized; expected head {', '.join(sorted(expected))}",
         )
     if not current:
         return PersistenceCheck(
             "migrations",
             "untracked",
-            "tables exist but alembic_version has no recorded revision; use a reviewed migration path",
+            (
+                "tables exist but alembic_version has no recorded revision; "
+                "use a reviewed migration path"
+            ),
         )
     if current == expected:
-        return PersistenceCheck("migrations", "ready", f"database at head {', '.join(sorted(current))}")
+        return PersistenceCheck(
+            "migrations", "ready", f"database at head {', '.join(sorted(current))}"
+        )
 
     known = {revision.revision for revision in script.walk_revisions(expected)}
     if not current <= known:
@@ -159,7 +168,9 @@ def _migration_check(connection, present_tables: set[str], repo_root: Path | Non
         state = "behind"
         reason = "database revision is behind the checked-in migration head"
     return PersistenceCheck(
-        "migrations", state, f"current={','.join(sorted(current))}; expected={','.join(sorted(expected))}; {reason}"
+        "migrations",
+        state,
+        f"current={','.join(sorted(current))}; expected={','.join(sorted(expected))}; {reason}",
     )
 
 
@@ -168,16 +179,22 @@ def _backup_checks(backend: str, path: Path | None) -> tuple[PersistenceCheck, P
         detail = "external backup policy; verify pg_dump/PITR from the deployment environment"
         return (
             PersistenceCheck("backups", "warning", detail),
-            PersistenceCheck("recovery", "warning", "restore drill is external to this local diagnostic"),
+            PersistenceCheck(
+                "recovery", "warning", "restore drill is external to this local diagnostic"
+            ),
         )
     if path is None:
         return (
             PersistenceCheck("backups", "warning", "in-memory SQLite has no durable backup target"),
-            PersistenceCheck("recovery", "warning", "in-memory SQLite cannot provide restart recovery"),
+            PersistenceCheck(
+                "recovery", "warning", "in-memory SQLite cannot provide restart recovery"
+            ),
         )
     if not path.exists():
         detail = "no database file yet; initialize the Seed before taking a backup"
-        return PersistenceCheck("backups", "new", detail), PersistenceCheck("recovery", "new", detail)
+        return PersistenceCheck("backups", "new", detail), PersistenceCheck(
+            "recovery", "new", detail
+        )
 
     backup_dir = path.parent / "backups"
     snapshots = sorted(backup_dir.glob(f"{path.stem}-*.db")) if backup_dir.is_dir() else []
@@ -199,7 +216,9 @@ def _backup_checks(backend: str, path: Path | None) -> tuple[PersistenceCheck, P
     )
 
 
-def inspect_persistence(url: str | None = None, *, repo_root: Path | None = None) -> PersistenceDoctorReport:
+def inspect_persistence(
+    url: str | None = None, *, repo_root: Path | None = None
+) -> PersistenceDoctorReport:
     """Inspect database, schema, migration, backup, and recovery state without mutation."""
     active_url = url or engine_url()
     backend, path, target = _target(active_url)
@@ -209,7 +228,9 @@ def inspect_persistence(url: str | None = None, *, repo_root: Path | None = None
             target,
             (
                 PersistenceCheck("database", "new", "no database file exists yet"),
-                PersistenceCheck("schema", "new", "a fresh database is accepted by the startup guard"),
+                PersistenceCheck(
+                    "schema", "new", "a fresh database is accepted by the startup guard"
+                ),
                 _migration_check_for_new(repo_root),
                 backups,
                 recovery,
@@ -223,9 +244,13 @@ def inspect_persistence(url: str | None = None, *, repo_root: Path | None = None
             present_tables = set(inspect(connection).get_table_names())
             gaps = missing_columns(engine)
             schema = (
-                PersistenceCheck("schema", "ready", "all declared model tables and columns are present")
+                PersistenceCheck(
+                    "schema", "ready", "all declared model tables and columns are present"
+                )
                 if not gaps
-                else PersistenceCheck("schema", "behind", f"missing {', '.join(gaps)}; run `make db-migrate`")
+                else PersistenceCheck(
+                    "schema", "behind", f"missing {', '.join(gaps)}; run `make db-migrate`"
+                )
             )
             checks = (
                 PersistenceCheck("database", "ready", f"connected using {backend}"),
@@ -240,9 +265,13 @@ def inspect_persistence(url: str | None = None, *, repo_root: Path | None = None
             (
                 PersistenceCheck("database", "unavailable", f"could not inspect database: {exc}"),
                 PersistenceCheck("schema", "unavailable", "schema inspection was not completed"),
-                PersistenceCheck("migrations", "unavailable", "migration inspection was not completed"),
+                PersistenceCheck(
+                    "migrations", "unavailable", "migration inspection was not completed"
+                ),
                 PersistenceCheck("backups", "unavailable", "backup inspection was not completed"),
-                PersistenceCheck("recovery", "unavailable", "recovery inspection was not completed"),
+                PersistenceCheck(
+                    "recovery", "unavailable", "recovery inspection was not completed"
+                ),
             ),
         )
     finally:
@@ -255,4 +284,6 @@ def _migration_check_for_new(repo_root: Path | None) -> PersistenceCheck:
         heads = _migration_script(repo_root).get_heads()
     except Exception as exc:
         return PersistenceCheck("migrations", "unavailable", f"could not inspect Alembic: {exc}")
-    return PersistenceCheck("migrations", "new", f"no revision recorded; expected head {', '.join(heads)}")
+    return PersistenceCheck(
+        "migrations", "new", f"no revision recorded; expected head {', '.join(heads)}"
+    )

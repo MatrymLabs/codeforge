@@ -1,0 +1,21 @@
+id: brightwater
+display_name: Brightwater
+canon_status: AUTHORED_LOCAL
+parent_region: caeloria
+parent_zone: caeloria_zone
+source_design_ids: [caeloria, authored_brightwater]
+population_band: river-city with mill workers, fishers, traders, and licensing officials
+government: Caelorian licensing authority balanced by river-warden practice
+food_sources: [river fish, nearby farms, market grain, water-ration trade]
+water_source: the river, millraces, and old sluice infrastructure
+fuel_source: mill timber, chandler stock, and managed riverbank wood
+labor_base: [milling, fishing, gathering, river warding, trade, licensing]
+waste_handling: mill runoff and lower-weir clearing managed by wardens, with old channels requiring inspection
+economy: mill output, river trade, meadowfoil gathering, draughts, rations, and licensed relic recovery
+architecture: riverstone markets, timber millworks, civic ledgers, weirs, and older pale channels
+culture: practical river work constrained by careful records and unresolved ownership questions
+services: [market, mill, licensing hall, river warding, gathering exchange, travel supplies]
+external_connections: [caeloria, brightwater, river trade]
+active_conflicts: [sluice_token_licensing, lower_weir_danger, meadowfoil_labor_shortage]
+daily_rhythm: dawn mill start, market trade, midday licensing, evening weir check, night river watch
+

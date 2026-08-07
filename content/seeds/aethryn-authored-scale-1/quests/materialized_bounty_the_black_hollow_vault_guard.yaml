@@ -1,0 +1,16 @@
+id: bounty_the_black_hollow_vault_guard
+name: 'Bounty: Hrothune the Bramble Scourge'
+start: posted
+reward_xp: 636
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_black_hollow_vault_guard
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothune the Bramble Scourge (level 53). Fell it for
+    636 XP.
+  collected: 'Bounty collected: Hrothune the Bramble Scourge is felled. Well hunted.'

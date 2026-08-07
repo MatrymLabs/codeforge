@@ -98,7 +98,7 @@ sunscar_city:
   level: 80
 
 red_dunes:
-  name: Red Dune
+  name: Red Dunes
   zone: "Zhaar Desert"
   level: 80
 
@@ -226,4 +226,3 @@ dark_expanse:
   name: Dark Expanse
   zone: "The Voidscar"
   level: 250
-

@@ -1,0 +1,71 @@
+id: cull_underground_eldryn_forest_underworks_beetle_12
+name: 'A standing Cull: the beetle-kind of The Rotwood Root-Chambers'
+start: s0
+reward_xp: 336
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_eldryn_forest_underworks|beetle
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_eldryn_forest_underworks|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the beetle-kind of The Rotwood Root-Chambers: 0/12 down (336 XP).'
+  s1: 'Cull the beetle-kind of The Rotwood Root-Chambers: 1/12 down (336 XP).'
+  s2: 'Cull the beetle-kind of The Rotwood Root-Chambers: 2/12 down (336 XP).'
+  s3: 'Cull the beetle-kind of The Rotwood Root-Chambers: 3/12 down (336 XP).'
+  s4: 'Cull the beetle-kind of The Rotwood Root-Chambers: 4/12 down (336 XP).'
+  s5: 'Cull the beetle-kind of The Rotwood Root-Chambers: 5/12 down (336 XP).'
+  s6: 'Cull the beetle-kind of The Rotwood Root-Chambers: 6/12 down (336 XP).'
+  s7: 'Cull the beetle-kind of The Rotwood Root-Chambers: 7/12 down (336 XP).'
+  s8: 'Cull the beetle-kind of The Rotwood Root-Chambers: 8/12 down (336 XP).'
+  s9: 'Cull the beetle-kind of The Rotwood Root-Chambers: 9/12 down (336 XP).'
+  s10: 'Cull the beetle-kind of The Rotwood Root-Chambers: 10/12 down (336 XP).'
+  s11: 'Cull the beetle-kind of The Rotwood Root-Chambers: 11/12 down (336 XP).'
+  done: The beetle-kind of The Rotwood Root-Chambers are thinned. The wardens of the
+    wood send their thanks.

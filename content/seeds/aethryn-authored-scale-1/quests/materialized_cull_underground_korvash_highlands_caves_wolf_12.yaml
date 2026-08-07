@@ -1,0 +1,73 @@
+id: cull_underground_korvash_highlands_caves_wolf_12
+name: 'A standing Warrant: the wolf-kind of Korvash Oath-Caves'
+start: s0
+reward_xp: 756
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_korvash_highlands_caves|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_caves|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 0/12 down (756 XP).'
+  s1: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 1/12 down (756 XP).'
+  s2: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 2/12 down (756 XP).'
+  s3: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 3/12 down (756 XP).'
+  s4: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 4/12 down (756 XP).'
+  s5: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 5/12 down (756 XP).'
+  s6: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 6/12 down (756 XP).'
+  s7: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 7/12 down (756 XP).'
+  s8: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 8/12 down (756 XP).'
+  s9: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 9/12 down (756 XP).'
+  s10: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 10/12 down (756
+    XP).'
+  s11: 'Answer the warrant on the wolf-kind of Korvash Oath-Caves: 11/12 down (756
+    XP).'
+  done: The wolf-kind of Korvash Oath-Caves are answered for. The region breathes
+    easier.

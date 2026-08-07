@@ -1,0 +1,15 @@
+id: errand_ancient_overlook
+name: 'Errand: Skyward Spires'
+start: posted
+reward_xp: 2250
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: skyward_spires
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Skyward Spires (2250 XP).
+  done: You set the token at Skyward Spires. The stone answers.

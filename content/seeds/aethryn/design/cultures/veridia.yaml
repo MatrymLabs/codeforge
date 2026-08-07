@@ -1,0 +1,6 @@
+id: veridia_culture
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+status: authoring_required
+known_patterns: [parish_memory, practical_craft, suspicion_of_unexplained_old_works]
+unknowns: [complete_regional_customs]

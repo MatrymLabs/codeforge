@@ -1,0 +1,71 @@
+id: cull_field_the_deepreach_reptile_12
+name: 'A standing Bounty: the reptile-kind of The Deepreach Wilds'
+start: s0
+reward_xp: 996
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_the_deepreach|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_the_deepreach|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_the_deepreach|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_the_deepreach|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_the_deepreach|reptile
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_the_deepreach|reptile
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_the_deepreach|reptile
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_the_deepreach|reptile
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_the_deepreach|reptile
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_the_deepreach|reptile
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_the_deepreach|reptile
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_the_deepreach|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the reptile-kind of The Deepreach Wilds: 0/12 down (996 XP).'
+  s1: 'Bring down the reptile-kind of The Deepreach Wilds: 1/12 down (996 XP).'
+  s2: 'Bring down the reptile-kind of The Deepreach Wilds: 2/12 down (996 XP).'
+  s3: 'Bring down the reptile-kind of The Deepreach Wilds: 3/12 down (996 XP).'
+  s4: 'Bring down the reptile-kind of The Deepreach Wilds: 4/12 down (996 XP).'
+  s5: 'Bring down the reptile-kind of The Deepreach Wilds: 5/12 down (996 XP).'
+  s6: 'Bring down the reptile-kind of The Deepreach Wilds: 6/12 down (996 XP).'
+  s7: 'Bring down the reptile-kind of The Deepreach Wilds: 7/12 down (996 XP).'
+  s8: 'Bring down the reptile-kind of The Deepreach Wilds: 8/12 down (996 XP).'
+  s9: 'Bring down the reptile-kind of The Deepreach Wilds: 9/12 down (996 XP).'
+  s10: 'Bring down the reptile-kind of The Deepreach Wilds: 10/12 down (996 XP).'
+  s11: 'Bring down the reptile-kind of The Deepreach Wilds: 11/12 down (996 XP).'
+  done: The reptile-kind of The Deepreach Wilds are hunted down. The ash-tracks are
+    a shade safer.

@@ -1,0 +1,15 @@
+id: errand_aurelian_city
+name: 'Errand: Wildgrowth'
+start: posted
+reward_xp: 3000
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: wildgrowth
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Wildgrowth (3000 XP).
+  done: You bring word to Wildgrowth. It is gratefully received.

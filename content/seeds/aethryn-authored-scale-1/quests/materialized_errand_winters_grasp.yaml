@@ -1,0 +1,15 @@
+id: errand_winters_grasp
+name: 'Errand: Zhaar Desert'
+start: posted
+reward_xp: 900
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: zhaar_desert
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Zhaar Desert (900 XP).
+  done: You set the token at Zhaar Desert. The stone answers.

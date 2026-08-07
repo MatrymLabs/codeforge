@@ -1,0 +1,385 @@
+# Compiled from the editorial drop: AETHRYN — VERIDIA CONTENT BATCH 01.
+# Source format keeps title, room type, prose, visible occupants, objects, and exits together;
+# this compiled form adds stable labels and explicit destination labels for the world link gate.
+batch:
+  id: aethryn_veridia_content_01
+  sequence: 1
+  status: ready
+  size: 25
+  final: true
+
+rooms:
+  greenhold_market:
+    name: Greenhold Market Square
+    room_type: Town Square
+    tags: [veridia, greenhold, town]
+    desc: |-
+      Pale riverstone cobbles spread between close-set timber buildings, their upper stories leaning toward one another above the square. A circular fountain stands at the center, its basin carved with sheaves of grain, alder leaves, and the winding course of the River Verin.
+
+      Morning trade fills the open space with the smell of bread, apples, lamp oil, and damp wool. Painted signs mark the surrounding shops, while the bells above the eastern gate sound whenever a caravan enters Greenhold.
+    occupants:
+      - A red-cheeked apple seller arranges fruit beneath a striped awning.
+      - A courier in a green tabard waits beside the fountain.
+    objects:
+      - A weathered public notice board stands near the southern road.
+    exits: {north: greenhold_north_gate, south: greenhold_south_gate, east: greenhold_east_gate, west: greenhold_west_gate}
+
+  greenhold_north_gate:
+    name: Greenhold North Gate
+    room_type: Town Gate
+    tags: [veridia, greenhold, gate]
+    desc: |-
+      A squat gatehouse of gray stone interrupts Greenhold's timber wall. The northern doors stand open beneath a beam darkened by age, revealing an orchard road that climbs gently between rows of apple and pear trees.
+
+      Iron brackets hold baskets of dried herbs above the arch, a local custom said to keep blight from crossing the threshold. Beyond the gate, the distant land rises toward wooded hills and the pale line of the Frostspire Peaks.
+    occupants:
+      - A gate guard checks the straps on a traveler's pack.
+    objects:
+      - A slate toll board lists wagon fees and market regulations.
+      - A brass warning bell hangs beside the northern doors.
+    exits: {north: north_orchard_road, south: greenhold_market, east: hearthlane, west: watchers_knoll}
+
+  greenhold_south_gate:
+    name: Greenhold South Gate
+    room_type: Town Gate
+    tags: [veridia, greenhold, gate]
+    desc: |-
+      The southern gate opens onto a broad cartway pressed smooth by wagons bound for Riverbend and Sunmeadow. Low fields begin almost immediately beyond the wall, divided by drainage ditches and hedges bright with white blossom.
+
+      Within the gate, the road widens to accommodate livestock and heavy carts. The stones are scuffed by iron rims, and a shallow trough catches clear water from a lion-headed spout built into the wall.
+    occupants:
+      - A sun-browned drover rests beside the watering trough.
+    objects:
+      - A milestone points south toward Riverbend.
+      - A bundle of repaired wagon spokes leans against the gatehouse.
+    exits: {north: greenhold_market, south: alder_cartway, east: wellward, west: alder_court}
+
+  greenhold_west_gate:
+    name: Greenhold West Gate
+    room_type: Town Gate
+    tags: [veridia, greenhold, gate]
+    desc: |-
+      Greenhold's western entrance is older than the rest of the wall, built from broad stones fitted without mortar. Moss fills the seams, and the carved crest above the arch has worn nearly smooth beneath generations of rain.
+
+      Outside, the road bends through grazing land toward low wooded country. On clear evenings, a purple haze gathers beyond the western fields where the first trees of Duskwood Vale crowd the horizon.
+    occupants:
+      - An elderly gatewarden sits beneath a patched canvas shelter.
+    objects:
+      - A rack of walking staffs stands beside the wall.
+      - A faded notice warns travelers not to leave the western road after sunset.
+    exits: {north: hearthlane, south: alder_court, east: greenhold_market, west: watchers_knoll}
+
+  greenhold_east_gate:
+    name: Greenhold East Gate
+    room_type: Town Gate
+    tags: [veridia, greenhold, gate]
+    desc: |-
+      Twin doors banded in green-painted iron stand beneath a narrow watch platform. The eastern road runs straight from the threshold, bordered by clipped hedges and old boundary stones on its way toward Elderwatch.
+
+      The gatehouse smells of wax, leather, and wet timber. Small copper bells are fixed beneath the eaves, and their uneven chiming carries across the road whenever the wind blows from Caeloria.
+    occupants:
+      - A merchant's cart waits while its cargo seals are inspected.
+      - A young guard records arrivals in a thick ledger.
+    objects:
+      - A carved route marker points east toward Elderwatch.
+    exits: {north: lantern_yard, south: wellward, east: hedgerow_mile, west: greenhold_market}
+
+  hearthlane:
+    name: Hearthlane
+    room_type: Residential Street
+    tags: [veridia, greenhold, residential]
+    desc: |-
+      Warm air drifts from a row of bakehouses along the narrow lane, carrying the scents of rye bread, cinnamon, and woodsmoke. Stone channels run beside the paving, guiding rainwater toward iron grates shaped like alder leaves.
+
+      Most of the buildings here have workshops below and family rooms above. Open shutters reveal shelves of pottery, baskets, and polished kitchen knives, while strips of dyed cloth flutter from lines stretched between the roofs.
+    occupants:
+      - A flour-dusted baker cools round loaves on a wooden rack.
+      - A sleepy brindled dog lies beside a red-painted doorway.
+    objects:
+      - A small handcart is stacked with bundles of kindling.
+    exits: {north: wellward, south: greenhold_west_gate, east: lantern_yard, west: alder_court}
+
+  wellward:
+    name: Wellward
+    room_type: Residential Court
+    tags: [veridia, greenhold, residential]
+    desc: |-
+      A deep communal well occupies the center of this quiet court. Its stone rim has been worn smooth by countless hands, and a wooden roof shelters the pulley from rain and falling leaves.
+
+      Laundry lines cross overhead between modest houses faced with white plaster and dark beams. Water spills from full buckets into the cobbled gutter, where mint and tiny blue flowers have taken root in the cracks.
+    occupants:
+      - A gray-haired herbalist sorts clipped stems into shallow baskets.
+    objects:
+      - A copper bucket hangs from the well's rope.
+      - A low bench rests beneath a flowering pear tree.
+    exits: {north: hearthlane, south: greenhold_south_gate, east: greenhold_east_gate, west: alder_court}
+
+  lantern_yard:
+    name: Lantern Yard
+    room_type: Artisan Court
+    tags: [veridia, greenhold, artisan]
+    desc: |-
+      Copper frames, colored glass, and lengths of fine chain hang from hooks beneath the surrounding eaves. The yard belongs to Greenhold's lampwrights, whose workshops open directly onto the paving through broad folding doors.
+
+      Dozens of unfinished lanterns catch the daylight in fragments of amber, green, and blue. At night, the entire court is said to glow like a fallen constellation as each new piece is tested before delivery.
+    occupants:
+      - A lampwright's apprentice polishes a pane of blue glass.
+    objects:
+      - A charcoal brazier stands beneath a narrow chimney hood.
+      - Several finished road lanterns wait in padded crates.
+    exits: {north: greenhold_east_gate, south: wellward, east: hedgerow_mile, west: hearthlane}
+
+  alder_court:
+    name: Alder Court
+    room_type: Residential Court
+    tags: [veridia, greenhold, residential]
+    desc: |-
+      Four ancient alder trees shade this broad court, their roots lifting the cobbles into gentle ridges. The houses around them are among Greenhold's oldest, with carved lintels and small stone plaques naming families that have lived here for centuries.
+
+      A narrow runnel circles the trees and carries clear water toward the western wall. Fallen leaves collect against its edges, turning slowly in the current before slipping beneath a covered drain.
+    occupants:
+      - A traveling scribe sits at a folding desk beneath the largest alder.
+    objects:
+      - A stone basin catches water from a bronze leaf-shaped spout.
+      - A row of sealed message boxes is set into the northern wall.
+    exits: {north: greenhold_west_gate, east: wellward, south: alder_cartway, west: hearthlane}
+
+  north_orchard_road:
+    name: North Orchard Road
+    room_type: Country Road
+    tags: [veridia, road, orchard]
+    desc: |-
+      The packed-earth road climbs between orderly rows of apple trees whose branches arch above the ditches. Whitewashed stones mark the boundaries of each orchard, and narrow gates open onto grassy lanes leading toward distant farmhouses.
+
+      Bees move heavily among the blossoms, filling the warm air with a steady hum. Greenhold's northern wall remains visible to the south, its rooftops rising beyond the lower branches.
+    occupants:
+      - An orchard keeper examines a split limb with a pruning knife.
+    objects:
+      - A wooden ladder rests against an apple tree.
+      - Several wicker harvest baskets are stacked beside the road.
+    exits: {south: greenhold_north_gate, east: watchers_knoll}
+
+  watchers_knoll:
+    name: Watcher's Knoll
+    room_type: Hilltop Path
+    tags: [veridia, road, overlook]
+    desc: |-
+      The road reaches a grassy knoll crowned by the remains of an old signal post. From here, the orchards fall away toward Greenhold, while the northern horizon rises in dark wooded folds beneath the far-off Frostspire Peaks.
+
+      Wind moves freely across the height, bending the grass around scattered foundation stones. A rusted iron basket still hangs from the signal frame, though no warning fire has burned here in many years.
+    occupants:
+      - A Veridian scout studies the northern road through a brass spyglass.
+    objects:
+      - A cracked signal drum rests beneath a weathered shelter.
+      - A stone marker bears arrows pointing southeast and west.
+    exits: {west: north_orchard_road, southeast: old_stone_causeway}
+
+  hedgerow_mile:
+    name: Hedgerow Mile
+    room_type: King's Road
+    tags: [veridia, road, elderwatch]
+    desc: |-
+      The eastern road runs between high hawthorn hedges clipped into long green walls. Gaps between the branches reveal fields of barley and grazing sheep, but the road itself feels enclosed and unexpectedly quiet.
+
+      Old paving stones surface through the packed earth wherever rain has washed away the topsoil. Foxglove, buttercups, and small white roses grow along the ditch, softening the edges of the ancient route.
+    occupants:
+      - A peddler pushes a narrow cart hung with tin cups and ribbons.
+    objects:
+      - A mossy boundary stone marks one mile from Greenhold.
+      - A broken wagon lantern lies half-hidden beneath the hedge.
+    exits: {west: greenhold_east_gate, east: old_stone_causeway, northwest: watchers_knoll}
+
+  old_stone_causeway:
+    name: Old Stone Causeway
+    room_type: Raised Road
+    tags: [veridia, road, elderwatch]
+    desc: |-
+      Broad slabs of weathered limestone carry the road across a low flood meadow. Shallow water gleams between reeds on either side, reflecting clouds, circling swallows, and the leaning posts of abandoned field fences.
+
+      The causeway was built before the founding of Elderwatch, and several stones bear mason marks no local guild recognizes. The road remains firm beneath wagon wheels, though grass pushes through the joints in pale green seams.
+    occupants:
+      - A covered farm wagon creaks slowly toward the east.
+    objects:
+      - A carved drainage channel runs beneath the road.
+      - Three weathered standing stones rise from the southern marsh.
+    exits: {east: elderwatch_gate, west: hedgerow_mile}
+
+  elderwatch_gate:
+    name: Elderwatch Gate
+    room_type: Fortified Gate
+    tags: [veridia, elderwatch, gate]
+    desc: |-
+      A tall timber palisade surrounds Elderwatch, reinforced with stone towers at each corner. The western gate stands beneath a square watchhouse whose upper windows command a clear view of the causeway and the fields beyond.
+
+      Unlike Greenhold's welcoming entrances, this gate is built for defense. Heavy chains, murder holes, and iron-shod doors remain plainly visible, though flowering vines soften the lower walls.
+    occupants:
+      - Two wardens inspect travel papers beside a narrow registry table.
+    objects:
+      - A rack of signal flags stands beneath the watchhouse stairs.
+      - A polished horn hangs from a peg near the gate.
+    exits: {west: old_stone_causeway, east: elderwatch_square}
+
+  elderwatch_square:
+    name: Elderwatch Square
+    room_type: Watchtown Square
+    tags: [veridia, elderwatch, town]
+    desc: |-
+      Elderwatch's square is paved in dark stone and dominated by a slender watchtower rising from its northern edge. White signal panels line the tower's upper gallery, ready to reflect sunlight toward distant posts.
+
+      The town has grown around military roads rather than market lanes, giving the square a stern, orderly shape. Inns, stables, and supply houses face the open space, their signs marked with road distances instead of decorative pictures.
+    occupants:
+      - A watch captain reviews a patrol roster beneath the tower.
+    objects:
+      - A public route map is mounted in a glazed wooden case.
+      - A stack of sealed supply crates waits outside the eastern storehouse.
+    exits: {north: elderwatch, south: elderwatch_south_road, west: elderwatch_gate}
+
+  alder_cartway:
+    name: Alder Cartway
+    room_type: Country Road
+    tags: [veridia, road, riverbend]
+    desc: |-
+      South of Greenhold, the cartway passes beneath scattered alders whose roots grip the raised banks of irrigation ditches. Wheel ruts fill with clear water after rain, forcing travelers onto the grassy center of the road.
+
+      The northern rooftops recede behind gentle folds of farmland. Ahead, broad meadows open toward Riverbend, their drainage channels flashing silver wherever the sun reaches them.
+    occupants:
+      - A shepherd guides a small flock across the road.
+    objects:
+      - A wooden footbridge spans the western ditch.
+      - A chipped milestone points north toward Greenhold and south toward Riverbend.
+    exits: {north: greenhold_south_gate, south: low_meadow_road}
+
+  low_meadow_road:
+    name: Low Meadow Road
+    room_type: Meadow Road
+    tags: [veridia, road, riverbend]
+    desc: |-
+      The road runs straight through low fields planted with flax, clover, and pale green oats. Narrow drainage cuts divide the land into long rectangles, and simple plank bridges connect isolated barns to the main route.
+
+      The River Verin cannot yet be seen, but its presence shapes the country. The soil is darker here, the air cooler, and reeds begin to replace grass wherever the ground dips.
+    occupants:
+      - A farmer repairs a ditch gate with a wooden mallet.
+      - A flock of white birds follows the freshly turned earth.
+    objects:
+      - A patient mule grazes beside an empty produce cart.
+    exits: {north: alder_cartway, south: riverbend_north_bank}
+
+  riverbend_north_bank:
+    name: Riverbend North Bank
+    room_type: Riverbank Road
+    tags: [veridia, road, riverbend, river]
+    desc: |-
+      The road descends to the River Verin, which sweeps past in a broad green curve before turning west. Stone posts line the bank where barges are tied during high water, their ropes polished smooth by years of strain.
+
+      Across the river, Riverbend's clustered roofs rise around a timber bridge and a pair of slow-turning waterwheels. The air smells of wet rope, fish, and grain carried from the riverside mills.
+    occupants:
+      - A boatman coils a heavy rope beside a mooring post.
+    objects:
+      - Several baskets of silver-scaled fish rest beneath damp cloth.
+      - A painted depth marker stands at the water's edge.
+    exits: {north: low_meadow_road, south: riverbend_crossing}
+
+  riverbend_crossing:
+    name: Riverbend Crossing
+    room_type: River Town
+    tags: [veridia, riverbend, town, river]
+    desc: |-
+      A timber bridge spans the River Verin at the heart of Riverbend, its broad deck crowded with carts, pedestrians, and pack animals. Water turns dark beneath the central arches before breaking into white ripples around the stone piers.
+
+      Shops and warehouses press close to both banks. Mill wheels groan steadily downstream, while bright pennants above the market quay show the river's changing wind.
+    occupants:
+      - A ferryman calls destinations from beside a flat-bottomed boat.
+      - A grain trader argues cheerfully over a set of brass weights.
+    objects:
+      - A public water clock drips beneath the bridge keeper's shelter.
+    exits: {north: riverbend_north_bank, east: willow_levee, west: cloverford}
+
+  willow_levee:
+    name: Willow Levee
+    room_type: Riverside Path
+    tags: [veridia, riverbend, river]
+    desc: |-
+      A raised path follows the river east beneath a line of old willows. Their trailing branches brush the water, and exposed roots twist through the packed earth along the outer edge of the levee.
+
+      Flood marks have been cut into several trunks, recording years when the Verin rose over the surrounding fields. The newest mark stands well below the path, though driftwood remains tangled high in the reeds.
+    occupants:
+      - A river ranger checks the condition of the levee.
+    objects:
+      - A narrow skiff is pulled onto the muddy bank.
+      - A carved post records flood heights and repair dates.
+    exits: {east: cloverford, west: riverbend_crossing}
+
+  cloverford:
+    name: Cloverford
+    room_type: Shallow Crossing
+    tags: [veridia, riverbend, river]
+    desc: |-
+      The River Verin spreads wide and shallow here, flowing over a bed of pale stones. A line of flat stepping slabs crosses the gentlest channel, while wagons use a gravel ford marked by paired wooden stakes.
+
+      Clover grows thick along both banks, giving the place a sweet green scent in warm weather. The sound of water over stone carries farther than expected across the open fields.
+    occupants:
+      - Two village children search the shallows for bright river glass.
+    objects:
+      - A small roadside shrine stands beneath a leaning willow.
+      - A rope guide stretches between the ford markers.
+    exits: {east: willow_levee, west: riverbend_crossing}
+
+  sunmeadow_west_gate:
+    name: Sunmeadow West Gate
+    room_type: Village Gate
+    tags: [veridia, sunmeadow, gate]
+    desc: |-
+      A low hedge and whitewashed stone wall mark the western edge of Sunmeadow. The gate itself is simple, formed by two oak posts carved with sunbursts and sheaves of wheat.
+
+      Beyond the entrance, neat lanes wind between cottages, gardens, and open drying yards. Sunflowers grow beside nearly every doorway, their heavy heads turning above painted fences.
+    occupants:
+      - A village clerk records incoming trade carts at a small desk.
+    objects:
+      - A basket of fresh-cut sunflowers rests beside the gate.
+      - A wooden sign welcomes travelers to Sunmeadow.
+    exits: {east: sunmeadow_green, west: windmill_ridge}
+
+  sunmeadow_green:
+    name: Sunmeadow Green
+    room_type: Village Green
+    tags: [veridia, sunmeadow, village]
+    desc: |-
+      A broad green occupies the center of Sunmeadow, bordered by cottages with yellow doors and steep roofs of red-brown tile. A ring of smooth stones surrounds an ancient oak whose branches shade most of the northern lawn.
+
+      Market stalls gather here on clear days, selling honey, flour, fruit preserves, woven hats, and bright bundles of flowers. Wind chimes hang from the eaves of the nearby inn and ring softly whenever the breeze crosses the square.
+    occupants:
+      - An innkeeper sets polished cups on an outdoor table.
+      - A beekeeper displays jars of amber honey beneath a canvas shade.
+    objects:
+      - A painted village map stands near the western lane.
+    exits: {north: windmill_ridge, west: sunmeadow_west_gate}
+
+  windmill_ridge:
+    name: Windmill Ridge
+    room_type: Hill Road
+    tags: [veridia, road, sunmeadow]
+    desc: |-
+      The road climbs a long grassy ridge above Sunmeadow. At its crest, a white-stone windmill turns broad wooden sails against the open sky, each slow sweep casting a moving shadow over the road.
+
+      From the ridge, the River Verin can be traced west toward Riverbend, while Elderwatch's tower rises to the north beyond bands of farmland. Grain fields spread across the slopes in shifting squares of gold and green.
+    occupants:
+      - A flour-covered miller checks the tension on a sail rope.
+    objects:
+      - Several sealed grain sacks are stacked beneath a canvas awning.
+      - A low stone wall follows the edge of the ridge.
+    exits: {north: elderwatch_south_road, south: sunmeadow_west_gate}
+
+  elderwatch_south_road:
+    name: Elderwatch South Road
+    room_type: Patrol Road
+    tags: [veridia, road, elderwatch, sunmeadow]
+    desc: |-
+      A carefully maintained road runs north from the farms of Sunmeadow toward Elderwatch. Flat stones mark the centerline, helping patrols and travelers keep their course when autumn fog settles over the fields.
+
+      Small watch posts stand at regular intervals along the route. Most are empty, but each contains a bell, a rain barrel, and a locked chest of emergency supplies.
+    occupants:
+      - A mounted patrol pauses beside the nearest watch post.
+    objects:
+      - A wayside shrine holds a newly lit beeswax candle.
+      - A wooden marker points north toward Elderwatch and south toward Sunmeadow.
+    exits: {north: elderwatch_square, south: windmill_ridge}

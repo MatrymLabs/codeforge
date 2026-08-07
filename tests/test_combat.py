@@ -346,12 +346,15 @@ def test_a_mortal_defeat_cannot_issue_the_same_reward_twice():
         assert after_first == before + 1
         assert "There is no one like that here" in second
         assert s.coins == coins_after_first
-        assert sum(
-            1
-            for iid in items.ITEMS
-            if items.prototype_of(iid) == "copper_key"
-            and items.ITEMS[iid]["location"] == "room:courtyard"
-        ) == after_first
+        assert (
+            sum(
+                1
+                for iid in items.ITEMS
+                if items.prototype_of(iid) == "copper_key"
+                and items.ITEMS[iid]["location"] == "room:courtyard"
+            )
+            == after_first
+        )
     finally:
         items.ITEMS.clear()
         items.ITEMS.update(items_snap)

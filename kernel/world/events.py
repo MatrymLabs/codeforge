@@ -214,9 +214,7 @@ def announce_to(player_ids: Iterable[str], text: str, exclude: str = "") -> None
     sink (an offline member, or one hosted elsewhere with no broker yet) is simply skipped, so a
     cohort message never fails because someone logged out."""
     targets = list(player_ids)
-    bus.get_bus().publish(
-        _ECHO_TOPIC, {"targets": targets, "text": text, "exclude": exclude}
-    )
+    bus.get_bus().publish(_ECHO_TOPIC, {"targets": targets, "text": text, "exclude": exclude})
     _record_event(
         "world.announce_to",
         {"target_count": len(targets), "excluded": bool(exclude)},

@@ -1,0 +1,19 @@
+id: caeloria_brightwater_ecology
+canon_status: AUTHORED_LOCAL
+parent_region: caeloria
+parent_zone: caeloria_zone
+source_design_ids: [brightwater, authored_brightwater]
+habitats:
+  - id: brightwater_millrace_habitat
+    creatures: [brightwater_sluice_eels]
+    resources: [meadowfoil, river_water, millrace_shelter]
+    pressure: old channels and food-rich runoff concentrate life around working machinery
+    recurrence: ordinary river recurrence while water and shelter remain
+    civilization_relation: gathering and maintenance share the same narrow working bank
+  - id: brightwater_lowerweir_habitat
+    creatures: [brightwater_riverwyrm]
+    resources: [flooded_timber, fish, lower_weir_shelter]
+    pressure: neglected lower races give a large predator room to persist below the licensed works
+    recurrence: persistent shelter and prey draw new predators even after one threat is removed
+    civilization_relation: river safety and mill output depend on keeping the lower weirs usable
+

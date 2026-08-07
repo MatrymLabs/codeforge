@@ -1,0 +1,16 @@
+id: bounty_korvash_highlands_lord_7
+name: 'Bounty: Morune the Peat Stalker'
+start: posted
+reward_xp: 1872
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: korvash_highlands_lord_7
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Morune the Peat Stalker (level 156). Fell it for 1872
+    XP.
+  collected: 'Bounty collected: Morune the Peat Stalker is felled. Well hunted.'

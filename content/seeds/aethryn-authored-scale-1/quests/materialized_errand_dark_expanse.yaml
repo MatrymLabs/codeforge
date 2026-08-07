@@ -1,0 +1,15 @@
+id: errand_dark_expanse
+name: 'Errand: The Crystal Labyrinth'
+start: posted
+reward_xp: 3750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_crystal_labyrinth
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Crystal Labyrinth (3750 XP).
+  done: You reach The Crystal Labyrinth and mark the way. Well scouted.

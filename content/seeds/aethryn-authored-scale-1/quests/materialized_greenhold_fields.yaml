@@ -1,0 +1,23 @@
+id: greenhold_fields
+name: The Field-Beast
+start: offered
+reward_xp: 35
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: greenhold_fields
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:gathering:20
+  on_defeat: greenhold_boar
+terminal:
+- done
+labels:
+  offered: Miller Harl says a beast is ruining his barley. Go EAST out to the green
+    fields and see for yourself.
+  hunting: The great field-boar is here among the trampled rows. Put it down.
+  done: '*** The field-boar is dead and the barley is saved. Miller Harl will not
+    go hungry, nor will Greenhold. Harl owes you a good turn, and says so loudly.
+    ***'

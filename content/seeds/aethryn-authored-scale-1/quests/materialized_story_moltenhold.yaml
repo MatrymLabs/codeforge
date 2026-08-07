@@ -1,0 +1,28 @@
+id: story_moltenhold
+name: The Tale of Moltenhold
+start: afoot
+reward_xp: 4250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_flamewrought_forge
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_flamewrought_forge_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: moltenhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Ashen Wastes: The Flamewrought Forge festers, and Moltenhold lives
+    in its shadow.'
+  at_heart: You stand within The Flamewrought Forge. Its deep terror waits below.
+    Fell it.
+  homeward: The terror of The Flamewrought Forge is slain. Bear word to Moltenhold
+    (4250 XP).
+  done: '*** Moltenhold breathes free. Ashen Wastes will remember you. ***'

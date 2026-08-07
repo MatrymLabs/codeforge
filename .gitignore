@@ -2,6 +2,7 @@
 __pycache__/
 .pytest_cache/
 save.json
+content/seeds/aethryn/world_state.json
 .coverage
 coverage.xml
 *.egg-info/

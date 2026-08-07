@@ -1,0 +1,20 @@
+id: delivery_ravenwatch
+name: 'Delivery: Ravenwatch to Twilight Grove'
+start: posted
+reward_xp: 240
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_ravenwatch
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: twilight_grove
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Ravenwatch is bound for Twilight Grove. Take it up (240 XP).
+  carrying: Carry the parcel to Twilight Grove.
+  done: The parcel is delivered to Twilight Grove. The road keeps its promise.

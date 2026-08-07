@@ -1,4 +1,4 @@
-"""CARD: fieldzone -- assemble a FIELD-backed wilderness zone from a compact seed config.
+"""CARD: fieldzone -- assemble FIELD-backed wilderness zones from compact seed configs.
 
 The field twin of `kernel.world.wildlands` for the trails: it bridges a `fields.yaml` row to the
 two-layer worldgen generator + its life layer, and hands back everything `world.py` needs to graft
@@ -12,12 +12,16 @@ an OPEN FIELD onto its zone hub in place of a linear trail-chain:
     zone AREA metadata (its rooms as members) so `zone_of` resolves every field cell.
 
 A field config is validated on load and FAILS LOUD on a malformed row, the same discipline the
-wildlands loader keeps. Deterministic: the same seed yields the same field, life and all. Status:
-PROTOTYPED (Veridia pilot, branch aethryn/pilot-veridia-field).
+wildlands loader keeps. Deterministic: the same seed yields the same field, life and all. The same
+``CODEFORGE_WILD_SCALE`` knob used by the fallback trail generator grows field width and height by
+the square root of the requested scale, preserving area growth without re-authoring the manifest.
+Status: production all-region surface generator.
 """
 
 from __future__ import annotations
 
+import math
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
@@ -45,7 +49,10 @@ _REVERSE = {
     "southwest": "northeast",
     "northwest": "southeast",
     "southeast": "northwest",
+    "up": "down",
+    "down": "up",
 }
+_FIELD_SCALE_ENV = "CODEFORGE_WILD_SCALE"
 
 # Every required key on a field row, with the loud message if it is missing or the wrong shape.
 _REQUIRED = (
@@ -64,6 +71,25 @@ _REQUIRED = (
 class FieldZoneError(ValueError):
     """A field zone that cannot be assembled (a malformed config or a region that is not a real,
     reachable, world-shaped field). Fails loud -- a broken zone never ships silently."""
+
+
+def _field_scale() -> float:
+    """Read the shared demo-to-MMO scale used by the active surface generators."""
+    raw = os.getenv(_FIELD_SCALE_ENV, "1")
+    try:
+        scale = float(raw)
+    except ValueError:
+        raise FieldZoneError(f"{_FIELD_SCALE_ENV} must be a number, got {raw!r}.") from None
+    if scale < 1:
+        raise FieldZoneError(
+            f"{_FIELD_SCALE_ENV} must be >= 1 (scaling only grows the world), got {raw!r}."
+        )
+    return scale
+
+
+def _scaled_dimension(value: int, scale: float) -> int:
+    """Grow field area linearly while keeping its width/height aspect ratio."""
+    return max(2, round(value * math.sqrt(scale)))
 
 
 @dataclass(frozen=True)
@@ -87,6 +113,7 @@ def load_field_configs(path: Path) -> list[dict[str, Any]] | None:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or not raw:
         raise FieldZoneError(f"{path}: a fields config must be a non-empty mapping of id -> row")
+    scale = _field_scale()
     configs: list[dict[str, Any]] = []
     for zone_id, row in raw.items():
         if not isinstance(row, dict):
@@ -98,7 +125,19 @@ def load_field_configs(path: Path) -> list[dict[str, Any]] | None:
             raise FieldZoneError(
                 f"{path}: field {zone_id!r} attach_dir {row['attach_dir']!r} is not a compass dir"
             )
-        configs.append({**row, "id": str(zone_id)})
+        for key in ("level_min", "level_max", "width", "height"):
+            value = row[key]
+            if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+                raise FieldZoneError(
+                    f"{path}: field {zone_id!r} {key!r} must be a positive integer"
+                )
+        if row["level_min"] > row["level_max"] or row["level_max"] > 300:
+            raise FieldZoneError(f"{path}: field {zone_id!r} has an invalid level band")
+        merged = {**row, "id": str(zone_id)}
+        if scale != 1:
+            merged["width"] = _scaled_dimension(int(row["width"]), scale)
+            merged["height"] = _scaled_dimension(int(row["height"]), scale)
+        configs.append(merged)
     return configs
 
 
@@ -165,6 +204,14 @@ def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:
         level_max=int(cfg["level_max"]),
         biome=cfg["biome"],
     )
+    zone["template"] = "field"
+    zone["canon_status"] = "GENERATED_LOCAL"
+    zone["provenance"] = {
+        "source": "content/seeds/aethryn/fields.yaml",
+        "template": "field",
+        "seed": int(cfg.get("seed", 0)),
+        "parent_region": cfg["region"],
+    }
     return FieldZone(
         f"field_{cfg['id']}", rooms, npcs, gate, cfg["attach"], cfg["attach_dir"], zone
     )

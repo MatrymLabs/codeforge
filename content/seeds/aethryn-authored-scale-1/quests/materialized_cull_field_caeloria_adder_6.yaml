@@ -1,0 +1,41 @@
+id: cull_field_caeloria_adder_6
+name: 'A small Purge: the adder-kind of The Caeloria Wilds'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_caeloria|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_caeloria|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_caeloria|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_caeloria|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_caeloria|adder
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_caeloria|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the adder-kind of The Caeloria Wilds: 0/6 down (120 XP).'
+  s1: 'Purge the adder-kind of The Caeloria Wilds: 1/6 down (120 XP).'
+  s2: 'Purge the adder-kind of The Caeloria Wilds: 2/6 down (120 XP).'
+  s3: 'Purge the adder-kind of The Caeloria Wilds: 3/6 down (120 XP).'
+  s4: 'Purge the adder-kind of The Caeloria Wilds: 4/6 down (120 XP).'
+  s5: 'Purge the adder-kind of The Caeloria Wilds: 5/6 down (120 XP).'
+  done: The adder-kind of The Caeloria Wilds are purged. The farm-roads are the safer
+    for it.

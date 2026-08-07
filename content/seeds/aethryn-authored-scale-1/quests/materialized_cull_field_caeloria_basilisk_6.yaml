@@ -1,0 +1,47 @@
+id: cull_field_caeloria_basilisk_6
+name: 'A small Contract: the basilisk-kind of The Caeloria Wilds'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_caeloria|basilisk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_caeloria|basilisk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_caeloria|basilisk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_caeloria|basilisk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_caeloria|basilisk
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_caeloria|basilisk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 0/6 down (120
+    XP).'
+  s1: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 1/6 down (120
+    XP).'
+  s2: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 2/6 down (120
+    XP).'
+  s3: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 3/6 down (120
+    XP).'
+  s4: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 4/6 down (120
+    XP).'
+  s5: 'Fulfil the contract on the basilisk-kind of The Caeloria Wilds: 5/6 down (120
+    XP).'
+  done: The basilisk-kind of The Caeloria Wilds are put down. The farm-roads are the
+    safer for it.

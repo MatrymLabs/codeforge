@@ -1,0 +1,61 @@
+id: forage_underground_the_deepreach_caves_ember_shard_10
+name: 'A standing Collection: ember shard of Deepreach Memory Grottos'
+start: s0
+reward_xp: 550
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_the_deepreach_caves|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_the_deepreach_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect ember shard in Deepreach Memory Grottos: 0/10 (550 XP).'
+  s1: 'Collect ember shard in Deepreach Memory Grottos: 1/10 (550 XP).'
+  s2: 'Collect ember shard in Deepreach Memory Grottos: 2/10 (550 XP).'
+  s3: 'Collect ember shard in Deepreach Memory Grottos: 3/10 (550 XP).'
+  s4: 'Collect ember shard in Deepreach Memory Grottos: 4/10 (550 XP).'
+  s5: 'Collect ember shard in Deepreach Memory Grottos: 5/10 (550 XP).'
+  s6: 'Collect ember shard in Deepreach Memory Grottos: 6/10 (550 XP).'
+  s7: 'Collect ember shard in Deepreach Memory Grottos: 7/10 (550 XP).'
+  s8: 'Collect ember shard in Deepreach Memory Grottos: 8/10 (550 XP).'
+  s9: 'Collect ember shard in Deepreach Memory Grottos: 9/10 (550 XP).'
+  done: You have brought in ember shard enough for Deepreach Memory Grottos. The forge-crews
+    can feed the fires now.

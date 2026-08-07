@@ -1,0 +1,27 @@
+id: story_stonefang_keep
+name: The Tale of Stonefang Keep
+start: afoot
+reward_xp: 3500
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: dreadmaw_hold
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: dreadmaw_hold_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: stonefang_keep
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Thalorin: Dreadmaw Hold festers, and Stonefang Keep lives in its
+    shadow.'
+  at_heart: You stand within Dreadmaw Hold. Its deep terror waits below. Fell it.
+  homeward: The terror of Dreadmaw Hold is slain. Bear word to Stonefang Keep (3500
+    XP).
+  done: '*** Stonefang Keep breathes free. Thalorin will remember you. ***'

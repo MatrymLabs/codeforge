@@ -1,0 +1,15 @@
+id: bounty_brightwater_eels
+name: 'Bounty: a knot of sluice-eels'
+start: posted
+reward_xp: 336
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: brightwater_eels
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a knot of sluice-eels (level 28). Fell it for 336 XP.
+  collected: 'Bounty collected: a knot of sluice-eels is felled. Well hunted.'

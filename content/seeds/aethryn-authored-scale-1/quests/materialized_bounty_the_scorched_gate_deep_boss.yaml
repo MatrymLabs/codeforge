@@ -1,0 +1,16 @@
+id: bounty_the_scorched_gate_deep_boss
+name: 'Bounty: the Scourge of The Scorched Gate'
+start: posted
+reward_xp: 2124
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_scorched_gate_deep_boss
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the Scourge of The Scorched Gate (level 177). Fell it
+    for 2124 XP.
+  collected: 'Bounty collected: the Scourge of The Scorched Gate is felled. Well hunted.'

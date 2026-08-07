@@ -1,0 +1,27 @@
+id: aethryn_historical_ages
+canon_status: CANON_WORKING
+source: content/seeds/aethryn/generation_contract.yaml
+status: authoring_required
+ages:
+  - id: pre_utopian
+    display_name: Pre-utopian
+    status: authoring_required
+  - id: age_of_plenty
+    display_name: Age of Plenty
+    status: authoring_required
+  - id: the_imitation
+    display_name: The Imitation
+    status: authoring_required
+  - id: the_starfall
+    display_name: The Starfall
+    status: authoring_required
+  - id: collapse_era
+    display_name: Collapse Era
+    status: authoring_required
+  - id: successor_era
+    display_name: Successor Era
+    status: authoring_required
+  - id: recent_event
+    display_name: Recent Event
+    status: authoring_required
+note: Names are generation-contract vocabulary, not a complete historical account.

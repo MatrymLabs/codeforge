@@ -1,0 +1,36 @@
+id: forage_field_ashen_wastes_raw_ore_5
+name: 'A small Draw: raw ore of The Ashen Wastes Wilds'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_ashen_wastes|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_ashen_wastes|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_ashen_wastes|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_ashen_wastes|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_ashen_wastes|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw raw ore in The Ashen Wastes Wilds: 0/5 (210 XP).'
+  s1: 'Draw raw ore in The Ashen Wastes Wilds: 1/5 (210 XP).'
+  s2: 'Draw raw ore in The Ashen Wastes Wilds: 2/5 (210 XP).'
+  s3: 'Draw raw ore in The Ashen Wastes Wilds: 3/5 (210 XP).'
+  s4: 'Draw raw ore in The Ashen Wastes Wilds: 4/5 (210 XP).'
+  done: You have drawn raw ore enough for The Ashen Wastes Wilds. The forge-crews
+    can feed the fires now.

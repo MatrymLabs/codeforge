@@ -1,0 +1,16 @@
+id: bounty_glacial_bastion_deep_boss
+name: 'Bounty: the Herald of Glacial Bastion'
+start: posted
+reward_xp: 1164
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: glacial_bastion_deep_boss
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the Herald of Glacial Bastion (level 97). Fell it for
+    1164 XP.
+  collected: 'Bounty collected: the Herald of Glacial Bastion is felled. Well hunted.'

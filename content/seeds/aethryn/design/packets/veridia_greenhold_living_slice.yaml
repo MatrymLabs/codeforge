@@ -1,0 +1,1269 @@
+packet_id: veridia_greenhold_living_slice
+batch_sequence: 14
+target_type: settlement_hinterland_vertical_slice
+parent_region: veridia
+parent_zone: veridia_zone
+canon_status: AUTHORED_LOCAL
+world_purpose: Connect Greenhold civic life to a small working hinterland without changing Veridia canon.
+gameplay_purpose: Give a new character a navigable water, food, trade, gathering, danger, and return loop.
+narrative_purpose: Show ordinary Veridia life built over surviving old infrastructure while leaving global mysteries open.
+inherited_constraints:
+  - Preserve the locked Veridia threat band of 1-30.
+  - Treat the map poster as orientation only.
+  - Use world_graph.yaml for region topology and do not invent a regional route.
+  - Keep all unresolved global questions as rumor or disputed evidence.
+  - Generated content cannot promote itself into canon.
+threat_range: [1, 12]
+geography_profile:
+  terrain: low fields, drainage ditches, hedgerows, and an old waterworks threshold
+  network: connected local loop anchored to Greenhold
+  poster_route_policy: decorative routes are not exits
+climate_profile:
+  biome: temperate-meadow
+  season: early growing season
+  pressure: recent rain followed by crop damage
+architecture_profile:
+  civic: timber and riverstone town edge over pale old-world masonry
+  agricultural: field walls, drainage channels, and repairable hand tools
+  hazard_site: shallow service hollow with a seized control assembly
+cultural_profile:
+  local_identity: practical parish memory and negotiated market obligation
+  dispute: public water access versus caution around unknown infrastructure
+economy_profile:
+  dependency: barley and meadowfoil move from fields through Greenhold trade
+  shortage: water interruption and damaged barley
+  transport: cart road and footpath loop
+ecology_profile:
+  habitat: managed fields becoming unmanaged hedgerow
+  pressure: crop damage displaces a persistent field boar
+  recurrence: ordinary seasonal forage and vermin recurrence
+required_connections: [greenhold, greenhold_fields, veridia]
+required_content_counts:
+  settlements: 1
+  districts: 1
+  neighborhoods: 2
+  wilderness: 1
+  rooms: 9
+  npcs: 3
+  creatures: 3
+  population_profiles: 6
+  spawn_pools: 2
+  roaming_routes: 1
+  migration_rules: 1
+  encounter_groups: 2
+  crowd_specs: 1
+  ambient_presence: 4
+  items: 2
+  material_culture: 1
+  resource_nodes: 2
+  economy_flows: 3
+  ecology_flows: 2
+  quest_pressures: 4
+  quests: 10
+  quest_arcs: 1
+  contract_templates: 1
+  public_events: 1
+  quest_world_effects: 4
+  quest_generation_profiles: 1
+  state_changes: 1
+  dungeons: 1
+state_scope: character_and_world_package
+forbidden_content:
+  - accidental divine strike
+  - natural-born god
+  - objective answer to whether Netharion survived
+  - superseded Forge, Ember, or Unforging metaphysics as current canon
+generation_seed: 41017
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+source_design_ids: [veridia, greenhold, veridia_greenhold_economy, veridia_greenhold_ecology]
+source_paths: [content/seeds/aethryn/design, content/seeds/aethryn/authored/greenhold.yaml]
+expected_output_paths:
+  - content/seeds/aethryn/room_batches/veridia_greenhold_living_slice_0014.yaml
+  - content/seeds/aethryn/generated/veridia_greenhold_living_slice/manifest.yaml
+  - content/seeds/aethryn/generated/veridia_greenhold_living_slice/provenance.yaml
+
+records:
+  settlements:
+    - id: greenhold_living_settlement
+      display_name: Greenhold immediate hinterland
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold]
+      population_band: small agricultural market-town hinterland
+      government: Keeper Wenna and parish custom, checked by market pressure
+      food_sources: [barley, meadowfoil, nearby farms]
+      water_source: old fountain works beneath the granary and the town well
+      fuel_source: local alder and managed hedge wood
+      labor_base: [farming, milling, smithing, trade, drainage maintenance]
+      waste_handling: field compost and town-side collection, with the old waste yard needing repair
+      economy: grain, dye plants, water, and traveler supplies circulate through Greenhold Market
+      architecture: riverstone edge roads, timber sheds, drainage channels, and pale old masonry
+      culture: practical, memory-keeping, and cautious about machinery no one can repair
+      services: [market, smithy, granary, well, field gathering, road repair]
+      external_connections: [greenhold, veridia, greenhold_fields]
+      active_conflicts: [greenhold_water_shortage, damaged_barley, public_access_to_old_works]
+      daily_rhythm: dawn field work, midmorning market, noon milling, evening gate and ditch checks
+  districts:
+    - id: greenhold_living_edge
+      display_name: Greenhold Working Edge
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      settlement_id: greenhold_living_settlement
+      source_design_ids: [greenhold]
+      purpose: [civic, economic, service]
+  neighborhoods:
+    - id: greenhold_civic_edge
+      display_name: Cistern and Waste Edge
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      settlement_id: greenhold_living_settlement
+      district_id: greenhold_living_edge
+      source_design_ids: [greenhold]
+      purpose: [civic, service, recovery]
+    - id: greenhold_agricultural_edge
+      display_name: Alder Field Edge
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      settlement_id: greenhold_living_settlement
+      district_id: greenhold_living_edge
+      source_design_ids: [greenhold]
+      purpose: [economic, ecological, resource]
+  wilderness:
+    - id: veridia_living_hinterland
+      display_name: Greenhold Immediate Hinterland
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia]
+      habitat: temperate-meadow fields, hedgerow, drainage, and shallow old works
+      traversal_identity: a short cart road becomes a foot loop around fields and a hazardous hollow
+      purpose: [traversal, ecological, resource, encounter]
+  rooms:
+    - id: greenhold
+      display_name: Greenhold
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold]
+      parent_settlement: greenhold_living_settlement
+      purpose: [social, civic, economic]
+      description: Greenhold gathers market, memory, and road traffic around a well while the working edge opens south toward fields, drainage, and an old water threshold.
+      room_type: Town Hub
+      tags: [veridia, greenhold, compiler_slice, authored_local]
+      replace: true
+      exits: {out: veridia, in: greenhold_inn, market: greenhold_store, square: greenhold_market, wards: veridia_massive_alder_court, south: veridia_living_civic_gate}
+    - id: veridia_living_civic_gate
+      display_name: Greenhold Civic Edge
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, greenhold_civic_edge]
+      parent_settlement: greenhold_living_settlement
+      district_id: greenhold_living_edge
+      neighborhood_id: greenhold_civic_edge
+      purpose: [threshold, civic, traversal]
+      description: The town wall gives way to a maintained civic edge where a public notice, a drainage map, and a low stone channel explain how Greenhold keeps people and water moving together.
+      room_type: Civic Threshold
+      tags: [veridia, greenhold, civic, compiler_slice]
+      exits: {north: greenhold, east: veridia_living_cistern_court, south: veridia_living_road_threshold}
+    - id: veridia_living_cistern_court
+      display_name: Cistern Court
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, veridia_greenhold_economy]
+      parent_settlement: greenhold_living_settlement
+      district_id: greenhold_living_edge
+      neighborhood_id: greenhold_civic_edge
+      purpose: [civic, service, narrative]
+      description: A shallow court surrounds a capped cistern where clean water should rise on a working day; a brass gauge and repair ledger record three competing explanations.
+      room_type: Water Service Court
+      tags: [veridia, greenhold, water, compiler_slice]
+      exits: {west: veridia_living_civic_gate, east: veridia_living_waste_yard}
+    - id: veridia_living_waste_yard
+      display_name: Alder Waste Yard
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, veridia_greenhold_economy]
+      parent_settlement: greenhold_living_settlement
+      district_id: greenhold_living_edge
+      neighborhood_id: greenhold_civic_edge
+      purpose: [civic, service, recovery]
+      description: Alder bins, compost frames, and a swept runoff trench make this yard a quiet piece of settlement infrastructure, though a blocked grate now sends foul water toward the field road.
+      room_type: Waste and Maintenance Yard
+      tags: [veridia, greenhold, waste, maintenance, compiler_slice]
+      exits: {west: veridia_living_cistern_court, south: veridia_living_road_threshold}
+    - id: veridia_living_road_threshold
+      display_name: South Cartway Threshold
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, greenhold]
+      parent_settlement: greenhold_living_settlement
+      neighborhood_id: greenhold_agricultural_edge
+      purpose: [threshold, traversal, economic]
+      description: The cartway leaves Greenhold between low hedges, a repaired milestone, and a ditch that carries both rain and the town's arguments about who must clear it.
+      room_type: Road Threshold
+      tags: [veridia, road, trade, compiler_slice]
+      exits: {north: veridia_living_civic_gate, east: veridia_living_wild_loop, south: veridia_living_farm_lane, west: veridia_living_waste_yard}
+    - id: veridia_living_farm_lane
+      display_name: Alder Farm Lane
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, veridia_greenhold_ecology]
+      parent_wilderness: veridia_living_hinterland
+      neighborhood_id: greenhold_agricultural_edge
+      purpose: [traversal, resource, economic]
+      description: Furrows and alder windbreaks flank a narrow farm lane where barley stubble, meadowfoil, and wagon ruts show the season's work and the crop's recent trouble.
+      room_type: Farm Road
+      tags: [veridia, fields, gathering, compiler_slice]
+      exits: {north: veridia_living_road_threshold, east: veridia_living_farmstead, south: veridia_living_wild_loop}
+    - id: veridia_living_farmstead
+      display_name: Alder Farmstead
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, veridia_greenhold_economy]
+      parent_wilderness: veridia_living_hinterland
+      neighborhood_id: greenhold_agricultural_edge
+      purpose: [economic, resource, social]
+      description: A small barley holding sits behind a split rail fence, with a hand mill, drying rack, and meadowfoil baskets ready for the trader if the damaged rows can be kept productive.
+      room_type: Agricultural Worksite
+      tags: [veridia, farm, food, trade, compiler_slice]
+      exits: {west: veridia_living_farm_lane}
+    - id: veridia_living_wild_loop
+      display_name: Hedgerow Loop
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, veridia_greenhold_ecology]
+      parent_wilderness: veridia_living_hinterland
+      purpose: [traversal, ecological, encounter, resource]
+      description: The path bends through wet grass and thorn hedges in a deliberate loop, passing forage, torn barley stems, and tracks too broad for the foxes that usually keep this edge balanced.
+      room_type: Managed Wilderness Loop
+      tags: [veridia, wilderness, ecology, compiler_slice]
+      exits: {west: veridia_living_road_threshold, north: veridia_living_farm_lane, east: veridia_living_hollow}
+    - id: veridia_living_hollow
+      display_name: The Shallow Service Hollow
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, greenhold_minor_site]
+      parent_wilderness: veridia_living_hinterland
+      purpose: [encounter, landmark, puzzle, narrative]
+      description: A shallow cut in the field reveals pale masonry, a seized sluice wheel, and a line of conduit disappearing under roots, while fresh boar tracks make the old work unsafe to study slowly.
+      room_type: Minor Hazardous Site
+      tags: [veridia, old_world, hazard, compiler_slice]
+      exits: {west: veridia_living_wild_loop}
+  npcs:
+    - id: living_ditchwarden
+      display_name: Ditchwarden Mara
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_civic_edge]
+      role: [maintenance, governance, information]
+      location: veridia_living_civic_gate
+      schedule: [dawn ditch inspection, midday notice updates, dusk gate report]
+      relationship_to_civilization: keeps water and waste routes usable for the town
+    - id: living_fieldhand
+      display_name: Fieldhand Oren
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_agricultural_edge]
+      role: [production, transport, information]
+      location: veridia_living_farmstead
+      schedule: [dawn furrow work, noon mill run, late afternoon meadowfoil sorting]
+      relationship_to_civilization: converts field labor into food and dye trade
+    - id: living_repairer
+      display_name: Repairer Sen
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      role: [maintenance, information, conflict]
+      location: veridia_living_hollow
+      schedule: [weekly inspection when the route is safe, otherwise market testimony]
+      relationship_to_civilization: wants the old sluice understood before it is reopened
+  creatures:
+    - id: living_field_boar
+      display_name: displaced field-boar
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      habitat: damaged barley margins and hedgerow loop
+      diet_or_energy_source: barley roots, fallen grain, and hedgerow forage
+      predators: local hunters and the village hounds
+      prey_or_resource_pressure: damaged crop and shrinking forage push it toward farms
+      reproduction_or_recurrence: ordinary seasonal reproduction and recurring crop access
+      seasonal_behavior: more aggressive during sowing and early harvest pressure
+      ecological_role: turns crop damage into visible pressure on the managed edge
+      relationship_to_civilization: dangerous pest but also evidence of a broken field balance
+      reason_for_persistence: fertile fields and repeated access through an unmaintained hedge gap
+      keywords: [boar, tusker, field]
+      creature_category: biological
+      allowed_regions: [veridia]
+      climate_tolerance: [temperate, wet]
+      threat_range: [2, 8]
+      description: A broad field-boar with a mud-dark shoulder and a stubborn path through the hedge.
+      room_presence_description: Torn barley and a heavy shape shifting beyond the hedge show that the displaced boar is close.
+      examine_description: Its tusks are chipped from roots and old fence posts; the animal is hungry, wary, and used to finding grain here.
+      behavior: roots, tests fences, and charges when cornered
+      intelligence: animal cunning
+      disposition: territorial and pressured
+      social_organization: solitary adult with seasonal family groups
+      activity_period: dawn and dusk
+      movement_behavior: follows forage between field margins and the hollow
+      combat_role: bruiser
+      abilities: [charge, tusk_gore]
+      retreat_behavior: breaks toward the hedgerow after a hard wound
+      pursuit_behavior: pursues only across the field edge
+      assistance_behavior: none
+      loot_outputs: [raw_hide]
+      crafting_outputs: [raw_hide]
+      rarity: uncommon
+      location: veridia_living_hollow
+    - id: living_hollow_vermin
+      display_name: hollow vermin
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      habitat: warm cracks around the shallow conduit
+      diet_or_energy_source: grain scraps, insects, and old organic waste
+      predators: field snakes and town cats
+      prey_or_resource_pressure: neglected service hollow and food leakage from the road
+      reproduction_or_recurrence: ordinary reproduction while shelter remains accessible
+      seasonal_behavior: expands toward the fields after wet weather
+      ecological_role: signals that abandoned infrastructure has become habitat
+      relationship_to_civilization: nuisance that exposes maintenance failure
+      reason_for_persistence: dry masonry and steady food traces
+      keywords: [vermin, rat, hollow]
+      creature_category: biological
+      allowed_regions: [veridia]
+      climate_tolerance: [temperate, wet]
+      threat_range: [1, 3]
+      description: Small warm-blooded scavengers nest in the dry seams around the old conduit.
+      room_presence_description: Tiny claws tick behind the pale masonry and grain husks gather in the cracks.
+      examine_description: The vermin have made a nest from reed, thread, and spoiled sackcloth beside the service channel.
+      behavior: scavenges, hides, and spreads when food is plentiful
+      intelligence: animal cunning
+      disposition: evasive unless trapped
+      social_organization: loose colony
+      activity_period: night and wet-weather sheltering
+      movement_behavior: slips between hollow, waste yard, and field-edge cracks
+      combat_role: nuisance swarm
+      abilities: [gnaw, scatter]
+      retreat_behavior: flees into masonry gaps
+      pursuit_behavior: does not pursue
+      assistance_behavior: nearby vermin scatter toward disturbance
+      loot_outputs: [raw_hide]
+      crafting_outputs: [raw_hide]
+      rarity: common
+    - id: living_field_rabbit
+      display_name: hedgerow field-rabbit
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      habitat: damp meadow margins and uncut hedgerows
+      diet_or_energy_source: tender grass, barley shoots, and meadowfoil leaves
+      predators: field-boar pressure, village hounds, and ordinary foxes
+      prey_or_resource_pressure: prey for local hunters and a baseline forage population
+      reproduction_or_recurrence: ordinary seasonal breeding with recovery after quiet weeks
+      seasonal_behavior: visible at dawn during the early growing season
+      ecological_role: prey population that makes predator pressure and quiet fields legible
+      relationship_to_civilization: tolerated near farms but protected when crop damage is low
+      reason_for_persistence: dense hedges, field margins, and a recoverable breeding cycle
+      keywords: [rabbit, field-rabbit, prey]
+      creature_category: biological
+      allowed_regions: [veridia]
+      climate_tolerance: [temperate, wet]
+      threat_range: [1, 2]
+      description: Quick brown rabbits use the uncut hedge as a moving seam between pasture and field.
+      room_presence_description: The hedge trembles in short bursts, and small tracks cross the wet grass.
+      examine_description: Fresh nibble marks and paired prints show a prey population still holding the field edge.
+      behavior: feeds, freezes, and bolts for cover
+      intelligence: animal instinct
+      disposition: skittish
+      social_organization: loose warren
+      activity_period: dawn and dusk
+      movement_behavior: keeps to hedges and nearby cover
+      combat_role: none
+      abilities: [bolt]
+      retreat_behavior: flees to the nearest hedge
+      pursuit_behavior: none
+      assistance_behavior: none
+      loot_outputs: [raw_hide]
+      crafting_outputs: [raw_hide]
+      rarity: common
+  population_profiles:
+    - id: greenhold_civilian_population
+      display_name: Greenhold residents and market traffic
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold]
+      archetype_id: greenhold_folk
+      region: veridia
+      zone: veridia_zone
+      habitat: town streets, market, and civic edge
+      candidate_rooms: [greenhold, veridia_living_civic_gate, veridia_living_cistern_court]
+      population_min: 8
+      population_max: 18
+      carrying_capacity: 24
+      spawn_rules: {schedule: market_day_and_daily_work}
+      reset_rules: {scope: world, recurrence: daily_schedule}
+      time_of_day: [dawn, morning, midday, evening]
+      direct_presence_probability: 0.15
+      ambient_evidence_probability: 0.8
+      hostile_presence_probability: 0.0
+      rarity: common
+    - id: greenhold_field_work_crews
+      display_name: Greenhold field and ditch crews
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_agricultural_edge]
+      archetype_id: living_fieldhand
+      region: veridia
+      zone: veridia_zone
+      habitat: farm lane, farmstead, and drainage edge
+      candidate_rooms: [veridia_living_road_threshold, veridia_living_farm_lane, veridia_living_farmstead, veridia_living_waste_yard]
+      population_min: 2
+      population_max: 7
+      carrying_capacity: 8
+      spawn_rules: {schedule: dawn_to_late_afternoon}
+      reset_rules: {scope: zone, recurrence: workday}
+      time_of_day: [dawn, morning, midday, afternoon]
+      direct_presence_probability: 0.2
+      ambient_evidence_probability: 0.7
+      hostile_presence_probability: 0.0
+      rarity: common
+    - id: greenhold_livestock
+      display_name: farm livestock
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_agricultural_edge]
+      creature_id: living_field_rabbit
+      region: veridia
+      zone: veridia_zone
+      habitat: managed pasture beside the farmstead
+      candidate_rooms: [veridia_living_farmstead]
+      allowed_room_types: [Agricultural Worksite]
+      forbidden_room_types: [Minor Hazardous Site]
+      population_min: 2
+      population_max: 5
+      carrying_capacity: 6
+      spawn_rules: {schedule: daylight}
+      reset_rules: {scope: zone, recurrence: daily}
+      direct_presence_probability: 0.1
+      ambient_evidence_probability: 0.55
+      hostile_presence_probability: 0.0
+      rarity: common
+    - id: greenhold_field_rabbits
+      display_name: hedgerow field-rabbit prey population
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      creature_id: living_field_rabbit
+      region: veridia
+      zone: veridia_zone
+      habitat: damp meadow margins and uncut hedgerows
+      candidate_rooms: [veridia_living_farm_lane, veridia_living_wild_loop]
+      forbidden_room_types: [Town Hub, Water Service Court]
+      population_min: 4
+      population_max: 12
+      carrying_capacity: 12
+      spawn_rules: {schedule: dawn_and_dusk}
+      depletion_rules: {enabled: true, kill_threshold: 3}
+      recovery_rules: {mechanism: breeding_and_cover, recovery_per_tick: 1}
+      direct_presence_probability: 0.2
+      ambient_evidence_probability: 0.85
+      hostile_presence_probability: 0.0
+      rarity: common
+    - id: greenhold_boar_hunt
+      display_name: displaced field-boar pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      creature_id: living_field_boar
+      region: veridia
+      zone: veridia_zone
+      habitat: damaged barley margins and the shallow service hollow
+      candidate_rooms: [veridia_living_wild_loop, veridia_living_hollow]
+      forbidden_room_types: [Town Hub, Water Service Court]
+      population_min: 1
+      population_max: 2
+      carrying_capacity: 2
+      spawn_rules: {schedule: dawn_and_dusk, hostile_when_crowded: true}
+      depletion_rules: {enabled: true, kill_threshold: 1}
+      recovery_rules: {mechanism: seasonal_recurrence, recovery_per_tick: 0}
+      direct_presence_probability: 0.35
+      ambient_evidence_probability: 0.9
+      hostile_presence_probability: 0.3
+      rarity: uncommon
+    - id: greenhold_hollow_vermin
+      display_name: shallow hollow vermin colony
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      creature_id: living_hollow_vermin
+      region: veridia
+      zone: veridia_zone
+      habitat: warm cracks around the shallow conduit
+      candidate_rooms: [veridia_living_hollow, veridia_living_waste_yard]
+      forbidden_room_types: [Town Hub, Market Plaza]
+      population_min: 1
+      population_max: 4
+      carrying_capacity: 4
+      spawn_rules: {schedule: night_and_wet_weather}
+      reset_rules: {scope: zone, recurrence: ordinary_reproduction}
+      depletion_rules: {enabled: true, kill_threshold: 2}
+      recovery_rules: {mechanism: colony_reproduction, recovery_per_tick: 1}
+      direct_presence_probability: 0.15
+      ambient_evidence_probability: 0.65
+      hostile_presence_probability: 0.0
+      rarity: common
+  spawn_pools:
+    - id: greenhold_rabbit_spawn_pool
+      display_name: Greenhold rabbit spawn pool
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      population_id: greenhold_field_rabbits
+      rooms: [veridia_living_farm_lane, veridia_living_wild_loop]
+      forbidden_rooms: [greenhold, veridia_living_hollow]
+      max_active: 12
+      reset_interval: 4
+      spawn_probability: 0.8
+      recurrence: breeding_after_quiet_period
+      source_design_ids: [veridia_greenhold_ecology]
+    - id: greenhold_boar_spawn_pool
+      display_name: Greenhold boar spawn pool
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      population_id: greenhold_boar_pressure
+      rooms: [veridia_living_wild_loop, veridia_living_hollow]
+      forbidden_rooms: [greenhold, veridia_living_cistern_court]
+      max_active: 2
+      reset_interval: 8
+      spawn_probability: 0.35
+      recurrence: seasonal_forage_and_crop_access
+      source_design_ids: [veridia_greenhold_ecology]
+  roaming_routes:
+    - id: greenhold_road_patrol_route
+      display_name: Greenhold road patrol
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_civic_edge]
+      population_id: greenhold_civilian_population
+      rooms: [greenhold, veridia_living_civic_gate, veridia_living_road_threshold, veridia_living_farm_lane]
+      forbidden_rooms: [veridia_living_hollow, veridia_living_cistern_court]
+      home_room: greenhold
+      origin_area: greenhold_living_settlement
+      movement_interval: 2
+      movement_probability: 0.65
+      max_distance: 3
+      destination_needs: [road_safety, ditch_inspection, market_transport]
+      closed_exit_behavior: return
+      hazard_behavior: avoid
+      return_behavior: return_home_at_dusk
+      population_cap: 3
+      provenance_note: ordinary civic patrol and road movement, not a new faction
+  migration_rules:
+    - id: greenhold_boar_seasonal_shift
+      display_name: boar forage shift
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      population_id: greenhold_boar_pressure
+      origin: veridia_living_wild_loop
+      destinations: [veridia_living_farm_lane, veridia_living_hollow]
+      trigger: damaged_barley_or_hedge_gap
+      return_trigger: repaired_hedges_and_recovered_crop
+      season: [spring, summer]
+      maximum_distance: 2
+  encounter_groups:
+    - id: greenhold_displaced_boar_pair
+      display_name: displaced boar pair
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      formation: pack
+      composition: {living_field_boar: [1, 2]}
+      minimum_size: 1
+      maximum_size: 2
+      formation_behavior: loose_forage_pair
+      cohesion: 0.65
+      shared_aggression: true
+      ally_assistance: false
+      pursuit_distance: 1
+      retreat_conditions: [one_member_wounded, route_reaches_town_edge]
+      leader_loss_behavior: scatter_to_hedge
+      casualty_behavior: retreat_at_half_strength
+      reinforcement_behavior: none
+      loot_ownership: group
+      spawn_rules: {rooms: [veridia_living_wild_loop, veridia_living_hollow], probability: 0.18}
+      recurrence: crop_pressure_and_seasonal_forage
+    - id: greenhold_road_work_crew
+      display_name: road and ditch work crew
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_agricultural_edge]
+      formation: work_crew
+      composition: {living_fieldhand: [2, 5]}
+      minimum_size: 2
+      maximum_size: 5
+      formation_behavior: task_focused
+      cohesion: 0.9
+      shared_aggression: false
+      ally_assistance: true
+      pursuit_distance: 0
+      retreat_conditions: [weather_turns, danger_reported]
+      leader_loss_behavior: pause_and_return
+      casualty_behavior: disperse_to_civic_edge
+      reinforcement_behavior: call_ditchwarden
+      loot_ownership: settlement
+      spawn_rules: {rooms: [veridia_living_road_threshold, veridia_living_waste_yard], probability: 0.55}
+      recurrence: daily_maintenance_schedule
+  crowd_specs:
+    - id: greenhold_market_crowd
+      display_name: Greenhold market crowd
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold]
+      rooms: [greenhold]
+      population_min: 6
+      population_max: 20
+      composition: {resident: [4, 12], trader: [1, 3], traveler: [0, 5], child: [0, 3]}
+      schedule: [quiet_setup, market_trade, market_trade, evening_clearance]
+      density_states: {quiet: [2, 6], active: [8, 20], dispersing: [1, 5]}
+      collective_description: The Greenhold market moves in small practical knots around baskets, carts, and the public well.
+      ambient_actions: [weighing grain, comparing dye bundles, calling children back from the carts]
+      mood: watchful_but_ordinary
+      danger_reaction: traders secure goods while residents move toward the civic edge
+      dispersal_behavior: clear the square without becoming persistent NPCs
+      representative_npcs: [greenhold_folk, living_ditchwarden]
+      accessibility_description: A market crowd is present as a collective presence; a few representative people are available to examine or speak with.
+  ambient_presence:
+    - id: greenhold_field_tracks
+      display_name: field-edge tracks
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      rooms: [veridia_living_wild_loop, veridia_living_farm_lane]
+      population_id: greenhold_boar_pressure
+      evidence_type: tracks
+      text: Broad cloven tracks cut through the wet margin, with barley stems bent toward the hedge.
+      activity_lines: [a heavy animal roots beyond the hedge, fresh mud darkens the track edges]
+      probability: 0.85
+    - id: greenhold_rabbit_sign
+      display_name: rabbit sign
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      rooms: [veridia_living_farm_lane, veridia_living_wild_loop]
+      population_id: greenhold_field_rabbits
+      evidence_type: spoor
+      text: Small paired prints and clipped grass show that prey still uses the hedgerow.
+      activity_lines: [the hedge flickers with a quick small movement, fresh nibble marks dot the meadowfoil]
+      probability: 0.75
+    - id: greenhold_work_sounds
+      display_name: work crew sounds
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_agricultural_edge]
+      rooms: [veridia_living_road_threshold, veridia_living_waste_yard]
+      population_id: greenhold_field_work_crews
+      evidence_type: sound
+      text: Mallets and ditch spades work somewhere beyond the next bend; the crew itself is out of sight.
+      activity_lines: [a cart creaks beyond the hedge, someone calls for a replacement handle]
+      probability: 0.7
+    - id: greenhold_quiet_hollow_sign
+      display_name: hollow vermin sign
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      room: veridia_living_cistern_court
+      population_id: greenhold_field_rabbits
+      evidence_type: movement
+      text: Something small moves through the service cracks, but the court is empty when you look.
+      activity_lines: [a dry scrape comes from behind the capped stone, grain husks shift under the ledger shelf]
+      probability: 0.45
+  items:
+    - id: living_drainage_ledger
+      display_name: the drainage ledger
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_civic_edge]
+      source_room: veridia_living_cistern_court
+      origin: parish maintenance record assembled over three generations
+      material: waxed linen pages, alder boards, and iron thread
+      maker_or_tradition: Greenhold ditchwarden tradition
+      use: track water, waste, and repair obligations
+      custody: Ditchwarden Mara
+      maintenance_state: damp but legible
+      regional_relevance: makes civic water dependency visible to players
+    - id: living_sluice_wheel
+      display_name: the pale sluice wheel
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      source_room: veridia_living_hollow
+      origin: old infrastructure of unknown makers
+      material: pale corrosion-resistant metal around a ceramic axle
+      maker_or_tradition: unknown, locally interpreted as a buried fountain part
+      use: input is controlled turning; output is altered water flow; failure is a seized valve
+      custody: disputed between the keeper and the repairer
+      maintenance_state: seized, inspectable, and reversible if freed
+      regional_relevance: connects ordinary water service to surviving ancient technology
+  material_culture:
+    - id: veridia_greenhold_material_culture
+      display_name: Veridia Greenhold material culture catalog
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia, greenhold, veridia_greenhold_economy, veridia_greenhold_ecology]
+      catalog_path: content/seeds/aethryn/material_culture.yaml
+      purpose: deterministic local materials, production chains, stock origins, ecology-aware loot, and role equipment
+  resource_nodes:
+    - id: living_meadowfoil_node
+      display_name: meadowfoil margin
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_economy]
+      resource: meadowfoil
+      habitat: field margins and damp hedgerow
+      recurrence: seasonal regrowth after gathering
+      source_room: veridia_living_farmstead
+      economic_use: dye trade through Trader Pell
+    - id: living_barley_node
+      display_name: damaged barley rows
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_economy]
+      resource: barley
+      habitat: Alder Farmstead furrows
+      recurrence: seasonal cultivation and replanting
+      source_room: veridia_living_farmstead
+      economic_use: milling and local food
+  economy_flows:
+    - id: living_meadowfoil_trade
+      display_name: meadowfoil trade
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_economy]
+      source: living_meadowfoil_node
+      sink: greenhold_trader
+      resource: meadowfoil
+      purpose: regional dye trade and shop liquidity
+      transport: hand bundles along farm lane and cartway
+      surplus_or_shortage: surplus is seasonal; shortage follows field damage
+      inventory_provenance: gathered locally and bought by Trader Pell
+    - id: living_barley_food
+      display_name: barley to mill
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_economy]
+      source: living_barley_node
+      sink: greenhold_miller
+      resource: barley
+      purpose: food production and market bread
+      transport: handcart from farmstead to Greenhold
+      surplus_or_shortage: current shortage caused by the field-boar pressure
+      inventory_provenance: cultivated at Alder Farmstead
+    - id: living_water_service
+      display_name: water to Greenhold
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_economy, greenhold_minor_site]
+      source: living_sluice_wheel
+      sink: greenhold_living_settlement
+      resource: clean_water
+      purpose: settlement survival and crop support
+      transport: buried conduit to cistern and public well
+      surplus_or_shortage: shortage while the sluice is seized
+      inventory_provenance: old works, locally maintained when possible
+  ecology_flows:
+    - id: living_boar_field_pressure
+      display_name: boar and barley pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [veridia_greenhold_ecology]
+      habitat: veridia_living_hinterland
+      creature: living_field_boar
+      energy_source: damaged barley and hedgerow forage
+      pressure: crop loss and unsafe field labor
+      recurrence: seasonal forage and recurring hedge access
+      civilization_relation: threatens food supply and changes the farmer's route
+    - id: living_vermin_hollow_ecology_flow
+      display_name: hollow vermin pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      habitat: veridia_living_hollow
+      creature: living_hollow_vermin
+      energy_source: grain scraps and insects
+      pressure: neglected infrastructure becomes a recurring shelter
+      recurrence: ordinary reproduction while the hollow remains open
+      civilization_relation: maintenance work is deferred because the site is unsafe
+  quest_pressures:
+    - id: living_water_shortage
+      display_name: Greenhold water shortage
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, greenhold_minor_site]
+      pressure_type: shortage
+      pressure: the town cistern is below service level
+      affected_records: [greenhold, veridia_living_cistern_court, living_sluice_wheel]
+      competing_interests: [public_water, safety_caution, old_works_access]
+      resolution_scope: local and reversible
+      cause: repeated rain damage and a seized buried sluice
+      current_severity: active_shortage
+      duration: current growing season
+      recurrence: returns after seasonal maintenance failure
+      stakeholders: [greenhold_living_settlement, living_ditchwarden, living_repairer]
+      beneficiaries: [households, farms, millers]
+      opposing_interests: [public_water, safety_caution, old_works_access]
+      valid_grammars: [discovery, repair, investigation, public_event]
+      unsuitable_grammars: [unbounded_campaign, unrelated_hunt]
+      escalation_behavior: queueing and crop stress increase if the gauge remains low
+      resolution_conditions: [cistern_status becomes flowing]
+      partial_resolution_conditions: [public evidence recorded, repair access made safer]
+      state_gate:
+        key: greenhold.cistern_status
+        active_values: [low]
+    - id: living_crop_damage
+      display_name: damaged barley pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, veridia_greenhold_ecology]
+      pressure_type: ecological_imbalance
+      pressure: displaced boar damages the crop and makes field labor unsafe
+      affected_records: [living_field_boar, living_barley_node, greenhold_miller]
+      competing_interests: [food_supply, creature_persistence, safe_harvest]
+      resolution_scope: local and revisitable
+      cause: wet-season forage loss and an unmaintained hedge gap
+      current_severity: recurring_crop_damage
+      duration: early growing season
+      recurrence: seasonal forage pressure returns while the gap remains open
+      stakeholders: [greenhold_living_settlement, living_fieldhand, living_field_boar]
+      beneficiaries: [farmers, market households]
+      opposing_interests: [food_supply, creature_persistence, safe_harvest]
+      valid_grammars: [hunt, defense, gathering_commission, repeatable_contract]
+      unsuitable_grammars: [diplomacy, dungeon_objective]
+      escalation_behavior: unsafe field labor and reduced barley deliveries
+      resolution_conditions: [boar pressure reduced, field work route reopened]
+      partial_resolution_conditions: [boar route displaced, hedge repair scheduled]
+    - id: living_civic_dispute
+      display_name: old works access dispute
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, greenhold_civic_dispute]
+      pressure_type: disputed_authority
+      pressure: Wenna and Sen disagree about reopening a machine no one fully understands
+      affected_records: [living_ditchwarden, living_repairer, living_sluice_wheel]
+      competing_interests: [continuity, caution, public_need]
+      resolution_scope: local, visible, and reversible
+      cause: two local authorities interpret the same seized mechanism differently
+      current_severity: unresolved_dispute
+      duration: until a witnessed test or new evidence
+      recurrence: disagreement returns when the cistern drops again
+      stakeholders: [living_ditchwarden, living_repairer, greenhold_living_settlement]
+      beneficiaries: [public_water_users, maintenance_workers]
+      opposing_interests: [continuity, caution, public_need]
+      valid_grammars: [investigation, diplomacy, repair, public_event]
+      unsuitable_grammars: [unrelated_hunt, unbounded_campaign]
+      escalation_behavior: delayed maintenance and conflicting public instructions
+      resolution_conditions: [local recommendation recorded, next test agreed]
+      partial_resolution_conditions: [testimony compared, access conditions documented]
+    - id: living_vermin_hollow_pressure
+      display_name: Shallow Hollow Maintenance Pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      pressure_type: maintenance_failure
+      pressure: vermin shelter in the conduit delays safe repair work
+      affected_records: [living_hollow_vermin, veridia_living_hollow, living_repairer]
+      competing_interests: [safe_work, habitat_persistence, repair_delay]
+      resolution_scope: local and temporary
+      cause: wet-weather shelter and neglected food traces around the old conduit
+      current_severity: active_worksite_risk
+      duration: until the hollow is maintained
+      recurrence: ordinary recurrence while shelter and scraps remain
+      stakeholders: [living_repairer, living_ditchwarden, greenhold_field_work_crews]
+      beneficiaries: [maintenance_workers, road travelers]
+      opposing_interests: [safe_work, habitat_persistence, repair_delay]
+      valid_grammars: [defense, hunt, repair, repeatable_contract]
+      unsuitable_grammars: [campaign, unrelated_delivery]
+      escalation_behavior: repair crews withdraw and the conduit remains unsafe
+      resolution_conditions: [repair window held, shelter pressure reduced]
+      partial_resolution_conditions: [work completed for one shift, food leakage contained]
+  state_changes:
+    - id: living_cistern_status
+      display_name: Greenhold cistern status
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold, greenhold_minor_site]
+      key: greenhold.cistern_status
+      room_id: veridia_living_cistern_court
+      initial_value: low
+      reversible_values: [low, flowing]
+      visible_projection: civic cistern gauge and public water description
+      persistence_scope: character_and_world_package
+      actions:
+        - command: maintain
+          target: cistern
+          aliases: [fountain, valve]
+          required_item: greenhold_valve_key
+          from: low
+          to: flowing
+          success_message: You seat the recovered valve-key and the old cistern answers with a clear rising flow.
+          already_message: The Greenhold cistern is already flowing and the public channel runs clear.
+  dungeons:
+    - id: living_shallow_service_hollow
+      display_name: The Shallow Service Hollow
+      canon_status: AUTHORED_LOCAL
+      parent_region: veridia
+      parent_zone: veridia_zone
+      source_design_ids: [greenhold_minor_site]
+      built_by: unknown ancient infrastructure workers
+      original_purpose: regulate water flow to the settlement edge
+      historical_layer: successor_era
+      failure: sluice wheel seized and drainage grate blocked
+      current_occupants: [living_hollow_vermin, living_field_boar]
+      why_not_reclaimed: shallow access is unsafe and its machinery is poorly understood
+      entrance_logic: veridia_living_wild_loop east to veridia_living_hollow
+      traversal_grammar: [threshold, orientation, escalation, revelation, choice, aftermath]
+      gameplay_purpose: connect a small hazard to water, waste, ecology, and civic pressure
+      revelation: ordinary settlement systems depend on infrastructure whose makers are unknown
+      aftermath: the hollow can become safer without resolving the larger old-world mystery
+      state_change: reversible
+  quests:
+    - id: greenhold_water_discovery
+      display_name: The Cistern Below the Ledger
+      canon_status: AUTHORED_LOCAL
+      quest_type: discovery
+      scope: personal
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_water_shortage
+      start_state: offered
+      terminal_states: [resolved]
+      room_ids: [greenhold, veridia_living_cistern_court, veridia_living_hollow]
+      npc_ids: [living_ditchwarden]
+      transitions:
+        - {from: offered, event: accept, to: traveling}
+        - {from: traveling, event: enter, target_id: veridia_living_cistern_court, to: examining}
+        - {from: examining, event: examine, target_id: living_drainage_ledger, to: resolved}
+      objectives:
+        - {id: reach_court, label: Reach the cistern court, type: visit, target_ids: [veridia_living_cistern_court]}
+        - {id: read_ledger, label: Compare the ledger with the gauge, type: examine, target_ids: [living_drainage_ledger]}
+      rewards: [{type: xp, amount: 20}]
+      consequences: [{id: water_evidence, effect_type: reveal_record, target: living_water_service, scope: personal}]
+      prose: {title: The Cistern Below the Ledger, summary: Greenhold's low water is recorded but not explained., discovery: Mara asks you to compare the old ledger with the silent gauge., journal: Follow the maintenance record to the cistern court and examine what the town has been preserving., current_objective: Reach the cistern court and examine the drainage ledger., success: The ledger narrows the problem to the buried sluice rather than proving who made it., aftermath: Greenhold has evidence enough to argue about a repair., unresolved_remainder: The old works still do not explain themselves.}
+      source_design_ids: [greenhold_civic_edge, greenhold_minor_site]
+    - id: greenhold_water_repair
+      display_name: Seat the Pale Valve
+      canon_status: AUTHORED_LOCAL
+      quest_type: repair
+      scope: settlement
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_water_shortage
+      start_state: offered
+      terminal_states: [resolved]
+      room_ids: [veridia_living_hollow, veridia_living_cistern_court]
+      npc_ids: [living_repairer, living_ditchwarden]
+      item_ids: [living_sluice_wheel]
+      transitions:
+        - {from: offered, event: accept, to: diagnose}
+        - {from: diagnose, event: enter, target_id: veridia_living_hollow, to: ready}
+        - {from: ready, event: repair, target_id: living_sluice_wheel, to: resolved, effect: state_changed:greenhold.cistern_status:flowing}
+      objectives:
+        - {id: inspect_wheel, label: Inspect the seized sluice wheel, type: examine, target_ids: [living_sluice_wheel]}
+        - {id: repair_wheel, label: Restore the water control, type: repair, target_ids: [living_sluice_wheel]}
+      rewards: [{type: xp, amount: 45}]
+      consequences: [{id: flowing_cistern, effect_type: change_world_state, target: greenhold.cistern_status, scope: settlement, persistence: world}]
+      prose: {title: Seat the Pale Valve, summary: A seized control leaves Greenhold's public water below service level., discovery: Sen will discuss a repair if someone first sees the mechanism in place., journal: Reach the shallow hollow, diagnose the seized wheel, and restore its movement without pretending to know its makers., current_objective: Inspect and repair the pale sluice wheel., success: The wheel turns; water rises through the civic channel and the repair remains a local, reversible act., aftermath: Ditch checks become easier and the town can argue from a working gauge., unresolved_remainder: The machinery's origin remains uncertain.}
+      source_design_ids: [greenhold_minor_site, greenhold_economy]
+    - id: greenhold_boar_pressure
+      display_name: The Broken Hedge
+      canon_status: AUTHORED_LOCAL
+      quest_type: hunt
+      scope: zone
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_crop_damage
+      start_state: warning
+      terminal_states: [contained]
+      room_ids: [veridia_living_farm_lane, veridia_living_hollow]
+      creature_ids: [living_field_boar]
+      transitions:
+        - {from: warning, event: accept, to: tracking}
+        - {from: tracking, event: enter, target_id: veridia_living_hollow, to: confronting}
+        - {from: confronting, event: defeat, target_id: living_field_boar, to: contained}
+      objectives:
+        - {id: track_boar, label: Follow the damaged hedge to the hollow, type: discover, target_ids: [veridia_living_hollow]}
+        - {id: contain_boar, label: Drive off the displaced field-boar, type: drive_off, target_ids: [living_field_boar], party_credit: shared}
+      rewards: [{type: xp, amount: 35}, {type: reputation, amount: 15, track: greenhold_civic}]
+      consequences: [{id: safer_fields, effect_type: reduce_population_pressure, target: greenhold_boar_pressure, scope: zone, duration: seasonal}]
+      prose: {title: The Broken Hedge, summary: A displaced boar is turning a barley shortage into an unsafe harvest., discovery: Oren points to torn roots and asks for a response that does not erase the field's wider balance., journal: Track the boar into the hollow and drive it from the crop edge., current_objective: Find the boar's route and confront it in compatible habitat., success: The field edge is quiet enough for workers to return, though the hedgerow still needs repair., aftermath: Oren can bring a smaller load to market without sending children to scout the lane., unresolved_remainder: The next wet season may reopen the route.}
+      source_design_ids: [veridia_greenhold_ecology]
+    - id: greenhold_ledger_delivery
+      display_name: A Dry Copy for the Mill
+      canon_status: AUTHORED_LOCAL
+      quest_type: delivery
+      scope: personal
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_water_shortage
+      start_state: offered
+      terminal_states: [delivered]
+      room_ids: [veridia_living_cistern_court, greenhold]
+      npc_ids: [living_ditchwarden]
+      item_ids: [living_drainage_ledger]
+      transitions:
+        - {from: offered, event: accept, to: carrying}
+        - {from: carrying, event: enter, target_id: greenhold, to: delivered}
+      objectives: [{id: carry_copy, label: Carry the dry ledger copy to Greenhold, type: deliver, target_ids: [living_drainage_ledger, greenhold]}]
+      rewards: [{type: xp, amount: 18}, {type: currency, amount: 6}]
+      consequences: [{id: ledger_access, effect_type: unlock_service, target: greenhold_notice_board, scope: personal}]
+      prose: {title: A Dry Copy for the Mill, summary: The repair record must reach the town before the market tally., discovery: Mara entrusts you with a copy because the original cannot leave the cistern court., journal: Keep the dry copy in your custody and deliver it at Greenhold., current_objective: Return the ledger copy to the town., success: The millers receive the figures before they commit the remaining barley., aftermath: A practical record, not a heroic claim, changes the morning's decisions., unresolved_remainder: The shortage still has to be worked through.}
+      source_design_ids: [greenhold_civic_edge, veridia_greenhold_economy]
+    - id: greenhold_meadowfoil_commission
+      display_name: Dye for the Market Cloth
+      canon_status: AUTHORED_LOCAL
+      quest_type: gathering_commission
+      scope: settlement
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_crop_damage
+      start_state: offered
+      terminal_states: [supplied]
+      room_ids: [veridia_living_farmstead, greenhold]
+      npc_ids: [living_fieldhand]
+      transitions:
+        - {from: offered, event: accept, to: gathering}
+        - {from: gathering, event: gather, target_id: meadowfoil, to: returning}
+        - {from: returning, event: enter, target_id: greenhold, to: supplied}
+      objectives: [{id: gather_meadowfoil, label: Gather meadowfoil from the field margin, type: gather, target_ids: [meadowfoil], quantity: 2}, {id: deliver_meadowfoil, label: Bring the bundles to market, type: deliver, target_ids: [greenhold]}]
+      rewards: [{type: xp, amount: 22}, {type: currency, amount: 8}]
+      consequences: [{id: market_dye_stock, effect_type: modify_merchant_stock, target: greenhold_trader, scope: settlement, duration: market_day}]
+      prose: {title: Dye for the Market Cloth, summary: Field damage has made a small dye order matter to Greenhold's trade., discovery: Pell needs two clean meadowfoil bundles before the next cart leaves., journal: Gather usable meadowfoil from the damp margin and deliver it to the market., current_objective: Gather the regional plant and bring it to Greenhold., success: The bundles make the cart's dye order viable without stripping the whole margin., aftermath: A modest trade continues because someone respected the resource's recovery., unresolved_remainder: The field remains vulnerable to another season of pressure.}
+      source_design_ids: [veridia_greenhold_economy]
+    - id: greenhold_conflicting_testimony
+      display_name: Three Accounts of the Wheel
+      canon_status: AUTHORED_LOCAL
+      quest_type: investigation
+      scope: settlement
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_civic_dispute
+      start_state: offered
+      terminal_states: [reported]
+      room_ids: [veridia_living_civic_gate, veridia_living_hollow]
+      npc_ids: [living_ditchwarden, living_repairer]
+      transitions:
+        - {from: offered, event: accept, to: gathering_evidence}
+        - {from: gathering_evidence, event: talk, target_id: living_repairer, to: comparing}
+        - {from: comparing, event: choose, to: reported}
+      objectives: [{id: hear_sen, label: Hear Sen's caution, type: speak, target_ids: [living_repairer]}, {id: compare_accounts, label: Compare the two repair accounts, type: compare_evidence, target_ids: [living_ditchwarden, living_repairer]}, {id: choose_report, label: Choose a local recommendation, type: choose}]
+      choices:
+        - {id: cautious_report, text: Recommend a measured test with a witness, destination_state: reported, reversible: true, consequence_scope: settlement}
+        - {id: public_repair, text: Recommend opening the works for public repair, destination_state: reported, reversible: true, consequence_scope: settlement}
+      rewards: [{type: xp, amount: 30}, {type: reputation, amount: 10, track: greenhold_civic}]
+      consequences: [{id: dispute_recorded, effect_type: change_dialogue_state, target: living_civic_dispute, scope: settlement}]
+      prose: {title: Three Accounts of the Wheel, summary: The same seized machine has produced two incompatible local explanations., discovery: Mara wants a report that distinguishes evidence from caution., journal: Hear both accounts, compare them at the hollow, and make a local recommendation without resolving an old-world mystery., current_objective: Compare testimony and choose how Greenhold should proceed., success: Your report makes the disagreement legible without pretending the unknown history is settled., aftermath: The keeper and repairer now argue over a testable next step., unresolved_remainder: No testimony can establish who made the old works.}
+      source_design_ids: [greenhold_civic_dispute, greenhold_minor_site]
+    - id: greenhold_field_repairs
+      display_name: Handles Before Harvest
+      canon_status: AUTHORED_LOCAL
+      quest_type: crafting_commission
+      scope: party
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_crop_damage
+      start_state: offered
+      terminal_states: [delivered]
+      room_ids: [veridia_living_farmstead, greenhold]
+      npc_ids: [living_fieldhand]
+      transitions:
+        - {from: offered, event: accept, to: making}
+        - {from: making, event: craft, target_id: alder_field_handle, to: delivering}
+        - {from: delivering, event: enter, target_id: veridia_living_farmstead, to: delivered}
+      objectives: [{id: make_handle, label: Craft a field handle at the woodworking bench, type: craft, target_ids: [alder_field_handle], party_credit: shared}, {id: deliver_handle, label: Deliver the handle to the field crew, type: deliver, target_ids: [veridia_living_farmstead]}]
+      rewards: [{type: xp, amount: 28}, {type: currency, amount: 10}]
+      consequences: [{id: repaired_tools, effect_type: change_population_schedule, target: greenhold_field_work_crews, scope: settlement, duration: harvest_week}]
+      prose: {title: Handles Before Harvest, summary: A work crew cannot clear the damaged rows without replacement handles., discovery: Oren offers a commission sized for a local bench and the remaining alder stock., journal: Craft a valid field handle and deliver it to the crew at the farmstead., current_objective: Craft and deliver one field handle., success: The crew can return to the rows with a tool that belongs to the local economy., aftermath: Work sounds replace some of the worry along the road., unresolved_remainder: The harvest still depends on weather and the boar's return.}
+      source_design_ids: [veridia_greenhold_economy, greenhold_agricultural_edge]
+    - id: greenhold_hollow_patrol
+      display_name: The Quiet Hollow Watch
+      canon_status: AUTHORED_LOCAL
+      quest_type: defense
+      scope: party
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_vermin_hollow_pressure
+      start_state: warning
+      terminal_states: [held]
+      room_ids: [veridia_living_hollow, veridia_living_waste_yard]
+      creature_ids: [living_hollow_vermin]
+      transitions:
+        - {from: warning, event: accept, to: preparation}
+        - {from: preparation, event: enter, target_id: veridia_living_hollow, to: active}
+        - {from: active, event: protect, target_id: veridia_living_hollow, to: held}
+      objectives: [{id: hold_hollow, label: Protect the repair team while it works, type: protect, target_ids: [veridia_living_hollow], party_credit: shared}]
+      rewards: [{type: xp, amount: 32}, {type: reputation, amount: 12, track: greenhold_civic}]
+      consequences: [{id: hollow_watch, effect_type: reduce_danger, target: veridia_living_hollow, scope: zone, duration: one_day}]
+      prose: {title: The Quiet Hollow Watch, summary: Vermin have made maintenance work unsafe around the conduit., discovery: Sen will attempt a repair if a small watch keeps the cracks from becoming a swarm., journal: Join the work crew at the hollow and protect the repair while the site is active., current_objective: Hold the hollow during the repair window., success: The crew finishes its narrow task and the vermin retreat into deeper cracks., aftermath: The road can carry workers again for a while., unresolved_remainder: The population will recur while food and shelter remain.}
+      source_design_ids: [greenhold_minor_site]
+    - id: greenhold_repeating_field_contract
+      display_name: Seasonal Field Watch
+      canon_status: GENERATED_LOCAL
+      quest_type: repeatable_contract
+      scope: zone
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_crop_damage
+      repeatability: contract
+      start_state: offered
+      terminal_states: [resolved]
+      room_ids: [veridia_living_farm_lane, veridia_living_wild_loop]
+      creature_ids: [living_field_boar]
+      transitions:
+        - {from: offered, event: accept, to: patrolling}
+        - {from: patrolling, event: defeat, target_id: living_field_boar, to: resolved}
+      objectives: [{id: patrol_fields, label: Respond to this season's field pressure, type: defeat, target_ids: [living_field_boar], party_credit: shared}]
+      rewards: [{type: xp, amount: 16}]
+      consequences: [{id: contract_relief, effect_type: suppress_pressure, target: living_crop_damage, scope: zone, duration: one_day}]
+      prose: {title: Seasonal Field Watch, summary: Recurring crop pressure calls for bounded local work., discovery: The notice board posts a new watch only while the field pressure remains active., journal: Patrol the compatible field edge and reduce the current pressure., current_objective: Respond to the current field pressure., success: The pressure is reduced for this cycle and the next watch will wait through its cooldown., aftermath: The board goes quiet until the fields need another watch., unresolved_remainder: Seasonal recurrence is expected.}
+      source_design_ids: [veridia_greenhold_ecology]
+      generation_seed: 41017
+      generator_version: aethryn_quest_v1
+    - id: greenhold_public_water_day
+      display_name: Water Day at the Civic Edge
+      canon_status: AUTHORED_LOCAL
+      quest_type: public_event
+      scope: public_event
+      region: veridia
+      zone: veridia_zone
+      pressure_id: living_water_shortage
+      repeatability: public_event
+      start_state: preparation
+      terminal_states: [success, failure]
+      room_ids: [veridia_living_civic_gate, veridia_living_cistern_court]
+      npc_ids: [living_ditchwarden, living_repairer]
+      transitions:
+        - {from: preparation, event: public_contribution, target_id: greenhold_water_day_event, to: active}
+        - {from: active, event: public_contribution, target_id: greenhold_water_day_event, to: success}
+      objectives: [{id: public_preparation, label: Contribute labor, evidence, or materials to the water day, type: contribute, target_ids: [greenhold_water_day], party_credit: contribution}]
+      rewards: [{type: reputation, amount: 8, track: greenhold_civic, contribution_required: 1}]
+      consequences: [{id: public_water_memory, effect_type: begin_public_schedule, target: greenhold_civic_edge, scope: regional, duration: one_market_day}]
+      prose: {title: Water Day at the Civic Edge, summary: Greenhold is preparing a shared response to a low cistern., discovery: A public notice asks for labor and evidence rather than a private champion., journal: Contribute meaningfully during the preparation and active phases of Water Day., current_objective: Join the shared preparation and contribute to the civic response., success: The work is recorded as a public effort, not duplicated as separate private rescues., aftermath: Greenhold's water queue moves with fewer arguments for the day., unresolved_remainder: The old works will need maintenance again.}
+      source_design_ids: [greenhold, greenhold_civic_dispute]
+  quest_arcs:
+      - id: greenhold_water_and_work_arc
+        display_name: Water, Work, and the Field Edge
+        canon_status: AUTHORED_LOCAL
+        source_design_ids: [greenhold, greenhold_minor_site]
+        quest_ids: [greenhold_water_discovery, greenhold_water_repair, greenhold_conflicting_testimony]
+        prerequisites: {greenhold_water_repair: [greenhold_water_discovery], greenhold_conflicting_testimony: [greenhold_water_repair]}
+        branch_points: [greenhold_conflicting_testimony]
+        convergence_points: [greenhold_water_repair]
+        finale: greenhold_conflicting_testimony
+        post_arc_state: greenhold_local_records_updated
+        provenance: {source_design_ids: [greenhold, greenhold_minor_site], canon_status: AUTHORED_LOCAL}
+  contract_templates:
+      - id: greenhold_seasonal_field_watch
+        display_name: Seasonal Field Watch Template
+        canon_status: GENERATED_LOCAL
+        source_design_ids: [veridia_greenhold_ecology]
+        regions: [veridia]
+        zones: [veridia_zone]
+        pressure_types: [ecological_imbalance]
+        objective_pool: [defeat, drive_off, inspect]
+        target_pool: [living_field_boar]
+        threat_range: [1, 8]
+        reward_budget: 25
+        cooldown: 12
+        anti_repetition: {target: 2, room: 2, prose: 3}
+        narrative_variants: [The field board posts a seasonal watch., A damaged hedge renews the local contract.] 
+        consequence_duration: one_day
+        provenance: {generator_version: aethryn_quest_v1, generation_seed: 41017}
+  public_events:
+      - id: greenhold_water_day_event
+        display_name: Greenhold Water Day Event
+        canon_status: AUTHORED_LOCAL
+        source_design_ids: [greenhold, greenhold_civic_dispute]
+        trigger_conditions: {state: greenhold.cistern_status, values: [low]}
+        announcement: Greenhold calls for a shared water response at the civic edge.
+        preparation_state: preparation
+        active_state: active
+        escalation: [queue_forms, repair_team_arrives]
+        success_threshold: 3
+        failure_threshold: 0
+        participant_reward_ids: [greenhold_civic_reputation]
+        cooldown: 24
+        aftermath_effect_ids: [public_water_memory]
+        persistence_scope: regional
+        contribution_policy: meaningful
+  quest_world_effects:
+      - {id: flowing_cistern, display_name: Flowing Greenhold Cistern, effect_type: change_world_state, target: greenhold.cistern_status, scope: settlement, duration: seasonal, persistence: world, reversible: true, source_design_ids: [greenhold_minor_site]}
+      - {id: safer_fields, display_name: Safer Field Edge, effect_type: reduce_population_pressure, target: greenhold_boar_pressure, scope: zone, duration: seasonal, persistence: world, reversible: true, source_design_ids: [veridia_greenhold_ecology]}
+      - {id: repaired_tools, display_name: Repaired Field Tools, effect_type: change_population_schedule, target: greenhold_field_work_crews, scope: settlement, duration: harvest_week, persistence: world, reversible: true, source_design_ids: [greenhold_agricultural_edge]}
+      - {id: public_water_memory, display_name: Water Day Civic Memory, effect_type: begin_public_schedule, target: greenhold_civic_edge, scope: regional, duration: one_market_day, persistence: world, reversible: true, source_design_ids: [greenhold]}
+  quest_generation_profiles:
+      - id: veridia_greenhold_quest_profile
+        display_name: Greenhold Local Pressure Profile
+        canon_status: AUTHORED_LOCAL
+        source_design_ids: [greenhold, veridia_greenhold_ecology]
+        regions: [veridia]
+        zones: [veridia_zone]
+        allowed_grammars: [discovery, repair, hunt, delivery, gathering_commission, crafting_commission, investigation, defense, repeatable_contract, public_event]
+        prohibited_grammars: [campaign]
+        complexity: local
+        quest_count_ceiling: 10
+        threat_range: [1, 12]
+        reward_budget: 300
+        repeatability_limits: {repeatable_contract: 1, public_event: 1}
+        consequence_profiles: [local_and_reversible]
+        prose_profile: greenhold_civic_practical

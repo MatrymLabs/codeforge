@@ -283,9 +283,7 @@ async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
                 if not verify_account(who, secret):
                     response = "That account and password do not align."
                 else:
-                    response = await _account_character_selection(
-                        ws, outbox, session, who, secret
-                    )
+                    response = await _account_character_selection(ws, outbox, session, who, secret)
                     if response is None:
                         return False
             else:

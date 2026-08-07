@@ -1,0 +1,47 @@
+id: cull_field_frostspire_peaks_hound_6
+name: 'A small Contract: the hound-kind of The Frostspire Peaks Wilds'
+start: s0
+reward_xp: 180
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_frostspire_peaks|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_frostspire_peaks|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_frostspire_peaks|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_frostspire_peaks|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_frostspire_peaks|hound
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_frostspire_peaks|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 0/6 down
+    (180 XP).'
+  s1: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 1/6 down
+    (180 XP).'
+  s2: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 2/6 down
+    (180 XP).'
+  s3: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 3/6 down
+    (180 XP).'
+  s4: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 4/6 down
+    (180 XP).'
+  s5: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 5/6 down
+    (180 XP).'
+  done: The hound-kind of The Frostspire Peaks Wilds are put down. The high passes
+    will hold a little longer.

@@ -1,0 +1,16 @@
+id: bounty_zhaar_desert_lord_4
+name: 'Bounty: Grathok the Grey Herald'
+start: posted
+reward_xp: 1008
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zhaar_desert_lord_4
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathok the Grey Herald (level 84). Fell it for 1008
+    XP.
+  collected: 'Bounty collected: Grathok the Grey Herald is felled. Well hunted.'

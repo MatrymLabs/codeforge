@@ -1,0 +1,71 @@
+id: cull_underground_skyward_spires_underworks_bear_12
+name: 'A standing Purge: the bear-kind of The Spire Nexus Foundations'
+start: s0
+reward_xp: 1032
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_skyward_spires_underworks|bear
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_underworks|bear
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the bear-kind of The Spire Nexus Foundations: 0/12 down (1032 XP).'
+  s1: 'Purge the bear-kind of The Spire Nexus Foundations: 1/12 down (1032 XP).'
+  s2: 'Purge the bear-kind of The Spire Nexus Foundations: 2/12 down (1032 XP).'
+  s3: 'Purge the bear-kind of The Spire Nexus Foundations: 3/12 down (1032 XP).'
+  s4: 'Purge the bear-kind of The Spire Nexus Foundations: 4/12 down (1032 XP).'
+  s5: 'Purge the bear-kind of The Spire Nexus Foundations: 5/12 down (1032 XP).'
+  s6: 'Purge the bear-kind of The Spire Nexus Foundations: 6/12 down (1032 XP).'
+  s7: 'Purge the bear-kind of The Spire Nexus Foundations: 7/12 down (1032 XP).'
+  s8: 'Purge the bear-kind of The Spire Nexus Foundations: 8/12 down (1032 XP).'
+  s9: 'Purge the bear-kind of The Spire Nexus Foundations: 9/12 down (1032 XP).'
+  s10: 'Purge the bear-kind of The Spire Nexus Foundations: 10/12 down (1032 XP).'
+  s11: 'Purge the bear-kind of The Spire Nexus Foundations: 11/12 down (1032 XP).'
+  done: The bear-kind of The Spire Nexus Foundations are purged. The region breathes
+    easier.

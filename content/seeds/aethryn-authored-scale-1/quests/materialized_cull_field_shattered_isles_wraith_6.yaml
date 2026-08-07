@@ -1,0 +1,47 @@
+id: cull_field_shattered_isles_wraith_6
+name: 'A small Contract: the wraith-kind of The Shattered Isles Wilds'
+start: s0
+reward_xp: 456
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_shattered_isles|wraith
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_shattered_isles|wraith
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_shattered_isles|wraith
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_shattered_isles|wraith
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_shattered_isles|wraith
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_shattered_isles|wraith
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 0/6 down
+    (456 XP).'
+  s1: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 1/6 down
+    (456 XP).'
+  s2: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 2/6 down
+    (456 XP).'
+  s3: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 3/6 down
+    (456 XP).'
+  s4: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 4/6 down
+    (456 XP).'
+  s5: 'Fulfil the contract on the wraith-kind of The Shattered Isles Wilds: 5/6 down
+    (456 XP).'
+  done: The wraith-kind of The Shattered Isles Wilds are put down. The tide-roads
+    are the safer for it.

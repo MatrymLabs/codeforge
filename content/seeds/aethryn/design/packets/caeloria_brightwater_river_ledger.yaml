@@ -1,0 +1,476 @@
+packet_id: caeloria_brightwater_river_ledger
+batch_sequence: 16
+target_type: settlement_system_vertical_slice
+parent_region: caeloria
+parent_zone: caeloria_zone
+canon_status: AUTHORED_LOCAL
+world_purpose: Turn existing Brightwater authored rooms into a validated river, trade, licensing, and ecology slice.
+gameplay_purpose: Give players a compact route where gathering, supply, custody, and river danger reinforce one another.
+narrative_purpose: Show Caeloria's rule by record meeting the river's older working infrastructure without resolving who should own the past.
+inherited_constraints:
+  - Preserve the locked Caeloria threat band of 30-60.
+  - Preserve the existing Brightwater authored rooms and their local quest path.
+  - Treat the map poster as orientation only.
+  - Use world_graph.yaml for regional topology and do not infer a new regional route.
+  - Keep ownership and ancient-technology questions disputed where the authored material leaves them open.
+  - Generated content cannot promote itself into canon.
+threat_range: [30, 45]
+geography_profile:
+  terrain: river market, millrace, flooded lower weirs, and a cold old sluice
+  network: five-room settlement loop anchored to Brightwater
+  poster_route_policy: decorative routes are not exits
+climate_profile:
+  biome: river-city
+  season: ordinary high-water season
+  pressure: water movement and mill work expose neglected lower channels
+architecture_profile:
+  civic: riverstone market and licensing hall with ledgers and seals
+  industrial: timber millworks, weirs, races, and covered gathering banks
+  hazard_site: flooded old sluice and lower weirs
+cultural_profile:
+  local_identity: practical river labor, licensing, and warden responsibility
+  dispute: state custody of recovered objects versus working access to the river
+economy_profile:
+  dependency: meadowfoil, mill labor, river provisions, and licensed recovery
+  shortage: safe access to meadowfoil and trustworthy relic provenance
+  transport: market carts, riverbank bundles, and warden escort
+ecology_profile:
+  habitat: working millrace and neglected lower weirs
+  pressure: shelter and food concentrate eels and a river-wyrm around the old channels
+  recurrence: ordinary river life and persistent lower-race shelter
+required_connections: [brightwater, caeloria]
+required_content_counts:
+  settlements: 1
+  districts: 1
+  neighborhoods: 1
+  rooms: 5
+  npcs: 3
+  creatures: 2
+  items: 2
+  resource_nodes: 1
+  economy_flows: 3
+  ecology_flows: 2
+  quest_pressures: 3
+  state_changes: 1
+  dungeons: 1
+state_scope: character_and_world_package
+forbidden_content:
+  - accidental divine strike
+  - natural-born god
+  - objective answer to whether Netharion survived
+  - superseded Forge, Ember, or Unforging metaphysics as current canon
+generation_seed: 63041
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+source_design_ids: [caeloria, brightwater, caeloria_brightwater_economy, caeloria_brightwater_ecology]
+source_paths: [content/seeds/aethryn/design, content/seeds/aethryn/authored/brightwater.yaml]
+expected_output_paths:
+  - content/seeds/aethryn/room_batches/caeloria_brightwater_river_ledger.yaml
+  - content/seeds/aethryn/generated/caeloria_brightwater_river_ledger/manifest.yaml
+  - content/seeds/aethryn/generated/caeloria_brightwater_river_ledger/provenance.yaml
+records:
+  settlements:
+    - id: brightwater_river_settlement
+      display_name: Brightwater river ward
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      population_band: river-city ward with mill workers, fishers, traders, and licensing officials
+      government: Caelorian licensing authority balanced by river-warden practice
+      food_sources: [river fish, nearby farms, market grain, water-ration trade]
+      water_source: the river, millraces, and old sluice infrastructure
+      fuel_source: mill timber, chandler stock, and managed riverbank wood
+      labor_base: [milling, fishing, gathering, river warding, trade, licensing]
+      waste_handling: mill runoff and lower-weir clearing managed by wardens, with old channels requiring inspection
+      economy: mill output, river trade, meadowfoil gathering, draughts, rations, and licensed relic recovery
+      architecture: riverstone markets, timber millworks, civic ledgers, weirs, and older pale channels
+      culture: practical river work constrained by careful records and unresolved ownership questions
+      services: [market, mill, licensing hall, river warding, gathering exchange, travel supplies]
+      external_connections: [brightwater, caeloria, river trade]
+      active_conflicts: [sluice_token_licensing, lower_weir_danger, meadowfoil_labor_shortage]
+      daily_rhythm: dawn mill start, market trade, midday licensing, evening weir check, night river watch
+  districts:
+    - id: brightwater_weirward
+      display_name: Weirward
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      settlement_id: brightwater_river_settlement
+      purpose: [civic, economic, ecological, service]
+  neighborhoods:
+    - id: brightwater_riverfront
+      display_name: Riverfront Weirward
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      settlement_id: brightwater_river_settlement
+      district_id: brightwater_weirward
+      purpose: [economic, civic, ecological, threshold]
+  rooms:
+    - id: brightwater_market
+      display_name: The Weir Market
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      parent_settlement: brightwater_river_settlement
+      district_id: brightwater_weirward
+      neighborhood_id: brightwater_riverfront
+      purpose: [social, economic, service]
+      description: The bright heart of Brightwater holds stalls beside the mill-weirs, where millers, fishers, and a licensing clerk turn river work into food, trade, and arguments over custody.
+      room_type: River Market
+      tags: [caeloria, brightwater, river, market, compiler_slice]
+      replace: true
+      exits: {out: brightwater, north: brightwater_millrace, west: brightwater_hall}
+    - id: brightwater_millrace
+      display_name: The Millrace
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      parent_settlement: brightwater_river_settlement
+      district_id: brightwater_weirward
+      neighborhood_id: brightwater_riverfront
+      purpose: [economic, ecological, resource, traversal]
+      description: Turning wheels drive water through narrow races while meadowfoil grows along wet piling, making the same bank useful to gatherers, millers, wardens, and whatever follows the current.
+      room_type: Working Millrace
+      tags: [caeloria, brightwater, river, gathering, compiler_slice]
+      replace: true
+      exits: {south: brightwater_market, down: brightwater_sluice, west: brightwater_lowerweir}
+    - id: brightwater_hall
+      display_name: The Licensing Hall
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      parent_settlement: brightwater_river_settlement
+      district_id: brightwater_weirward
+      neighborhood_id: brightwater_riverfront
+      purpose: [civic, economic, narrative, service]
+      description: Cool stone walls hold ledgers and seals where Caeloria registers what the river gives up before private hands can claim it, even when the clerks do not understand the old works.
+      room_type: Licensing Hall
+      tags: [caeloria, brightwater, civic, records, compiler_slice]
+      replace: true
+      exits: {east: brightwater_market}
+    - id: brightwater_sluice
+      display_name: The Old Sluice
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      parent_settlement: brightwater_river_settlement
+      district_id: brightwater_weirward
+      neighborhood_id: brightwater_riverfront
+      purpose: [hazard, threshold, puzzle, narrative]
+      description: A flooded chamber older than the mills holds pale channels and seized flow-gates that once ruled the river without a hand, while a quiet mechanical pulse waits behind the water.
+      room_type: Ancient Waterworks
+      tags: [caeloria, brightwater, old_world, sluice, compiler_slice]
+      replace: true
+      exits: {up: brightwater_millrace}
+    - id: brightwater_lowerweir
+      display_name: The Lower Weirs
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      parent_settlement: brightwater_river_settlement
+      district_id: brightwater_weirward
+      neighborhood_id: brightwater_riverfront
+      purpose: [encounter, ecological, hazard, traversal]
+      description: Below the mills, flooded lower races spread through sunken timber where the licensing clerks do not go and a long-drowned predator has made the neglected water its shelter.
+      room_type: Lower Weirs
+      tags: [caeloria, brightwater, river, hazard, compiler_slice]
+      replace: true
+      exits: {east: brightwater_millrace}
+  npcs:
+    - id: brightwater_licensor
+      display_name: Licensor Aldre
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      role: [governance, trade, information, conflict]
+      location: brightwater_hall
+      schedule: [morning ledger opening, midday relic intake, afternoon licensing review, evening flood-ledger close]
+      relationship_to_civilization: turns river recovery into recorded custody and public argument
+    - id: brightwater_chandler
+      display_name: Chandler Merrow
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      role: [production, trade, transport, social_identity]
+      location: brightwater_market
+      schedule: [dawn stock check, market trade, midday meadowfoil weighing, evening ration count]
+      relationship_to_civilization: supplies river labor and buys the gathered resource that keeps local trade moving
+    - id: brightwater_warden
+      display_name: River-Warden Kess
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater, brightwater_wardens]
+      role: [military, maintenance, ecological_interaction, conflict]
+      location: brightwater_market
+      schedule: [dawn river survey, midday millrace inspection, dusk lower-weir patrol, night flood watch]
+      relationship_to_civilization: keeps the river usable where civic licensing stops at the ledger
+  creatures:
+    - id: brightwater_sluice_eels
+      display_name: a knot of sluice-eels
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      location: brightwater_sluice
+      habitat: flooded channels and pale stone pockets in the old sluice
+      diet_or_energy_source: river fish, scraps, and warm flow around the old gates
+      predators: larger river predators and occasional wardens
+      prey_or_resource_pressure: steady water and food draw them toward the machinery
+      reproduction_or_recurrence: ordinary river spawning wherever cold shelter remains
+      seasonal_behavior: gather in deeper channels during low night flow
+      ecological_role: marks the sluice as a living water system rather than an empty ruin
+      relationship_to_civilization: nuisance to maintenance crews and warning of blocked channels
+      reason_for_persistence: water, food, and protected stone channels persist beneath the mills
+      keywords: [eel, sluice-eel, river]
+      creature_category: biological
+      allowed_regions: [caeloria]
+      climate_tolerance: [temperate, riverine]
+      threat_range: [1, 4]
+      description: A knot of narrow eels threads through the sluice's warm seams and flooded channels.
+      room_presence_description: Wet scales flash between the sluice stones while the water mutters below.
+      examine_description: The eels shelter in pale stone pockets and feed wherever mill scraps collect.
+      behavior: schools through warm flow and scatters from tools
+      intelligence: animal instinct
+      disposition: defensive nuisance
+      social_organization: school
+      activity_period: all day, strongest at low flow
+      movement_behavior: follows water between channels
+      combat_role: swarm nuisance
+      abilities: [schooling_bite, slip_away]
+      retreat_behavior: vanishes into flooded seams
+      pursuit_behavior: does not pursue beyond the water
+      assistance_behavior: nearby eels tighten the school when disturbed
+      loot_outputs: [raw_hide]
+      crafting_outputs: [raw_hide]
+      rarity: common
+    - id: brightwater_riverwyrm
+      display_name: a drowned river-wyrm
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      location: brightwater_lowerweir
+      habitat: flooded lower weirs and sunken timber
+      diet_or_energy_source: fish, river animals, and accumulated lower-race prey
+      predators: wardens, larger river predators, and organized hunting parties
+      prey_or_resource_pressure: neglected timber provides shelter while lower-race prey gathers
+      reproduction_or_recurrence: persistent shelter can attract another predator after one is removed
+      seasonal_behavior: rises toward the millrace when high water expands the lower channels
+      ecological_role: makes neglected infrastructure a visible civic danger
+      relationship_to_civilization: threatens fishers, mill output, and the safety of lower-race work
+      reason_for_persistence: flooded shelter, prey, and delayed maintenance keep the lower weir viable
+      keywords: [river-wyrm, wyrm, lower-weir]
+      creature_category: biological
+      allowed_regions: [caeloria]
+      climate_tolerance: [temperate, riverine]
+      threat_range: [8, 18]
+      description: A drowned river-wyrm coils among the lower timbers where the weir has stopped receiving care.
+      room_presence_description: The lower water bulges around a scaled back, and the old timber answers with a wet groan.
+      examine_description: Its scarred hide carries silt and splinters; it has learned that the neglected weir is a reliable hunting place.
+      behavior: waits below the race, strikes from cover, and retreats with the current
+      intelligence: predatory cunning
+      disposition: territorial predator
+      social_organization: solitary
+      activity_period: dusk and high water
+      movement_behavior: follows flooded channels and lower-race shelter
+      combat_role: ambusher
+      abilities: [current_lunge, constrict]
+      retreat_behavior: withdraws into the lower channels after a hard wound
+      pursuit_behavior: pursues only along connected water
+      assistance_behavior: none
+      loot_outputs: [raw_hide]
+      crafting_outputs: [raw_hide]
+      rarity: rare
+  items:
+    - id: brightwater_sluice_token
+      display_name: a warden's sluice-token
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      source_room: brightwater_sluice
+      origin: recovered from the old sluice beneath the working mills
+      material: pale untarnished metal worked with channels like a river seen from above
+      maker_or_tradition: unknown earlier waterworks tradition
+      use: ordinary custody marker for an extraordinary control system
+      custody: Brightwater River Wardens pending licensing review
+      maintenance_state: intact, cold-water worn, and awaiting registration
+      regional_relevance: forces Caeloria's record law to meet infrastructure it cannot fully explain
+    - id: brightwater_flood_ledger
+      display_name: the Brightwater flood-ledger
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      source_room: brightwater_hall
+      origin: maintained civic record of floods and mill survival
+      material: bound paper, river wax, iron clasp, and layered ink
+      maker_or_tradition: Brightwater licensing clerks across three centuries
+      use: ordinary flood reporting and evidence for river decisions
+      custody: Licensor Aldre in the Licensing Hall
+      maintenance_state: active, dry, and updated after each flood watch
+      regional_relevance: records the repeated relationship between civic survival and the old sluice
+  resource_nodes:
+    - id: brightwater_meadowfoil_node
+      display_name: riverbank meadowfoil
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      resource: meadowfoil
+      habitat: wet piling and maintained millrace bank
+      recurrence: regrowth after careful gathering and ordinary river seasons
+      source_room: brightwater_millrace
+      economic_use: dyer supply, chandler trade, and river-travel provisions
+  economy_flows:
+    - id: brightwater_meadowfoil_flow
+      display_name: meadowfoil to the market
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [caeloria_brightwater_economy]
+      source: brightwater_meadowfoil_node
+      sink: brightwater_chandler
+      resource: meadowfoil
+      purpose: supply dyers and keep river provisions moving
+      transport: gathered bundles along the millrace bank
+      surplus_or_shortage: shortage when safe access to the bank narrows
+      inventory_provenance: gathered locally and weighed at the Brightwater market
+    - id: brightwater_provision_flow
+      display_name: chandler provisions to river labor
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [caeloria_brightwater_economy]
+      source: brightwater_chandler
+      sink: brightwater_market
+      resource: draughts_and_rations
+      purpose: sustain mill labor, wardens, fishers, and high-road travelers
+      transport: covered stall stock and market handcarts
+      surplus_or_shortage: steady supply unless river access or gathering labor fails
+      inventory_provenance: chandler stock made from purchased ingredients and locally gathered meadowfoil
+    - id: brightwater_licensing_flow
+      display_name: sluice token to civic custody
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [caeloria_brightwater_economy]
+      source: brightwater_sluice
+      sink: brightwater_licensor
+      resource: recovered_sluice_token
+      purpose: establish lawful custody before private use or trade
+      transport: warden escort from the old sluice to the Licensing Hall
+      surplus_or_shortage: shortage of trustworthy provenance
+      inventory_provenance: recovered from the old sluice and entered in the flood-ledger
+  ecology_flows:
+    - id: brightwater_eel_channel_flow
+      display_name: eel and sluice flow
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [caeloria_brightwater_ecology]
+      habitat: brightwater_millrace_habitat
+      creature: brightwater_sluice_eels
+      energy_source: river fish, scraps, and warm gate flow
+      pressure: blocked channels concentrate life around maintenance work
+      recurrence: ordinary spawning while water and shelter remain
+      civilization_relation: the same channel supports gathering, milling, and hazard
+    - id: brightwater_wyrm_lowerweir_flow
+      display_name: wyrm and lower-weir pressure
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [caeloria_brightwater_ecology]
+      habitat: brightwater_lowerweir_habitat
+      creature: brightwater_riverwyrm
+      energy_source: fish and lower-race prey
+      pressure: neglected flooded timber provides persistent shelter
+      recurrence: shelter can draw another predator after one is removed
+      civilization_relation: river safety and mill output depend on lower-weir maintenance
+  quest_pressures:
+    - id: brightwater_licensing_pressure
+      display_name: disputed sluice custody
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater, brightwater_wardens]
+      pressure_type: disputed_authority
+      pressure: licensing officials require custody while wardens need practical access to recovered objects
+      affected_records: [brightwater_licensor, brightwater_warden, brightwater_sluice_token]
+      competing_interests: [public_record, working_access, private_claim]
+      resolution_scope: local and reversible
+    - id: brightwater_lower_weir_pressure
+      display_name: lower-weir danger
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater, brightwater_wardens]
+      pressure_type: unsafe_route
+      pressure: a river-wyrm has made the neglected lower races unsafe for fishers and mill work
+      affected_records: [brightwater_riverwyrm, brightwater_lowerweir, brightwater_warden]
+      competing_interests: [mill_output, worker_safety, delayed_maintenance]
+      resolution_scope: local and visible
+    - id: brightwater_meadowfoil_pressure
+      display_name: meadowfoil labor shortage
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater, caeloria_brightwater_economy]
+      pressure_type: missing_labor
+      pressure: dangerous water access reduces the gathered herb supply used by trade and provisions
+      affected_records: [brightwater_meadowfoil_node, brightwater_chandler, brightwater_millrace]
+      competing_interests: [gatherer_income, safe_access, market_supply]
+      resolution_scope: local and reversible
+  state_changes:
+    - id: brightwater_sluice_state
+      display_name: old sluice condition
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      key: brightwater.sluice_status
+      room_id: brightwater_sluice
+      initial_value: ticking
+      reversible_values: [ticking, quiet]
+      visible_projection: The buried flow-gates remain {value} behind the flooded channels.
+      persistence_scope: character_and_world_package
+      actions:
+        - command: maintain
+          target: sluice
+          aliases: [old sluice, flow-gates]
+          required_item: brightwater_sluice_token
+          from: ticking
+          to: quiet
+          success_message: You set the recovered sluice-token into the old control and the buried flow-gates settle quiet behind the water.
+          already_message: The buried flow-gates are already quiet.
+  dungeons:
+    - id: brightwater_old_sluice
+      display_name: The Old Sluice
+      canon_status: AUTHORED_LOCAL
+      parent_region: caeloria
+      parent_zone: caeloria_zone
+      source_design_ids: [brightwater]
+      built_by: unknown earlier waterworks builders
+      original_purpose: regulate river flow beneath the later Brightwater mills
+      historical_layer: before the successor kingdom, exact age unresolved
+      failure: flow-gates seized and flooded channels became habitat for eels
+      current_occupants: [brightwater_sluice_eels]
+      why_not_reclaimed: the chambers are flooded, the controls are not understood, and the city licenses rather than owns the risk
+      entrance_logic: down from the working millrace
+      traversal_grammar: [threshold, orientation, escalation, revelation, choice, aftermath]
+      gameplay_purpose: make ancient infrastructure, licensing, gathering, and river danger a connected local choice
+      revelation: the old system was functional infrastructure with inputs, outputs, and failure modes rather than an explained miracle
+      aftermath: the token may be recorded and the river may be serviced without resolving who built the system
+      state_change: reversible

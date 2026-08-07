@@ -1,0 +1,36 @@
+id: forage_field_veridia_ember_shard_5
+name: 'A small Requisition: ember shard of The Veridia Wilds'
+start: s0
+reward_xp: 35
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_veridia|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_veridia|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_veridia|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_veridia|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_veridia|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in The Veridia Wilds: 0/5 (35 XP).'
+  s1: 'Bring in ember shard in The Veridia Wilds: 1/5 (35 XP).'
+  s2: 'Bring in ember shard in The Veridia Wilds: 2/5 (35 XP).'
+  s3: 'Bring in ember shard in The Veridia Wilds: 3/5 (35 XP).'
+  s4: 'Bring in ember shard in The Veridia Wilds: 4/5 (35 XP).'
+  done: You have requisitioned ember shard enough for The Veridia Wilds. The village
+    makers will put it to use.

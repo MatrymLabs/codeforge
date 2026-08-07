@@ -1,0 +1,21 @@
+id: crawl_irondeep_mines
+name: 'Descent: Irondeep Mines'
+start: above
+reward_xp: 2800
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: irondeep_mines
+- state: delving
+  event: reach
+  to: done
+  on_enter: irondeep_mines_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Irondeep Mines. Cross its mouth and
+    descend.
+  delving: You are within Irondeep Mines. Press on to its deepest chamber.
+  done: You have reached the heart of Irondeep Mines and lived. Few can (2800 XP).

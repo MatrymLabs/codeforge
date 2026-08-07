@@ -1,0 +1,8 @@
+id: greenhold_civic_dispute
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+faction: greenward_compact
+pressure_type: disputed_authority
+pressure: Keeper Wenna must choose between preserving unknown infrastructure and reopening it for public water.
+counterpressure: Miller Harl needs reliable fields and the market needs water and stock.
+resolution_status: intentionally_reversible

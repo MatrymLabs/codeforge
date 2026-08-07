@@ -1,0 +1,61 @@
+id: forage_underground_frostspire_peaks_underworks_raw_ore_10
+name: 'A standing Collection: raw ore of The Glacial Bastion Foundations'
+start: s0
+reward_xp: 240
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_frostspire_peaks_underworks|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect raw ore in The Glacial Bastion Foundations: 0/10 (240 XP).'
+  s1: 'Collect raw ore in The Glacial Bastion Foundations: 1/10 (240 XP).'
+  s2: 'Collect raw ore in The Glacial Bastion Foundations: 2/10 (240 XP).'
+  s3: 'Collect raw ore in The Glacial Bastion Foundations: 3/10 (240 XP).'
+  s4: 'Collect raw ore in The Glacial Bastion Foundations: 4/10 (240 XP).'
+  s5: 'Collect raw ore in The Glacial Bastion Foundations: 5/10 (240 XP).'
+  s6: 'Collect raw ore in The Glacial Bastion Foundations: 6/10 (240 XP).'
+  s7: 'Collect raw ore in The Glacial Bastion Foundations: 7/10 (240 XP).'
+  s8: 'Collect raw ore in The Glacial Bastion Foundations: 8/10 (240 XP).'
+  s9: 'Collect raw ore in The Glacial Bastion Foundations: 9/10 (240 XP).'
+  done: You have brought in raw ore enough for The Glacial Bastion Foundations. The
+    hold's smiths will not want for it.

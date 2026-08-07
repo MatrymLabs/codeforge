@@ -25,7 +25,7 @@ from kernel.world.seed import SEED_DIR, Zone, load_zones
 from kernel.world.session import Session
 from kernel.world.spiral import load_spiral_config, spiral_zones
 from kernel.world.wildlands import load_wildlands_config, wildlands_zones
-from kernel.world.world import FIELD_ZONES, WORLD
+from kernel.world.world import FIELD_ZONES, UNDERGROUND_ZONES, WORLD
 
 
 def merged_zones(base: dict[str, Zone], spiral_cfg: dict | None) -> dict[str, Zone]:
@@ -43,15 +43,25 @@ ZONES: dict[str, Zone] = merged_zones(
     load_zones(SEED_DIR / "zones.yaml", set(WORLD)),
     load_spiral_config(SEED_DIR / "spiral.yaml"),
 )
+
+# A pure-authoring snapshot keeps the canonical 14 story zones in zones.yaml and places the
+# materialized field/cave/delve areas in a second pack, so campaign validation can still measure the
+# story layer without losing zone routing at runtime.
+_authored_zones_path = SEED_DIR / "authored_zones.yaml"
+if _authored_zones_path.is_file():
+    ZONES.update(load_zones(_authored_zones_path, set(WORLD)))
 # The procedural wilderness regions carry their own metadata areas too (one per region), so every
 # generated room belongs to geography exactly like the hand-authored and Spiral rooms.
 _wildlands_cfg = load_wildlands_config(SEED_DIR / "wildlands.yaml")
 if _wildlands_cfg is not None:
+    _field_regions = {str(zone.get("region")) for zone in FIELD_ZONES.values()}
+    _wildlands_cfg = [cfg for cfg in _wildlands_cfg if str(cfg["region"]) not in _field_regions]
     ZONES.update(wildlands_zones(_wildlands_cfg))
 
 # Field-backed wilderness zones carry their own areas too (built once in world.py, published so
 # we do not regenerate the field), so every generated field cell belongs to geography for zone_of.
 ZONES.update(FIELD_ZONES)
+ZONES.update(UNDERGROUND_ZONES)
 
 # Per-area beat counter: world beats since this area last came due. Runtime state, never
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.

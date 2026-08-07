@@ -1,0 +1,36 @@
+id: forage_underground_the_deepreach_caves_raw_ore_5
+name: 'A small Haul: raw ore of Deepreach Memory Grottos'
+start: s0
+reward_xp: 275
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_deepreach_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_deepreach_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_deepreach_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_deepreach_caves|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_the_deepreach_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in raw ore in Deepreach Memory Grottos: 0/5 (275 XP).'
+  s1: 'Haul in raw ore in Deepreach Memory Grottos: 1/5 (275 XP).'
+  s2: 'Haul in raw ore in Deepreach Memory Grottos: 2/5 (275 XP).'
+  s3: 'Haul in raw ore in Deepreach Memory Grottos: 3/5 (275 XP).'
+  s4: 'Haul in raw ore in Deepreach Memory Grottos: 4/5 (275 XP).'
+  done: You have hauled in raw ore enough for Deepreach Memory Grottos. The forge-crews
+    can feed the fires now.

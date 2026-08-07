@@ -1,0 +1,70 @@
+id: cull_ashen_wastes_zone_adder_12
+name: 'A standing Cull: the adder-kind of Ashen Wastes'
+start: s0
+reward_xp: 672
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: ashen_wastes_zone|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: ashen_wastes_zone|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: ashen_wastes_zone|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: ashen_wastes_zone|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: ashen_wastes_zone|adder
+- state: s5
+  event: cull
+  to: s6
+  on_cull: ashen_wastes_zone|adder
+- state: s6
+  event: cull
+  to: s7
+  on_cull: ashen_wastes_zone|adder
+- state: s7
+  event: cull
+  to: s8
+  on_cull: ashen_wastes_zone|adder
+- state: s8
+  event: cull
+  to: s9
+  on_cull: ashen_wastes_zone|adder
+- state: s9
+  event: cull
+  to: s10
+  on_cull: ashen_wastes_zone|adder
+- state: s10
+  event: cull
+  to: s11
+  on_cull: ashen_wastes_zone|adder
+- state: s11
+  event: cull
+  to: done
+  on_cull: ashen_wastes_zone|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the adder-kind of Ashen Wastes: 0/12 down (672 XP).'
+  s1: 'Cull the adder-kind of Ashen Wastes: 1/12 down (672 XP).'
+  s2: 'Cull the adder-kind of Ashen Wastes: 2/12 down (672 XP).'
+  s3: 'Cull the adder-kind of Ashen Wastes: 3/12 down (672 XP).'
+  s4: 'Cull the adder-kind of Ashen Wastes: 4/12 down (672 XP).'
+  s5: 'Cull the adder-kind of Ashen Wastes: 5/12 down (672 XP).'
+  s6: 'Cull the adder-kind of Ashen Wastes: 6/12 down (672 XP).'
+  s7: 'Cull the adder-kind of Ashen Wastes: 7/12 down (672 XP).'
+  s8: 'Cull the adder-kind of Ashen Wastes: 8/12 down (672 XP).'
+  s9: 'Cull the adder-kind of Ashen Wastes: 9/12 down (672 XP).'
+  s10: 'Cull the adder-kind of Ashen Wastes: 10/12 down (672 XP).'
+  s11: 'Cull the adder-kind of Ashen Wastes: 11/12 down (672 XP).'
+  done: The adder-kind of Ashen Wastes are thinned. The ash-tracks are a shade safer.

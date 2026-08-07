@@ -1,0 +1,15 @@
+id: bounty_veridia_lord_9
+name: 'Bounty: Urok the Upland Bane'
+start: posted
+reward_xp: 240
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: veridia_lord_9
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Urok the Upland Bane (level 20). Fell it for 240 XP.
+  collected: 'Bounty collected: Urok the Upland Bane is felled. Well hunted.'

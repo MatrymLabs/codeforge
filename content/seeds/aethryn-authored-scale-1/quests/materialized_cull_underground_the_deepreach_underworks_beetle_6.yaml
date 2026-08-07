@@ -1,0 +1,47 @@
+id: cull_underground_the_deepreach_underworks_beetle_6
+name: 'A small Bounty: the beetle-kind of The Crystal Labyrinth Approach'
+start: s0
+reward_xp: 516
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_deepreach_underworks|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_deepreach_underworks|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_deepreach_underworks|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_deepreach_underworks|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_deepreach_underworks|beetle
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_the_deepreach_underworks|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 0/6 down (516
+    XP).'
+  s1: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 1/6 down (516
+    XP).'
+  s2: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 2/6 down (516
+    XP).'
+  s3: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 3/6 down (516
+    XP).'
+  s4: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 4/6 down (516
+    XP).'
+  s5: 'Bring down the beetle-kind of The Crystal Labyrinth Approach: 5/6 down (516
+    XP).'
+  done: The beetle-kind of The Crystal Labyrinth Approach are hunted down. The ash-tracks
+    are a shade safer.

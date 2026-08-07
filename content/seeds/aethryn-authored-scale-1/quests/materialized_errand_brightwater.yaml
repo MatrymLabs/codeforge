@@ -1,0 +1,15 @@
+id: errand_brightwater
+name: 'Errand: Riverbend'
+start: posted
+reward_xp: 450
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: riverbend
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Riverbend (450 XP).
+  done: You bring word to Riverbend. It is gratefully received.

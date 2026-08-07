@@ -1,0 +1,83 @@
+id: cull_underground_the_deepreach_underworks_golem_12
+name: 'A standing Warrant: the golem-kind of The Crystal Labyrinth Approach'
+start: s0
+reward_xp: 1032
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_deepreach_underworks|golem
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_the_deepreach_underworks|golem
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 0/12
+    down (1032 XP).'
+  s1: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 1/12
+    down (1032 XP).'
+  s2: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 2/12
+    down (1032 XP).'
+  s3: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 3/12
+    down (1032 XP).'
+  s4: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 4/12
+    down (1032 XP).'
+  s5: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 5/12
+    down (1032 XP).'
+  s6: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 6/12
+    down (1032 XP).'
+  s7: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 7/12
+    down (1032 XP).'
+  s8: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 8/12
+    down (1032 XP).'
+  s9: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 9/12
+    down (1032 XP).'
+  s10: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 10/12
+    down (1032 XP).'
+  s11: 'Answer the warrant on the golem-kind of The Crystal Labyrinth Approach: 11/12
+    down (1032 XP).'
+  done: The golem-kind of The Crystal Labyrinth Approach are answered for. The ash-tracks
+    are a shade safer.

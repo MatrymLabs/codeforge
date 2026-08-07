@@ -1,0 +1,83 @@
+id: cull_underground_the_voidscar_underworks_revenant_12
+name: 'A standing Contract: the revenant-kind of The God-Mirror Approach'
+start: s0
+reward_xp: 1200
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_voidscar_underworks|revenant
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_the_voidscar_underworks|revenant
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 0/12 down
+    (1200 XP).'
+  s1: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 1/12 down
+    (1200 XP).'
+  s2: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 2/12 down
+    (1200 XP).'
+  s3: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 3/12 down
+    (1200 XP).'
+  s4: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 4/12 down
+    (1200 XP).'
+  s5: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 5/12 down
+    (1200 XP).'
+  s6: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 6/12 down
+    (1200 XP).'
+  s7: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 7/12 down
+    (1200 XP).'
+  s8: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 8/12 down
+    (1200 XP).'
+  s9: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 9/12 down
+    (1200 XP).'
+  s10: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 10/12
+    down (1200 XP).'
+  s11: 'Fulfil the contract on the revenant-kind of The God-Mirror Approach: 11/12
+    down (1200 XP).'
+  done: The revenant-kind of The God-Mirror Approach are put down. The ash-tracks
+    are a shade safer.

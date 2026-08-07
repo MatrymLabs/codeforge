@@ -61,10 +61,13 @@ def test_activation_approval_consumption_is_cross_process_and_audited(tmp_path):
 
     outcomes = [results.get(timeout=2) for _ in workers]
     assert outcomes.count("ok") == 1
-    assert sum(
-        outcome.startswith("error:activation approval 'approval-process' was already used")
-        for outcome in outcomes
-    ) == 1
+    assert (
+        sum(
+            outcome.startswith("error:activation approval 'approval-process' was already used")
+            for outcome in outcomes
+        )
+        == 1
+    )
     ledger = ActivationApprovalLedger(path)
     assert ledger.audit_records()[0]["action"] == "activation_approval_consumed"
 
@@ -313,9 +316,7 @@ def test_activation_boundary_applies_seed_scoped_policy_before_consuming_approva
         seed_id="seed-a",
         now=now,
         policy=PermissionPolicy((PermissionRule("component.activate", scope="seed-a"),)),
-        permission=PermissionContext(
-            "operator", capabilities=frozenset({"component.activate"})
-        ),
+        permission=PermissionContext("operator", capabilities=frozenset({"component.activate"})),
     )
     audit = ledger.audit_records()[0]
     assert audit["actor_id"] == "operator"

@@ -1,0 +1,36 @@
+id: forage_underground_caeloria_underworks_meadowfoil_5
+name: 'A small Gleaning: meadowfoil of The Starfall Sublevels'
+start: s0
+reward_xp: 80
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_caeloria_underworks|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_caeloria_underworks|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_caeloria_underworks|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_caeloria_underworks|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_caeloria_underworks|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean meadowfoil in The Starfall Sublevels: 0/5 (80 XP).'
+  s1: 'Glean meadowfoil in The Starfall Sublevels: 1/5 (80 XP).'
+  s2: 'Glean meadowfoil in The Starfall Sublevels: 2/5 (80 XP).'
+  s3: 'Glean meadowfoil in The Starfall Sublevels: 3/5 (80 XP).'
+  s4: 'Glean meadowfoil in The Starfall Sublevels: 4/5 (80 XP).'
+  done: You have gleaned meadowfoil enough for The Starfall Sublevels. The village
+    makers will put it to use.

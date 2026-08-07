@@ -1,0 +1,15 @@
+id: errand_shadowfissure
+name: 'Errand: The Spire Nexus'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_spire_nexus
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Spire Nexus (1500 XP).
+  done: You reach The Spire Nexus and mark the way. Well scouted.

@@ -1,0 +1,15 @@
+id: bounty_moltenhold_drake
+name: 'Bounty: a slag-scaled drake'
+start: posted
+reward_xp: 1416
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: moltenhold_drake
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a slag-scaled drake (level 118). Fell it for 1416 XP.
+  collected: 'Bounty collected: a slag-scaled drake is felled. Well hunted.'

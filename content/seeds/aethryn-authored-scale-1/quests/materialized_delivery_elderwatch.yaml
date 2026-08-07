@@ -1,0 +1,20 @@
+id: delivery_elderwatch
+name: 'Delivery: Elderwatch to Greenhold'
+start: posted
+reward_xp: 12
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_elderwatch
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: greenhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Elderwatch is bound for Greenhold. Take it up (12 XP).
+  carrying: Carry the parcel to Greenhold.
+  done: The parcel is delivered to Greenhold. The road keeps its promise.

@@ -1,0 +1,31 @@
+id: eldryn_city_blight
+name: The Grey in the Roots
+start: offered
+reward_xp: 60
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: eldryn_city_wardenhall
+- state: accepted
+  event: take
+  to: recovered
+  on_take: eldryn_city_heartsap
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:gathering:30
+  on_enter: eldryn_city_wardenhall
+terminal:
+- done
+labels:
+  offered: In Eldryn City, the grove-warden frets over a grey rot risen in the deep
+    roots. Step into the wardens' hall in the northern trunk and hear her.
+  accepted: Go DOWN into the deep roots below the court and draw a phial of the blighted
+    heartsap where the rot runs darkest.
+  recovered: Carry the phial of blighted heartsap back up to Grove-Warden Thessaly
+    in the wardens' hall.
+  done: '*** The phial is in Thessaly''s hand, and the capital''s healers have a clean
+    sample of the rot to study at last. What the grey thread laced through the heartsap
+    truly is, and whether the Great Tree can be saved, no warden living can yet say.
+    ***'

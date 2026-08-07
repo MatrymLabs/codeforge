@@ -1,0 +1,52 @@
+id: veridia_first_road
+name: The First Road
+start: offered
+reward_xp: 120
+steps:
+- state: offered
+  event: accept
+  to: accepted
+- state: accepted
+  event: enter
+  to: briefed
+  on_enter: veridia_maproom
+- state: briefed
+  event: take
+  to: carrying
+  on_take: veridia_wayfinder_compass
+- state: carrying
+  event: enter
+  to: greenhold
+  on_enter: greenhold_market
+- state: greenhold
+  event: enter
+  to: elderwatch
+  on_enter: elderwatch_tower
+- state: elderwatch
+  event: enter
+  to: riverbend
+  on_enter: riverbend_reeds
+- state: riverbend
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:making:35;grant_rep:knowing:35
+  on_defeat: riverbend_vault_lurker
+terminal:
+- done
+labels:
+  offered: Wayfinder Maelin has marked the four roads. Accept the first road, then
+    enter the map room and learn what Veridia is keeping.
+  accepted: The first road begins at the map. Go NORTH into the Cradle Map Room in
+    the Wayfarer's House.
+  briefed: Scribe Oren has shown you the four-point sigil. TAKE the wayfinder's compass
+    from the map table.
+  carrying: The compass points into the valley. Carry it to Greenhold's market, then
+    follow the old works from town to town.
+  greenhold: Greenhold's water is waking and its people need help. Read the market,
+    then take the road EAST to Elderwatch when you are ready.
+  elderwatch: From Elderwatch's tower you can see the cradle whole. Climb the watch,
+    then follow the road to Riverbend.
+  riverbend: The river crossing is held by a pale thing in the weir-vault. Go NORTH
+    into the ferry-house, DOWN into the vault, and put it down.
+  done: '*** The first road is yours. Greenhold''s water, Elderwatch''s fire, and
+    Riverbend''s crossing all answer your hand; Veridia knows your name now. ***'

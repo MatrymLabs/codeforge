@@ -1,0 +1,15 @@
+id: errand_eldryn_city
+name: 'Errand: Sunmeadow'
+start: posted
+reward_xp: 750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: sunmeadow
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Sunmeadow (750 XP).
+  done: You bring word to Sunmeadow. It is gratefully received.

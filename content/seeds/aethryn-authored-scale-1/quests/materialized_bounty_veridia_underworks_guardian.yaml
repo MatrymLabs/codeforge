@@ -1,0 +1,16 @@
+id: bounty_veridia_underworks_guardian
+name: 'Bounty: Balaar the Upland Scourge'
+start: posted
+reward_xp: 384
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: veridia_underworks_guardian
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Balaar the Upland Scourge (level 32). Fell it for 384
+    XP.
+  collected: 'Bounty collected: Balaar the Upland Scourge is felled. Well hunted.'

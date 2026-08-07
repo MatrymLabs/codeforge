@@ -1,0 +1,15 @@
+id: errand_sunscar_city
+name: 'Errand: Scorchstone Keep'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: scorchstone_keep
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Scorchstone Keep (1200 XP).
+  done: You reach Scorchstone Keep and mark the way. Well scouted.

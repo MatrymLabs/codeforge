@@ -1,0 +1,61 @@
+id: forage_underground_ashen_wastes_caves_raw_ore_10
+name: 'A standing Harvest: raw ore of Ashen Slag Hollows'
+start: s0
+reward_xp: 400
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_ashen_wastes_caves|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_ashen_wastes_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest raw ore in Ashen Slag Hollows: 0/10 (400 XP).'
+  s1: 'Harvest raw ore in Ashen Slag Hollows: 1/10 (400 XP).'
+  s2: 'Harvest raw ore in Ashen Slag Hollows: 2/10 (400 XP).'
+  s3: 'Harvest raw ore in Ashen Slag Hollows: 3/10 (400 XP).'
+  s4: 'Harvest raw ore in Ashen Slag Hollows: 4/10 (400 XP).'
+  s5: 'Harvest raw ore in Ashen Slag Hollows: 5/10 (400 XP).'
+  s6: 'Harvest raw ore in Ashen Slag Hollows: 6/10 (400 XP).'
+  s7: 'Harvest raw ore in Ashen Slag Hollows: 7/10 (400 XP).'
+  s8: 'Harvest raw ore in Ashen Slag Hollows: 8/10 (400 XP).'
+  s9: 'Harvest raw ore in Ashen Slag Hollows: 9/10 (400 XP).'
+  done: You have harvested raw ore enough for Ashen Slag Hollows. The forge-crews
+    can feed the fires now.

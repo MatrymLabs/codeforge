@@ -283,11 +283,11 @@ sunscar_city_folk:
     - "Sunscar City keeps to itself, traveller, but you are welcome to pass through."
 
 red_dunes_folk:
-  name: a villager of Red Dune
+  name: a villager of Red Dunes
   keywords: [villager, Red, Dune]
   location: red_dunes
   dialogue:
-    - "Red Dune keeps to itself, traveller, but you are welcome to pass through."
+    - "Red Dunes keeps to itself, traveller, but you are welcome to pass through."
 
 sandspire_ruins_folk:
   name: a keeper of Sandspire Ruins

@@ -1,0 +1,36 @@
+id: forage_korvash_highlands_zone_moorbell_5
+name: 'A small Gleaning: moorbell of Korvash Highlands'
+start: s0
+reward_xp: 250
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: korvash_highlands_zone|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: korvash_highlands_zone|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: korvash_highlands_zone|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: korvash_highlands_zone|moorbell
+- state: s4
+  event: forage
+  to: done
+  on_forage: korvash_highlands_zone|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean moorbell in Korvash Highlands: 0/5 (250 XP).'
+  s1: 'Glean moorbell in Korvash Highlands: 1/5 (250 XP).'
+  s2: 'Glean moorbell in Korvash Highlands: 2/5 (250 XP).'
+  s3: 'Glean moorbell in Korvash Highlands: 3/5 (250 XP).'
+  s4: 'Glean moorbell in Korvash Highlands: 4/5 (250 XP).'
+  done: You have gleaned moorbell enough for Korvash Highlands. The region's makers
+    will put it to use.

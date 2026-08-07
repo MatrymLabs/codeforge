@@ -1,0 +1,15 @@
+id: errand_lumengrotto
+name: 'Errand: Greenmist'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: greenmist
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Greenmist (1500 XP).
+  done: You bring word to Greenmist. It is gratefully received.

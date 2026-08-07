@@ -1,0 +1,71 @@
+id: cull_field_caeloria_hawk_12
+name: 'A standing Thinning: the hawk-kind of The Caeloria Wilds'
+start: s0
+reward_xp: 240
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_caeloria|hawk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_caeloria|hawk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_caeloria|hawk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_caeloria|hawk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_caeloria|hawk
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_caeloria|hawk
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_caeloria|hawk
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_caeloria|hawk
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_caeloria|hawk
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_caeloria|hawk
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_caeloria|hawk
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_caeloria|hawk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the hawk-kind of The Caeloria Wilds: 0/12 down (240 XP).'
+  s1: 'Thin out the hawk-kind of The Caeloria Wilds: 1/12 down (240 XP).'
+  s2: 'Thin out the hawk-kind of The Caeloria Wilds: 2/12 down (240 XP).'
+  s3: 'Thin out the hawk-kind of The Caeloria Wilds: 3/12 down (240 XP).'
+  s4: 'Thin out the hawk-kind of The Caeloria Wilds: 4/12 down (240 XP).'
+  s5: 'Thin out the hawk-kind of The Caeloria Wilds: 5/12 down (240 XP).'
+  s6: 'Thin out the hawk-kind of The Caeloria Wilds: 6/12 down (240 XP).'
+  s7: 'Thin out the hawk-kind of The Caeloria Wilds: 7/12 down (240 XP).'
+  s8: 'Thin out the hawk-kind of The Caeloria Wilds: 8/12 down (240 XP).'
+  s9: 'Thin out the hawk-kind of The Caeloria Wilds: 9/12 down (240 XP).'
+  s10: 'Thin out the hawk-kind of The Caeloria Wilds: 10/12 down (240 XP).'
+  s11: 'Thin out the hawk-kind of The Caeloria Wilds: 11/12 down (240 XP).'
+  done: The hawk-kind of The Caeloria Wilds are thinned back. The farm-roads are the
+    safer for it.

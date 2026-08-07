@@ -1,0 +1,61 @@
+id: forage_underground_veridia_caves_meadowfoil_10
+name: 'A standing Forage: meadowfoil of Veridia''s River Caves'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_veridia_caves|meadowfoil
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_veridia_caves|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather meadowfoil in Veridia''s River Caves: 0/10 (60 XP).'
+  s1: 'Gather meadowfoil in Veridia''s River Caves: 1/10 (60 XP).'
+  s2: 'Gather meadowfoil in Veridia''s River Caves: 2/10 (60 XP).'
+  s3: 'Gather meadowfoil in Veridia''s River Caves: 3/10 (60 XP).'
+  s4: 'Gather meadowfoil in Veridia''s River Caves: 4/10 (60 XP).'
+  s5: 'Gather meadowfoil in Veridia''s River Caves: 5/10 (60 XP).'
+  s6: 'Gather meadowfoil in Veridia''s River Caves: 6/10 (60 XP).'
+  s7: 'Gather meadowfoil in Veridia''s River Caves: 7/10 (60 XP).'
+  s8: 'Gather meadowfoil in Veridia''s River Caves: 8/10 (60 XP).'
+  s9: 'Gather meadowfoil in Veridia''s River Caves: 9/10 (60 XP).'
+  done: You have gathered meadowfoil enough for Veridia's River Caves. The village
+    makers will put it to use.

@@ -1,0 +1,16 @@
+id: bounty_zhaar_desert_underworks_guardian
+name: 'Bounty: Balaar the Scour Scourge'
+start: posted
+reward_xp: 1656
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zhaar_desert_underworks_guardian
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Balaar the Scour Scourge (level 138). Fell it for 1656
+    XP.
+  collected: 'Bounty collected: Balaar the Scour Scourge is felled. Well hunted.'

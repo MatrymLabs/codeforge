@@ -1,0 +1,71 @@
+id: cull_duskwood_vale_zone_lynx_12
+name: 'A standing Contract: the lynx-kind of Duskwood Vale'
+start: s0
+reward_xp: 192
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: duskwood_vale_zone|lynx
+- state: s1
+  event: cull
+  to: s2
+  on_cull: duskwood_vale_zone|lynx
+- state: s2
+  event: cull
+  to: s3
+  on_cull: duskwood_vale_zone|lynx
+- state: s3
+  event: cull
+  to: s4
+  on_cull: duskwood_vale_zone|lynx
+- state: s4
+  event: cull
+  to: s5
+  on_cull: duskwood_vale_zone|lynx
+- state: s5
+  event: cull
+  to: s6
+  on_cull: duskwood_vale_zone|lynx
+- state: s6
+  event: cull
+  to: s7
+  on_cull: duskwood_vale_zone|lynx
+- state: s7
+  event: cull
+  to: s8
+  on_cull: duskwood_vale_zone|lynx
+- state: s8
+  event: cull
+  to: s9
+  on_cull: duskwood_vale_zone|lynx
+- state: s9
+  event: cull
+  to: s10
+  on_cull: duskwood_vale_zone|lynx
+- state: s10
+  event: cull
+  to: s11
+  on_cull: duskwood_vale_zone|lynx
+- state: s11
+  event: cull
+  to: done
+  on_cull: duskwood_vale_zone|lynx
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 0/12 down (192 XP).'
+  s1: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 1/12 down (192 XP).'
+  s2: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 2/12 down (192 XP).'
+  s3: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 3/12 down (192 XP).'
+  s4: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 4/12 down (192 XP).'
+  s5: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 5/12 down (192 XP).'
+  s6: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 6/12 down (192 XP).'
+  s7: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 7/12 down (192 XP).'
+  s8: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 8/12 down (192 XP).'
+  s9: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 9/12 down (192 XP).'
+  s10: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 10/12 down (192 XP).'
+  s11: 'Fulfil the contract on the lynx-kind of Duskwood Vale: 11/12 down (192 XP).'
+  done: The lynx-kind of Duskwood Vale are put down. The wardens of the wood send
+    their thanks.

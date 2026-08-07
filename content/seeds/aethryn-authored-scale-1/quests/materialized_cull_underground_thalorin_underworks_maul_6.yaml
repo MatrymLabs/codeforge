@@ -1,0 +1,41 @@
+id: cull_underground_thalorin_underworks_maul_6
+name: 'A small Reckoning: the maul-kind of The Irondeep Command Vaults'
+start: s0
+reward_xp: 294
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_thalorin_underworks|maul
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_thalorin_underworks|maul
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_thalorin_underworks|maul
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_thalorin_underworks|maul
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_thalorin_underworks|maul
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_thalorin_underworks|maul
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the maul-kind of The Irondeep Command Vaults: 0/6 down (294 XP).'
+  s1: 'Reckon with the maul-kind of The Irondeep Command Vaults: 1/6 down (294 XP).'
+  s2: 'Reckon with the maul-kind of The Irondeep Command Vaults: 2/6 down (294 XP).'
+  s3: 'Reckon with the maul-kind of The Irondeep Command Vaults: 3/6 down (294 XP).'
+  s4: 'Reckon with the maul-kind of The Irondeep Command Vaults: 4/6 down (294 XP).'
+  s5: 'Reckon with the maul-kind of The Irondeep Command Vaults: 5/6 down (294 XP).'
+  done: The maul-kind of The Irondeep Command Vaults are settled with. The region
+    breathes easier.

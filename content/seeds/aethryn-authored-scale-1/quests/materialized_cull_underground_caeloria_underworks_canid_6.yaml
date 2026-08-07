@@ -1,0 +1,41 @@
+id: cull_underground_caeloria_underworks_canid_6
+name: 'A small Thinning: the canid-kind of The Starfall Sublevels'
+start: s0
+reward_xp: 132
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_underworks|canid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_underworks|canid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_underworks|canid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_underworks|canid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_underworks|canid
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_caeloria_underworks|canid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the canid-kind of The Starfall Sublevels: 0/6 down (132 XP).'
+  s1: 'Thin out the canid-kind of The Starfall Sublevels: 1/6 down (132 XP).'
+  s2: 'Thin out the canid-kind of The Starfall Sublevels: 2/6 down (132 XP).'
+  s3: 'Thin out the canid-kind of The Starfall Sublevels: 3/6 down (132 XP).'
+  s4: 'Thin out the canid-kind of The Starfall Sublevels: 4/6 down (132 XP).'
+  s5: 'Thin out the canid-kind of The Starfall Sublevels: 5/6 down (132 XP).'
+  done: The canid-kind of The Starfall Sublevels are thinned back. The farm-roads
+    are the safer for it.

@@ -1,0 +1,71 @@
+id: cull_underground_thalorin_caves_wolf_12
+name: 'A standing Thinning: the wolf-kind of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 528
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_thalorin_caves|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_thalorin_caves|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_thalorin_caves|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_thalorin_caves|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_thalorin_caves|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_thalorin_caves|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_thalorin_caves|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_thalorin_caves|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_thalorin_caves|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_thalorin_caves|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_thalorin_caves|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_thalorin_caves|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 0/12 down (528 XP).'
+  s1: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 1/12 down (528 XP).'
+  s2: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 2/12 down (528 XP).'
+  s3: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 3/12 down (528 XP).'
+  s4: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 4/12 down (528 XP).'
+  s5: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 5/12 down (528 XP).'
+  s6: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 6/12 down (528 XP).'
+  s7: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 7/12 down (528 XP).'
+  s8: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 8/12 down (528 XP).'
+  s9: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 9/12 down (528 XP).'
+  s10: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 10/12 down (528 XP).'
+  s11: 'Thin out the wolf-kind of Thalorin''s Moor Mines: 11/12 down (528 XP).'
+  done: The wolf-kind of Thalorin's Moor Mines are thinned back. The region breathes
+    easier.

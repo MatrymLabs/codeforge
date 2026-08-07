@@ -1,0 +1,409 @@
+version: 1
+audit_commit: 0f6d8ed876876f92fd77eed7caa14b48b6ba5fd7
+generated_at: '2026-08-06T18:42:19-05:00'
+scope: repository-grounded-read-only-audit
+baseline:
+  make_check: 'blocked: ruff not found on PATH, exit 127'
+  ruff_format: 'failed: unformatted files'
+  ruff_check: 'failed: 80 errors in captured run'
+  import_lint: 'failed: one broken Seed Kernel boundary'
+  full_pytest: "timed out with exit 124 at approximately 64 percent; failures and errors appeared before timeout"
+  focused_aethryn_pytest: '64 passed in 83.25 seconds'
+  full_mypy: 'failed: 155 errors in 49 files, 917 files checked'
+  world_validate: 'passed: CLEAN'
+  room_batch_validate: 'passed: 11 batches, 1068 batch rooms, 28745 assembled rooms'
+  canon_check: 'passed: CLEAN'
+  map_concordance_check: 'passed: CLEAN'
+  persistence_doctor: 'warning: restore not verified'
+capabilities:
+  - id: compiler.packet_compile
+    domain: content_compiler
+    title: Deterministic Aethryn packet compilation
+    status: VERIFIED_FUNCTIONAL
+    evidence: Three active packets have clean validation reports and generated manifests. Fresh Veridia compile produced a stable output digest.
+    files: [kernel/world/aethryn_compiler.py, kernel/world/aethryn_models.py, kernel/world/aethryn_validation.py]
+    tests: [tests/test_aethryn_world_compiler.py, tests/test_aethryn_room_prose.py]
+    runtime_entry_point: tools/world.py -> kernel.world.aethryn_cli.run
+    dependencies: [compiler.packet_validation, content.room_batches]
+    blockers: []
+    risks: [packet-only scope, output is not a complete runtime package]
+    priority: P0
+    effort: M
+    implementation_action: Preserve the packet compiler and place it behind a shared IR and pass manager.
+    acceptance_criteria: Veridia and a second fixture compile through the same ordered passes with stable ids and a versioned package digest.
+    proof_required: [deterministic rebuild, materialized package load, semantic diff, rollback]
+  - id: compiler.world_ir
+    domain: content_compiler
+    title: Unified normalized WorldIR
+    status: VERIFIED_FUNCTIONAL
+    evidence: Adapter-first WorldIR now normalizes all registered records in active packets and a structurally different fixture while preserving stable ids and source digests.
+    files: [kernel/world/aethryn_ir.py, kernel/world/aethryn_models.py, kernel/world/seed.py, kernel/world/world.py]
+    tests: [tests/test_aethryn_compiler_foundation.py]
+    runtime_entry_point: none
+    dependencies: [compiler.schema_registry]
+    blockers: []
+    risks: [duplicate definitions, cross-system drift]
+    priority: P0
+    effort: L
+    implementation_action: Extend the adapter-first IR to full-world sources without replacing existing runtime records.
+    acceptance_criteria: All current Veridia records and one second-world fixture normalize without id loss.
+    proof_required: [IR snapshot, stable-id comparison, runtime materialization]
+  - id: compiler.schema_registry
+    domain: content_compiler
+    title: Shared content schema and adapter registry
+    status: VERIFIED_FUNCTIONAL
+    evidence: Explicit registry now declares schema version, parser, validator, migration, reference fields, serialization, compiler passes, runtime adapter, and optional modules for current packet types.
+    files: [kernel/world/aethryn_schema.py, kernel/world/aethryn_models.py, kernel/world/seed.py, migrations/versions]
+    tests: [tests/test_aethryn_compiler_foundation.py, tests/test_generation_contract.py, tests/test_migrations.py]
+    runtime_entry_point: none
+    dependencies: []
+    blockers: []
+    risks: [incompatible schema evolution, silent fallback]
+    priority: P0
+    effort: L
+    implementation_action: 'Register only verified shared types first: world, region, zone, room, exit, item, recipe, creature, quest, state.'
+    acceptance_criteria: Every registered type exposes version, parser, validator, references, serializer, and runtime adapter.
+    proof_required: [registry contract tests, schema migration test]
+  - id: compiler.reference_resolver
+    domain: content_compiler
+    title: Cross-system reference resolver
+    status: VERIFIED_FUNCTIONAL
+    evidence: Declared schema references now resolve normalized records or explicit compatibility external ids and report source, record, field, target, and correction.
+    files: [kernel/world/aethryn_references.py, kernel/world/aethryn_schema.py, kernel/world/aethryn_ir.py]
+    tests: [tests/test_aethryn_compiler_foundation.py, tests/test_aethryn_world_compiler.py, tests/test_aethryn_population.py, tests/test_aethryn_quests.py]
+    runtime_entry_point: packet validation only
+    dependencies: [compiler.world_ir]
+    blockers: []
+    risks: [unresolved references can bypass a shared dependency chain]
+    priority: P0
+    effort: M
+    implementation_action: Extend the resolver to full-world dependencies and aliases.
+    acceptance_criteria: A quest to item to recipe to material to habitat to reachable room chain resolves or reports source, field, expected type, and correction.
+    proof_required: [broken-reference fixture, complete dependency-chain fixture]
+  - id: compiler.pass_manager
+    domain: content_compiler
+    title: Ordered deterministic compiler passes
+    status: VERIFIED_FUNCTIONAL
+    evidence: Foundation pass manager now executes source loading, normalization, canon validation, and reference resolution with explicit dependencies and targeted execution.
+    files: [kernel/world/aethryn_passes.py, kernel/world/aethryn_compiler.py]
+    tests: [tests/test_aethryn_compiler_foundation.py, tests/test_aethryn_world_compiler.py]
+    runtime_entry_point: kernel.world.aethryn_compiler.compile_packet
+    dependencies: [compiler.world_ir, compiler.schema_registry, compiler.reference_resolver]
+    blockers: []
+    risks: [cannot target or cache passes, hidden ordering dependencies]
+    priority: P0
+    effort: M
+    implementation_action: Add remaining topology, prose, economy, progression, state, packaging, and proof passes while preserving the current output writer.
+    acceptance_criteria: Passes declare dependencies, inputs, outputs, diagnostics, and deterministic cache keys.
+    proof_required: [pass-order test, targeted-pass CLI output, cache invalidation test]
+  - id: compiler.diagnostics
+    domain: content_compiler
+    title: Structured compiler diagnostics
+    status: VERIFIED_FUNCTIONAL
+    evidence: DiagnosticReport now provides code, severity, subsystem, source path, record, field, rule, authority, correction, related records, and formatted verdicts; the existing ValidationReport remains the stable packet compiler adapter.
+    files: [kernel/world/aethryn_diagnostics.py, kernel/world/aethryn_models.py, kernel/world/aethryn_validation.py, kernel/world/aethryn_compiler.py]
+    tests: [tests/test_aethryn_compiler_foundation.py, tests/test_aethryn_world_compiler.py]
+    runtime_entry_point: kernel.world.aethryn_passes.run_foundation_pipeline
+    dependencies: []
+    blockers: [not yet shared with survey, migrations, release gates, or import lint]
+    risks: [different subsystems have incompatible diagnostic schemas]
+    priority: P0
+    effort: M
+    implementation_action: Extend the foundation envelope across survey, migrations, release gates, and import lint without breaking the packet compiler adapter.
+    acceptance_criteria: Human and JSON output have stable codes and CI exit semantics across compiler domains.
+    proof_required: [JSON diagnostics fixture, warnings-as-errors test]
+  - id: compiler.incremental_cache
+    domain: content_compiler
+    title: Dependency-aware incremental builds and cache
+    status: VERIFIED_PARTIAL
+    evidence: Deterministic complete-package cache reuse now keys on packet payload, WorldIR source digest, cache schema, and compiler version.
+    files: [kernel/world/aethryn_delivery.py, kernel/world/aethryn_compiler.py, kernel/world/aethryn_cli.py]
+    tests: [tests/test_aethryn_delivery.py]
+    runtime_entry_point: world compile-packet --cache and world cache-inspect
+    dependencies: [compiler.pass_manager, compiler.reference_resolver]
+    blockers: []
+    risks: [full rebuild cost and stale derived content]
+    priority: P1
+    effort: L
+    implementation_action: Extend conservative package caching into pass-level and affected-record caching after all pass inputs are explicit.
+    acceptance_criteria: A single room change rebuilds only affected records and reports cache hits.
+    proof_required: [incremental build trace, invalidation fixture]
+  - id: compiler.content_migrations
+    domain: content_compiler
+    title: Versioned content schema migrations
+    status: VERIFIED_PARTIAL
+    evidence: Alembic manages persistent SQL schema revisions, but generated content schema versions and save compatibility are not integrated.
+    files: [alembic.ini, migrations/versions, kernel/world/db.py, kernel/world/aethryn_models.py]
+    tests: [tests/test_migrations.py]
+    runtime_entry_point: Alembic for persistence only
+    dependencies: [compiler.schema_registry, runtime.player_persistence]
+    blockers: []
+    risks: [content package and player save mismatch]
+    priority: P0
+    effort: L
+    implementation_action: Separate and version content, runtime world, and player-save migrations with compatibility manifests.
+    acceptance_criteria: Dry-run migration preserves stable ids and refuses incompatible saves before publish.
+    proof_required: [forward migration, rollback where safe, save compatibility report]
+  - id: compiler.hotfix
+    domain: content_compiler
+    title: Bounded content hotfix package
+    status: VERIFIED_PARTIAL
+    evidence: Bounded hotfix manifests now record base and candidate digests, changed records, migration reasons, and rollback identity after package integrity validation.
+    files: [kernel/world/aethryn_delivery.py, kernel/world/aethryn_cli.py, docs/aethryn/implementation/AETHRYN_MATERIALIZATION_AND_ROLLBACK.md]
+    tests: [tests/test_aethryn_delivery.py]
+    runtime_entry_point: world hotfix
+    dependencies: [compiler.pass_manager, compiler.content_migrations, operations.packaging]
+    blockers: []
+    risks: [partial publication can desynchronize runtime and state]
+    priority: P1
+    effort: M
+    implementation_action: Add dependency closure, approval, publication, and tested hotfix rollback around the bounded package contract.
+    acceptance_criteria: Hotfix cannot bypass canon, schema, or package validation.
+    proof_required: [hotfix apply, rejection, rollback]
+  - id: content.rooms_prose_topology
+    domain: world_content
+    title: Room generation, prose, and topology
+    status: VERIFIED_FUNCTIONAL
+    evidence: Fresh room-batch validation passed with 11 batches and 1068 batch rooms; the assembled world reports 28745 rooms and canon/map checks are clean.
+    files: [kernel/world/room_batches.py, kernel/world/aethryn_room_prose.py, kernel/world/aethryn_validation.py, content/seeds/aethryn/world_graph.yaml]
+    tests: [tests/test_aethryn_room_prose.py, tests/test_room_batches.py, tests/test_aethryn_world_compiler.py]
+    runtime_entry_point: kernel.world.world.WORLD and handle_command look/go
+    dependencies: [compiler.packet_compile]
+    blockers: [not all world content is proven through the packet compiler]
+    risks: [legacy and generated room authorities can diverge]
+    priority: P0
+    effort: M
+    implementation_action: Route room content through WorldIR adapters and preserve world_graph topology authority.
+    acceptance_criteria: All published rooms have structured prose, valid exits, hierarchy, provenance, and runtime reload proof.
+    proof_required: [full-world room audit, text render, structured render, deterministic rebuild]
+  - id: content.population_npc
+    domain: world_content
+    title: Population, creatures, crowds, and NPC runtime
+    status: VERIFIED_PARTIAL
+    evidence: Packet population records validate and runtime projects signals; roaming and NPC modules are active. Runtime docs state movement, production, and depletion simulation remain incomplete.
+    files: [kernel/world/aethryn_population.py, kernel/world/aethryn_runtime.py, kernel/world/npcs.py, kernel/world/roaming.py]
+    tests: [tests/test_aethryn_population.py, tests/test_aethryn_runtime.py, tests/test_npcs.py, tests/test_roaming.py]
+    runtime_entry_point: world tick and runtime context projection
+    dependencies: [compiler.reference_resolver, world.state]
+    blockers: []
+    risks: [ambient data can look simulated without actual stateful movement]
+    priority: P1
+    effort: L
+    implementation_action: Implement bounded NPC schedules and population state transitions behind explicit runtime budgets.
+    acceptance_criteria: Restart-safe schedules, boundaries, depletion, recovery, and stuck recovery are observable.
+    proof_required: [schedule transcript, population restart test, bounded runtime measurement]
+  - id: content.items_crafting_economy
+    domain: economy
+    title: Items, crafting, merchants, loot, and economy flows
+    status: VERIFIED_PARTIAL
+    evidence: Existing feature paths remain separate, but an idempotent transaction service, SQL receipt store, currency ledger tables, and replay protections now exist as an additive integration seam.
+    files: [kernel/world/economy_transactions.py, kernel/world/db.py, migrations/versions/d6a7b8c9e0f1_add_economy_transaction_ledger.py, kernel/world/items.py, kernel/world/crafting.py, kernel/world/material_culture.py, kernel/world/trade.py, kernel/world/auction.py, kernel/world/coinage.py]
+    tests: [tests/test_economy_transactions.py, tests/test_migrations.py, tests/test_items.py, tests/test_crafting.py, tests/test_trade.py, tests/test_auction.py, tests/test_coin_flow.py]
+    runtime_entry_point: handle_command item/craft/trade/auction paths
+    dependencies: [runtime.player_persistence]
+    blockers: [existing commands still use separate gameplay and persistence mutation paths]
+    risks: [feature-specific mutation paths and duplicate value]
+    priority: P0
+    effort: L
+    implementation_action: Integrate the transaction boundary into each value-moving command after gameplay and ledger state share one authoritative persistence adapter.
+    acceptance_criteria: Every item and coin movement produces one auditable atomic transaction.
+    proof_required: [concurrent trade test, retry test, reconciliation report, exploit fixtures]
+  - id: content.quests_pressures
+    domain: world_content
+    title: Quest state, pressures, arcs, and consequences
+    status: VERIFIED_PARTIAL
+    evidence: Aethryn packet quest validation and runtime quest adapter exist; legacy workflow state and packet consequence state are separate.
+    files: [kernel/world/aethryn_quests.py, kernel/world/quest.py, kernel/world/aethryn_state.py]
+    tests: [tests/test_aethryn_quests.py, tests/test_quest.py, tests/test_aethryn_world_compiler.py]
+    runtime_entry_point: handle_command quest and quest event hooks
+    dependencies: [compiler.reference_resolver, world.state]
+    blockers: []
+    risks: [duplicate quest authorities and consequence drift]
+    priority: P1
+    effort: L
+    implementation_action: Normalize quest references and route state effects through scoped state contracts.
+    acceptance_criteria: Party credit, state consequence, reward, and reload behavior are proven for Veridia.
+    proof_required: [end-to-end quest transcript, restart recovery, build migration]
+  - id: runtime.account_character
+    domain: account_lifecycle
+    title: Account, session, and character lifecycle
+    status: VERIFIED_FUNCTIONAL
+    evidence: PBKDF2 account hashing, registration, mixed-case password tests, gateway login, character persistence, reconnect, bans, and migrations exist.
+    files: [kernel/world/accounts.py, kernel/world/characters.py, adapters/gateway.py, kernel/session_registry.py, migrations/versions]
+    tests: [tests/test_accounts.py, tests/test_gateway.py, tests/test_characters.py, tests/test_migrations.py]
+    runtime_entry_point: adapters.gateway and adapters.web_gateway
+    dependencies: [runtime.persistence]
+    blockers: [production recovery and multi-process authority unproven]
+    risks: [duplicate-login behavior and split session stores]
+    priority: P0
+    effort: L
+    implementation_action: Define durable session authority, duplicate-login policy, and recovery contracts.
+    acceptance_criteria: Two independent clients create, reconnect, invalidate, and recover characters without duplication.
+    proof_required: [two-client test, restart test, security review, restore drill]
+  - id: runtime.social
+    domain: social
+    title: Chat, parties, guilds, friends, mail, and moderation
+    status: VERIFIED_PARTIAL
+    evidence: Party, guild, friends, chat, mail, bans, gateway frames, and guild storage have tests.
+    files: [kernel/world/party.py, kernel/world/guild.py, kernel/world/friends.py, kernel/world/mail.py, kernel/world/chat.py, kernel/world/bans.py]
+    tests: [tests/test_party.py, tests/test_guild.py, tests/test_friends.py, tests/test_mail.py, tests/test_chat.py, tests/test_bans.py]
+    runtime_entry_point: handle_command and event delivery bus
+    dependencies: [runtime.account_character, runtime.persistence]
+    blockers: [reporting, appeals, cross-process block enforcement unproven]
+    risks: [abuse and privacy controls incomplete]
+    priority: P0
+    effort: L
+    implementation_action: Add moderation case workflow and make social authority persistent and process-safe.
+    acceptance_criteria: Block, ignore, permissions, audit, reconnect, and moderation behavior pass abuse fixtures.
+    proof_required: [multi-client transcript, moderation audit, privacy review]
+  - id: runtime.combat_encounters
+    domain: combat
+    title: Multiplayer combat and encounter authority
+    status: VERIFIED_PARTIAL
+    evidence: Combat, boss phases, raid scaling, party reward sharing, defeat, loot, and combat logging seams exist.
+    files: [kernel/world/combat.py, kernel/world/boss_phases.py, kernel/world/party_rewards.py, kernel/world/encounter_log.py]
+    tests: [tests/test_combat.py, tests/test_boss_phases.py, tests/test_party_rewards.py]
+    runtime_entry_point: handle_command attack and world tick
+    dependencies: [runtime.account_character, economy.transactions]
+    blockers: [no unified encounter identity, contribution ledger, instance lifecycle, or load proof]
+    risks: [reward exploits, duplicate kills, process-local combat state]
+    priority: P0
+    effort: XL
+    implementation_action: Consolidate encounter state and contribution accounting before adding MMO-scale content.
+    acceptance_criteria: Solo, group, support contribution, reset, disconnect, loot, and concurrent encounters are deterministic.
+    proof_required: [two-client combat transcript, load test, disconnect test, exploit test]
+  - id: runtime.persistence
+    domain: persistence
+    title: SQL persistence and schema migration
+    status: VERIFIED_FUNCTIONAL
+    evidence: SQLAlchemy models, Alembic revisions, local database at head, migration round-trip tests, and persistence doctor exist.
+    files: [kernel/world/db.py, alembic.ini, migrations/versions, kernel/persistence_doctor.py]
+    tests: [tests/test_migrations.py, tests/test_db.py, tests/test_persistence_doctor.py]
+    runtime_entry_point: kernel.world.db
+    dependencies: []
+    blockers: [restore drill not verified]
+    risks: [JSON and SQL authorities coexist]
+    priority: P0
+    effort: M
+    implementation_action: Define state ownership and run a real isolated restore drill.
+    acceptance_criteria: Current player fixture restores exactly from a dated backup without live database mutation.
+    proof_required: [backup hash, restore transcript, row comparison]
+  - id: runtime.world_state
+    domain: world_state
+    title: Scoped persistent world state and events
+    status: VERIFIED_PARTIAL
+    evidence: Aethryn state store, climate, scheduler, events, runtime signals, and quest consequences exist.
+    files: [kernel/world/aethryn_state.py, kernel/world/scheduler.py, kernel/world/events.py, kernel/world/climate.py]
+    tests: [tests/test_aethryn_state.py, tests/test_scheduler.py, tests/test_events.py, tests/test_climate.py]
+    runtime_entry_point: world tick and room projection
+    dependencies: [runtime.persistence, compiler.world_ir]
+    blockers: [no unified scope, migration, and conflict policy]
+    risks: [state can diverge from package and quest records]
+    priority: P1
+    effort: L
+    implementation_action: Create typed state variables with scope, owner, persistence, transitions, reset, migration, and conflict policy.
+    acceptance_criteria: Settlement, zone, event, character, and temporary state survive restart and package migration.
+    proof_required: [restart recovery, state migration, consequence transcript]
+  - id: client.command_registry
+    domain: client
+    title: Authoritative commands and text/structured parity
+    status: VERIFIED_PARTIAL
+    evidence: Command spine, help index, text gateway, WebSocket gateway, GMCP frames, and command tests exist.
+    files: [kernel/commands.py, kernel/shelf/help_index.py, kernel/gmcp.py, adapters/gateway.py, adapters/web_gateway.py]
+    tests: [tests/test_commands.py, tests/test_help_index.py, tests/test_gmcp.py, tests/test_gateway.py, tests/test_web_gateway.py]
+    runtime_entry_point: forge.handle_command and gateway adapters
+    dependencies: [runtime.account_character]
+    blockers: [legacy command branches and no complete parity matrix]
+    risks: [help drift, inaccessible essential features]
+    priority: P0
+    effort: L
+    implementation_action: Register essential commands once and generate text/structured help and capability tests.
+    acceptance_criteria: Every P0 feature has a text command, structured projection, help, permission, and accessibility test.
+    proof_required: [parity matrix, narrow/no-color render, screen-reader order review]
+  - id: operations.observability_recovery
+    domain: operations
+    title: Observability, backups, restore, deployment, and rollback
+    status: VERIFIED_PARTIAL
+    evidence: Metrics, structured logging, maintenance mode, backups, local deployment, release gates, and rollback components exist. Persistence doctor explicitly warns restore is unverified.
+    files: [kernel/world/metrics.py, kernel/shelf/observability.py, kernel/persistence_doctor.py, kernel/seedlab/deployment.py, Makefile]
+    tests: [tests/test_observability.py, tests/test_deployment.py, tests/test_release_gate.py, tests/test_loadtest.py]
+    runtime_entry_point: Makefile, adapters/api.py, deployment controller
+    dependencies: [runtime.persistence, compiler.hotfix]
+    blockers: [restore drill, soak run, production alert policy]
+    risks: [false readiness claims]
+    priority: P0
+    effort: L
+    implementation_action: Complete isolated restore, crash recovery, load, soak, and release evidence.
+    acceptance_criteria: A release candidate can be published, observed, backed up, restored, and rolled back with recorded hashes.
+    proof_required: [restore drill, load report, soak report, rollback report]
+  - id: architecture.import_boundary
+    domain: architecture
+    title: Kernel dependency boundary
+    status: DUPLICATE_OR_COMPETING
+    evidence: lint-imports reports a broken contract because kernel.seedlab imports kernel.world through multiple modules.
+    files: [kernel/seedlab/aethryn_content.py, kernel/seedlab/audit_registry.py, kernel/seedlab/event_bridge.py, kernel/seedlab/runtime_bridge.py]
+    tests: [tests/test_seed_kernel_boundary.py]
+    runtime_entry_point: lint-imports
+    dependencies: []
+    blockers: []
+    risks: [platform and game layers cannot evolve independently]
+    priority: P0
+    effort: M
+    implementation_action: Define ports and adapters so generic SeedLab depends on contracts, not kernel.world.
+    acceptance_criteria: Import contract passes with Aethryn registered as an adapter.
+    proof_required: [lint-imports clean, boundary test]
+phases:
+  - id: phase_0
+    title: Audit and safe foundation
+    capabilities: [compiler.packet_compile, runtime.persistence, operations.observability_recovery]
+    dependencies: []
+    exit_criteria: Branch, commit, dirty state, baseline gates, database schema, and rollback constraints are recorded.
+  - id: phase_1
+    title: Compiler foundation
+    capabilities: [compiler.world_ir, compiler.schema_registry, compiler.reference_resolver, compiler.diagnostics, compiler.pass_manager, architecture.import_boundary]
+    dependencies: [phase_0]
+    exit_criteria: Veridia and second fixture normalize, resolve, compile, and report through one ordered deterministic pipeline.
+  - id: phase_2
+    title: Versioned package and content migration
+    capabilities: [compiler.content_migrations, compiler.incremental_cache, compiler.hotfix, content.rooms_prose_topology]
+    dependencies: [phase_1]
+    exit_criteria: Semantic diff, incremental rebuild, compatibility report, publish, and rollback pass.
+  - id: phase_3
+    title: Persistent multiplayer authority
+    capabilities: [runtime.account_character, runtime.persistence, economy.transactions, runtime.combat_encounters, runtime.social]
+    dependencies: [phase_2]
+    exit_criteria: Two-client lifecycle, atomic economy, group combat, social permissions, and restart recovery pass.
+  - id: phase_4
+    title: Live world and client proof
+    capabilities: [content.population_npc, content.quests_pressures, runtime.world_state, client.command_registry]
+    dependencies: [phase_3]
+    exit_criteria: Veridia end-to-end proof and second-region proof pass with text and structured parity.
+  - id: phase_5
+    title: Operations and release proof
+    capabilities: [operations.observability_recovery]
+    dependencies: [phase_3, phase_4]
+    exit_criteria: backup restore, crash recovery, load, soak, publish, hotfix, rollback, and security evidence are complete.
+human_decisions:
+  - id: session_takeover
+    question: What duplicate-login and session takeover policy is approved for beta?
+    impact: Changes persistence, security, and player experience.
+  - id: loss_policy
+    question: Which defeat losses are acceptable for persistent beta?
+    impact: Changes economy, recovery, and migration contracts.
+  - id: production_storage
+    question: Which production database, backup retention, privacy retention, and recovery channel are approved?
+    impact: Blocks production operations proof.
+  - id: legacy_save_authority
+    question: Should JSON saves be imported, frozen read-only, or retired after verified export?
+    impact: Changes migration and rollback scope.
+  - id: optional_mmo_modules
+    question: Which guild storage, auction, public events, PvP, housing, and naval systems are P0 versus feature-flagged?
+    impact: Changes the beta acceptance boundary.
+known_risks:
+  - dirty_worktree makes attribution of current code changes uncertain
+  - full repository format, lint, and import gates are red
+  - baseline test failures are not yet cleared
+  - multiple content and persistence authorities can drift
+  - restore has not been demonstrated
+  - runtime state and encounters are process-local in important paths
+recommended_sequence: [phase_1, phase_2, phase_3, phase_4, phase_5]

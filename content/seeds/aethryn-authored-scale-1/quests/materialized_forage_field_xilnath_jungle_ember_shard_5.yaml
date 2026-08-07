@@ -1,0 +1,36 @@
+id: forage_field_xilnath_jungle_ember_shard_5
+name: 'A small Requisition: ember shard of The Xil''nath Jungle Wilds'
+start: s0
+reward_xp: 185
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_xilnath_jungle|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_xilnath_jungle|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_xilnath_jungle|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_xilnath_jungle|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_xilnath_jungle|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in The Xil''nath Jungle Wilds: 0/5 (185 XP).'
+  s1: 'Bring in ember shard in The Xil''nath Jungle Wilds: 1/5 (185 XP).'
+  s2: 'Bring in ember shard in The Xil''nath Jungle Wilds: 2/5 (185 XP).'
+  s3: 'Bring in ember shard in The Xil''nath Jungle Wilds: 3/5 (185 XP).'
+  s4: 'Bring in ember shard in The Xil''nath Jungle Wilds: 4/5 (185 XP).'
+  done: You have requisitioned ember shard enough for The Xil'nath Jungle Wilds. The
+    physicians can work with this.

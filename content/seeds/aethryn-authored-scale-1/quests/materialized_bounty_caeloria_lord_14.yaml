@@ -1,0 +1,16 @@
+id: bounty_caeloria_lord_14
+name: 'Bounty: Hrothok the Meadow Sovereign'
+start: posted
+reward_xp: 504
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: caeloria_lord_14
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothok the Meadow Sovereign (level 42). Fell it for
+    504 XP.
+  collected: 'Bounty collected: Hrothok the Meadow Sovereign is felled. Well hunted.'

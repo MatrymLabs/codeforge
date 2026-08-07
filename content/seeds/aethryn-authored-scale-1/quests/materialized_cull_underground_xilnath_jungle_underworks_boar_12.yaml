@@ -1,0 +1,71 @@
+id: cull_underground_xilnath_jungle_underworks_boar_12
+name: 'A standing Reckoning: the boar-kind of The Verdant Loom Below'
+start: s0
+reward_xp: 624
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_xilnath_jungle_underworks|boar
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_xilnath_jungle_underworks|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the boar-kind of The Verdant Loom Below: 0/12 down (624 XP).'
+  s1: 'Reckon with the boar-kind of The Verdant Loom Below: 1/12 down (624 XP).'
+  s2: 'Reckon with the boar-kind of The Verdant Loom Below: 2/12 down (624 XP).'
+  s3: 'Reckon with the boar-kind of The Verdant Loom Below: 3/12 down (624 XP).'
+  s4: 'Reckon with the boar-kind of The Verdant Loom Below: 4/12 down (624 XP).'
+  s5: 'Reckon with the boar-kind of The Verdant Loom Below: 5/12 down (624 XP).'
+  s6: 'Reckon with the boar-kind of The Verdant Loom Below: 6/12 down (624 XP).'
+  s7: 'Reckon with the boar-kind of The Verdant Loom Below: 7/12 down (624 XP).'
+  s8: 'Reckon with the boar-kind of The Verdant Loom Below: 8/12 down (624 XP).'
+  s9: 'Reckon with the boar-kind of The Verdant Loom Below: 9/12 down (624 XP).'
+  s10: 'Reckon with the boar-kind of The Verdant Loom Below: 10/12 down (624 XP).'
+  s11: 'Reckon with the boar-kind of The Verdant Loom Below: 11/12 down (624 XP).'
+  done: The boar-kind of The Verdant Loom Below are settled with. The physic-paths
+    are a shade clearer.

@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import sys
 
-from kernel.world import area_store, survey
+from kernel.world import aethryn_cli, area_store, survey
 
 # The read-only half routes to the Surveyor; everything else is the area bench.
 _READ_ONLY = {
@@ -39,11 +39,88 @@ _READ_ONLY = {
     "graph",
 }
 
+_AETHRYN_COMMANDS = {
+    "explain",
+    "validate-packet",
+    "compile-packet",
+    "materialize",
+    "diff",
+    "hotfix",
+    "cache-inspect",
+    "provenance",
+    "find-orphans",
+    "economy-check",
+    "item-check",
+    "weapon-check",
+    "armor-check",
+    "crafting-check",
+    "merchant-check",
+    "loot-check",
+    "inspect-item",
+    "inspect-material",
+    "inspect-recipe",
+    "inspect-merchant-stock",
+    "item-lineage",
+    "item-provenance",
+    "recipe-tree",
+    "merchant-preview",
+    "loot-preview",
+    "simulate-crafting",
+    "simulate-stock",
+    "find-unobtainable-items",
+    "find-unproducible-items",
+    "find-orphaned-recipes",
+    "find-broken-sets",
+    "find-balance-outliers",
+    "find-economic-loops",
+    "find-duplicate-uniques",
+    "ecology-check",
+    "bestiary-check",
+    "population-check",
+    "inspect-creature",
+    "inspect-population",
+    "population-map",
+    "encounter-preview",
+    "simulate-population",
+    "find-overpopulated",
+    "find-empty-zones",
+    "find-habitat-conflicts",
+    "find-orphaned-creatures",
+    "quest-check",
+    "quest-reference-check",
+    "quest-graph-check",
+    "quest-reward-check",
+    "quest-consequence-check",
+    "inspect-quest",
+    "inspect-pressure",
+    "inspect-arc",
+    "quest-graph",
+    "quest-lineage",
+    "quest-provenance",
+    "simulate-quest",
+    "simulate-public-event",
+    "preview-contract",
+    "find-broken-quests",
+    "find-unreachable-quest-states",
+    "find-unobtainable-objectives",
+    "find-missing-quest-references",
+    "find-duplicate-rewards",
+    "find-quest-economic-loops",
+    "find-canon-leaking-quests",
+    "find-quests-without-consequences",
+    "find-overused-quest-targets",
+    "canon-check",
+    "map-concordance-check",
+    "full-world-check",
+}
+
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args and args[0] in _READ_ONLY:
         code, text = survey.run(args)
+    elif args and args[0] in _AETHRYN_COMMANDS:
+        code, text = aethryn_cli.run(args)
     else:
         code, text = area_store.run(args)
     print(text)

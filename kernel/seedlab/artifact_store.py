@@ -355,8 +355,7 @@ def compare_artifact_reproduction(
         and original.transformation_version == rerun.transformation_version
     )
     same_output = (
-        original.manifest_hash == rerun.manifest_hash
-        and original.checksums == rerun.checksums
+        original.manifest_hash == rerun.manifest_hash and original.checksums == rerun.checksums
     )
     return {
         "original_artifact_id": original.artifact_id,

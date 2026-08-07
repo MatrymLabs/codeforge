@@ -1,0 +1,73 @@
+id: cull_underground_xilnath_jungle_caves_sabrecat_12
+name: 'A standing Thinning: the sabrecat-kind of Xil''nath''s Green Tunnels'
+start: s0
+reward_xp: 552
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_xilnath_jungle_caves|sabrecat
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 0/12 down (552 XP).'
+  s1: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 1/12 down (552 XP).'
+  s2: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 2/12 down (552 XP).'
+  s3: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 3/12 down (552 XP).'
+  s4: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 4/12 down (552 XP).'
+  s5: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 5/12 down (552 XP).'
+  s6: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 6/12 down (552 XP).'
+  s7: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 7/12 down (552 XP).'
+  s8: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 8/12 down (552 XP).'
+  s9: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 9/12 down (552 XP).'
+  s10: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 10/12 down (552
+    XP).'
+  s11: 'Thin out the sabrecat-kind of Xil''nath''s Green Tunnels: 11/12 down (552
+    XP).'
+  done: The sabrecat-kind of Xil'nath's Green Tunnels are thinned back. The physic-paths
+    are a shade clearer.

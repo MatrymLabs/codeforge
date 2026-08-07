@@ -1,0 +1,36 @@
+id: forage_underground_caeloria_caves_meadowfoil_5
+name: 'A small Provision: meadowfoil of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 65
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_caeloria_caves|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_caeloria_caves|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 0/5 (65 XP).'
+  s1: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 1/5 (65 XP).'
+  s2: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 2/5 (65 XP).'
+  s3: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 3/5 (65 XP).'
+  s4: 'Lay in meadowfoil in Caeloria''s Sealed Aqueducts: 4/5 (65 XP).'
+  done: You have laid in meadowfoil enough for Caeloria's Sealed Aqueducts. The village
+    makers will put it to use.

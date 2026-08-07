@@ -1,0 +1,16 @@
+id: bounty_the_black_hollow_deep_boss
+name: 'Bounty: the Keeper of The Black Hollow'
+start: posted
+reward_xp: 684
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_black_hollow_deep_boss
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the Keeper of The Black Hollow (level 57). Fell it for
+    684 XP.
+  collected: 'Bounty collected: the Keeper of The Black Hollow is felled. Well hunted.'

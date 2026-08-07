@@ -1,0 +1,71 @@
+id: cull_underground_korvash_highlands_caves_brute_12
+name: 'A standing Thinning: the brute-kind of Korvash Oath-Caves'
+start: s0
+reward_xp: 756
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_korvash_highlands_caves|brute
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_caves|brute
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the brute-kind of Korvash Oath-Caves: 0/12 down (756 XP).'
+  s1: 'Thin out the brute-kind of Korvash Oath-Caves: 1/12 down (756 XP).'
+  s2: 'Thin out the brute-kind of Korvash Oath-Caves: 2/12 down (756 XP).'
+  s3: 'Thin out the brute-kind of Korvash Oath-Caves: 3/12 down (756 XP).'
+  s4: 'Thin out the brute-kind of Korvash Oath-Caves: 4/12 down (756 XP).'
+  s5: 'Thin out the brute-kind of Korvash Oath-Caves: 5/12 down (756 XP).'
+  s6: 'Thin out the brute-kind of Korvash Oath-Caves: 6/12 down (756 XP).'
+  s7: 'Thin out the brute-kind of Korvash Oath-Caves: 7/12 down (756 XP).'
+  s8: 'Thin out the brute-kind of Korvash Oath-Caves: 8/12 down (756 XP).'
+  s9: 'Thin out the brute-kind of Korvash Oath-Caves: 9/12 down (756 XP).'
+  s10: 'Thin out the brute-kind of Korvash Oath-Caves: 10/12 down (756 XP).'
+  s11: 'Thin out the brute-kind of Korvash Oath-Caves: 11/12 down (756 XP).'
+  done: The brute-kind of Korvash Oath-Caves are thinned back. The region breathes
+    easier.

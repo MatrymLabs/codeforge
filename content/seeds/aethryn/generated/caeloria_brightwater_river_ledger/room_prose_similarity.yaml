@@ -1,0 +1,46 @@
+presentation_version: aethryn-room-v1
+room_count: 5
+unique_long_descriptions: 5
+duplicate_groups: []
+reused_phrases:
+- phrase: river market millrace flooded lower
+  count: 5
+- phrase: market millrace flooded lower weirs
+  count: 5
+- phrase: millrace flooded lower weirs and
+  count: 5
+- phrase: flooded lower weirs and a
+  count: 5
+- phrase: lower weirs and a cold
+  count: 5
+- phrase: weirs and a cold old
+  count: 5
+- phrase: and a cold old sluice
+  count: 5
+- phrase: a cold old sluice meets
+  count: 3
+- phrase: riverstone market and licensing hall
+  count: 3
+- phrase: market and licensing hall with
+  count: 3
+- phrase: and licensing hall with ledgers
+  count: 3
+- phrase: licensing hall with ledgers and
+  count: 3
+- phrase: hall with ledgers and seals
+  count: 3
+- phrase: work river market millrace flooded
+  count: 2
+- phrase: a cold old sluice gives
+  count: 2
+- phrase: cold old sluice gives the
+  count: 2
+- phrase: old sluice gives the work
+  count: 2
+- phrase: sluice gives the work its
+  count: 2
+- phrase: gives the work its shape
+  count: 2
+- phrase: its materials and position belong
+  count: 2
+flags: []

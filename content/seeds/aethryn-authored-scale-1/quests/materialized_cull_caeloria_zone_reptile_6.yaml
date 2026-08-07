@@ -1,0 +1,41 @@
+id: cull_caeloria_zone_reptile_6
+name: 'A small Cull: the reptile-kind of Caeloria'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: caeloria_zone|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: caeloria_zone|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: caeloria_zone|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: caeloria_zone|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: caeloria_zone|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: caeloria_zone|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the reptile-kind of Caeloria: 0/6 down (120 XP).'
+  s1: 'Cull the reptile-kind of Caeloria: 1/6 down (120 XP).'
+  s2: 'Cull the reptile-kind of Caeloria: 2/6 down (120 XP).'
+  s3: 'Cull the reptile-kind of Caeloria: 3/6 down (120 XP).'
+  s4: 'Cull the reptile-kind of Caeloria: 4/6 down (120 XP).'
+  s5: 'Cull the reptile-kind of Caeloria: 5/6 down (120 XP).'
+  done: The reptile-kind of Caeloria are thinned. The farm-roads are the safer for
+    it.

@@ -1,0 +1,70 @@
+id: cull_korvash_highlands_zone_undead_12
+name: 'A standing Purge: the undead-kind of Korvash Highlands'
+start: s0
+reward_xp: 792
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: korvash_highlands_zone|undead
+- state: s1
+  event: cull
+  to: s2
+  on_cull: korvash_highlands_zone|undead
+- state: s2
+  event: cull
+  to: s3
+  on_cull: korvash_highlands_zone|undead
+- state: s3
+  event: cull
+  to: s4
+  on_cull: korvash_highlands_zone|undead
+- state: s4
+  event: cull
+  to: s5
+  on_cull: korvash_highlands_zone|undead
+- state: s5
+  event: cull
+  to: s6
+  on_cull: korvash_highlands_zone|undead
+- state: s6
+  event: cull
+  to: s7
+  on_cull: korvash_highlands_zone|undead
+- state: s7
+  event: cull
+  to: s8
+  on_cull: korvash_highlands_zone|undead
+- state: s8
+  event: cull
+  to: s9
+  on_cull: korvash_highlands_zone|undead
+- state: s9
+  event: cull
+  to: s10
+  on_cull: korvash_highlands_zone|undead
+- state: s10
+  event: cull
+  to: s11
+  on_cull: korvash_highlands_zone|undead
+- state: s11
+  event: cull
+  to: done
+  on_cull: korvash_highlands_zone|undead
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the undead-kind of Korvash Highlands: 0/12 down (792 XP).'
+  s1: 'Purge the undead-kind of Korvash Highlands: 1/12 down (792 XP).'
+  s2: 'Purge the undead-kind of Korvash Highlands: 2/12 down (792 XP).'
+  s3: 'Purge the undead-kind of Korvash Highlands: 3/12 down (792 XP).'
+  s4: 'Purge the undead-kind of Korvash Highlands: 4/12 down (792 XP).'
+  s5: 'Purge the undead-kind of Korvash Highlands: 5/12 down (792 XP).'
+  s6: 'Purge the undead-kind of Korvash Highlands: 6/12 down (792 XP).'
+  s7: 'Purge the undead-kind of Korvash Highlands: 7/12 down (792 XP).'
+  s8: 'Purge the undead-kind of Korvash Highlands: 8/12 down (792 XP).'
+  s9: 'Purge the undead-kind of Korvash Highlands: 9/12 down (792 XP).'
+  s10: 'Purge the undead-kind of Korvash Highlands: 10/12 down (792 XP).'
+  s11: 'Purge the undead-kind of Korvash Highlands: 11/12 down (792 XP).'
+  done: The undead-kind of Korvash Highlands are purged. The region breathes easier.

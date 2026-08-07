@@ -1,0 +1,15 @@
+id: bounty_xilnath_jungle_lord_2
+name: 'Bounty: Vexar the Mire Matron'
+start: posted
+reward_xp: 1116
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: xilnath_jungle_lord_2
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Vexar the Mire Matron (level 93). Fell it for 1116 XP.
+  collected: 'Bounty collected: Vexar the Mire Matron is felled. Well hunted.'

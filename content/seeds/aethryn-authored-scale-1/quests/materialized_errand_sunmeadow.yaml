@@ -1,0 +1,15 @@
+id: errand_sunmeadow
+name: 'Errand: The Black Hollow'
+start: posted
+reward_xp: 15
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_black_hollow
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Black Hollow (15 XP).
+  done: You reach The Black Hollow and mark the way. Well scouted.

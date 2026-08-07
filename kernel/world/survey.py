@@ -20,6 +20,7 @@ import yaml
 
 from kernel.shelf import table
 from kernel.world import canon, worldgraph
+from kernel.world.aethryn_validation import load_packet, validate_map_concordance, validate_packet
 from kernel.world.seed import SeedError, _UniqueKeyLoader
 
 # The seed files the Surveyor reads. Regions come from canon; these carry the placed locations.
@@ -124,7 +125,32 @@ def validate() -> list[str]:
         + faction_references()
         + canon.check_canon()
         + unreachable()
+        + design_contracts()
     )
+
+
+def design_contracts() -> list[str]:
+    """Run the Aethryn design-layer gates through the established read-only survey path."""
+    root = canon.AETHRYN_DIR.parent.parent.parent
+    problems = [
+        f"{issue.category}/{issue.code} at {issue.path}: {issue.message}; action: {issue.action}"
+        for issue in validate_map_concordance(canon.AETHRYN_DIR / "design" / "map_concordance.yaml")
+    ]
+    packet_root = canon.AETHRYN_DIR / "design" / "packets"
+    for path in sorted(packet_root.glob("*.yaml")):
+        try:
+            report = validate_packet(load_packet(path), root=root)
+        except Exception as exc:  # malformed packets are survey findings, not hidden crashes
+            problems.append(f"packet {path.name}: cannot load: {exc}")
+            continue
+        problems.extend(
+            (
+                f"packet {path.name}: {issue.category}/{issue.code} at {issue.path}: "
+                f"{issue.message}; action: {issue.action}"
+            )
+            for issue in report.issues
+        )
+    return problems
 
 
 def _format_regions() -> str:

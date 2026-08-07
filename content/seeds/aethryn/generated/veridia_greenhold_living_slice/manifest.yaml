@@ -1,0 +1,65 @@
+packet_id: veridia_greenhold_living_slice
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+generation_seed: 41017
+input_digest: e8b9436e78a4fabde5f069a3de8bfafb01eaae79cb681de49362865d3436f077
+output_digest: 537f147ede61336fc0003765e1ae1b9011387be4735ccfae051a8daf30c2edc6
+records:
+  settlements: 1
+  districts: 1
+  neighborhoods: 2
+  wilderness: 1
+  rooms: 9
+  npcs: 3
+  creatures: 3
+  population_profiles: 6
+  spawn_pools: 2
+  roaming_routes: 1
+  migration_rules: 1
+  encounter_groups: 2
+  crowd_specs: 1
+  ambient_presence: 4
+  items: 18
+  material_culture: 1
+  resource_nodes: 2
+  economy_flows: 3
+  ecology_flows: 2
+  quest_pressures: 4
+  state_changes: 1
+  dungeons: 1
+  quests: 10
+  quest_arcs: 1
+  contract_templates: 1
+  public_events: 1
+  quest_world_effects: 4
+  quest_generation_profiles: 1
+  materials: 7
+  item_families: 10
+  quality_profiles: 2
+  crafting_stations: 5
+  merchant_stock_profiles: 2
+  loot_profiles: 4
+  placements: 3
+  equipment_sets: 1
+  recipes: 8
+output_paths:
+- content/seeds/aethryn/room_batches/veridia_greenhold_living_slice_0014.yaml
+- content/seeds/aethryn/generated/veridia_greenhold_living_slice/manifest.yaml
+- content/seeds/aethryn/generated/veridia_greenhold_living_slice/provenance.yaml
+provenance:
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+  source_paths:
+  - content/seeds/aethryn/design
+  - content/seeds/aethryn/authored/greenhold.yaml
+  packet_id: veridia_greenhold_living_slice
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  authority: AUTHORED_LOCAL
+  note: offline deterministic compiler output
+validation_verdict: CLEAN
+previous_package: ''

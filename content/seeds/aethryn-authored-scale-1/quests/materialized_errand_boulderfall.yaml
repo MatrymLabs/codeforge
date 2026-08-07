@@ -1,0 +1,15 @@
+id: errand_boulderfall
+name: 'Errand: Ashen Wastes'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: ashen_wastes
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Ashen Wastes (1500 XP).
+  done: You set the token at Ashen Wastes. The stone answers.

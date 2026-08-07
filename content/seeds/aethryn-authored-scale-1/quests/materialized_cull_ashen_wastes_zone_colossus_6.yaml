@@ -1,0 +1,40 @@
+id: cull_ashen_wastes_zone_colossus_6
+name: 'A small Purge: the colossus-kind of Ashen Wastes'
+start: s0
+reward_xp: 336
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: ashen_wastes_zone|colossus
+- state: s1
+  event: cull
+  to: s2
+  on_cull: ashen_wastes_zone|colossus
+- state: s2
+  event: cull
+  to: s3
+  on_cull: ashen_wastes_zone|colossus
+- state: s3
+  event: cull
+  to: s4
+  on_cull: ashen_wastes_zone|colossus
+- state: s4
+  event: cull
+  to: s5
+  on_cull: ashen_wastes_zone|colossus
+- state: s5
+  event: cull
+  to: done
+  on_cull: ashen_wastes_zone|colossus
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the colossus-kind of Ashen Wastes: 0/6 down (336 XP).'
+  s1: 'Purge the colossus-kind of Ashen Wastes: 1/6 down (336 XP).'
+  s2: 'Purge the colossus-kind of Ashen Wastes: 2/6 down (336 XP).'
+  s3: 'Purge the colossus-kind of Ashen Wastes: 3/6 down (336 XP).'
+  s4: 'Purge the colossus-kind of Ashen Wastes: 4/6 down (336 XP).'
+  s5: 'Purge the colossus-kind of Ashen Wastes: 5/6 down (336 XP).'
+  done: The colossus-kind of Ashen Wastes are purged. The ash-tracks are a shade safer.

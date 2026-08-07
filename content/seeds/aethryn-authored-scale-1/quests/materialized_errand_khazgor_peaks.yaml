@@ -1,0 +1,15 @@
+id: errand_khazgor_peaks
+name: 'Errand: Brightwater'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: brightwater
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Brightwater (1500 XP).
+  done: You bring word to Brightwater. It is gratefully received.

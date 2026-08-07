@@ -1,0 +1,1205 @@
+settlements:
+- id: brightwater_river_settlement
+  display_name: Brightwater river ward
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  population_band: river-city ward with mill workers, fishers, traders, and licensing
+    officials
+  government: Caelorian licensing authority balanced by river-warden practice
+  food_sources:
+  - river fish
+  - nearby farms
+  - market grain
+  - water-ration trade
+  water_source: the river, millraces, and old sluice infrastructure
+  fuel_source: mill timber, chandler stock, and managed riverbank wood
+  labor_base:
+  - milling
+  - fishing
+  - gathering
+  - river warding
+  - trade
+  - licensing
+  waste_handling: mill runoff and lower-weir clearing managed by wardens, with old
+    channels requiring inspection
+  economy: mill output, river trade, meadowfoil gathering, draughts, rations, and
+    licensed relic recovery
+  architecture: riverstone markets, timber millworks, civic ledgers, weirs, and older
+    pale channels
+  culture: practical river work constrained by careful records and unresolved ownership
+    questions
+  services:
+  - market
+  - mill
+  - licensing hall
+  - river warding
+  - gathering exchange
+  - travel supplies
+  external_connections:
+  - brightwater
+  - caeloria
+  - river trade
+  active_conflicts:
+  - sluice_token_licensing
+  - lower_weir_danger
+  - meadowfoil_labor_shortage
+  daily_rhythm: dawn mill start, market trade, midday licensing, evening weir check,
+    night river watch
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 04e0f4324050970fca36e3359291d8d8a0289643b2b99cd7471031c2c0d860c9
+districts:
+- id: brightwater_weirward
+  display_name: Weirward
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  settlement_id: brightwater_river_settlement
+  purpose:
+  - civic
+  - economic
+  - ecological
+  - service
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d95ed7c041ced774477f70a9ad673e73bfc1176984821beb5109983fdc150c3f
+neighborhoods:
+- id: brightwater_riverfront
+  display_name: Riverfront Weirward
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  settlement_id: brightwater_river_settlement
+  district_id: brightwater_weirward
+  purpose:
+  - economic
+  - civic
+  - ecological
+  - threshold
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 5a20e487cbaa9052f1a51d922be8a5a0ae93e3b022a0c696a82ac29255ef29ac
+rooms:
+- id: brightwater_market
+  display_name: The Weir Market
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  parent_settlement: brightwater_river_settlement
+  district_id: brightwater_weirward
+  neighborhood_id: brightwater_riverfront
+  purpose:
+  - social
+  - economic
+  - service
+  description: The bright heart of Brightwater holds stalls beside the mill-weirs,
+    where millers, fishers, and a licensing clerk turn river work into food, trade,
+    and arguments over custody.
+  room_type: River Market
+  tags:
+  - caeloria
+  - brightwater
+  - river
+  - market
+  - compiler_slice
+  replace: true
+  exits:
+    out: brightwater
+    north: brightwater_millrace
+    west: brightwater_hall
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1950f9c04d772ab398f794a6f6231b73e0f686f788e642b99de0a0741892bcaa
+  presentation_version: aethryn-room-v1
+  area_name: Caeloria
+  primary_purpose:
+  - social
+  - economic
+  - service
+  short_description: The bright heart of Brightwater holds stalls beside the mill-weirs,
+    where millers, fishers, and a licensing clerk turn river work into food, trade,
+    and arguments over custody.
+  long_description: 'The bright heart of Brightwater holds stalls beside the mill-weirs,
+    where millers, fishers, and a licensing clerk turn river work into food, trade,
+    and arguments over custody.
+
+
+    In Caeloria, this river market exists for social, economic, and service work;
+    river market, millrace, flooded lower weirs, and a cold old sluice gives the work
+    its shape.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: brightwater_millrace
+  display_name: The Millrace
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  parent_settlement: brightwater_river_settlement
+  district_id: brightwater_weirward
+  neighborhood_id: brightwater_riverfront
+  purpose:
+  - economic
+  - ecological
+  - resource
+  - traversal
+  description: Turning wheels drive water through narrow races while meadowfoil grows
+    along wet piling, making the same bank useful to gatherers, millers, wardens,
+    and whatever follows the current.
+  room_type: Working Millrace
+  tags:
+  - caeloria
+  - brightwater
+  - river
+  - gathering
+  - compiler_slice
+  replace: true
+  exits:
+    south: brightwater_market
+    down: brightwater_sluice
+    west: brightwater_lowerweir
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 57a5f169bd43e921b54393693cab9b98726915e5ac93526a80f3f75f488d797d
+  presentation_version: aethryn-room-v1
+  area_name: Caeloria
+  primary_purpose:
+  - economic
+  - ecological
+  - resource
+  - traversal
+  short_description: Turning wheels drive water through narrow races while meadowfoil
+    grows along wet piling, making the same bank useful to gatherers, millers, wardens,
+    and whatever follows the current.
+  long_description: 'Turning wheels drive water through narrow races while meadowfoil
+    grows along wet piling, making the same bank useful to gatherers, millers, wardens,
+    and whatever follows the current.
+
+
+    Its materials and position belong to Caeloria: river market, millrace, flooded
+    lower weirs, and a cold old sluice meets riverstone market and licensing hall
+    with ledgers and seals at this threshold.'
+  points_of_interest:
+  - id: brightwater_meadowfoil_node
+    display: riverbank meadowfoil
+    kind: resource
+    actions:
+    - examine
+    - gather
+    source_record: brightwater_meadowfoil_node
+  conditions:
+  - id: pressure:brightwater_meadowfoil_pressure
+    kind: pressure
+    source_record: brightwater_meadowfoil_pressure
+    display: dangerous water access reduces the gathered herb supply used by trade
+      and provisions
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: brightwater_hall
+  display_name: The Licensing Hall
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  parent_settlement: brightwater_river_settlement
+  district_id: brightwater_weirward
+  neighborhood_id: brightwater_riverfront
+  purpose:
+  - civic
+  - economic
+  - narrative
+  - service
+  description: Cool stone walls hold ledgers and seals where Caeloria registers what
+    the river gives up before private hands can claim it, even when the clerks do
+    not understand the old works.
+  room_type: Licensing Hall
+  tags:
+  - caeloria
+  - brightwater
+  - civic
+  - records
+  - compiler_slice
+  replace: true
+  exits:
+    east: brightwater_market
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: df15287ea00e0479a94cebe5acb47634033cd0031b2e408f1bcb267dadd7384d
+  presentation_version: aethryn-room-v1
+  area_name: Caeloria
+  primary_purpose:
+  - civic
+  - economic
+  - narrative
+  - service
+  short_description: Cool stone walls hold ledgers and seals where Caeloria registers
+    what the river gives up before private hands can claim it, even when the clerks
+    do not understand the old works.
+  long_description: 'Cool stone walls hold ledgers and seals where Caeloria registers
+    what the river gives up before private hands can claim it, even when the clerks
+    do not understand the old works.
+
+
+    In Caeloria, this licensing hall exists for civic, economic, and narrative work;
+    river market, millrace, flooded lower weirs, and a cold old sluice gives the work
+    its shape.'
+  points_of_interest:
+  - id: brightwater_flood_ledger
+    display: the Brightwater flood-ledger
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: brightwater_flood_ledger
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: brightwater_sluice
+  display_name: The Old Sluice
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  parent_settlement: brightwater_river_settlement
+  district_id: brightwater_weirward
+  neighborhood_id: brightwater_riverfront
+  purpose:
+  - hazard
+  - threshold
+  - puzzle
+  - narrative
+  description: A flooded chamber older than the mills holds pale channels and seized
+    flow-gates that once ruled the river without a hand, while a quiet mechanical
+    pulse waits behind the water.
+  room_type: Ancient Waterworks
+  tags:
+  - caeloria
+  - brightwater
+  - old_world
+  - sluice
+  - compiler_slice
+  replace: true
+  exits:
+    up: brightwater_millrace
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ad756bfc02858bbd2de986072ad24ee8f322ffd349e777c0e91b7b736460e522
+  presentation_version: aethryn-room-v1
+  area_name: Caeloria
+  primary_purpose:
+  - hazard
+  - threshold
+  - puzzle
+  - narrative
+  short_description: A flooded chamber older than the mills holds pale channels and
+    seized flow-gates that once ruled the river without a hand, while a quiet mechanical
+    pulse waits behind the water.
+  long_description: 'A flooded chamber older than the mills holds pale channels and
+    seized flow-gates that once ruled the river without a hand, while a quiet mechanical
+    pulse waits behind the water.
+
+
+    The Caeloria setting makes its hazard, threshold, and puzzle work purpose visible
+    in the riverstone market and licensing hall with ledgers and seals built where
+    river market, millrace, flooded lower weirs, and a cold old sluice meets the route.'
+  points_of_interest:
+  - id: brightwater_sluice_token
+    display: a warden's sluice-token
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: brightwater_sluice_token
+  conditions:
+  - id: state:brightwater.sluice_status
+    kind: state
+    state_key: brightwater.sluice_status
+    values:
+    - ticking
+    - quiet
+    display: The buried flow-gates remain {value} behind the flooded channels.
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: brightwater_lowerweir
+  display_name: The Lower Weirs
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  parent_settlement: brightwater_river_settlement
+  district_id: brightwater_weirward
+  neighborhood_id: brightwater_riverfront
+  purpose:
+  - encounter
+  - ecological
+  - hazard
+  - traversal
+  description: Below the mills, flooded lower races spread through sunken timber where
+    the licensing clerks do not go and a long-drowned predator has made the neglected
+    water its shelter.
+  room_type: Lower Weirs
+  tags:
+  - caeloria
+  - brightwater
+  - river
+  - hazard
+  - compiler_slice
+  replace: true
+  exits:
+    east: brightwater_millrace
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 67ddfc41cc3ca9887587ed9bf09e6d649ef15edb741118525fd453e9be7e5162
+  presentation_version: aethryn-room-v1
+  area_name: Caeloria
+  primary_purpose:
+  - encounter
+  - ecological
+  - hazard
+  - traversal
+  short_description: Below the mills, flooded lower races spread through sunken timber
+    where the licensing clerks do not go and a long-drowned predator has made the
+    neglected water its shelter.
+  long_description: 'Below the mills, flooded lower races spread through sunken timber
+    where the licensing clerks do not go and a long-drowned predator has made the
+    neglected water its shelter.
+
+
+    Its materials and position belong to Caeloria: river market, millrace, flooded
+    lower weirs, and a cold old sluice meets riverstone market and licensing hall
+    with ledgers and seals at this threshold.'
+  points_of_interest: []
+  conditions:
+  - id: pressure:brightwater_lower_weir_pressure
+    kind: pressure
+    source_record: brightwater_lower_weir_pressure
+    display: a river-wyrm has made the neglected lower races unsafe for fishers and
+      mill work
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+npcs:
+- id: brightwater_licensor
+  display_name: Licensor Aldre
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  role:
+  - governance
+  - trade
+  - information
+  - conflict
+  location: brightwater_hall
+  schedule:
+  - morning ledger opening
+  - midday relic intake
+  - afternoon licensing review
+  - evening flood-ledger close
+  relationship_to_civilization: turns river recovery into recorded custody and public
+    argument
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 8d32ffe972292ac503bc0d500892f85aa26a3aef2268ede8ce93213eefbb0328
+- id: brightwater_chandler
+  display_name: Chandler Merrow
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  role:
+  - production
+  - trade
+  - transport
+  - social_identity
+  location: brightwater_market
+  schedule:
+  - dawn stock check
+  - market trade
+  - midday meadowfoil weighing
+  - evening ration count
+  relationship_to_civilization: supplies river labor and buys the gathered resource
+    that keeps local trade moving
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 51afe8fb9796c1d2a838aa78f464e5a88376d29a6abc281c3efed11a1bd56c01
+- id: brightwater_warden
+  display_name: River-Warden Kess
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  - brightwater_wardens
+  role:
+  - military
+  - maintenance
+  - ecological_interaction
+  - conflict
+  location: brightwater_market
+  schedule:
+  - dawn river survey
+  - midday millrace inspection
+  - dusk lower-weir patrol
+  - night flood watch
+  relationship_to_civilization: keeps the river usable where civic licensing stops
+    at the ledger
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    - brightwater_wardens
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 115719d3dd1ab04a5d964bf97b6bc7bdd59fab46299268ea9480d9ebea781686
+creatures:
+- id: brightwater_sluice_eels
+  display_name: a knot of sluice-eels
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  location: brightwater_sluice
+  habitat: flooded channels and pale stone pockets in the old sluice
+  diet_or_energy_source: river fish, scraps, and warm flow around the old gates
+  predators: larger river predators and occasional wardens
+  prey_or_resource_pressure: steady water and food draw them toward the machinery
+  reproduction_or_recurrence: ordinary river spawning wherever cold shelter remains
+  seasonal_behavior: gather in deeper channels during low night flow
+  ecological_role: marks the sluice as a living water system rather than an empty
+    ruin
+  relationship_to_civilization: nuisance to maintenance crews and warning of blocked
+    channels
+  reason_for_persistence: water, food, and protected stone channels persist beneath
+    the mills
+  keywords:
+  - eel
+  - sluice-eel
+  - river
+  creature_category: biological
+  allowed_regions:
+  - caeloria
+  climate_tolerance:
+  - temperate
+  - riverine
+  threat_range:
+  - 1
+  - 4
+  description: A knot of narrow eels threads through the sluice's warm seams and flooded
+    channels.
+  room_presence_description: Wet scales flash between the sluice stones while the
+    water mutters below.
+  examine_description: The eels shelter in pale stone pockets and feed wherever mill
+    scraps collect.
+  behavior: schools through warm flow and scatters from tools
+  intelligence: animal instinct
+  disposition: defensive nuisance
+  social_organization: school
+  activity_period: all day, strongest at low flow
+  movement_behavior: follows water between channels
+  combat_role: swarm nuisance
+  abilities:
+  - schooling_bite
+  - slip_away
+  retreat_behavior: vanishes into flooded seams
+  pursuit_behavior: does not pursue beyond the water
+  assistance_behavior: nearby eels tighten the school when disturbed
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: common
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6a746482ac683e3005c53eb2069fac41056fbd8a03a41be63f2ad71d87564d24
+- id: brightwater_riverwyrm
+  display_name: a drowned river-wyrm
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  location: brightwater_lowerweir
+  habitat: flooded lower weirs and sunken timber
+  diet_or_energy_source: fish, river animals, and accumulated lower-race prey
+  predators: wardens, larger river predators, and organized hunting parties
+  prey_or_resource_pressure: neglected timber provides shelter while lower-race prey
+    gathers
+  reproduction_or_recurrence: persistent shelter can attract another predator after
+    one is removed
+  seasonal_behavior: rises toward the millrace when high water expands the lower channels
+  ecological_role: makes neglected infrastructure a visible civic danger
+  relationship_to_civilization: threatens fishers, mill output, and the safety of
+    lower-race work
+  reason_for_persistence: flooded shelter, prey, and delayed maintenance keep the
+    lower weir viable
+  keywords:
+  - river-wyrm
+  - wyrm
+  - lower-weir
+  creature_category: biological
+  allowed_regions:
+  - caeloria
+  climate_tolerance:
+  - temperate
+  - riverine
+  threat_range:
+  - 8
+  - 18
+  description: A drowned river-wyrm coils among the lower timbers where the weir has
+    stopped receiving care.
+  room_presence_description: The lower water bulges around a scaled back, and the
+    old timber answers with a wet groan.
+  examine_description: Its scarred hide carries silt and splinters; it has learned
+    that the neglected weir is a reliable hunting place.
+  behavior: waits below the race, strikes from cover, and retreats with the current
+  intelligence: predatory cunning
+  disposition: territorial predator
+  social_organization: solitary
+  activity_period: dusk and high water
+  movement_behavior: follows flooded channels and lower-race shelter
+  combat_role: ambusher
+  abilities:
+  - current_lunge
+  - constrict
+  retreat_behavior: withdraws into the lower channels after a hard wound
+  pursuit_behavior: pursues only along connected water
+  assistance_behavior: none
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: rare
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6da5b226a047eef859993b2b4646db504b7dbf615cd2318ff8616528da351576
+items:
+- id: brightwater_sluice_token
+  display_name: a warden's sluice-token
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  source_room: brightwater_sluice
+  origin: recovered from the old sluice beneath the working mills
+  material: pale untarnished metal worked with channels like a river seen from above
+  maker_or_tradition: unknown earlier waterworks tradition
+  use: ordinary custody marker for an extraordinary control system
+  custody: Brightwater River Wardens pending licensing review
+  maintenance_state: intact, cold-water worn, and awaiting registration
+  regional_relevance: forces Caeloria's record law to meet infrastructure it cannot
+    fully explain
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 0a29c9475780b1cac2f55d22ae668c23e8a28e9ce8a98bdd5c0edf843c4b2215
+- id: brightwater_flood_ledger
+  display_name: the Brightwater flood-ledger
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  source_room: brightwater_hall
+  origin: maintained civic record of floods and mill survival
+  material: bound paper, river wax, iron clasp, and layered ink
+  maker_or_tradition: Brightwater licensing clerks across three centuries
+  use: ordinary flood reporting and evidence for river decisions
+  custody: Licensor Aldre in the Licensing Hall
+  maintenance_state: active, dry, and updated after each flood watch
+  regional_relevance: records the repeated relationship between civic survival and
+    the old sluice
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 04ca0b88fc294cb0877bb27d9585aedf4f6d427adb90d6254e9f70c9795060e8
+resource_nodes:
+- id: brightwater_meadowfoil_node
+  display_name: riverbank meadowfoil
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  resource: meadowfoil
+  habitat: wet piling and maintained millrace bank
+  recurrence: regrowth after careful gathering and ordinary river seasons
+  source_room: brightwater_millrace
+  economic_use: dyer supply, chandler trade, and river-travel provisions
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 221ca61a979a165b68d02b93f60cd236ba8d4ec8e665ed4e1b8cd2603ff0483c
+economy_flows:
+- id: brightwater_meadowfoil_flow
+  display_name: meadowfoil to the market
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - caeloria_brightwater_economy
+  source: brightwater_meadowfoil_node
+  sink: brightwater_chandler
+  resource: meadowfoil
+  purpose: supply dyers and keep river provisions moving
+  transport: gathered bundles along the millrace bank
+  surplus_or_shortage: shortage when safe access to the bank narrows
+  inventory_provenance: gathered locally and weighed at the Brightwater market
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - caeloria_brightwater_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1cffdfd3b34a3e34de3d8faf518d3574158de53f44f1d7a08722b23de4048d70
+- id: brightwater_provision_flow
+  display_name: chandler provisions to river labor
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - caeloria_brightwater_economy
+  source: brightwater_chandler
+  sink: brightwater_market
+  resource: draughts_and_rations
+  purpose: sustain mill labor, wardens, fishers, and high-road travelers
+  transport: covered stall stock and market handcarts
+  surplus_or_shortage: steady supply unless river access or gathering labor fails
+  inventory_provenance: chandler stock made from purchased ingredients and locally
+    gathered meadowfoil
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - caeloria_brightwater_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1e40f5b9331d12f0f63c618f52b70abe6e29c90398644b34caaa8a6f7dfd453c
+- id: brightwater_licensing_flow
+  display_name: sluice token to civic custody
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - caeloria_brightwater_economy
+  source: brightwater_sluice
+  sink: brightwater_licensor
+  resource: recovered_sluice_token
+  purpose: establish lawful custody before private use or trade
+  transport: warden escort from the old sluice to the Licensing Hall
+  surplus_or_shortage: shortage of trustworthy provenance
+  inventory_provenance: recovered from the old sluice and entered in the flood-ledger
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - caeloria_brightwater_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d7bd4bd12613245cf5245470518ae9fea0830a37f542253f854bbe5d4fd0987b
+ecology_flows:
+- id: brightwater_eel_channel_flow
+  display_name: eel and sluice flow
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - caeloria_brightwater_ecology
+  habitat: brightwater_millrace_habitat
+  creature: brightwater_sluice_eels
+  energy_source: river fish, scraps, and warm gate flow
+  pressure: blocked channels concentrate life around maintenance work
+  recurrence: ordinary spawning while water and shelter remain
+  civilization_relation: the same channel supports gathering, milling, and hazard
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - caeloria_brightwater_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 690973277b60fa09bfb23d0e8ac395e58ce011bc5e37cd6ba597800288310a5a
+- id: brightwater_wyrm_lowerweir_flow
+  display_name: wyrm and lower-weir pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - caeloria_brightwater_ecology
+  habitat: brightwater_lowerweir_habitat
+  creature: brightwater_riverwyrm
+  energy_source: fish and lower-race prey
+  pressure: neglected flooded timber provides persistent shelter
+  recurrence: shelter can draw another predator after one is removed
+  civilization_relation: river safety and mill output depend on lower-weir maintenance
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - caeloria_brightwater_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: eb9de09e6038af56c4790a864fa270b09d9a4315d491e8285aca5839a417ac5f
+quest_pressures:
+- id: brightwater_licensing_pressure
+  display_name: disputed sluice custody
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  - brightwater_wardens
+  pressure_type: disputed_authority
+  pressure: licensing officials require custody while wardens need practical access
+    to recovered objects
+  affected_records:
+  - brightwater_licensor
+  - brightwater_warden
+  - brightwater_sluice_token
+  competing_interests:
+  - public_record
+  - working_access
+  - private_claim
+  resolution_scope: local and reversible
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    - brightwater_wardens
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 0493e9100ec582d6ba9cf5bac918caec9ca706a3a8bccbb7afdb8e95e8a6215c
+- id: brightwater_lower_weir_pressure
+  display_name: lower-weir danger
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  - brightwater_wardens
+  pressure_type: unsafe_route
+  pressure: a river-wyrm has made the neglected lower races unsafe for fishers and
+    mill work
+  affected_records:
+  - brightwater_riverwyrm
+  - brightwater_lowerweir
+  - brightwater_warden
+  competing_interests:
+  - mill_output
+  - worker_safety
+  - delayed_maintenance
+  resolution_scope: local and visible
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    - brightwater_wardens
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1dff65e73fae42bf69b7a8b849264764e6c42e4d287982d32aa2478d02d06242
+- id: brightwater_meadowfoil_pressure
+  display_name: meadowfoil labor shortage
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  - caeloria_brightwater_economy
+  pressure_type: missing_labor
+  pressure: dangerous water access reduces the gathered herb supply used by trade
+    and provisions
+  affected_records:
+  - brightwater_meadowfoil_node
+  - brightwater_chandler
+  - brightwater_millrace
+  competing_interests:
+  - gatherer_income
+  - safe_access
+  - market_supply
+  resolution_scope: local and reversible
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    - caeloria_brightwater_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 95e40eb7c60a9bb0a6dc1648f94febfbd297786c222864ec1325496dec479d35
+state_changes:
+- id: brightwater_sluice_state
+  display_name: old sluice condition
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  key: brightwater.sluice_status
+  room_id: brightwater_sluice
+  initial_value: ticking
+  reversible_values:
+  - ticking
+  - quiet
+  visible_projection: The buried flow-gates remain {value} behind the flooded channels.
+  persistence_scope: character_and_world_package
+  actions:
+  - command: maintain
+    target: sluice
+    aliases:
+    - old sluice
+    - flow-gates
+    required_item: brightwater_sluice_token
+    from: ticking
+    to: quiet
+    success_message: You set the recovered sluice-token into the old control and the
+      buried flow-gates settle quiet behind the water.
+    already_message: The buried flow-gates are already quiet.
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 86741f01ee3b8fdb7f3f5cd2f1029ba7979cfe77a28674fe6e094b2038b0b894
+dungeons:
+- id: brightwater_old_sluice
+  display_name: The Old Sluice
+  canon_status: AUTHORED_LOCAL
+  parent_region: caeloria
+  parent_zone: caeloria_zone
+  source_design_ids:
+  - brightwater
+  built_by: unknown earlier waterworks builders
+  original_purpose: regulate river flow beneath the later Brightwater mills
+  historical_layer: before the successor kingdom, exact age unresolved
+  failure: flow-gates seized and flooded channels became habitat for eels
+  current_occupants:
+  - brightwater_sluice_eels
+  why_not_reclaimed: the chambers are flooded, the controls are not understood, and
+    the city licenses rather than owns the risk
+  entrance_logic: down from the working millrace
+  traversal_grammar:
+  - threshold
+  - orientation
+  - escalation
+  - revelation
+  - choice
+  - aftermath
+  gameplay_purpose: make ancient infrastructure, licensing, gathering, and river danger
+    a connected local choice
+  revelation: the old system was functional infrastructure with inputs, outputs, and
+    failure modes rather than an explained miracle
+  aftermath: the token may be recorded and the river may be serviced without resolving
+    who built the system
+  state_change: reversible
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - brightwater
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/brightwater.yaml
+    packet_id: caeloria_brightwater_river_ledger
+    generation_seed: 63041
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b8297545db6edd9bdf79fb06d3b1bd42b7cef4b54258221460e47eb55811f2e4

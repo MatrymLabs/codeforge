@@ -1,0 +1,15 @@
+id: errand_westgate
+name: 'Errand: Eldryn Forest'
+start: posted
+reward_xp: 450
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: eldryn_forest
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Eldryn Forest (450 XP).
+  done: You set the token at Eldryn Forest. The stone answers.

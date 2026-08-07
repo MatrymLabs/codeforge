@@ -1,0 +1,61 @@
+id: forage_underground_zhaar_desert_caves_raw_ore_10
+name: 'A standing Forage: raw ore of The Red Dune Sinkholes'
+start: s0
+reward_xp: 300
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_zhaar_desert_caves|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_zhaar_desert_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather raw ore in The Red Dune Sinkholes: 0/10 (300 XP).'
+  s1: 'Gather raw ore in The Red Dune Sinkholes: 1/10 (300 XP).'
+  s2: 'Gather raw ore in The Red Dune Sinkholes: 2/10 (300 XP).'
+  s3: 'Gather raw ore in The Red Dune Sinkholes: 3/10 (300 XP).'
+  s4: 'Gather raw ore in The Red Dune Sinkholes: 4/10 (300 XP).'
+  s5: 'Gather raw ore in The Red Dune Sinkholes: 5/10 (300 XP).'
+  s6: 'Gather raw ore in The Red Dune Sinkholes: 6/10 (300 XP).'
+  s7: 'Gather raw ore in The Red Dune Sinkholes: 7/10 (300 XP).'
+  s8: 'Gather raw ore in The Red Dune Sinkholes: 8/10 (300 XP).'
+  s9: 'Gather raw ore in The Red Dune Sinkholes: 9/10 (300 XP).'
+  done: You have gathered raw ore enough for The Red Dune Sinkholes. The caravan traders
+    will pay well for it.

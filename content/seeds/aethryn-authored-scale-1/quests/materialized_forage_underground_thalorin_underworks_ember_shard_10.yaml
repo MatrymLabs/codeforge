@@ -1,0 +1,61 @@
+id: forage_underground_thalorin_underworks_ember_shard_10
+name: 'A standing Provision: ember shard of The Irondeep Command Vaults'
+start: s0
+reward_xp: 370
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_thalorin_underworks|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_thalorin_underworks|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in ember shard in The Irondeep Command Vaults: 0/10 (370 XP).'
+  s1: 'Lay in ember shard in The Irondeep Command Vaults: 1/10 (370 XP).'
+  s2: 'Lay in ember shard in The Irondeep Command Vaults: 2/10 (370 XP).'
+  s3: 'Lay in ember shard in The Irondeep Command Vaults: 3/10 (370 XP).'
+  s4: 'Lay in ember shard in The Irondeep Command Vaults: 4/10 (370 XP).'
+  s5: 'Lay in ember shard in The Irondeep Command Vaults: 5/10 (370 XP).'
+  s6: 'Lay in ember shard in The Irondeep Command Vaults: 6/10 (370 XP).'
+  s7: 'Lay in ember shard in The Irondeep Command Vaults: 7/10 (370 XP).'
+  s8: 'Lay in ember shard in The Irondeep Command Vaults: 8/10 (370 XP).'
+  s9: 'Lay in ember shard in The Irondeep Command Vaults: 9/10 (370 XP).'
+  done: You have laid in ember shard enough for The Irondeep Command Vaults. The region's
+    makers will put it to use.

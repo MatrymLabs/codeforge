@@ -1,0 +1,40 @@
+id: cull_thalorin_zone_jackal_6
+name: 'A small Clearance: the jackal-kind of Thalorin'
+start: s0
+reward_xp: 276
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: thalorin_zone|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: thalorin_zone|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: thalorin_zone|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: thalorin_zone|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: thalorin_zone|jackal
+- state: s5
+  event: cull
+  to: done
+  on_cull: thalorin_zone|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the jackal-kind of Thalorin: 0/6 down (276 XP).'
+  s1: 'Clear out the jackal-kind of Thalorin: 1/6 down (276 XP).'
+  s2: 'Clear out the jackal-kind of Thalorin: 2/6 down (276 XP).'
+  s3: 'Clear out the jackal-kind of Thalorin: 3/6 down (276 XP).'
+  s4: 'Clear out the jackal-kind of Thalorin: 4/6 down (276 XP).'
+  s5: 'Clear out the jackal-kind of Thalorin: 5/6 down (276 XP).'
+  done: The jackal-kind of Thalorin are cleared out. The region breathes easier.

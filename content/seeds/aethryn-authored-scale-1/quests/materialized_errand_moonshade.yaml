@@ -1,0 +1,15 @@
+id: errand_moonshade
+name: 'Errand: Elderwatch'
+start: posted
+reward_xp: 300
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: elderwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Elderwatch (300 XP).
+  done: You bring word to Elderwatch. It is gratefully received.

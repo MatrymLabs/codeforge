@@ -15,7 +15,9 @@ cannot repair by relogging. Non-gear items (no slot) never wear -- a potion has 
 from __future__ import annotations
 
 from kernel.world import items
+from kernel.world.aethryn_models import content_digest
 from kernel.world.coinage import purse
+from kernel.world.economy_transactions import TransactionError, move_currency
 from kernel.world.session import Session
 
 MAX = 100  # a fresh gear piece's full durability
@@ -70,7 +72,24 @@ def repair_session(session: Session) -> str:
         return "Your gear is whole; there is nothing to mend."
     if session.coins < cost:
         return f"Repairs would cost {purse(cost)}; you carry only {purse(session.coins)}."
-    session.coins -= cost
+    wallets = {session.player_id: session.coins}
+    token = content_digest(
+        {"kind": "repair", "player": session.player_id, "cost": cost, "gear": session.equipped}
+    )[:32]
+    try:
+        move_currency(
+            transaction_id=f"repair-{token}",
+            idempotency_key=f"repair-{token}",
+            actor=session.player_id,
+            source=session.player_id,
+            destination="",
+            amount=cost,
+            reason="gear_repair",
+            wallets=wallets,
+        )
+    except TransactionError as exc:
+        return f"Repairs fail: {exc}."
+    session.coins = wallets[session.player_id]
     for iid in list(session.equipped.values()):
         repair(iid)
     return f"You mend your gear for {purse(cost)}. (purse: {purse(session.coins)})"

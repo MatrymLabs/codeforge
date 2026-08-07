@@ -12,7 +12,16 @@ Refuses loud and early: no shop here, an item not for sale, an empty purse, a th
 from __future__ import annotations
 
 from kernel.world import items
+from kernel.world.aethryn_models import content_digest
 from kernel.world.coinage import AETHRYN_COINAGE, purse
+from kernel.world.economy_transactions import (
+    CurrencyTransfer,
+    EconomyTransactionService,
+    ItemTransfer,
+    SqlTransactionStore,
+    TransactionError,
+    TransactionRequest,
+)
 from kernel.world.npcs import NPCS, npcs_in
 from kernel.world.session import Session, sentence_case
 
@@ -73,8 +82,28 @@ def buy(session: Session, word: str) -> str:
     price = sells[proto]
     if session.coins < price:
         return f"You cannot afford that ({_price(price)}; your purse holds {purse(session.coins)})."
-    session.coins -= price
-    items.clone(proto, items.carrier(session.player_id))
+    merchant = f"room:merchant:{nid}"
+    iid = items.clone(proto, merchant)
+    wallets = {session.player_id: session.coins}
+    owners = {item_id: item.get("location", "") for item_id, item in items.ITEMS.items()}
+    request_id = content_digest({"kind": "shop_buy", "actor": session.player_id, "item": iid})[:32]
+    request = TransactionRequest(
+        transaction_id=f"shop-buy-{request_id}",
+        idempotency_key=f"shop-buy-{request_id}",
+        actor=session.player_id,
+        reason="merchant_purchase",
+        currency_transfers=(CurrencyTransfer(session.player_id, "", price, "merchant_purchase"),),
+        item_transfers=(ItemTransfer(iid, merchant, items.carrier(session.player_id)),),
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets=wallets, item_owners=owners
+        )
+    except TransactionError as exc:
+        items.ITEMS.pop(iid, None)
+        return f"The purchase fails: {exc}."
+    session.coins = wallets[session.player_id]
+    items.ITEMS[iid]["location"] = items.carrier(session.player_id)
     _save(session)
     name = items.PROTOTYPES[proto]["name"]
     return f"You buy {name} for {_price(price)}. (purse: {purse(session.coins)})"
@@ -96,11 +125,29 @@ def sell(session: Session, word: str) -> str:
         return f"{sentence_case(items.ITEMS[iid]['name'])} is not something this shop buys."
     price = buys[proto]
     name = items.ITEMS[iid]["name"]
-    del items.ITEMS[iid]  # the shop takes the item off your hands
+    merchant = f"room:merchant:{nid}"
+    wallets = {session.player_id: session.coins}
+    owners = {item_id: item.get("location", "") for item_id, item in items.ITEMS.items()}
+    request_id = content_digest({"kind": "shop_sell", "actor": session.player_id, "item": iid})[:32]
+    request = TransactionRequest(
+        transaction_id=f"shop-sell-{request_id}",
+        idempotency_key=f"shop-sell-{request_id}",
+        actor=session.player_id,
+        reason="merchant_sale",
+        currency_transfers=(CurrencyTransfer("", session.player_id, price, "merchant_sale"),),
+        item_transfers=(ItemTransfer(iid, items.carrier(session.player_id), merchant),),
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets=wallets, item_owners=owners
+        )
+    except TransactionError as exc:
+        return f"The sale fails: {exc}."
+    del items.ITEMS[iid]  # the shop takes the item off its live inventory after the receipt
     for slot, worn in list(session.equipped.items()):
         if worn == iid:
             del session.equipped[slot]  # sold from a slot: unequip it too
-    session.coins += price
+    session.coins = wallets[session.player_id]
     _save(session)
     return f"You sell {name} for {_price(price)}. (purse: {purse(session.coins)})"
 

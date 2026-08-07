@@ -1,0 +1,16 @@
+id: bounty_shattered_isles_lord_8
+name: 'Bounty: Skarnen the Strand Scourge'
+start: posted
+reward_xp: 2280
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: shattered_isles_lord_8
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Skarnen the Strand Scourge (level 190). Fell it for 2280
+    XP.
+  collected: 'Bounty collected: Skarnen the Strand Scourge is felled. Well hunted.'

@@ -1,0 +1,30 @@
+id: voidspire_threshold
+name: The Warden's Leave
+start: offered
+reward_xp: 200
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: voidspire_watch
+- state: accepted
+  event: take
+  to: recovered
+  on_take: voidspire_stable_anchor
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:warcraft:50
+  on_enter: voidspire_watch
+terminal:
+- done
+labels:
+  offered: At Voidspire, the Wardens of the Scars weigh who may descend. Step into
+    the Wardens' Watch and hear the marshal.
+  accepted: Descend to the fracture edge and recover the watch's stable anchor (a
+    law-shade holds it -- come ready).
+  recovered: Carry the stable anchor back UP to Warden-Marshal Cael in the Wardens'
+    Watch.
+  done: '*** You stood at the edge and kept your name. The Warden-Marshal gives her
+    leave: the apex ways to Netharion''s Throne and the Rifted Abyss are open to you
+    now. ***'

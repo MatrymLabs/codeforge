@@ -1,0 +1,71 @@
+id: cull_field_ashen_wastes_basilisk_12
+name: 'A standing Clearance: the basilisk-kind of The Ashen Wastes Wilds'
+start: s0
+reward_xp: 672
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_ashen_wastes|basilisk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_ashen_wastes|basilisk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_ashen_wastes|basilisk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_ashen_wastes|basilisk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_ashen_wastes|basilisk
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_ashen_wastes|basilisk
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_ashen_wastes|basilisk
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_ashen_wastes|basilisk
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_ashen_wastes|basilisk
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_ashen_wastes|basilisk
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_ashen_wastes|basilisk
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_ashen_wastes|basilisk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 0/12 down (672 XP).'
+  s1: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 1/12 down (672 XP).'
+  s2: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 2/12 down (672 XP).'
+  s3: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 3/12 down (672 XP).'
+  s4: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 4/12 down (672 XP).'
+  s5: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 5/12 down (672 XP).'
+  s6: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 6/12 down (672 XP).'
+  s7: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 7/12 down (672 XP).'
+  s8: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 8/12 down (672 XP).'
+  s9: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 9/12 down (672 XP).'
+  s10: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 10/12 down (672 XP).'
+  s11: 'Clear out the basilisk-kind of The Ashen Wastes Wilds: 11/12 down (672 XP).'
+  done: The basilisk-kind of The Ashen Wastes Wilds are cleared out. The ash-tracks
+    are a shade safer.

@@ -1,0 +1,20 @@
+id: crawl_dreadmaw_hold
+name: 'Descent: Dreadmaw Hold'
+start: above
+reward_xp: 2800
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: dreadmaw_hold
+- state: delving
+  event: reach
+  to: done
+  on_enter: dreadmaw_hold_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Dreadmaw Hold. Cross its mouth and descend.
+  delving: You are within Dreadmaw Hold. Press on to its deepest chamber.
+  done: You have reached the heart of Dreadmaw Hold and lived. Few can (2800 XP).

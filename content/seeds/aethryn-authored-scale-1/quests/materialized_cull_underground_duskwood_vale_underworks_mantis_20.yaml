@@ -1,0 +1,111 @@
+id: cull_underground_duskwood_vale_underworks_mantis_20
+name: 'A great Clearance: the mantis-kind of The Black Root Below'
+start: s0
+reward_xp: 360
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_duskwood_vale_underworks|mantis
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_duskwood_vale_underworks|mantis
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the mantis-kind of The Black Root Below: 0/20 down (360 XP).'
+  s1: 'Clear out the mantis-kind of The Black Root Below: 1/20 down (360 XP).'
+  s2: 'Clear out the mantis-kind of The Black Root Below: 2/20 down (360 XP).'
+  s3: 'Clear out the mantis-kind of The Black Root Below: 3/20 down (360 XP).'
+  s4: 'Clear out the mantis-kind of The Black Root Below: 4/20 down (360 XP).'
+  s5: 'Clear out the mantis-kind of The Black Root Below: 5/20 down (360 XP).'
+  s6: 'Clear out the mantis-kind of The Black Root Below: 6/20 down (360 XP).'
+  s7: 'Clear out the mantis-kind of The Black Root Below: 7/20 down (360 XP).'
+  s8: 'Clear out the mantis-kind of The Black Root Below: 8/20 down (360 XP).'
+  s9: 'Clear out the mantis-kind of The Black Root Below: 9/20 down (360 XP).'
+  s10: 'Clear out the mantis-kind of The Black Root Below: 10/20 down (360 XP).'
+  s11: 'Clear out the mantis-kind of The Black Root Below: 11/20 down (360 XP).'
+  s12: 'Clear out the mantis-kind of The Black Root Below: 12/20 down (360 XP).'
+  s13: 'Clear out the mantis-kind of The Black Root Below: 13/20 down (360 XP).'
+  s14: 'Clear out the mantis-kind of The Black Root Below: 14/20 down (360 XP).'
+  s15: 'Clear out the mantis-kind of The Black Root Below: 15/20 down (360 XP).'
+  s16: 'Clear out the mantis-kind of The Black Root Below: 16/20 down (360 XP).'
+  s17: 'Clear out the mantis-kind of The Black Root Below: 17/20 down (360 XP).'
+  s18: 'Clear out the mantis-kind of The Black Root Below: 18/20 down (360 XP).'
+  s19: 'Clear out the mantis-kind of The Black Root Below: 19/20 down (360 XP).'
+  done: The mantis-kind of The Black Root Below are cleared out. The wardens of the
+    wood send their thanks.

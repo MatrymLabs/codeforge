@@ -1,0 +1,16 @@
+id: bounty_skyward_spires_lord_12
+name: 'Bounty: Draumune the Scree Maw'
+start: posted
+reward_xp: 2640
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: skyward_spires_lord_12
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumune the Scree Maw (level 220). Fell it for 2640
+    XP.
+  collected: 'Bounty collected: Draumune the Scree Maw is felled. Well hunted.'

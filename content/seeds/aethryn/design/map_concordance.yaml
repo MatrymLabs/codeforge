@@ -1,0 +1,38 @@
+id: aethryn_map_concordance
+canon_status: CANON_LOCKED
+topology_source: content/seeds/aethryn/world_graph.yaml
+poster_role: visual_orientation_only
+prohibitions:
+  - Decorative poster routes do not create playable exits.
+  - Shared seas do not create a room-level route without an authored transport system.
+  - The Deepreach is not a southern surface island.
+regions:
+  veridia: {display_name: Veridia, poster_label: Veridia, legacy_aliases: []}
+  duskwood_vale: {display_name: Duskwood Vale, poster_label: Duskwood Vale, legacy_aliases: []}
+  caeloria: {display_name: Caeloria, poster_label: Caeloria, legacy_aliases: []}
+  eldryn_forest: {display_name: Eldryn Forest, poster_label: Eldryn Forest, legacy_aliases: []}
+  frostspire_peaks: {display_name: Frostspire Peaks, poster_label: Frostspire Peaks, legacy_aliases: []}
+  zhaar_desert: {display_name: Zhaar Desert, poster_label: Zhaar Desert, legacy_aliases: []}
+  xilnath_jungle: {display_name: Xil'nath Jungle, poster_label: Xil'nath Jungle, legacy_aliases: []}
+  thalorin: {display_name: Thalorin, poster_label: Thalorin, legacy_aliases: []}
+  ashen_wastes: {display_name: Ashen Wastes, poster_label: Ashen Wastes, legacy_aliases: []}
+  korvash_highlands: {display_name: Korvash Highlands, poster_label: Korvash Highlands, legacy_aliases: []}
+  shattered_isles: {display_name: The Shattered Isles, poster_label: The Shattered Isles, legacy_aliases: []}
+  skyward_spires: {display_name: Skyward Spires, poster_label: Skyward Spires, legacy_aliases: []}
+  the_deepreach: {display_name: The Deepreach, poster_label: The Deepreach, legacy_aliases: [], diagrammatic_inset: true, surface_island: false}
+  the_voidscar: {display_name: The Voidscar, poster_label: The Voidscar, legacy_aliases: []}
+reconciliations:
+  - id: cinderfire_cragfire
+    canonical_display_name: Cinderfire
+    alternate_labels: [Cragfire]
+    status: authoring_required
+    rule: Do not silently rename existing records; resolve by explicit alias mapping.
+  - id: red_dune_red_dunes
+    canonical_display_name: Red Dunes
+    alternate_labels: [Red Dune]
+    status: AUTHORED_LOCAL
+    rule: Use Red Dunes for display; retain red_dunes as the permanent machine id.
+  - id: deepreach_inset
+    canonical_display_name: The Deepreach
+    status: CANON_LOCKED
+    rule: Treat as an underground diagrammatic inset; do not derive a southern surface route from poster placement.

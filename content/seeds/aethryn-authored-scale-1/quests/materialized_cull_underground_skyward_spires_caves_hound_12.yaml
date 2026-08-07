@@ -1,0 +1,83 @@
+id: cull_underground_skyward_spires_caves_hound_12
+name: 'A standing Contract: the hound-kind of The Broken Skychain Hollows'
+start: s0
+reward_xp: 960
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_caves|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_caves|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_caves|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_caves|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_caves|hound
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_skyward_spires_caves|hound
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_skyward_spires_caves|hound
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_skyward_spires_caves|hound
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_skyward_spires_caves|hound
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_skyward_spires_caves|hound
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_skyward_spires_caves|hound
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_caves|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 0/12
+    down (960 XP).'
+  s1: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 1/12
+    down (960 XP).'
+  s2: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 2/12
+    down (960 XP).'
+  s3: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 3/12
+    down (960 XP).'
+  s4: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 4/12
+    down (960 XP).'
+  s5: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 5/12
+    down (960 XP).'
+  s6: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 6/12
+    down (960 XP).'
+  s7: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 7/12
+    down (960 XP).'
+  s8: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 8/12
+    down (960 XP).'
+  s9: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 9/12
+    down (960 XP).'
+  s10: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 10/12
+    down (960 XP).'
+  s11: 'Fulfil the contract on the hound-kind of The Broken Skychain Hollows: 11/12
+    down (960 XP).'
+  done: The hound-kind of The Broken Skychain Hollows are put down. The region breathes
+    easier.

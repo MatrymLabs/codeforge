@@ -74,6 +74,7 @@ def test_tool_grant_enforces_seed_scope_action_resource_and_policy() -> None:
 def test_ai_run_requires_review_for_escalated_autonomy_and_survives_restart(tmp_path: Path) -> None:
     store = FileAIRunStore(tmp_path / "ai-runs")
     audit_entries: list[tuple[str, str, str]] = []
+
     def audit_sink(actor: str, action: str, detail: str) -> None:
         audit_entries.append((actor, action, detail))
 

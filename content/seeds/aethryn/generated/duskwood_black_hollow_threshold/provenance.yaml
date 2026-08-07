@@ -1,0 +1,14 @@
+source_design_ids:
+- duskwood_vale
+- ravenwatch
+- duskwood_black_hollow_ecology
+- duskwood_ravenwatch_economy
+source_paths:
+- content/seeds/aethryn/design
+- content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+packet_id: duskwood_black_hollow_threshold
+generation_seed: 52023
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+authority: AUTHORED_LOCAL
+note: offline deterministic compiler output

@@ -1,0 +1,41 @@
+id: cull_field_the_voidscar_reptile_6
+name: 'A small Purge: the reptile-kind of The Voidscar Wilds'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_the_voidscar|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_the_voidscar|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_the_voidscar|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_the_voidscar|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_the_voidscar|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_the_voidscar|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the reptile-kind of The Voidscar Wilds: 0/6 down (600 XP).'
+  s1: 'Purge the reptile-kind of The Voidscar Wilds: 1/6 down (600 XP).'
+  s2: 'Purge the reptile-kind of The Voidscar Wilds: 2/6 down (600 XP).'
+  s3: 'Purge the reptile-kind of The Voidscar Wilds: 3/6 down (600 XP).'
+  s4: 'Purge the reptile-kind of The Voidscar Wilds: 4/6 down (600 XP).'
+  s5: 'Purge the reptile-kind of The Voidscar Wilds: 5/6 down (600 XP).'
+  done: The reptile-kind of The Voidscar Wilds are purged. The ash-tracks are a shade
+    safer.

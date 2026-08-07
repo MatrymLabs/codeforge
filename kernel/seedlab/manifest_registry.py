@@ -101,9 +101,7 @@ class DualReadManifestEvidenceStore:
         )
 
     @staticmethod
-    def _try_get(
-        store: ManifestEvidenceStore, evidence_id: str
-    ) -> ManifestRunEvidence | None:
+    def _try_get(store: ManifestEvidenceStore, evidence_id: str) -> ManifestRunEvidence | None:
         try:
             return store.get(evidence_id)
         except ManifestEvidenceError as exc:

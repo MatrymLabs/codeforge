@@ -1,0 +1,7 @@
+id: duskwood_vale
+display_name: Duskwood Vale
+canon_status: CANON_LOCKED
+threat_range: [20, 50]
+source_canon_id: duskwood_vale
+topology_source: content/seeds/aethryn/world_graph.yaml
+world_purpose: A shadowed forest frontier where memory, grief, and old danger shape ordinary work.

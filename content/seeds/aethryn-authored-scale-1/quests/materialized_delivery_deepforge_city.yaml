@@ -1,0 +1,21 @@
+id: delivery_deepforge_city
+name: 'Delivery: Deepforge City to Khazgor Peaks'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_deepforge_city
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: khazgor_peaks
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Deepforge City is bound for Khazgor Peaks. Take it up (1200
+    XP).
+  carrying: Carry the parcel to Khazgor Peaks.
+  done: The parcel is delivered to Khazgor Peaks. The road keeps its promise.

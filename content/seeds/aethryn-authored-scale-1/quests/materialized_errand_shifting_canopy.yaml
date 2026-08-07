@@ -1,0 +1,15 @@
+id: errand_shifting_canopy
+name: 'Errand: Caeloria City'
+start: posted
+reward_xp: 1350
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: caeloria_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Caeloria City (1350 XP).
+  done: You bring word to Caeloria City. It is gratefully received.

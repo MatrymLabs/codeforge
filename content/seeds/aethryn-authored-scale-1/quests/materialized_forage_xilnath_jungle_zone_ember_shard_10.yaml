@@ -1,0 +1,61 @@
+id: forage_xilnath_jungle_zone_ember_shard_10
+name: 'A standing Requisition: ember shard of Xil''nath Jungle'
+start: s0
+reward_xp: 370
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: xilnath_jungle_zone|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: xilnath_jungle_zone|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in Xil''nath Jungle: 0/10 (370 XP).'
+  s1: 'Bring in ember shard in Xil''nath Jungle: 1/10 (370 XP).'
+  s2: 'Bring in ember shard in Xil''nath Jungle: 2/10 (370 XP).'
+  s3: 'Bring in ember shard in Xil''nath Jungle: 3/10 (370 XP).'
+  s4: 'Bring in ember shard in Xil''nath Jungle: 4/10 (370 XP).'
+  s5: 'Bring in ember shard in Xil''nath Jungle: 5/10 (370 XP).'
+  s6: 'Bring in ember shard in Xil''nath Jungle: 6/10 (370 XP).'
+  s7: 'Bring in ember shard in Xil''nath Jungle: 7/10 (370 XP).'
+  s8: 'Bring in ember shard in Xil''nath Jungle: 8/10 (370 XP).'
+  s9: 'Bring in ember shard in Xil''nath Jungle: 9/10 (370 XP).'
+  done: You have requisitioned ember shard enough for Xil'nath Jungle. The physicians
+    can work with this.

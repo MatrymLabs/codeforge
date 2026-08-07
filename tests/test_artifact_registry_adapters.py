@@ -42,7 +42,9 @@ def test_sql_artifact_store_survives_restart_and_rejects_overwrite(tmp_path: Pat
 
     store.save(record)
     store.save(record)
-    assert SqlArtifactStore(lambda: Session(engine)).load(record.seed_id, record.artifact_id) == record
+    assert (
+        SqlArtifactStore(lambda: Session(engine)).load(record.seed_id, record.artifact_id) == record
+    )
     with pytest.raises(ArtifactStoreError, match="different evidence"):
         store.save(replace(record, model_identity="tampered"))
 
@@ -63,12 +65,16 @@ def test_dual_read_artifact_store_reads_legacy_and_rejects_conflicts(tmp_path: P
         store.load(record.seed_id, record.artifact_id)
 
 
-def test_api_and_workspace_contract_share_sql_artifact_metadata(monkeypatch, tmp_path: Path) -> None:
+def test_api_and_workspace_contract_share_sql_artifact_metadata(
+    monkeypatch, tmp_path: Path
+) -> None:
     home = tmp_path / ".seedlab"
     monkeypatch.setenv("SEEDLAB_HOME", str(home))
     monkeypatch.setenv("CODEFORGE_SEED_REGISTRY", "sql")
     monkeypatch.setenv("CODEFORGE_DB", str(tmp_path / "codeforge.db"))
-    _seedlab_kernel().create_seed("SQL Artifacts", "alice", "artifact authority", seed_id="seed-sql-artifacts")
+    _seedlab_kernel().create_seed(
+        "SQL Artifacts", "alice", "artifact authority", seed_id="seed-sql-artifacts"
+    )
     record = _record("seed-sql-artifacts")
     _seedlab_artifact_store().save(record)
 

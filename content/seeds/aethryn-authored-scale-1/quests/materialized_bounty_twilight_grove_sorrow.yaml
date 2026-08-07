@@ -1,0 +1,15 @@
+id: bounty_twilight_grove_sorrow
+name: 'Bounty: a grief-shaped thing'
+start: posted
+reward_xp: 228
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: twilight_grove_sorrow
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a grief-shaped thing (level 19). Fell it for 228 XP.
+  collected: 'Bounty collected: a grief-shaped thing is felled. Well hunted.'

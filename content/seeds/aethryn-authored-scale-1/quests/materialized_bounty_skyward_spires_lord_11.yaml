@@ -1,0 +1,16 @@
+id: bounty_skyward_spires_lord_11
+name: 'Bounty: Kaelaya the Moor Matron'
+start: posted
+reward_xp: 2616
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: skyward_spires_lord_11
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Kaelaya the Moor Matron (level 218). Fell it for 2616
+    XP.
+  collected: 'Bounty collected: Kaelaya the Moor Matron is felled. Well hunted.'

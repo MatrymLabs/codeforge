@@ -1,0 +1,5780 @@
+batch:
+  id: aethryn_text_drop_0002
+  sequence: 2
+  status: ready
+  size: 250
+  final: true
+  link_inference: ordered_route
+rooms:
+  alder_court:
+    name: Alder Court
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where a carved public fountain sends a thin stream into a circular
+      basin.
+
+
+      The air carries lamp oil, wool, and rain, and a smith''s measured hammering
+      drifts between the roofs. The town wall rises above the houses to the west.'
+    exits:
+      east: copper_square
+      south: alder_court
+    occupants:
+    - A lampwright's apprentice waits beside a loaded handcart
+    objects:
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  copper_square:
+    name: Copper Square
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a mosaic of the River Verin winds across
+      the paving.
+
+
+      Children calling across the lane echoes through the district while roasted roots
+      and chimney smoke lingers near the open doorways. The road toward Riverbend
+      begins beyond the southern wards.'
+    exits:
+      east: lantern_walk
+      south: alder_court
+      west: alder_court
+    occupants:
+    - A retired watchman sorts a stack of delivery tags
+    objects:
+    - A painted notice board stands near the nearest doorway
+    - Freshly cut flowers have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  lantern_walk:
+    name: Lantern Walk
+    room_type: Civic Square
+    desc: 'A narrow way opens between workshops whose doors stand open to the street.
+      Beneath your feet, well-worn flagstones curves around a shallow channel carries
+      clear water toward the southern drains.
+
+
+      Light filters down in broken bands from the narrow sky above. A line of orchard
+      trees is visible through the northern gap. The smell of sawdust and beeswax
+      settles over the street.'
+    exits:
+      east: mill_terrace
+      south: copper_square
+      southwest: copper_square
+      west: copper_square
+    occupants: []
+    objects:
+    - A young cooper counts copper coins into a leather purse
+    - A brass route marker stands near the drainage channel
+    - Three sealed crates have been arranged beneath a tiled lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_terrace:
+    name: Mill Terrace
+    room_type: Residential Court
+    desc: 'The street widens here into a small public space bordered by shops beneath
+      overhanging upper floors. At its center, a bronze town bell hangs beneath a
+      tiled shelter.
+
+
+      The district feels busy without being hurried. The chiming of shop bells rises
+      and fades around you, and The market square lies somewhere to the east.'
+    exits:
+      east: garden_row
+      south: lantern_walk
+      west: lantern_walk
+    occupants: []
+    objects:
+    - A town courier studies a notice pinned to the wall
+    - A rack of walking staffs stands near the nearest doorway
+    - Rows of clay jars have been arranged beneath a timber arcade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  garden_row:
+    name: Garden Row
+    room_type: Artisan Quarter
+    desc: 'This part of Greenhold is built in orderly tiers, with whitewashed homes
+      with steep roofs overlooking moss-lined cobbles and a weathered statue watches
+      over the crossing.
+
+
+      The air carries herbs drying beneath the eaves, and the clatter of handcarts
+      drifts between the roofs. Greenhold''s northern gate can be glimpsed beyond
+      the rooftops.'
+    exits:
+      south: bell_crossing
+      west: mill_terrace
+    occupants:
+    - A bread seller sweeps rainwater toward the gutter
+    objects:
+    - A painted notice board stands near the drainage channel
+    - Freshly cut flowers have been arranged beneath a patched canvas sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bell_crossing:
+    name: Bell Crossing
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where an alder tree rises from a low ring of stones.
+
+
+      A smith''s measured hammering echoes through the district while lamp oil, wool,
+      and rain lingers near the open doorways. The town wall rises above the houses
+      to the west.'
+    exits:
+      north: willow_street
+      northeast: willow_street
+      east: willow_street
+      south: garden_row
+    occupants:
+    - A herbalist checks a row of sealed parcels
+    objects:
+    - A brass route marker stands near the nearest doorway
+    - Three sealed crates have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  willow_street:
+    name: Willow Street
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a roofed well stands beside a row of message
+      boxes.
+
+
+      Light filters down in broken bands from the narrow sky above. The road toward
+      Riverbend begins beyond the southern wards. The smell of roasted roots and chimney
+      smoke settles over the street.'
+    exits:
+      north: hearth_lane
+      east: hearth_lane
+      southwest: bell_crossing
+      south: bell_crossing
+      west: bell_crossing
+    occupants: []
+    objects:
+    - A market porter waits beside a loaded handcart
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hearth_lane:
+    name: Hearth Lane
+    room_type: Civic Square
+    desc: 'A narrow way opens between workshops whose doors stand open to the street.
+      Beneath your feet, well-worn flagstones curves around a carved public fountain
+      sends a thin stream into a circular basin.
+
+
+      The district feels busy without being hurried. Quiet conversation rises and
+      fades around you, and A line of orchard trees is visible through the northern
+      gap.'
+    exits:
+      north: clover_ward
+      east: clover_ward
+      south: willow_street
+      west: willow_street
+    occupants: []
+    objects:
+    - A traveling scribe sorts a stack of delivery tags
+    - A painted notice board stands near the nearest doorway
+    - Freshly cut flowers have been arranged beneath a tiled lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  clover_ward:
+    name: Clover Ward
+    room_type: Residential Court
+    desc: 'The street widens here into a small public space bordered by shops beneath
+      overhanging upper floors. At its center, a mosaic of the River Verin winds across
+      the paving.
+
+
+      The air carries fresh bread and damp wood, and the chiming of shop bells drifts
+      between the roofs. The market square lies somewhere to the east.'
+    exits:
+      north: stone_yard
+      east: stone_yard
+      south: hearth_lane
+      west: hearth_lane
+    occupants:
+    - A lampwright's apprentice counts copper coins into a leather purse
+    objects:
+    - A brass route marker stands near the drainage channel
+    - Three sealed crates have been arranged beneath a timber arcade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_yard:
+    name: Stone Yard
+    room_type: Artisan Quarter
+    desc: 'This part of Greenhold is built in orderly tiers, with whitewashed homes
+      with steep roofs overlooking moss-lined cobbles and a shallow channel carries
+      clear water toward the southern drains.
+
+
+      The clatter of handcarts echoes through the district while herbs drying beneath
+      the eaves lingers near the open doorways. Greenhold''s northern gate can be
+      glimpsed beyond the rooftops.'
+    exits:
+      north: alder_lane
+      south: clover_ward
+      west: clover_ward
+    occupants:
+    - A retired watchman studies a notice pinned to the wall
+    objects:
+    - A rack of walking staffs stands near the nearest doorway
+    - Rows of clay jars have been arranged beneath a patched canvas sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  alder_lane:
+    name: Alder Lane
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where a bronze town bell hangs beneath a tiled shelter.
+
+
+      Light filters down in broken bands from the narrow sky above. The town wall
+      rises above the houses to the west. The smell of lamp oil, wool, and rain settles
+      over the street.'
+    exits:
+      north: copper_ward
+      east: copper_ward
+      south: stone_yard
+    occupants: []
+    objects:
+    - A young cooper sweeps rainwater toward the gutter
+    - A painted notice board stands near the drainage channel
+    - Freshly cut flowers have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  copper_ward:
+    name: Copper Ward
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a weathered statue watches over the crossing.
+
+
+      The district feels busy without being hurried. Children calling across the lane
+      rises and fades around you, and The road toward Riverbend begins beyond the
+      southern wards.'
+    exits:
+      north: lantern_yard
+      east: lantern_yard
+      south: alder_lane
+      west: alder_lane
+    occupants: []
+    objects:
+    - A town courier checks a row of sealed parcels
+    - A brass route marker stands near the nearest doorway
+    - Three sealed crates have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  lantern_yard:
+    name: Lantern Yard
+    room_type: Civic Square
+    desc: 'A narrow way opens between workshops whose doors stand open to the street.
+      Beneath your feet, well-worn flagstones curves around an alder tree rises from
+      a low ring of stones.
+
+
+      The air carries sawdust and beeswax, and quiet conversation drifts between the
+      roofs. A line of orchard trees is visible through the northern gap.'
+    exits:
+      north: mill_court
+      east: mill_court
+      south: copper_ward
+      west: copper_ward
+    occupants:
+    - A bread seller waits beside a loaded handcart
+    objects:
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath a tiled lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_court:
+    name: Mill Court
+    room_type: Residential Court
+    desc: 'The street widens here into a small public space bordered by shops beneath
+      overhanging upper floors. At its center, a roofed well stands beside a row of
+      message boxes.
+
+
+      The chiming of shop bells echoes through the district while fresh bread and
+      damp wood lingers near the open doorways. The market square lies somewhere to
+      the east.'
+    exits:
+      north: garden_square
+      northeast: garden_square
+      east: garden_square
+      south: lantern_yard
+      west: lantern_yard
+    occupants:
+    - A herbalist sorts a stack of delivery tags
+    objects:
+    - A painted notice board stands near the nearest doorway
+    - Freshly cut flowers have been arranged beneath a timber arcade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  garden_square:
+    name: Garden Square
+    room_type: Artisan Quarter
+    desc: 'This part of Greenhold is built in orderly tiers, with whitewashed homes
+      with steep roofs overlooking moss-lined cobbles and a carved public fountain
+      sends a thin stream into a circular basin.
+
+
+      Light filters down in broken bands from the narrow sky above. Greenhold''s northern
+      gate can be glimpsed beyond the rooftops. The smell of herbs drying beneath
+      the eaves settles over the street.'
+    exits:
+      north: bell_walk
+      south: mill_court
+      southwest: mill_court
+      west: mill_court
+    occupants: []
+    objects:
+    - A market porter counts copper coins into a leather purse
+    - A brass route marker stands near the drainage channel
+    - Three sealed crates have been arranged beneath a patched canvas sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bell_walk:
+    name: Bell Walk
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where a mosaic of the River Verin winds across the paving.
+
+
+      The district feels busy without being hurried. A smith''s measured hammering
+      rises and fades around you, and The town wall rises above the houses to the
+      west.'
+    exits:
+      north: willow_terrace
+      east: willow_terrace
+      south: garden_square
+    occupants: []
+    objects:
+    - A traveling scribe studies a notice pinned to the wall
+    - A rack of walking staffs stands near the nearest doorway
+    - Rows of clay jars have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  willow_terrace:
+    name: Willow Terrace
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a shallow channel carries clear water toward
+      the southern drains.
+
+
+      The air carries roasted roots and chimney smoke, and children calling across
+      the lane drifts between the roofs. The road toward Riverbend begins beyond the
+      southern wards.'
+    exits:
+      north: hearth_row
+      east: hearth_row
+      south: bell_walk
+      west: bell_walk
+    occupants:
+    - A lampwright's apprentice sweeps rainwater toward the gutter
+    objects:
+    - A painted notice board stands near the drainage channel
+    - Freshly cut flowers have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hearth_row:
+    name: Hearth Row
+    room_type: Civic Square
+    desc: 'A narrow way opens between workshops whose doors stand open to the street.
+      Beneath your feet, well-worn flagstones curves around a bronze town bell hangs
+      beneath a tiled shelter.
+
+
+      Quiet conversation echoes through the district while sawdust and beeswax lingers
+      near the open doorways. A line of orchard trees is visible through the northern
+      gap.'
+    exits:
+      north: clover_crossing
+      northeast: clover_crossing
+      east: clover_crossing
+      south: willow_terrace
+      west: willow_terrace
+    occupants:
+    - A retired watchman checks a row of sealed parcels
+    objects:
+    - A brass route marker stands near the nearest doorway
+    - Three sealed crates have been arranged beneath a tiled lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  clover_crossing:
+    name: Clover Crossing
+    room_type: Residential Court
+    desc: 'The street widens here into a small public space bordered by shops beneath
+      overhanging upper floors. At its center, a weathered statue watches over the
+      crossing.
+
+
+      Light filters down in broken bands from the narrow sky above. The market square
+      lies somewhere to the east. The smell of fresh bread and damp wood settles over
+      the street.'
+    exits:
+      north: stone_street
+      east: stone_street
+      southwest: hearth_row
+      south: hearth_row
+      west: hearth_row
+    occupants: []
+    objects:
+    - A young cooper waits beside a loaded handcart
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath a timber arcade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_street:
+    name: Stone Street
+    room_type: Artisan Quarter
+    desc: 'This part of Greenhold is built in orderly tiers, with whitewashed homes
+      with steep roofs overlooking moss-lined cobbles and an alder tree rises from
+      a low ring of stones.
+
+
+      The district feels busy without being hurried. The clatter of handcarts rises
+      and fades around you, and Greenhold''s northern gate can be glimpsed beyond
+      the rooftops.'
+    exits:
+      north: alder_row
+      south: clover_crossing
+      west: clover_crossing
+    occupants: []
+    objects:
+    - A town courier sorts a stack of delivery tags
+    - A painted notice board stands near the nearest doorway
+    - Freshly cut flowers have been arranged beneath a patched canvas sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  alder_row:
+    name: Alder Row
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where a roofed well stands beside a row of message boxes.
+
+
+      The air carries lamp oil, wool, and rain, and a smith''s measured hammering
+      drifts between the roofs. The town wall rises above the houses to the west.'
+    exits:
+      north: copper_crossing
+      east: copper_crossing
+    occupants:
+    - A bread seller counts copper coins into a leather purse
+    objects:
+    - A brass route marker stands near the drainage channel
+    - Three sealed crates have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  copper_crossing:
+    name: Copper Crossing
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a carved public fountain sends a thin stream
+      into a circular basin.
+
+
+      Children calling across the lane echoes through the district while roasted roots
+      and chimney smoke lingers near the open doorways. The road toward Riverbend
+      begins beyond the southern wards.'
+    exits:
+      north: lantern_street
+      northeast: lantern_street
+      east: lantern_street
+      west: alder_row
+    occupants:
+    - A herbalist studies a notice pinned to the wall
+    objects:
+    - A rack of walking staffs stands near the nearest doorway
+    - Rows of clay jars have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  lantern_street:
+    name: Lantern Street
+    room_type: Civic Square
+    desc: 'A narrow way opens between workshops whose doors stand open to the street.
+      Beneath your feet, well-worn flagstones curves around a mosaic of the River
+      Verin winds across the paving.
+
+
+      Light filters down in broken bands from the narrow sky above. A line of orchard
+      trees is visible through the northern gap. The smell of sawdust and beeswax
+      settles over the street.'
+    exits:
+      north: mill_lane
+      east: mill_lane
+      west: copper_crossing
+    occupants: []
+    objects:
+    - A market porter sweeps rainwater toward the gutter
+    - A painted notice board stands near the drainage channel
+    - Freshly cut flowers have been arranged beneath a tiled lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_lane:
+    name: Mill Lane
+    room_type: Residential Court
+    desc: 'The street widens here into a small public space bordered by shops beneath
+      overhanging upper floors. At its center, a shallow channel carries clear water
+      toward the southern drains.
+
+
+      The district feels busy without being hurried. The chiming of shop bells rises
+      and fades around you, and The market square lies somewhere to the east.'
+    exits:
+      north: garden_ward
+      east: garden_ward
+      west: lantern_street
+    occupants: []
+    objects:
+    - A traveling scribe checks a row of sealed parcels
+    - A brass route marker stands near the nearest doorway
+    - Three sealed crates have been arranged beneath a timber arcade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  garden_ward:
+    name: Garden Ward
+    room_type: Artisan Quarter
+    desc: 'This part of Greenhold is built in orderly tiers, with whitewashed homes
+      with steep roofs overlooking moss-lined cobbles and a bronze town bell hangs
+      beneath a tiled shelter.
+
+
+      The air carries herbs drying beneath the eaves, and the clatter of handcarts
+      drifts between the roofs. Greenhold''s northern gate can be glimpsed beyond
+      the rooftops.'
+    exits:
+      north: north_road
+      west: mill_lane
+    occupants:
+    - A lampwright's apprentice waits beside a loaded handcart
+    objects:
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath a patched canvas sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  north_road:
+    name: North Road
+    room_type: Northern Crossing
+    desc: 'The northern road climbs through wind-bent trees above narrow valleys,
+      where a line of frost-cracked stones marks an old boundary.
+
+
+      Sheep bells ring below the path moves across the hills while rain on stone follows
+      the colder wind. Elderwatch''s tower stands east across the fields.'
+    exits:
+      east: pine_path
+      south: garden_ward
+    occupants: []
+    objects:
+    - A ridge scout fills a flask at the cold spring
+    - A stone spring basin stands near the signal post
+    - Three water skins have been arranged beneath the shelter roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pine_path:
+    name: Pine Path
+    room_type: Wooded Rise
+    desc: 'You stand on a stony upland road above the lower farms. Nearby, a watcher''s
+      cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. The western hills descend toward
+      Duskwood Vale. Nearby, loose stones click down the slope.'
+    exits:
+      east: coldwater_way
+      south: north_road
+      west: north_road
+    occupants: []
+    objects:
+    - A traveling hunter watches the northern horizon
+    - A watcher's cairn stands near the spring
+    - Stacks of flat wall stone have been arranged beneath a hide sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  coldwater_way:
+    name: Coldwater Way
+    room_type: Watch Path
+    desc: 'A cool upland path winds between upland farms protected by stone walls,
+      its edge marked by a line of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. A narrow track continues toward
+      isolated farmsteads. A trace of juniper and damp earth clings to the rocks.'
+    exits:
+      east: high_reach
+      south: pine_path
+      southwest: pine_path
+      west: pine_path
+    occupants: []
+    objects:
+    - A stone gatherer studies tracks in the gravel
+    - A boundary pillar stands near the signal post
+    - Bundles of pine kindling have been arranged beneath a stone overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  high_reach:
+    name: High Reach
+    room_type: Upland Road
+    desc: 'Wind-scoured track rises toward scattered pines and rocky pasture. A watcher''s
+      cairn stands on the highest ground.
+
+
+      The air smells of pine resin and cold grass, and water runs through the ravine
+      carries from the higher ground. Greenhold lies far below to the south.'
+    exits:
+      east: wind_track
+      south: coldwater_way
+      west: coldwater_way
+    occupants:
+    - A boundary keeper rests beside a cairn
+    objects:
+    - A stone spring basin stands near the spring
+    - Three water skins have been arranged beneath a canvas windbreak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wind_track:
+    name: Wind Track
+    room_type: Hill Track
+    desc: 'The land gathers into long hills around small woods broken by open ridges,
+      broken by a line of frost-cracked stones marks an old boundary.
+
+
+      Wind strains against the signal frame moves across the hills while woodsmoke
+      from an upland farm follows the colder wind. The Frostspire Peaks rise beyond
+      the northern horizon.'
+    exits:
+      south: frost_mile
+      west: high_reach
+    occupants: []
+    objects:
+    - A signal warden checks the ropes on a signal frame
+    - A watcher's cairn stands near the signal post
+    - Stacks of flat wall stone have been arranged beneath a low pine
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  frost_mile:
+    name: Frost Mile
+    room_type: Northern Crossing
+    desc: 'The northern road climbs through wind-bent trees above narrow valleys,
+      where a watcher''s cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. Elderwatch''s tower stands east
+      across the fields. Nearby, sheep bells ring below the path.'
+    exits:
+      north: ridge_lookout
+      northeast: ridge_lookout
+      east: ridge_lookout
+      south: wind_track
+    occupants:
+    - A upland shepherd repairs a gap in the stone wall
+    objects:
+    - A boundary pillar stands near the spring
+    - Bundles of pine kindling have been arranged beneath the shelter roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ridge_lookout:
+    name: Ridge Lookout
+    room_type: Wooded Rise
+    desc: 'You stand on a stony upland road above the lower farms. Nearby, a line
+      of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. The western hills descend toward
+      Duskwood Vale. A trace of frosted moss clings to the rocks.'
+    exits:
+      north: stone_rise
+      east: stone_rise
+      southwest: frost_mile
+      south: frost_mile
+      west: frost_mile
+    occupants: []
+    objects:
+    - A spring tender fills a flask at the cold spring
+    - A stone spring basin stands near the signal post
+    - Three water skins have been arranged beneath a hide sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_rise:
+    name: Stone Rise
+    room_type: Watch Path
+    desc: 'A cool upland path winds between upland farms protected by stone walls,
+      its edge marked by a watcher''s cairn stands on the highest ground.
+
+
+      The air smells of juniper and damp earth, and a hawk cries above the ridge carries
+      from the higher ground. A narrow track continues toward isolated farmsteads.'
+    exits:
+      north: cloud_crossing
+      east: cloud_crossing
+      south: ridge_lookout
+      west: ridge_lookout
+    occupants: []
+    objects:
+    - A goat herder watches the northern horizon
+    - A watcher's cairn stands near the spring
+    - Stacks of flat wall stone have been arranged beneath a stone overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cloud_crossing:
+    name: Cloud Crossing
+    room_type: Upland Road
+    desc: 'Wind-scoured track rises toward scattered pines and rocky pasture. A line
+      of frost-cracked stones marks an old boundary.
+
+
+      Water runs through the ravine moves across the hills while pine resin and cold
+      grass follows the colder wind. Greenhold lies far below to the south.'
+    exits:
+      north: watcher_s_bend
+      east: watcher_s_bend
+      south: stone_rise
+      west: stone_rise
+    occupants: []
+    objects:
+    - A ridge scout studies tracks in the gravel
+    - A boundary pillar stands near the signal post
+    - Bundles of pine kindling have been arranged beneath a canvas windbreak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  watcher_s_bend:
+    name: Watcher's Bend
+    room_type: Hill Track
+    desc: 'The land gathers into long hills around small woods broken by open ridges,
+      broken by a watcher''s cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. The Frostspire Peaks rise beyond
+      the northern horizon. Nearby, wind strains against the signal frame.'
+    exits:
+      north: north_rise
+      south: cloud_crossing
+      west: cloud_crossing
+    occupants: []
+    objects:
+    - A traveling hunter rests beside a cairn
+    - A stone spring basin stands near the spring
+    - Three water skins have been arranged beneath a low pine
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  north_rise:
+    name: North Rise
+    room_type: Northern Crossing
+    desc: 'The northern road climbs through wind-bent trees above narrow valleys,
+      where a line of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. Elderwatch''s tower stands east
+      across the fields. A trace of rain on stone clings to the rocks.'
+    exits:
+      north: pine_crossing
+      east: pine_crossing
+      south: watcher_s_bend
+    occupants: []
+    objects:
+    - A stone gatherer checks the ropes on a signal frame
+    - A watcher's cairn stands near the signal post
+    - Stacks of flat wall stone have been arranged beneath the shelter roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pine_crossing:
+    name: Pine Crossing
+    room_type: Wooded Rise
+    desc: 'You stand on a stony upland road above the lower farms. Nearby, a watcher''s
+      cairn stands on the highest ground.
+
+
+      The air smells of frosted moss, and loose stones click down the slope carries
+      from the higher ground. The western hills descend toward Duskwood Vale.'
+    exits:
+      north: coldwater_bend
+      east: coldwater_bend
+      south: north_rise
+      west: north_rise
+    occupants:
+    - A boundary keeper repairs a gap in the stone wall
+    objects:
+    - A boundary pillar stands near the spring
+    - Bundles of pine kindling have been arranged beneath a hide sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  coldwater_bend:
+    name: Coldwater Bend
+    room_type: Watch Path
+    desc: 'A cool upland path winds between upland farms protected by stone walls,
+      its edge marked by a line of frost-cracked stones marks an old boundary.
+
+
+      A hawk cries above the ridge moves across the hills while juniper and damp earth
+      follows the colder wind. A narrow track continues toward isolated farmsteads.'
+    exits:
+      north: high_road
+      east: high_road
+      south: pine_crossing
+      west: pine_crossing
+    occupants: []
+    objects:
+    - A signal warden fills a flask at the cold spring
+    - A stone spring basin stands near the signal post
+    - Three water skins have been arranged beneath a stone overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  high_road:
+    name: High Road
+    room_type: Upland Road
+    desc: 'Wind-scoured track rises toward scattered pines and rocky pasture. A watcher''s
+      cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. Greenhold lies far below to the
+      south. Nearby, water runs through the ravine.'
+    exits:
+      north: wind_path
+      northeast: wind_path
+      east: wind_path
+      south: coldwater_bend
+      west: coldwater_bend
+    occupants:
+    - A upland shepherd watches the northern horizon
+    objects:
+    - A watcher's cairn stands near the spring
+    - Stacks of flat wall stone have been arranged beneath a canvas windbreak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wind_path:
+    name: Wind Path
+    room_type: Hill Track
+    desc: 'The land gathers into long hills around small woods broken by open ridges,
+      broken by a line of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. The Frostspire Peaks rise beyond
+      the northern horizon. A trace of woodsmoke from an upland farm clings to the
+      rocks.'
+    exits:
+      north: frost_way
+      south: high_road
+      southwest: high_road
+      west: high_road
+    occupants: []
+    objects:
+    - A spring tender studies tracks in the gravel
+    - A boundary pillar stands near the signal post
+    - Bundles of pine kindling have been arranged beneath a low pine
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  frost_way:
+    name: Frost Way
+    room_type: Northern Crossing
+    desc: 'The northern road climbs through wind-bent trees above narrow valleys,
+      where a watcher''s cairn stands on the highest ground.
+
+
+      The air smells of rain on stone, and sheep bells ring below the path carries
+      from the higher ground. Elderwatch''s tower stands east across the fields.'
+    exits:
+      north: ridge_reach
+      east: ridge_reach
+      south: wind_path
+    occupants: []
+    objects:
+    - A goat herder rests beside a cairn
+    - A stone spring basin stands near the spring
+    - Three water skins have been arranged beneath the shelter roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ridge_reach:
+    name: Ridge Reach
+    room_type: Wooded Rise
+    desc: 'You stand on a stony upland road above the lower farms. Nearby, a line
+      of frost-cracked stones marks an old boundary.
+
+
+      Loose stones click down the slope moves across the hills while frosted moss
+      follows the colder wind. The western hills descend toward Duskwood Vale.'
+    exits:
+      north: stone_track
+      east: stone_track
+      south: frost_way
+      west: frost_way
+    occupants: []
+    objects:
+    - A ridge scout checks the ropes on a signal frame
+    - A watcher's cairn stands near the signal post
+    - Stacks of flat wall stone have been arranged beneath a hide sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_track:
+    name: Stone Track
+    room_type: Watch Path
+    desc: 'A cool upland path winds between upland farms protected by stone walls,
+      its edge marked by a watcher''s cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. A narrow track continues toward
+      isolated farmsteads. Nearby, a hawk cries above the ridge.'
+    exits:
+      north: cloud_mile
+      northeast: cloud_mile
+      east: cloud_mile
+      south: ridge_reach
+      west: ridge_reach
+    occupants: []
+    objects:
+    - A traveling hunter repairs a gap in the stone wall
+    - A boundary pillar stands near the spring
+    - Bundles of pine kindling have been arranged beneath a stone overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cloud_mile:
+    name: Cloud Mile
+    room_type: Upland Road
+    desc: 'Wind-scoured track rises toward scattered pines and rocky pasture. A line
+      of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. Greenhold lies far below to the
+      south. A trace of pine resin and cold grass clings to the rocks.'
+    exits:
+      north: watcher_s_lookout
+      east: watcher_s_lookout
+      southwest: stone_track
+      south: stone_track
+      west: stone_track
+    occupants: []
+    objects:
+    - A stone gatherer fills a flask at the cold spring
+    - A stone spring basin stands near the signal post
+    - Three water skins have been arranged beneath a canvas windbreak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  watcher_s_lookout:
+    name: Watcher's Lookout
+    room_type: Hill Track
+    desc: 'The land gathers into long hills around small woods broken by open ridges,
+      broken by a watcher''s cairn stands on the highest ground.
+
+
+      The air smells of woodsmoke from an upland farm, and wind strains against the
+      signal frame carries from the higher ground. The Frostspire Peaks rise beyond
+      the northern horizon.'
+    exits:
+      north: north_track
+      south: cloud_mile
+      west: cloud_mile
+    occupants:
+    - A boundary keeper watches the northern horizon
+    objects:
+    - A watcher's cairn stands near the spring
+    - Stacks of flat wall stone have been arranged beneath a low pine
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  north_track:
+    name: North Track
+    room_type: Northern Crossing
+    desc: 'The northern road climbs through wind-bent trees above narrow valleys,
+      where a line of frost-cracked stones marks an old boundary.
+
+
+      Sheep bells ring below the path moves across the hills while rain on stone follows
+      the colder wind. Elderwatch''s tower stands east across the fields.'
+    exits:
+      north: pine_mile_of_northern_veridia
+      east: pine_mile_of_northern_veridia
+    occupants: []
+    objects:
+    - A signal warden studies tracks in the gravel
+    - A boundary pillar stands near the signal post
+    - Bundles of pine kindling have been arranged beneath the shelter roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pine_mile_of_northern_veridia:
+    name: Pine Mile of Northern Veridia
+    room_type: Wooded Rise
+    desc: 'You stand on a stony upland road above the lower farms. Nearby, a watcher''s
+      cairn stands on the highest ground.
+
+
+      The view opens south across much of Veridia. The western hills descend toward
+      Duskwood Vale. Nearby, loose stones click down the slope.'
+    exits:
+      north: coldwater_lookout
+      northeast: coldwater_lookout
+      east: coldwater_lookout
+      west: north_track
+    occupants:
+    - A upland shepherd rests beside a cairn
+    objects:
+    - A stone spring basin stands near the spring
+    - Three water skins have been arranged beneath a hide sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  coldwater_lookout:
+    name: Coldwater Lookout
+    room_type: Watch Path
+    desc: 'A cool upland path winds between upland farms protected by stone walls,
+      its edge marked by a line of frost-cracked stones marks an old boundary.
+
+
+      Cloud shadows travel quickly over the slopes. A narrow track continues toward
+      isolated farmsteads. A trace of juniper and damp earth clings to the rocks.'
+    exits:
+      north: high_rise
+      east: high_rise
+      west: pine_mile_of_northern_veridia
+    occupants: []
+    objects:
+    - A spring tender checks the ropes on a signal frame
+    - A watcher's cairn stands near the signal post
+    - Stacks of flat wall stone have been arranged beneath a stone overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  high_rise:
+    name: High Rise
+    room_type: Upland Road
+    desc: 'Wind-scoured track rises toward scattered pines and rocky pasture. A watcher''s
+      cairn stands on the highest ground.
+
+
+      The air smells of pine resin and cold grass, and water runs through the ravine
+      carries from the higher ground. Greenhold lies far below to the south.'
+    exits:
+      north: wind_crossing
+      east: wind_crossing
+      west: coldwater_lookout
+    occupants: []
+    objects:
+    - A goat herder repairs a gap in the stone wall
+    - A boundary pillar stands near the spring
+    - Bundles of pine kindling have been arranged beneath a canvas windbreak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wind_crossing:
+    name: Wind Crossing
+    room_type: Hill Track
+    desc: 'The land gathers into long hills around small woods broken by open ridges,
+      broken by a line of frost-cracked stones marks an old boundary.
+
+
+      Wind strains against the signal frame moves across the hills while woodsmoke
+      from an upland farm follows the colder wind. The Frostspire Peaks rise beyond
+      the northern horizon.'
+    exits:
+      north: king_s_mile
+      west: high_rise
+    occupants: []
+    objects:
+    - A ridge scout fills a flask at the cold spring
+    - A stone spring basin stands near the signal post
+    - Three water skins have been arranged beneath a low pine
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  king_s_mile:
+    name: King's Mile
+    room_type: Ruined Highway
+    desc: 'The ancient road continues between rolling country dotted with foundation
+      stones, where a collapsed arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. Elderwatch''s
+      tower can be seen on the horizon. A trace of rain in old mortar clings to the
+      old stones.'
+    exits:
+      east: old_crossing
+      south: wind_crossing
+    occupants: []
+    objects:
+    - A boundary warden measures the width of the old paving
+    - A roadside shrine stands near the milestone
+    - A cluster of pottery shards have been arranged beneath the shadow of a broken
+      arch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  old_crossing:
+    name: Old Crossing
+    room_type: Forgotten Crossing
+    desc: 'You stand on a cracked imperial road laid long before the surrounding farms.
+      Nearby, a broken statue faces east.
+
+
+      The air carries sun-heated stone, and larks call over the fields follows the
+      road from far away. Duskwood Vale darkens the western distance.'
+    exits:
+      east: broken_rise
+      south: king_s_mile
+      west: king_s_mile
+    occupants: []
+    objects:
+    - A pilgrim traces a mason mark with one finger
+    - A broken milestone stands near the collapsed arch
+    - Pieces of rusted iron have been arranged beneath a mat of grass
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_rise:
+    name: Broken Rise
+    room_type: Stone Causeway
+    desc: 'A broad old way crosses abandoned fields reclaimed by grass, its course
+      preserved by a collapsed arch lies beside the road.
+
+
+      Wind moves through broken masonry echoes faintly across the open ground while
+      wild thyme and dust gathers in the cracks between stones. The causeway continues
+      north into quieter country.'
+    exits:
+      east: white_stone_passage
+      south: old_crossing
+      southwest: old_crossing
+      west: old_crossing
+    occupants: []
+    objects:
+    - A caravan scout watches a distant wagon approach
+    - A survey tripod stands near the milestone
+    - Several loose paving slabs have been arranged beneath a growth of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  white_stone_passage:
+    name: White Stone Passage
+    room_type: Boundary Road
+    desc: 'Road of fitted limestone slabs emerges from the earth in broken sections
+      through small farms built around older ruins. A broken statue faces east.
+
+
+      Grass grows through the joints in pale seams. Greenhold lies somewhere east
+      of the old route. Nearby, water drips beneath the causeway.'
+    exits:
+      east: founder_s_road
+      south: broken_rise
+      west: broken_rise
+    occupants: []
+    objects:
+    - A road mason checks a crack in the causeway
+    - A roadside shrine stands near the collapsed arch
+    - A cluster of pottery shards have been arranged beneath a low stone shelf
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  founder_s_road:
+    name: Founder's Road
+    room_type: Ancient Road
+    desc: 'The road rises above low meadows and drainage channels, marked by a collapsed
+      arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. The road
+      bends south toward Riverbend. A trace of moss and standing water clings to the
+      old stones.'
+    exits:
+      south: crown_approach
+      west: white_stone_passage
+    occupants:
+    - A survey clerk copies an inscription into a notebook
+    objects:
+    - A broken milestone stands near the milestone
+    - Pieces of rusted iron have been arranged beneath a waxed survey cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  crown_approach:
+    name: Crown Approach
+    room_type: Ruined Highway
+    desc: 'The ancient road continues between rolling country dotted with foundation
+      stones, where a broken statue faces east.
+
+
+      The air carries rain in old mortar, and a distant bell carries from settled
+      land follows the road from far away. Elderwatch''s tower can be seen on the
+      horizon.'
+    exits:
+      north: pilgrim_reach
+      northeast: pilgrim_reach
+      east: pilgrim_reach
+      south: founder_s_road
+    occupants: []
+    objects:
+    - A wandering priest rests beside a weathered milestone
+    - A survey tripod stands near the collapsed arch
+    - Several loose paving slabs have been arranged beneath the shadow of a broken
+      arch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pilgrim_reach:
+    name: Pilgrim Reach
+    room_type: Forgotten Crossing
+    desc: 'You stand on a cracked imperial road laid long before the surrounding farms.
+      Nearby, a collapsed arch lies beside the road.
+
+
+      Larks call over the fields echoes faintly across the open ground while sun-heated
+      stone gathers in the cracks between stones. Duskwood Vale darkens the western
+      distance.'
+    exits:
+      north: mason_causeway
+      east: mason_causeway
+      southwest: crown_approach
+      south: crown_approach
+      west: crown_approach
+    occupants: []
+    objects:
+    - A traveling antiquarian measures the width of the old paving
+    - A roadside shrine stands near the milestone
+    - A cluster of pottery shards have been arranged beneath a mat of grass
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mason_causeway:
+    name: Mason Causeway
+    room_type: Stone Causeway
+    desc: 'A broad old way crosses abandoned fields reclaimed by grass, its course
+      preserved by a broken statue faces east.
+
+
+      Grass grows through the joints in pale seams. The causeway continues north into
+      quieter country. Nearby, wind moves through broken masonry.'
+    exits:
+      north: weathered_way
+      east: weathered_way
+      south: pilgrim_reach
+      west: pilgrim_reach
+    occupants: []
+    objects:
+    - A stone cutter traces a mason mark with one finger
+    - A broken milestone stands near the collapsed arch
+    - Pieces of rusted iron have been arranged beneath a growth of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  weathered_way:
+    name: Weathered Way
+    room_type: Boundary Road
+    desc: 'Road of fitted limestone slabs emerges from the earth in broken sections
+      through small farms built around older ruins. A collapsed arch lies beside the
+      road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. Greenhold
+      lies somewhere east of the old route. A trace of warm limestone and grass clings
+      to the old stones.'
+    exits:
+      north: long_bend
+      east: long_bend
+      south: mason_causeway
+      west: mason_causeway
+    occupants: []
+    objects:
+    - A boundary warden watches a distant wagon approach
+    - A survey tripod stands near the milestone
+    - Several loose paving slabs have been arranged beneath a low stone shelf
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  long_bend:
+    name: Long Bend
+    room_type: Ancient Road
+    desc: 'The road rises above low meadows and drainage channels, marked by a broken
+      statue faces east.
+
+
+      The air carries moss and standing water, and wagon wheels strike the slabs in
+      a slow rhythm follows the road from far away. The road bends south toward Riverbend.'
+    exits:
+      north: king_s_causeway
+      south: weathered_way
+      west: weathered_way
+    occupants: []
+    objects:
+    - A pilgrim checks a crack in the causeway
+    - A roadside shrine stands near the collapsed arch
+    - A cluster of pottery shards have been arranged beneath a waxed survey cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  king_s_causeway:
+    name: King's Causeway
+    room_type: Ruined Highway
+    desc: 'The ancient road continues between rolling country dotted with foundation
+      stones, where a collapsed arch lies beside the road.
+
+
+      A distant bell carries from settled land echoes faintly across the open ground
+      while rain in old mortar gathers in the cracks between stones. Elderwatch''s
+      tower can be seen on the horizon.'
+    exits:
+      north: old_way
+      east: old_way
+      south: long_bend
+    occupants: []
+    objects:
+    - A caravan scout copies an inscription into a notebook
+    - A broken milestone stands near the milestone
+    - Pieces of rusted iron have been arranged beneath the shadow of a broken arch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  old_way:
+    name: Old Way
+    room_type: Forgotten Crossing
+    desc: 'You stand on a cracked imperial road laid long before the surrounding farms.
+      Nearby, a broken statue faces east.
+
+
+      Grass grows through the joints in pale seams. Duskwood Vale darkens the western
+      distance. Nearby, larks call over the fields.'
+    exits:
+      north: broken_bend
+      east: broken_bend
+      south: king_s_causeway
+      west: king_s_causeway
+    occupants: []
+    objects:
+    - A road mason rests beside a weathered milestone
+    - A survey tripod stands near the collapsed arch
+    - Several loose paving slabs have been arranged beneath a mat of grass
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_bend:
+    name: Broken Bend
+    room_type: Stone Causeway
+    desc: 'A broad old way crosses abandoned fields reclaimed by grass, its course
+      preserved by a collapsed arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. The causeway
+      continues north into quieter country. A trace of wild thyme and dust clings
+      to the old stones.'
+    exits:
+      north: white_stone_mile
+      east: white_stone_mile
+      south: old_way
+      west: old_way
+    occupants:
+    - A survey clerk measures the width of the old paving
+    objects:
+    - A roadside shrine stands near the milestone
+    - A cluster of pottery shards have been arranged beneath a growth of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  white_stone_mile:
+    name: White Stone Mile
+    room_type: Boundary Road
+    desc: 'Road of fitted limestone slabs emerges from the earth in broken sections
+      through small farms built around older ruins. A broken statue faces east.
+
+
+      The air carries warm limestone and grass, and water drips beneath the causeway
+      follows the road from far away. Greenhold lies somewhere east of the old route.'
+    exits:
+      north: founder_s_crossing
+      northeast: founder_s_crossing
+      east: founder_s_crossing
+      south: broken_bend
+      west: broken_bend
+    occupants: []
+    objects:
+    - A wandering priest traces a mason mark with one finger
+    - A broken milestone stands near the collapsed arch
+    - Pieces of rusted iron have been arranged beneath a low stone shelf
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  founder_s_crossing:
+    name: Founder's Crossing
+    room_type: Ancient Road
+    desc: 'The road rises above low meadows and drainage channels, marked by a collapsed
+      arch lies beside the road.
+
+
+      Wagon wheels strike the slabs in a slow rhythm echoes faintly across the open
+      ground while moss and standing water gathers in the cracks between stones. The
+      road bends south toward Riverbend.'
+    exits:
+      north: crown_rise
+      south: white_stone_mile
+      southwest: white_stone_mile
+      west: white_stone_mile
+    occupants: []
+    objects:
+    - A traveling antiquarian watches a distant wagon approach
+    - A survey tripod stands near the milestone
+    - Several loose paving slabs have been arranged beneath a waxed survey cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  crown_rise:
+    name: Crown Rise
+    room_type: Ruined Highway
+    desc: 'The ancient road continues between rolling country dotted with foundation
+      stones, where a broken statue faces east.
+
+
+      Grass grows through the joints in pale seams. Elderwatch''s tower can be seen
+      on the horizon. Nearby, a distant bell carries from settled land.'
+    exits:
+      north: pilgrim_passage
+      east: pilgrim_passage
+      south: founder_s_crossing
+    occupants: []
+    objects:
+    - A stone cutter checks a crack in the causeway
+    - A roadside shrine stands near the collapsed arch
+    - A cluster of pottery shards have been arranged beneath the shadow of a broken
+      arch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pilgrim_passage:
+    name: Pilgrim Passage
+    room_type: Forgotten Crossing
+    desc: 'You stand on a cracked imperial road laid long before the surrounding farms.
+      Nearby, a collapsed arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. Duskwood
+      Vale darkens the western distance. A trace of sun-heated stone clings to the
+      old stones.'
+    exits:
+      north: mason_road
+      east: mason_road
+      south: crown_rise
+      west: crown_rise
+    occupants: []
+    objects:
+    - A boundary warden copies an inscription into a notebook
+    - A broken milestone stands near the milestone
+    - Pieces of rusted iron have been arranged beneath a mat of grass
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mason_road:
+    name: Mason Road
+    room_type: Stone Causeway
+    desc: 'A broad old way crosses abandoned fields reclaimed by grass, its course
+      preserved by a broken statue faces east.
+
+
+      The air carries wild thyme and dust, and wind moves through broken masonry follows
+      the road from far away. The causeway continues north into quieter country.'
+    exits:
+      north: weathered_approach
+      northeast: weathered_approach
+      east: weathered_approach
+      south: pilgrim_passage
+      west: pilgrim_passage
+    occupants: []
+    objects:
+    - A pilgrim rests beside a weathered milestone
+    - A survey tripod stands near the collapsed arch
+    - Several loose paving slabs have been arranged beneath a growth of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  weathered_approach:
+    name: Weathered Approach
+    room_type: Boundary Road
+    desc: 'Road of fitted limestone slabs emerges from the earth in broken sections
+      through small farms built around older ruins. A collapsed arch lies beside the
+      road.
+
+
+      Water drips beneath the causeway echoes faintly across the open ground while
+      warm limestone and grass gathers in the cracks between stones. Greenhold lies
+      somewhere east of the old route.'
+    exits:
+      north: long_reach
+      east: long_reach
+      southwest: mason_road
+      south: mason_road
+      west: mason_road
+    occupants: []
+    objects:
+    - A caravan scout measures the width of the old paving
+    - A roadside shrine stands near the milestone
+    - A cluster of pottery shards have been arranged beneath a low stone shelf
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  long_reach:
+    name: Long Reach
+    room_type: Ancient Road
+    desc: 'The road rises above low meadows and drainage channels, marked by a broken
+      statue faces east.
+
+
+      Grass grows through the joints in pale seams. The road bends south toward Riverbend.
+      Nearby, wagon wheels strike the slabs in a slow rhythm.'
+    exits:
+      north: king_s_road
+      south: weathered_approach
+      west: weathered_approach
+    occupants: []
+    objects:
+    - A road mason traces a mason mark with one finger
+    - A broken milestone stands near the collapsed arch
+    - Pieces of rusted iron have been arranged beneath a waxed survey cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  king_s_road:
+    name: King's Road
+    room_type: Ruined Highway
+    desc: 'The ancient road continues between rolling country dotted with foundation
+      stones, where a collapsed arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. Elderwatch''s
+      tower can be seen on the horizon. A trace of rain in old mortar clings to the
+      old stones.'
+    exits:
+      north: old_approach
+      east: old_approach
+    occupants:
+    - A survey clerk watches a distant wagon approach
+    objects:
+    - A survey tripod stands near the milestone
+    - Several loose paving slabs have been arranged beneath the shadow of a broken
+      arch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  old_approach:
+    name: Old Approach
+    room_type: Forgotten Crossing
+    desc: 'You stand on a cracked imperial road laid long before the surrounding farms.
+      Nearby, a broken statue faces east.
+
+
+      The air carries sun-heated stone, and larks call over the fields follows the
+      road from far away. Duskwood Vale darkens the western distance.'
+    exits:
+      north: broken_reach
+      northeast: broken_reach
+      east: broken_reach
+      west: king_s_road
+    occupants: []
+    objects:
+    - A wandering priest checks a crack in the causeway
+    - A roadside shrine stands near the collapsed arch
+    - A cluster of pottery shards have been arranged beneath a mat of grass
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_reach:
+    name: Broken Reach
+    room_type: Stone Causeway
+    desc: 'A broad old way crosses abandoned fields reclaimed by grass, its course
+      preserved by a collapsed arch lies beside the road.
+
+
+      Wind moves through broken masonry echoes faintly across the open ground while
+      wild thyme and dust gathers in the cracks between stones. The causeway continues
+      north into quieter country.'
+    exits:
+      north: white_stone_causeway
+      east: white_stone_causeway
+      west: old_approach
+    occupants: []
+    objects:
+    - A traveling antiquarian copies an inscription into a notebook
+    - A broken milestone stands near the milestone
+    - Pieces of rusted iron have been arranged beneath a growth of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  white_stone_causeway:
+    name: White Stone Causeway
+    room_type: Boundary Road
+    desc: 'Road of fitted limestone slabs emerges from the earth in broken sections
+      through small farms built around older ruins. A broken statue faces east.
+
+
+      Grass grows through the joints in pale seams. Greenhold lies somewhere east
+      of the old route. Nearby, water drips beneath the causeway.'
+    exits:
+      north: founder_s_way
+      east: founder_s_way
+      west: broken_reach
+    occupants: []
+    objects:
+    - A stone cutter rests beside a weathered milestone
+    - A survey tripod stands near the collapsed arch
+    - Several loose paving slabs have been arranged beneath a low stone shelf
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  founder_s_way:
+    name: Founder's Way
+    room_type: Ancient Road
+    desc: 'The road rises above low meadows and drainage channels, marked by a collapsed
+      arch lies beside the road.
+
+
+      The road is quiet but unmistakably deliberate in its construction. The road
+      bends south toward Riverbend. A trace of moss and standing water clings to the
+      old stones.'
+    exits:
+      north: fallen_court
+      west: white_stone_causeway
+    occupants: []
+    objects:
+    - A boundary warden measures the width of the old paving
+    - A roadside shrine stands near the milestone
+    - A cluster of pottery shards have been arranged beneath a waxed survey cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fallen_court:
+    name: Fallen Court
+    room_type: Buried Foundation
+    desc: 'The ruins open around roofless chambers open to the sky, where a sealed
+      stone door is set into the northern wall.
+
+
+      The air smells of ivy and rainwater. A dark tree line marks the approach to
+      Duskwood Vale. Somewhere within the ruin, wind hums through a cracked doorway.'
+    exits:
+      east: ivy_foundation
+      south: founder_s_way
+    occupants: []
+    objects:
+    - A ruin surveyor clears ivy from a carved panel
+    - A sealed stone door stands near the old stair
+    - A row of old iron nails lie beneath a mat of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ivy_foundation:
+    name: Ivy Foundation
+    room_type: Ruined Courtyard
+    desc: 'You stand among collapsed walls and ivy-covered columns. Nearby, an inscription
+      survives beneath a layer of moss.
+
+
+      Insects buzz above the grass moves through the empty spaces while stagnant water
+      in a carved basin gathers beneath the stones. The old highway can be reached
+      to the north.'
+    exits:
+      east: silent_gallery
+      south: fallen_court
+      west: fallen_court
+    occupants: []
+    objects:
+    - A stone conservator copies an inscription onto thin paper
+    - A carved stone basin stands near the center of the court
+    - Fragments of painted plaster lie beneath a linen sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  silent_gallery:
+    name: Silent Gallery
+    room_type: Collapsed Hall
+    desc: 'An overgrown enclosure contains an old courtyard filled with saplings,
+      its silence broken by a sealed stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. Riverbend''s mills are
+      faintly audible in clear weather. A trace of cold earth beneath broken paving
+      hangs in the sheltered corners.'
+    exits:
+      east: moss_terrace
+      south: ivy_foundation
+      southwest: ivy_foundation
+      west: ivy_foundation
+    occupants: []
+    objects:
+    - A watchful scout waits beside the old basin
+    - A survey chest stands near the old stair
+    - Pieces of colored glass lie beneath a low stone ledge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_terrace:
+    name: Moss Terrace
+    room_type: Overgrown Ruin
+    desc: 'Weed-covered paving leads into a low mound of buried masonry. An inscription
+      survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. The nearest farm road lies
+      east of the ruin. From below the broken floor comes loose stones settle somewhere
+      below.'
+    exits:
+      east: broken_hall
+      south: silent_gallery
+      west: silent_gallery
+    occupants: []
+    objects:
+    - A traveling scholar sorts pottery fragments on a cloth
+    - A sealed stone door stands near the center of the court
+    - A row of old iron nails lie beneath a waxed field cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_hall:
+    name: Broken Hall
+    room_type: Ancient Shrine
+    desc: 'The remains of an old structure rise from foundation stones beneath tall
+      grass, centered on a sealed stone door is set into the northern wall.
+
+
+      The air smells of wildflowers growing through mortar. Greenhold''s lands begin
+      beyond the southern fields. Somewhere within the ruin, water drips into an unseen
+      hollow.'
+    exits:
+      south: sunken_steps
+      west: moss_terrace
+    occupants: []
+    objects:
+    - A herb gatherer studies the sealed stone door
+    - A carved stone basin stands near the old stair
+    - Fragments of painted plaster lie beneath the shadow of a fallen column
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  sunken_steps:
+    name: Sunken Steps
+    room_type: Buried Foundation
+    desc: 'The ruins open around roofless chambers open to the sky, where an inscription
+      survives beneath a layer of moss.
+
+
+      Wind hums through a cracked doorway moves through the empty spaces while ivy
+      and rainwater gathers beneath the stones. A dark tree line marks the approach
+      to Duskwood Vale.'
+    exits:
+      north: forgotten_chamber
+      northeast: forgotten_chamber
+      east: forgotten_chamber
+      south: broken_hall
+    occupants: []
+    objects:
+    - A young antiquarian measures a collapsed doorway
+    - A survey chest stands near the center of the court
+    - Pieces of colored glass lie beneath a mat of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  forgotten_chamber:
+    name: Forgotten Chamber
+    room_type: Ruined Courtyard
+    desc: 'You stand among collapsed walls and ivy-covered columns. Nearby, a sealed
+      stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. The old highway can be
+      reached to the north. A trace of stagnant water in a carved basin hangs in the
+      sheltered corners.'
+    exits:
+      north: gray_shrine
+      east: gray_shrine
+      southwest: sunken_steps
+      south: sunken_steps
+      west: sunken_steps
+    occupants: []
+    objects:
+    - A local guide clears ivy from a carved panel
+    - A sealed stone door stands near the old stair
+    - A row of old iron nails lie beneath a linen sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  gray_shrine:
+    name: Gray Shrine
+    room_type: Collapsed Hall
+    desc: 'An overgrown enclosure contains an old courtyard filled with saplings,
+      its silence broken by an inscription survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. Riverbend''s mills are faintly
+      audible in clear weather. From below the broken floor comes small birds move
+      among the columns.'
+    exits:
+      north: warden_s_vault
+      east: warden_s_vault
+      south: forgotten_chamber
+      west: forgotten_chamber
+    occupants: []
+    objects:
+    - A quiet pilgrim copies an inscription onto thin paper
+    - A carved stone basin stands near the center of the court
+    - Fragments of painted plaster lie beneath a low stone ledge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  warden_s_vault:
+    name: Warden's Vault
+    room_type: Overgrown Ruin
+    desc: 'Weed-covered paving leads into a low mound of buried masonry. A sealed
+      stone door is set into the northern wall.
+
+
+      The air smells of moss, damp stone, and old dust. The nearest farm road lies
+      east of the ruin. Somewhere within the ruin, loose stones settle somewhere below.'
+    exits:
+      north: hollow_enclosure
+      east: hollow_enclosure
+      south: gray_shrine
+      west: gray_shrine
+    occupants: []
+    objects:
+    - A ruin surveyor waits beside the old basin
+    - A survey chest stands near the old stair
+    - Pieces of colored glass lie beneath a waxed field cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hollow_enclosure:
+    name: Hollow Enclosure
+    room_type: Ancient Shrine
+    desc: 'The remains of an old structure rise from foundation stones beneath tall
+      grass, centered on an inscription survives beneath a layer of moss.
+
+
+      Water drips into an unseen hollow moves through the empty spaces while wildflowers
+      growing through mortar gathers beneath the stones. Greenhold''s lands begin
+      beyond the southern fields.'
+    exits:
+      north: fallen_shrine
+      south: warden_s_vault
+      west: warden_s_vault
+    occupants: []
+    objects:
+    - A stone conservator sorts pottery fragments on a cloth
+    - A sealed stone door stands near the center of the court
+    - A row of old iron nails lie beneath the shadow of a fallen column
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fallen_shrine:
+    name: Fallen Shrine
+    room_type: Buried Foundation
+    desc: 'The ruins open around roofless chambers open to the sky, where a sealed
+      stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. A dark tree line marks
+      the approach to Duskwood Vale. A trace of ivy and rainwater hangs in the sheltered
+      corners.'
+    exits:
+      north: ivy_vault
+      east: ivy_vault
+      south: hollow_enclosure
+    occupants: []
+    objects:
+    - A watchful scout studies the sealed stone door
+    - A carved stone basin stands near the old stair
+    - Fragments of painted plaster lie beneath a mat of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ivy_vault:
+    name: Ivy Vault
+    room_type: Ruined Courtyard
+    desc: 'You stand among collapsed walls and ivy-covered columns. Nearby, an inscription
+      survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. The old highway can be reached
+      to the north. From below the broken floor comes insects buzz above the grass.'
+    exits:
+      north: silent_enclosure
+      east: silent_enclosure
+      south: fallen_shrine
+      west: fallen_shrine
+    occupants: []
+    objects:
+    - A traveling scholar measures a collapsed doorway
+    - A survey chest stands near the center of the court
+    - Pieces of colored glass lie beneath a linen sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  silent_enclosure:
+    name: Silent Enclosure
+    room_type: Collapsed Hall
+    desc: 'An overgrown enclosure contains an old courtyard filled with saplings,
+      its silence broken by a sealed stone door is set into the northern wall.
+
+
+      The air smells of cold earth beneath broken paving. Riverbend''s mills are faintly
+      audible in clear weather. Somewhere within the ruin, small birds move among
+      the columns.'
+    exits:
+      north: moss_court
+      east: moss_court
+      south: ivy_vault
+      west: ivy_vault
+    occupants: []
+    objects:
+    - A herb gatherer clears ivy from a carved panel
+    - A sealed stone door stands near the old stair
+    - A row of old iron nails lie beneath a low stone ledge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_court:
+    name: Moss Court
+    room_type: Overgrown Ruin
+    desc: 'Weed-covered paving leads into a low mound of buried masonry. An inscription
+      survives beneath a layer of moss.
+
+
+      Loose stones settle somewhere below moves through the empty spaces while moss,
+      damp stone, and old dust gathers beneath the stones. The nearest farm road lies
+      east of the ruin.'
+    exits:
+      north: broken_foundation
+      northeast: broken_foundation
+      east: broken_foundation
+      south: silent_enclosure
+      west: silent_enclosure
+    occupants: []
+    objects:
+    - A young antiquarian copies an inscription onto thin paper
+    - A carved stone basin stands near the center of the court
+    - Fragments of painted plaster lie beneath a waxed field cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_foundation:
+    name: Broken Foundation
+    room_type: Ancient Shrine
+    desc: 'The remains of an old structure rise from foundation stones beneath tall
+      grass, centered on a sealed stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. Greenhold''s lands begin
+      beyond the southern fields. A trace of wildflowers growing through mortar hangs
+      in the sheltered corners.'
+    exits:
+      north: sunken_gallery
+      south: moss_court
+      southwest: moss_court
+      west: moss_court
+    occupants: []
+    objects:
+    - A local guide waits beside the old basin
+    - A survey chest stands near the old stair
+    - Pieces of colored glass lie beneath the shadow of a fallen column
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  sunken_gallery:
+    name: Sunken Gallery
+    room_type: Buried Foundation
+    desc: 'The ruins open around roofless chambers open to the sky, where an inscription
+      survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. A dark tree line marks the
+      approach to Duskwood Vale. From below the broken floor comes wind hums through
+      a cracked doorway.'
+    exits:
+      north: forgotten_terrace
+      east: forgotten_terrace
+      south: broken_foundation
+    occupants: []
+    objects:
+    - A quiet pilgrim sorts pottery fragments on a cloth
+    - A sealed stone door stands near the center of the court
+    - A row of old iron nails lie beneath a mat of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  forgotten_terrace:
+    name: Forgotten Terrace
+    room_type: Ruined Courtyard
+    desc: 'You stand among collapsed walls and ivy-covered columns. Nearby, a sealed
+      stone door is set into the northern wall.
+
+
+      The air smells of stagnant water in a carved basin. The old highway can be reached
+      to the north. Somewhere within the ruin, insects buzz above the grass.'
+    exits:
+      north: gray_hall
+      east: gray_hall
+      south: sunken_gallery
+      west: sunken_gallery
+    occupants: []
+    objects:
+    - A ruin surveyor studies the sealed stone door
+    - A carved stone basin stands near the old stair
+    - Fragments of painted plaster lie beneath a linen sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  gray_hall:
+    name: Gray Hall
+    room_type: Collapsed Hall
+    desc: 'An overgrown enclosure contains an old courtyard filled with saplings,
+      its silence broken by an inscription survives beneath a layer of moss.
+
+
+      Small birds move among the columns moves through the empty spaces while cold
+      earth beneath broken paving gathers beneath the stones. Riverbend''s mills are
+      faintly audible in clear weather.'
+    exits:
+      north: warden_s_steps
+      northeast: warden_s_steps
+      east: warden_s_steps
+      south: forgotten_terrace
+      west: forgotten_terrace
+    occupants: []
+    objects:
+    - A stone conservator measures a collapsed doorway
+    - A survey chest stands near the center of the court
+    - Pieces of colored glass lie beneath a low stone ledge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  warden_s_steps:
+    name: Warden's Steps
+    room_type: Overgrown Ruin
+    desc: 'Weed-covered paving leads into a low mound of buried masonry. A sealed
+      stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. The nearest farm road
+      lies east of the ruin. A trace of moss, damp stone, and old dust hangs in the
+      sheltered corners.'
+    exits:
+      north: hollow_chamber
+      east: hollow_chamber
+      southwest: gray_hall
+      south: gray_hall
+      west: gray_hall
+    occupants: []
+    objects:
+    - A watchful scout clears ivy from a carved panel
+    - A sealed stone door stands near the old stair
+    - A row of old iron nails lie beneath a waxed field cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hollow_chamber:
+    name: Hollow Chamber
+    room_type: Ancient Shrine
+    desc: 'The remains of an old structure rise from foundation stones beneath tall
+      grass, centered on an inscription survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. Greenhold''s lands begin beyond
+      the southern fields. From below the broken floor comes water drips into an unseen
+      hollow.'
+    exits:
+      north: fallen_hall
+      south: warden_s_steps
+      west: warden_s_steps
+    occupants: []
+    objects:
+    - A traveling scholar copies an inscription onto thin paper
+    - A carved stone basin stands near the center of the court
+    - Fragments of painted plaster lie beneath the shadow of a fallen column
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fallen_hall:
+    name: Fallen Hall
+    room_type: Buried Foundation
+    desc: 'The ruins open around roofless chambers open to the sky, where a sealed
+      stone door is set into the northern wall.
+
+
+      The air smells of ivy and rainwater. A dark tree line marks the approach to
+      Duskwood Vale. Somewhere within the ruin, wind hums through a cracked doorway.'
+    exits:
+      north: ivy_steps
+      east: ivy_steps
+    occupants: []
+    objects:
+    - A herb gatherer waits beside the old basin
+    - A survey chest stands near the old stair
+    - Pieces of colored glass lie beneath a mat of ivy
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ivy_steps:
+    name: Ivy Steps
+    room_type: Ruined Courtyard
+    desc: 'You stand among collapsed walls and ivy-covered columns. Nearby, an inscription
+      survives beneath a layer of moss.
+
+
+      Insects buzz above the grass moves through the empty spaces while stagnant water
+      in a carved basin gathers beneath the stones. The old highway can be reached
+      to the north.'
+    exits:
+      north: silent_chamber
+      northeast: silent_chamber
+      east: silent_chamber
+      west: fallen_hall
+    occupants: []
+    objects:
+    - A young antiquarian sorts pottery fragments on a cloth
+    - A sealed stone door stands near the center of the court
+    - A row of old iron nails lie beneath a linen sheet
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  silent_chamber:
+    name: Silent Chamber
+    room_type: Collapsed Hall
+    desc: 'An overgrown enclosure contains an old courtyard filled with saplings,
+      its silence broken by a sealed stone door is set into the northern wall.
+
+
+      Sunlight falls through gaps where the roof once stood. Riverbend''s mills are
+      faintly audible in clear weather. A trace of cold earth beneath broken paving
+      hangs in the sheltered corners.'
+    exits:
+      north: moss_shrine
+      east: moss_shrine
+      west: ivy_steps
+    occupants: []
+    objects:
+    - A local guide studies the sealed stone door
+    - A carved stone basin stands near the old stair
+    - Fragments of painted plaster lie beneath a low stone ledge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_shrine:
+    name: Moss Shrine
+    room_type: Overgrown Ruin
+    desc: 'Weed-covered paving leads into a low mound of buried masonry. An inscription
+      survives beneath a layer of moss.
+
+
+      The place feels abandoned rather than forgotten. The nearest farm road lies
+      east of the ruin. From below the broken floor comes loose stones settle somewhere
+      below.'
+    exits:
+      north: broken_vault
+      east: broken_vault
+      west: silent_chamber
+    occupants: []
+    objects:
+    - A quiet pilgrim measures a collapsed doorway
+    - A survey chest stands near the center of the court
+    - Pieces of colored glass lie beneath a waxed field cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  broken_vault:
+    name: Broken Vault
+    room_type: Ancient Shrine
+    desc: 'The remains of an old structure rise from foundation stones beneath tall
+      grass, centered on a sealed stone door is set into the northern wall.
+
+
+      The air smells of wildflowers growing through mortar. Greenhold''s lands begin
+      beyond the southern fields. Somewhere within the ruin, water drips into an unseen
+      hollow.'
+    exits:
+      north: sun_green
+      west: moss_shrine
+    occupants: []
+    objects:
+    - A ruin surveyor clears ivy from a carved panel
+    - A sealed stone door stands near the old stair
+    - A row of old iron nails lie beneath the shadow of a fallen column
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  sun_green:
+    name: Sun Green
+    room_type: Hill Path
+    desc: 'The village lane winds between orchards and bee yards, where bright cloth
+      ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. Elderwatch''s tower is visible to the
+      northeast. A trace of cut wheat and wildflowers hangs around the gardens.'
+    exits:
+      east: honey_walk
+      south: broken_vault
+    occupants:
+    - A flower seller hangs fresh ribbons from a gatepost
+    objects:
+    - A whitewashed milestone stands near the cottage fence
+    - Bundles of cut wheat have been arranged beneath the cottage eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  honey_walk:
+    name: Honey Walk
+    room_type: Village Lane
+    desc: 'You stand beside cottages with yellow doors. Nearby, a painted wind vane
+      turns above a tiled roof.
+
+
+      The air carries fresh hay and apple preserves, and a distant hammer taps against
+      wood drifts from the nearby homes. The southern fields fade into rolling pasture.'
+    exits:
+      east: wheat_way
+      south: sun_green
+      west: sun_green
+    occupants: []
+    objects:
+    - A wheelwright checks a row of honey jars
+    - A painted village map stands near the village gate
+    - Clay pots of herbs have been arranged beneath a linen shade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wheat_way:
+    name: Wheat Way
+    room_type: Farmstead Road
+    desc: 'A sunlit path crosses wheat fields broken by stone walls, its edge marked
+      by bright cloth ribbons flutter from a festival pole.
+
+
+      A mill wheel creaks on the ridge rises above the fields while the smell of rosemary
+      and woodsmoke follows the breeze. Greenhold lies beyond the distant northwest
+      road.'
+    exits:
+      east: flower_terrace
+      south: honey_walk
+      southwest: honey_walk
+      west: honey_walk
+    occupants:
+    - A village clerk rests beneath the shade of an oak
+    objects:
+    - A bee skep stands near the cottage fence
+    - Several flour sacks have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flower_terrace:
+    name: Flower Terrace
+    room_type: Garden Walk
+    desc: 'Soft earthen path passes through the heart of Sunmeadow between low farms
+      beneath broad sky. A painted wind vane turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. The River Verin glints beyond the northern
+      fields. Somewhere nearby, children laugh near the village green.'
+    exits:
+      east: mill_rise
+      south: wheat_way
+      west: wheat_way
+    occupants: []
+    objects:
+    - A farmhand repairs a cracked wooden wheel
+    - A whitewashed milestone stands near the village gate
+    - Bundles of cut wheat have been arranged beneath the old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_rise:
+    name: Mill Rise
+    room_type: Village Green
+    desc: 'The ground rises gently toward gardens bright with sunflowers. Along the
+      way, bright cloth ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. Riverbend lies along the western road.
+      A trace of sun-warmed earth hangs around the gardens.'
+    exits:
+      south: golden_court
+      west: flower_terrace
+    occupants:
+    - A young shepherd waters a bed of herbs
+    objects:
+    - A painted village map stands near the cottage fence
+    - Clay pots of herbs have been arranged beneath a striped market awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  golden_court:
+    name: Golden Court
+    room_type: Hill Path
+    desc: 'The village lane winds between orchards and bee yards, where a painted
+      wind vane turns above a tiled roof.
+
+
+      The air carries cut wheat and wildflowers, and hens call from a fenced yard
+      drifts from the nearby homes. Elderwatch''s tower is visible to the northeast.'
+    exits:
+      north: cottage_bend
+      northeast: cottage_bend
+      east: cottage_bend
+      south: mill_rise
+    occupants:
+    - A miller loads flour sacks onto a cart
+    objects:
+    - A bee skep stands near the village gate
+    - Several flour sacks have been arranged beneath the cottage eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cottage_bend:
+    name: Cottage Bend
+    room_type: Village Lane
+    desc: 'You stand beside cottages with yellow doors. Nearby, bright cloth ribbons
+      flutter from a festival pole.
+
+
+      A distant hammer taps against wood rises above the fields while the smell of
+      fresh hay and apple preserves follows the breeze. The southern fields fade into
+      rolling pasture.'
+    exits:
+      north: oak_lane
+      east: oak_lane
+      southwest: golden_court
+      south: golden_court
+      west: golden_court
+    occupants:
+    - A innkeeper hangs fresh ribbons from a gatepost
+    objects:
+    - A whitewashed milestone stands near the cottage fence
+    - Bundles of cut wheat have been arranged beneath a linen shade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  oak_lane:
+    name: Oak Lane
+    room_type: Farmstead Road
+    desc: 'A sunlit path crosses wheat fields broken by stone walls, its edge marked
+      by a painted wind vane turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. Greenhold lies beyond the distant northwest
+      road. Somewhere nearby, a mill wheel creaks on the ridge.'
+    exits:
+      north: harvest_road
+      east: harvest_road
+      south: cottage_bend
+      west: cottage_bend
+    occupants:
+    - A beekeeper checks a row of honey jars
+    objects:
+    - A painted village map stands near the village gate
+    - Clay pots of herbs have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  harvest_road:
+    name: Harvest Road
+    room_type: Garden Walk
+    desc: 'Soft earthen path passes through the heart of Sunmeadow between low farms
+      beneath broad sky. Bright cloth ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. The River Verin glints beyond the northern
+      fields. A trace of honey and warm bread hangs around the gardens.'
+    exits:
+      north: bright_field
+      east: bright_field
+      south: oak_lane
+      west: oak_lane
+    occupants:
+    - A flower seller rests beneath the shade of an oak
+    objects:
+    - A bee skep stands near the cottage fence
+    - Several flour sacks have been arranged beneath the old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bright_field:
+    name: Bright Field
+    room_type: Village Green
+    desc: 'The ground rises gently toward gardens bright with sunflowers. Along the
+      way, a painted wind vane turns above a tiled roof.
+
+
+      The air carries sun-warmed earth, and wind chimes ring softly drifts from the
+      nearby homes. Riverbend lies along the western road.'
+    exits:
+      north: sun_lane
+      south: harvest_road
+      west: harvest_road
+    occupants: []
+    objects:
+    - A wheelwright repairs a cracked wooden wheel
+    - A whitewashed milestone stands near the village gate
+    - Bundles of cut wheat have been arranged beneath a striped market awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  sun_lane:
+    name: Sun Lane
+    room_type: Hill Path
+    desc: 'The village lane winds between orchards and bee yards, where bright cloth
+      ribbons flutter from a festival pole.
+
+
+      Hens call from a fenced yard rises above the fields while the smell of cut wheat
+      and wildflowers follows the breeze. Elderwatch''s tower is visible to the northeast.'
+    exits:
+      north: honey_road
+      east: honey_road
+      south: bright_field
+    occupants:
+    - A village clerk waters a bed of herbs
+    objects:
+    - A painted village map stands near the cottage fence
+    - Clay pots of herbs have been arranged beneath the cottage eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  honey_road:
+    name: Honey Road
+    room_type: Village Lane
+    desc: 'You stand beside cottages with yellow doors. Nearby, a painted wind vane
+      turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. The southern fields fade into rolling pasture.
+      Somewhere nearby, a distant hammer taps against wood.'
+    exits:
+      north: wheat_field
+      east: wheat_field
+      south: sun_lane
+      west: sun_lane
+    occupants: []
+    objects:
+    - A farmhand loads flour sacks onto a cart
+    - A bee skep stands near the village gate
+    - Several flour sacks have been arranged beneath a linen shade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wheat_field:
+    name: Wheat Field
+    room_type: Farmstead Road
+    desc: 'A sunlit path crosses wheat fields broken by stone walls, its edge marked
+      by bright cloth ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. Greenhold lies beyond the distant northwest
+      road. A trace of rosemary and woodsmoke hangs around the gardens.'
+    exits:
+      north: flower_green
+      east: flower_green
+      south: honey_road
+      west: honey_road
+    occupants:
+    - A young shepherd hangs fresh ribbons from a gatepost
+    objects:
+    - A whitewashed milestone stands near the cottage fence
+    - Bundles of cut wheat have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flower_green:
+    name: Flower Green
+    room_type: Garden Walk
+    desc: 'Soft earthen path passes through the heart of Sunmeadow between low farms
+      beneath broad sky. A painted wind vane turns above a tiled roof.
+
+
+      The air carries honey and warm bread, and children laugh near the village green
+      drifts from the nearby homes. The River Verin glints beyond the northern fields.'
+    exits:
+      north: mill_walk_of_sunmeadow
+      northeast: mill_walk_of_sunmeadow
+      east: mill_walk_of_sunmeadow
+      south: wheat_field
+      west: wheat_field
+    occupants:
+    - A miller checks a row of honey jars
+    objects:
+    - A painted village map stands near the village gate
+    - Clay pots of herbs have been arranged beneath the old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_walk_of_sunmeadow:
+    name: Mill Walk of Sunmeadow
+    room_type: Village Green
+    desc: 'The ground rises gently toward gardens bright with sunflowers. Along the
+      way, bright cloth ribbons flutter from a festival pole.
+
+
+      Wind chimes ring softly rises above the fields while the smell of sun-warmed
+      earth follows the breeze. Riverbend lies along the western road.'
+    exits:
+      north: golden_way
+      south: flower_green
+      southwest: flower_green
+      west: flower_green
+    occupants:
+    - A innkeeper rests beneath the shade of an oak
+    objects:
+    - A bee skep stands near the cottage fence
+    - Several flour sacks have been arranged beneath a striped market awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  golden_way:
+    name: Golden Way
+    room_type: Hill Path
+    desc: 'The village lane winds between orchards and bee yards, where a painted
+      wind vane turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. Elderwatch''s tower is visible to the northeast.
+      Somewhere nearby, hens call from a fenced yard.'
+    exits:
+      north: cottage_terrace
+      east: cottage_terrace
+      south: mill_walk_of_sunmeadow
+    occupants:
+    - A beekeeper repairs a cracked wooden wheel
+    objects:
+    - A whitewashed milestone stands near the village gate
+    - Bundles of cut wheat have been arranged beneath the cottage eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cottage_terrace:
+    name: Cottage Terrace
+    room_type: Village Lane
+    desc: 'You stand beside cottages with yellow doors. Nearby, bright cloth ribbons
+      flutter from a festival pole.
+
+
+      The village feels open and unhurried. The southern fields fade into rolling
+      pasture. A trace of fresh hay and apple preserves hangs around the gardens.'
+    exits:
+      north: oak_rise
+      east: oak_rise
+      south: golden_way
+      west: golden_way
+    occupants:
+    - A flower seller waters a bed of herbs
+    objects:
+    - A painted village map stands near the cottage fence
+    - Clay pots of herbs have been arranged beneath a linen shade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  oak_rise:
+    name: Oak Rise
+    room_type: Farmstead Road
+    desc: 'A sunlit path crosses wheat fields broken by stone walls, its edge marked
+      by a painted wind vane turns above a tiled roof.
+
+
+      The air carries rosemary and woodsmoke, and a mill wheel creaks on the ridge
+      drifts from the nearby homes. Greenhold lies beyond the distant northwest road.'
+    exits:
+      north: harvest_court
+      northeast: harvest_court
+      east: harvest_court
+      south: cottage_terrace
+      west: cottage_terrace
+    occupants: []
+    objects:
+    - A wheelwright loads flour sacks onto a cart
+    - A bee skep stands near the village gate
+    - Several flour sacks have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  harvest_court:
+    name: Harvest Court
+    room_type: Garden Walk
+    desc: 'Soft earthen path passes through the heart of Sunmeadow between low farms
+      beneath broad sky. Bright cloth ribbons flutter from a festival pole.
+
+
+      Children laugh near the village green rises above the fields while the smell
+      of honey and warm bread follows the breeze. The River Verin glints beyond the
+      northern fields.'
+    exits:
+      north: bright_bend
+      east: bright_bend
+      southwest: oak_rise
+      south: oak_rise
+      west: oak_rise
+    occupants:
+    - A village clerk hangs fresh ribbons from a gatepost
+    objects:
+    - A whitewashed milestone stands near the cottage fence
+    - Bundles of cut wheat have been arranged beneath the old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bright_bend:
+    name: Bright Bend
+    room_type: Village Green
+    desc: 'The ground rises gently toward gardens bright with sunflowers. Along the
+      way, a painted wind vane turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. Riverbend lies along the western road. Somewhere
+      nearby, wind chimes ring softly.'
+    exits:
+      north: sun_rise
+      south: harvest_court
+      west: harvest_court
+    occupants: []
+    objects:
+    - A farmhand checks a row of honey jars
+    - A painted village map stands near the village gate
+    - Clay pots of herbs have been arranged beneath a striped market awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  sun_rise:
+    name: Sun Rise
+    room_type: Hill Path
+    desc: 'The village lane winds between orchards and bee yards, where bright cloth
+      ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. Elderwatch''s tower is visible to the
+      northeast. A trace of cut wheat and wildflowers hangs around the gardens.'
+    exits:
+      north: honey_court
+      east: honey_court
+    occupants:
+    - A young shepherd rests beneath the shade of an oak
+    objects:
+    - A bee skep stands near the village gate
+    - Several flour sacks have been arranged beneath the cottage eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  honey_court:
+    name: Honey Court
+    room_type: Village Lane
+    desc: 'You stand beside cottages with yellow doors. Nearby, a painted wind vane
+      turns above a tiled roof.
+
+
+      The air carries fresh hay and apple preserves, and a distant hammer taps against
+      wood drifts from the nearby homes. The southern fields fade into rolling pasture.'
+    exits:
+      north: wheat_bend
+      northeast: wheat_bend
+      east: wheat_bend
+      west: sun_rise
+    occupants:
+    - A miller repairs a cracked wooden wheel
+    objects:
+    - A whitewashed milestone stands near the village gate
+    - Bundles of cut wheat have been arranged beneath a linen shade
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  wheat_bend:
+    name: Wheat Bend
+    room_type: Farmstead Road
+    desc: 'A sunlit path crosses wheat fields broken by stone walls, its edge marked
+      by bright cloth ribbons flutter from a festival pole.
+
+
+      A mill wheel creaks on the ridge rises above the fields while the smell of rosemary
+      and woodsmoke follows the breeze. Greenhold lies beyond the distant northwest
+      road.'
+    exits:
+      north: flower_lane
+      east: flower_lane
+      west: honey_court
+    occupants:
+    - A innkeeper waters a bed of herbs
+    objects:
+    - A painted village map stands near the cottage fence
+    - Clay pots of herbs have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flower_lane:
+    name: Flower Lane
+    room_type: Garden Walk
+    desc: 'Soft earthen path passes through the heart of Sunmeadow between low farms
+      beneath broad sky. A painted wind vane turns above a tiled roof.
+
+
+      Sunlight lies warm across the lane. The River Verin glints beyond the northern
+      fields. Somewhere nearby, children laugh near the village green.'
+    exits:
+      north: mill_road
+      east: mill_road
+      west: wheat_bend
+    occupants:
+    - A beekeeper loads flour sacks onto a cart
+    objects:
+    - A bee skep stands near the village gate
+    - Several flour sacks have been arranged beneath the old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_road:
+    name: Mill Road
+    room_type: Village Green
+    desc: 'The ground rises gently toward gardens bright with sunflowers. Along the
+      way, bright cloth ribbons flutter from a festival pole.
+
+
+      The village feels open and unhurried. Riverbend lies along the western road.
+      A trace of sun-warmed earth hangs around the gardens.'
+    exits:
+      north: watch_court
+      west: flower_lane
+    occupants:
+    - A flower seller hangs fresh ribbons from a gatepost
+    objects:
+    - A whitewashed milestone stands near the cottage fence
+    - Bundles of cut wheat have been arranged beneath a striped market awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  watch_court:
+    name: Watch Court
+    room_type: Barracks Lane
+    desc: 'The way passes beneath low administrative halls, where a narrow tower stair
+      climbs toward the upper gallery.
+
+
+      The air smells of horse tack and lamp smoke, and stable doors open and close
+      carries sharply between the walls. Open farmland stretches east beyond the wall.'
+    exits:
+      east: signal_square
+      south: mill_road
+    occupants:
+    - A patrol scout checks the straps on a traveler's pack
+    objects:
+    - A sealed supply chest stands near the signal mast
+    - Bundles of signal poles have been arranged beneath the gatehouse roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  signal_square:
+    name: Signal Square
+    room_type: Fortified Gate
+    desc: 'You stand on a dark stone paving inside Elderwatch''s defenses. Nearby,
+      a rack of colored warning flags stands beneath an awning.
+
+
+      Signal panels click in the wind echoes through the watchtown while the smell
+      of pine tar from the palisade lingers near the barracks. The watchtower dominates
+      the northern skyline.'
+    exits:
+      east: tower_approach
+      south: watch_court
+      west: watch_court
+    occupants:
+    - A messenger reviews a patrol roster
+    - A stack of patrol ledgers have been arranged beneath a military awning
+    objects:
+    - A route map case stands near the barracks door
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  tower_approach:
+    name: Tower Approach
+    room_type: Signal Court
+    desc: 'A disciplined street runs between orderly rows of stables and armories.
+      At its center, a narrow tower stair climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. The old causeway begins beyond
+      the western gate. From the tower comes boots cross the upper walk.'
+    exits:
+      east: guard_post
+      south: signal_square
+      southwest: signal_square
+      west: signal_square
+    occupants: []
+    objects:
+    - A stable master waits beside a saddled horse
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath a canvas lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  guard_post:
+    name: Guard Post
+    room_type: Watchtown Street
+    desc: 'Broad flagstone lane leads toward the watchtower through stone barracks
+      and supply houses. A rack of colored warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. The western gate
+      leads toward Greenhold. A trace of oiled leather and rain-dark stone hangs in
+      the cool air.'
+    exits:
+      east: banner_road
+      south: tower_approach
+      west: tower_approach
+    occupants: []
+    objects:
+    - A quartermaster tests the edge of a short spear
+    - A sealed supply chest stands near the barracks door
+    - Bundles of signal poles have been arranged beneath the watchtower eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  banner_road:
+    name: Banner Road
+    room_type: Patrol Road
+    desc: 'The fortified district opens around signal buildings with mirrored panels,
+      its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+
+      The air smells of stew from the barracks kitchens, and a patrol bell marks the
+      hour carries sharply between the walls. The southern patrol road descends toward
+      Sunmeadow.'
+    exits:
+      south: stone_walk
+      west: guard_post
+    occupants:
+    - A stack of patrol ledgers have been arranged beneath a timber shelter
+    objects:
+    - A watch captain records arrivals in a thick ledger
+    - A route map case stands near the signal mast
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_walk:
+    name: Stone Walk
+    room_type: Barracks Lane
+    desc: 'The way passes beneath low administrative halls, where a rack of colored
+      warning flags stands beneath an awning.
+
+
+      Stable doors open and close echoes through the watchtown while the smell of
+      horse tack and lamp smoke lingers near the barracks. Open farmland stretches
+      east beyond the wall.'
+    exits:
+      north: horn_terrace
+      northeast: horn_terrace
+      east: horn_terrace
+      south: banner_road
+    occupants:
+    - A signal clerk polishes a brass signal mirror
+    objects:
+    - A weapon inspection table stands near the barracks door
+    - Rows of practice shields have been arranged beneath the gatehouse roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  horn_terrace:
+    name: Horn Terrace
+    room_type: Fortified Gate
+    desc: 'You stand on a dark stone paving inside Elderwatch''s defenses. Nearby,
+      a narrow tower stair climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. The watchtower dominates the
+      northern skyline. From the tower comes signal panels click in the wind.'
+    exits:
+      north: patrol_gate
+      east: patrol_gate
+      southwest: stone_walk
+      south: stone_walk
+      west: stone_walk
+    occupants: []
+    objects:
+    - A gate sergeant checks the straps on a traveler's pack
+    - A sealed supply chest stands near the signal mast
+    - Bundles of signal poles have been arranged beneath a military awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  patrol_gate:
+    name: Patrol Gate
+    room_type: Signal Court
+    desc: 'A disciplined street runs between orderly rows of stables and armories.
+      At its center, a rack of colored warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. The old causeway
+      begins beyond the western gate. A trace of waxed wood and iron hangs in the
+      cool air.'
+    exits:
+      north: beacon_lane
+      east: beacon_lane
+      south: horn_terrace
+      west: horn_terrace
+    occupants:
+    - A young warden reviews a patrol roster
+    - A stack of patrol ledgers have been arranged beneath a canvas lean-to
+    objects:
+    - A route map case stands near the barracks door
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  beacon_lane:
+    name: Beacon Lane
+    room_type: Watchtown Street
+    desc: 'Broad flagstone lane leads toward the watchtower through stone barracks
+      and supply houses. A narrow tower stair climbs toward the upper gallery.
+
+
+      The air smells of oiled leather and rain-dark stone, and a drill sergeant calls
+      a cadence carries sharply between the walls. The western gate leads toward Greenhold.'
+    exits:
+      north: ward_yard
+      east: ward_yard
+      south: patrol_gate
+      west: patrol_gate
+    occupants:
+    - A patrol scout waits beside a saddled horse
+    objects:
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath the watchtower eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ward_yard:
+    name: Ward Yard
+    room_type: Patrol Road
+    desc: 'The fortified district opens around signal buildings with mirrored panels,
+      its order reinforced by a rack of colored warning flags stands beneath an awning.
+
+
+      A patrol bell marks the hour echoes through the watchtown while the smell of
+      stew from the barracks kitchens lingers near the barracks. The southern patrol
+      road descends toward Sunmeadow.'
+    exits:
+      north: watch_gate
+      south: beacon_lane
+      west: beacon_lane
+    occupants: []
+    objects:
+    - A messenger tests the edge of a short spear
+    - A sealed supply chest stands near the barracks door
+    - Bundles of signal poles have been arranged beneath a timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  watch_gate:
+    name: Watch Gate
+    room_type: Barracks Lane
+    desc: 'The way passes beneath low administrative halls, where a narrow tower stair
+      climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. Open farmland stretches east
+      beyond the wall. From the tower comes stable doors open and close.'
+    exits:
+      north: signal_lane
+      east: signal_lane
+      south: ward_yard
+    occupants:
+    - A stack of patrol ledgers have been arranged beneath the gatehouse roof
+    objects:
+    - A stable master records arrivals in a thick ledger
+    - A route map case stands near the signal mast
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  signal_lane:
+    name: Signal Lane
+    room_type: Fortified Gate
+    desc: 'You stand on a dark stone paving inside Elderwatch''s defenses. Nearby,
+      a rack of colored warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. The watchtower
+      dominates the northern skyline. A trace of pine tar from the palisade hangs
+      in the cool air.'
+    exits:
+      north: tower_yard
+      east: tower_yard
+      south: watch_gate
+      west: watch_gate
+    occupants: []
+    objects:
+    - A quartermaster polishes a brass signal mirror
+    - A weapon inspection table stands near the barracks door
+    - Rows of practice shields have been arranged beneath a military awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  tower_yard:
+    name: Tower Yard
+    room_type: Signal Court
+    desc: 'A disciplined street runs between orderly rows of stables and armories.
+      At its center, a narrow tower stair climbs toward the upper gallery.
+
+
+      The air smells of waxed wood and iron, and boots cross the upper walk carries
+      sharply between the walls. The old causeway begins beyond the western gate.'
+    exits:
+      north: guard_court
+      east: guard_court
+      south: signal_lane
+      west: signal_lane
+    occupants: []
+    objects:
+    - A watch captain checks the straps on a traveler's pack
+    - A sealed supply chest stands near the signal mast
+    - Bundles of signal poles have been arranged beneath a canvas lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  guard_court:
+    name: Guard Court
+    room_type: Watchtown Street
+    desc: 'Broad flagstone lane leads toward the watchtower through stone barracks
+      and supply houses. A rack of colored warning flags stands beneath an awning.
+
+
+      A drill sergeant calls a cadence echoes through the watchtown while the smell
+      of oiled leather and rain-dark stone lingers near the barracks. The western
+      gate leads toward Greenhold.'
+    exits:
+      north: banner_square
+      northeast: banner_square
+      east: banner_square
+      south: tower_yard
+      west: tower_yard
+    occupants:
+    - A signal clerk reviews a patrol roster
+    - A stack of patrol ledgers have been arranged beneath the watchtower eaves
+    objects:
+    - A route map case stands near the barracks door
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  banner_square:
+    name: Banner Square
+    room_type: Patrol Road
+    desc: 'The fortified district opens around signal buildings with mirrored panels,
+      its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. The southern patrol road descends
+      toward Sunmeadow. From the tower comes a patrol bell marks the hour.'
+    exits:
+      north: stone_approach
+      south: guard_court
+      southwest: guard_court
+      west: guard_court
+    occupants: []
+    objects:
+    - A gate sergeant waits beside a saddled horse
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath a timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stone_approach:
+    name: Stone Approach
+    room_type: Barracks Lane
+    desc: 'The way passes beneath low administrative halls, where a rack of colored
+      warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. Open farmland
+      stretches east beyond the wall. A trace of horse tack and lamp smoke hangs in
+      the cool air.'
+    exits:
+      north: horn_post
+      east: horn_post
+      south: banner_square
+    occupants: []
+    objects:
+    - A young warden tests the edge of a short spear
+    - A sealed supply chest stands near the barracks door
+    - Bundles of signal poles have been arranged beneath the gatehouse roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  horn_post:
+    name: Horn Post
+    room_type: Fortified Gate
+    desc: 'You stand on a dark stone paving inside Elderwatch''s defenses. Nearby,
+      a narrow tower stair climbs toward the upper gallery.
+
+
+      The air smells of pine tar from the palisade, and signal panels click in the
+      wind carries sharply between the walls. The watchtower dominates the northern
+      skyline.'
+    exits:
+      north: patrol_road
+      east: patrol_road
+      south: stone_approach
+      west: stone_approach
+    occupants:
+    - A patrol scout records arrivals in a thick ledger
+    - A stack of patrol ledgers have been arranged beneath a military awning
+    objects:
+    - A route map case stands near the signal mast
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  patrol_road:
+    name: Patrol Road
+    room_type: Signal Court
+    desc: 'A disciplined street runs between orderly rows of stables and armories.
+      At its center, a rack of colored warning flags stands beneath an awning.
+
+
+      Boots cross the upper walk echoes through the watchtown while the smell of waxed
+      wood and iron lingers near the barracks. The old causeway begins beyond the
+      western gate.'
+    exits:
+      north: beacon_walk
+      northeast: beacon_walk
+      east: beacon_walk
+      south: horn_post
+      west: horn_post
+    occupants: []
+    objects:
+    - A messenger polishes a brass signal mirror
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath a canvas lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  beacon_walk:
+    name: Beacon Walk
+    room_type: Watchtown Street
+    desc: 'Broad flagstone lane leads toward the watchtower through stone barracks
+      and supply houses. A narrow tower stair climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. The western gate leads toward
+      Greenhold. From the tower comes a drill sergeant calls a cadence.'
+    exits:
+      north: ward_terrace
+      east: ward_terrace
+      southwest: patrol_road
+      south: patrol_road
+      west: patrol_road
+    occupants: []
+    objects:
+    - A stable master checks the straps on a traveler's pack
+    - A sealed supply chest stands near the signal mast
+    - Bundles of signal poles have been arranged beneath the watchtower eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ward_terrace:
+    name: Ward Terrace
+    room_type: Patrol Road
+    desc: 'The fortified district opens around signal buildings with mirrored panels,
+      its order reinforced by a rack of colored warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. The southern
+      patrol road descends toward Sunmeadow. A trace of stew from the barracks kitchens
+      hangs in the cool air.'
+    exits:
+      north: watch_road
+      south: beacon_walk
+      west: beacon_walk
+    occupants:
+    - A quartermaster reviews a patrol roster
+    - A stack of patrol ledgers have been arranged beneath a timber shelter
+    objects:
+    - A route map case stands near the barracks door
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  watch_road:
+    name: Watch Road
+    room_type: Barracks Lane
+    desc: 'The way passes beneath low administrative halls, where a narrow tower stair
+      climbs toward the upper gallery.
+
+
+      The air smells of horse tack and lamp smoke, and stable doors open and close
+      carries sharply between the walls. Open farmland stretches east beyond the wall.'
+    exits:
+      north: signal_walk
+      east: signal_walk
+    occupants: []
+    objects:
+    - A watch captain waits beside a saddled horse
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath the gatehouse roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  signal_walk:
+    name: Signal Walk
+    room_type: Fortified Gate
+    desc: 'You stand on a dark stone paving inside Elderwatch''s defenses. Nearby,
+      a rack of colored warning flags stands beneath an awning.
+
+
+      Signal panels click in the wind echoes through the watchtown while the smell
+      of pine tar from the palisade lingers near the barracks. The watchtower dominates
+      the northern skyline.'
+    exits:
+      north: tower_terrace
+      northeast: tower_terrace
+      east: tower_terrace
+      west: watch_road
+    occupants:
+    - A signal clerk tests the edge of a short spear
+    objects:
+    - A sealed supply chest stands near the barracks door
+    - Bundles of signal poles have been arranged beneath a military awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  tower_terrace:
+    name: Tower Terrace
+    room_type: Signal Court
+    desc: 'A disciplined street runs between orderly rows of stables and armories.
+      At its center, a narrow tower stair climbs toward the upper gallery.
+
+
+      Everything here appears measured and maintained. The old causeway begins beyond
+      the western gate. From the tower comes boots cross the upper walk.'
+    exits:
+      north: guard_gate
+      east: guard_gate
+      west: signal_walk
+    occupants:
+    - A stack of patrol ledgers have been arranged beneath a canvas lean-to
+    objects:
+    - A gate sergeant records arrivals in a thick ledger
+    - A route map case stands near the signal mast
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  guard_gate:
+    name: Guard Gate
+    room_type: Watchtown Street
+    desc: 'Broad flagstone lane leads toward the watchtower through stone barracks
+      and supply houses. A rack of colored warning flags stands beneath an awning.
+
+
+      The district feels prepared for trouble even in quiet weather. The western gate
+      leads toward Greenhold. A trace of oiled leather and rain-dark stone hangs in
+      the cool air.'
+    exits:
+      north: banner_lane
+      east: banner_lane
+      west: tower_terrace
+    occupants: []
+    objects:
+    - A young warden polishes a brass signal mirror
+    - A weapon inspection table stands near the signal mast
+    - Rows of practice shields have been arranged beneath the watchtower eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  banner_lane:
+    name: Banner Lane
+    room_type: Patrol Road
+    desc: 'The fortified district opens around signal buildings with mirrored panels,
+      its order reinforced by a narrow tower stair climbs toward the upper gallery.
+
+
+      The air smells of stew from the barracks kitchens, and a patrol bell marks the
+      hour carries sharply between the walls. The southern patrol road descends toward
+      Sunmeadow.'
+    exits:
+      north: apple_road
+      west: guard_gate
+    occupants:
+    - A patrol scout checks the straps on a traveler's pack
+    objects:
+    - A sealed supply chest stands near the signal mast
+    - Bundles of signal poles have been arranged beneath a timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  apple_road:
+    name: Apple Road
+    room_type: Orchard Path
+    desc: 'The road passes between clover fields and clipped hedges, where a narrow
+      plank bridge crosses an irrigation ditch.
+
+
+      The air smells of apple blossom and cut grass. Wooded hills rise faintly along
+      the northern horizon. Above the hedges, sheep bells on the western slope comes
+      and goes with the wind.'
+    exits:
+      east: pear_lane
+      south: banner_lane
+    occupants: []
+    objects:
+    - A farmhand repairs a broken fence rail
+    - A stone mile marker stands near the field wall
+    - Three cider barrels have been arranged beneath the orchard eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pear_lane:
+    name: Pear Lane
+    room_type: Pasture Lane
+    desc: 'You stand along a grass-centered cartway bordered by open sheep pasture.
+      Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. The River Verin lies somewhere
+      beyond the southern fields. The only nearby sound is a woodpecker tapping beyond
+      the fields.'
+    exits:
+      east: hawthorn_way
+      south: apple_road
+      west: apple_road
+    occupants: []
+    objects:
+    - A hedge cutter checks a row of grafted saplings
+    - A wooden ladder stands near the orchard gate
+    - Coils of orchard rope have been arranged beneath a canvas tarp
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hawthorn_way:
+    name: Hawthorn Way
+    room_type: Country Road
+    desc: 'A gently rising track cuts through rows of apple and pear trees. At the
+      roadside, a narrow plank bridge crosses an irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. A watchtower
+      breaks the skyline far to the east. A trace of fresh hay hangs in the air.'
+    exits:
+      east: meadow_reach
+      south: pear_lane
+      southwest: pear_lane
+      west: pear_lane
+    occupants: []
+    objects:
+    - A field warden rests beside a stone boundary marker
+    - A weathered scarecrow stands near the field wall
+    - A row of milk cans have been arranged beneath a leaning shed roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  meadow_reach:
+    name: Meadow Reach
+    room_type: Farm Track
+    desc: 'Raised farm road continues through the northern farms, winding between
+      barley plots edged by drainage ditches and an abandoned cider press rests beneath
+      a roofed shelter.
+
+
+      Bees move among the blossoms while wagon wheels on stone carries from a distant
+      farmstead. Greenhold''s rooftops remain visible to the south.'
+    exits:
+      east: orchard_track
+      south: hawthorn_way
+      west: hawthorn_way
+    occupants:
+    - A shepherd loads baskets onto a narrow cart
+    objects:
+    - A stone mile marker stands near the orchard gate
+    - Three cider barrels have been arranged beneath an alder tree
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  orchard_track:
+    name: Orchard Track
+    room_type: Hedgerow Road
+    desc: 'The country opens into small farms beneath alder windbreaks, divided by
+      ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+
+      The air smells of woodsmoke from a distant farmhouse. The road toward Elderwatch
+      stretches eastward. Above the hedges, a farmer calling to a mule comes and goes
+      with the wind.'
+    exits:
+      south: beech_bend
+      west: meadow_reach
+    occupants: []
+    objects:
+    - A traveling peddler sharpens a pruning knife
+    - A wooden ladder stands near the field wall
+    - Coils of orchard rope have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  beech_bend:
+    name: Beech Bend
+    room_type: Orchard Path
+    desc: 'The road passes between clover fields and clipped hedges, where an abandoned
+      cider press rests beneath a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. Wooded hills rise faintly along
+      the northern horizon. The only nearby sound is sheep bells on the western slope.'
+    exits:
+      north: barley_crossing
+      northeast: barley_crossing
+      east: barley_crossing
+      south: orchard_track
+    occupants:
+    - A orchard keeper guides a small flock across the lane
+    objects:
+    - A weathered scarecrow stands near the orchard gate
+    - A row of milk cans have been arranged beneath the orchard eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  barley_crossing:
+    name: Barley Crossing
+    room_type: Pasture Lane
+    desc: 'You stand along a grass-centered cartway bordered by open sheep pasture.
+      Nearby, a narrow plank bridge crosses an irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. The River
+      Verin lies somewhere beyond the southern fields. A trace of rain on warm earth
+      hangs in the air.'
+    exits:
+      north: cider_rise
+      east: cider_rise
+      southwest: beech_bend
+      south: beech_bend
+      west: beech_bend
+    occupants:
+    - A miller's boy repairs a broken fence rail
+    objects:
+    - A stone mile marker stands near the field wall
+    - Three cider barrels have been arranged beneath a canvas tarp
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cider_rise:
+    name: Cider Rise
+    room_type: Country Road
+    desc: 'A gently rising track cuts through rows of apple and pear trees. At the
+      roadside, an abandoned cider press rests beneath a roofed shelter.
+
+
+      Bees move among the blossoms while the creak of orchard ladders carries from
+      a distant farmstead. A watchtower breaks the skyline far to the east.'
+    exits:
+      north: brook_mile
+      east: brook_mile
+      south: barley_crossing
+      west: barley_crossing
+    occupants:
+    - A bee keeper checks a row of grafted saplings
+    objects:
+    - A wooden ladder stands near the orchard gate
+    - Coils of orchard rope have been arranged beneath a leaning shed roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  brook_mile:
+    name: Brook Mile
+    room_type: Farm Track
+    desc: 'Raised farm road continues through the northern farms, winding between
+      barley plots edged by drainage ditches and a narrow plank bridge crosses an
+      irrigation ditch.
+
+
+      The air smells of crushed clover and damp soil. Greenhold''s rooftops remain
+      visible to the south. Above the hedges, wagon wheels on stone comes and goes
+      with the wind.'
+    exits:
+      north: boundary_path
+      east: boundary_path
+      south: cider_rise
+      west: cider_rise
+    occupants: []
+    objects:
+    - A farmhand rests beside a stone boundary marker
+    - A weathered scarecrow stands near the field wall
+    - A row of milk cans have been arranged beneath an alder tree
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  boundary_path:
+    name: Boundary Path
+    room_type: Hedgerow Road
+    desc: 'The country opens into small farms beneath alder windbreaks, divided by
+      ditches and low fences. An abandoned cider press rests beneath a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. The road toward Elderwatch stretches
+      eastward. The only nearby sound is a farmer calling to a mule.'
+    exits:
+      north: apple_rise
+      south: brook_mile
+      west: brook_mile
+    occupants: []
+    objects:
+    - A hedge cutter loads baskets onto a narrow cart
+    - A stone mile marker stands near the orchard gate
+    - Three cider barrels have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  apple_rise:
+    name: Apple Rise
+    room_type: Orchard Path
+    desc: 'The road passes between clover fields and clipped hedges, where a narrow
+      plank bridge crosses an irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. Wooded
+      hills rise faintly along the northern horizon. A trace of apple blossom and
+      cut grass hangs in the air.'
+    exits:
+      north: pear_mile
+      east: pear_mile
+      south: boundary_path
+    occupants: []
+    objects:
+    - A field warden sharpens a pruning knife
+    - A wooden ladder stands near the field wall
+    - Coils of orchard rope have been arranged beneath the orchard eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pear_mile:
+    name: Pear Mile
+    room_type: Pasture Lane
+    desc: 'You stand along a grass-centered cartway bordered by open sheep pasture.
+      Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+
+      Bees move among the blossoms while a woodpecker tapping beyond the fields carries
+      from a distant farmstead. The River Verin lies somewhere beyond the southern
+      fields.'
+    exits:
+      north: hawthorn_path
+      east: hawthorn_path
+      south: apple_rise
+      west: apple_rise
+    occupants:
+    - A shepherd guides a small flock across the lane
+    objects:
+    - A weathered scarecrow stands near the orchard gate
+    - A row of milk cans have been arranged beneath a canvas tarp
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hawthorn_path:
+    name: Hawthorn Path
+    room_type: Country Road
+    desc: 'A gently rising track cuts through rows of apple and pear trees. At the
+      roadside, a narrow plank bridge crosses an irrigation ditch.
+
+
+      The air smells of fresh hay. A watchtower breaks the skyline far to the east.
+      Above the hedges, the creak of orchard ladders comes and goes with the wind.'
+    exits:
+      north: meadow_road
+      east: meadow_road
+      south: pear_mile
+      west: pear_mile
+    occupants: []
+    objects:
+    - A traveling peddler repairs a broken fence rail
+    - A stone mile marker stands near the field wall
+    - Three cider barrels have been arranged beneath a leaning shed roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  meadow_road:
+    name: Meadow Road
+    room_type: Farm Track
+    desc: 'Raised farm road continues through the northern farms, winding between
+      barley plots edged by drainage ditches and an abandoned cider press rests beneath
+      a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. Greenhold''s rooftops remain visible
+      to the south. The only nearby sound is wagon wheels on stone.'
+    exits:
+      north: orchard_lane
+      northeast: orchard_lane
+      east: orchard_lane
+      south: hawthorn_path
+      west: hawthorn_path
+    occupants:
+    - A orchard keeper checks a row of grafted saplings
+    objects:
+    - A wooden ladder stands near the orchard gate
+    - Coils of orchard rope have been arranged beneath an alder tree
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  orchard_lane:
+    name: Orchard Lane
+    room_type: Hedgerow Road
+    desc: 'The country opens into small farms beneath alder windbreaks, divided by
+      ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. The road
+      toward Elderwatch stretches eastward. A trace of woodsmoke from a distant farmhouse
+      hangs in the air.'
+    exits:
+      north: beech_way
+      south: meadow_road
+      southwest: meadow_road
+      west: meadow_road
+    occupants:
+    - A miller's boy rests beside a stone boundary marker
+    objects:
+    - A weathered scarecrow stands near the field wall
+    - A row of milk cans have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  beech_way:
+    name: Beech Way
+    room_type: Orchard Path
+    desc: 'The road passes between clover fields and clipped hedges, where an abandoned
+      cider press rests beneath a roofed shelter.
+
+
+      Bees move among the blossoms while sheep bells on the western slope carries
+      from a distant farmstead. Wooded hills rise faintly along the northern horizon.'
+    exits:
+      north: barley_reach
+      east: barley_reach
+      south: orchard_lane
+    occupants:
+    - A bee keeper loads baskets onto a narrow cart
+    objects:
+    - A stone mile marker stands near the orchard gate
+    - Three cider barrels have been arranged beneath the orchard eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  barley_reach:
+    name: Barley Reach
+    room_type: Pasture Lane
+    desc: 'You stand along a grass-centered cartway bordered by open sheep pasture.
+      Nearby, a narrow plank bridge crosses an irrigation ditch.
+
+
+      The air smells of rain on warm earth. The River Verin lies somewhere beyond
+      the southern fields. Above the hedges, a woodpecker tapping beyond the fields
+      comes and goes with the wind.'
+    exits:
+      north: cider_track
+      east: cider_track
+      south: beech_way
+      west: beech_way
+    occupants: []
+    objects:
+    - A farmhand sharpens a pruning knife
+    - A wooden ladder stands near the field wall
+    - Coils of orchard rope have been arranged beneath a canvas tarp
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  cider_track:
+    name: Cider Track
+    room_type: Country Road
+    desc: 'A gently rising track cuts through rows of apple and pear trees. At the
+      roadside, an abandoned cider press rests beneath a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. A watchtower breaks the skyline
+      far to the east. The only nearby sound is the creak of orchard ladders.'
+    exits:
+      north: brook_bend
+      northeast: brook_bend
+      east: brook_bend
+      south: barley_reach
+      west: barley_reach
+    occupants: []
+    objects:
+    - A hedge cutter guides a small flock across the lane
+    - A weathered scarecrow stands near the orchard gate
+    - A row of milk cans have been arranged beneath a leaning shed roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  brook_bend:
+    name: Brook Bend
+    room_type: Farm Track
+    desc: 'Raised farm road continues through the northern farms, winding between
+      barley plots edged by drainage ditches and a narrow plank bridge crosses an
+      irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. Greenhold''s
+      rooftops remain visible to the south. A trace of crushed clover and damp soil
+      hangs in the air.'
+    exits:
+      north: boundary_crossing
+      east: boundary_crossing
+      southwest: cider_track
+      south: cider_track
+      west: cider_track
+    occupants: []
+    objects:
+    - A field warden repairs a broken fence rail
+    - A stone mile marker stands near the field wall
+    - Three cider barrels have been arranged beneath an alder tree
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  boundary_crossing:
+    name: Boundary Crossing
+    room_type: Hedgerow Road
+    desc: 'The country opens into small farms beneath alder windbreaks, divided by
+      ditches and low fences. An abandoned cider press rests beneath a roofed shelter.
+
+
+      Bees move among the blossoms while a farmer calling to a mule carries from a
+      distant farmstead. The road toward Elderwatch stretches eastward.'
+    exits:
+      north: apple_track
+      south: brook_bend
+      west: brook_bend
+    occupants:
+    - A shepherd checks a row of grafted saplings
+    objects:
+    - A wooden ladder stands near the orchard gate
+    - Coils of orchard rope have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  apple_track:
+    name: Apple Track
+    room_type: Orchard Path
+    desc: 'The road passes between clover fields and clipped hedges, where a narrow
+      plank bridge crosses an irrigation ditch.
+
+
+      The air smells of apple blossom and cut grass. Wooded hills rise faintly along
+      the northern horizon. Above the hedges, sheep bells on the western slope comes
+      and goes with the wind.'
+    exits:
+      north: pear_bend
+      east: pear_bend
+    occupants: []
+    objects:
+    - A traveling peddler rests beside a stone boundary marker
+    - A weathered scarecrow stands near the field wall
+    - A row of milk cans have been arranged beneath the orchard eaves
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pear_bend:
+    name: Pear Bend
+    room_type: Pasture Lane
+    desc: 'You stand along a grass-centered cartway bordered by open sheep pasture.
+      Nearby, an abandoned cider press rests beneath a roofed shelter.
+
+
+      Cloud shadows move slowly across the fields. The River Verin lies somewhere
+      beyond the southern fields. The only nearby sound is a woodpecker tapping beyond
+      the fields.'
+    exits:
+      north: hawthorn_crossing
+      northeast: hawthorn_crossing
+      east: hawthorn_crossing
+      west: apple_track
+    occupants:
+    - A orchard keeper loads baskets onto a narrow cart
+    objects:
+    - A stone mile marker stands near the orchard gate
+    - Three cider barrels have been arranged beneath a canvas tarp
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hawthorn_crossing:
+    name: Hawthorn Crossing
+    room_type: Country Road
+    desc: 'A gently rising track cuts through rows of apple and pear trees. At the
+      roadside, a narrow plank bridge crosses an irrigation ditch.
+
+
+      The road bears the marks of steady travel rather than heavy traffic. A watchtower
+      breaks the skyline far to the east. A trace of fresh hay hangs in the air.'
+    exits:
+      north: meadow_rise
+      east: meadow_rise
+      west: pear_bend
+    occupants:
+    - A miller's boy sharpens a pruning knife
+    objects:
+    - A wooden ladder stands near the field wall
+    - Coils of orchard rope have been arranged beneath a leaning shed roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  meadow_rise:
+    name: Meadow Rise
+    room_type: Farm Track
+    desc: 'Raised farm road continues through the northern farms, winding between
+      barley plots edged by drainage ditches and an abandoned cider press rests beneath
+      a roofed shelter.
+
+
+      Bees move among the blossoms while wagon wheels on stone carries from a distant
+      farmstead. Greenhold''s rooftops remain visible to the south.'
+    exits:
+      north: orchard_mile
+      east: orchard_mile
+      west: hawthorn_crossing
+    occupants:
+    - A bee keeper guides a small flock across the lane
+    objects:
+    - A weathered scarecrow stands near the orchard gate
+    - A row of milk cans have been arranged beneath an alder tree
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  orchard_mile:
+    name: Orchard Mile
+    room_type: Hedgerow Road
+    desc: 'The country opens into small farms beneath alder windbreaks, divided by
+      ditches and low fences. A narrow plank bridge crosses an irrigation ditch.
+
+
+      The air smells of woodsmoke from a distant farmhouse. The road toward Elderwatch
+      stretches eastward. Above the hedges, a farmer calling to a mule comes and goes
+      with the wind.'
+    exits:
+      north: river_walk
+      west: meadow_rise
+    occupants: []
+    objects:
+    - A farmhand repairs a broken fence rail
+    - A stone mile marker stands near the field wall
+    - Three cider barrels have been arranged beneath a low timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  river_walk:
+    name: River Walk
+    room_type: Bridge Approach
+    desc: 'The River Verin curves past grain mills built close to the bank, its surface
+      broken by a mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. Greenhold lies beyond
+      the northern meadows. From downstream comes ferrymen calling across the channel.'
+    exits:
+      east: willow_quay
+      south: orchard_mile
+    occupants:
+    - A grain trader checks the depth marks beside the bank
+    objects:
+    - A flat-bottomed skiff stands near the water's edge
+    - A row of sealed barrels have been arranged beneath a patched awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  willow_quay:
+    name: Willow Quay
+    room_type: Levee Road
+    desc: 'You stand on a willow-shaded path above the river, where a flight of stone
+      steps descends to a landing.
+
+
+      The river current moves with patient force. The river continues east toward
+      Elderwatch''s lands. A cool trace of reeds and cold stone clings to the bank.'
+    exits:
+      east: ferry_approach
+      south: river_walk
+      west: river_walk
+    occupants:
+    - A fish seller coils a heavy mooring line
+    objects:
+    - A painted depth marker stands near the bridge pier
+    - Stacks of river crates have been arranged beneath a damp cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ferry_approach:
+    name: Ferry Approach
+    room_type: Riverside Path
+    desc: 'A riverside way runs between reeds beneath leaning willows and the dark
+      green water. A mill wheel turns with a steady wooden groan.
+
+
+      The air smells of rainwater and mill dust, and the creak of mill machinery travels
+      clearly across the water. A line of warehouses follows the bank downstream.'
+    exits:
+      east: mill_way
+      south: willow_quay
+      southwest: willow_quay
+      west: willow_quay
+    occupants:
+    - A ferryman repairs a split oar
+    objects:
+    - A grain scale stands near the water's edge
+    - Three grain sacks have been arranged beneath a low canvas roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_way:
+    name: Mill Way
+    room_type: Quayside
+    desc: 'Raised stone levee follows the river''s bend through low houses with river-facing
+      doors. Below, a flight of stone steps descends to a landing.
+
+
+      Water rushing beneath the bridge mingles with the smell of wet rope, fish, and
+      grain. Riverbend''s bridge rises to the west.'
+    exits:
+      east: quay_reach
+      south: ferry_approach
+      west: ferry_approach
+    occupants:
+    - A mill worker waits for a barge to clear the channel
+    objects:
+    - A flat-bottomed skiff stands near the bridge pier
+    - A row of sealed barrels have been arranged beneath a warehouse overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  quay_reach:
+    name: Quay Reach
+    room_type: River Town
+    desc: 'The river broadens here beside warehouses and mooring posts. Near the bank,
+      a mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. The road toward
+      Sunmeadow leaves the southern bank. From downstream comes the knock of hulls
+      against pilings.'
+    exits:
+      south: reed_lane
+      west: mill_way
+    occupants:
+    - A bridge keeper scrapes riverweed from a landing step
+    - Stacks of river crates have been arranged beneath the bridge keeper's shelter
+    objects:
+    - A painted depth marker stands near the water's edge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  reed_lane:
+    name: Reed Lane
+    room_type: Bridge Approach
+    desc: 'The River Verin curves past grain mills built close to the bank, its surface
+      broken by a flight of stone steps descends to a landing.
+
+
+      The river current moves with patient force. Greenhold lies beyond the northern
+      meadows. A cool trace of river mud and cut timber clings to the bank.'
+    exits:
+      north: bridge_landing
+      northeast: bridge_landing
+      east: bridge_landing
+      south: quay_reach
+    occupants:
+    - A river ranger counts sacks beneath a warehouse awning
+    objects:
+    - A grain scale stands near the bridge pier
+    - Three grain sacks have been arranged beneath a patched awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bridge_landing:
+    name: Bridge Landing
+    room_type: Levee Road
+    desc: 'You stand on a willow-shaded path above the river, where a mill wheel turns
+      with a steady wooden groan.
+
+
+      The air smells of reeds and cold stone, and gulls crying over the quay travels
+      clearly across the water. The river continues east toward Elderwatch''s lands.'
+    exits:
+      north: lock_crossing
+      east: lock_crossing
+      southwest: reed_lane
+      south: reed_lane
+      west: reed_lane
+    occupants: []
+    objects:
+    - A barge hand checks the depth marks beside the bank
+    - A flat-bottomed skiff stands near the water's edge
+    - A row of sealed barrels have been arranged beneath a damp cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  lock_crossing:
+    name: Lock Crossing
+    room_type: Riverside Path
+    desc: 'A riverside way runs between reeds beneath leaning willows and the dark
+      green water. A flight of stone steps descends to a landing.
+
+
+      The creak of mill machinery mingles with the smell of rainwater and mill dust.
+      A line of warehouses follows the bank downstream.'
+    exits:
+      north: barge_bank
+      east: barge_bank
+      south: bridge_landing
+      west: bridge_landing
+    occupants: []
+    objects:
+    - A rope maker coils a heavy mooring line
+    - A painted depth marker stands near the bridge pier
+    - Stacks of river crates have been arranged beneath a low canvas roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  barge_bank:
+    name: Barge Bank
+    room_type: Quayside
+    desc: 'Raised stone levee follows the river''s bend through low houses with river-facing
+      doors. Below, a mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. Riverbend''s bridge
+      rises to the west. From downstream comes water rushing beneath the bridge.'
+    exits:
+      north: water_bend
+      east: water_bend
+      south: lock_crossing
+      west: lock_crossing
+    occupants:
+    - A grain trader repairs a split oar
+    objects:
+    - A grain scale stands near the water's edge
+    - Three grain sacks have been arranged beneath a warehouse overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  water_bend:
+    name: Water Bend
+    room_type: River Town
+    desc: 'The river broadens here beside warehouses and mooring posts. Near the bank,
+      a flight of stone steps descends to a landing.
+
+
+      The river current moves with patient force. The road toward Sunmeadow leaves
+      the southern bank. A cool trace of tarred planks clings to the bank.'
+    exits:
+      north: river_crossing
+      south: barge_bank
+      west: barge_bank
+    occupants:
+    - A fish seller waits for a barge to clear the channel
+    - A row of sealed barrels have been arranged beneath the bridge keeper's shelter
+    objects:
+    - A flat-bottomed skiff stands near the bridge pier
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  river_crossing:
+    name: River Crossing
+    room_type: Bridge Approach
+    desc: 'The River Verin curves past grain mills built close to the bank, its surface
+      broken by a mill wheel turns with a steady wooden groan.
+
+
+      The air smells of river mud and cut timber, and ferrymen calling across the
+      channel travels clearly across the water. Greenhold lies beyond the northern
+      meadows.'
+    exits:
+      north: willow_bank
+      east: willow_bank
+      south: water_bend
+    occupants:
+    - A ferryman scrapes riverweed from a landing step
+    objects:
+    - A painted depth marker stands near the water's edge
+    - Stacks of river crates have been arranged beneath a patched awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  willow_bank:
+    name: Willow Bank
+    room_type: Levee Road
+    desc: 'You stand on a willow-shaded path above the river, where a flight of stone
+      steps descends to a landing.
+
+
+      Gulls crying over the quay mingles with the smell of reeds and cold stone. The
+      river continues east toward Elderwatch''s lands.'
+    exits:
+      north: ferry_bend
+      east: ferry_bend
+      south: river_crossing
+      west: river_crossing
+    occupants:
+    - A mill worker counts sacks beneath a warehouse awning
+    objects:
+    - A grain scale stands near the bridge pier
+    - Three grain sacks have been arranged beneath a damp cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ferry_bend:
+    name: Ferry Bend
+    room_type: Riverside Path
+    desc: 'A riverside way runs between reeds beneath leaning willows and the dark
+      green water. A mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. A line of warehouses
+      follows the bank downstream. From downstream comes the creak of mill machinery.'
+    exits:
+      north: mill_walk
+      east: mill_walk
+      south: willow_bank
+      west: willow_bank
+    occupants:
+    - A bridge keeper checks the depth marks beside the bank
+    objects:
+    - A flat-bottomed skiff stands near the water's edge
+    - A row of sealed barrels have been arranged beneath a low canvas roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_walk:
+    name: Mill Walk
+    room_type: Quayside
+    desc: 'Raised stone levee follows the river''s bend through low houses with river-facing
+      doors. Below, a flight of stone steps descends to a landing.
+
+
+      The river current moves with patient force. Riverbend''s bridge rises to the
+      west. A cool trace of wet rope, fish, and grain clings to the bank.'
+    exits:
+      north: quay_quay
+      northeast: quay_quay
+      east: quay_quay
+      south: ferry_bend
+      west: ferry_bend
+    occupants:
+    - A river ranger coils a heavy mooring line
+    objects:
+    - A painted depth marker stands near the bridge pier
+    - Stacks of river crates have been arranged beneath a warehouse overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  quay_quay:
+    name: Quay Quay
+    room_type: River Town
+    desc: 'The river broadens here beside warehouses and mooring posts. Near the bank,
+      a mill wheel turns with a steady wooden groan.
+
+
+      The air smells of tarred planks, and the knock of hulls against pilings travels
+      clearly across the water. The road toward Sunmeadow leaves the southern bank.'
+    exits:
+      north: reed_approach
+      south: mill_walk
+      southwest: mill_walk
+      west: mill_walk
+    occupants:
+    - Three grain sacks have been arranged beneath the bridge keeper's shelter
+    objects:
+    - A barge hand repairs a split oar
+    - A grain scale stands near the water's edge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  reed_approach:
+    name: Reed Approach
+    room_type: Bridge Approach
+    desc: 'The River Verin curves past grain mills built close to the bank, its surface
+      broken by a flight of stone steps descends to a landing.
+
+
+      Ferrymen calling across the channel mingles with the smell of river mud and
+      cut timber. Greenhold lies beyond the northern meadows.'
+    exits:
+      north: bridge_way
+      east: bridge_way
+      south: quay_quay
+    occupants: []
+    objects:
+    - A rope maker waits for a barge to clear the channel
+    - A flat-bottomed skiff stands near the bridge pier
+    - A row of sealed barrels have been arranged beneath a patched awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  bridge_way:
+    name: Bridge Way
+    room_type: Levee Road
+    desc: 'You stand on a willow-shaded path above the river, where a mill wheel turns
+      with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. The river continues
+      east toward Elderwatch''s lands. From downstream comes gulls crying over the
+      quay.'
+    exits:
+      north: lock_reach
+      east: lock_reach
+      south: reed_approach
+      west: reed_approach
+    occupants:
+    - A grain trader scrapes riverweed from a landing step
+    objects:
+    - A painted depth marker stands near the water's edge
+    - Stacks of river crates have been arranged beneath a damp cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  lock_reach:
+    name: Lock Reach
+    room_type: Riverside Path
+    desc: 'A riverside way runs between reeds beneath leaning willows and the dark
+      green water. A flight of stone steps descends to a landing.
+
+
+      The river current moves with patient force. A line of warehouses follows the
+      bank downstream. A cool trace of rainwater and mill dust clings to the bank.'
+    exits:
+      north: barge_lane
+      northeast: barge_lane
+      east: barge_lane
+      south: bridge_way
+      west: bridge_way
+    occupants:
+    - A fish seller counts sacks beneath a warehouse awning
+    objects:
+    - A grain scale stands near the bridge pier
+    - Three grain sacks have been arranged beneath a low canvas roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  barge_lane:
+    name: Barge Lane
+    room_type: Quayside
+    desc: 'Raised stone levee follows the river''s bend through low houses with river-facing
+      doors. Below, a mill wheel turns with a steady wooden groan.
+
+
+      The air smells of wet rope, fish, and grain, and water rushing beneath the bridge
+      travels clearly across the water. Riverbend''s bridge rises to the west.'
+    exits:
+      north: water_landing
+      east: water_landing
+      southwest: lock_reach
+      south: lock_reach
+      west: lock_reach
+    occupants:
+    - A ferryman checks the depth marks beside the bank
+    objects:
+    - A flat-bottomed skiff stands near the water's edge
+    - A row of sealed barrels have been arranged beneath a warehouse overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  water_landing:
+    name: Water Landing
+    room_type: River Town
+    desc: 'The river broadens here beside warehouses and mooring posts. Near the bank,
+      a flight of stone steps descends to a landing.
+
+
+      The knock of hulls against pilings mingles with the smell of tarred planks.
+      The road toward Sunmeadow leaves the southern bank.'
+    exits:
+      north: river_reach
+      south: barge_lane
+      west: barge_lane
+    occupants:
+    - A mill worker coils a heavy mooring line
+    - Stacks of river crates have been arranged beneath the bridge keeper's shelter
+    objects:
+    - A painted depth marker stands near the bridge pier
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  river_reach:
+    name: River Reach
+    room_type: Bridge Approach
+    desc: 'The River Verin curves past grain mills built close to the bank, its surface
+      broken by a mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. Greenhold lies beyond
+      the northern meadows. From downstream comes ferrymen calling across the channel.'
+    exits:
+      north: willow_lane
+      east: willow_lane
+    occupants:
+    - A bridge keeper repairs a split oar
+    objects:
+    - A grain scale stands near the water's edge
+    - Three grain sacks have been arranged beneath a patched awning
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  willow_lane:
+    name: Willow Lane
+    room_type: Levee Road
+    desc: 'You stand on a willow-shaded path above the river, where a flight of stone
+      steps descends to a landing.
+
+
+      The river current moves with patient force. The river continues east toward
+      Elderwatch''s lands. A cool trace of reeds and cold stone clings to the bank.'
+    exits:
+      north: ferry_landing
+      northeast: ferry_landing
+      east: ferry_landing
+      west: river_reach
+    occupants:
+    - A river ranger waits for a barge to clear the channel
+    objects:
+    - A flat-bottomed skiff stands near the bridge pier
+    - A row of sealed barrels have been arranged beneath a damp cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  ferry_landing:
+    name: Ferry Landing
+    room_type: Riverside Path
+    desc: 'A riverside way runs between reeds beneath leaning willows and the dark
+      green water. A mill wheel turns with a steady wooden groan.
+
+
+      The air smells of rainwater and mill dust, and the creak of mill machinery travels
+      clearly across the water. A line of warehouses follows the bank downstream.'
+    exits:
+      north: mill_crossing
+      east: mill_crossing
+      west: willow_lane
+    occupants: []
+    objects:
+    - A barge hand scrapes riverweed from a landing step
+    - A painted depth marker stands near the water's edge
+    - Stacks of river crates have been arranged beneath a low canvas roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  mill_crossing:
+    name: Mill Crossing
+    room_type: Quayside
+    desc: 'Raised stone levee follows the river''s bend through low houses with river-facing
+      doors. Below, a flight of stone steps descends to a landing.
+
+
+      Water rushing beneath the bridge mingles with the smell of wet rope, fish, and
+      grain. Riverbend''s bridge rises to the west.'
+    exits:
+      north: quay_bank
+      east: quay_bank
+      west: ferry_landing
+    occupants: []
+    objects:
+    - A rope maker counts sacks beneath a warehouse awning
+    - A grain scale stands near the bridge pier
+    - Three grain sacks have been arranged beneath a warehouse overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  quay_bank:
+    name: Quay Bank
+    room_type: River Town
+    desc: 'The river broadens here beside warehouses and mooring posts. Near the bank,
+      a mill wheel turns with a steady wooden groan.
+
+
+      Ripples scatter reflections of the clouds and nearby roofs. The road toward
+      Sunmeadow leaves the southern bank. From downstream comes the knock of hulls
+      against pilings.'
+    exits:
+      north: flax_road
+      west: mill_crossing
+    occupants:
+    - A grain trader checks the depth marks beside the bank
+    - A row of sealed barrels have been arranged beneath the bridge keeper's shelter
+    objects:
+    - A flat-bottomed skiff stands near the water's edge
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flax_road:
+    name: Flax Road
+    room_type: Farm Road
+    desc: 'The road crosses flax fields and grazing pasture, where a line of white
+      stones marks the edge of the common pasture.
+
+
+      A cart axle complains on the road drifts across the fields while turned soil
+      and clover settles along the road. Riverbend can be reached by the southern
+      lanes.'
+    exits:
+      east: clover_lane
+      south: quay_bank
+    occupants: []
+    objects:
+    - A field hand checks the depth of a drainage cut
+    - A roofed threshing floor stands near the brook crossing
+    - Three wool bales have been arranged beneath a timber lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  clover_lane:
+    name: Clover Lane
+    room_type: Pasture Track
+    desc: 'You stand along a grass-grown cart track between fallow land bright with
+      weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. The northern country rises toward
+      wooded hills. A faint trace of grain dust lingers in the breeze.'
+    exits:
+      east: stonewall_bend
+      south: flax_road
+      west: flax_road
+    occupants: []
+    objects:
+    - A farm steward repairs a stone wall
+    - A hay cart stands near the pasture entrance
+    - Bundles of flax have been arranged beneath a weighted canvas
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stonewall_bend:
+    name: Stonewall Bend
+    room_type: Rural Crossing
+    desc: 'A quiet farm track follows broad hay meadows, its edge marked by a line
+      of white stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. A narrow road branches east toward
+      the main cartway. From a distant farm comes cattle low beyond a stone wall.'
+    exits:
+      east: pasture_mile
+      south: clover_lane
+      southwest: clover_lane
+      west: clover_lane
+    occupants: []
+    objects:
+    - A thresher ties a new rope around a grain bundle
+    - A stone drinking trough stands near the brook crossing
+    - Rows of empty milk cans have been arranged beneath a patched tarpaulin
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pasture_mile:
+    name: Pasture Mile
+    room_type: Field Path
+    desc: 'Chalky farm path bends through low stone walls and drainage ditches. A
+      pair of weathered gateposts frame a field entrance.
+
+
+      The air smells of hay and damp wool. Greenhold''s western wall lies beyond the
+      eastern fields. Nearby, sheep bells ring on the far slope.'
+    exits:
+      east: threshing_crossing
+      south: stonewall_bend
+      west: stonewall_bend
+    occupants: []
+    objects:
+    - A wagoner rests beside a loaded wagon
+    - A roofed threshing floor stands near the pasture entrance
+    - Three wool bales have been arranged beneath a low barn roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  threshing_crossing:
+    name: Threshing Crossing
+    room_type: Boundary Lane
+    desc: 'The fields open widely around small farms beneath wind-bent trees, broken
+      only by a line of white stones marks the edge of the common pasture.
+
+
+      A threshing flail strikes in steady rhythm drifts across the fields while rainwater
+      in the ditches settles along the road. Duskwood Vale darkens the horizon to
+      the west.'
+    exits:
+      south: moss_way
+      west: pasture_mile
+    occupants:
+    - A shepherd turns hay with a wooden fork
+    objects:
+    - A hay cart stands near the brook crossing
+    - Bundles of flax have been arranged beneath the branches of an old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_way:
+    name: Moss Way
+    room_type: Farm Road
+    desc: 'The road crosses flax fields and grazing pasture, where a pair of weathered
+      gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. Riverbend can be reached by the southern
+      lanes. A faint trace of turned soil and clover lingers in the breeze.'
+    exits:
+      north: shepherd_path
+      northeast: shepherd_path
+      east: shepherd_path
+      south: threshing_crossing
+    occupants: []
+    objects:
+    - A cattle drover guides cattle toward a pasture gate
+    - A stone drinking trough stands near the pasture entrance
+    - Rows of empty milk cans have been arranged beneath a timber lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  shepherd_path:
+    name: Shepherd Path
+    room_type: Pasture Track
+    desc: 'You stand along a grass-grown cart track between fallow land bright with
+      weeds. Nearby, a line of white stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. The northern country rises toward
+      wooded hills. From a distant farm comes a dog barks from a distant yard.'
+    exits:
+      north: rain_track
+      east: rain_track
+      southwest: moss_way
+      south: moss_way
+      west: moss_way
+    occupants:
+    - A hedge keeper checks the depth of a drainage cut
+    objects:
+    - A roofed threshing floor stands near the brook crossing
+    - Three wool bales have been arranged beneath a weighted canvas
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  rain_track:
+    name: Rain Track
+    room_type: Rural Crossing
+    desc: 'A quiet farm track follows broad hay meadows, its edge marked by a pair
+      of weathered gateposts frame a field entrance.
+
+
+      The air smells of woodsmoke and manure. A narrow road branches east toward the
+      main cartway. Nearby, cattle low beyond a stone wall.'
+    exits:
+      north: fallow_field
+      east: fallow_field
+      south: shepherd_path
+      west: shepherd_path
+    occupants:
+    - A ditch worker repairs a stone wall
+    objects:
+    - A hay cart stands near the pasture entrance
+    - Bundles of flax have been arranged beneath a patched tarpaulin
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fallow_field:
+    name: Fallow Field
+    room_type: Field Path
+    desc: 'Chalky farm path bends through low stone walls and drainage ditches. A
+      line of white stones marks the edge of the common pasture.
+
+
+      Sheep bells ring on the far slope drifts across the fields while hay and damp
+      wool settles along the road. Greenhold''s western wall lies beyond the eastern
+      fields.'
+    exits:
+      north: brook_rise
+      east: brook_rise
+      south: rain_track
+      west: rain_track
+    occupants: []
+    objects:
+    - A field hand ties a new rope around a grain bundle
+    - A stone drinking trough stands near the brook crossing
+    - Rows of empty milk cans have been arranged beneath a low barn roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  brook_rise:
+    name: Brook Rise
+    room_type: Boundary Lane
+    desc: 'The fields open widely around small farms beneath wind-bent trees, broken
+      only by a pair of weathered gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. Duskwood Vale darkens the horizon
+      to the west. A faint trace of rainwater in the ditches lingers in the breeze.'
+    exits:
+      north: flax_track
+      south: fallow_field
+      west: fallow_field
+    occupants: []
+    objects:
+    - A farm steward rests beside a loaded wagon
+    - A roofed threshing floor stands near the pasture entrance
+    - Three wool bales have been arranged beneath the branches of an old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flax_track:
+    name: Flax Track
+    room_type: Farm Road
+    desc: 'The road crosses flax fields and grazing pasture, where a line of white
+      stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. Riverbend can be reached by the
+      southern lanes. From a distant farm comes a cart axle complains on the road.'
+    exits:
+      north: clover_field
+      east: clover_field
+      south: brook_rise
+    occupants: []
+    objects:
+    - A thresher turns hay with a wooden fork
+    - A hay cart stands near the brook crossing
+    - Bundles of flax have been arranged beneath a timber lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  clover_field:
+    name: Clover Field
+    room_type: Pasture Track
+    desc: 'You stand along a grass-grown cart track between fallow land bright with
+      weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+
+      The air smells of grain dust. The northern country rises toward wooded hills.
+      Nearby, a dog barks from a distant yard.'
+    exits:
+      north: stonewall_rise
+      east: stonewall_rise
+      south: flax_track
+      west: flax_track
+    occupants: []
+    objects:
+    - A wagoner guides cattle toward a pasture gate
+    - A stone drinking trough stands near the pasture entrance
+    - Rows of empty milk cans have been arranged beneath a weighted canvas
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stonewall_rise:
+    name: Stonewall Rise
+    room_type: Rural Crossing
+    desc: 'A quiet farm track follows broad hay meadows, its edge marked by a line
+      of white stones marks the edge of the common pasture.
+
+
+      Cattle low beyond a stone wall drifts across the fields while woodsmoke and
+      manure settles along the road. A narrow road branches east toward the main cartway.'
+    exits:
+      north: pasture_road
+      east: pasture_road
+      south: clover_field
+      west: clover_field
+    occupants:
+    - A shepherd checks the depth of a drainage cut
+    objects:
+    - A roofed threshing floor stands near the brook crossing
+    - Three wool bales have been arranged beneath a patched tarpaulin
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pasture_road:
+    name: Pasture Road
+    room_type: Field Path
+    desc: 'Chalky farm path bends through low stone walls and drainage ditches. A
+      pair of weathered gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. Greenhold''s western wall lies beyond
+      the eastern fields. A faint trace of hay and damp wool lingers in the breeze.'
+    exits:
+      north: threshing_lane
+      northeast: threshing_lane
+      east: threshing_lane
+      south: stonewall_rise
+      west: stonewall_rise
+    occupants: []
+    objects:
+    - A cattle drover repairs a stone wall
+    - A hay cart stands near the pasture entrance
+    - Bundles of flax have been arranged beneath a low barn roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  threshing_lane:
+    name: Threshing Lane
+    room_type: Boundary Lane
+    desc: 'The fields open widely around small farms beneath wind-bent trees, broken
+      only by a line of white stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. Duskwood Vale darkens the horizon
+      to the west. From a distant farm comes a threshing flail strikes in steady rhythm.'
+    exits:
+      north: moss_bend
+      south: pasture_road
+      southwest: pasture_road
+      west: pasture_road
+    occupants:
+    - A hedge keeper ties a new rope around a grain bundle
+    objects:
+    - A stone drinking trough stands near the brook crossing
+    - Rows of empty milk cans have been arranged beneath the branches of an old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_bend:
+    name: Moss Bend
+    room_type: Farm Road
+    desc: 'The road crosses flax fields and grazing pasture, where a pair of weathered
+      gateposts frame a field entrance.
+
+
+      The air smells of turned soil and clover. Riverbend can be reached by the southern
+      lanes. Nearby, a cart axle complains on the road.'
+    exits:
+      north: shepherd_mile
+      east: shepherd_mile
+      south: threshing_lane
+    occupants:
+    - A ditch worker rests beside a loaded wagon
+    objects:
+    - A roofed threshing floor stands near the pasture entrance
+    - Three wool bales have been arranged beneath a timber lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  shepherd_mile:
+    name: Shepherd Mile
+    room_type: Pasture Track
+    desc: 'You stand along a grass-grown cart track between fallow land bright with
+      weeds. Nearby, a line of white stones marks the edge of the common pasture.
+
+
+      A dog barks from a distant yard drifts across the fields while grain dust settles
+      along the road. The northern country rises toward wooded hills.'
+    exits:
+      north: rain_crossing
+      east: rain_crossing
+      south: moss_bend
+      west: moss_bend
+    occupants: []
+    objects:
+    - A field hand turns hay with a wooden fork
+    - A hay cart stands near the brook crossing
+    - Bundles of flax have been arranged beneath a weighted canvas
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  rain_crossing:
+    name: Rain Crossing
+    room_type: Rural Crossing
+    desc: 'A quiet farm track follows broad hay meadows, its edge marked by a pair
+      of weathered gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. A narrow road branches east toward
+      the main cartway. A faint trace of woodsmoke and manure lingers in the breeze.'
+    exits:
+      north: fallow_way
+      northeast: fallow_way
+      east: fallow_way
+      south: shepherd_mile
+      west: shepherd_mile
+    occupants: []
+    objects:
+    - A farm steward guides cattle toward a pasture gate
+    - A stone drinking trough stands near the pasture entrance
+    - Rows of empty milk cans have been arranged beneath a patched tarpaulin
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fallow_way:
+    name: Fallow Way
+    room_type: Field Path
+    desc: 'Chalky farm path bends through low stone walls and drainage ditches. A
+      line of white stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. Greenhold''s western wall lies beyond
+      the eastern fields. From a distant farm comes sheep bells ring on the far slope.'
+    exits:
+      north: brook_path
+      east: brook_path
+      southwest: rain_crossing
+      south: rain_crossing
+      west: rain_crossing
+    occupants: []
+    objects:
+    - A thresher checks the depth of a drainage cut
+    - A roofed threshing floor stands near the brook crossing
+    - Three wool bales have been arranged beneath a low barn roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  brook_path:
+    name: Brook Path
+    room_type: Boundary Lane
+    desc: 'The fields open widely around small farms beneath wind-bent trees, broken
+      only by a pair of weathered gateposts frame a field entrance.
+
+
+      The air smells of rainwater in the ditches. Duskwood Vale darkens the horizon
+      to the west. Nearby, a threshing flail strikes in steady rhythm.'
+    exits:
+      north: flax_crossing
+      south: fallow_way
+      west: fallow_way
+    occupants: []
+    objects:
+    - A wagoner repairs a stone wall
+    - A hay cart stands near the pasture entrance
+    - Bundles of flax have been arranged beneath the branches of an old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  flax_crossing:
+    name: Flax Crossing
+    room_type: Farm Road
+    desc: 'The road crosses flax fields and grazing pasture, where a line of white
+      stones marks the edge of the common pasture.
+
+
+      A cart axle complains on the road drifts across the fields while turned soil
+      and clover settles along the road. Riverbend can be reached by the southern
+      lanes.'
+    exits:
+      north: clover_way
+      east: clover_way
+    occupants:
+    - A shepherd ties a new rope around a grain bundle
+    objects:
+    - A stone drinking trough stands near the brook crossing
+    - Rows of empty milk cans have been arranged beneath a timber lean-to
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  clover_way:
+    name: Clover Way
+    room_type: Pasture Track
+    desc: 'You stand along a grass-grown cart track between fallow land bright with
+      weeds. Nearby, a pair of weathered gateposts frame a field entrance.
+
+
+      Clouds move slowly over the open country. The northern country rises toward
+      wooded hills. A faint trace of grain dust lingers in the breeze.'
+    exits:
+      north: stonewall_path
+      northeast: stonewall_path
+      east: stonewall_path
+      west: flax_crossing
+    occupants: []
+    objects:
+    - A cattle drover rests beside a loaded wagon
+    - A roofed threshing floor stands near the pasture entrance
+    - Three wool bales have been arranged beneath a weighted canvas
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  stonewall_path:
+    name: Stonewall Path
+    room_type: Rural Crossing
+    desc: 'A quiet farm track follows broad hay meadows, its edge marked by a line
+      of white stones marks the edge of the common pasture.
+
+
+      The land here feels worked but not crowded. A narrow road branches east toward
+      the main cartway. From a distant farm comes cattle low beyond a stone wall.'
+    exits:
+      north: pasture_track
+      east: pasture_track
+      west: clover_way
+    occupants:
+    - A hedge keeper turns hay with a wooden fork
+    objects:
+    - A hay cart stands near the brook crossing
+    - Bundles of flax have been arranged beneath a patched tarpaulin
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pasture_track:
+    name: Pasture Track
+    room_type: Field Path
+    desc: 'Chalky farm path bends through low stone walls and drainage ditches. A
+      pair of weathered gateposts frame a field entrance.
+
+
+      The air smells of hay and damp wool. Greenhold''s western wall lies beyond the
+      eastern fields. Nearby, sheep bells ring on the far slope.'
+    exits:
+      north: threshing_field
+      east: threshing_field
+      west: stonewall_path
+    occupants:
+    - A ditch worker guides cattle toward a pasture gate
+    objects:
+    - A stone drinking trough stands near the pasture entrance
+    - Rows of empty milk cans have been arranged beneath a low barn roof
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  threshing_field:
+    name: Threshing Field
+    room_type: Boundary Lane
+    desc: 'The fields open widely around small farms beneath wind-bent trees, broken
+      only by a line of white stones marks the edge of the common pasture.
+
+
+      A threshing flail strikes in steady rhythm drifts across the fields while rainwater
+      in the ditches settles along the road. Duskwood Vale darkens the horizon to
+      the west.'
+    exits:
+      north: raven_path
+      west: pasture_track
+    occupants: []
+    objects:
+    - A field hand checks the depth of a drainage cut
+    - A roofed threshing floor stands near the brook crossing
+    - Three wool bales have been arranged beneath the branches of an old oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  raven_path:
+    name: Raven Path
+    room_type: Woodland Path
+    desc: 'The road enters old oaks draped in moss, where a weathered warding post
+      stands beside the road.
+
+
+      Little sunlight reaches the forest floor. Moonshade lies somewhere beyond the
+      deeper woods. Somewhere ahead, water runs unseen over stone.'
+    exits:
+      east: moss_hollow
+      south: threshing_field
+    occupants: []
+    objects:
+    - A mushroom picker ties a strip of cloth to a branch
+    - A moss-covered milestone stands near the broken shrine
+    - A row of small animal traps lie beneath the roots of an oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_hollow:
+    name: Moss Hollow
+    room_type: Shadowed Lane
+    desc: 'You stand on a mossy timber track beneath dense undergrowth and leaning
+      trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+
+      The road feels older than the farms behind it. Greenhold is no longer visible
+      from the trail. A cool trace of crushed fern hangs beneath the trees.'
+    exits:
+      east: twilight_way
+      south: raven_path
+      west: raven_path
+    occupants: []
+    objects:
+    - A charcoal burner studies tracks beside the road
+    - A warding post stands near the old stump
+    - Stacks of cut pine lie beneath a waxed cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  twilight_way:
+    name: Twilight Way
+    room_type: Forest Road
+    desc: 'A dim woodland path winds through close pines and blackthorn, its edge
+      marked by a weathered warding post stands beside the road.
+
+
+      The air smells of leaf mold and smoke, and branches knock together in the wind
+      comes from deeper among the trees. The land falls away toward a hidden stream
+      valley.'
+    exits:
+      east: blackthorn_descent
+      south: moss_hollow
+      southwest: moss_hollow
+      west: moss_hollow
+    occupants: []
+    objects:
+    - A traveling hunter watches the deeper forest without moving
+    - A iron trail lantern stands near the broken shrine
+    - Bundles of drying herbs lie beneath a low branch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  blackthorn_descent:
+    name: Blackthorn Descent
+    room_type: Border Track
+    desc: 'Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging
+      marker bears three deep axe cuts.
+
+
+      Something small moves through the brush carries beneath the canopy while wet
+      bark and mushrooms clings to the damp ground. Open farmland remains visible
+      through the eastern trees.'
+    exits:
+      east: hollow_bend
+      south: twilight_way
+      west: twilight_way
+    occupants:
+    - A raven keeper sorts herbs into a waxed satchel
+    objects:
+    - A moss-covered milestone stands near the old stump
+    - A row of small animal traps lie beneath a mossy overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hollow_bend:
+    name: Hollow Bend
+    room_type: Old Timber Road
+    desc: 'The cultivated country gives way to the first shadowed trees of Duskwood
+      Vale, broken by a weathered warding post stands beside the road.
+
+
+      Little sunlight reaches the forest floor. The road toward Ravenswatch continues
+      west. Somewhere ahead, a raven calls once and falls silent.'
+    exits:
+      south: moon_crossing
+      west: blackthorn_descent
+    occupants: []
+    objects:
+    - A herb gatherer rests a wood axe against one shoulder
+    - A warding post stands near the broken shrine
+    - Stacks of cut pine lie beneath a leaning timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moon_crossing:
+    name: Moon Crossing
+    room_type: Woodland Path
+    desc: 'The road enters old oaks draped in moss, where an old logging marker bears
+      three deep axe cuts.
+
+
+      The road feels older than the farms behind it. Moonshade lies somewhere beyond
+      the deeper woods. A cool trace of pine resin and cold earth hangs beneath the
+      trees.'
+    exits:
+      north: pine_mile
+      northeast: pine_mile
+      east: pine_mile
+      south: hollow_bend
+    occupants: []
+    objects:
+    - A border scout checks the carving on a warding post
+    - A iron trail lantern stands near the old stump
+    - Bundles of drying herbs lie beneath the roots of an oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pine_mile:
+    name: Pine Mile
+    room_type: Shadowed Lane
+    desc: 'You stand on a mossy timber track beneath dense undergrowth and leaning
+      trunks. Nearby, a weathered warding post stands beside the road.
+
+
+      The air smells of crushed fern, and a distant woodcutter''s axe echoes comes
+      from deeper among the trees. Greenhold is no longer visible from the trail.'
+    exits:
+      north: root_road
+      east: root_road
+      southwest: moon_crossing
+      south: moon_crossing
+      west: moon_crossing
+    occupants: []
+    objects:
+    - A forest warden ties a strip of cloth to a branch
+    - A moss-covered milestone stands near the broken shrine
+    - A row of small animal traps lie beneath a waxed cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  root_road:
+    name: Root Road
+    room_type: Forest Road
+    desc: 'A dim woodland path winds through close pines and blackthorn, its edge
+      marked by an old logging marker bears three deep axe cuts.
+
+
+      Branches knock together in the wind carries beneath the canopy while leaf mold
+      and smoke clings to the damp ground. The land falls away toward a hidden stream
+      valley.'
+    exits:
+      north: fern_reach
+      east: fern_reach
+      south: pine_mile
+      west: pine_mile
+    occupants: []
+    objects:
+    - A woodcutter studies tracks beside the road
+    - A warding post stands near the old stump
+    - Stacks of cut pine lie beneath a low branch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fern_reach:
+    name: Fern Reach
+    room_type: Border Track
+    desc: 'Dark earth trail narrows beneath ferns beneath a dim canopy. A weathered
+      warding post stands beside the road.
+
+
+      Little sunlight reaches the forest floor. Open farmland remains visible through
+      the eastern trees. Somewhere ahead, something small moves through the brush.'
+    exits:
+      north: gloam_trail
+      east: gloam_trail
+      south: root_road
+      west: root_road
+    occupants: []
+    objects:
+    - A mushroom picker watches the deeper forest without moving
+    - A iron trail lantern stands near the broken shrine
+    - Bundles of drying herbs lie beneath a mossy overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  gloam_trail:
+    name: Gloam Trail
+    room_type: Old Timber Road
+    desc: 'The cultivated country gives way to the first shadowed trees of Duskwood
+      Vale, broken by an old logging marker bears three deep axe cuts.
+
+
+      The road feels older than the farms behind it. The road toward Ravenswatch continues
+      west. A cool trace of moss and stagnant water hangs beneath the trees.'
+    exits:
+      north: raven_road
+      south: fern_reach
+      west: fern_reach
+    occupants: []
+    objects:
+    - A charcoal burner sorts herbs into a waxed satchel
+    - A moss-covered milestone stands near the old stump
+    - A row of small animal traps lie beneath a leaning timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  raven_road:
+    name: Raven Road
+    room_type: Woodland Path
+    desc: 'The road enters old oaks draped in moss, where a weathered warding post
+      stands beside the road.
+
+
+      The air smells of pine resin and cold earth, and water runs unseen over stone
+      comes from deeper among the trees. Moonshade lies somewhere beyond the deeper
+      woods.'
+    exits:
+      north: moss_reach
+      east: moss_reach
+      south: gloam_trail
+    occupants: []
+    objects:
+    - A traveling hunter rests a wood axe against one shoulder
+    - A warding post stands near the broken shrine
+    - Stacks of cut pine lie beneath the roots of an oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_reach:
+    name: Moss Reach
+    room_type: Shadowed Lane
+    desc: 'You stand on a mossy timber track beneath dense undergrowth and leaning
+      trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+
+      A distant woodcutter''s axe echoes carries beneath the canopy while crushed
+      fern clings to the damp ground. Greenhold is no longer visible from the trail.'
+    exits:
+      north: twilight_trail
+      east: twilight_trail
+      south: raven_road
+      west: raven_road
+    occupants:
+    - A raven keeper checks the carving on a warding post
+    objects:
+    - A iron trail lantern stands near the old stump
+    - Bundles of drying herbs lie beneath a waxed cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  twilight_trail:
+    name: Twilight Trail
+    room_type: Forest Road
+    desc: 'A dim woodland path winds through close pines and blackthorn, its edge
+      marked by a weathered warding post stands beside the road.
+
+
+      Little sunlight reaches the forest floor. The land falls away toward a hidden
+      stream valley. Somewhere ahead, branches knock together in the wind.'
+    exits:
+      north: blackthorn_path
+      east: blackthorn_path
+      south: moss_reach
+      west: moss_reach
+    occupants: []
+    objects:
+    - A herb gatherer ties a strip of cloth to a branch
+    - A moss-covered milestone stands near the broken shrine
+    - A row of small animal traps lie beneath a low branch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  blackthorn_path:
+    name: Blackthorn Path
+    room_type: Border Track
+    desc: 'Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging
+      marker bears three deep axe cuts.
+
+
+      The road feels older than the farms behind it. Open farmland remains visible
+      through the eastern trees. A cool trace of wet bark and mushrooms hangs beneath
+      the trees.'
+    exits:
+      north: hollow_hollow
+      northeast: hollow_hollow
+      east: hollow_hollow
+      south: twilight_trail
+      west: twilight_trail
+    occupants: []
+    objects:
+    - A border scout studies tracks beside the road
+    - A warding post stands near the old stump
+    - Stacks of cut pine lie beneath a mossy overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hollow_hollow:
+    name: Hollow Hollow
+    room_type: Old Timber Road
+    desc: 'The cultivated country gives way to the first shadowed trees of Duskwood
+      Vale, broken by a weathered warding post stands beside the road.
+
+
+      The air smells of moss and stagnant water, and a raven calls once and falls
+      silent comes from deeper among the trees. The road toward Ravenswatch continues
+      west.'
+    exits:
+      north: moon_way
+      south: blackthorn_path
+      southwest: blackthorn_path
+      west: blackthorn_path
+    occupants: []
+    objects:
+    - A forest warden watches the deeper forest without moving
+    - A iron trail lantern stands near the broken shrine
+    - Bundles of drying herbs lie beneath a leaning timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moon_way:
+    name: Moon Way
+    room_type: Woodland Path
+    desc: 'The road enters old oaks draped in moss, where an old logging marker bears
+      three deep axe cuts.
+
+
+      Water runs unseen over stone carries beneath the canopy while pine resin and
+      cold earth clings to the damp ground. Moonshade lies somewhere beyond the deeper
+      woods.'
+    exits:
+      north: pine_descent
+      east: pine_descent
+      south: hollow_hollow
+    occupants: []
+    objects:
+    - A woodcutter sorts herbs into a waxed satchel
+    - A moss-covered milestone stands near the old stump
+    - A row of small animal traps lie beneath the roots of an oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  pine_descent:
+    name: Pine Descent
+    room_type: Shadowed Lane
+    desc: 'You stand on a mossy timber track beneath dense undergrowth and leaning
+      trunks. Nearby, a weathered warding post stands beside the road.
+
+
+      Little sunlight reaches the forest floor. Greenhold is no longer visible from
+      the trail. Somewhere ahead, a distant woodcutter''s axe echoes.'
+    exits:
+      north: root_bend
+      east: root_bend
+      south: moon_way
+      west: moon_way
+    occupants: []
+    objects:
+    - A mushroom picker rests a wood axe against one shoulder
+    - A warding post stands near the broken shrine
+    - Stacks of cut pine lie beneath a waxed cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  root_bend:
+    name: Root Bend
+    room_type: Forest Road
+    desc: 'A dim woodland path winds through close pines and blackthorn, its edge
+      marked by an old logging marker bears three deep axe cuts.
+
+
+      The road feels older than the farms behind it. The land falls away toward a
+      hidden stream valley. A cool trace of leaf mold and smoke hangs beneath the
+      trees.'
+    exits:
+      north: fern_crossing
+      northeast: fern_crossing
+      east: fern_crossing
+      south: pine_descent
+      west: pine_descent
+    occupants: []
+    objects:
+    - A charcoal burner checks the carving on a warding post
+    - A iron trail lantern stands near the old stump
+    - Bundles of drying herbs lie beneath a low branch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  fern_crossing:
+    name: Fern Crossing
+    room_type: Border Track
+    desc: 'Dark earth trail narrows beneath ferns beneath a dim canopy. A weathered
+      warding post stands beside the road.
+
+
+      The air smells of wet bark and mushrooms, and something small moves through
+      the brush comes from deeper among the trees. Open farmland remains visible through
+      the eastern trees.'
+    exits:
+      north: gloam_mile
+      east: gloam_mile
+      southwest: root_bend
+      south: root_bend
+      west: root_bend
+    occupants: []
+    objects:
+    - A traveling hunter ties a strip of cloth to a branch
+    - A moss-covered milestone stands near the broken shrine
+    - A row of small animal traps lie beneath a mossy overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  gloam_mile:
+    name: Gloam Mile
+    room_type: Old Timber Road
+    desc: 'The cultivated country gives way to the first shadowed trees of Duskwood
+      Vale, broken by an old logging marker bears three deep axe cuts.
+
+
+      A raven calls once and falls silent carries beneath the canopy while moss and
+      stagnant water clings to the damp ground. The road toward Ravenswatch continues
+      west.'
+    exits:
+      north: raven_bend
+      south: fern_crossing
+      west: fern_crossing
+    occupants:
+    - A raven keeper studies tracks beside the road
+    objects:
+    - A warding post stands near the old stump
+    - Stacks of cut pine lie beneath a leaning timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  raven_bend:
+    name: Raven Bend
+    room_type: Woodland Path
+    desc: 'The road enters old oaks draped in moss, where a weathered warding post
+      stands beside the road.
+
+
+      Little sunlight reaches the forest floor. Moonshade lies somewhere beyond the
+      deeper woods. Somewhere ahead, water runs unseen over stone.'
+    exits:
+      north: moss_crossing
+      east: moss_crossing
+    occupants: []
+    objects:
+    - A herb gatherer watches the deeper forest without moving
+    - A iron trail lantern stands near the broken shrine
+    - Bundles of drying herbs lie beneath the roots of an oak
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  moss_crossing:
+    name: Moss Crossing
+    room_type: Shadowed Lane
+    desc: 'You stand on a mossy timber track beneath dense undergrowth and leaning
+      trunks. Nearby, an old logging marker bears three deep axe cuts.
+
+
+      The road feels older than the farms behind it. Greenhold is no longer visible
+      from the trail. A cool trace of crushed fern hangs beneath the trees.'
+    exits:
+      north: twilight_mile
+      northeast: twilight_mile
+      east: twilight_mile
+      west: raven_bend
+    occupants: []
+    objects:
+    - A border scout sorts herbs into a waxed satchel
+    - A moss-covered milestone stands near the old stump
+    - A row of small animal traps lie beneath a waxed cloth
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  twilight_mile:
+    name: Twilight Mile
+    room_type: Forest Road
+    desc: 'A dim woodland path winds through close pines and blackthorn, its edge
+      marked by a weathered warding post stands beside the road.
+
+
+      The air smells of leaf mold and smoke, and branches knock together in the wind
+      comes from deeper among the trees. The land falls away toward a hidden stream
+      valley.'
+    exits:
+      north: blackthorn_road
+      east: blackthorn_road
+      west: moss_crossing
+    occupants: []
+    objects:
+    - A forest warden rests a wood axe against one shoulder
+    - A warding post stands near the broken shrine
+    - Stacks of cut pine lie beneath a low branch
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  blackthorn_road:
+    name: Blackthorn Road
+    room_type: Border Track
+    desc: 'Dark earth trail narrows beneath ferns beneath a dim canopy. An old logging
+      marker bears three deep axe cuts.
+
+
+      Something small moves through the brush carries beneath the canopy while wet
+      bark and mushrooms clings to the damp ground. Open farmland remains visible
+      through the eastern trees.'
+    exits:
+      north: hollow_reach
+      east: hollow_reach
+      west: twilight_mile
+    occupants: []
+    objects:
+    - A woodcutter checks the carving on a warding post
+    - A iron trail lantern stands near the old stump
+    - Bundles of drying herbs lie beneath a mossy overhang
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop
+  hollow_reach:
+    name: Hollow Reach
+    room_type: Old Timber Road
+    desc: 'The cultivated country gives way to the first shadowed trees of Duskwood
+      Vale, broken by a weathered warding post stands beside the road.
+
+
+      Little sunlight reaches the forest floor. The road toward Ravenswatch continues
+      west. Somewhere ahead, a raven calls once and falls silent.'
+    exits:
+      north: hollow_reach
+      west: blackthorn_road
+    occupants: []
+    objects:
+    - A mushroom picker ties a strip of cloth to a branch
+    - A moss-covered milestone stands near the broken shrine
+    - A row of small animal traps lie beneath a leaning timber shelter
+    replace: true
+    tags:
+    - veridia
+    - imported_text_drop

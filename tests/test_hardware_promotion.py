@@ -86,9 +86,7 @@ def test_promotion_audit_tampering_fails_loud(tmp_path: Path) -> None:
     promote_hardware_component(registry, packets, _packet(registry))
     audit_path = packets.audit_path
     assert audit_path is not None
-    tampered = audit_path.read_text(encoding="utf-8").replace(
-        "promotion_authorized", "tampered"
-    )
+    tampered = audit_path.read_text(encoding="utf-8").replace("promotion_authorized", "tampered")
     audit_path.write_text(tampered, encoding="utf-8")
 
     with pytest.raises(HardwarePromotionError, match="cannot read promotion audit"):

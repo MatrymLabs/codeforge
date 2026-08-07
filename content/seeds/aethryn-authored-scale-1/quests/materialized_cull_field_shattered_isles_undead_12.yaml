@@ -1,0 +1,73 @@
+id: cull_field_shattered_isles_undead_12
+name: 'A standing Reckoning: the undead-kind of The Shattered Isles Wilds'
+start: s0
+reward_xp: 912
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_shattered_isles|undead
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_shattered_isles|undead
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_shattered_isles|undead
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_shattered_isles|undead
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_shattered_isles|undead
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_shattered_isles|undead
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_shattered_isles|undead
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_shattered_isles|undead
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_shattered_isles|undead
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_shattered_isles|undead
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_shattered_isles|undead
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_shattered_isles|undead
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the undead-kind of The Shattered Isles Wilds: 0/12 down (912 XP).'
+  s1: 'Reckon with the undead-kind of The Shattered Isles Wilds: 1/12 down (912 XP).'
+  s2: 'Reckon with the undead-kind of The Shattered Isles Wilds: 2/12 down (912 XP).'
+  s3: 'Reckon with the undead-kind of The Shattered Isles Wilds: 3/12 down (912 XP).'
+  s4: 'Reckon with the undead-kind of The Shattered Isles Wilds: 4/12 down (912 XP).'
+  s5: 'Reckon with the undead-kind of The Shattered Isles Wilds: 5/12 down (912 XP).'
+  s6: 'Reckon with the undead-kind of The Shattered Isles Wilds: 6/12 down (912 XP).'
+  s7: 'Reckon with the undead-kind of The Shattered Isles Wilds: 7/12 down (912 XP).'
+  s8: 'Reckon with the undead-kind of The Shattered Isles Wilds: 8/12 down (912 XP).'
+  s9: 'Reckon with the undead-kind of The Shattered Isles Wilds: 9/12 down (912 XP).'
+  s10: 'Reckon with the undead-kind of The Shattered Isles Wilds: 10/12 down (912
+    XP).'
+  s11: 'Reckon with the undead-kind of The Shattered Isles Wilds: 11/12 down (912
+    XP).'
+  done: The undead-kind of The Shattered Isles Wilds are settled with. The tide-roads
+    are the safer for it.

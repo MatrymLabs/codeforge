@@ -1,0 +1,36 @@
+id: forage_underground_veridia_underworks_ember_shard_5
+name: 'A small Draw: ember shard of The Cradle Underworks'
+start: s0
+reward_xp: 40
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_veridia_underworks|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_veridia_underworks|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_veridia_underworks|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_veridia_underworks|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_veridia_underworks|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw ember shard in The Cradle Underworks: 0/5 (40 XP).'
+  s1: 'Draw ember shard in The Cradle Underworks: 1/5 (40 XP).'
+  s2: 'Draw ember shard in The Cradle Underworks: 2/5 (40 XP).'
+  s3: 'Draw ember shard in The Cradle Underworks: 3/5 (40 XP).'
+  s4: 'Draw ember shard in The Cradle Underworks: 4/5 (40 XP).'
+  done: You have drawn ember shard enough for The Cradle Underworks. The village makers
+    will put it to use.

@@ -182,9 +182,7 @@ class FileSessionRegistry:
         self.require_active(record.identity, now=now)
         return record.identity
 
-    def require_active(
-        self, identity: SessionIdentity, *, now: datetime | None = None
-    ) -> None:
+    def require_active(self, identity: SessionIdentity, *, now: datetime | None = None) -> None:
         record = self.load(identity.session_id)
         if record is None:
             raise SessionRegistryError(f"unknown session {identity.session_id!r}")

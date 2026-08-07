@@ -12,12 +12,32 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 from kernel.world import items
+from kernel.world.aethryn_models import content_digest
+from kernel.world.economy_transactions import (
+    EconomyTransactionService,
+    ItemTransfer,
+    SqlTransactionStore,
+    TransactionError,
+    TransactionRequest,
+)
 from kernel.world.seed import SEED_DIR, load_recipes
 from kernel.world.session import Session
 
 #: The active seed's recipes, loaded once at import (like a Job's abilities). {} when the seed ships
 #: no recipes.yaml -- crafting then reports "nothing to craft here" rather than failing.
 RECIPES = load_recipes(SEED_DIR / "recipes.yaml")
+
+# Rich Aethryn recipes are projected into the same recipe map.  The normal recipe loader remains
+# authoritative for legacy-compatible seeds; a seed without material_culture.yaml gets exactly the
+# old behavior.
+try:
+    from kernel.world.material_culture import legacy_recipes, load_catalog
+
+    RECIPES.update(legacy_recipes(load_catalog()))
+except (ImportError, ValueError):
+    # Non-Aethryn seeds do not carry the optional catalog.  Do not make their existing crafting
+    # path depend on an extension file.
+    pass
 
 
 def _held(prototype: str, owner: str) -> list[str]:
@@ -93,15 +113,46 @@ def craft(session: Session, arg: str) -> str:
     if short:
         lack = ", ".join(f"{count} more {proto}" for proto, count in sorted(short.items()))
         return f"You lack materials to forge {recipe['name']}: need {lack}."
+    sink = f"room:crafting:{session.player_id}"
     try:
-        made = items.clone(
-            recipe["makes"], items.carrier(session.player_id)
-        )  # mint first: spent only on success
+        made = items.clone(recipe["makes"], sink)  # mint first: spent only on success
     except items.ItemError:
         return f"You cannot forge {recipe['name']} right now."
-    for proto, qty in recipe["inputs"].items():
-        for iid in held[proto][:qty]:
-            del items.ITEMS[iid]  # spend the materials only once the output is in hand
+    input_ids = tuple(iid for proto, qty in recipe["inputs"].items() for iid in held[proto][:qty])
+    owners = {item_id: item.get("location", "") for item_id, item in items.ITEMS.items()}
+    request_id = content_digest(
+        {
+            "kind": "craft",
+            "actor": session.player_id,
+            "recipe": name,
+            "inputs": input_ids,
+            "output": made,
+        }
+    )[:32]
+    request = TransactionRequest(
+        transaction_id=f"craft-{request_id}",
+        idempotency_key=f"craft-{request_id}",
+        actor=session.player_id,
+        reason="crafting",
+        item_transfers=tuple(
+            [
+                *(ItemTransfer(iid, items.carrier(session.player_id), sink) for iid in input_ids),
+                ItemTransfer(made, sink, items.carrier(session.player_id)),
+            ]
+        ),
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets={}, item_owners=owners
+        )
+    except TransactionError as exc:
+        items.ITEMS.pop(made, None)
+        return f"You cannot forge {recipe['name']} right now: {exc}."
+    for iid in input_ids:
+        del items.ITEMS[
+            iid
+        ]  # receipt records the consumed input before it leaves the live registry
+    items.ITEMS[made]["location"] = items.carrier(session.player_id)
     line = f"You forge {items.ITEMS[made]['name']} at the hearth."
     # Forging advances the craft trade that makes this recipe (smithing/alchemy/leatherworking);
     # a rank-up appends its own line, a no-op is silent (kernel.world.professions).

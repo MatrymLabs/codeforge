@@ -73,9 +73,7 @@ def test_workspace_projects_supplied_lifecycle_records_without_mutating_authorit
     assert payload["lifecycle"]["approvals"] == [
         {"approval_id": "approval-1", "status": "approved"}
     ]
-    assert payload["lifecycle"]["promotions"] == [
-        {"packet_id": "packet-1", "status": "approved"}
-    ]
+    assert payload["lifecycle"]["promotions"] == [{"packet_id": "packet-1", "status": "approved"}]
 
 
 def test_workspace_does_not_project_evidence_for_another_seed() -> None:

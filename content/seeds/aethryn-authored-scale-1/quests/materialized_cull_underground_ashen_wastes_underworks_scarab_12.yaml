@@ -1,0 +1,71 @@
+id: cull_underground_ashen_wastes_underworks_scarab_12
+name: 'A standing Cull: the scarab-kind of The Flamewrought Service Depths'
+start: s0
+reward_xp: 708
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_ashen_wastes_underworks|scarab
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_ashen_wastes_underworks|scarab
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the scarab-kind of The Flamewrought Service Depths: 0/12 down (708 XP).'
+  s1: 'Cull the scarab-kind of The Flamewrought Service Depths: 1/12 down (708 XP).'
+  s2: 'Cull the scarab-kind of The Flamewrought Service Depths: 2/12 down (708 XP).'
+  s3: 'Cull the scarab-kind of The Flamewrought Service Depths: 3/12 down (708 XP).'
+  s4: 'Cull the scarab-kind of The Flamewrought Service Depths: 4/12 down (708 XP).'
+  s5: 'Cull the scarab-kind of The Flamewrought Service Depths: 5/12 down (708 XP).'
+  s6: 'Cull the scarab-kind of The Flamewrought Service Depths: 6/12 down (708 XP).'
+  s7: 'Cull the scarab-kind of The Flamewrought Service Depths: 7/12 down (708 XP).'
+  s8: 'Cull the scarab-kind of The Flamewrought Service Depths: 8/12 down (708 XP).'
+  s9: 'Cull the scarab-kind of The Flamewrought Service Depths: 9/12 down (708 XP).'
+  s10: 'Cull the scarab-kind of The Flamewrought Service Depths: 10/12 down (708 XP).'
+  s11: 'Cull the scarab-kind of The Flamewrought Service Depths: 11/12 down (708 XP).'
+  done: The scarab-kind of The Flamewrought Service Depths are thinned. The ash-tracks
+    are a shade safer.

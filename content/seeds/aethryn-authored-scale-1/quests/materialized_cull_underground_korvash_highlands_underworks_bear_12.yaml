@@ -1,0 +1,71 @@
+id: cull_underground_korvash_highlands_underworks_bear_12
+name: 'A standing Cull: the bear-kind of The Measured Throne Below'
+start: s0
+reward_xp: 828
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_korvash_highlands_underworks|bear
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_underworks|bear
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the bear-kind of The Measured Throne Below: 0/12 down (828 XP).'
+  s1: 'Cull the bear-kind of The Measured Throne Below: 1/12 down (828 XP).'
+  s2: 'Cull the bear-kind of The Measured Throne Below: 2/12 down (828 XP).'
+  s3: 'Cull the bear-kind of The Measured Throne Below: 3/12 down (828 XP).'
+  s4: 'Cull the bear-kind of The Measured Throne Below: 4/12 down (828 XP).'
+  s5: 'Cull the bear-kind of The Measured Throne Below: 5/12 down (828 XP).'
+  s6: 'Cull the bear-kind of The Measured Throne Below: 6/12 down (828 XP).'
+  s7: 'Cull the bear-kind of The Measured Throne Below: 7/12 down (828 XP).'
+  s8: 'Cull the bear-kind of The Measured Throne Below: 8/12 down (828 XP).'
+  s9: 'Cull the bear-kind of The Measured Throne Below: 9/12 down (828 XP).'
+  s10: 'Cull the bear-kind of The Measured Throne Below: 10/12 down (828 XP).'
+  s11: 'Cull the bear-kind of The Measured Throne Below: 11/12 down (828 XP).'
+  done: The bear-kind of The Measured Throne Below are thinned. The region breathes
+    easier.

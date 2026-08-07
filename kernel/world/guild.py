@@ -18,8 +18,10 @@ from __future__ import annotations
 import re
 
 import kernel.world.guild_store as guild_store
+from kernel.world.aethryn_models import content_digest
 from kernel.world.characters import _default_store, save_character
 from kernel.world.coinage import purse
+from kernel.world.economy_transactions import TransactionError, move_currency
 from kernel.world.events import announce_to, push_channel
 from kernel.world.session import SESSIONS, Session, display_name, sentence_case
 
@@ -230,9 +232,32 @@ def bank_deposit(session: Session, amount_word: str) -> str:
         return "Deposit how many coins? (guild deposit <number>)"
     if amount > session.coins:
         return "You do not have that many coins."
-    session.coins -= amount
+    old_balance = guild_store.coins(session.guild)
+    wallets = {session.player_id: session.coins, f"guild:{session.guild}": old_balance}
+    token = content_digest(
+        {
+            "kind": "guild_deposit",
+            "player": session.player_id,
+            "guild": session.guild,
+            "amount": amount,
+        }
+    )[:32]
+    try:
+        move_currency(
+            transaction_id=f"guild-deposit-{token}",
+            idempotency_key=f"guild-deposit-{token}",
+            actor=session.player_id,
+            source=session.player_id,
+            destination=f"guild:{session.guild}",
+            amount=amount,
+            reason="guild_deposit",
+            wallets=wallets,
+        )
+    except TransactionError as exc:
+        return f"The deposit fails: {exc}."
+    session.coins = wallets[session.player_id]
     save_character(session)  # the purse is persisted; keep it and the treasury in step
-    balance = guild_store.adjust(session.guild, amount)
+    balance = guild_store.adjust(session.guild, wallets[f"guild:{session.guild}"] - old_balance)
     announce_to(
         [m for m in _online_members(session.guild) if m != session.player_id],
         f"\n{display_name(session.player_id)} deposits {amount} coins into the guild treasury.",
@@ -252,8 +277,31 @@ def bank_withdraw(session: Session, amount_word: str) -> str:
         return "Withdraw how many coins? (guild withdraw <number>)"
     if amount > guild_store.coins(session.guild):
         return "The treasury does not hold that many coins."
-    balance = guild_store.adjust(session.guild, -amount)
-    session.coins += amount
+    old_balance = guild_store.coins(session.guild)
+    wallets = {session.player_id: session.coins, f"guild:{session.guild}": old_balance}
+    token = content_digest(
+        {
+            "kind": "guild_withdraw",
+            "player": session.player_id,
+            "guild": session.guild,
+            "amount": amount,
+        }
+    )[:32]
+    try:
+        move_currency(
+            transaction_id=f"guild-withdraw-{token}",
+            idempotency_key=f"guild-withdraw-{token}",
+            actor=session.player_id,
+            source=f"guild:{session.guild}",
+            destination=session.player_id,
+            amount=amount,
+            reason="guild_withdraw",
+            wallets=wallets,
+        )
+    except TransactionError as exc:
+        return f"The withdrawal fails: {exc}."
+    balance = guild_store.adjust(session.guild, wallets[f"guild:{session.guild}"] - old_balance)
+    session.coins = wallets[session.player_id]
     save_character(session)
     announce_to(
         [m for m in _online_members(session.guild) if m != session.player_id],

@@ -1,0 +1,61 @@
+id: forage_underground_thalorin_underworks_raw_ore_10
+name: 'A standing Draw: raw ore of The Irondeep Command Vaults'
+start: s0
+reward_xp: 370
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_thalorin_underworks|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_thalorin_underworks|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw raw ore in The Irondeep Command Vaults: 0/10 (370 XP).'
+  s1: 'Draw raw ore in The Irondeep Command Vaults: 1/10 (370 XP).'
+  s2: 'Draw raw ore in The Irondeep Command Vaults: 2/10 (370 XP).'
+  s3: 'Draw raw ore in The Irondeep Command Vaults: 3/10 (370 XP).'
+  s4: 'Draw raw ore in The Irondeep Command Vaults: 4/10 (370 XP).'
+  s5: 'Draw raw ore in The Irondeep Command Vaults: 5/10 (370 XP).'
+  s6: 'Draw raw ore in The Irondeep Command Vaults: 6/10 (370 XP).'
+  s7: 'Draw raw ore in The Irondeep Command Vaults: 7/10 (370 XP).'
+  s8: 'Draw raw ore in The Irondeep Command Vaults: 8/10 (370 XP).'
+  s9: 'Draw raw ore in The Irondeep Command Vaults: 9/10 (370 XP).'
+  done: You have drawn raw ore enough for The Irondeep Command Vaults. The region's
+    makers will put it to use.

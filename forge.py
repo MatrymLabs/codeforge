@@ -28,7 +28,7 @@ from kernel.classroom import (
     talk_to_codex,
 )
 from kernel.clone_scan import clones
-from kernel.commands import ADMIN, CORE, Command, CommandSet
+from kernel.commands import ADMIN, CORE, SEED, Command, CommandSet
 from kernel.complexity import complexity
 from kernel.features import features
 from kernel.harvest_lens import harvest
@@ -54,6 +54,7 @@ from kernel.telegraph import telegraph
 from kernel.titles import title
 from kernel.vitals import vitals
 from kernel.world import (
+    aethryn_actions,
     allocate,
     appearance,
     artifact,
@@ -188,7 +189,7 @@ def _world_minimap(location: str) -> str:
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
 HELP_TEXT = (
-    "Commands: look, go <direction> (or n/s/e/w/u/d), "
+    "Commands: look [verbose], go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
     "weather, factions, professions, standing, condition, "
@@ -201,6 +202,7 @@ HELP_TEXT = (
     "appearance [show|skin <color>], ansi [on|off|status], "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
+    "maintain <target>, "
     "channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
     "telegraph, chime, harvest, store [find <query>], learnings [show <id>], "
@@ -602,6 +604,13 @@ def _say_cmd(session: Session, message: str) -> str:
         exclude=session.player_id,
     )
     return f'You say, "{message}"'
+
+
+def _aethryn_store():
+    """Return the configured Aethryn state seam without importing the world during command setup."""
+    from kernel.world import world
+
+    return world._AETHRYN_STATE
 
 
 # The result of the plugin discovery pass at spine-build time (None until _build_commands runs).
@@ -1385,7 +1394,9 @@ def _build_commands() -> CommandSet:
             "look",
             "CMD-04.034",
             "look at your surroundings",
-            lambda s, _a: render_scene(s.location, viewer=s.player_id),
+            lambda s, arg: render_scene(
+                s.location, viewer=s.player_id, verbose=arg.strip().casefold() == "verbose"
+            ),
             namespace=CORE,
         )
     )
@@ -1394,7 +1405,9 @@ def _build_commands() -> CommandSet:
             "l",
             "CMD-04.034",
             "look at your surroundings",
-            lambda s, _a: render_scene(s.location, viewer=s.player_id),
+            lambda s, arg: render_scene(
+                s.location, viewer=s.player_id, verbose=arg.strip().casefold() == "verbose"
+            ),
             namespace=CORE,
         )
     )
@@ -2067,6 +2080,17 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "maintain",
+            "CMD-04.117",
+            "run a packet-declared local world maintenance action",
+            lambda s, arg: aethryn_actions.apply_declared_action(
+                s, "maintain", arg, _aethryn_store()
+            ),
+            namespace=SEED,
+        )
+    )
+    cs.add(
+        Command(
             "pray",
             "CMD-04.113",
             "take the boon of this room's wayshrine",
@@ -2260,11 +2284,11 @@ def _recog_cmd(session: Session, arg: str) -> str:
     return f"From now on you see {display_name(pid)} as {alias}."
 
 
-def render_scene(location: str, viewer: str = "") -> str:
+def render_scene(location: str, viewer: str = "", *, verbose: bool = False) -> str:
     """The full projection of a room: place, things, people, players."""
-    scene = [render_room(location)]
+    scene = [render_room(location, verbose=verbose)]
     area = area_line(location)  # the room's area banner, or '' if it belongs to no zone
-    if area:
+    if area and WORLD[location].get("presentation_version") != "aethryn-room-v1":
         scene.append(area)
     panel = _DYNAMIC_PANELS.get(dynamic_capability(location))
     if panel is not None:

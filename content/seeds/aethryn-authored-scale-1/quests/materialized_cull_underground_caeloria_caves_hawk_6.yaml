@@ -1,0 +1,41 @@
+id: cull_underground_caeloria_caves_hawk_6
+name: 'A small Cull: the hawk-kind of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 108
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_caves|hawk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_caves|hawk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_caves|hawk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_caves|hawk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_caves|hawk
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_caeloria_caves|hawk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 0/6 down (108 XP).'
+  s1: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 1/6 down (108 XP).'
+  s2: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 2/6 down (108 XP).'
+  s3: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 3/6 down (108 XP).'
+  s4: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 4/6 down (108 XP).'
+  s5: 'Cull the hawk-kind of Caeloria''s Sealed Aqueducts: 5/6 down (108 XP).'
+  done: The hawk-kind of Caeloria's Sealed Aqueducts are thinned. The farm-roads are
+    the safer for it.

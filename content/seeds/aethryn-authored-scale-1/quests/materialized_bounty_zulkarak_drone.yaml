@@ -1,0 +1,16 @@
+id: bounty_zulkarak_drone
+name: 'Bounty: an engineered nest-drone'
+start: posted
+reward_xp: 1056
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zulkarak_drone
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on an engineered nest-drone (level 88). Fell it for 1056
+    XP.
+  collected: 'Bounty collected: an engineered nest-drone is felled. Well hunted.'

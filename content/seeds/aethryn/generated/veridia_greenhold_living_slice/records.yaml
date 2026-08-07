@@ -1,0 +1,5518 @@
+settlements:
+- id: greenhold_living_settlement
+  display_name: Greenhold immediate hinterland
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  population_band: small agricultural market-town hinterland
+  government: Keeper Wenna and parish custom, checked by market pressure
+  food_sources:
+  - barley
+  - meadowfoil
+  - nearby farms
+  water_source: old fountain works beneath the granary and the town well
+  fuel_source: local alder and managed hedge wood
+  labor_base:
+  - farming
+  - milling
+  - smithing
+  - trade
+  - drainage maintenance
+  waste_handling: field compost and town-side collection, with the old waste yard
+    needing repair
+  economy: grain, dye plants, water, and traveler supplies circulate through Greenhold
+    Market
+  architecture: riverstone edge roads, timber sheds, drainage channels, and pale old
+    masonry
+  culture: practical, memory-keeping, and cautious about machinery no one can repair
+  services:
+  - market
+  - smithy
+  - granary
+  - well
+  - field gathering
+  - road repair
+  external_connections:
+  - greenhold
+  - veridia
+  - greenhold_fields
+  active_conflicts:
+  - greenhold_water_shortage
+  - damaged_barley
+  - public_access_to_old_works
+  daily_rhythm: dawn field work, midmorning market, noon milling, evening gate and
+    ditch checks
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d76aaf3754f603a13ce5b0fb457d759a8061cac6186419919708bbecd99df6be
+districts:
+- id: greenhold_living_edge
+  display_name: Greenhold Working Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  settlement_id: greenhold_living_settlement
+  source_design_ids:
+  - greenhold
+  purpose:
+  - civic
+  - economic
+  - service
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 2611380eef920bcae12c3677f0e49407b45414eab5b1891785ccd158e1de3212
+neighborhoods:
+- id: greenhold_civic_edge
+  display_name: Cistern and Waste Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  settlement_id: greenhold_living_settlement
+  district_id: greenhold_living_edge
+  source_design_ids:
+  - greenhold
+  purpose:
+  - civic
+  - service
+  - recovery
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d7964faa7ac8ecd8bce9d3a1924cc581985920fc3a025eff55c8bf31ecb31f6a
+- id: greenhold_agricultural_edge
+  display_name: Alder Field Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  settlement_id: greenhold_living_settlement
+  district_id: greenhold_living_edge
+  source_design_ids:
+  - greenhold
+  purpose:
+  - economic
+  - ecological
+  - resource
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b2ff1ec128c01628fdbb2ac403d103d6a755de03eaacd482aaf02ace494fe936
+wilderness:
+- id: veridia_living_hinterland
+  display_name: Greenhold Immediate Hinterland
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  habitat: temperate-meadow fields, hedgerow, drainage, and shallow old works
+  traversal_identity: a short cart road becomes a foot loop around fields and a hazardous
+    hollow
+  purpose:
+  - traversal
+  - ecological
+  - resource
+  - encounter
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 98eb5b40884d0a5e2e36bae9efdc661cc297d5318df8e9331fccc332254623b6
+rooms:
+- id: greenhold
+  display_name: Greenhold
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  parent_settlement: greenhold_living_settlement
+  purpose:
+  - social
+  - civic
+  - economic
+  description: Greenhold gathers market, memory, and road traffic around a well while
+    the working edge opens south toward fields, drainage, and an old water threshold.
+  room_type: Town Hub
+  tags:
+  - veridia
+  - greenhold
+  - compiler_slice
+  - authored_local
+  replace: true
+  exits:
+    out: veridia
+    in: greenhold_inn
+    market: greenhold_store
+    square: greenhold_market
+    wards: veridia_massive_alder_court
+    south: veridia_living_civic_gate
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c939da0ed34249459ae7d7dc3d99d0f50404fb91da53139fbbb548fe00e75d95
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - social
+  - civic
+  - economic
+  short_description: Greenhold gathers market, memory, and road traffic around a well
+    while the working edge opens south toward fields, drainage, and an old water threshold.
+  long_description: 'Greenhold gathers market, memory, and road traffic around a well
+    while the working edge opens south toward fields, drainage, and an old water threshold.
+
+
+    The Veridia setting makes its social, civic, and economic work purpose visible
+    in the timber and riverstone town edge over pale old-world masonry built where
+    low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+    the route.'
+  points_of_interest: []
+  conditions:
+  - id: pressure:living_water_shortage
+    kind: pressure
+    source_record: living_water_shortage
+    display: the town cistern is below service level
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_civic_gate
+  display_name: Greenhold Civic Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - greenhold_civic_edge
+  parent_settlement: greenhold_living_settlement
+  district_id: greenhold_living_edge
+  neighborhood_id: greenhold_civic_edge
+  purpose:
+  - threshold
+  - civic
+  - traversal
+  description: The town wall gives way to a maintained civic edge where a public notice,
+    a drainage map, and a low stone channel explain how Greenhold keeps people and
+    water moving together.
+  room_type: Civic Threshold
+  tags:
+  - veridia
+  - greenhold
+  - civic
+  - compiler_slice
+  exits:
+    north: greenhold
+    east: veridia_living_cistern_court
+    south: veridia_living_road_threshold
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_civic_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f1a957306205d27c98d9ec514b934e5bde5a20490a4c080d87e8ce68d643f1fb
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - threshold
+  - civic
+  - traversal
+  short_description: The town wall gives way to a maintained civic edge where a public
+    notice, a drainage map, and a low stone channel explain how Greenhold keeps people
+    and water moving together.
+  long_description: 'The town wall gives way to a maintained civic edge where a public
+    notice, a drainage map, and a low stone channel explain how Greenhold keeps people
+    and water moving together.
+
+
+    The Veridia setting makes its threshold, civic, and traversal work purpose visible
+    in the timber and riverstone town edge over pale old-world masonry built where
+    low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+    the route.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_cistern_court
+  display_name: Cistern Court
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - veridia_greenhold_economy
+  parent_settlement: greenhold_living_settlement
+  district_id: greenhold_living_edge
+  neighborhood_id: greenhold_civic_edge
+  purpose:
+  - civic
+  - service
+  - narrative
+  description: A shallow court surrounds a capped cistern where clean water should
+    rise on a working day; a brass gauge and repair ledger record three competing
+    explanations.
+  room_type: Water Service Court
+  tags:
+  - veridia
+  - greenhold
+  - water
+  - compiler_slice
+  exits:
+    west: veridia_living_civic_gate
+    east: veridia_living_waste_yard
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 92f02952aa6ba9aa58db0db0f30b45d316cde64e78c972a8f185643ce3421036
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - civic
+  - service
+  - narrative
+  short_description: A shallow court surrounds a capped cistern where clean water
+    should rise on a working day; a brass gauge and repair ledger record three competing
+    explanations.
+  long_description: 'A shallow court surrounds a capped cistern where clean water
+    should rise on a working day; a brass gauge and repair ledger record three competing
+    explanations.
+
+
+    The Veridia setting makes its civic, service, and narrative work purpose visible
+    in the timber and riverstone town edge over pale old-world masonry built where
+    low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+    the route.'
+  points_of_interest:
+  - id: living_drainage_ledger
+    display: the drainage ledger
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: living_drainage_ledger
+  conditions:
+  - id: state:greenhold.cistern_status
+    kind: state
+    state_key: greenhold.cistern_status
+    values:
+    - low
+    - flowing
+    display: civic cistern gauge and public water description
+  - id: pressure:living_water_shortage
+    kind: pressure
+    source_record: living_water_shortage
+    display: the town cistern is below service level
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_waste_yard
+  display_name: Alder Waste Yard
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - veridia_greenhold_economy
+  parent_settlement: greenhold_living_settlement
+  district_id: greenhold_living_edge
+  neighborhood_id: greenhold_civic_edge
+  purpose:
+  - civic
+  - service
+  - recovery
+  description: Alder bins, compost frames, and a swept runoff trench make this yard
+    a quiet piece of settlement infrastructure, though a blocked grate now sends foul
+    water toward the field road.
+  room_type: Waste and Maintenance Yard
+  tags:
+  - veridia
+  - greenhold
+  - waste
+  - maintenance
+  - compiler_slice
+  exits:
+    west: veridia_living_cistern_court
+    south: veridia_living_road_threshold
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f9814519c1a7307d2c073bc749c2be6649329803babd48b9f3651d60d5a163ef
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - civic
+  - service
+  - recovery
+  short_description: Alder bins, compost frames, and a swept runoff trench make this
+    yard a quiet piece of settlement infrastructure, though a blocked grate now sends
+    foul water toward the field road.
+  long_description: 'Alder bins, compost frames, and a swept runoff trench make this
+    yard a quiet piece of settlement infrastructure, though a blocked grate now sends
+    foul water toward the field road.
+
+
+    This waste and maintenance yard is a working part of Veridia, where civic, service,
+    and recovery work follows low fields, drainage ditches, hedgerows, and an old
+    waterworks threshold and the local weather.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_road_threshold
+  display_name: South Cartway Threshold
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - greenhold
+  parent_settlement: greenhold_living_settlement
+  neighborhood_id: greenhold_agricultural_edge
+  purpose:
+  - threshold
+  - traversal
+  - economic
+  description: The cartway leaves Greenhold between low hedges, a repaired milestone,
+    and a ditch that carries both rain and the town's arguments about who must clear
+    it.
+  room_type: Road Threshold
+  tags:
+  - veridia
+  - road
+  - trade
+  - compiler_slice
+  exits:
+    north: veridia_living_civic_gate
+    east: veridia_living_wild_loop
+    south: veridia_living_farm_lane
+    west: veridia_living_waste_yard
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c99c6e3145d5f0e13ade715e9d7399d52a320040c5f1e09c367ea4776a216a6a
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - threshold
+  - traversal
+  - economic
+  short_description: The cartway leaves Greenhold between low hedges, a repaired milestone,
+    and a ditch that carries both rain and the town's arguments about who must clear
+    it.
+  long_description: 'The cartway leaves Greenhold between low hedges, a repaired milestone,
+    and a ditch that carries both rain and the town''s arguments about who must clear
+    it.
+
+
+    This road threshold is a working part of Veridia, where threshold, traversal,
+    and economic work follows low fields, drainage ditches, hedgerows, and an old
+    waterworks threshold and the local weather.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_farm_lane
+  display_name: Alder Farm Lane
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - veridia_greenhold_ecology
+  parent_wilderness: veridia_living_hinterland
+  neighborhood_id: greenhold_agricultural_edge
+  purpose:
+  - traversal
+  - resource
+  - economic
+  description: Furrows and alder windbreaks flank a narrow farm lane where barley
+    stubble, meadowfoil, and wagon ruts show the season's work and the crop's recent
+    trouble.
+  room_type: Farm Road
+  tags:
+  - veridia
+  - fields
+  - gathering
+  - compiler_slice
+  exits:
+    north: veridia_living_road_threshold
+    east: veridia_living_farmstead
+    south: veridia_living_wild_loop
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b0035135836c1b66f4b56c8da165abfc7c49f2d2e412cd13160ab53b163fc379
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - traversal
+  - resource
+  - economic
+  short_description: Furrows and alder windbreaks flank a narrow farm lane where barley
+    stubble, meadowfoil, and wagon ruts show the season's work and the crop's recent
+    trouble.
+  long_description: 'Furrows and alder windbreaks flank a narrow farm lane where barley
+    stubble, meadowfoil, and wagon ruts show the season''s work and the crop''s recent
+    trouble.
+
+
+    In Veridia, this farm road exists for traversal, resource, and economic work;
+    low fields, drainage ditches, hedgerows, and an old waterworks threshold gives
+    the work its shape.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_farmstead
+  display_name: Alder Farmstead
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - veridia_greenhold_economy
+  parent_wilderness: veridia_living_hinterland
+  neighborhood_id: greenhold_agricultural_edge
+  purpose:
+  - economic
+  - resource
+  - social
+  description: A small barley holding sits behind a split rail fence, with a hand
+    mill, drying rack, and meadowfoil baskets ready for the trader if the damaged
+    rows can be kept productive.
+  room_type: Agricultural Worksite
+  tags:
+  - veridia
+  - farm
+  - food
+  - trade
+  - compiler_slice
+  exits:
+    west: veridia_living_farm_lane
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 4b5b91cf5268b984e203315986387114bf0053f0dcb3b62216188baa7bfd5a81
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - economic
+  - resource
+  - social
+  short_description: A small barley holding sits behind a split rail fence, with a
+    hand mill, drying rack, and meadowfoil baskets ready for the trader if the damaged
+    rows can be kept productive.
+  long_description: 'A small barley holding sits behind a split rail fence, with a
+    hand mill, drying rack, and meadowfoil baskets ready for the trader if the damaged
+    rows can be kept productive.
+
+
+    The Veridia setting makes its economic, resource, and social work purpose visible
+    in the timber and riverstone town edge over pale old-world masonry built where
+    low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+    the route.'
+  points_of_interest:
+  - id: living_meadowfoil_node
+    display: meadowfoil margin
+    kind: resource
+    actions:
+    - examine
+    - gather
+    source_record: living_meadowfoil_node
+  - id: living_barley_node
+    display: damaged barley rows
+    kind: resource
+    actions:
+    - examine
+    - gather
+    source_record: living_barley_node
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_wild_loop
+  display_name: Hedgerow Loop
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - veridia_greenhold_ecology
+  parent_wilderness: veridia_living_hinterland
+  purpose:
+  - traversal
+  - ecological
+  - encounter
+  - resource
+  description: The path bends through wet grass and thorn hedges in a deliberate loop,
+    passing forage, torn barley stems, and tracks too broad for the foxes that usually
+    keep this edge balanced.
+  room_type: Managed Wilderness Loop
+  tags:
+  - veridia
+  - wilderness
+  - ecology
+  - compiler_slice
+  exits:
+    west: veridia_living_road_threshold
+    north: veridia_living_farm_lane
+    east: veridia_living_hollow
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6290a80b42991d5c0d1e783d3d45613dcb545836dbd914dcc318b237263ec26a
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - traversal
+  - ecological
+  - encounter
+  - resource
+  short_description: The path bends through wet grass and thorn hedges in a deliberate
+    loop, passing forage, torn barley stems, and tracks too broad for the foxes that
+    usually keep this edge balanced.
+  long_description: 'The path bends through wet grass and thorn hedges in a deliberate
+    loop, passing forage, torn barley stems, and tracks too broad for the foxes that
+    usually keep this edge balanced.
+
+
+    In Veridia, this managed wilderness loop exists for traversal, ecological, and
+    encounter work; low fields, drainage ditches, hedgerows, and an old waterworks
+    threshold gives the work its shape.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: veridia_living_hollow
+  display_name: The Shallow Service Hollow
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - greenhold_minor_site
+  parent_wilderness: veridia_living_hinterland
+  purpose:
+  - encounter
+  - landmark
+  - puzzle
+  - narrative
+  description: A shallow cut in the field reveals pale masonry, a seized sluice wheel,
+    and a line of conduit disappearing under roots, while fresh boar tracks make the
+    old work unsafe to study slowly.
+  room_type: Minor Hazardous Site
+  tags:
+  - veridia
+  - old_world
+  - hazard
+  - compiler_slice
+  exits:
+    west: veridia_living_wild_loop
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 08791e2c4937c22328c95f7cb4ef839e2e331ab8fab22191d315394486c0978c
+  presentation_version: aethryn-room-v1
+  area_name: Veridia
+  primary_purpose:
+  - encounter
+  - landmark
+  - puzzle
+  - narrative
+  short_description: A shallow cut in the field reveals pale masonry, a seized sluice
+    wheel, and a line of conduit disappearing under roots, while fresh boar tracks
+    make the old work unsafe to study slowly.
+  long_description: 'A shallow cut in the field reveals pale masonry, a seized sluice
+    wheel, and a line of conduit disappearing under roots, while fresh boar tracks
+    make the old work unsafe to study slowly.
+
+
+    Its materials and position belong to Veridia: low fields, drainage ditches, hedgerows,
+    and an old waterworks threshold meets timber and riverstone town edge over pale
+    old-world masonry at this threshold.'
+  points_of_interest:
+  - id: living_sluice_wheel
+    display: the pale sluice wheel
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: living_sluice_wheel
+  conditions:
+  - id: pressure:living_vermin_hollow_pressure
+    kind: pressure
+    source_record: living_vermin_hollow_pressure
+    display: vermin shelter in the conduit delays safe repair work
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+npcs:
+- id: living_ditchwarden
+  display_name: Ditchwarden Mara
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_civic_edge
+  role:
+  - maintenance
+  - governance
+  - information
+  location: veridia_living_civic_gate
+  schedule:
+  - dawn ditch inspection
+  - midday notice updates
+  - dusk gate report
+  relationship_to_civilization: keeps water and waste routes usable for the town
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 5a42ee63b9d87bf96a15aa8afb125382740aaa370c1ac3ef2b4f49671acaf037
+- id: living_fieldhand
+  display_name: Fieldhand Oren
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_agricultural_edge
+  role:
+  - production
+  - transport
+  - information
+  location: veridia_living_farmstead
+  schedule:
+  - dawn furrow work
+  - noon mill run
+  - late afternoon meadowfoil sorting
+  relationship_to_civilization: converts field labor into food and dye trade
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: dba647be5978bddd6c76eefcc75b11fe481c92c0c92b55a0c9b8e9a09ceb3718
+- id: living_repairer
+  display_name: Repairer Sen
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  role:
+  - maintenance
+  - information
+  - conflict
+  location: veridia_living_hollow
+  schedule:
+  - weekly inspection when the route is safe
+  - otherwise market testimony
+  relationship_to_civilization: wants the old sluice understood before it is reopened
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: a3cc13a2417ca6ef1bf0396b42d49bde892248d0016c4a1c81b969cbec411345
+creatures:
+- id: living_field_boar
+  display_name: displaced field-boar
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  habitat: damaged barley margins and hedgerow loop
+  diet_or_energy_source: barley roots, fallen grain, and hedgerow forage
+  predators: local hunters and the village hounds
+  prey_or_resource_pressure: damaged crop and shrinking forage push it toward farms
+  reproduction_or_recurrence: ordinary seasonal reproduction and recurring crop access
+  seasonal_behavior: more aggressive during sowing and early harvest pressure
+  ecological_role: turns crop damage into visible pressure on the managed edge
+  relationship_to_civilization: dangerous pest but also evidence of a broken field
+    balance
+  reason_for_persistence: fertile fields and repeated access through an unmaintained
+    hedge gap
+  keywords:
+  - boar
+  - tusker
+  - field
+  creature_category: biological
+  allowed_regions:
+  - veridia
+  climate_tolerance:
+  - temperate
+  - wet
+  threat_range:
+  - 2
+  - 8
+  description: A broad field-boar with a mud-dark shoulder and a stubborn path through
+    the hedge.
+  room_presence_description: Torn barley and a heavy shape shifting beyond the hedge
+    show that the displaced boar is close.
+  examine_description: Its tusks are chipped from roots and old fence posts; the animal
+    is hungry, wary, and used to finding grain here.
+  behavior: roots, tests fences, and charges when cornered
+  intelligence: animal cunning
+  disposition: territorial and pressured
+  social_organization: solitary adult with seasonal family groups
+  activity_period: dawn and dusk
+  movement_behavior: follows forage between field margins and the hollow
+  combat_role: bruiser
+  abilities:
+  - charge
+  - tusk_gore
+  retreat_behavior: breaks toward the hedgerow after a hard wound
+  pursuit_behavior: pursues only across the field edge
+  assistance_behavior: none
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: uncommon
+  location: veridia_living_hollow
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: cc7eedc7465112c5eb4e88eb56f4b6b23639c6efe7979cac446938d3b5eb7944
+- id: living_hollow_vermin
+  display_name: hollow vermin
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  habitat: warm cracks around the shallow conduit
+  diet_or_energy_source: grain scraps, insects, and old organic waste
+  predators: field snakes and town cats
+  prey_or_resource_pressure: neglected service hollow and food leakage from the road
+  reproduction_or_recurrence: ordinary reproduction while shelter remains accessible
+  seasonal_behavior: expands toward the fields after wet weather
+  ecological_role: signals that abandoned infrastructure has become habitat
+  relationship_to_civilization: nuisance that exposes maintenance failure
+  reason_for_persistence: dry masonry and steady food traces
+  keywords:
+  - vermin
+  - rat
+  - hollow
+  creature_category: biological
+  allowed_regions:
+  - veridia
+  climate_tolerance:
+  - temperate
+  - wet
+  threat_range:
+  - 1
+  - 3
+  description: Small warm-blooded scavengers nest in the dry seams around the old
+    conduit.
+  room_presence_description: Tiny claws tick behind the pale masonry and grain husks
+    gather in the cracks.
+  examine_description: The vermin have made a nest from reed, thread, and spoiled
+    sackcloth beside the service channel.
+  behavior: scavenges, hides, and spreads when food is plentiful
+  intelligence: animal cunning
+  disposition: evasive unless trapped
+  social_organization: loose colony
+  activity_period: night and wet-weather sheltering
+  movement_behavior: slips between hollow, waste yard, and field-edge cracks
+  combat_role: nuisance swarm
+  abilities:
+  - gnaw
+  - scatter
+  retreat_behavior: flees into masonry gaps
+  pursuit_behavior: does not pursue
+  assistance_behavior: nearby vermin scatter toward disturbance
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 80b8654c4bef4f0212b5dad04a4c72ff5ec4fdea3b4adb4b59fcdf3e458a574f
+- id: living_field_rabbit
+  display_name: hedgerow field-rabbit
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  habitat: damp meadow margins and uncut hedgerows
+  diet_or_energy_source: tender grass, barley shoots, and meadowfoil leaves
+  predators: field-boar pressure, village hounds, and ordinary foxes
+  prey_or_resource_pressure: prey for local hunters and a baseline forage population
+  reproduction_or_recurrence: ordinary seasonal breeding with recovery after quiet
+    weeks
+  seasonal_behavior: visible at dawn during the early growing season
+  ecological_role: prey population that makes predator pressure and quiet fields legible
+  relationship_to_civilization: tolerated near farms but protected when crop damage
+    is low
+  reason_for_persistence: dense hedges, field margins, and a recoverable breeding
+    cycle
+  keywords:
+  - rabbit
+  - field-rabbit
+  - prey
+  creature_category: biological
+  allowed_regions:
+  - veridia
+  climate_tolerance:
+  - temperate
+  - wet
+  threat_range:
+  - 1
+  - 2
+  description: Quick brown rabbits use the uncut hedge as a moving seam between pasture
+    and field.
+  room_presence_description: The hedge trembles in short bursts, and small tracks
+    cross the wet grass.
+  examine_description: Fresh nibble marks and paired prints show a prey population
+    still holding the field edge.
+  behavior: feeds, freezes, and bolts for cover
+  intelligence: animal instinct
+  disposition: skittish
+  social_organization: loose warren
+  activity_period: dawn and dusk
+  movement_behavior: keeps to hedges and nearby cover
+  combat_role: none
+  abilities:
+  - bolt
+  retreat_behavior: flees to the nearest hedge
+  pursuit_behavior: none
+  assistance_behavior: none
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b660ccfd4ef5c60792fbfac534a4b4609bc103e9340e6ec842a638896bd5a4a4
+population_profiles:
+- id: greenhold_civilian_population
+  display_name: Greenhold residents and market traffic
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  archetype_id: greenhold_folk
+  region: veridia
+  zone: veridia_zone
+  habitat: town streets, market, and civic edge
+  candidate_rooms:
+  - greenhold
+  - veridia_living_civic_gate
+  - veridia_living_cistern_court
+  population_min: 8
+  population_max: 18
+  carrying_capacity: 24
+  spawn_rules:
+    schedule: market_day_and_daily_work
+  reset_rules:
+    scope: world
+    recurrence: daily_schedule
+  time_of_day:
+  - dawn
+  - morning
+  - midday
+  - evening
+  direct_presence_probability: 0.15
+  ambient_evidence_probability: 0.8
+  hostile_presence_probability: 0.0
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: efa131598bab59142fcf4d9cb508e3912df1c3892118c6cfa74e64c4233d2c91
+- id: greenhold_field_work_crews
+  display_name: Greenhold field and ditch crews
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_agricultural_edge
+  archetype_id: living_fieldhand
+  region: veridia
+  zone: veridia_zone
+  habitat: farm lane, farmstead, and drainage edge
+  candidate_rooms:
+  - veridia_living_road_threshold
+  - veridia_living_farm_lane
+  - veridia_living_farmstead
+  - veridia_living_waste_yard
+  population_min: 2
+  population_max: 7
+  carrying_capacity: 8
+  spawn_rules:
+    schedule: dawn_to_late_afternoon
+  reset_rules:
+    scope: zone
+    recurrence: workday
+  time_of_day:
+  - dawn
+  - morning
+  - midday
+  - afternoon
+  direct_presence_probability: 0.2
+  ambient_evidence_probability: 0.7
+  hostile_presence_probability: 0.0
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6ba59bcf51c50d58087887419504e0d19165d961d2eb594af3629bf3f668e75d
+- id: greenhold_livestock
+  display_name: farm livestock
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_agricultural_edge
+  creature_id: living_field_rabbit
+  region: veridia
+  zone: veridia_zone
+  habitat: managed pasture beside the farmstead
+  candidate_rooms:
+  - veridia_living_farmstead
+  allowed_room_types:
+  - Agricultural Worksite
+  forbidden_room_types:
+  - Minor Hazardous Site
+  population_min: 2
+  population_max: 5
+  carrying_capacity: 6
+  spawn_rules:
+    schedule: daylight
+  reset_rules:
+    scope: zone
+    recurrence: daily
+  direct_presence_probability: 0.1
+  ambient_evidence_probability: 0.55
+  hostile_presence_probability: 0.0
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 7d561d85fd11ed33c6c3070a4205c24f2e6d7e6c2b2e1108229e6e68455ad4d2
+- id: greenhold_field_rabbits
+  display_name: hedgerow field-rabbit prey population
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  creature_id: living_field_rabbit
+  region: veridia
+  zone: veridia_zone
+  habitat: damp meadow margins and uncut hedgerows
+  candidate_rooms:
+  - veridia_living_farm_lane
+  - veridia_living_wild_loop
+  forbidden_room_types:
+  - Town Hub
+  - Water Service Court
+  population_min: 4
+  population_max: 12
+  carrying_capacity: 12
+  spawn_rules:
+    schedule: dawn_and_dusk
+  depletion_rules:
+    enabled: true
+    kill_threshold: 3
+  recovery_rules:
+    mechanism: breeding_and_cover
+    recovery_per_tick: 1
+  direct_presence_probability: 0.2
+  ambient_evidence_probability: 0.85
+  hostile_presence_probability: 0.0
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 4f1d6436284d299182c75dc7d76f52eebcd48402348d60354dcf432812674f1b
+- id: greenhold_boar_hunt
+  display_name: displaced field-boar pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  creature_id: living_field_boar
+  region: veridia
+  zone: veridia_zone
+  habitat: damaged barley margins and the shallow service hollow
+  candidate_rooms:
+  - veridia_living_wild_loop
+  - veridia_living_hollow
+  forbidden_room_types:
+  - Town Hub
+  - Water Service Court
+  population_min: 1
+  population_max: 2
+  carrying_capacity: 2
+  spawn_rules:
+    schedule: dawn_and_dusk
+    hostile_when_crowded: true
+  depletion_rules:
+    enabled: true
+    kill_threshold: 1
+  recovery_rules:
+    mechanism: seasonal_recurrence
+    recovery_per_tick: 0
+  direct_presence_probability: 0.35
+  ambient_evidence_probability: 0.9
+  hostile_presence_probability: 0.3
+  rarity: uncommon
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: bef2c19df0d5d446760081e45dca3ceb54fd272b385118924a47f83615513ab3
+- id: greenhold_hollow_vermin
+  display_name: shallow hollow vermin colony
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  creature_id: living_hollow_vermin
+  region: veridia
+  zone: veridia_zone
+  habitat: warm cracks around the shallow conduit
+  candidate_rooms:
+  - veridia_living_hollow
+  - veridia_living_waste_yard
+  forbidden_room_types:
+  - Town Hub
+  - Market Plaza
+  population_min: 1
+  population_max: 4
+  carrying_capacity: 4
+  spawn_rules:
+    schedule: night_and_wet_weather
+  reset_rules:
+    scope: zone
+    recurrence: ordinary_reproduction
+  depletion_rules:
+    enabled: true
+    kill_threshold: 2
+  recovery_rules:
+    mechanism: colony_reproduction
+    recovery_per_tick: 1
+  direct_presence_probability: 0.15
+  ambient_evidence_probability: 0.65
+  hostile_presence_probability: 0.0
+  rarity: common
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 94fd9bfa017424a896134dde7171a0b670097a744ed90ae43c610bee031f63e0
+spawn_pools:
+- id: greenhold_rabbit_spawn_pool
+  display_name: Greenhold rabbit spawn pool
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  population_id: greenhold_field_rabbits
+  rooms:
+  - veridia_living_farm_lane
+  - veridia_living_wild_loop
+  forbidden_rooms:
+  - greenhold
+  - veridia_living_hollow
+  max_active: 12
+  reset_interval: 4
+  spawn_probability: 0.8
+  recurrence: breeding_after_quiet_period
+  source_design_ids:
+  - veridia_greenhold_ecology
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 458e4c93a1a4683eaafe16c7e047e28487f86206dd3b27ba3b5728ec3c980648
+- id: greenhold_boar_spawn_pool
+  display_name: Greenhold boar spawn pool
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  population_id: greenhold_boar_pressure
+  rooms:
+  - veridia_living_wild_loop
+  - veridia_living_hollow
+  forbidden_rooms:
+  - greenhold
+  - veridia_living_cistern_court
+  max_active: 2
+  reset_interval: 8
+  spawn_probability: 0.35
+  recurrence: seasonal_forage_and_crop_access
+  source_design_ids:
+  - veridia_greenhold_ecology
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 7338aa133805550c7c362f81c2545b59a76db27c4167db1c2a3c658a35c4ad1d
+roaming_routes:
+- id: greenhold_road_patrol_route
+  display_name: Greenhold road patrol
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_civic_edge
+  population_id: greenhold_civilian_population
+  rooms:
+  - greenhold
+  - veridia_living_civic_gate
+  - veridia_living_road_threshold
+  - veridia_living_farm_lane
+  forbidden_rooms:
+  - veridia_living_hollow
+  - veridia_living_cistern_court
+  home_room: greenhold
+  origin_area: greenhold_living_settlement
+  movement_interval: 2
+  movement_probability: 0.65
+  max_distance: 3
+  destination_needs:
+  - road_safety
+  - ditch_inspection
+  - market_transport
+  closed_exit_behavior: return
+  hazard_behavior: avoid
+  return_behavior: return_home_at_dusk
+  population_cap: 3
+  provenance_note: ordinary civic patrol and road movement, not a new faction
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ordinary civic patrol and road movement, not a new faction
+  content_digest: 26f101ebc86a7945735c49682e5c707263a8d8a8c6522e1b8992f99b94a5ec81
+migration_rules:
+- id: greenhold_boar_seasonal_shift
+  display_name: boar forage shift
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  population_id: greenhold_boar_pressure
+  origin: veridia_living_wild_loop
+  destinations:
+  - veridia_living_farm_lane
+  - veridia_living_hollow
+  trigger: damaged_barley_or_hedge_gap
+  return_trigger: repaired_hedges_and_recovered_crop
+  season:
+  - spring
+  - summer
+  maximum_distance: 2
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b66f97ebed62ac9df3534561a871913168b235d293d430d3885888036bc50633
+encounter_groups:
+- id: greenhold_displaced_boar_pair
+  display_name: displaced boar pair
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  formation: pack
+  composition:
+    living_field_boar:
+    - 1
+    - 2
+  minimum_size: 1
+  maximum_size: 2
+  formation_behavior: loose_forage_pair
+  cohesion: 0.65
+  shared_aggression: true
+  ally_assistance: false
+  pursuit_distance: 1
+  retreat_conditions:
+  - one_member_wounded
+  - route_reaches_town_edge
+  leader_loss_behavior: scatter_to_hedge
+  casualty_behavior: retreat_at_half_strength
+  reinforcement_behavior: none
+  loot_ownership: group
+  spawn_rules:
+    rooms:
+    - veridia_living_wild_loop
+    - veridia_living_hollow
+    probability: 0.18
+  recurrence: crop_pressure_and_seasonal_forage
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 52f5792b4761ded2ff08783f0cb57e007b3da82d0c97189a2d341ca70004ab97
+- id: greenhold_road_work_crew
+  display_name: road and ditch work crew
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_agricultural_edge
+  formation: work_crew
+  composition:
+    living_fieldhand:
+    - 2
+    - 5
+  minimum_size: 2
+  maximum_size: 5
+  formation_behavior: task_focused
+  cohesion: 0.9
+  shared_aggression: false
+  ally_assistance: true
+  pursuit_distance: 0
+  retreat_conditions:
+  - weather_turns
+  - danger_reported
+  leader_loss_behavior: pause_and_return
+  casualty_behavior: disperse_to_civic_edge
+  reinforcement_behavior: call_ditchwarden
+  loot_ownership: settlement
+  spawn_rules:
+    rooms:
+    - veridia_living_road_threshold
+    - veridia_living_waste_yard
+    probability: 0.55
+  recurrence: daily_maintenance_schedule
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 700aea3298d102dd2b57fc3d9c98c7853e4fa4a609c70be3a399af8da23e0ab0
+crowd_specs:
+- id: greenhold_market_crowd
+  display_name: Greenhold market crowd
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  rooms:
+  - greenhold
+  population_min: 6
+  population_max: 20
+  composition:
+    resident:
+    - 4
+    - 12
+    trader:
+    - 1
+    - 3
+    traveler:
+    - 0
+    - 5
+    child:
+    - 0
+    - 3
+  schedule:
+  - quiet_setup
+  - market_trade
+  - market_trade
+  - evening_clearance
+  density_states:
+    quiet:
+    - 2
+    - 6
+    active:
+    - 8
+    - 20
+    dispersing:
+    - 1
+    - 5
+  collective_description: The Greenhold market moves in small practical knots around
+    baskets, carts, and the public well.
+  ambient_actions:
+  - weighing grain
+  - comparing dye bundles
+  - calling children back from the carts
+  mood: watchful_but_ordinary
+  danger_reaction: traders secure goods while residents move toward the civic edge
+  dispersal_behavior: clear the square without becoming persistent NPCs
+  representative_npcs:
+  - greenhold_folk
+  - living_ditchwarden
+  accessibility_description: A market crowd is present as a collective presence; a
+    few representative people are available to examine or speak with.
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c62805fcd453bfb8ed70b58dec0c4f638ce7ced9c8d302b50e5f10f7275df0bc
+ambient_presence:
+- id: greenhold_field_tracks
+  display_name: field-edge tracks
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  rooms:
+  - veridia_living_wild_loop
+  - veridia_living_farm_lane
+  population_id: greenhold_boar_pressure
+  evidence_type: tracks
+  text: Broad cloven tracks cut through the wet margin, with barley stems bent toward
+    the hedge.
+  activity_lines:
+  - a heavy animal roots beyond the hedge
+  - fresh mud darkens the track edges
+  probability: 0.85
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c50c076fc3f51bcfa1cb4c4f3b124df940e544c40db6d008f974b8619ed64a4f
+- id: greenhold_rabbit_sign
+  display_name: rabbit sign
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  rooms:
+  - veridia_living_farm_lane
+  - veridia_living_wild_loop
+  population_id: greenhold_field_rabbits
+  evidence_type: spoor
+  text: Small paired prints and clipped grass show that prey still uses the hedgerow.
+  activity_lines:
+  - the hedge flickers with a quick small movement
+  - fresh nibble marks dot the meadowfoil
+  probability: 0.75
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 091ad1ac04d46dddbdc3d36b9e2387bf25b55dd4e7dba9a25cbd4a264aeea65a
+- id: greenhold_work_sounds
+  display_name: work crew sounds
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_agricultural_edge
+  rooms:
+  - veridia_living_road_threshold
+  - veridia_living_waste_yard
+  population_id: greenhold_field_work_crews
+  evidence_type: sound
+  text: Mallets and ditch spades work somewhere beyond the next bend; the crew itself
+    is out of sight.
+  activity_lines:
+  - a cart creaks beyond the hedge
+  - someone calls for a replacement handle
+  probability: 0.7
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 77652b3e4446aabcda5ae56cf9c111c2e46f90729143024ce588f14e3de3ef71
+- id: greenhold_quiet_hollow_sign
+  display_name: hollow vermin sign
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  room: veridia_living_cistern_court
+  population_id: greenhold_field_rabbits
+  evidence_type: movement
+  text: Something small moves through the service cracks, but the court is empty when
+    you look.
+  activity_lines:
+  - a dry scrape comes from behind the capped stone
+  - grain husks shift under the ledger shelf
+  probability: 0.45
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 3df479308c04e3e895a35f9cf43ce04f178d644f3cfbdc70967e5d13b48a4be7
+items:
+- id: living_drainage_ledger
+  display_name: the drainage ledger
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_civic_edge
+  source_room: veridia_living_cistern_court
+  origin: parish maintenance record assembled over three generations
+  material: waxed linen pages, alder boards, and iron thread
+  maker_or_tradition: Greenhold ditchwarden tradition
+  use: track water, waste, and repair obligations
+  custody: Ditchwarden Mara
+  maintenance_state: damp but legible
+  regional_relevance: makes civic water dependency visible to players
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 44a4b67d3e9a258910d2dbf31a5714fdc63a3e0cbf0e449447b3c22fd239b539
+- id: living_sluice_wheel
+  display_name: the pale sluice wheel
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  source_room: veridia_living_hollow
+  origin: old infrastructure of unknown makers
+  material: pale corrosion-resistant metal around a ceramic axle
+  maker_or_tradition: unknown, locally interpreted as a buried fountain part
+  use: input is controlled turning; output is altered water flow; failure is a seized
+    valve
+  custody: disputed between the keeper and the repairer
+  maintenance_state: seized, inspectable, and reversible if freed
+  regional_relevance: connects ordinary water service to surviving ancient technology
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 794552c10a43bbbd75d035a192b8219f75b51af7cd109f6eae08797830bd98ba
+- display_name: a wrought Veridian iron bar
+  keywords:
+  - bar
+  - iron
+  - wrought
+  - material
+  family_id: component
+  category: ingredient
+  short_description: A narrow bar of locally smelted iron, ready for a smith's bench.
+  ground_description: A warm-grey iron bar lies beside the work surface, its scale
+    hammered flat.
+  examine_description: The bar is not elegant, but its grain is even and its edges
+    are squared for measuring. Greenhold smiths value this consistency because farm
+    repairs must be repeatable.
+  primary_use: forging fittings, spearheads, and sword blanks
+  materials:
+  - veridian_iron_ore
+  construction_method: smelted and hammered
+  maker_tradition: Greenhold market smithing
+  source_regions:
+  - veridia
+  ownership_default: communal_use
+  weight: 1.0
+  stackable: true
+  stack_limit: 20
+  value: 7
+  rarity: common
+  merchant_eligible: true
+  recipe_ids:
+  - forge_veridian_fitting
+  - forge_greenhold_field_spear
+  - forge_greenhold_arming_sword
+  id: wrought_veridian_iron
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a seasoned alder haft
+  keywords:
+  - haft
+  - alder
+  - handle
+  - wood
+  - material
+  family_id: component
+  category: ingredient
+  short_description: A straight alder handle seasoned above a Greenhold cookfire.
+  ground_description: A pale alder haft leans against the bench, shaved smooth where
+    a hand will grip it.
+  examine_description: The wood is light, springy, and sealed at the grain. Its maker
+    left enough flex for a field tool without making it soft at the socket.
+  primary_use: fitting tools, spears, and bucklers
+  materials:
+  - alder_wood
+  construction_method: coppiced, seasoned, and shaved
+  maker_tradition: Greenhold fieldcraft
+  source_regions:
+  - veridia
+  ownership_default: communal_use
+  weight: 0.5
+  stackable: true
+  stack_limit: 10
+  value: 4
+  rarity: common
+  merchant_eligible: true
+  recipe_ids:
+  - shape_alder_haft
+  id: alder_haft
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Veridian iron fitting
+  keywords:
+  - fitting
+  - bracket
+  - iron
+  - component
+  family_id: component
+  category: ingredient
+  short_description: A drilled iron fitting used to bind local wood and metal into
+    working goods.
+  ground_description: A small iron bracket sits in a tray of filings, its holes aligned
+    for a repairer's rivets.
+  examine_description: 'The fitting is deliberately plain: two drilled holes, one
+    squared shoulder, and a face filed smooth enough not to split a leather strap.
+    It is the sort of part a settlement keeps making because carts keep breaking.'
+  primary_use: assembling tools and bucklers
+  materials:
+  - veridian_iron_ore
+  - alder_wood
+  construction_method: forged and drilled
+  maker_tradition: Greenhold repair benches
+  source_regions:
+  - veridia
+  ownership_default: communal_use
+  weight: 0.3
+  stackable: true
+  stack_limit: 20
+  value: 10
+  rarity: common
+  merchant_eligible: true
+  recipe_ids:
+  - assemble_riverstone_buckler
+  id: veridian_iron_fitting
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold field spear
+  keywords:
+  - spear
+  - field
+  - militia
+  - greenhold
+  - weapon
+  family_id: field_spear
+  category: weapon
+  short_description: A two-handed spear issued to field guards and road wardens.
+  ground_description: A long alder shaft carries a leaf-shaped iron head, kept ready
+    beside the gate rather than scattered as loot.
+  examine_description: The spearhead is narrow enough for a boar charge and broad
+    enough to discourage a rush through a cartway. The shaft is alder, the socket
+    is iron, and a blue-green cord identifies Greenhold road service. Its reach buys
+    space at the cost of a slower recovery.
+  equipped_description: The long alder shaft extends the wielder's line while the
+    Greenhold cord marks a tool of organized road work.
+  damaged_description: The iron head is still true, but the alder shaft has begun
+    to splinter near the socket.
+  broken_description: The split haft can no longer hold a thrust; the head is salvageable
+    but the spear is unsafe.
+  use_feedback: You set the Greenhold spear and hold the cartway at reach.
+  repair_feedback: A new haft and two rivets return the spear to service.
+  crafting_feedback: The smith seats the iron head into a seasoned alder haft.
+  salvage_feedback: The head can be recovered as iron; the split haft returns as kindling.
+  materials:
+  - wrought_veridian_iron
+  - alder_haft
+  - boar_hide
+  construction_method: forged, hafted, and leather-bound
+  maker_tradition: Greenhold road wardens
+  source_regions:
+  - veridia
+  ownership_default: military_issue
+  weight: 3.0
+  stackable: false
+  value: 38
+  rarity: common
+  level_band:
+  - 1
+  - 8
+  quality_profile: standard
+  durability_profile: field_gear
+  repair_profile: field_spear_repair
+  salvage_profile: field_spear_salvage
+  merchant_eligible: true
+  loot_eligible: true
+  equipment_slot: weapon
+  weapon:
+    handedness: two
+    damage_type: thrust
+    reach: 2
+    cadence: 2
+    accuracy: 1
+    base_damage_budget: 7
+    operating_cost: 0
+    special_properties: []
+  id: greenhold_field_spear
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold arming sword
+  keywords:
+  - sword
+  - arming
+  - militia
+  - greenhold
+  - weapon
+  family_id: arming_sword
+  category: weapon
+  short_description: A balanced one-handed sword made for militia patrols and caravan
+    escorts.
+  ground_description: A service sword rests in a plain leather scabbard, its brass-free
+    iron fittings chosen for easy replacement.
+  examine_description: The blade is a practical length for a gate or wagon lane. Its
+    iron core is locally worked, its grip is alder wrapped in boar leather, and its
+    modest balance favors a quick second cut over a single heavy blow.
+  equipped_description: The Greenhold sword sits close to the body, ready for a second
+    cut in a crowded lane.
+  damaged_description: The edge has rolled in two places and the leather grip is loosening.
+  broken_description: The blade is too warped for safe work, though its iron can still
+    return to the smith.
+  use_feedback: You draw the Greenhold sword for close work.
+  repair_feedback: The smith straightens the edge and rebinds the grip.
+  crafting_feedback: The blade is ground, balanced, and fitted to an alder grip.
+  salvage_feedback: The blade yields iron; the grip yields a small leather strap.
+  materials:
+  - wrought_veridian_iron
+  - alder_haft
+  - boar_hide
+  construction_method: forged, ground, and grip-bound
+  maker_tradition: Greenhold market smithing
+  source_regions:
+  - veridia
+  ownership_default: merchant_stock
+  weight: 1.8
+  stackable: false
+  value: 42
+  rarity: common
+  level_band:
+  - 1
+  - 8
+  durability_profile: field_gear
+  repair_profile: sword_repair
+  salvage_profile: sword_salvage
+  merchant_eligible: true
+  loot_eligible: true
+  equipment_slot: weapon
+  weapon:
+    handedness: one
+    damage_type: slash
+    reach: 1
+    cadence: 1
+    accuracy: 2
+    base_damage_budget: 7
+    operating_cost: 0
+    special_properties: []
+  id: greenhold_arming_sword
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold road-warden bow
+  keywords:
+  - bow
+  - roadwarden
+  - patrol
+  - greenhold
+  - weapon
+  family_id: roadwarden_bow
+  category: weapon
+  short_description: A short patrol bow built from seasoned alder and a replaceable
+    cord.
+  ground_description: A compact bow lies in a waxed cloth sleeve, kept dry for the
+    road watch.
+  examine_description: The bow is short enough for a hedge path and strong enough
+    for a warning shot. Its alder limbs are backed with cured hide; the design accepts
+    local repairs, but it expects arrows and space rather than close combat.
+  equipped_description: The road-warden bow stays light in the hand, made for hedges
+    and watch platforms.
+  damaged_description: One limb has lost its spring and the bowstring is dry-cracked.
+  broken_description: The limb is split; it cannot be drawn until a bowyer replaces
+    the backing.
+  use_feedback: You nock an arrow and keep the road at distance.
+  repair_feedback: The bowyer replaces the cord and backs the tired limb.
+  crafting_feedback: The alder limbs are tillered until both bends agree.
+  salvage_feedback: The bow yields a usable cord and a short alder stave.
+  materials:
+  - alder_haft
+  - boar_hide
+  construction_method: seasoned, tillered, and hide-backed
+  maker_tradition: Greenhold road wardens
+  source_regions:
+  - veridia
+  ownership_default: military_issue
+  weight: 1.0
+  stackable: false
+  value: 35
+  rarity: common
+  level_band:
+  - 1
+  - 8
+  durability_profile: field_gear
+  repair_profile: bow_repair
+  salvage_profile: bow_salvage
+  merchant_eligible: false
+  loot_eligible: true
+  equipment_slot: weapon
+  weapon:
+    handedness: two
+    damage_type: pierce
+    reach: 3
+    cadence: 2
+    accuracy: 1
+    base_damage_budget: 5
+    operating_cost: 1
+    special_properties:
+    - requires_ammunition
+  id: greenhold_roadwarden_bow
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a riverstone buckler
+  keywords:
+  - buckler
+  - shield
+  - riverstone
+  - guard
+  family_id: buckler
+  category: shield
+  short_description: A compact wood-and-riverstone shield for carts, gates, and narrow
+    lanes.
+  ground_description: A round buckler shows a riverstone boss and a fresh leather
+    hand strap.
+  examine_description: The buckler's alder core is faced with a thin riverstone disk
+    and bound in boar hide. It turns a glancing blow without making a gate worker
+    carry a wall, though it occupies the arm that might otherwise hold a tool.
+  equipped_description: The riverstone boss sits forward as a small, dependable line
+    of cover.
+  damaged_description: The leather rim is scuffed and one stone-facing rivet has loosened.
+  broken_description: The core has split around the boss; it is no longer safe to
+    trust in a charge.
+  use_feedback: You bring the riverstone buckler up and close the gap.
+  repair_feedback: The rim is re-laced and the boss riveted back into the alder core.
+  crafting_feedback: The smith seats riverstone into an alder disk and binds the rim.
+  salvage_feedback: The stone boss and iron fittings survive the broken core.
+  materials:
+  - alder_haft
+  - riverstone
+  - boar_hide
+  - veridian_iron_fitting
+  construction_method: carved, faced, riveted, and bound
+  maker_tradition: Greenhold road wardens
+  source_regions:
+  - veridia
+  ownership_default: militia_issue
+  weight: 1.9
+  stackable: false
+  value: 30
+  rarity: common
+  level_band:
+  - 1
+  - 8
+  durability_profile: field_gear
+  repair_profile: buckler_repair
+  salvage_profile: buckler_salvage
+  merchant_eligible: true
+  loot_eligible: true
+  equipment_slot: arm
+  armor:
+    defense_budget: 3
+    magic_defense_budget: 0
+    evasion: 0
+    movement_cost: 0
+    coverage: forearm
+  shield:
+    block_budget: 2
+    offensive_use: false
+  id: riverstone_buckler
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a ditchwarden's work jacket
+  keywords:
+  - jacket
+  - workwear
+  - ditchwarden
+  - armor
+  family_id: light_workwear
+  category: armor
+  short_description: Waxed field cloth reinforced at the elbows for wet maintenance
+    work.
+  ground_description: A waxed jacket hangs from a peg beside the ditch map, its elbows
+    dark from honest use.
+  examine_description: The jacket is layered linen with cured boar-leather elbow patches
+    and a strip of alder toggles. It sheds rain and protects against tools, but it
+    is not plate and does not pretend to be.
+  equipped_description: The waxed jacket carries the smell of rain, leather, and the
+    ditch bank.
+  damaged_description: Water has lifted the wax at one shoulder and the elbow patch
+    is thinning.
+  broken_description: The seams have opened enough that it no longer keeps rain or
+    tools out.
+  use_feedback: You settle into the jacket's familiar work fit.
+  repair_feedback: Fresh wax and a leather patch restore the jacket's weatherproof
+    seams.
+  crafting_feedback: The tailor cuts field cloth around a reinforced work pattern.
+  salvage_feedback: The leather patches and sound cloth are separated for reuse.
+  materials:
+  - boar_hide
+  - alder_wood
+  construction_method: cut, stitched, and waxed
+  maker_tradition: Greenhold fieldcraft
+  source_regions:
+  - veridia
+  ownership_default: civic_property
+  weight: 1.2
+  stackable: false
+  value: 24
+  rarity: common
+  level_band:
+  - 1
+  - 8
+  durability_profile: field_gear
+  repair_profile: jacket_repair
+  salvage_profile: jacket_salvage
+  merchant_eligible: true
+  loot_eligible: false
+  equipment_slot: body
+  armor:
+    defense_budget: 2
+    magic_defense_budget: 0
+    evasion: 1
+    movement_cost: 0
+    coverage: torso_and_elbows
+  id: ditchwarden_jacket
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold field hoe
+  keywords:
+  - hoe
+  - tool
+  - field
+  - farm
+  family_id: farm_tool
+  category: tool
+  short_description: A replaceable iron hoe head fitted to a seasoned alder handle.
+  ground_description: A field hoe rests blade-down by the furrow, too useful to be
+    mistaken for loose loot.
+  examine_description: The hoe's iron head is narrow for working between barley rows
+    and its alder handle is long enough to save a farmer's back. The socket is a standard
+    Greenhold size, so a farm can repair it without waiting for a traveling maker.
+  damaged_description: The edge is blunted and the handle has a shallow split.
+  broken_description: The head has pulled from the socket; field work must stop until
+    it is fitted again.
+  use_feedback: You turn the soil with the field hoe.
+  repair_feedback: A new fitting and a trimmed haft return the hoe to the furrow.
+  crafting_feedback: The iron head is socketed onto a seasoned alder handle.
+  salvage_feedback: The head is retained for reforging and the haft becomes kindling.
+  materials:
+  - wrought_veridian_iron
+  - alder_haft
+  construction_method: forged and hafted
+  maker_tradition: Greenhold fieldcraft
+  source_regions:
+  - veridia
+  ownership_default: household_property
+  weight: 2.2
+  stackable: false
+  value: 16
+  rarity: common
+  durability_profile: field_tool
+  repair_profile: tool_repair
+  salvage_profile: tool_salvage
+  merchant_eligible: true
+  loot_eligible: false
+  tool:
+    gathering_profession: farming
+    uses:
+    - tilling
+    - ditch_edge_work
+  id: field_hoe
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold ditch spade
+  keywords:
+  - spade
+  - tool
+  - ditch
+  - maintenance
+  family_id: farm_tool
+  category: tool
+  short_description: A narrow iron spade made for clearing Greenhold drainage channels.
+  ground_description: A ditch spade leans against the channel wall, its narrow blade
+    still wet with field mud.
+  examine_description: The spade is narrower than a field shovel so it can work between
+    a ditch wall and its living alder roots. Its iron blade and replaceable haft are
+    standard civic maintenance stock.
+  damaged_description: Mud has packed the socket and the blade edge is rolled.
+  broken_description: The haft has split below the socket; the channel must wait for
+    a replacement.
+  use_feedback: You clear a measured strip of silt with the ditch spade.
+  repair_feedback: The socket is cleaned, the edge dressed, and the haft replaced.
+  crafting_feedback: The narrow iron blade is fitted to a seasoned alder haft.
+  salvage_feedback: The iron blade is kept for reforging and the broken haft is discarded.
+  materials:
+  - wrought_veridian_iron
+  - alder_haft
+  construction_method: forged, narrowed, and hafted
+  maker_tradition: Greenhold ditchwarden tradition
+  source_regions:
+  - veridia
+  ownership_default: civic_property
+  weight: 2.0
+  stackable: false
+  value: 18
+  rarity: common
+  durability_profile: field_tool
+  repair_profile: tool_repair
+  salvage_profile: tool_salvage
+  merchant_eligible: true
+  loot_eligible: false
+  tool:
+    gathering_profession: farming
+    uses:
+    - ditch_clearing
+    - drainage_maintenance
+  id: ditch_spade
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a small flask of repair oil
+  keywords:
+  - oil
+  - repair
+  - flask
+  - maintenance
+  family_id: ingredient
+  category: consumable
+  short_description: Linseed oil and fine ash for keeping hinges, leather, and tool
+    sockets moving.
+  ground_description: A stoppered glass flask of dark oil sits beside the repair ledger.
+  examine_description: The oil is ordinary linseed cut with a little ash and stored
+    in imported tideglass. It is not a potion; it keeps a socket from seizing and
+    makes a small amount of maintenance possible on the road.
+  primary_use: field maintenance of tools and light gear
+  materials:
+  - meadowfoil
+  - imported_tideglass
+  construction_method: pressed, mixed, and bottled
+  maker_tradition: Greenhold repair benches
+  source_regions:
+  - veridia
+  - shattered_isles
+  ownership_default: merchant_stock
+  weight: 0.2
+  stackable: true
+  stack_limit: 10
+  value: 9
+  rarity: common
+  merchant_eligible: true
+  loot_eligible: false
+  consumption_feedback: You work a few drops into the stiff joint and the tool moves
+    again.
+  consumable:
+    charges: 1
+    effect:
+      maintenance: 1
+  id: repair_oil
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a meadowfoil travel tonic
+  keywords:
+  - tonic
+  - meadowfoil
+  - travel
+  - healing
+  family_id: ingredient
+  category: consumable
+  short_description: A mild local tonic for tired travelers and field hands.
+  ground_description: A corked ceramic vial holds a green-gold meadowfoil tonic.
+  examine_description: Meadowfoil leaves are steeped, strained, and sealed with a
+    little honey. The tonic restores a small amount of vigor, tastes bitter, and is
+    common enough to be a household preparation rather than a miracle.
+  primary_use: restore a small amount of health while traveling
+  materials:
+  - meadowfoil
+  - imported_tideglass
+  construction_method: gathered, steeped, and bottled
+  maker_tradition: Greenhold field kitchens
+  source_regions:
+  - veridia
+  - shattered_isles
+  ownership_default: merchant_stock
+  weight: 0.2
+  stackable: true
+  stack_limit: 10
+  value: 12
+  rarity: common
+  merchant_eligible: true
+  loot_eligible: true
+  consumption_feedback: The bitter meadowfoil warms your throat and steadies your
+    hands.
+  consumable:
+    charges: 1
+    effect:
+      hp: 18
+  id: meadowfoil_tonic
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a wrapped barley ration
+  keywords:
+  - barley
+  - ration
+  - food
+  - traveler
+  family_id: ingredient
+  category: household_good
+  short_description: A compact barley cake wrapped for a day on the road.
+  ground_description: A cloth-wrapped barley ration rests beside the cart manifest.
+  examine_description: The ration is coarse barley meal baked with salt and dried
+    apple. It is inexpensive, durable for a short journey, and tied to Greenhold's
+    fields rather than imported adventure fare.
+  primary_use: ordinary travel food
+  materials:
+  - meadowfoil
+  construction_method: milled, baked, and wrapped
+  maker_tradition: Greenhold household baking
+  source_regions:
+  - veridia
+  ownership_default: merchant_stock
+  weight: 0.3
+  stackable: true
+  stack_limit: 20
+  value: 3
+  rarity: common
+  merchant_eligible: true
+  loot_eligible: false
+  id: barley_ration
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: an imported tideglass vial
+  keywords:
+  - vial
+  - tideglass
+  - imported
+  - trade
+  family_id: ingredient
+  category: trade_good
+  short_description: A clear small vial carried inland from the southern maritime
+    route.
+  ground_description: A thin clear vial catches the market light, packed in straw
+    against the cart road.
+  examine_description: The glass is faintly blue at the lip and too consistent for
+    Greenhold's small kilns. Trader Pell records it as southern cargo; the route,
+    not mystery, explains its price.
+  primary_use: container for oils, tonics, and gauge samples
+  materials:
+  - imported_tideglass
+  construction_method: imported cargo
+  maker_tradition: southern maritime glassmakers
+  source_regions:
+  - shattered_isles
+  ownership_default: merchant_stock
+  weight: 0.1
+  stackable: true
+  stack_limit: 20
+  value: 8
+  rarity: uncommon
+  merchant_eligible: true
+  loot_eligible: false
+  trade_good:
+    source: maritime caravan
+    route_id: greenhold_southern_caravan
+  id: imported_tideglass_vial
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: the Greenhold valve key
+  keywords:
+  - key
+  - valve
+  - cistern
+  - greenhold
+  family_id: key_item
+  category: key_item
+  short_description: A locally cut maintenance key held for the Greenhold cistern
+    work.
+  ground_description: A short iron key with a blue-green cord lies in the repairer's
+    locked tool chest.
+  examine_description: The key is a recent Greenhold copy made to fit the seized service
+    assembly. Its teeth are practical, its cord marks civic custody, and its purpose
+    is limited to the local cistern work.
+  primary_use: operate the Greenhold sluice maintenance action
+  materials:
+  - wrought_veridian_iron
+  - boar_hide
+  construction_method: cut, filed, and cord-bound
+  maker_tradition: Greenhold repair benches
+  source_regions:
+  - veridia
+  ownership_default: civic_property
+  weight: 0.1
+  stackable: false
+  value: 20
+  rarity: uncommon
+  merchant_eligible: false
+  loot_eligible: false
+  unique: true
+  key_item:
+    unlocks:
+    - greenhold.cistern_status
+    unique: true
+  id: greenhold_valve_key
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: a Greenhold road-warden cloak
+  keywords:
+  - cloak
+  - roadwarden
+  - traveler
+  - greenhold
+  family_id: traveler_cloak
+  category: wearable
+  short_description: A weathered blue-grey cloak that identifies a road warden without
+    making a uniform of them.
+  ground_description: A blue-grey cloak hangs from a peg, its hem repaired for wet
+    roads.
+  examine_description: The cloak is waxed field cloth with a narrow greenhold braid
+    at the shoulder. It keeps rain off a traveler and signals who may ask after a
+    road, but it carries no secret authority beyond the local watch.
+  equipped_description: The road-warden braid sits at your shoulder and sheds the
+    first rain.
+  damaged_description: The wax has thinned along the hem and one braid stitch has
+    pulled loose.
+  broken_description: The cloak is torn through the shoulder and no longer reads as
+    serviceable road gear.
+  use_feedback: You draw the road-warden cloak around your shoulders.
+  repair_feedback: The tailor rewaxes the hem and restores the shoulder braid.
+  crafting_feedback: The field cloth is cut, waxed, and marked with the local braid.
+  salvage_feedback: The braid and sound cloth are saved for another cloak.
+  materials:
+  - boar_hide
+  construction_method: cut, waxed, and braided
+  maker_tradition: Greenhold market tailoring
+  source_regions:
+  - veridia
+  ownership_default: military_issue
+  weight: 0.8
+  stackable: false
+  value: 18
+  rarity: common
+  durability_profile: field_gear
+  repair_profile: cloak_repair
+  salvage_profile: cloak_salvage
+  merchant_eligible: false
+  loot_eligible: true
+  equipment_slot: body
+  armor:
+    defense_budget: 1
+    magic_defense_budget: 0
+    evasion: 1
+    movement_cost: 0
+    coverage: shoulders
+  id: greenhold_roadwarden_cloak
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+material_culture:
+- id: veridia_greenhold_material_culture
+  display_name: Veridia Greenhold material culture catalog
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+  catalog_path: content/seeds/aethryn/material_culture.yaml
+  purpose: deterministic local materials, production chains, stock origins, ecology-aware
+    loot, and role equipment
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia
+    - greenhold
+    - veridia_greenhold_economy
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f3497f3be9ad2157acf03ecf29bcc370b0bffa42a08aeef45e2f3d1d53f2a793
+resource_nodes:
+- id: living_meadowfoil_node
+  display_name: meadowfoil margin
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_economy
+  resource: meadowfoil
+  habitat: field margins and damp hedgerow
+  recurrence: seasonal regrowth after gathering
+  source_room: veridia_living_farmstead
+  economic_use: dye trade through Trader Pell
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1d74396ff874922e5a41808331283230a11431bba10fbbde1934e25d85c2880d
+- id: living_barley_node
+  display_name: damaged barley rows
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_economy
+  resource: barley
+  habitat: Alder Farmstead furrows
+  recurrence: seasonal cultivation and replanting
+  source_room: veridia_living_farmstead
+  economic_use: milling and local food
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6db7b44ca71fe88651bcbdca7aefc87d602cd7db410ca0717227888d0be3eae5
+economy_flows:
+- id: living_meadowfoil_trade
+  display_name: meadowfoil trade
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_economy
+  source: living_meadowfoil_node
+  sink: greenhold_trader
+  resource: meadowfoil
+  purpose: regional dye trade and shop liquidity
+  transport: hand bundles along farm lane and cartway
+  surplus_or_shortage: surplus is seasonal; shortage follows field damage
+  inventory_provenance: gathered locally and bought by Trader Pell
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ca33fcf5621b8865c62ecdaf41760b072476f0de3e302475fcff7535f09ab9b2
+- id: living_barley_food
+  display_name: barley to mill
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_economy
+  source: living_barley_node
+  sink: greenhold_miller
+  resource: barley
+  purpose: food production and market bread
+  transport: handcart from farmstead to Greenhold
+  surplus_or_shortage: current shortage caused by the field-boar pressure
+  inventory_provenance: cultivated at Alder Farmstead
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 0bf9c94940ac18b7a8621d86d852588dae970976e53434f53fe0b8ef88e27768
+- id: living_water_service
+  display_name: water to Greenhold
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_economy
+  - greenhold_minor_site
+  source: living_sluice_wheel
+  sink: greenhold_living_settlement
+  resource: clean_water
+  purpose: settlement survival and crop support
+  transport: buried conduit to cistern and public well
+  surplus_or_shortage: shortage while the sluice is seized
+  inventory_provenance: old works, locally maintained when possible
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6d008b198acef29d44fc2691f824f671481f2992f3a12391e491c47aa62afbf9
+ecology_flows:
+- id: living_boar_field_pressure
+  display_name: boar and barley pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - veridia_greenhold_ecology
+  habitat: veridia_living_hinterland
+  creature: living_field_boar
+  energy_source: damaged barley and hedgerow forage
+  pressure: crop loss and unsafe field labor
+  recurrence: seasonal forage and recurring hedge access
+  civilization_relation: threatens food supply and changes the farmer's route
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: fdc517f6efb7110cd5ad7f87cef3f447ecc336a4027fec1db5b1342442ed50ee
+- id: living_vermin_hollow_ecology_flow
+  display_name: hollow vermin pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  habitat: veridia_living_hollow
+  creature: living_hollow_vermin
+  energy_source: grain scraps and insects
+  pressure: neglected infrastructure becomes a recurring shelter
+  recurrence: ordinary reproduction while the hollow remains open
+  civilization_relation: maintenance work is deferred because the site is unsafe
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6806428d22296dd3fcea3c7a7024cdc96fe452988865b2285dcd10e29377f907
+quest_pressures:
+- id: living_water_shortage
+  display_name: Greenhold water shortage
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - greenhold_minor_site
+  pressure_type: shortage
+  pressure: the town cistern is below service level
+  affected_records:
+  - greenhold
+  - veridia_living_cistern_court
+  - living_sluice_wheel
+  competing_interests:
+  - public_water
+  - safety_caution
+  - old_works_access
+  resolution_scope: local and reversible
+  cause: repeated rain damage and a seized buried sluice
+  current_severity: active_shortage
+  duration: current growing season
+  recurrence: returns after seasonal maintenance failure
+  stakeholders:
+  - greenhold_living_settlement
+  - living_ditchwarden
+  - living_repairer
+  beneficiaries:
+  - households
+  - farms
+  - millers
+  opposing_interests:
+  - public_water
+  - safety_caution
+  - old_works_access
+  valid_grammars:
+  - discovery
+  - repair
+  - investigation
+  - public_event
+  unsuitable_grammars:
+  - unbounded_campaign
+  - unrelated_hunt
+  escalation_behavior: queueing and crop stress increase if the gauge remains low
+  resolution_conditions:
+  - cistern_status becomes flowing
+  partial_resolution_conditions:
+  - public evidence recorded
+  - repair access made safer
+  state_gate:
+    key: greenhold.cistern_status
+    active_values:
+    - low
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c909d58c9fa265e4cb4cc52e8710c2e4bb7bb8e41946561bdda4bcc24b1938b6
+- id: living_crop_damage
+  display_name: damaged barley pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - veridia_greenhold_ecology
+  pressure_type: ecological_imbalance
+  pressure: displaced boar damages the crop and makes field labor unsafe
+  affected_records:
+  - living_field_boar
+  - living_barley_node
+  - greenhold_miller
+  competing_interests:
+  - food_supply
+  - creature_persistence
+  - safe_harvest
+  resolution_scope: local and revisitable
+  cause: wet-season forage loss and an unmaintained hedge gap
+  current_severity: recurring_crop_damage
+  duration: early growing season
+  recurrence: seasonal forage pressure returns while the gap remains open
+  stakeholders:
+  - greenhold_living_settlement
+  - living_fieldhand
+  - living_field_boar
+  beneficiaries:
+  - farmers
+  - market households
+  opposing_interests:
+  - food_supply
+  - creature_persistence
+  - safe_harvest
+  valid_grammars:
+  - hunt
+  - defense
+  - gathering_commission
+  - repeatable_contract
+  unsuitable_grammars:
+  - diplomacy
+  - dungeon_objective
+  escalation_behavior: unsafe field labor and reduced barley deliveries
+  resolution_conditions:
+  - boar pressure reduced
+  - field work route reopened
+  partial_resolution_conditions:
+  - boar route displaced
+  - hedge repair scheduled
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 3b1be0c12a9b93dfb735955fb8e6f6aaceeec525235a03490eaeed928158e28b
+- id: living_civic_dispute
+  display_name: old works access dispute
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - greenhold_civic_dispute
+  pressure_type: disputed_authority
+  pressure: Wenna and Sen disagree about reopening a machine no one fully understands
+  affected_records:
+  - living_ditchwarden
+  - living_repairer
+  - living_sluice_wheel
+  competing_interests:
+  - continuity
+  - caution
+  - public_need
+  resolution_scope: local, visible, and reversible
+  cause: two local authorities interpret the same seized mechanism differently
+  current_severity: unresolved_dispute
+  duration: until a witnessed test or new evidence
+  recurrence: disagreement returns when the cistern drops again
+  stakeholders:
+  - living_ditchwarden
+  - living_repairer
+  - greenhold_living_settlement
+  beneficiaries:
+  - public_water_users
+  - maintenance_workers
+  opposing_interests:
+  - continuity
+  - caution
+  - public_need
+  valid_grammars:
+  - investigation
+  - diplomacy
+  - repair
+  - public_event
+  unsuitable_grammars:
+  - unrelated_hunt
+  - unbounded_campaign
+  escalation_behavior: delayed maintenance and conflicting public instructions
+  resolution_conditions:
+  - local recommendation recorded
+  - next test agreed
+  partial_resolution_conditions:
+  - testimony compared
+  - access conditions documented
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_civic_dispute
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 4f513a3fced4d5a369929336f18a87a6a7887beb9c299be2b0264f6d4404ed32
+- id: living_vermin_hollow_pressure
+  display_name: Shallow Hollow Maintenance Pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  pressure_type: maintenance_failure
+  pressure: vermin shelter in the conduit delays safe repair work
+  affected_records:
+  - living_hollow_vermin
+  - veridia_living_hollow
+  - living_repairer
+  competing_interests:
+  - safe_work
+  - habitat_persistence
+  - repair_delay
+  resolution_scope: local and temporary
+  cause: wet-weather shelter and neglected food traces around the old conduit
+  current_severity: active_worksite_risk
+  duration: until the hollow is maintained
+  recurrence: ordinary recurrence while shelter and scraps remain
+  stakeholders:
+  - living_repairer
+  - living_ditchwarden
+  - greenhold_field_work_crews
+  beneficiaries:
+  - maintenance_workers
+  - road travelers
+  opposing_interests:
+  - safe_work
+  - habitat_persistence
+  - repair_delay
+  valid_grammars:
+  - defense
+  - hunt
+  - repair
+  - repeatable_contract
+  unsuitable_grammars:
+  - campaign
+  - unrelated_delivery
+  escalation_behavior: repair crews withdraw and the conduit remains unsafe
+  resolution_conditions:
+  - repair window held
+  - shelter pressure reduced
+  partial_resolution_conditions:
+  - work completed for one shift
+  - food leakage contained
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 3b6c2760113cd71a8cb2be6fac1689f183adef2444647c9559382fb46dc1e5fd
+state_changes:
+- id: living_cistern_status
+  display_name: Greenhold cistern status
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold
+  - greenhold_minor_site
+  key: greenhold.cistern_status
+  room_id: veridia_living_cistern_court
+  initial_value: low
+  reversible_values:
+  - low
+  - flowing
+  visible_projection: civic cistern gauge and public water description
+  persistence_scope: character_and_world_package
+  actions:
+  - command: maintain
+    target: cistern
+    aliases:
+    - fountain
+    - valve
+    required_item: greenhold_valve_key
+    from: low
+    to: flowing
+    success_message: You seat the recovered valve-key and the old cistern answers
+      with a clear rising flow.
+    already_message: The Greenhold cistern is already flowing and the public channel
+      runs clear.
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 0d7db441675b5e38586f9a460c01a5170bd35c3b416b2e9b45174e48fd0330e0
+dungeons:
+- id: living_shallow_service_hollow
+  display_name: The Shallow Service Hollow
+  canon_status: AUTHORED_LOCAL
+  parent_region: veridia
+  parent_zone: veridia_zone
+  source_design_ids:
+  - greenhold_minor_site
+  built_by: unknown ancient infrastructure workers
+  original_purpose: regulate water flow to the settlement edge
+  historical_layer: successor_era
+  failure: sluice wheel seized and drainage grate blocked
+  current_occupants:
+  - living_hollow_vermin
+  - living_field_boar
+  why_not_reclaimed: shallow access is unsafe and its machinery is poorly understood
+  entrance_logic: veridia_living_wild_loop east to veridia_living_hollow
+  traversal_grammar:
+  - threshold
+  - orientation
+  - escalation
+  - revelation
+  - choice
+  - aftermath
+  gameplay_purpose: connect a small hazard to water, waste, ecology, and civic pressure
+  revelation: ordinary settlement systems depend on infrastructure whose makers are
+    unknown
+  aftermath: the hollow can become safer without resolving the larger old-world mystery
+  state_change: reversible
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: e218b30b27d70a483b9a5c9ed4afbe6e83e85c83fbcc112f8bda513d77f8e82e
+quests:
+- id: greenhold_water_discovery
+  display_name: The Cistern Below the Ledger
+  canon_status: AUTHORED_LOCAL
+  quest_type: discovery
+  scope: personal
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_water_shortage
+  start_state: offered
+  terminal_states:
+  - resolved
+  room_ids:
+  - greenhold
+  - veridia_living_cistern_court
+  - veridia_living_hollow
+  npc_ids:
+  - living_ditchwarden
+  transitions:
+  - from: offered
+    event: accept
+    to: traveling
+  - from: traveling
+    event: enter
+    target_id: veridia_living_cistern_court
+    to: examining
+  - from: examining
+    event: examine
+    target_id: living_drainage_ledger
+    to: resolved
+  objectives:
+  - id: reach_court
+    label: Reach the cistern court
+    type: visit
+    target_ids:
+    - veridia_living_cistern_court
+  - id: read_ledger
+    label: Compare the ledger with the gauge
+    type: examine
+    target_ids:
+    - living_drainage_ledger
+  rewards:
+  - type: xp
+    amount: 20
+  consequences:
+  - id: water_evidence
+    effect_type: reveal_record
+    target: living_water_service
+    scope: personal
+  prose:
+    title: The Cistern Below the Ledger
+    summary: Greenhold's low water is recorded but not explained.
+    discovery: Mara asks you to compare the old ledger with the silent gauge.
+    journal: Follow the maintenance record to the cistern court and examine what the
+      town has been preserving.
+    current_objective: Reach the cistern court and examine the drainage ledger.
+    success: The ledger narrows the problem to the buried sluice rather than proving
+      who made it.
+    aftermath: Greenhold has evidence enough to argue about a repair.
+    unresolved_remainder: The old works still do not explain themselves.
+  source_design_ids:
+  - greenhold_civic_edge
+  - greenhold_minor_site
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_edge
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f4a225d5e1283ad132211d840c0d2e0ec908c2884bdd00f56ad1efecdd02878d
+- id: greenhold_water_repair
+  display_name: Seat the Pale Valve
+  canon_status: AUTHORED_LOCAL
+  quest_type: repair
+  scope: settlement
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_water_shortage
+  start_state: offered
+  terminal_states:
+  - resolved
+  room_ids:
+  - veridia_living_hollow
+  - veridia_living_cistern_court
+  npc_ids:
+  - living_repairer
+  - living_ditchwarden
+  item_ids:
+  - living_sluice_wheel
+  transitions:
+  - from: offered
+    event: accept
+    to: diagnose
+  - from: diagnose
+    event: enter
+    target_id: veridia_living_hollow
+    to: ready
+  - from: ready
+    event: repair
+    target_id: living_sluice_wheel
+    to: resolved
+    effect: state_changed:greenhold.cistern_status:flowing
+  objectives:
+  - id: inspect_wheel
+    label: Inspect the seized sluice wheel
+    type: examine
+    target_ids:
+    - living_sluice_wheel
+  - id: repair_wheel
+    label: Restore the water control
+    type: repair
+    target_ids:
+    - living_sluice_wheel
+  rewards:
+  - type: xp
+    amount: 45
+  consequences:
+  - id: flowing_cistern
+    effect_type: change_world_state
+    target: greenhold.cistern_status
+    scope: settlement
+    persistence: world
+  prose:
+    title: Seat the Pale Valve
+    summary: A seized control leaves Greenhold's public water below service level.
+    discovery: Sen will discuss a repair if someone first sees the mechanism in place.
+    journal: Reach the shallow hollow
+    diagnose the seized wheel: null
+    and restore its movement without pretending to know its makers.: null
+    current_objective: Inspect and repair the pale sluice wheel.
+    success: The wheel turns; water rises through the civic channel and the repair
+      remains a local
+    reversible act.: null
+    aftermath: Ditch checks become easier and the town can argue from a working gauge.
+    unresolved_remainder: The machinery's origin remains uncertain.
+  source_design_ids:
+  - greenhold_minor_site
+  - greenhold_economy
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    - greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1e9d4d8e819d58371957392fb3c38c86841a3a2c35682710509a5540334f2986
+- id: greenhold_boar_pressure
+  display_name: The Broken Hedge
+  canon_status: AUTHORED_LOCAL
+  quest_type: hunt
+  scope: zone
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_crop_damage
+  start_state: warning
+  terminal_states:
+  - contained
+  room_ids:
+  - veridia_living_farm_lane
+  - veridia_living_hollow
+  creature_ids:
+  - living_field_boar
+  transitions:
+  - from: warning
+    event: accept
+    to: tracking
+  - from: tracking
+    event: enter
+    target_id: veridia_living_hollow
+    to: confronting
+  - from: confronting
+    event: defeat
+    target_id: living_field_boar
+    to: contained
+  objectives:
+  - id: track_boar
+    label: Follow the damaged hedge to the hollow
+    type: discover
+    target_ids:
+    - veridia_living_hollow
+  - id: contain_boar
+    label: Drive off the displaced field-boar
+    type: drive_off
+    target_ids:
+    - living_field_boar
+    party_credit: shared
+  rewards:
+  - type: xp
+    amount: 35
+  - type: reputation
+    amount: 15
+    track: greenhold_civic
+  consequences:
+  - id: safer_fields
+    effect_type: reduce_population_pressure
+    target: greenhold_boar_pressure
+    scope: zone
+    duration: seasonal
+  prose:
+    title: The Broken Hedge
+    summary: A displaced boar is turning a barley shortage into an unsafe harvest.
+    discovery: Oren points to torn roots and asks for a response that does not erase
+      the field's wider balance.
+    journal: Track the boar into the hollow and drive it from the crop edge.
+    current_objective: Find the boar's route and confront it in compatible habitat.
+    success: The field edge is quiet enough for workers to return
+    though the hedgerow still needs repair.: null
+    aftermath: Oren can bring a smaller load to market without sending children to
+      scout the lane.
+    unresolved_remainder: The next wet season may reopen the route.
+  source_design_ids:
+  - veridia_greenhold_ecology
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1d667dbc44fc9b0bb773058a02e9b2cbbf7ac08d1deeb14a9b6824be32bb05da
+- id: greenhold_ledger_delivery
+  display_name: A Dry Copy for the Mill
+  canon_status: AUTHORED_LOCAL
+  quest_type: delivery
+  scope: personal
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_water_shortage
+  start_state: offered
+  terminal_states:
+  - delivered
+  room_ids:
+  - veridia_living_cistern_court
+  - greenhold
+  npc_ids:
+  - living_ditchwarden
+  item_ids:
+  - living_drainage_ledger
+  transitions:
+  - from: offered
+    event: accept
+    to: carrying
+  - from: carrying
+    event: enter
+    target_id: greenhold
+    to: delivered
+  objectives:
+  - id: carry_copy
+    label: Carry the dry ledger copy to Greenhold
+    type: deliver
+    target_ids:
+    - living_drainage_ledger
+    - greenhold
+  rewards:
+  - type: xp
+    amount: 18
+  - type: currency
+    amount: 6
+  consequences:
+  - id: ledger_access
+    effect_type: unlock_service
+    target: greenhold_notice_board
+    scope: personal
+  prose:
+    title: A Dry Copy for the Mill
+    summary: The repair record must reach the town before the market tally.
+    discovery: Mara entrusts you with a copy because the original cannot leave the
+      cistern court.
+    journal: Keep the dry copy in your custody and deliver it at Greenhold.
+    current_objective: Return the ledger copy to the town.
+    success: The millers receive the figures before they commit the remaining barley.
+    aftermath: A practical record
+    not a heroic claim: null
+    changes the morning's decisions.: null
+    unresolved_remainder: The shortage still has to be worked through.
+  source_design_ids:
+  - greenhold_civic_edge
+  - veridia_greenhold_economy
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_edge
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: e76aa7b4d9a6bd184dab288c07313758007c9279b91f187096ad7090c4446290
+- id: greenhold_meadowfoil_commission
+  display_name: Dye for the Market Cloth
+  canon_status: AUTHORED_LOCAL
+  quest_type: gathering_commission
+  scope: settlement
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_crop_damage
+  start_state: offered
+  terminal_states:
+  - supplied
+  room_ids:
+  - veridia_living_farmstead
+  - greenhold
+  npc_ids:
+  - living_fieldhand
+  transitions:
+  - from: offered
+    event: accept
+    to: gathering
+  - from: gathering
+    event: gather
+    target_id: meadowfoil
+    to: returning
+  - from: returning
+    event: enter
+    target_id: greenhold
+    to: supplied
+  objectives:
+  - id: gather_meadowfoil
+    label: Gather meadowfoil from the field margin
+    type: gather
+    target_ids:
+    - meadowfoil
+    quantity: 2
+  - id: deliver_meadowfoil
+    label: Bring the bundles to market
+    type: deliver
+    target_ids:
+    - greenhold
+  rewards:
+  - type: xp
+    amount: 22
+  - type: currency
+    amount: 8
+  consequences:
+  - id: market_dye_stock
+    effect_type: modify_merchant_stock
+    target: greenhold_trader
+    scope: settlement
+    duration: market_day
+  prose:
+    title: Dye for the Market Cloth
+    summary: Field damage has made a small dye order matter to Greenhold's trade.
+    discovery: Pell needs two clean meadowfoil bundles before the next cart leaves.
+    journal: Gather usable meadowfoil from the damp margin and deliver it to the market.
+    current_objective: Gather the regional plant and bring it to Greenhold.
+    success: The bundles make the cart's dye order viable without stripping the whole
+      margin.
+    aftermath: A modest trade continues because someone respected the resource's recovery.
+    unresolved_remainder: The field remains vulnerable to another season of pressure.
+  source_design_ids:
+  - veridia_greenhold_economy
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f4170b8b532875b801667bbecf7c5d85906d10467375de3c90e9d027006e526e
+- id: greenhold_conflicting_testimony
+  display_name: Three Accounts of the Wheel
+  canon_status: AUTHORED_LOCAL
+  quest_type: investigation
+  scope: settlement
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_civic_dispute
+  start_state: offered
+  terminal_states:
+  - reported
+  room_ids:
+  - veridia_living_civic_gate
+  - veridia_living_hollow
+  npc_ids:
+  - living_ditchwarden
+  - living_repairer
+  transitions:
+  - from: offered
+    event: accept
+    to: gathering_evidence
+  - from: gathering_evidence
+    event: talk
+    target_id: living_repairer
+    to: comparing
+  - from: comparing
+    event: choose
+    to: reported
+  objectives:
+  - id: hear_sen
+    label: Hear Sen's caution
+    type: speak
+    target_ids:
+    - living_repairer
+  - id: compare_accounts
+    label: Compare the two repair accounts
+    type: compare_evidence
+    target_ids:
+    - living_ditchwarden
+    - living_repairer
+  - id: choose_report
+    label: Choose a local recommendation
+    type: choose
+  choices:
+  - id: cautious_report
+    text: Recommend a measured test with a witness
+    destination_state: reported
+    reversible: true
+    consequence_scope: settlement
+  - id: public_repair
+    text: Recommend opening the works for public repair
+    destination_state: reported
+    reversible: true
+    consequence_scope: settlement
+  rewards:
+  - type: xp
+    amount: 30
+  - type: reputation
+    amount: 10
+    track: greenhold_civic
+  consequences:
+  - id: dispute_recorded
+    effect_type: change_dialogue_state
+    target: living_civic_dispute
+    scope: settlement
+  prose:
+    title: Three Accounts of the Wheel
+    summary: The same seized machine has produced two incompatible local explanations.
+    discovery: Mara wants a report that distinguishes evidence from caution.
+    journal: Hear both accounts
+    compare them at the hollow: null
+    and make a local recommendation without resolving an old-world mystery.: null
+    current_objective: Compare testimony and choose how Greenhold should proceed.
+    success: Your report makes the disagreement legible without pretending the unknown
+      history is settled.
+    aftermath: The keeper and repairer now argue over a testable next step.
+    unresolved_remainder: No testimony can establish who made the old works.
+  source_design_ids:
+  - greenhold_civic_dispute
+  - greenhold_minor_site
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_civic_dispute
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 93383d3e96e43dc8bfac44e8afb18ab9540d401bd0689345b81dd0bc986d2019
+- id: greenhold_field_repairs
+  display_name: Handles Before Harvest
+  canon_status: AUTHORED_LOCAL
+  quest_type: crafting_commission
+  scope: party
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_crop_damage
+  start_state: offered
+  terminal_states:
+  - delivered
+  room_ids:
+  - veridia_living_farmstead
+  - greenhold
+  npc_ids:
+  - living_fieldhand
+  transitions:
+  - from: offered
+    event: accept
+    to: making
+  - from: making
+    event: craft
+    target_id: alder_field_handle
+    to: delivering
+  - from: delivering
+    event: enter
+    target_id: veridia_living_farmstead
+    to: delivered
+  objectives:
+  - id: make_handle
+    label: Craft a field handle at the woodworking bench
+    type: craft
+    target_ids:
+    - alder_field_handle
+    party_credit: shared
+  - id: deliver_handle
+    label: Deliver the handle to the field crew
+    type: deliver
+    target_ids:
+    - veridia_living_farmstead
+  rewards:
+  - type: xp
+    amount: 28
+  - type: currency
+    amount: 10
+  consequences:
+  - id: repaired_tools
+    effect_type: change_population_schedule
+    target: greenhold_field_work_crews
+    scope: settlement
+    duration: harvest_week
+  prose:
+    title: Handles Before Harvest
+    summary: A work crew cannot clear the damaged rows without replacement handles.
+    discovery: Oren offers a commission sized for a local bench and the remaining
+      alder stock.
+    journal: Craft a valid field handle and deliver it to the crew at the farmstead.
+    current_objective: Craft and deliver one field handle.
+    success: The crew can return to the rows with a tool that belongs to the local
+      economy.
+    aftermath: Work sounds replace some of the worry along the road.
+    unresolved_remainder: The harvest still depends on weather and the boar's return.
+  source_design_ids:
+  - veridia_greenhold_economy
+  - greenhold_agricultural_edge
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_economy
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 5f7ea53c6edd163c69245561f244e9c3752fa6dca21ca96c8848dac3ee9591bb
+- id: greenhold_hollow_patrol
+  display_name: The Quiet Hollow Watch
+  canon_status: AUTHORED_LOCAL
+  quest_type: defense
+  scope: party
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_vermin_hollow_pressure
+  start_state: warning
+  terminal_states:
+  - held
+  room_ids:
+  - veridia_living_hollow
+  - veridia_living_waste_yard
+  creature_ids:
+  - living_hollow_vermin
+  transitions:
+  - from: warning
+    event: accept
+    to: preparation
+  - from: preparation
+    event: enter
+    target_id: veridia_living_hollow
+    to: active
+  - from: active
+    event: protect
+    target_id: veridia_living_hollow
+    to: held
+  objectives:
+  - id: hold_hollow
+    label: Protect the repair team while it works
+    type: protect
+    target_ids:
+    - veridia_living_hollow
+    party_credit: shared
+  rewards:
+  - type: xp
+    amount: 32
+  - type: reputation
+    amount: 12
+    track: greenhold_civic
+  consequences:
+  - id: hollow_watch
+    effect_type: reduce_danger
+    target: veridia_living_hollow
+    scope: zone
+    duration: one_day
+  prose:
+    title: The Quiet Hollow Watch
+    summary: Vermin have made maintenance work unsafe around the conduit.
+    discovery: Sen will attempt a repair if a small watch keeps the cracks from becoming
+      a swarm.
+    journal: Join the work crew at the hollow and protect the repair while the site
+      is active.
+    current_objective: Hold the hollow during the repair window.
+    success: The crew finishes its narrow task and the vermin retreat into deeper
+      cracks.
+    aftermath: The road can carry workers again for a while.
+    unresolved_remainder: The population will recur while food and shelter remain.
+  source_design_ids:
+  - greenhold_minor_site
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c541ff2dff76d51a1ecac9697052321416c5b2912547ce61a89ca40c90c42158
+- id: greenhold_repeating_field_contract
+  display_name: Seasonal Field Watch
+  canon_status: GENERATED_LOCAL
+  quest_type: repeatable_contract
+  scope: zone
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_crop_damage
+  repeatability: contract
+  start_state: offered
+  terminal_states:
+  - resolved
+  room_ids:
+  - veridia_living_farm_lane
+  - veridia_living_wild_loop
+  creature_ids:
+  - living_field_boar
+  transitions:
+  - from: offered
+    event: accept
+    to: patrolling
+  - from: patrolling
+    event: defeat
+    target_id: living_field_boar
+    to: resolved
+  objectives:
+  - id: patrol_fields
+    label: Respond to this season's field pressure
+    type: defeat
+    target_ids:
+    - living_field_boar
+    party_credit: shared
+  rewards:
+  - type: xp
+    amount: 16
+  consequences:
+  - id: contract_relief
+    effect_type: suppress_pressure
+    target: living_crop_damage
+    scope: zone
+    duration: one_day
+  prose:
+    title: Seasonal Field Watch
+    summary: Recurring crop pressure calls for bounded local work.
+    discovery: The notice board posts a new watch only while the field pressure remains
+      active.
+    journal: Patrol the compatible field edge and reduce the current pressure.
+    current_objective: Respond to the current field pressure.
+    success: The pressure is reduced for this cycle and the next watch will wait through
+      its cooldown.
+    aftermath: The board goes quiet until the fields need another watch.
+    unresolved_remainder: Seasonal recurrence is expected.
+  source_design_ids:
+  - veridia_greenhold_ecology
+  generation_seed: 41017
+  generator_version: 1.0.0
+  generator_name: aethryn_world_compiler
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d32fe3182b330d0e3baa4401283000d5662e09e15aa08c3c3bbb4684c4b3c214
+- id: greenhold_public_water_day
+  display_name: Water Day at the Civic Edge
+  canon_status: AUTHORED_LOCAL
+  quest_type: public_event
+  scope: public_event
+  region: veridia
+  zone: veridia_zone
+  pressure_id: living_water_shortage
+  repeatability: public_event
+  start_state: preparation
+  terminal_states:
+  - success
+  - failure
+  room_ids:
+  - veridia_living_civic_gate
+  - veridia_living_cistern_court
+  npc_ids:
+  - living_ditchwarden
+  - living_repairer
+  transitions:
+  - from: preparation
+    event: public_contribution
+    target_id: greenhold_water_day_event
+    to: active
+  - from: active
+    event: public_contribution
+    target_id: greenhold_water_day_event
+    to: success
+  objectives:
+  - id: public_preparation
+    label: Contribute labor
+    evidence: null
+    or materials to the water day: null
+    type: contribute
+    target_ids:
+    - greenhold_water_day
+    party_credit: contribution
+  rewards:
+  - type: reputation
+    amount: 8
+    track: greenhold_civic
+    contribution_required: 1
+  consequences:
+  - id: public_water_memory
+    effect_type: begin_public_schedule
+    target: greenhold_civic_edge
+    scope: regional
+    duration: one_market_day
+  prose:
+    title: Water Day at the Civic Edge
+    summary: Greenhold is preparing a shared response to a low cistern.
+    discovery: A public notice asks for labor and evidence rather than a private champion.
+    journal: Contribute meaningfully during the preparation and active phases of Water
+      Day.
+    current_objective: Join the shared preparation and contribute to the civic response.
+    success: The work is recorded as a public effort
+    not duplicated as separate private rescues.: null
+    aftermath: Greenhold's water queue moves with fewer arguments for the day.
+    unresolved_remainder: The old works will need maintenance again.
+  source_design_ids:
+  - greenhold
+  - greenhold_civic_dispute
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_civic_dispute
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: dddefbc3b827b61329c2010d590271798e71515ea421e9ec9f85e31f57023403
+quest_arcs:
+- id: greenhold_water_and_work_arc
+  display_name: Water, Work, and the Field Edge
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - greenhold
+  - greenhold_minor_site
+  quest_ids:
+  - greenhold_water_discovery
+  - greenhold_water_repair
+  - greenhold_conflicting_testimony
+  prerequisites:
+    greenhold_water_repair:
+    - greenhold_water_discovery
+    greenhold_conflicting_testimony:
+    - greenhold_water_repair
+  branch_points:
+  - greenhold_conflicting_testimony
+  convergence_points:
+  - greenhold_water_repair
+  finale: greenhold_conflicting_testimony
+  post_arc_state: greenhold_local_records_updated
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  content_digest: 80ef1b88a4ea693adde0ea9f659af320297eea6f1c0de0df63cb8b5af87b5cc0
+contract_templates:
+- id: greenhold_seasonal_field_watch
+  display_name: Seasonal Field Watch Template
+  canon_status: GENERATED_LOCAL
+  source_design_ids:
+  - veridia_greenhold_ecology
+  regions:
+  - veridia
+  zones:
+  - veridia_zone
+  pressure_types:
+  - ecological_imbalance
+  objective_pool:
+  - defeat
+  - drive_off
+  - inspect
+  target_pool:
+  - living_field_boar
+  threat_range:
+  - 1
+  - 8
+  reward_budget: 25
+  cooldown: 12
+  anti_repetition:
+    target: 2
+    room: 2
+    prose: 3
+  narrative_variants:
+  - The field board posts a seasonal watch.
+  - A damaged hedge renews the local contract.
+  consequence_duration: one_day
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  content_digest: 75165ba89b8b82fc8c4b2f5d4ae500a7a660004edcbc7dcae6d5eee1b091187a
+public_events:
+- id: greenhold_water_day_event
+  display_name: Greenhold Water Day Event
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - greenhold
+  - greenhold_civic_dispute
+  trigger_conditions:
+    state: greenhold.cistern_status
+    values:
+    - low
+  announcement: Greenhold calls for a shared water response at the civic edge.
+  preparation_state: preparation
+  active_state: active
+  escalation:
+  - queue_forms
+  - repair_team_arrives
+  success_threshold: 3
+  failure_threshold: 0
+  participant_reward_ids:
+  - greenhold_civic_reputation
+  cooldown: 24
+  aftermath_effect_ids:
+  - public_water_memory
+  persistence_scope: regional
+  contribution_policy: meaningful
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - greenhold_civic_dispute
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 6858adb4573aed73a369ee512fa0ab90d05d011125a39954e0ec69f08810cdf9
+quest_world_effects:
+- id: flowing_cistern
+  display_name: Flowing Greenhold Cistern
+  effect_type: change_world_state
+  target: greenhold.cistern_status
+  scope: settlement
+  duration: seasonal
+  persistence: world
+  reversible: true
+  source_design_ids:
+  - greenhold_minor_site
+  canon_status: AUTHORED_LOCAL
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_minor_site
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 60746581889988f1e8ae28c1db393e880613d51576d555ca36c3a7d40ceda717
+- id: safer_fields
+  display_name: Safer Field Edge
+  effect_type: reduce_population_pressure
+  target: greenhold_boar_pressure
+  scope: zone
+  duration: seasonal
+  persistence: world
+  reversible: true
+  source_design_ids:
+  - veridia_greenhold_ecology
+  canon_status: AUTHORED_LOCAL
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f9b816ee6cb9f4a4892d76cce560bbfc7be83bc5a3ad415e062e915f0157219a
+- id: repaired_tools
+  display_name: Repaired Field Tools
+  effect_type: change_population_schedule
+  target: greenhold_field_work_crews
+  scope: settlement
+  duration: harvest_week
+  persistence: world
+  reversible: true
+  source_design_ids:
+  - greenhold_agricultural_edge
+  canon_status: AUTHORED_LOCAL
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold_agricultural_edge
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ac88639cb4594f3d8d3ec7365b8847dbce99d2cf8f7851d97236d97ac45547fa
+- id: public_water_memory
+  display_name: Water Day Civic Memory
+  effect_type: begin_public_schedule
+  target: greenhold_civic_edge
+  scope: regional
+  duration: one_market_day
+  persistence: world
+  reversible: true
+  source_design_ids:
+  - greenhold
+  canon_status: AUTHORED_LOCAL
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: e0587da2c2fb40abf4a1ca45b5ad614c9e779c5a756fc06429b7516fba9b6a3e
+quest_generation_profiles:
+- id: veridia_greenhold_quest_profile
+  display_name: Greenhold Local Pressure Profile
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - greenhold
+  - veridia_greenhold_ecology
+  regions:
+  - veridia
+  zones:
+  - veridia_zone
+  allowed_grammars:
+  - discovery
+  - repair
+  - hunt
+  - delivery
+  - gathering_commission
+  - crafting_commission
+  - investigation
+  - defense
+  - repeatable_contract
+  - public_event
+  prohibited_grammars:
+  - campaign
+  complexity: local
+  quest_count_ceiling: 10
+  threat_range:
+  - 1
+  - 12
+  reward_budget: 300
+  repeatability_limits:
+    repeatable_contract: 1
+    public_event: 1
+  consequence_profiles:
+  - local_and_reversible
+  prose_profile: greenhold_civic_practical
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/authored/greenhold.yaml
+    packet_id: veridia_greenhold_living_slice
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1bf7287402dc74f5cb50c009e52a39a91afc276292232425b0503991ab9114e4
+materials:
+- display_name: Veridian iron ore
+  material_class: metal
+  source_regions:
+  - veridia
+  source_habitats:
+  - managed field margins
+  - shallow road cuts
+  gathering_method: hand sorting and shallow pick work
+  gathering_profession: mining
+  refinement_chain:
+  - veridian_iron_ore
+  - wrought_veridian_iron
+  - veridian_iron_fitting
+  common_uses:
+  - farm tools
+  - buckler rims
+  - spear heads
+  - repair plates
+  scarcity: common
+  weight_factor: 1.2
+  durability_factor: 1.0
+  value_factor: 1.0
+  repair_compatibility:
+  - veridian_iron
+  - wrought_iron
+  cultural_interpretation: Greenhold treats the ore as a dependable local resource,
+    not a relic.
+  id: veridian_iron_ore
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Alder wood
+  material_class: wood
+  source_regions:
+  - veridia
+  source_habitats:
+  - hedgerows
+  - managed ditch banks
+  gathering_method: coppicing and seasonal trimming
+  gathering_profession: woodcutting
+  refinement_chain:
+  - alder_wood
+  - alder_haft
+  common_uses:
+  - tool handles
+  - spear shafts
+  - market frames
+  - household shelves
+  scarcity: common
+  weight_factor: 0.7
+  durability_factor: 0.85
+  value_factor: 0.8
+  repair_compatibility:
+  - alder_wood
+  cultural_interpretation: Alder is cut on a rotation because the ditch banks need
+    living roots.
+  id: alder_wood
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Meadowfoil
+  material_class: herb
+  source_regions:
+  - veridia
+  source_habitats:
+  - damp field margins
+  - hedgerows
+  gathering_method: hand gathering after rain
+  gathering_profession: herbalism
+  refinement_chain:
+  - meadowfoil
+  - meadowfoil_reagent
+  common_uses:
+  - dye
+  - poultice
+  - traveler tonic
+  scarcity: seasonal_surplus
+  weight_factor: 0.1
+  durability_factor: 1.0
+  value_factor: 1.1
+  repair_compatibility: []
+  cultural_interpretation: Meadowfoil is a crop-side plant whose dye value helps a
+    small farm survive a poor barley season.
+  id: meadowfoil
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Field-boar hide
+  material_class: hide
+  source_regions:
+  - veridia
+  source_habitats:
+  - damaged barley margins
+  - hedgerows
+  gathering_method: field dressing after a lawful cull
+  gathering_profession: leatherworking
+  refinement_chain:
+  - boar_hide
+  - cured_boar_leather
+  common_uses:
+  - work gloves
+  - tool sheaths
+  - travel straps
+  scarcity: pressure_limited
+  weight_factor: 0.9
+  durability_factor: 1.05
+  value_factor: 1.2
+  repair_compatibility:
+  - boar_leather
+  cultural_interpretation: The hide is a byproduct of protecting crops, not a reason
+    to breed danger.
+  id: boar_hide
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Field-rabbit fur
+  material_class: fur
+  source_regions:
+  - veridia
+  source_habitats:
+  - damp meadow margins
+  - uncut hedgerows
+  gathering_method: careful field dressing after a lawful harvest
+  gathering_profession: leatherworking
+  refinement_chain:
+  - rabbit_fur
+  - felted_rabbit_fur
+  common_uses:
+  - lining
+  - winter caps
+  - small tool wraps
+  scarcity: population_limited
+  weight_factor: 0.3
+  durability_factor: 0.7
+  value_factor: 1.0
+  repair_compatibility:
+  - rabbit_fur
+  cultural_interpretation: Rabbit fur is a minor household byproduct; the living prey
+    population is more valuable than its pelt.
+  id: rabbit_fur
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Riverstone
+  material_class: stone
+  source_regions:
+  - veridia
+  source_habitats:
+  - river margins
+  - old road foundations
+  gathering_method: quarrying loose stone from maintained banks
+  gathering_profession: masonry
+  refinement_chain:
+  - riverstone
+  - riverstone_tile
+  common_uses:
+  - household weights
+  - paving
+  - buckler bosses
+  - sluice repairs
+  scarcity: common
+  weight_factor: 1.5
+  durability_factor: 1.1
+  value_factor: 0.7
+  repair_compatibility:
+  - riverstone
+  cultural_interpretation: Riverstone is useful precisely because Greenhold keeps
+    it ordinary and replaceable.
+  id: riverstone
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Imported tideglass
+  material_class: glass
+  source_regions:
+  - shattered_isles
+  source_habitats:
+  - maritime cargo route
+  gathering_method: imported by cart-and-river caravan
+  gathering_profession: trade
+  refinement_chain:
+  - imported_tideglass
+  common_uses:
+  - sealed vials
+  - gauge lenses
+  - merchant display goods
+  scarcity: imported
+  weight_factor: 0.4
+  durability_factor: 0.65
+  value_factor: 2.0
+  repair_compatibility:
+  - imported_tideglass
+  cultural_interpretation: Greenhold buys small quantities from a documented southern
+    caravan route.
+  id: imported_tideglass
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+item_families:
+- display_name: Ingredient
+  category: ingredient
+  allowed_material_classes:
+  - metal
+  - wood
+  - stone
+  - herb
+  - hide
+  - fur
+  - leather
+  - glass
+  - textile
+  - plant_fiber
+  - food
+  - liquid
+  allowed_slots: []
+  construction_methods:
+  - gathered
+  - imported
+  - prepared
+  regional_traditions:
+  - local gathering
+  - local household work
+  role: material or provision used by another system
+  tradeoffs:
+  - not equipment
+  id: ingredient
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Component
+  category: ingredient
+  allowed_material_classes:
+  - metal
+  - wood
+  - stone
+  - herb
+  - hide
+  - leather
+  - glass
+  - textile
+  - plant_fiber
+  allowed_slots: []
+  construction_methods:
+  - forged
+  - shaped
+  - seasoned
+  - prepared
+  regional_traditions:
+  - local workshop
+  role: intermediate part in a reachable production chain
+  tradeoffs:
+  - requires a finished recipe
+  id: component
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Key item
+  category: key_item
+  allowed_material_classes:
+  - metal
+  - wood
+  - leather
+  - hide
+  - textile
+  allowed_slots: []
+  construction_methods:
+  - cut
+  - filed
+  - bound
+  regional_traditions:
+  - local repair bench
+  role: bounded local access or quest custody
+  tradeoffs:
+  - not ordinary stock
+  id: key_item
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Arming sword
+  category: weapon
+  allowed_material_classes:
+  - metal
+  - wood
+  - leather
+  - hide
+  allowed_slots:
+  - weapon
+  construction_methods:
+  - forge
+  - grind
+  - haft
+  regional_traditions:
+  - greenhold_market_smithing
+  supported_damage_types:
+  - slash
+  - thrust
+  handedness: one
+  role: reliable militia sidearm
+  tradeoffs:
+  - moderate reach
+  - moderate cadence
+  - no special property
+  id: arming_sword
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Field spear
+  category: weapon
+  allowed_material_classes:
+  - metal
+  - wood
+  - leather
+  - hide
+  allowed_slots:
+  - weapon
+  construction_methods:
+  - forge
+  - haft
+  - bind
+  regional_traditions:
+  - greenhold_roadwardens
+  supported_damage_types:
+  - thrust
+  handedness: two
+  role: road control and formation reach
+  tradeoffs:
+  - long reach
+  - slower cadence
+  - two-handed
+  id: field_spear
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Road-warden bow
+  category: weapon
+  allowed_material_classes:
+  - wood
+  - leather
+  - hide
+  - plant_fiber
+  allowed_slots:
+  - weapon
+  construction_methods:
+  - season
+  - tiller
+  - string
+  regional_traditions:
+  - greenhold_roadwardens
+  supported_damage_types:
+  - pierce
+  handedness: two
+  role: watch patrol ranged pressure
+  tradeoffs:
+  - ranged reach
+  - ammunition required
+  - light damage
+  id: roadwarden_bow
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Farm tool
+  category: tool
+  allowed_material_classes:
+  - metal
+  - wood
+  allowed_slots: []
+  construction_methods:
+  - forge
+  - haft
+  regional_traditions:
+  - greenhold_fieldcraft
+  role: field and ditch maintenance
+  tradeoffs:
+  - wears during work
+  - improvised weapon only
+  id: farm_tool
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Light workwear
+  category: armor
+  allowed_material_classes:
+  - hide
+  - leather
+  - textile
+  - wood
+  allowed_slots:
+  - body
+  construction_methods:
+  - cut
+  - stitch
+  - rivet
+  regional_traditions:
+  - greenhold_fieldcraft
+  role: protection that does not slow field labor
+  tradeoffs:
+  - low coverage
+  - low movement cost
+  id: light_workwear
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Buckler
+  category: shield
+  allowed_material_classes:
+  - metal
+  - wood
+  - stone
+  - leather
+  - hide
+  allowed_slots:
+  - arm
+  construction_methods:
+  - forge
+  - carve
+  - rivet
+  regional_traditions:
+  - greenhold_roadwardens
+  role: compact protection for carts and gates
+  tradeoffs:
+  - occupies arm slot
+  - limited coverage
+  id: buckler
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Traveler cloak
+  category: wearable
+  allowed_material_classes:
+  - textile
+  - hide
+  - leather
+  allowed_slots:
+  - body
+  construction_methods:
+  - cut
+  - stitch
+  - wax
+  regional_traditions:
+  - greenhold_market_tailoring
+  role: weather protection and visible road identity
+  tradeoffs:
+  - no combat defense
+  - durable against rain only
+  id: traveler_cloak
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+quality_profiles:
+- display_name: standard
+  durability_factor: 1.0
+  value_factor: 1.0
+  modifier_budget: 0
+  salvage_factor: 1.0
+  source_causes:
+  - ordinary material
+  - competent workshop
+  id: standard
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: sound
+  durability_factor: 1.05
+  value_factor: 1.1
+  modifier_budget: 1
+  salvage_factor: 1.0
+  source_causes:
+  - seasoned material
+  - careful inspection
+  id: sound
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+crafting_stations:
+- display_name: Greenhold smelter
+  supported_recipe_families:
+  - component
+  rooms:
+  - greenhold_store
+  ownership: civic_property
+  fuel_requirements:
+    alder_wood: 1
+  availability: working
+  condition: sound
+  repair_requirements:
+    wrought_veridian_iron: 1
+  interaction_text: A low charcoal smelter holds enough heat for local iron
+  not for heroic spectacle.: null
+  id: smelter
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Greenhold smith anvil
+  supported_recipe_families:
+  - weapon
+  - shield
+  - tool
+  rooms:
+  - greenhold_store
+  ownership: privately_owned
+  availability: working
+  condition: sound
+  repair_requirements:
+    wrought_veridian_iron: 1
+  interaction_text: The anvil is scarred by farm repairs and sized for repeatable
+    work.
+  id: anvil
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Greenhold repair bench
+  supported_recipe_families:
+  - weapon
+  - shield
+  - armor
+  - tool
+  - wearable
+  rooms:
+  - greenhold_store
+  - veridia_living_waste_yard
+  ownership: communal_use
+  availability: working
+  condition: sound
+  repair_requirements:
+    alder_haft: 1
+  interaction_text: A low bench keeps replacement parts
+  oil: null
+  cord: null
+  and a ledger within reach.: null
+  id: repair_bench
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Alder Farm woodworking bench
+  supported_recipe_families:
+  - component
+  rooms:
+  - veridia_living_farmstead
+  ownership: household_property
+  availability: working
+  condition: sound
+  interaction_text: The bench is scarred by handles and pegs
+  with a rack for drying alder.: null
+  id: woodworking_bench
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: Greenhold field kitchen bench
+  supported_recipe_families:
+  - consumable
+  rooms:
+  - veridia_living_farmstead
+  ownership: household_property
+  availability: working
+  condition: sound
+  interaction_text: Ceramic cups
+  strainers: null
+  and a tideglass vial rack turn gathered plants into travel provisions.: null
+  id: alchemical_bench
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+merchant_stock_profiles:
+- merchant_id: greenhold_trader
+  settlement: greenhold_living_settlement
+  shop_type: field_and_travel
+  ordinary_stock:
+    field_hoe:
+    - 1
+    - 3
+    ditch_spade:
+    - 1
+    - 2
+    barley_ration:
+    - 4
+    - 12
+    meadowfoil_tonic:
+    - 1
+    - 4
+    imported_tideglass_vial:
+    - 1
+    - 3
+    wrought_veridian_iron:
+    - 1
+    - 3
+  conditional_stock:
+    greenhold_arming_sword:
+      condition: militia_surplus
+      quantity:
+      - 0
+      - 1
+  restock_interval: 3
+  supply_sources:
+    field_hoe: local_smith
+    ditch_spade: local_smith
+    barley_ration: alder_farmstead
+    meadowfoil_tonic: alder_farmstead
+    imported_tideglass_vial: greenhold_southern_caravan
+    wrought_veridian_iron: greenhold_smithy
+    greenhold_arming_sword: greenhold_smithy
+  imported_goods:
+    imported_tideglass_vial: greenhold_southern_caravan
+  scarcity_behavior: damaged barley reduces rations and meadowfoil tonics before tools.
+  buy_rules:
+    barley_ration: 1
+    meadowfoil_tonic: 6
+    boar_hide: 5
+    veridian_iron_ore: 1
+  sell_rules:
+    markup: 1.25
+    labor_charge: true
+  markup: 1.25
+  id: greenhold_field_merchant_stock
+  display_name: Greenhold Field Merchant Stock
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- merchant_id: greenhold_warden_quartermaster
+  settlement: greenhold_living_settlement
+  shop_type: civic_and_militia
+  ordinary_stock:
+    greenhold_field_spear:
+    - 1
+    - 2
+    riverstone_buckler:
+    - 1
+    - 2
+    repair_oil:
+    - 2
+    - 6
+    greenhold_roadwarden_cloak:
+    - 0
+    - 1
+  conditional_stock:
+    greenhold_roadwarden_bow:
+      condition: road_watch_funded
+      quantity:
+      - 0
+      - 1
+  restock_interval: 7
+  supply_sources:
+    greenhold_field_spear: greenhold_smithy
+    riverstone_buckler: greenhold_smithy
+    repair_oil: greenhold_repair_bench
+    greenhold_roadwarden_cloak: greenhold_tailor
+    greenhold_roadwarden_bow: greenhold_roadwarden_bowyer
+  imported_goods: {}
+  scarcity_behavior: militia issue is reduced when road repairs consume the same iron
+    and labor.
+  buy_rules:
+    boar_hide: 6
+    broken_field_tool: 2
+  sell_rules:
+    markup: 1.15
+    reputation_required: civic_trust
+  markup: 1.15
+  id: greenhold_warden_stock
+  display_name: Greenhold Warden Stock
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+loot_profiles:
+- source_id: living_field_boar
+  source_class: biological
+  body_class: boar
+  guaranteed: []
+  weighted:
+    boar_hide: 3
+    nothing: 7
+  quantity_ranges:
+    boar_hide:
+    - 1
+    - 1
+  rarity: common
+  threat_band:
+  - 2
+  - 8
+  ownership: salvage_rights
+  regional_restrictions:
+  - veridia
+  production_reason: a field-dressed hide is a byproduct of protecting the barley
+    crop.
+  respawn_behavior: population_recurrence
+  unique_restrictions: []
+  id: living_field_boar_loot
+  display_name: Living Field Boar Loot
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- source_id: living_hollow_vermin
+  source_class: biological
+  body_class: small_mammal
+  guaranteed: []
+  weighted:
+    boar_hide: 1
+    nothing: 9
+  quantity_ranges:
+    boar_hide:
+    - 0
+    - 1
+  rarity: common
+  threat_band:
+  - 1
+  - 3
+  ownership: unowned
+  regional_restrictions:
+  - veridia
+  production_reason: most vermin yield no portable material; occasional usable hide
+    is incidental.
+  respawn_behavior: population_recurrence
+  unique_restrictions: []
+  id: living_hollow_vermin_loot
+  display_name: Living Hollow Vermin Loot
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- source_id: living_field_rabbit
+  source_class: biological
+  body_class: rabbit
+  guaranteed: []
+  weighted:
+    rabbit_fur: 2
+    nothing: 8
+  quantity_ranges:
+    rabbit_fur:
+    - 1
+    - 1
+  rarity: common
+  threat_band:
+  - 1
+  - 2
+  ownership: salvage_rights
+  regional_restrictions:
+  - veridia
+  production_reason: a carefully dressed pelt is an occasional household byproduct
+    of lawful small-game harvest.
+  respawn_behavior: population_recurrence
+  unique_restrictions: []
+  id: living_field_rabbit_loot
+  display_name: Living Field Rabbit Loot
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- source_id: greenhold_road_bandit
+  source_class: humanoid
+  body_class: humanoid
+  guaranteed: []
+  weighted:
+    repair_oil: 2
+    barley_ration: 3
+    nothing: 5
+  quantity_ranges:
+    repair_oil:
+    - 1
+    - 1
+    barley_ration:
+    - 1
+    - 2
+  rarity: common
+  threat_band:
+  - 3
+  - 10
+  ownership: stolen
+  regional_restrictions:
+  - veridia
+  production_reason: road thieves carry used supplies taken from local traffic.
+  respawn_behavior: encounter_reset
+  unique_restrictions:
+  - greenhold_valve_key
+  id: greenhold_road_bandit_loot
+  display_name: Greenhold Road Bandit Loot
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+placements:
+- layer: environmental
+  rooms:
+  - greenhold_store
+  quantity:
+  - 1
+  - 1
+  ownership: privately_owned
+  portable: false
+  interaction: Examine the bench, anvil, hanging tools, and labeled repair trays.
+  id: greenhold_workshop_ambient
+  display_name: Greenhold Workshop Ambient
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- layer: ambient_goods
+  rooms:
+  - veridia_living_farmstead
+  quantity:
+  - 3
+  - 6
+  ownership: household_property
+  portable: false
+  interaction: Search the drying rack or inspect the baskets without taking the working
+    stock.
+  id: greenhold_farm_goods
+  display_name: Greenhold Farm Goods
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- layer: portable
+  rooms:
+  - greenhold
+  quantity:
+  - 1
+  - 2
+  ownership: merchant_stock
+  portable: true
+  interaction: Buy or examine the provisions; they are not loose public loot.
+  id: greenhold_travel_supplies
+  display_name: Greenhold Travel Supplies
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+equipment_sets:
+- display_name: Greenhold Road Wardens
+  pieces:
+  - greenhold_field_spear
+  - riverstone_buckler
+  - greenhold_roadwarden_cloak
+  slots:
+  - weapon
+  - arm
+  - body
+  bonuses:
+    DEF: 2
+  partial_behavior: none
+  tradition: A practical issue set shared by gate crews and road patrols.
+  canon_status: GENERATED_LOCAL
+  id: greenhold_roadwardens
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+recipes:
+- display_name: shape an alder haft
+  output_prototype: alder_haft
+  requirements:
+  - prototype_id: alder_wood
+    quantity: 2
+  profession: woodcraft
+  station: woodworking_bench
+  time_cost: 3
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: shape_alder_haft
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: smelt Veridian iron
+  output_prototype: wrought_veridian_iron
+  requirements:
+  - prototype_id: veridian_iron_ore
+    quantity: 3
+  profession: smithing
+  station: smelter
+  time_cost: 5
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: smelt_veridian_iron
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: forge a Veridian iron fitting
+  output_prototype: veridian_iron_fitting
+  requirements:
+  - prototype_id: wrought_veridian_iron
+    quantity: 2
+  profession: smithing
+  station: anvil
+  time_cost: 4
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: forge_veridian_fitting
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: forge a Greenhold field spear
+  output_prototype: greenhold_field_spear
+  requirements:
+  - prototype_id: wrought_veridian_iron
+    quantity: 1
+  - prototype_id: alder_haft
+    quantity: 1
+  - prototype_id: boar_hide
+    quantity: 1
+  profession: smithing
+  station: anvil
+  time_cost: 8
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: forge_greenhold_field_spear
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: forge a Greenhold arming sword
+  output_prototype: greenhold_arming_sword
+  requirements:
+  - prototype_id: wrought_veridian_iron
+    quantity: 2
+  - prototype_id: alder_haft
+    quantity: 1
+  - prototype_id: boar_hide
+    quantity: 1
+  profession: smithing
+  station: anvil
+  time_cost: 10
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: forge_greenhold_arming_sword
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: forge a Greenhold ditch spade
+  output_prototype: ditch_spade
+  requirements:
+  - prototype_id: wrought_veridian_iron
+    quantity: 1
+  - prototype_id: alder_haft
+    quantity: 1
+  profession: smithing
+  station: anvil
+  time_cost: 6
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: forge_ditch_spade
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: assemble a riverstone buckler
+  output_prototype: riverstone_buckler
+  requirements:
+  - prototype_id: alder_haft
+    quantity: 1
+  - prototype_id: riverstone
+    quantity: 1
+  - prototype_id: boar_hide
+    quantity: 1
+  - prototype_id: veridian_iron_fitting
+    quantity: 1
+  profession: smithing
+  station: repair_bench
+  time_cost: 7
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: assemble_riverstone_buckler
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+- display_name: brew a meadowfoil travel tonic
+  output_prototype: meadowfoil_tonic
+  requirements:
+  - prototype_id: meadowfoil
+    quantity: 2
+  - prototype_id: imported_tideglass_vial
+    quantity: 1
+  profession: alchemy
+  station: alchemical_bench
+  time_cost: 3
+  output_quantity: 1
+  quality_logic: material_and_skill
+  id: brew_meadowfoil_tonic
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology

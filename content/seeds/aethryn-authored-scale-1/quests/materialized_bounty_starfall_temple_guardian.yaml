@@ -1,0 +1,16 @@
+id: bounty_starfall_temple_guardian
+name: 'Bounty: the guardian of Starfall Temple'
+start: posted
+reward_xp: 720
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: starfall_temple_guardian
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the guardian of Starfall Temple (level 60). Fell it for
+    720 XP.
+  collected: 'Bounty collected: the guardian of Starfall Temple is felled. Well hunted.'

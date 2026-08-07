@@ -1,0 +1,16 @@
+id: bounty_heart_of_xilnath_vault_guard
+name: 'Bounty: Hrothune the Canopy Scourge'
+start: posted
+reward_xp: 1836
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: heart_of_xilnath_vault_guard
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothune the Canopy Scourge (level 153). Fell it for
+    1836 XP.
+  collected: 'Bounty collected: Hrothune the Canopy Scourge is felled. Well hunted.'

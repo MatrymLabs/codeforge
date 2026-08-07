@@ -1,0 +1,31 @@
+id: silverwatch_tally
+name: The Deep Tally
+start: offered
+reward_xp: 44
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: silverwatch_tally
+- state: accepted
+  event: take
+  to: recovered
+  on_take: silverwatch_tally_book
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:26
+  on_enter: silverwatch_tally
+terminal:
+- done
+labels:
+  offered: In Silverwatch, the tally-clerk has lost the deep tally-book to the workings
+    below. Step into the tally-hall and hear him.
+  accepted: The deep tally-book went down on the last shift and never came up. Take
+    it up from the deep workings under the mine-head.
+  recovered: Carry the deep tally-book back to Tally-Clerk Sennic in the tally-hall.
+  done: '*** The deep tally-book is back on Sennic''s desk, the season''s assay can
+    be sealed, and Silverwatch is once more a town that knows what it is owed. But
+    the last columns still trail off into blank ruled lines, order after order from
+    the reaches beyond the plains shipped and never marked RECEIVED, and no ledger
+    in the heartland can say why the far world has stopped writing back. ***'

@@ -1,0 +1,83 @@
+id: cull_field_frostspire_peaks_hound_12
+name: 'A standing Contract: the hound-kind of The Frostspire Peaks Wilds'
+start: s0
+reward_xp: 360
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_frostspire_peaks|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_frostspire_peaks|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_frostspire_peaks|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_frostspire_peaks|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_frostspire_peaks|hound
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_frostspire_peaks|hound
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_frostspire_peaks|hound
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_frostspire_peaks|hound
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_frostspire_peaks|hound
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_frostspire_peaks|hound
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_frostspire_peaks|hound
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_frostspire_peaks|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 0/12 down
+    (360 XP).'
+  s1: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 1/12 down
+    (360 XP).'
+  s2: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 2/12 down
+    (360 XP).'
+  s3: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 3/12 down
+    (360 XP).'
+  s4: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 4/12 down
+    (360 XP).'
+  s5: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 5/12 down
+    (360 XP).'
+  s6: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 6/12 down
+    (360 XP).'
+  s7: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 7/12 down
+    (360 XP).'
+  s8: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 8/12 down
+    (360 XP).'
+  s9: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 9/12 down
+    (360 XP).'
+  s10: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 10/12
+    down (360 XP).'
+  s11: 'Fulfil the contract on the hound-kind of The Frostspire Peaks Wilds: 11/12
+    down (360 XP).'
+  done: The hound-kind of The Frostspire Peaks Wilds are put down. The high passes
+    will hold a little longer.

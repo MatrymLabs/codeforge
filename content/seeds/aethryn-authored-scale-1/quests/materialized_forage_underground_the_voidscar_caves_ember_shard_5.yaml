@@ -1,0 +1,36 @@
+id: forage_underground_the_voidscar_caves_ember_shard_5
+name: 'A small Provision: ember shard of Voidscar Fracture Caves'
+start: s0
+reward_xp: 365
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_voidscar_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_voidscar_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_voidscar_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_voidscar_caves|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_the_voidscar_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in ember shard in Voidscar Fracture Caves: 0/5 (365 XP).'
+  s1: 'Lay in ember shard in Voidscar Fracture Caves: 1/5 (365 XP).'
+  s2: 'Lay in ember shard in Voidscar Fracture Caves: 2/5 (365 XP).'
+  s3: 'Lay in ember shard in Voidscar Fracture Caves: 3/5 (365 XP).'
+  s4: 'Lay in ember shard in Voidscar Fracture Caves: 4/5 (365 XP).'
+  done: You have laid in ember shard enough for Voidscar Fracture Caves. The forge-crews
+    can feed the fires now.

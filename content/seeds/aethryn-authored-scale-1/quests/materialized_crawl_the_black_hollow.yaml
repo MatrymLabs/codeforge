@@ -1,0 +1,21 @@
+id: crawl_the_black_hollow
+name: 'Descent: The Black Hollow'
+start: above
+reward_xp: 1000
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: the_black_hollow
+- state: delving
+  event: reach
+  to: done
+  on_enter: the_black_hollow_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of The Black Hollow. Cross its mouth and
+    descend.
+  delving: You are within The Black Hollow. Press on to its deepest chamber.
+  done: You have reached the heart of The Black Hollow and lived. Few can (1000 XP).

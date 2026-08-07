@@ -1,0 +1,41 @@
+id: cull_field_frostspire_peaks_elemental_6
+name: 'A small Thinning: the elemental-kind of The Frostspire Peaks Wilds'
+start: s0
+reward_xp: 180
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_frostspire_peaks|elemental
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_frostspire_peaks|elemental
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_frostspire_peaks|elemental
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_frostspire_peaks|elemental
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_frostspire_peaks|elemental
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_frostspire_peaks|elemental
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 0/6 down (180 XP).'
+  s1: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 1/6 down (180 XP).'
+  s2: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 2/6 down (180 XP).'
+  s3: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 3/6 down (180 XP).'
+  s4: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 4/6 down (180 XP).'
+  s5: 'Thin out the elemental-kind of The Frostspire Peaks Wilds: 5/6 down (180 XP).'
+  done: The elemental-kind of The Frostspire Peaks Wilds are thinned back. The high
+    passes will hold a little longer.

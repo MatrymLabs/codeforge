@@ -1,0 +1,36 @@
+id: forage_field_skyward_spires_moorbell_5
+name: 'A small Harvest: moorbell of The Skyward Spires Wilds'
+start: s0
+reward_xp: 310
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_skyward_spires|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_skyward_spires|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_skyward_spires|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_skyward_spires|moorbell
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_skyward_spires|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest moorbell in The Skyward Spires Wilds: 0/5 (310 XP).'
+  s1: 'Harvest moorbell in The Skyward Spires Wilds: 1/5 (310 XP).'
+  s2: 'Harvest moorbell in The Skyward Spires Wilds: 2/5 (310 XP).'
+  s3: 'Harvest moorbell in The Skyward Spires Wilds: 3/5 (310 XP).'
+  s4: 'Harvest moorbell in The Skyward Spires Wilds: 4/5 (310 XP).'
+  done: You have harvested moorbell enough for The Skyward Spires Wilds. The region's
+    makers will put it to use.

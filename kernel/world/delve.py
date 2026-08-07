@@ -25,16 +25,27 @@ import yaml
 from kernel.world.bestiary import make_beast, make_notable
 from kernel.world.seed import Npc, Room, SeedError
 
-_DEPTH = 4  # chambers in a delve's descent below the mouth
-_BOSS_BUMP = 5  # the deep boss out-levels the dungeon's mouth guardian by this many levels
+_DEPTH = 6  # chambers in a delve's descent below the mouth
+_BOSS_BUMP = 7  # the deep boss out-levels the dungeon's mouth guardian by this many levels
+
+
+def _level(value: int) -> int:
+    """Keep generated challenge levels inside the seed's canonical 1-300 progression."""
+    return max(1, min(300, value))
+
 
 # A descent should READ like one: a chamber names how deep it sits, so the threshold and the boss's
-# lair do not read alike. Four stages (a short title + a lead), mapped across `_DEPTH` by fraction,
-# so the count is robust if the depth changes; the last chamber always lands on the lair.
+# lair do not read alike. Six stages (a short title + a lead), mapped across `_DEPTH` by fraction,
+# so the count remains robust if the depth changes; the last chamber always lands on the lair.
 _CHAMBER_STAGES = (
     (
         "the threshold",
         "The descent into {name} begins here, where the last of the daylight fails. {note} {mood}",
+    ),
+    (
+        "the upper galleries",
+        "Below the threshold of {name}, worked galleries descend through the living rock. "
+        "{note} {mood}",
     ),
     (
         "the mid-depths",
@@ -42,9 +53,15 @@ _CHAMBER_STAGES = (
         "{note} {mood}",
     ),
     (
-        "the deep",
+        "the lower deep",
         "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "
         "{note} {mood}",
+    ),
+    (
+        "the rootward vaults",
+        "The oldest cut beneath {name} opens into rootward vaults, where forgotten work still "
+        "marks "
+        "the walls. {note} {mood}",
     ),
     (
         "the lair",
@@ -151,10 +168,10 @@ def generate_delves(
             if i < _DEPTH:
                 room["exits"]["down"] = f"{mouth}_delve_{i + 1}"
                 # a trash foe, deadlier the deeper you go (ambient: a fight, but no bounty)
-                npcs[f"{label}_foe"] = make_beast(biome, base + i, i, label)
+                npcs[f"{label}_foe"] = make_beast(biome, _level(base + i), i, label)
             else:
                 # the deep boss: a named notable, boss-tier and lethal, out-levelling the mouth
-                boss = make_notable(biome, base + _BOSS_BUMP, i, label, 5)
+                boss = make_notable(biome, _level(base + _BOSS_BUMP), i, label, 5)
                 boss["tier"] = "boss"
                 boss["lethal"] = True
                 boss["aggressive"] = False  # a hunt at the bottom, not an ambush at the door
@@ -170,7 +187,7 @@ def generate_delves(
                 vault = _vault_room(name, biome)
                 vault["exits"]["out"] = label
                 rooms[vault_label] = vault
-                guard = make_notable(biome, base + _VAULT_OFF + 1, i, vault_label, 6)
+                guard = make_notable(biome, _level(base + _VAULT_OFF + 1), i, vault_label, 6)
                 guard["aggressive"] = True  # it sits the hoard and will not let you at it
                 npcs[f"{mouth}_vault_guard"] = guard
     return rooms, npcs

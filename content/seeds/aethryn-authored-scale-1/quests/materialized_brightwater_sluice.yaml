@@ -1,0 +1,29 @@
+id: brightwater_sluice
+name: A Matter of Licence
+start: offered
+reward_xp: 55
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: brightwater_hall
+- state: accepted
+  event: take
+  to: recovered
+  on_take: brightwater_sluice_token
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:25
+  on_enter: brightwater_hall
+terminal:
+- done
+labels:
+  offered: In Brightwater, the Licensing Hall has need of a steady hand. Step inside
+    and hear the licensor.
+  accepted: Descend to the old sluice beneath the millrace and recover the warden's
+    token (mind the eels).
+  recovered: Carry the sluice-token back UP to Licensor Aldre in the Licensing Hall
+    to register it.
+  done: '*** The token is entered in the great book. The law is satisfied, and Brightwater
+    remembers the favour. ***'

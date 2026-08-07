@@ -1,0 +1,71 @@
+id: cull_underground_the_voidscar_underworks_mantis_12
+name: 'A standing Thinning: the mantis-kind of The God-Mirror Approach'
+start: s0
+reward_xp: 1200
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_voidscar_underworks|mantis
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_the_voidscar_underworks|mantis
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the mantis-kind of The God-Mirror Approach: 0/12 down (1200 XP).'
+  s1: 'Thin out the mantis-kind of The God-Mirror Approach: 1/12 down (1200 XP).'
+  s2: 'Thin out the mantis-kind of The God-Mirror Approach: 2/12 down (1200 XP).'
+  s3: 'Thin out the mantis-kind of The God-Mirror Approach: 3/12 down (1200 XP).'
+  s4: 'Thin out the mantis-kind of The God-Mirror Approach: 4/12 down (1200 XP).'
+  s5: 'Thin out the mantis-kind of The God-Mirror Approach: 5/12 down (1200 XP).'
+  s6: 'Thin out the mantis-kind of The God-Mirror Approach: 6/12 down (1200 XP).'
+  s7: 'Thin out the mantis-kind of The God-Mirror Approach: 7/12 down (1200 XP).'
+  s8: 'Thin out the mantis-kind of The God-Mirror Approach: 8/12 down (1200 XP).'
+  s9: 'Thin out the mantis-kind of The God-Mirror Approach: 9/12 down (1200 XP).'
+  s10: 'Thin out the mantis-kind of The God-Mirror Approach: 10/12 down (1200 XP).'
+  s11: 'Thin out the mantis-kind of The God-Mirror Approach: 11/12 down (1200 XP).'
+  done: The mantis-kind of The God-Mirror Approach are thinned back. The ash-tracks
+    are a shade safer.

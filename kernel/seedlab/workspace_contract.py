@@ -176,8 +176,10 @@ def build_workspace_contract(
         artifact_store=artifact_store,
     )
     project = ProjectHub(kernel).contract(seed_id, state=state)
-    task_list = list(tasks) if tasks is not None else list(
-        configured_task_store(home).all_for_seed(seed_id)
+    task_list = (
+        list(tasks)
+        if tasks is not None
+        else list(configured_task_store(home).all_for_seed(seed_id))
     )
     project["tasks"] = [task.to_dict() for task in task_list]
     deployment = _latest_deployment(home, seed_id)
@@ -268,8 +270,7 @@ def _merge_lifecycle_evidence(
     if durable is None and supplied is None:
         return None
     merged: dict[str, Sequence[Mapping[str, object]]] = {
-        key: tuple(dict(record) for record in records)
-        for key, records in (durable or {}).items()
+        key: tuple(dict(record) for record in records) for key, records in (durable or {}).items()
     }
     for key, records in (supplied or {}).items():
         merged[key] = tuple(dict(record) for record in records)
@@ -309,9 +310,7 @@ def _durable_lifecycle_evidence(
     if not has_durable_state:
         return None
 
-    lifecycle: dict[str, list[Mapping[str, object]]] = {
-        key: [] for key in _LIFECYCLE_KEYS
-    }
+    lifecycle: dict[str, list[Mapping[str, object]]] = {key: [] for key in _LIFECYCLE_KEYS}
     lifecycle["catalog"] = [_catalog_record(part) for part in load_catalog()]
     draft_records: list[Mapping[str, object]] = []
     for draft_path in (workshop_root / f"{seed_id}.drafts.json", workshop_root / "drafts.json"):
@@ -323,8 +322,7 @@ def _durable_lifecycle_evidence(
     ]
     lifecycle["approvals"] = _load_approvals(workshop_root / "approvals", seed_id)
     lifecycle["activations"] = [
-        _hardware_record(item) for item in (hardware_records or ())
-        if seed_id in item.consumers
+        _hardware_record(item) for item in (hardware_records or ()) if seed_id in item.consumers
     ]
     lifecycle["health"] = _load_deployment_runs(deployments_root, seed_id)
     lifecycle["rollbacks"] = _load_rollbacks(hardware_root / "rollbacks", seed_id)

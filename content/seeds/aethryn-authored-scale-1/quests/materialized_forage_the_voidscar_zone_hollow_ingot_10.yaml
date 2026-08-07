@@ -1,0 +1,61 @@
+id: forage_the_voidscar_zone_hollow_ingot_10
+name: 'A standing Requisition: hollow ingot of The Voidscar'
+start: s0
+reward_xp: 750
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s4
+  event: forage
+  to: s5
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s5
+  event: forage
+  to: s6
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s6
+  event: forage
+  to: s7
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s7
+  event: forage
+  to: s8
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s8
+  event: forage
+  to: s9
+  on_forage: the_voidscar_zone|hollow_ingot
+- state: s9
+  event: forage
+  to: done
+  on_forage: the_voidscar_zone|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in hollow ingot in The Voidscar: 0/10 (750 XP).'
+  s1: 'Bring in hollow ingot in The Voidscar: 1/10 (750 XP).'
+  s2: 'Bring in hollow ingot in The Voidscar: 2/10 (750 XP).'
+  s3: 'Bring in hollow ingot in The Voidscar: 3/10 (750 XP).'
+  s4: 'Bring in hollow ingot in The Voidscar: 4/10 (750 XP).'
+  s5: 'Bring in hollow ingot in The Voidscar: 5/10 (750 XP).'
+  s6: 'Bring in hollow ingot in The Voidscar: 6/10 (750 XP).'
+  s7: 'Bring in hollow ingot in The Voidscar: 7/10 (750 XP).'
+  s8: 'Bring in hollow ingot in The Voidscar: 8/10 (750 XP).'
+  s9: 'Bring in hollow ingot in The Voidscar: 9/10 (750 XP).'
+  done: You have requisitioned hollow ingot enough for The Voidscar. The forge-crews
+    can feed the fires now.

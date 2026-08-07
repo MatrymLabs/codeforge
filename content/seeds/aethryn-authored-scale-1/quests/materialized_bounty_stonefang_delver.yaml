@@ -1,0 +1,16 @@
+id: bounty_stonefang_delver
+name: 'Bounty: a stone-hided deep-delver'
+start: posted
+reward_xp: 1212
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: stonefang_delver
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a stone-hided deep-delver (level 101). Fell it for 1212
+    XP.
+  collected: 'Bounty collected: a stone-hided deep-delver is felled. Well hunted.'

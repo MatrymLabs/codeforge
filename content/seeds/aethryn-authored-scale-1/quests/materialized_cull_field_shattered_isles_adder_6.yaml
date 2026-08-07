@@ -1,0 +1,41 @@
+id: cull_field_shattered_isles_adder_6
+name: 'A small Thinning: the adder-kind of The Shattered Isles Wilds'
+start: s0
+reward_xp: 456
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_shattered_isles|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_shattered_isles|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_shattered_isles|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_shattered_isles|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_shattered_isles|adder
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_shattered_isles|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the adder-kind of The Shattered Isles Wilds: 0/6 down (456 XP).'
+  s1: 'Thin out the adder-kind of The Shattered Isles Wilds: 1/6 down (456 XP).'
+  s2: 'Thin out the adder-kind of The Shattered Isles Wilds: 2/6 down (456 XP).'
+  s3: 'Thin out the adder-kind of The Shattered Isles Wilds: 3/6 down (456 XP).'
+  s4: 'Thin out the adder-kind of The Shattered Isles Wilds: 4/6 down (456 XP).'
+  s5: 'Thin out the adder-kind of The Shattered Isles Wilds: 5/6 down (456 XP).'
+  done: The adder-kind of The Shattered Isles Wilds are thinned back. The tide-roads
+    are the safer for it.

@@ -1,0 +1,12 @@
+id: aethryn_promotion_authorization
+authority: project_owner
+approved_by: Josh
+approved_on: 2026-08-06
+status: AUTHORIZED
+policy:
+  future_packets_may_promote: true
+  required_packet_authorization: true
+  automatic_silent_promotion: false
+  allowed_statuses: [CANON_WORKING, AUTHORED_LOCAL, GENERATED_LOCAL, RUMOR]
+  canon_locked_changes: human_decision_required
+note: This records permission to approve future promotions through explicit packet authorization. It does not authorize silent changes to locked canon.

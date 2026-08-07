@@ -1,0 +1,16 @@
+id: bounty_frostspire_peaks_lord_5
+name: 'Bounty: Voroth the Rime Sovereign'
+start: posted
+reward_xp: 756
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: frostspire_peaks_lord_5
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Voroth the Rime Sovereign (level 63). Fell it for 756
+    XP.
+  collected: 'Bounty collected: Voroth the Rime Sovereign is felled. Well hunted.'

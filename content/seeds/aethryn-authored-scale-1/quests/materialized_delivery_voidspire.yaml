@@ -1,0 +1,20 @@
+id: delivery_voidspire
+name: 'Delivery: Voidspire to Elderwatch'
+start: posted
+reward_xp: 3000
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_voidspire
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: elderwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Voidspire is bound for Elderwatch. Take it up (3000 XP).
+  carrying: Carry the parcel to Elderwatch.
+  done: The parcel is delivered to Elderwatch. The road keeps its promise.

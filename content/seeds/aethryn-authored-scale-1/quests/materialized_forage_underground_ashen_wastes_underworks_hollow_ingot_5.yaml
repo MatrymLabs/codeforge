@@ -1,0 +1,36 @@
+id: forage_underground_ashen_wastes_underworks_hollow_ingot_5
+name: 'A small Harvest: hollow ingot of The Flamewrought Service Depths'
+start: s0
+reward_xp: 220
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_ashen_wastes_underworks|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_ashen_wastes_underworks|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_ashen_wastes_underworks|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_ashen_wastes_underworks|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_ashen_wastes_underworks|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest hollow ingot in The Flamewrought Service Depths: 0/5 (220 XP).'
+  s1: 'Harvest hollow ingot in The Flamewrought Service Depths: 1/5 (220 XP).'
+  s2: 'Harvest hollow ingot in The Flamewrought Service Depths: 2/5 (220 XP).'
+  s3: 'Harvest hollow ingot in The Flamewrought Service Depths: 3/5 (220 XP).'
+  s4: 'Harvest hollow ingot in The Flamewrought Service Depths: 4/5 (220 XP).'
+  done: You have harvested hollow ingot enough for The Flamewrought Service Depths.
+    The forge-crews can feed the fires now.

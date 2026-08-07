@@ -1,0 +1,21 @@
+id: delivery_stormreach
+name: 'Delivery: Stormreach to The Maelstrom Rise'
+start: posted
+reward_xp: 2160
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_stormreach
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: the_maelstrom_rise
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Stormreach is bound for The Maelstrom Rise. Take it up (2160
+    XP).
+  carrying: Carry the parcel to The Maelstrom Rise.
+  done: The parcel is delivered to The Maelstrom Rise. The road keeps its promise.

@@ -1,0 +1,73 @@
+id: cull_underground_skyward_spires_caves_wolf_12
+name: 'A standing Reckoning: the wolf-kind of The Broken Skychain Hollows'
+start: s0
+reward_xp: 960
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_skyward_spires_caves|wolf
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_skyward_spires_caves|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 0/12 down (960 XP).'
+  s1: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 1/12 down (960 XP).'
+  s2: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 2/12 down (960 XP).'
+  s3: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 3/12 down (960 XP).'
+  s4: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 4/12 down (960 XP).'
+  s5: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 5/12 down (960 XP).'
+  s6: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 6/12 down (960 XP).'
+  s7: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 7/12 down (960 XP).'
+  s8: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 8/12 down (960 XP).'
+  s9: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 9/12 down (960 XP).'
+  s10: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 10/12 down (960
+    XP).'
+  s11: 'Reckon with the wolf-kind of The Broken Skychain Hollows: 11/12 down (960
+    XP).'
+  done: The wolf-kind of The Broken Skychain Hollows are settled with. The region
+    breathes easier.

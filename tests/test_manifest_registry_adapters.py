@@ -75,7 +75,9 @@ def test_workspace_contract_loads_configured_sql_manifest_evidence(
     monkeypatch.setenv("SEEDLAB_HOME", str(home))
     monkeypatch.setenv("CODEFORGE_SEED_REGISTRY", "sql")
     monkeypatch.setenv("CODEFORGE_DB", str(tmp_path / "codeforge.db"))
-    _seedlab_kernel().create_seed("SQL Evidence", "alice", "manifest authority", seed_id="seed-sql-evidence")
+    _seedlab_kernel().create_seed(
+        "SQL Evidence", "alice", "manifest authority", seed_id="seed-sql-evidence"
+    )
     evidence = _evidence("seed-sql-evidence")
     configured_manifest_evidence_store(home).save(evidence)
 

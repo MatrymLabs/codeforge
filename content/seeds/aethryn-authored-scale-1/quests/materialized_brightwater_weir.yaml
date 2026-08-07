@@ -1,0 +1,23 @@
+id: brightwater_weir
+name: The Drowned Wyrm
+start: offered
+reward_xp: 42
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: brightwater_lowerweir
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:22
+  on_defeat: brightwater_riverwyrm
+terminal:
+- done
+labels:
+  offered: River-Warden Kess says a drowned wyrm has taken the lower weirs. Go WEST
+    from the millrace and see.
+  hunting: The drowned river-wyrm coils in the flooded timber. Put it down before
+    it takes a fisher.
+  done: '*** The wyrm is dead and the lower weirs are a fisher''s water again. Brightwater''s
+    river-wardens mark the debt, and Kess says so. ***'

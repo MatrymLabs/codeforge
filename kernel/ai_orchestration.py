@@ -112,9 +112,7 @@ class ToolGrant:
         object.__setattr__(
             self, "actions", tuple(_required(item, "action") for item in self.actions)
         )
-        object.__setattr__(
-            self, "scope", tuple(_required(item, "scope") for item in self.scope)
-        )
+        object.__setattr__(self, "scope", tuple(_required(item, "scope") for item in self.scope))
         object.__setattr__(
             self,
             "denied",

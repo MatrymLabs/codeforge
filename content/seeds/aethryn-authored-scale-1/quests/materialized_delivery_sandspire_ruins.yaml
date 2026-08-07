@@ -1,0 +1,20 @@
+id: delivery_sandspire_ruins
+name: 'Delivery: Sandspire Ruins to Sunscar City'
+start: posted
+reward_xp: 960
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_sandspire_ruins
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: sunscar_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Sandspire Ruins is bound for Sunscar City. Take it up (960 XP).
+  carrying: Carry the parcel to Sunscar City.
+  done: The parcel is delivered to Sunscar City. The road keeps its promise.

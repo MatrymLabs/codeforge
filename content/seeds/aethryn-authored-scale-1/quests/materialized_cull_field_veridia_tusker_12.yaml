@@ -1,0 +1,83 @@
+id: cull_field_veridia_tusker_12
+name: 'A standing Contract: the tusker-kind of The Veridia Wilds'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_veridia|tusker
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_veridia|tusker
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_veridia|tusker
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_veridia|tusker
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_veridia|tusker
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_veridia|tusker
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_veridia|tusker
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_veridia|tusker
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_veridia|tusker
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_veridia|tusker
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_veridia|tusker
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_veridia|tusker
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 0/12 down (120
+    XP).'
+  s1: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 1/12 down (120
+    XP).'
+  s2: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 2/12 down (120
+    XP).'
+  s3: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 3/12 down (120
+    XP).'
+  s4: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 4/12 down (120
+    XP).'
+  s5: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 5/12 down (120
+    XP).'
+  s6: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 6/12 down (120
+    XP).'
+  s7: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 7/12 down (120
+    XP).'
+  s8: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 8/12 down (120
+    XP).'
+  s9: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 9/12 down (120
+    XP).'
+  s10: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 10/12 down (120
+    XP).'
+  s11: 'Fulfil the contract on the tusker-kind of The Veridia Wilds: 11/12 down (120
+    XP).'
+  done: The tusker-kind of The Veridia Wilds are put down. The farm-roads are the
+    safer for it.

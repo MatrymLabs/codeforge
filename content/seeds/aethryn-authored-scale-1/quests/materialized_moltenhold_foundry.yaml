@@ -1,0 +1,29 @@
+id: moltenhold_foundry
+name: The Unknown Casting
+start: offered
+reward_xp: 110
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: moltenhold_watch
+- state: accepted
+  event: take
+  to: recovered
+  on_take: moltenhold_casting_die
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:warcraft:35
+  on_enter: moltenhold_watch
+terminal:
+- done
+labels:
+  offered: In Moltenhold, the Foundry Watch needs a hand it can spare. Step into the
+    watch-hall and hear the captain.
+  accepted: Descend to the foundry floor and take the unknown casting-die from the
+    line (mind the constructs).
+  recovered: Carry the casting-die back UP to Watch-Captain Ordric in the Foundry
+    Watch.
+  done: '*** The Watch has its casting, and a name for what the machine is making.
+    Moltenhold stands another season. ***'

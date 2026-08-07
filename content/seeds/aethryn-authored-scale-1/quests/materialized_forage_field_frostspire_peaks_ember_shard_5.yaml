@@ -1,0 +1,36 @@
+id: forage_field_frostspire_peaks_ember_shard_5
+name: 'A small Requisition: ember shard of The Frostspire Peaks Wilds'
+start: s0
+reward_xp: 110
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_frostspire_peaks|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_frostspire_peaks|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_frostspire_peaks|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_frostspire_peaks|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_frostspire_peaks|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in ember shard in The Frostspire Peaks Wilds: 0/5 (110 XP).'
+  s1: 'Bring in ember shard in The Frostspire Peaks Wilds: 1/5 (110 XP).'
+  s2: 'Bring in ember shard in The Frostspire Peaks Wilds: 2/5 (110 XP).'
+  s3: 'Bring in ember shard in The Frostspire Peaks Wilds: 3/5 (110 XP).'
+  s4: 'Bring in ember shard in The Frostspire Peaks Wilds: 4/5 (110 XP).'
+  done: You have requisitioned ember shard enough for The Frostspire Peaks Wilds.
+    The hold's smiths will not want for it.

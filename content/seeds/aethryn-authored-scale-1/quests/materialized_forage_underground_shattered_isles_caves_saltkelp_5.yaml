@@ -1,0 +1,36 @@
+id: forage_underground_shattered_isles_caves_saltkelp_5
+name: 'A small Forage: saltkelp of The Drowned Isle Caves'
+start: s0
+reward_xp: 275
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_shattered_isles_caves|saltkelp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather saltkelp in The Drowned Isle Caves: 0/5 (275 XP).'
+  s1: 'Gather saltkelp in The Drowned Isle Caves: 1/5 (275 XP).'
+  s2: 'Gather saltkelp in The Drowned Isle Caves: 2/5 (275 XP).'
+  s3: 'Gather saltkelp in The Drowned Isle Caves: 3/5 (275 XP).'
+  s4: 'Gather saltkelp in The Drowned Isle Caves: 4/5 (275 XP).'
+  done: You have gathered saltkelp enough for The Drowned Isle Caves. The harbour
+    makers are glad of it.

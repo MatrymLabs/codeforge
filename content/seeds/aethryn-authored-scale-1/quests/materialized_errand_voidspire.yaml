@@ -1,0 +1,15 @@
+id: errand_voidspire
+name: 'Errand: The Great Tree'
+start: posted
+reward_xp: 3750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_great_tree
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to The Great Tree (3750 XP).
+  done: You bring word to The Great Tree. It is gratefully received.

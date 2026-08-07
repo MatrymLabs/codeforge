@@ -1,0 +1,71 @@
+id: cull_shattered_isles_zone_insectoid_12
+name: 'A standing Cull: the insectoid-kind of The Shattered Isles'
+start: s0
+reward_xp: 912
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|insectoid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|insectoid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|insectoid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|insectoid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|insectoid
+- state: s5
+  event: cull
+  to: s6
+  on_cull: shattered_isles_zone|insectoid
+- state: s6
+  event: cull
+  to: s7
+  on_cull: shattered_isles_zone|insectoid
+- state: s7
+  event: cull
+  to: s8
+  on_cull: shattered_isles_zone|insectoid
+- state: s8
+  event: cull
+  to: s9
+  on_cull: shattered_isles_zone|insectoid
+- state: s9
+  event: cull
+  to: s10
+  on_cull: shattered_isles_zone|insectoid
+- state: s10
+  event: cull
+  to: s11
+  on_cull: shattered_isles_zone|insectoid
+- state: s11
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|insectoid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the insectoid-kind of The Shattered Isles: 0/12 down (912 XP).'
+  s1: 'Cull the insectoid-kind of The Shattered Isles: 1/12 down (912 XP).'
+  s2: 'Cull the insectoid-kind of The Shattered Isles: 2/12 down (912 XP).'
+  s3: 'Cull the insectoid-kind of The Shattered Isles: 3/12 down (912 XP).'
+  s4: 'Cull the insectoid-kind of The Shattered Isles: 4/12 down (912 XP).'
+  s5: 'Cull the insectoid-kind of The Shattered Isles: 5/12 down (912 XP).'
+  s6: 'Cull the insectoid-kind of The Shattered Isles: 6/12 down (912 XP).'
+  s7: 'Cull the insectoid-kind of The Shattered Isles: 7/12 down (912 XP).'
+  s8: 'Cull the insectoid-kind of The Shattered Isles: 8/12 down (912 XP).'
+  s9: 'Cull the insectoid-kind of The Shattered Isles: 9/12 down (912 XP).'
+  s10: 'Cull the insectoid-kind of The Shattered Isles: 10/12 down (912 XP).'
+  s11: 'Cull the insectoid-kind of The Shattered Isles: 11/12 down (912 XP).'
+  done: The insectoid-kind of The Shattered Isles are thinned. The tide-roads are
+    the safer for it.

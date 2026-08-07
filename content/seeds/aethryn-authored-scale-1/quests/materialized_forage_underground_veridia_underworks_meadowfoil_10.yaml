@@ -1,0 +1,61 @@
+id: forage_underground_veridia_underworks_meadowfoil_10
+name: 'A standing Collection: meadowfoil of The Cradle Underworks'
+start: s0
+reward_xp: 80
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_veridia_underworks|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect meadowfoil in The Cradle Underworks: 0/10 (80 XP).'
+  s1: 'Collect meadowfoil in The Cradle Underworks: 1/10 (80 XP).'
+  s2: 'Collect meadowfoil in The Cradle Underworks: 2/10 (80 XP).'
+  s3: 'Collect meadowfoil in The Cradle Underworks: 3/10 (80 XP).'
+  s4: 'Collect meadowfoil in The Cradle Underworks: 4/10 (80 XP).'
+  s5: 'Collect meadowfoil in The Cradle Underworks: 5/10 (80 XP).'
+  s6: 'Collect meadowfoil in The Cradle Underworks: 6/10 (80 XP).'
+  s7: 'Collect meadowfoil in The Cradle Underworks: 7/10 (80 XP).'
+  s8: 'Collect meadowfoil in The Cradle Underworks: 8/10 (80 XP).'
+  s9: 'Collect meadowfoil in The Cradle Underworks: 9/10 (80 XP).'
+  done: You have brought in meadowfoil enough for The Cradle Underworks. The village
+    makers will put it to use.

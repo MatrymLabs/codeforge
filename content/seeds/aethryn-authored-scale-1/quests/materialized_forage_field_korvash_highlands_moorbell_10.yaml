@@ -1,0 +1,61 @@
+id: forage_field_korvash_highlands_moorbell_10
+name: 'A standing Gleaning: moorbell of The Korvash Highlands Wilds'
+start: s0
+reward_xp: 500
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_korvash_highlands|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_korvash_highlands|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_korvash_highlands|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_korvash_highlands|moorbell
+- state: s4
+  event: forage
+  to: s5
+  on_forage: field_korvash_highlands|moorbell
+- state: s5
+  event: forage
+  to: s6
+  on_forage: field_korvash_highlands|moorbell
+- state: s6
+  event: forage
+  to: s7
+  on_forage: field_korvash_highlands|moorbell
+- state: s7
+  event: forage
+  to: s8
+  on_forage: field_korvash_highlands|moorbell
+- state: s8
+  event: forage
+  to: s9
+  on_forage: field_korvash_highlands|moorbell
+- state: s9
+  event: forage
+  to: done
+  on_forage: field_korvash_highlands|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean moorbell in The Korvash Highlands Wilds: 0/10 (500 XP).'
+  s1: 'Glean moorbell in The Korvash Highlands Wilds: 1/10 (500 XP).'
+  s2: 'Glean moorbell in The Korvash Highlands Wilds: 2/10 (500 XP).'
+  s3: 'Glean moorbell in The Korvash Highlands Wilds: 3/10 (500 XP).'
+  s4: 'Glean moorbell in The Korvash Highlands Wilds: 4/10 (500 XP).'
+  s5: 'Glean moorbell in The Korvash Highlands Wilds: 5/10 (500 XP).'
+  s6: 'Glean moorbell in The Korvash Highlands Wilds: 6/10 (500 XP).'
+  s7: 'Glean moorbell in The Korvash Highlands Wilds: 7/10 (500 XP).'
+  s8: 'Glean moorbell in The Korvash Highlands Wilds: 8/10 (500 XP).'
+  s9: 'Glean moorbell in The Korvash Highlands Wilds: 9/10 (500 XP).'
+  done: You have gleaned moorbell enough for The Korvash Highlands Wilds. The region's
+    makers will put it to use.

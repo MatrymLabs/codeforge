@@ -1,0 +1,41 @@
+id: cull_field_skyward_spires_jackal_6
+name: 'A small Purge: the jackal-kind of The Skyward Spires Wilds'
+start: s0
+reward_xp: 498
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_skyward_spires|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_skyward_spires|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_skyward_spires|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_skyward_spires|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_skyward_spires|jackal
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_skyward_spires|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the jackal-kind of The Skyward Spires Wilds: 0/6 down (498 XP).'
+  s1: 'Purge the jackal-kind of The Skyward Spires Wilds: 1/6 down (498 XP).'
+  s2: 'Purge the jackal-kind of The Skyward Spires Wilds: 2/6 down (498 XP).'
+  s3: 'Purge the jackal-kind of The Skyward Spires Wilds: 3/6 down (498 XP).'
+  s4: 'Purge the jackal-kind of The Skyward Spires Wilds: 4/6 down (498 XP).'
+  s5: 'Purge the jackal-kind of The Skyward Spires Wilds: 5/6 down (498 XP).'
+  done: The jackal-kind of The Skyward Spires Wilds are purged. The region breathes
+    easier.

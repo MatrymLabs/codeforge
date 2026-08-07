@@ -44,4 +44,3 @@ def downgrade() -> None:
     op.drop_index("ix_seed_registry_status", table_name="seed_registry")
     op.drop_index("ix_seed_registry_owner", table_name="seed_registry")
     op.drop_table("seed_registry")
-

@@ -1,0 +1,83 @@
+id: cull_shattered_isles_zone_avian_12
+name: 'A standing Contract: the avian-kind of The Shattered Isles'
+start: s0
+reward_xp: 912
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|avian
+- state: s5
+  event: cull
+  to: s6
+  on_cull: shattered_isles_zone|avian
+- state: s6
+  event: cull
+  to: s7
+  on_cull: shattered_isles_zone|avian
+- state: s7
+  event: cull
+  to: s8
+  on_cull: shattered_isles_zone|avian
+- state: s8
+  event: cull
+  to: s9
+  on_cull: shattered_isles_zone|avian
+- state: s9
+  event: cull
+  to: s10
+  on_cull: shattered_isles_zone|avian
+- state: s10
+  event: cull
+  to: s11
+  on_cull: shattered_isles_zone|avian
+- state: s11
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the avian-kind of The Shattered Isles: 0/12 down (912
+    XP).'
+  s1: 'Fulfil the contract on the avian-kind of The Shattered Isles: 1/12 down (912
+    XP).'
+  s2: 'Fulfil the contract on the avian-kind of The Shattered Isles: 2/12 down (912
+    XP).'
+  s3: 'Fulfil the contract on the avian-kind of The Shattered Isles: 3/12 down (912
+    XP).'
+  s4: 'Fulfil the contract on the avian-kind of The Shattered Isles: 4/12 down (912
+    XP).'
+  s5: 'Fulfil the contract on the avian-kind of The Shattered Isles: 5/12 down (912
+    XP).'
+  s6: 'Fulfil the contract on the avian-kind of The Shattered Isles: 6/12 down (912
+    XP).'
+  s7: 'Fulfil the contract on the avian-kind of The Shattered Isles: 7/12 down (912
+    XP).'
+  s8: 'Fulfil the contract on the avian-kind of The Shattered Isles: 8/12 down (912
+    XP).'
+  s9: 'Fulfil the contract on the avian-kind of The Shattered Isles: 9/12 down (912
+    XP).'
+  s10: 'Fulfil the contract on the avian-kind of The Shattered Isles: 10/12 down (912
+    XP).'
+  s11: 'Fulfil the contract on the avian-kind of The Shattered Isles: 11/12 down (912
+    XP).'
+  done: The avian-kind of The Shattered Isles are put down. The tide-roads are the
+    safer for it.

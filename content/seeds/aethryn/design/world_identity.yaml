@@ -1,0 +1,14 @@
+id: aethryn
+display_name: Aethryn
+canon_status: CANON_LOCKED
+level_range: [1, 300]
+start_region: veridia
+start_room: veridia
+authority:
+  canon: content/seeds/aethryn/canon.yaml
+  lore: docs/aethryn_lore_bible.md
+  topology: content/seeds/aethryn/world_graph.yaml
+  generation_contract: content/seeds/aethryn/generation_contract.yaml
+status_ladder: [CANON_LOCKED, CANON_WORKING, AUTHORED_LOCAL, GENERATED_LOCAL, RUMOR]
+unknown_values: [unknown, intentionally_unresolved, authoring_required, rumor_only, not_yet_modeled]
+runtime_generation: forbidden

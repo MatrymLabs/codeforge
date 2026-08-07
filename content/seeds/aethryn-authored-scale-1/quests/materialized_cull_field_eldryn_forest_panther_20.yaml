@@ -1,0 +1,131 @@
+id: cull_field_eldryn_forest_panther_20
+name: 'A great Contract: the panther-kind of The Eldryn Forest Wilds'
+start: s0
+reward_xp: 520
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_eldryn_forest|panther
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_eldryn_forest|panther
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_eldryn_forest|panther
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_eldryn_forest|panther
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_eldryn_forest|panther
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_eldryn_forest|panther
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_eldryn_forest|panther
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_eldryn_forest|panther
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_eldryn_forest|panther
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_eldryn_forest|panther
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_eldryn_forest|panther
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_eldryn_forest|panther
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_eldryn_forest|panther
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_eldryn_forest|panther
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_eldryn_forest|panther
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_eldryn_forest|panther
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_eldryn_forest|panther
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_eldryn_forest|panther
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_eldryn_forest|panther
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_eldryn_forest|panther
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 0/20 down
+    (520 XP).'
+  s1: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 1/20 down
+    (520 XP).'
+  s2: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 2/20 down
+    (520 XP).'
+  s3: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 3/20 down
+    (520 XP).'
+  s4: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 4/20 down
+    (520 XP).'
+  s5: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 5/20 down
+    (520 XP).'
+  s6: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 6/20 down
+    (520 XP).'
+  s7: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 7/20 down
+    (520 XP).'
+  s8: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 8/20 down
+    (520 XP).'
+  s9: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 9/20 down
+    (520 XP).'
+  s10: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 10/20
+    down (520 XP).'
+  s11: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 11/20
+    down (520 XP).'
+  s12: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 12/20
+    down (520 XP).'
+  s13: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 13/20
+    down (520 XP).'
+  s14: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 14/20
+    down (520 XP).'
+  s15: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 15/20
+    down (520 XP).'
+  s16: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 16/20
+    down (520 XP).'
+  s17: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 17/20
+    down (520 XP).'
+  s18: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 18/20
+    down (520 XP).'
+  s19: 'Fulfil the contract on the panther-kind of The Eldryn Forest Wilds: 19/20
+    down (520 XP).'
+  done: The panther-kind of The Eldryn Forest Wilds are put down. The wardens of the
+    wood send their thanks.

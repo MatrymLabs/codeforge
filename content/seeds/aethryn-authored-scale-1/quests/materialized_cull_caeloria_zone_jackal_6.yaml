@@ -1,0 +1,41 @@
+id: cull_caeloria_zone_jackal_6
+name: 'A small Bounty: the jackal-kind of Caeloria'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: caeloria_zone|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: caeloria_zone|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: caeloria_zone|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: caeloria_zone|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: caeloria_zone|jackal
+- state: s5
+  event: cull
+  to: done
+  on_cull: caeloria_zone|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the jackal-kind of Caeloria: 0/6 down (120 XP).'
+  s1: 'Bring down the jackal-kind of Caeloria: 1/6 down (120 XP).'
+  s2: 'Bring down the jackal-kind of Caeloria: 2/6 down (120 XP).'
+  s3: 'Bring down the jackal-kind of Caeloria: 3/6 down (120 XP).'
+  s4: 'Bring down the jackal-kind of Caeloria: 4/6 down (120 XP).'
+  s5: 'Bring down the jackal-kind of Caeloria: 5/6 down (120 XP).'
+  done: The jackal-kind of Caeloria are hunted down. The farm-roads are the safer
+    for it.

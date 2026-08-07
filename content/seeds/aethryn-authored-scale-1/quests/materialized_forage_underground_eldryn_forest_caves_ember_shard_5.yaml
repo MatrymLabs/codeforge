@@ -1,0 +1,36 @@
+id: forage_underground_eldryn_forest_caves_ember_shard_5
+name: 'A small Harvest: ember shard of Eldryn''s Living Tunnels'
+start: s0
+reward_xp: 90
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_eldryn_forest_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest ember shard in Eldryn''s Living Tunnels: 0/5 (90 XP).'
+  s1: 'Harvest ember shard in Eldryn''s Living Tunnels: 1/5 (90 XP).'
+  s2: 'Harvest ember shard in Eldryn''s Living Tunnels: 2/5 (90 XP).'
+  s3: 'Harvest ember shard in Eldryn''s Living Tunnels: 3/5 (90 XP).'
+  s4: 'Harvest ember shard in Eldryn''s Living Tunnels: 4/5 (90 XP).'
+  done: You have harvested ember shard enough for Eldryn's Living Tunnels. The wood's
+    craftfolk have what they need.

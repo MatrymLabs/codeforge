@@ -1,0 +1,15 @@
+id: errand_frosthold
+name: 'Errand: The Obsidian Pit'
+start: posted
+reward_xp: 900
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_obsidian_pit
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Obsidian Pit (900 XP).
+  done: You reach The Obsidian Pit and mark the way. Well scouted.

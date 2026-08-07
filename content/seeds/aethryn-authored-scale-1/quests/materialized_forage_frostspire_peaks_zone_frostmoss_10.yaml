@@ -1,0 +1,61 @@
+id: forage_frostspire_peaks_zone_frostmoss_10
+name: 'A standing Draw: frostmoss of Frostspire Peaks'
+start: s0
+reward_xp: 220
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s1
+  event: forage
+  to: s2
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s2
+  event: forage
+  to: s3
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s3
+  event: forage
+  to: s4
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s4
+  event: forage
+  to: s5
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s5
+  event: forage
+  to: s6
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s6
+  event: forage
+  to: s7
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s7
+  event: forage
+  to: s8
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s8
+  event: forage
+  to: s9
+  on_forage: frostspire_peaks_zone|frostmoss
+- state: s9
+  event: forage
+  to: done
+  on_forage: frostspire_peaks_zone|frostmoss
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw frostmoss in Frostspire Peaks: 0/10 (220 XP).'
+  s1: 'Draw frostmoss in Frostspire Peaks: 1/10 (220 XP).'
+  s2: 'Draw frostmoss in Frostspire Peaks: 2/10 (220 XP).'
+  s3: 'Draw frostmoss in Frostspire Peaks: 3/10 (220 XP).'
+  s4: 'Draw frostmoss in Frostspire Peaks: 4/10 (220 XP).'
+  s5: 'Draw frostmoss in Frostspire Peaks: 5/10 (220 XP).'
+  s6: 'Draw frostmoss in Frostspire Peaks: 6/10 (220 XP).'
+  s7: 'Draw frostmoss in Frostspire Peaks: 7/10 (220 XP).'
+  s8: 'Draw frostmoss in Frostspire Peaks: 8/10 (220 XP).'
+  s9: 'Draw frostmoss in Frostspire Peaks: 9/10 (220 XP).'
+  done: You have drawn frostmoss enough for Frostspire Peaks. The hold's smiths will
+    not want for it.

@@ -1,0 +1,22 @@
+id: crawl_the_crystal_labyrinth
+name: 'Descent: The Crystal Labyrinth'
+start: above
+reward_xp: 5000
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: the_crystal_labyrinth
+- state: delving
+  event: reach
+  to: done
+  on_enter: the_crystal_labyrinth_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of The Crystal Labyrinth. Cross its mouth
+    and descend.
+  delving: You are within The Crystal Labyrinth. Press on to its deepest chamber.
+  done: You have reached the heart of The Crystal Labyrinth and lived. Few can (5000
+    XP).

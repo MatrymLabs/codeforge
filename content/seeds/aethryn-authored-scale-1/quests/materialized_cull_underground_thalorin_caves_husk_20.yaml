@@ -1,0 +1,111 @@
+id: cull_underground_thalorin_caves_husk_20
+name: 'A great Bounty: the husk-kind of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 880
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_thalorin_caves|husk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_thalorin_caves|husk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_thalorin_caves|husk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_thalorin_caves|husk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_thalorin_caves|husk
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_thalorin_caves|husk
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_thalorin_caves|husk
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_thalorin_caves|husk
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_thalorin_caves|husk
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_thalorin_caves|husk
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_thalorin_caves|husk
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_thalorin_caves|husk
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_thalorin_caves|husk
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_thalorin_caves|husk
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_thalorin_caves|husk
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_thalorin_caves|husk
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_thalorin_caves|husk
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_thalorin_caves|husk
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_thalorin_caves|husk
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_thalorin_caves|husk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the husk-kind of Thalorin''s Moor Mines: 0/20 down (880 XP).'
+  s1: 'Bring down the husk-kind of Thalorin''s Moor Mines: 1/20 down (880 XP).'
+  s2: 'Bring down the husk-kind of Thalorin''s Moor Mines: 2/20 down (880 XP).'
+  s3: 'Bring down the husk-kind of Thalorin''s Moor Mines: 3/20 down (880 XP).'
+  s4: 'Bring down the husk-kind of Thalorin''s Moor Mines: 4/20 down (880 XP).'
+  s5: 'Bring down the husk-kind of Thalorin''s Moor Mines: 5/20 down (880 XP).'
+  s6: 'Bring down the husk-kind of Thalorin''s Moor Mines: 6/20 down (880 XP).'
+  s7: 'Bring down the husk-kind of Thalorin''s Moor Mines: 7/20 down (880 XP).'
+  s8: 'Bring down the husk-kind of Thalorin''s Moor Mines: 8/20 down (880 XP).'
+  s9: 'Bring down the husk-kind of Thalorin''s Moor Mines: 9/20 down (880 XP).'
+  s10: 'Bring down the husk-kind of Thalorin''s Moor Mines: 10/20 down (880 XP).'
+  s11: 'Bring down the husk-kind of Thalorin''s Moor Mines: 11/20 down (880 XP).'
+  s12: 'Bring down the husk-kind of Thalorin''s Moor Mines: 12/20 down (880 XP).'
+  s13: 'Bring down the husk-kind of Thalorin''s Moor Mines: 13/20 down (880 XP).'
+  s14: 'Bring down the husk-kind of Thalorin''s Moor Mines: 14/20 down (880 XP).'
+  s15: 'Bring down the husk-kind of Thalorin''s Moor Mines: 15/20 down (880 XP).'
+  s16: 'Bring down the husk-kind of Thalorin''s Moor Mines: 16/20 down (880 XP).'
+  s17: 'Bring down the husk-kind of Thalorin''s Moor Mines: 17/20 down (880 XP).'
+  s18: 'Bring down the husk-kind of Thalorin''s Moor Mines: 18/20 down (880 XP).'
+  s19: 'Bring down the husk-kind of Thalorin''s Moor Mines: 19/20 down (880 XP).'
+  done: The husk-kind of Thalorin's Moor Mines are hunted down. The region breathes
+    easier.

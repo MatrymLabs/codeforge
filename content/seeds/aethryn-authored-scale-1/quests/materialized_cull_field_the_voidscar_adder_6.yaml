@@ -1,0 +1,41 @@
+id: cull_field_the_voidscar_adder_6
+name: 'A small Thinning: the adder-kind of The Voidscar Wilds'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_the_voidscar|adder
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_the_voidscar|adder
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_the_voidscar|adder
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_the_voidscar|adder
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_the_voidscar|adder
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_the_voidscar|adder
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the adder-kind of The Voidscar Wilds: 0/6 down (600 XP).'
+  s1: 'Thin out the adder-kind of The Voidscar Wilds: 1/6 down (600 XP).'
+  s2: 'Thin out the adder-kind of The Voidscar Wilds: 2/6 down (600 XP).'
+  s3: 'Thin out the adder-kind of The Voidscar Wilds: 3/6 down (600 XP).'
+  s4: 'Thin out the adder-kind of The Voidscar Wilds: 4/6 down (600 XP).'
+  s5: 'Thin out the adder-kind of The Voidscar Wilds: 5/6 down (600 XP).'
+  done: The adder-kind of The Voidscar Wilds are thinned back. The ash-tracks are
+    a shade safer.

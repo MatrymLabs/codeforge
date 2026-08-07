@@ -71,9 +71,7 @@ def test_dual_read_provenance_reads_legacy_and_rejects_conflict(tmp_path: Path) 
     store = DualReadProvenanceStore(SqlProvenanceStore(lambda: Session(engine)), legacy)
 
     assert store.load("seed-1", record.source_id) == record
-    SqlProvenanceStore(lambda: Session(engine)).save(
-        "seed-1", replace(record, commit="changed")
-    )
+    SqlProvenanceStore(lambda: Session(engine)).save("seed-1", replace(record, commit="changed"))
     with pytest.raises(ProvenanceStoreError, match="differs between SQL and legacy"):
         store.load("seed-1", record.source_id)
 
@@ -83,14 +81,18 @@ def test_workspace_contract_recovers_sql_source_provenance(monkeypatch, tmp_path
     monkeypatch.setenv("SEEDLAB_HOME", str(home))
     monkeypatch.setenv("CODEFORGE_SEED_REGISTRY", "sql")
     monkeypatch.setenv("CODEFORGE_DB", str(tmp_path / "codeforge.db"))
-    _seedlab_kernel().create_seed("SQL Sources", "alice", "source authority", seed_id="seed-sql-source")
+    _seedlab_kernel().create_seed(
+        "SQL Sources", "alice", "source authority", seed_id="seed-sql-source"
+    )
     record = _source("project-source")
     configured_provenance_store(home).save("seed-sql-source", record)
 
     contract = build_workspace_contract("seed-sql-source", root=home)
 
     assert contract.project_state["sources"]
-    connection = next(package for package in contract.packages if package.package == "Source.Connection")
+    connection = next(
+        package for package in contract.packages if package.package == "Source.Connection"
+    )
     assert connection.payload["source_id"] == record.source_id
     assert connection.payload["license"] == "MIT"
     assert not list((home / "sources").glob("**/*.json"))
@@ -144,7 +146,9 @@ def test_sql_audit_chain_detects_tampering_and_world_audit_routes_to_sql(
     with audit_store_session() as session:
         row = session.get(AuditEventRow, 0)
         assert row is not None
-        row.payload_json = '{"action":"forged","actor":"alice","detail":"source","ts":"2026-08-05T00:00:00Z"}'
+        row.payload_json = (
+            '{"action":"forged","actor":"alice","detail":"source","ts":"2026-08-05T00:00:00Z"}'
+        )
         session.commit()
     assert audit.verify() is False
 

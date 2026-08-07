@@ -1,0 +1,16 @@
+id: bounty_source_warden
+name: 'Bounty: the Warden of the Source'
+start: posted
+reward_xp: 168
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: source_warden
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the Warden of the Source (level 14). Fell it for 168
+    XP.
+  collected: 'Bounty collected: the Warden of the Source is felled. Well hunted.'

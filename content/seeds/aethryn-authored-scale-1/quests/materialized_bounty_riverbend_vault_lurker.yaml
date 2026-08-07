@@ -1,0 +1,15 @@
+id: bounty_riverbend_vault_lurker
+name: 'Bounty: the pale vault-lurker'
+start: posted
+reward_xp: 60
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: riverbend_vault_lurker
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the pale vault-lurker (level 5). Fell it for 60 XP.
+  collected: 'Bounty collected: the pale vault-lurker is felled. Well hunted.'

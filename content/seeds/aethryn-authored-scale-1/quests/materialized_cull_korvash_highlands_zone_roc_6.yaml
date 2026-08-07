@@ -1,0 +1,40 @@
+id: cull_korvash_highlands_zone_roc_6
+name: 'A small Thinning: the roc-kind of Korvash Highlands'
+start: s0
+reward_xp: 396
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: korvash_highlands_zone|roc
+- state: s1
+  event: cull
+  to: s2
+  on_cull: korvash_highlands_zone|roc
+- state: s2
+  event: cull
+  to: s3
+  on_cull: korvash_highlands_zone|roc
+- state: s3
+  event: cull
+  to: s4
+  on_cull: korvash_highlands_zone|roc
+- state: s4
+  event: cull
+  to: s5
+  on_cull: korvash_highlands_zone|roc
+- state: s5
+  event: cull
+  to: done
+  on_cull: korvash_highlands_zone|roc
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the roc-kind of Korvash Highlands: 0/6 down (396 XP).'
+  s1: 'Thin out the roc-kind of Korvash Highlands: 1/6 down (396 XP).'
+  s2: 'Thin out the roc-kind of Korvash Highlands: 2/6 down (396 XP).'
+  s3: 'Thin out the roc-kind of Korvash Highlands: 3/6 down (396 XP).'
+  s4: 'Thin out the roc-kind of Korvash Highlands: 4/6 down (396 XP).'
+  s5: 'Thin out the roc-kind of Korvash Highlands: 5/6 down (396 XP).'
+  done: The roc-kind of Korvash Highlands are thinned back. The region breathes easier.

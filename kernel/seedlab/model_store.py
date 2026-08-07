@@ -142,9 +142,7 @@ class SqlModelStore:
         try:
             return ProjectModel.from_dict(json.loads(row.model_json))
         except (json.JSONDecodeError, TypeError, ValueError) as exc:
-            raise ModelStoreError(
-                f"corrupt SQL model record {seed_id}/{model_id}: {exc}"
-            ) from exc
+            raise ModelStoreError(f"corrupt SQL model record {seed_id}/{model_id}: {exc}") from exc
 
     def all_for_seed(self, seed_id: str) -> list[ProjectModel]:
         with self.session_factory() as session:
@@ -180,9 +178,7 @@ class DualReadModelStore:
         return self.primary.load(seed_id, model_id) or self.legacy.load(seed_id, model_id)
 
     def all_for_seed(self, seed_id: str) -> list[ProjectModel]:
-        primary = {
-            model_id_for(model): model for model in self.primary.all_for_seed(seed_id)
-        }
+        primary = {model_id_for(model): model for model in self.primary.all_for_seed(seed_id)}
         legacy = {model_id_for(model): model for model in self.legacy.all_for_seed(seed_id)}
         return [
             primary.get(model_id, legacy[model_id])

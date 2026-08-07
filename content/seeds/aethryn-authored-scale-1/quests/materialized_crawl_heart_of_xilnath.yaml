@@ -1,0 +1,21 @@
+id: crawl_heart_of_xilnath
+name: 'Descent: Heart of Xil''nath'
+start: above
+reward_xp: 3000
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: heart_of_xilnath
+- state: delving
+  event: reach
+  to: done
+  on_enter: heart_of_xilnath_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Heart of Xil'nath. Cross its mouth and
+    descend.
+  delving: You are within Heart of Xil'nath. Press on to its deepest chamber.
+  done: You have reached the heart of Heart of Xil'nath and lived. Few can (3000 XP).

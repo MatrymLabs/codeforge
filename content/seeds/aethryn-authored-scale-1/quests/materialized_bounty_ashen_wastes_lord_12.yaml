@@ -1,0 +1,15 @@
+id: bounty_ashen_wastes_lord_12
+name: 'Bounty: Draumune the Char Maw'
+start: posted
+reward_xp: 1608
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: ashen_wastes_lord_12
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumune the Char Maw (level 134). Fell it for 1608 XP.
+  collected: 'Bounty collected: Draumune the Char Maw is felled. Well hunted.'

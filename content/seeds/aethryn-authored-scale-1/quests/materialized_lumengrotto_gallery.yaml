@@ -1,0 +1,23 @@
+id: lumengrotto_gallery
+name: The Gallery-Stalker
+start: offered
+reward_xp: 100
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: lumengrotto_gallery
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:gathering:35
+  on_defeat: lumengrotto_stalker
+terminal:
+- done
+labels:
+  offered: Delve-Warden Sorrel says a stalker has come up out of the black. Go EAST
+    from the market into the dark gallery and see.
+  hunting: The blind gallery-stalker turns toward your heartbeat. Put it down before
+    it finds the way to the terraces.
+  done: '*** The gallery-stalker is dead and the town''s edge holds another season.
+    Lumengrotto''s delve-wardens call you kin of the deep, and Sorrel says so. ***'

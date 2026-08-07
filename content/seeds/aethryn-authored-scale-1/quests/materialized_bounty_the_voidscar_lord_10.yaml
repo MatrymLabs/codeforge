@@ -1,0 +1,16 @@
+id: bounty_the_voidscar_lord_10
+name: 'Bounty: Balaoth the Obsidian Warden'
+start: posted
+reward_xp: 3144
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_voidscar_lord_10
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Balaoth the Obsidian Warden (level 262). Fell it for
+    3144 XP.
+  collected: 'Bounty collected: Balaoth the Obsidian Warden is felled. Well hunted.'

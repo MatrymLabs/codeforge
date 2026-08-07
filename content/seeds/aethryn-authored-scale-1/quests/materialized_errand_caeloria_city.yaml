@@ -1,0 +1,15 @@
+id: errand_caeloria_city
+name: 'Errand: Caeloria'
+start: posted
+reward_xp: 450
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: caeloria
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Caeloria (450 XP).
+  done: You set the token at Caeloria. The stone answers.

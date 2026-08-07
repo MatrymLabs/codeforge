@@ -1,0 +1,61 @@
+id: forage_underground_shattered_isles_caves_saltkelp_10
+name: 'A standing Forage: saltkelp of The Drowned Isle Caves'
+start: s0
+reward_xp: 550
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_shattered_isles_caves|saltkelp
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_shattered_isles_caves|saltkelp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather saltkelp in The Drowned Isle Caves: 0/10 (550 XP).'
+  s1: 'Gather saltkelp in The Drowned Isle Caves: 1/10 (550 XP).'
+  s2: 'Gather saltkelp in The Drowned Isle Caves: 2/10 (550 XP).'
+  s3: 'Gather saltkelp in The Drowned Isle Caves: 3/10 (550 XP).'
+  s4: 'Gather saltkelp in The Drowned Isle Caves: 4/10 (550 XP).'
+  s5: 'Gather saltkelp in The Drowned Isle Caves: 5/10 (550 XP).'
+  s6: 'Gather saltkelp in The Drowned Isle Caves: 6/10 (550 XP).'
+  s7: 'Gather saltkelp in The Drowned Isle Caves: 7/10 (550 XP).'
+  s8: 'Gather saltkelp in The Drowned Isle Caves: 8/10 (550 XP).'
+  s9: 'Gather saltkelp in The Drowned Isle Caves: 9/10 (550 XP).'
+  done: You have gathered saltkelp enough for The Drowned Isle Caves. The harbour
+    makers are glad of it.

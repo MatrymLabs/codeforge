@@ -1,0 +1,71 @@
+id: cull_field_eldryn_forest_sabrecat_12
+name: 'A standing Cull: the sabrecat-kind of The Eldryn Forest Wilds'
+start: s0
+reward_xp: 312
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_eldryn_forest|sabrecat
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_eldryn_forest|sabrecat
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_eldryn_forest|sabrecat
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_eldryn_forest|sabrecat
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_eldryn_forest|sabrecat
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_eldryn_forest|sabrecat
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_eldryn_forest|sabrecat
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_eldryn_forest|sabrecat
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_eldryn_forest|sabrecat
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_eldryn_forest|sabrecat
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_eldryn_forest|sabrecat
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_eldryn_forest|sabrecat
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 0/12 down (312 XP).'
+  s1: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 1/12 down (312 XP).'
+  s2: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 2/12 down (312 XP).'
+  s3: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 3/12 down (312 XP).'
+  s4: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 4/12 down (312 XP).'
+  s5: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 5/12 down (312 XP).'
+  s6: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 6/12 down (312 XP).'
+  s7: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 7/12 down (312 XP).'
+  s8: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 8/12 down (312 XP).'
+  s9: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 9/12 down (312 XP).'
+  s10: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 10/12 down (312 XP).'
+  s11: 'Cull the sabrecat-kind of The Eldryn Forest Wilds: 11/12 down (312 XP).'
+  done: The sabrecat-kind of The Eldryn Forest Wilds are thinned. The wardens of the
+    wood send their thanks.

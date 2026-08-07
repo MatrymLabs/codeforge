@@ -236,7 +236,7 @@ glacial_bastion:
 zhaar_desert:
   name: Zhaar Desert
   desc: |-
-    The Zhaar Desert zone (levels 80-130): a vast scorched desert of dunes, ruins, and buried fire. Within its bounds lie Sunscar City, Red Dune, Sandspire Ruins, The Obsidian Pit, Scorchstone Keep. Roads and routes run on to the neighbouring lands.
+    The Zhaar Desert zone (levels 80-130): a vast scorched desert of dunes, ruins, and buried fire. Within its bounds lie Sunscar City, Red Dunes, Sandspire Ruins, The Obsidian Pit, Scorchstone Keep. Roads and routes run on to the neighbouring lands.
   exits:
     north: duskwood_vale
     east: eldryn_forest
@@ -255,7 +255,7 @@ sunscar_city:
     out: zhaar_desert
 
 red_dunes:
-  name: Red Dune
+  name: Red Dunes
   desc: |-
     A caravan-outpost among the great red dunes of the deep desert. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
@@ -633,4 +633,3 @@ the_rifted_abyss:
     A rift into the abyss below the world, where reality comes apart. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
     out: the_voidscar
-

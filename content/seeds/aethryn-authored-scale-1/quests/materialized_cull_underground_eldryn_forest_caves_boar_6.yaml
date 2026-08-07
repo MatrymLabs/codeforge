@@ -1,0 +1,41 @@
+id: cull_underground_eldryn_forest_caves_boar_6
+name: 'A small Bounty: the boar-kind of Eldryn''s Living Tunnels'
+start: s0
+reward_xp: 144
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_eldryn_forest_caves|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_eldryn_forest_caves|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_eldryn_forest_caves|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_eldryn_forest_caves|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_eldryn_forest_caves|boar
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_eldryn_forest_caves|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 0/6 down (144 XP).'
+  s1: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 1/6 down (144 XP).'
+  s2: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 2/6 down (144 XP).'
+  s3: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 3/6 down (144 XP).'
+  s4: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 4/6 down (144 XP).'
+  s5: 'Bring down the boar-kind of Eldryn''s Living Tunnels: 5/6 down (144 XP).'
+  done: The boar-kind of Eldryn's Living Tunnels are hunted down. The wardens of the
+    wood send their thanks.

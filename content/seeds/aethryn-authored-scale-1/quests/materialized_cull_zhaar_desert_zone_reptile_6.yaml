@@ -1,0 +1,41 @@
+id: cull_zhaar_desert_zone_reptile_6
+name: 'A small Warrant: the reptile-kind of Zhaar Desert'
+start: s0
+reward_xp: 258
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: zhaar_desert_zone|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: zhaar_desert_zone|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: zhaar_desert_zone|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: zhaar_desert_zone|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: zhaar_desert_zone|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: zhaar_desert_zone|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the reptile-kind of Zhaar Desert: 0/6 down (258 XP).'
+  s1: 'Answer the warrant on the reptile-kind of Zhaar Desert: 1/6 down (258 XP).'
+  s2: 'Answer the warrant on the reptile-kind of Zhaar Desert: 2/6 down (258 XP).'
+  s3: 'Answer the warrant on the reptile-kind of Zhaar Desert: 3/6 down (258 XP).'
+  s4: 'Answer the warrant on the reptile-kind of Zhaar Desert: 4/6 down (258 XP).'
+  s5: 'Answer the warrant on the reptile-kind of Zhaar Desert: 5/6 down (258 XP).'
+  done: The reptile-kind of Zhaar Desert are answered for. The caravan roads breathe
+    easier.

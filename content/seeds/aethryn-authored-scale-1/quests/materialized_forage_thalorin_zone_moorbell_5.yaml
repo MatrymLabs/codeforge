@@ -1,0 +1,36 @@
+id: forage_thalorin_zone_moorbell_5
+name: 'A small Forage: moorbell of Thalorin'
+start: s0
+reward_xp: 175
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: thalorin_zone|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: thalorin_zone|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: thalorin_zone|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: thalorin_zone|moorbell
+- state: s4
+  event: forage
+  to: done
+  on_forage: thalorin_zone|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather moorbell in Thalorin: 0/5 (175 XP).'
+  s1: 'Gather moorbell in Thalorin: 1/5 (175 XP).'
+  s2: 'Gather moorbell in Thalorin: 2/5 (175 XP).'
+  s3: 'Gather moorbell in Thalorin: 3/5 (175 XP).'
+  s4: 'Gather moorbell in Thalorin: 4/5 (175 XP).'
+  done: You have gathered moorbell enough for Thalorin. The region's makers will put
+    it to use.

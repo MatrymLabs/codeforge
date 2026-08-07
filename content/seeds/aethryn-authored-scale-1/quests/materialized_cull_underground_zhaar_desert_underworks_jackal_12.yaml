@@ -1,0 +1,73 @@
+id: cull_underground_zhaar_desert_underworks_jackal_12
+name: 'A standing Bounty: the jackal-kind of The Obsidian Pit Galleries'
+start: s0
+reward_xp: 552
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_zhaar_desert_underworks|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_zhaar_desert_underworks|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 0/12 down (552 XP).'
+  s1: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 1/12 down (552 XP).'
+  s2: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 2/12 down (552 XP).'
+  s3: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 3/12 down (552 XP).'
+  s4: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 4/12 down (552 XP).'
+  s5: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 5/12 down (552 XP).'
+  s6: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 6/12 down (552 XP).'
+  s7: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 7/12 down (552 XP).'
+  s8: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 8/12 down (552 XP).'
+  s9: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 9/12 down (552 XP).'
+  s10: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 10/12 down (552
+    XP).'
+  s11: 'Bring down the jackal-kind of The Obsidian Pit Galleries: 11/12 down (552
+    XP).'
+  done: The jackal-kind of The Obsidian Pit Galleries are hunted down. The caravan
+    roads breathe easier.

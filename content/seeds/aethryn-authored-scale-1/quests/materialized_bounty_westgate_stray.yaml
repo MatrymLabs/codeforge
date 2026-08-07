@@ -1,0 +1,15 @@
+id: bounty_westgate_stray
+name: 'Bounty: a reach-frayed wanderer'
+start: posted
+reward_xp: 348
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: westgate_stray
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a reach-frayed wanderer (level 29). Fell it for 348 XP.
+  collected: 'Bounty collected: a reach-frayed wanderer is felled. Well hunted.'

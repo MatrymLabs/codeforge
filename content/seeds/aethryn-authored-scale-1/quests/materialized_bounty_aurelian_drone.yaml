@@ -1,0 +1,16 @@
+id: bounty_aurelian_drone
+name: 'Bounty: a derelict transit-drone'
+start: posted
+reward_xp: 2376
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: aurelian_drone
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a derelict transit-drone (level 198). Fell it for 2376
+    XP.
+  collected: 'Bounty collected: a derelict transit-drone is felled. Well hunted.'

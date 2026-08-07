@@ -1,0 +1,15 @@
+id: bounty_zhaar_desert_lord_1
+name: 'Bounty: Draumur the Grey Warden'
+start: posted
+reward_xp: 972
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zhaar_desert_lord_1
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumur the Grey Warden (level 81). Fell it for 972 XP.
+  collected: 'Bounty collected: Draumur the Grey Warden is felled. Well hunted.'

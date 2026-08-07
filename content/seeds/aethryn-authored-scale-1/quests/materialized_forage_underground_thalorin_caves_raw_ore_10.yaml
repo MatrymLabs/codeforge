@@ -1,0 +1,61 @@
+id: forage_underground_thalorin_caves_raw_ore_10
+name: 'A standing Haul: raw ore of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 330
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_thalorin_caves|raw_ore
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_thalorin_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in raw ore in Thalorin''s Moor Mines: 0/10 (330 XP).'
+  s1: 'Haul in raw ore in Thalorin''s Moor Mines: 1/10 (330 XP).'
+  s2: 'Haul in raw ore in Thalorin''s Moor Mines: 2/10 (330 XP).'
+  s3: 'Haul in raw ore in Thalorin''s Moor Mines: 3/10 (330 XP).'
+  s4: 'Haul in raw ore in Thalorin''s Moor Mines: 4/10 (330 XP).'
+  s5: 'Haul in raw ore in Thalorin''s Moor Mines: 5/10 (330 XP).'
+  s6: 'Haul in raw ore in Thalorin''s Moor Mines: 6/10 (330 XP).'
+  s7: 'Haul in raw ore in Thalorin''s Moor Mines: 7/10 (330 XP).'
+  s8: 'Haul in raw ore in Thalorin''s Moor Mines: 8/10 (330 XP).'
+  s9: 'Haul in raw ore in Thalorin''s Moor Mines: 9/10 (330 XP).'
+  done: You have hauled in raw ore enough for Thalorin's Moor Mines. The region's
+    makers will put it to use.

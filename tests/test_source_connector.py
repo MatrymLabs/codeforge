@@ -10,6 +10,7 @@ searched, or read; an empty search query and a non-directory root are refused.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -17,8 +18,8 @@ import pytest
 from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import (
-    ConnectorRateLimitExceeded,
     ConnectorRateLimiter,
+    ConnectorRateLimitExceeded,
     LocalSource,
     PathBoundaryError,
     ProtectedPathError,
@@ -28,7 +29,6 @@ from kernel.seedlab.source_connector import (
     source_label,
 )
 from kernel.session_identity import SessionIdentity
-from datetime import UTC, datetime, timedelta
 
 # A fake git sha + secret-file contents for the fixture (none are real). The commit is centralized
 # and marked so the secret scanner treats it as the allowlisted test fixture it is.
@@ -76,7 +76,9 @@ def test_register_records_provenance_and_metadata(tmp_path: Path) -> None:
     assert record.digest.startswith("sha256:")
 
 
-def test_authorized_source_reads_require_active_identity_and_seed_scoped_grant(tmp_path: Path) -> None:
+def test_authorized_source_reads_require_active_identity_and_seed_scoped_grant(
+    tmp_path: Path,
+) -> None:
     now = datetime.now(UTC)
     identity = SessionIdentity(
         principal_id="human:josh",

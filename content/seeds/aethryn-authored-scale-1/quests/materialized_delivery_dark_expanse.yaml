@@ -1,0 +1,20 @@
+id: delivery_dark_expanse
+name: 'Delivery: Dark Expanse to Voidspire'
+start: posted
+reward_xp: 3000
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_dark_expanse
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: voidspire
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Dark Expanse is bound for Voidspire. Take it up (3000 XP).
+  carrying: Carry the parcel to Voidspire.
+  done: The parcel is delivered to Voidspire. The road keeps its promise.

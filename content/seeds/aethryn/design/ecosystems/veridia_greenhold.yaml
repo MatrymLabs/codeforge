@@ -1,0 +1,42 @@
+id: veridia_greenhold_ecology
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+parent_zone: veridia_zone
+habitats:
+  - id: greenhold_fields
+    creatures: [greenhold_boar]
+    resources: [meadowfoil, barley]
+    pressure: damaged_barley_and_displaced_boar
+    recurrence: seasonal forage and local crop access
+    civilization_relation: crop damage threatens milling and market supply
+  - id: greenhold_undercroft
+    creatures: [greenhold_vermin]
+    resources: [old_water_infrastructure]
+    pressure: neglected maintenance and food scraps
+    recurrence: ordinary vermin reproduction
+*** Add File: /home/josh/Projects/MatrymLabs/codeforge/content/seeds/aethryn/design/economies/veridia_greenhold.yaml
+id: veridia_greenhold_economy
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+parent_zone: veridia_zone
+flows:
+  - id: meadowfoil_to_trader
+    source: greenhold_fields
+    sink: greenhold_trader
+    resource: meadowfoil
+    purpose: dye trade and shop liquidity
+    status: modeled
+  - id: barley_to_mill
+    source: greenhold_fields
+    sink: greenhold_miller
+    resource: barley
+    purpose: food production
+    status: modeled
+  - id: water_to_settlement
+    source: greenhold_undercroft
+    sink: greenhold
+    resource: clean_water
+    purpose: settlement survival
+    status: modeled_with_reversible_failure
+dependencies: [water, food, labor, transport, shop_inventory]
+shortages: [greenhold_water_shortage, damaged_barley]

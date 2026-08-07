@@ -1,0 +1,19 @@
+id: riverbend_reeds
+name: The Sunken Marker
+start: offered
+reward_xp: 25
+steps:
+- state: offered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:15
+  on_enter: riverbend_reeds
+terminal:
+- done
+labels:
+  offered: They say an old marker-stone leans half-sunk in the Riverbend reeds, older
+    than the crossing, with a charm left at its foot. Go EAST from the landing to
+    the reed-flats and find it while the water is low.
+  done: '*** At the foot of the sunken marker a river-worn charm waits in its niche,
+    cast with the same gear-work as the weir below. You have found what the fishers
+    would not touch, and the reeds keep their older secret still. ***'

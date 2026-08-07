@@ -1,0 +1,23 @@
+id: aurelian_gantry
+name: The Wind-Wraith
+start: offered
+reward_xp: 155
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: aurelian_gantry
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:gathering:44
+  on_defeat: aurelian_windwraith
+terminal:
+- done
+labels:
+  offered: Dock-Master Perrin says a wind-wraith walks the outer gantry. Go EAST from
+    the market onto the gantry and see.
+  hunting: The keening wind-wraith reaches along the rail. Put it down so the salvage-crews
+    can work the gantry again.
+  done: '*** The wind-wraith is scattered and the gantry can be worked again. Aurelian
+    owes you the sky itself, and Perrin says so. ***'

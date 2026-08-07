@@ -1,0 +1,10 @@
+id: brightwater_wardens
+display_name: Brightwater River Wardens
+canon_status: AUTHORED_LOCAL
+parent_region: caeloria
+parent_zone: caeloria_zone
+source_design_ids: [brightwater, authored_brightwater]
+purpose: Maintain river safety where licensing records do not reach.
+methods: [weir inspection, lower-race patrol, flood reporting, escorted recovery]
+pressure: licensing authority wants custody while wardens need practical access to the water
+

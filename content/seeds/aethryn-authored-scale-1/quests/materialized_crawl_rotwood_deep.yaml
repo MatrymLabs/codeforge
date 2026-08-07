@@ -1,0 +1,20 @@
+id: crawl_rotwood_deep
+name: 'Descent: Rotwood Deep'
+start: above
+reward_xp: 1600
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: rotwood_deep
+- state: delving
+  event: reach
+  to: done
+  on_enter: rotwood_deep_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Rotwood Deep. Cross its mouth and descend.
+  delving: You are within Rotwood Deep. Press on to its deepest chamber.
+  done: You have reached the heart of Rotwood Deep and lived. Few can (1600 XP).

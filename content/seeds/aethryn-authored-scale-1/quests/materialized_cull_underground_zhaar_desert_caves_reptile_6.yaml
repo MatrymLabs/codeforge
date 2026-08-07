@@ -1,0 +1,41 @@
+id: cull_underground_zhaar_desert_caves_reptile_6
+name: 'A small Thinning: the reptile-kind of The Red Dune Sinkholes'
+start: s0
+reward_xp: 240
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_zhaar_desert_caves|reptile
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_zhaar_desert_caves|reptile
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_zhaar_desert_caves|reptile
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_zhaar_desert_caves|reptile
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_zhaar_desert_caves|reptile
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_zhaar_desert_caves|reptile
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the reptile-kind of The Red Dune Sinkholes: 0/6 down (240 XP).'
+  s1: 'Thin out the reptile-kind of The Red Dune Sinkholes: 1/6 down (240 XP).'
+  s2: 'Thin out the reptile-kind of The Red Dune Sinkholes: 2/6 down (240 XP).'
+  s3: 'Thin out the reptile-kind of The Red Dune Sinkholes: 3/6 down (240 XP).'
+  s4: 'Thin out the reptile-kind of The Red Dune Sinkholes: 4/6 down (240 XP).'
+  s5: 'Thin out the reptile-kind of The Red Dune Sinkholes: 5/6 down (240 XP).'
+  done: The reptile-kind of The Red Dune Sinkholes are thinned back. The caravan roads
+    breathe easier.

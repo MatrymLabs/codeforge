@@ -1,0 +1,20 @@
+id: greenhold
+display_name: Greenhold
+canon_status: AUTHORED_LOCAL
+parent_region: veridia
+parent_zone: veridia_zone
+source_design_ids: [veridia, authored_greenhold]
+population_band: small agricultural market-town
+government: keeper and parish custom, with market bargaining
+food_sources: [barley, meadowfoil, nearby farms]
+water_source: old fountain works beneath the granary and local well
+fuel_source: local wood and smithy stock
+labor_base: farming, milling, smithing, trade, maintenance
+waste_handling: not_yet_modeled
+economy: grain and meadowfoil support local trade; traveller supplies cross the market
+architecture: walled market-town over older pale-stone infrastructure
+culture: practical, memory-keeping, suspicious of unexplained old works
+services: [market, smithy, granary, water, lodging_not_yet_modeled]
+external_connections: [veridia, greenhold_fields]
+active_conflicts: [granary_water_shortage, damaged_barley, old_works_uncertainty]
+daily_rhythm: market opening, field labor, milling, well gossip, evening gate closure

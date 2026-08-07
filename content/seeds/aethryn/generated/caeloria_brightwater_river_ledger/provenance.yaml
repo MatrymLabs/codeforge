@@ -1,0 +1,14 @@
+source_design_ids:
+- caeloria
+- brightwater
+- caeloria_brightwater_economy
+- caeloria_brightwater_ecology
+source_paths:
+- content/seeds/aethryn/design
+- content/seeds/aethryn/authored/brightwater.yaml
+packet_id: caeloria_brightwater_river_ledger
+generation_seed: 63041
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+authority: AUTHORED_LOCAL
+note: offline deterministic compiler output

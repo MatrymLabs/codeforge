@@ -1,0 +1,15 @@
+id: bounty_duskwood_vale_lord_0
+name: 'Bounty: Kaelix the Timber Bane'
+start: posted
+reward_xp: 240
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: duskwood_vale_lord_0
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Kaelix the Timber Bane (level 20). Fell it for 240 XP.
+  collected: 'Bounty collected: Kaelix the Timber Bane is felled. Well hunted.'

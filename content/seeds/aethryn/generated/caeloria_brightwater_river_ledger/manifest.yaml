@@ -1,0 +1,41 @@
+packet_id: caeloria_brightwater_river_ledger
+generator_name: aethryn_world_compiler
+generator_version: 1.0.0
+generation_seed: 63041
+input_digest: d2507749fb63248653b8ad256240aaa5fb4781d7692f240bbe10849351257dd8
+output_digest: 303fc3712e4ae61e263d9958e02758f63307121cb911335be72c279341176536
+records:
+  settlements: 1
+  districts: 1
+  neighborhoods: 1
+  rooms: 5
+  npcs: 3
+  creatures: 2
+  items: 2
+  resource_nodes: 1
+  economy_flows: 3
+  ecology_flows: 2
+  quest_pressures: 3
+  state_changes: 1
+  dungeons: 1
+output_paths:
+- content/seeds/aethryn/room_batches/caeloria_brightwater_river_ledger.yaml
+- content/seeds/aethryn/generated/caeloria_brightwater_river_ledger/manifest.yaml
+- content/seeds/aethryn/generated/caeloria_brightwater_river_ledger/provenance.yaml
+provenance:
+  source_design_ids:
+  - caeloria
+  - brightwater
+  - caeloria_brightwater_economy
+  - caeloria_brightwater_ecology
+  source_paths:
+  - content/seeds/aethryn/design
+  - content/seeds/aethryn/authored/brightwater.yaml
+  packet_id: caeloria_brightwater_river_ledger
+  generation_seed: 63041
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  authority: AUTHORED_LOCAL
+  note: offline deterministic compiler output
+validation_verdict: CLEAN
+previous_package: ''

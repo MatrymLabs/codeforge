@@ -1,0 +1,26 @@
+id: story_stonehelm
+name: The Tale of Stonehelm
+start: afoot
+reward_xp: 5000
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: korvash_crater
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: korvash_crater_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: stonehelm
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Korvash Highlands: Korvash Crater festers, and Stonehelm lives
+    in its shadow.'
+  at_heart: You stand within Korvash Crater. Its deep terror waits below. Fell it.
+  homeward: The terror of Korvash Crater is slain. Bear word to Stonehelm (5000 XP).
+  done: '*** Stonehelm breathes free. Korvash Highlands will remember you. ***'

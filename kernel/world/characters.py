@@ -48,6 +48,21 @@ def snapshot_item(iid: str) -> dict[str, Any] | None:
         "mods": item["mods"],
         "rarity": item.get("rarity", "common"),
     }
+    # Instance facts are optional and additive: older saves remain valid, while richer Aethryn
+    # prototypes preserve custody, condition, quality, and provenance across reload.
+    for key in (
+        "owner",
+        "quantity",
+        "condition",
+        "charges",
+        "quality",
+        "maker",
+        "custody",
+        "stolen",
+        "instance_provenance",
+    ):
+        if key in item:
+            snap[key] = item[key]
     if item.get("slot"):  # only gear wears; carry its durability so wear survives logout
         from kernel.world.durability import current as _durability
 
@@ -79,6 +94,19 @@ def reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
             ITEMS[iid]["rarity"] = snapshot["rarity"]
         if isinstance(snapshot.get("durability"), int):  # restore any accrued wear
             ITEMS[iid]["durability"] = snapshot["durability"]
+        for key in (
+            "owner",
+            "quantity",
+            "condition",
+            "charges",
+            "quality",
+            "maker",
+            "custody",
+            "stolen",
+            "instance_provenance",
+        ):
+            if key in snapshot:
+                ITEMS[iid][key] = snapshot[key]
     return iid
 
 

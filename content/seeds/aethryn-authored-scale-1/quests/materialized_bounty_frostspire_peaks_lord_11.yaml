@@ -1,0 +1,15 @@
+id: bounty_frostspire_peaks_lord_11
+name: 'Bounty: Kaelaya the Rime Matron'
+start: posted
+reward_xp: 792
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: frostspire_peaks_lord_11
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Kaelaya the Rime Matron (level 66). Fell it for 792 XP.
+  collected: 'Bounty collected: Kaelaya the Rime Matron is felled. Well hunted.'

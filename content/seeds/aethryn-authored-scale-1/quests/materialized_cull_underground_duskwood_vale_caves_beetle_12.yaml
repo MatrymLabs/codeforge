@@ -1,0 +1,83 @@
+id: cull_underground_duskwood_vale_caves_beetle_12
+name: 'A standing Contract: the beetle-kind of Duskwood Root Hollows'
+start: s0
+reward_xp: 168
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_duskwood_vale_caves|beetle
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_duskwood_vale_caves|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 0/12 down
+    (168 XP).'
+  s1: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 1/12 down
+    (168 XP).'
+  s2: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 2/12 down
+    (168 XP).'
+  s3: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 3/12 down
+    (168 XP).'
+  s4: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 4/12 down
+    (168 XP).'
+  s5: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 5/12 down
+    (168 XP).'
+  s6: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 6/12 down
+    (168 XP).'
+  s7: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 7/12 down
+    (168 XP).'
+  s8: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 8/12 down
+    (168 XP).'
+  s9: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 9/12 down
+    (168 XP).'
+  s10: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 10/12 down
+    (168 XP).'
+  s11: 'Fulfil the contract on the beetle-kind of Duskwood Root Hollows: 11/12 down
+    (168 XP).'
+  done: The beetle-kind of Duskwood Root Hollows are put down. The wardens of the
+    wood send their thanks.

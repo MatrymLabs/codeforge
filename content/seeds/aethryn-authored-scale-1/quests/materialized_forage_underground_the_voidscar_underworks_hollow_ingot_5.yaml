@@ -1,0 +1,36 @@
+id: forage_underground_the_voidscar_underworks_hollow_ingot_5
+name: 'A small Draw: hollow ingot of The God-Mirror Approach'
+start: s0
+reward_xp: 375
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_voidscar_underworks|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_voidscar_underworks|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_voidscar_underworks|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_voidscar_underworks|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_the_voidscar_underworks|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw hollow ingot in The God-Mirror Approach: 0/5 (375 XP).'
+  s1: 'Draw hollow ingot in The God-Mirror Approach: 1/5 (375 XP).'
+  s2: 'Draw hollow ingot in The God-Mirror Approach: 2/5 (375 XP).'
+  s3: 'Draw hollow ingot in The God-Mirror Approach: 3/5 (375 XP).'
+  s4: 'Draw hollow ingot in The God-Mirror Approach: 4/5 (375 XP).'
+  done: You have drawn hollow ingot enough for The God-Mirror Approach. The forge-crews
+    can feed the fires now.

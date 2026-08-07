@@ -1,0 +1,47 @@
+id: cull_underground_ashen_wastes_underworks_wisp_6
+name: 'A small Reckoning: the wisp-kind of The Flamewrought Service Depths'
+start: s0
+reward_xp: 354
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_ashen_wastes_underworks|wisp
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_ashen_wastes_underworks|wisp
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_ashen_wastes_underworks|wisp
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_ashen_wastes_underworks|wisp
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_ashen_wastes_underworks|wisp
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_ashen_wastes_underworks|wisp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 0/6 down (354
+    XP).'
+  s1: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 1/6 down (354
+    XP).'
+  s2: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 2/6 down (354
+    XP).'
+  s3: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 3/6 down (354
+    XP).'
+  s4: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 4/6 down (354
+    XP).'
+  s5: 'Reckon with the wisp-kind of The Flamewrought Service Depths: 5/6 down (354
+    XP).'
+  done: The wisp-kind of The Flamewrought Service Depths are settled with. The ash-tracks
+    are a shade safer.

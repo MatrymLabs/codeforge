@@ -18,7 +18,15 @@ transfers straight to PostgreSQL when the world outgrows one file.
 import os
 from pathlib import Path
 
-from sqlalchemy import CheckConstraint, Engine, ForeignKey, LargeBinary, Text, create_engine
+from sqlalchemy import (
+    CheckConstraint,
+    Engine,
+    ForeignKey,
+    LargeBinary,
+    Text,
+    UniqueConstraint,
+    create_engine,
+)
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
@@ -307,6 +315,42 @@ class AuctionRow(ArchiveBase):
     name: Mapped[str] = mapped_column()
     mods: Mapped[str] = mapped_column(default="{}")
     rarity: Mapped[str] = mapped_column(default="common")
+
+
+class EconomyTransactionRow(ArchiveBase):
+    """One idempotent value movement, retained for replay and reconciliation."""
+
+    __tablename__ = "economy_transactions"
+    __table_args__ = (
+        UniqueConstraint("idempotency_key", name="uq_economy_transaction_idempotency"),
+    )
+
+    transaction_id: Mapped[str] = mapped_column(primary_key=True)
+    idempotency_key: Mapped[str] = mapped_column(index=True)
+    request_hash: Mapped[str] = mapped_column()
+    actor: Mapped[str] = mapped_column(index=True)
+    source: Mapped[str] = mapped_column()
+    destination: Mapped[str] = mapped_column(default="")
+    currency_amount: Mapped[int] = mapped_column(default=0)
+    item_ids: Mapped[str] = mapped_column(Text(), default="[]")
+    reason: Mapped[str] = mapped_column(default="")
+    status: Mapped[str] = mapped_column(default="committed")
+    created_at: Mapped[str] = mapped_column(default="")
+
+
+class CurrencyLedgerRow(ArchiveBase):
+    """One signed currency ledger entry attached to an economy transaction."""
+
+    __tablename__ = "currency_ledger"
+
+    entry_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    transaction_id: Mapped[str] = mapped_column(index=True)
+    account: Mapped[str] = mapped_column(index=True)
+    delta: Mapped[int] = mapped_column()
+    balance_after: Mapped[int] = mapped_column()
+    source: Mapped[str] = mapped_column()
+    destination: Mapped[str] = mapped_column(default="")
+    reason: Mapped[str] = mapped_column(default="")
 
 
 def engine_url() -> str:

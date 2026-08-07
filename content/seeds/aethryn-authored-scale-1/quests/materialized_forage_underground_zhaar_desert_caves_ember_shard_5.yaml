@@ -1,0 +1,36 @@
+id: forage_underground_zhaar_desert_caves_ember_shard_5
+name: 'A small Haul: ember shard of The Red Dune Sinkholes'
+start: s0
+reward_xp: 150
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_zhaar_desert_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_zhaar_desert_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_zhaar_desert_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_zhaar_desert_caves|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_zhaar_desert_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in ember shard in The Red Dune Sinkholes: 0/5 (150 XP).'
+  s1: 'Haul in ember shard in The Red Dune Sinkholes: 1/5 (150 XP).'
+  s2: 'Haul in ember shard in The Red Dune Sinkholes: 2/5 (150 XP).'
+  s3: 'Haul in ember shard in The Red Dune Sinkholes: 3/5 (150 XP).'
+  s4: 'Haul in ember shard in The Red Dune Sinkholes: 4/5 (150 XP).'
+  done: You have hauled in ember shard enough for The Red Dune Sinkholes. The caravan
+    traders will pay well for it.

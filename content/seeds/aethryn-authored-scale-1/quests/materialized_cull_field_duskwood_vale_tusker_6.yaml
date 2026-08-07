@@ -1,0 +1,41 @@
+id: cull_field_duskwood_vale_tusker_6
+name: 'A small Cull: the tusker-kind of The Duskwood Vale Wilds'
+start: s0
+reward_xp: 96
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_duskwood_vale|tusker
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_duskwood_vale|tusker
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_duskwood_vale|tusker
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_duskwood_vale|tusker
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_duskwood_vale|tusker
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_duskwood_vale|tusker
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the tusker-kind of The Duskwood Vale Wilds: 0/6 down (96 XP).'
+  s1: 'Cull the tusker-kind of The Duskwood Vale Wilds: 1/6 down (96 XP).'
+  s2: 'Cull the tusker-kind of The Duskwood Vale Wilds: 2/6 down (96 XP).'
+  s3: 'Cull the tusker-kind of The Duskwood Vale Wilds: 3/6 down (96 XP).'
+  s4: 'Cull the tusker-kind of The Duskwood Vale Wilds: 4/6 down (96 XP).'
+  s5: 'Cull the tusker-kind of The Duskwood Vale Wilds: 5/6 down (96 XP).'
+  done: The tusker-kind of The Duskwood Vale Wilds are thinned. The wardens of the
+    wood send their thanks.

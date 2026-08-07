@@ -1,0 +1,29 @@
+id: greenhold_source
+name: The Heart of the Cradle
+start: offered
+reward_xp: 130
+steps:
+- state: offered
+  event: enter
+  to: descending
+  on_enter: greenhold_deepstair
+- state: descending
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:knowing:40
+  on_defeat: source_warden
+terminal:
+- done
+labels:
+  offered: Scholar Ilric says the cradle's four old works are one machine, and the
+    stair below Greenhold's undercroft is its throat. Go DOWN from the granary undercroft
+    to the deep stair and hear him out.
+  descending: 'Down past the Gallery of Names and the Channel-Junction lies the Reservoir-Heart,
+    and the elite Warden of the Source that guards it. Reach the heart and put the
+    Warden down (mind the tender and the sentinel on the way, and the sealed alcove
+    NORTH of the junction). These foes far outmatch the cradle: go strong.'
+  done: '*** The Warden falls, and the stilled engine at the cradle''s heart lies
+    open at last. The heart-keystone is yours to take, the master-record is yours
+    to read, and Scholar Ilric will have the truth of what feeds the valley. Greenhold,
+    Riverbend, Elderwatch, Sunmeadow: one well, one promise, kept a thousand years
+    past the keepers who made it. ***'

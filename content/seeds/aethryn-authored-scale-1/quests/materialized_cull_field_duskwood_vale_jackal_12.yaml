@@ -1,0 +1,71 @@
+id: cull_field_duskwood_vale_jackal_12
+name: 'A standing Cull: the jackal-kind of The Duskwood Vale Wilds'
+start: s0
+reward_xp: 192
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_duskwood_vale|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_duskwood_vale|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_duskwood_vale|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_duskwood_vale|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_duskwood_vale|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_duskwood_vale|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_duskwood_vale|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_duskwood_vale|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_duskwood_vale|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_duskwood_vale|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_duskwood_vale|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_duskwood_vale|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the jackal-kind of The Duskwood Vale Wilds: 0/12 down (192 XP).'
+  s1: 'Cull the jackal-kind of The Duskwood Vale Wilds: 1/12 down (192 XP).'
+  s2: 'Cull the jackal-kind of The Duskwood Vale Wilds: 2/12 down (192 XP).'
+  s3: 'Cull the jackal-kind of The Duskwood Vale Wilds: 3/12 down (192 XP).'
+  s4: 'Cull the jackal-kind of The Duskwood Vale Wilds: 4/12 down (192 XP).'
+  s5: 'Cull the jackal-kind of The Duskwood Vale Wilds: 5/12 down (192 XP).'
+  s6: 'Cull the jackal-kind of The Duskwood Vale Wilds: 6/12 down (192 XP).'
+  s7: 'Cull the jackal-kind of The Duskwood Vale Wilds: 7/12 down (192 XP).'
+  s8: 'Cull the jackal-kind of The Duskwood Vale Wilds: 8/12 down (192 XP).'
+  s9: 'Cull the jackal-kind of The Duskwood Vale Wilds: 9/12 down (192 XP).'
+  s10: 'Cull the jackal-kind of The Duskwood Vale Wilds: 10/12 down (192 XP).'
+  s11: 'Cull the jackal-kind of The Duskwood Vale Wilds: 11/12 down (192 XP).'
+  done: The jackal-kind of The Duskwood Vale Wilds are thinned. The wardens of the
+    wood send their thanks.

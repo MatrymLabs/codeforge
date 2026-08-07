@@ -1,0 +1,16 @@
+id: bounty_korvash_highlands_lord_8
+name: 'Bounty: Skarnen the Moor Scourge'
+start: posted
+reward_xp: 1884
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: korvash_highlands_lord_8
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Skarnen the Moor Scourge (level 157). Fell it for 1884
+    XP.
+  collected: 'Bounty collected: Skarnen the Moor Scourge is felled. Well hunted.'

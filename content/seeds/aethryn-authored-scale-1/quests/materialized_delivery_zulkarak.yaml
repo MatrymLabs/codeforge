@@ -1,0 +1,20 @@
+id: delivery_zulkarak
+name: 'Delivery: Zul''karak to Boulderfall'
+start: posted
+reward_xp: 1080
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_zulkarak
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: boulderfall
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Zul'karak is bound for Boulderfall. Take it up (1080 XP).
+  carrying: Carry the parcel to Boulderfall.
+  done: The parcel is delivered to Boulderfall. The road keeps its promise.

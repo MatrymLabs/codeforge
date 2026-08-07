@@ -1,0 +1,16 @@
+id: bounty_ashen_wastes_lord_4
+name: 'Bounty: Grathok the Obsidian Herald'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: ashen_wastes_lord_4
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Grathok the Obsidian Herald (level 125). Fell it for
+    1500 XP.
+  collected: 'Bounty collected: Grathok the Obsidian Herald is felled. Well hunted.'

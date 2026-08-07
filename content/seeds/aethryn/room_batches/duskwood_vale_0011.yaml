@@ -1,0 +1,1197 @@
+batch:
+  id: aethryn_duskwood_vale_0011
+  sequence: 11
+  status: ready
+  size: 51
+  final: true
+  link_inference: ordered_route
+  source: Aethryn_Duskwood_Vale_Batch01.txt
+  imported_rooms: 50
+  anchor_room: ravenwatch
+  anchor_exit: gate
+rooms:
+  duskwood_vale_ravenwatch_gate:
+    name: Ravenwatch Gate
+    room_type: Town Gate
+    desc: 'A solid timber gate bound with dark iron stands in a low stone wall. The
+      gatehouse is small but well-kept, and the banner of Ravenwatch hangs above the
+      arch. Beyond the gate the trees press close.
+
+
+      The air is cooler than the open lands and carries the scent of deep forest and
+      woodsmoke.'
+    exits:
+      north: duskwood_vale_ravenwatch_square
+      south: duskwood_vale_ravenwatch_gate
+      east: duskwood_vale_ravenwatch_square
+      west: duskwood_vale_ravenwatch_gate
+      out: ravenwatch
+    occupants: []
+    objects:
+    - A pair of watchmen stand near the gate, alert but not unfriendly
+    - A wooden board lists current notices and road warnings
+    - Muddy tracks lead both into the settlement and back toward the fringe
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_square:
+    name: Ravenwatch Square
+    room_type: Town Square
+    desc: 'The central square of Ravenwatch is paved with dark stone and kept clear.
+      A tall wooden post holds the settlement banner and a stone well stands to one
+      side. Timber buildings of sturdy construction surround the open space.
+
+
+      The air is quieter than a true town and carries more of the forest than of commerce.'
+    exits:
+      north: duskwood_vale_ravenwatch_keep_approach
+      south: duskwood_vale_ravenwatch_gate
+      east: duskwood_vale_ravenwatch_keep_approach
+      west: duskwood_vale_ravenwatch_gate
+    occupants: []
+    objects:
+    - Locals move with purpose across the square
+    - A notice board is fixed to the banner post
+    - Stone benches sit in the deeper shade of the larger buildings
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_keep_approach:
+    name: Ravenwatch Keep Approach
+    room_type: Military
+    desc: 'A short rising path leads from the square to the small stone keep that
+      overlooks the settlement. The keep is squat and solid, its walls dark with age
+      and moss.
+
+
+      The air is cooler and the view opens slightly as the ground rises.'
+    exits:
+      south: duskwood_vale_ravenwatch_square
+      north: duskwood_vale_ravenwatch_inn
+      east: duskwood_vale_ravenwatch_inn
+      west: duskwood_vale_ravenwatch_square
+    occupants:
+    - A pair of guards stand at the base of the keep steps
+    objects:
+    - The banner of Ravenwatch flies from the highest point
+    - The stonework is clean and well maintained despite the surrounding forest
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_inn:
+    name: Ravenwatch Inn
+    room_type: Inn
+    desc: 'A solid two-story inn of dark timber and stone stands near the square.
+      The painted sign shows a black raven perched on a watchtower. The common room
+      is quieter and more watchful than those in Veridia.
+
+
+      The air inside carries the scent of cooking, ale, and woodsmoke.'
+    exits:
+      south: duskwood_vale_ravenwatch_keep_approach
+      east: duskwood_vale_ravenwatch_market
+      west: duskwood_vale_ravenwatch_keep_approach
+      north: duskwood_vale_ravenwatch_market
+    occupants: []
+    objects:
+    - A stable yard sits behind the inn
+    - Wooden tables and benches stand outside under a covered walk
+    - A water trough sits near the stable entrance
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_market:
+    name: Ravenwatch Market
+    room_type: Market
+    desc: 'A small open market operates along one side of the square and into a short
+      side street. Goods lean toward forest products, simple metalwork, dried meats,
+      and travel supplies.
+
+
+      The air smells of wood, leather, smoke, and the surrounding forest.'
+    exits:
+      west: duskwood_vale_ravenwatch_inn
+      east: duskwood_vale_watchmen_s_row
+      north: duskwood_vale_watchmen_s_row
+      south: duskwood_vale_ravenwatch_inn
+    occupants:
+    - A trader displays bundles of dried herbs and moss
+    objects:
+    - Baskets of forest nuts and roots sit on a low table
+    - A fletcher works on a set of arrows under a lean-to
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_watchmen_s_row:
+    name: Watchmen's Row
+    room_type: Residential
+    desc: 'A short street of sturdy timber houses runs toward the eastern edge of
+      the settlement. Many of the residents serve in the watch or work the surrounding
+      woods. Tools and gear hang near several doors.
+
+
+      The air carries the strong scent of the forest.'
+    exits:
+      west: duskwood_vale_ravenwatch_market
+      east: duskwood_vale_ravenwatch_temple
+      north: duskwood_vale_ravenwatch_temple
+      south: duskwood_vale_ravenwatch_market
+    occupants:
+    - A watchman cleans a spear on a bench outside his house
+    - A pair of large dogs lie in the shade, watchful
+    objects:
+    - Stacks of cut firewood stand ready for use
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_temple:
+    name: Ravenwatch Temple
+    room_type: Sacred
+    desc: 'A modest stone temple dedicated to vigilance and the balance of the deep
+      woods stands near the northern edge of the settlement. The entrance faces a
+      small grove of dark trees.
+
+
+      The air is cooler and quieter. The scent of the forest is strong.'
+    exits:
+      south: duskwood_vale_watchmen_s_row
+      east: duskwood_vale_ravenwatch_south_path
+      west: duskwood_vale_watchmen_s_row
+    occupants:
+    - An acolyte tends a simple altar of dark stone
+    objects:
+    - Offerings of feathers, polished stones, and small carved ravens sit on the altar
+    - A wooden collection box is fixed beside the door
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_south_path:
+    name: Ravenwatch South Path
+    room_type: Town Edge
+    desc: 'A maintained path leads south from Ravenwatch into the deeper Vale. The
+      trees close in quickly and the light dims. The path remains clear but the undergrowth
+      presses close on both sides.
+
+
+      The air is cooler and the forest presence stronger.'
+    exits:
+      north: duskwood_vale_ravenwatch_north_path
+      south: duskwood_vale_ravenwatch_temple
+      east: duskwood_vale_ravenwatch_north_path
+      west: duskwood_vale_ravenwatch_temple
+    occupants: []
+    objects:
+    - A wooden marker points back to Ravenwatch and onward into the Vale
+    - Animal tracks cross the path frequently
+    - The sense of open settlement fades within a few dozen paces
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_north_path:
+    name: Ravenwatch North Path
+    room_type: Town Edge
+    desc: 'The northern path from Ravenwatch leads back toward the Veridian fringe
+      and the lighter woods. The trees begin to thin and the light grows stronger
+      as one travels.
+
+
+      The air is a mix of deep forest and more open land scents.'
+    exits:
+      south: duskwood_vale_ravenwatch_south_path
+      north: duskwood_vale_ravenwatch_east_gate
+      east: duskwood_vale_ravenwatch_east_gate
+      west: duskwood_vale_ravenwatch_south_path
+    occupants: []
+    objects:
+    - A wooden marker points back to Ravenwatch and northward
+    - Game trails branch off into the surrounding growth
+    - The pressure of the deeper Vale eases with distance
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_east_gate:
+    name: Ravenwatch East Gate
+    room_type: Town Gate
+    desc: 'A simpler gate opens eastward into older woodland. The gate is used mainly
+      by hunters, foresters, and those traveling toward Moonshade or the deeper paths.
+
+
+      The air is full of the scent of leaf mold and growing things.'
+    exits:
+      west: duskwood_vale_ravenwatch_north_path
+      east: duskwood_vale_keep_courtyard
+      north: duskwood_vale_keep_courtyard
+      south: duskwood_vale_ravenwatch_north_path
+    occupants: []
+    objects:
+    - A wooden sign warns of the deeper woods beyond
+    - A small shrine to safe travel stands beside the gate
+    - The path beyond is clear but narrower than the main roads
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_keep_courtyard:
+    name: Keep Courtyard
+    room_type: Military
+    desc: 'A small paved courtyard sits within the walls of the Ravenwatch keep. Weapon
+      racks stand under a covered walk and a training post is fixed in the center.
+
+
+      The air smells of oil, leather, and stone.'
+    exits:
+      south: duskwood_vale_ravenwatch_east_gate
+      east: duskwood_vale_ravenwatch_well_court
+      west: duskwood_vale_ravenwatch_east_gate
+      up: duskwood_vale_ravenwatch_east_gate
+    occupants:
+    - A young recruit practices forms with a wooden weapon
+    objects:
+    - A water barrel and dipper stand near the inner door
+    - The walls of the keep rise close on all sides
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_well_court:
+    name: Ravenwatch Well Court
+    room_type: Residential
+    desc: 'A quiet court centers on a deep stone well whose water is cold and clear.
+      The houses around the court are well-kept and the cobbles are clean despite
+      the surrounding forest.
+
+
+      The air is still. The sound of the well bucket and chain is occasional but clear.'
+    exits:
+      north: duskwood_vale_moonshade_approach
+      south: duskwood_vale_keep_courtyard
+      east: duskwood_vale_moonshade_approach
+      west: duskwood_vale_keep_courtyard
+    occupants:
+    - An older woman draws water while speaking quietly to a neighbor
+    objects:
+    - Flower boxes of shade-tolerant plants brighten several windows
+    - A wooden bench sits near the well
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_approach:
+    name: Moonshade Approach
+    room_type: Forest Path
+    desc: 'The path to Moonshade winds through denser growth. The light takes on a
+      softer, more silvered quality even in daytime, and the air feels slightly reflective.
+
+
+      The scent of the forest is strong and clean. Distant water sounds can sometimes
+      be heard.'
+    exits:
+      southwest: duskwood_vale_moonshade_gate
+      northeast: duskwood_vale_moonshade_gate
+      north: duskwood_vale_moonshade_gate
+      south: duskwood_vale_ravenwatch_well_court
+    occupants: []
+    objects:
+    - Cold luminous moss appears in scattered patches along the path
+    - A wooden marker points ahead to Moonshade and back toward Ravenwatch
+    - The sense of being observed is present but diffuse
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_gate:
+    name: Moonshade Gate
+    room_type: Town Gate
+    desc: 'A low stone wall and a simple timber gate mark the entrance to Moonshade.
+      The settlement is smaller and quieter than Ravenwatch, nestled among older trees.
+      The gate stands open during daylight.
+
+
+      The air is cool and carries a faint mineral and water scent.'
+    exits:
+      southwest: duskwood_vale_moonshade_square
+      northeast: duskwood_vale_moonshade_square
+      east: duskwood_vale_moonshade_square
+      west: duskwood_vale_moonshade_approach
+    occupants:
+    - A single watchman stands near the gate
+    objects:
+    - A wooden sign names the settlement and offers basic welcome
+    - The path beyond the gate leads into a small open square
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_square:
+    name: Moonshade Square
+    room_type: Town Square
+    desc: 'The central space of Moonshade is a small open clearing of packed earth
+      and pale stone. A low fountain of clear water plays in the center, its surface
+      unusually still and reflective.
+
+
+      The air is quieter and carries more of the deep forest than of settlement life.'
+    exits:
+      north: duskwood_vale_moonshade_inn
+      south: duskwood_vale_moonshade_gate
+      east: duskwood_vale_moonshade_inn
+      west: duskwood_vale_moonshade_gate
+    occupants: []
+    objects:
+    - Locals move softly across the square
+    - A notice board is fixed to a post near the fountain
+    - Simple wooden benches sit in the shade of the surrounding trees
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_inn:
+    name: Moonshade Inn
+    room_type: Inn
+    desc: 'A modest timber inn stands on the north side of the square. The painted
+      sign shows a crescent moon reflected in still water. The common room is small
+      and subdued.
+
+
+      The air inside carries the scent of cooking, herbs, and woodsmoke.'
+    exits:
+      south: duskwood_vale_moonshade_square
+      east: duskwood_vale_moonshade_market
+      west: duskwood_vale_moonshade_square
+      north: duskwood_vale_moonshade_market
+    occupants: []
+    objects:
+    - A small stable sits behind the inn
+    - Wooden tables and benches stand outside under the trees
+    - A water trough sits near the stable entrance
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_market:
+    name: Moonshade Market
+    room_type: Market
+    desc: 'A very small market operates along one edge of the square. Goods are limited:
+      forest herbs, simple crafts, dried fish from local streams, and travel necessities.
+
+
+      The air smells of herbs, wood, and the surrounding trees.'
+    exits:
+      west: duskwood_vale_moonshade_inn
+      east: duskwood_vale_reflecting_pool
+      north: duskwood_vale_reflecting_pool
+      south: duskwood_vale_moonshade_inn
+    occupants:
+    - A woman sells bundles of dried moss and roots
+    objects:
+    - A few baskets of forest berries sit on a low table
+    - A woodcarver displays small, smooth figures
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_reflecting_pool:
+    name: Reflecting Pool
+    room_type: Sacred
+    desc: 'A still pool of clear water sits in a small stone-lined basin near the
+      edge of Moonshade. The surface is unnaturally calm and reflects the canopy and
+      sky with unusual clarity.
+
+
+      The air is cool and quiet. The water seems to hold light longer than it should.'
+    exits:
+      south: duskwood_vale_moonshade_market
+      east: duskwood_vale_moonshade_path_south
+      west: duskwood_vale_moonshade_market
+    occupants: []
+    objects:
+    - A few offerings of small stones and flowers sit on the rim
+    - A wooden bench faces the pool
+    - Those who look too long into the water sometimes report brief, delayed reflections
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_path_south:
+    name: Moonshade Path South
+    room_type: Forest Path
+    desc: 'A narrow path leads south from Moonshade into older woodland. The trees
+      are taller and the undergrowth thicker. The light remains soft and silvered.
+
+
+      The air is still and carries the deep forest scent.'
+    exits:
+      north: duskwood_vale_moonshade_path_east
+      south: duskwood_vale_reflecting_pool
+      east: duskwood_vale_moonshade_path_east
+      west: duskwood_vale_reflecting_pool
+    occupants: []
+    objects:
+    - A wooden marker points back to Moonshade
+    - Game trails cross the path at several points
+    - The sense of the settlement fades quickly
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_path_east:
+    name: Moonshade Path East
+    room_type: Forest Path
+    desc: The eastern path from Moonshade leads toward deeper Vale and eventual links
+      with Twilight Grove. The canopy is nearly continuous and the air feels heavier.
+    exits:
+      west: duskwood_vale_moonshade_path_south
+      east: duskwood_vale_moonshade_residence_row
+      north: duskwood_vale_moonshade_residence_row
+      south: duskwood_vale_moonshade_path_south
+    occupants: []
+    objects:
+    - Cold moss appears more frequently along the route
+    - Soft root-creaks can sometimes be heard beneath the soil
+    - The path remains passable but requires more attention
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_residence_row:
+    name: Moonshade Residence Row
+    room_type: Residential
+    desc: 'A short row of small timber houses stands among the trees on the western
+      side of the settlement. The buildings are simple and well-tended, with small
+      garden plots of shade plants.
+
+
+      The air is quiet and carries the scent of wood and herbs.'
+    exits:
+      east: duskwood_vale_twilight_grove_approach
+      north: duskwood_vale_twilight_grove_approach
+      south: duskwood_vale_moonshade_path_east
+    occupants: []
+    objects:
+    - A resident works in a small herb garden
+    - Laundry hangs between two of the houses
+    - A thin path leads back toward the square
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_grove_approach:
+    name: Twilight Grove Approach
+    room_type: Forest Path
+    desc: 'The path enters a broad area of older trees where the light is permanently
+      muted. Even at midday the grove feels like late afternoon. The undergrowth is
+      thinner here, as if the trees themselves discourage dense growth.
+
+
+      The air is cool and still. The scent of leaf mold and old wood is strong.'
+    exits:
+      north: duskwood_vale_twilight_grove_heart
+      south: duskwood_vale_moonshade_residence_row
+      east: duskwood_vale_twilight_grove_heart
+      west: duskwood_vale_moonshade_residence_row
+    occupants: []
+    objects:
+    - Cold luminous moss grows in broader patches than elsewhere
+    - A low root ridge crosses the path in places
+    - The ambient pressure of the Gloaming Veil is noticeable
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_grove_heart:
+    name: Twilight Grove Heart
+    room_type: Grove
+    desc: 'The center of Twilight Grove is a wide, natural clearing among enormous
+      trunks. The canopy overhead is nearly solid, and the light that reaches the
+      ground is dim and green-blue. The air feels heavy and attentive.
+
+
+      Soft whispers rise occasionally from the root systems.'
+    exits:
+      north: duskwood_vale_twilight_standing_stones
+      south: duskwood_vale_twilight_grove_approach
+      east: duskwood_vale_twilight_standing_stones
+      west: duskwood_vale_twilight_grove_approach
+    occupants: []
+    objects:
+    - A large fallen trunk serves as a natural gathering place
+    - Patches of cold moss glow steadily in the deeper shade
+    - The sense of the older forest is strong and patient
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_standing_stones:
+    name: Twilight Standing Stones
+    room_type: Sacred
+    desc: 'A small ring of dark standing stones sits in a quieter part of the grove.
+      The stones are worn and partially covered in moss. The air within the ring is
+      stiller than outside.
+
+
+      The light is dimmer. Whispers are more frequent near the stones.'
+    exits:
+      south: duskwood_vale_twilight_grove_heart
+      east: duskwood_vale_twilight_root_clearing
+      west: duskwood_vale_twilight_grove_heart
+    occupants: []
+    objects:
+    - A few faded offerings lie at the base of the largest stone
+    - The ground within the ring is bare of ordinary undergrowth
+    - The Gloaming Veil feels concentrated here
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_root_clearing:
+    name: Twilight Root Clearing
+    room_type: Grove
+    desc: 'A smaller clearing where thick surface roots form natural seats and low
+      walls. The moss here glows more brightly than in the surrounding grove.
+
+
+      The air is cool and carries a faint mineral scent.'
+    exits:
+      north: duskwood_vale_twilight_north_path
+      south: duskwood_vale_twilight_standing_stones
+      east: duskwood_vale_twilight_north_path
+      west: duskwood_vale_twilight_standing_stones
+    occupants: []
+    objects:
+    - Soft root movements can sometimes be felt underfoot
+    - A dry platform of interwoven roots offers a place to rest
+    - The pressure of attention is milder than in the Black Hollow but still present
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_north_path:
+    name: Twilight North Path
+    room_type: Forest Path
+    desc: 'A path leads north from the grove toward the lighter woods and eventual
+      links with Ravenwatch and the Veridian fringe. The light gradually strengthens
+      and the ambient weight lessens.
+
+
+      The air grows fresher with distance from the grove heart.'
+    exits:
+      south: duskwood_vale_twilight_root_clearing
+      north: duskwood_vale_twilight_south_path
+      east: duskwood_vale_twilight_south_path
+      west: duskwood_vale_twilight_root_clearing
+    occupants: []
+    objects:
+    - A wooden marker points back to Twilight Grove
+    - Animal trails branch off into the surrounding growth
+    - The sense of deep forest eases step by step
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_south_path:
+    name: Twilight South Path
+    room_type: Forest Path
+    desc: The southern path from the grove continues into older and darker woodland.
+      The trees are larger, the canopy thicker, and the air heavier.
+    exits:
+      north: duskwood_vale_twilight_east_path
+      south: duskwood_vale_twilight_north_path
+      east: duskwood_vale_twilight_east_path
+      west: duskwood_vale_twilight_north_path
+    occupants: []
+    objects:
+    - Cold moss is common along the route
+    - Soft whispers drift from the deeper root systems
+    - The path remains clear but the feeling of the Vale intensifies
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_east_path:
+    name: Twilight East Path
+    room_type: Forest Path
+    desc: An eastern path winds toward deeper sections of the Vale and eventual approaches
+      to the Black Hollow region. The undergrowth is denser and the light more muted.
+    exits:
+      west: duskwood_vale_twilight_south_path
+      east: duskwood_vale_duskwood_main_track
+      north: duskwood_vale_duskwood_main_track
+      south: duskwood_vale_twilight_south_path
+    occupants: []
+    objects:
+    - The air is still and carries the strong scent of deep leaf mold
+    - Root ridges cross the path frequently
+    - The sense of being observed grows slowly stronger
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_duskwood_main_track:
+    name: Duskwood Main Track
+    room_type: Forest Road
+    desc: 'A wider, maintained track runs through the Vale, linking Ravenwatch with
+      the southern and eastern paths. The surface is packed earth and old root, wide
+      enough for a small cart.
+
+
+      The air is cooler than open land and the light is filtered.'
+    exits:
+      north: duskwood_vale_fringe_road_north
+      south: duskwood_vale_twilight_east_path
+      east: duskwood_vale_fringe_road_north
+      west: duskwood_vale_twilight_east_path
+    occupants: []
+    objects:
+    - Wooden markers appear at intervals
+    - Game trails and narrower paths branch off frequently
+    - The ambient presence of the forest is constant but not overwhelming
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_fringe_road_north:
+    name: Fringe Road North
+    room_type: Forest Road
+    desc: 'The northern stretch of the main track approaches the Veridian border.
+      The trees begin to thin and the light strengthens. The sense of deep Vale lessens.
+
+
+      The air mixes forest and more open land scents.'
+    exits:
+      north: duskwood_vale_hollow_road_link
+      south: duskwood_vale_duskwood_main_track
+      east: duskwood_vale_hollow_road_link
+      west: duskwood_vale_duskwood_main_track
+    occupants: []
+    objects:
+    - A boundary marker of pale stone stands beside the track
+    - Wagon ruts are deeper here from traffic between the zones
+    - The path continues both into Veridia and deeper into Duskwood
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_hollow_road_link:
+    name: Hollow Road Link
+    room_type: Forest Path
+    desc: 'A narrower path branches from the main track toward the Black Hollow region.
+      The trees close in and the light dims more quickly. Cold moss appears with greater
+      frequency.
+
+
+      The air grows heavier. Soft root-creaks can be heard.'
+    exits:
+      west: duskwood_vale_fringe_road_north
+      east: duskwood_vale_moonshade_connector
+      north: duskwood_vale_moonshade_connector
+      south: duskwood_vale_fringe_road_north
+    occupants: []
+    objects:
+    - A wooden marker warns of the Hollow ahead
+    - The sense of attention begins to focus
+    - The path remains passable but requires care
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_connector:
+    name: Moonshade Connector
+    room_type: Forest Path
+    desc: 'A well-used path links Moonshade with the main track and Ravenwatch. The
+      light retains a softer quality and the air feels slightly reflective.
+
+
+      The scent of the forest is clean and strong.'
+    exits:
+      northeast: duskwood_vale_twilight_connector
+      southwest: duskwood_vale_hollow_road_link
+      north: duskwood_vale_twilight_connector
+      south: duskwood_vale_hollow_road_link
+    occupants: []
+    objects:
+    - A wooden marker points toward Moonshade and the main road
+    - Scattered patches of cold moss line the route
+    - The ambient pressure is mild compared with the deeper grove
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_connector:
+    name: Twilight Connector
+    room_type: Forest Path
+    desc: A quieter path links Twilight Grove with the main Vale tracks. The light
+      is permanently muted and the air carries the heavier presence of the Gloaming
+      Veil.
+    exits:
+      north: duskwood_vale_old_forest_road
+      south: duskwood_vale_moonshade_connector
+      east: duskwood_vale_old_forest_road
+      west: duskwood_vale_moonshade_connector
+    occupants: []
+    objects:
+    - Cold moss grows more thickly along this route
+    - Soft whispers rise occasionally from the roots
+    - The path is clear but the feeling of the grove travels with the traveler
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_old_forest_road:
+    name: Old Forest Road
+    room_type: Forest Road
+    desc: 'An older, less-maintained road runs through a section of particularly ancient
+      trees. The surface is broken by roots and the canopy is nearly continuous.
+
+
+      The air is still and cool. Sound is muffled.'
+    exits:
+      north: duskwood_vale_hunter_s_track
+      south: duskwood_vale_twilight_connector
+      east: duskwood_vale_hunter_s_track
+      west: duskwood_vale_twilight_connector
+    occupants: []
+    objects:
+    - Cold luminous moss is common
+    - The sense of age and slow attention is strong
+    - The road continues both toward Ravenwatch and deeper south
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_hunter_s_track:
+    name: Hunter's Track
+    room_type: Forest Path
+    desc: 'A narrow but clear track used mainly by hunters and foresters. It winds
+      between older trees and avoids the heaviest undergrowth.
+
+
+      The air smells of leaf mold and the occasional trace of woodsmoke.'
+    exits:
+      north: duskwood_vale_root_ridge_path
+      south: duskwood_vale_old_forest_road
+      east: duskwood_vale_root_ridge_path
+      west: duskwood_vale_old_forest_road
+    occupants: []
+    objects:
+    - Animal tracks are numerous
+    - A few simple markers of stacked stones appear at junctions
+    - The path feels practical rather than ceremonial
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_root_ridge_path:
+    name: Root Ridge Path
+    room_type: Forest Path
+    desc: 'The path follows a long, low ridge of exposed roots that runs for some
+      distance through the Vale. Walking is uneven but the elevation offers slightly
+      better views under the canopy.
+
+
+      The air is a little clearer on the ridge.'
+    exits:
+      east: duskwood_vale_deep_canopy_stand
+      west: duskwood_vale_hunter_s_track
+      north: duskwood_vale_deep_canopy_stand
+      south: duskwood_vale_hunter_s_track
+    occupants: []
+    objects:
+    - Cold moss clings to the lower sides of the roots
+    - Soft vibrations sometimes run through the wood
+    - The path eventually descends back into ordinary forest floor
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_deep_canopy_stand:
+    name: Deep Canopy Stand
+    room_type: Light Forest
+    desc: 'A stand of particularly tall, old trees forms a near-continuous canopy.
+      Little undergrowth survives in the deep shade. The air is still and cool.
+
+
+      The light is dim and green-blue.'
+    exits:
+      north: duskwood_vale_brambled_hollow
+      south: duskwood_vale_root_ridge_path
+      east: duskwood_vale_brambled_hollow
+      west: duskwood_vale_root_ridge_path
+    occupants: []
+    objects:
+    - Cold moss grows in irregular patches on the trunks and ground
+    - Soft root-creaks are more audible here
+    - The sense of the older forest is strong
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_brambled_hollow:
+    name: Brambled Hollow
+    room_type: Dense Undergrowth
+    desc: 'A shallow depression filled with thick brambles, young trees, and tangled
+      vines. Progress is slow and the trail is faint. The canopy overhead is almost
+      solid.
+
+
+      The air is still and humid. Visibility is limited.'
+    exits:
+      north: duskwood_vale_fern_grotto
+      south: duskwood_vale_deep_canopy_stand
+      east: duskwood_vale_fern_grotto
+      west: duskwood_vale_deep_canopy_stand
+    occupants: []
+    objects:
+    - Thorns catch at clothing and skin
+    - A few clearer animal tunnels run through the denser growth
+    - The sound of the wider forest is muffled
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_fern_grotto:
+    name: Fern Grotto
+    room_type: Forest
+    desc: 'A damp, low area where ferns grow in thick stands among the roots of older
+      trees. The air is moist and the light is heavily filtered.
+
+
+      The scent of wet earth and green growth is strong.'
+    exits:
+      north: duskwood_vale_fallen_titan
+      south: duskwood_vale_brambled_hollow
+      east: duskwood_vale_fallen_titan
+      west: duskwood_vale_brambled_hollow
+    occupants: []
+    objects:
+    - Cold moss appears on the damper stones and roots
+    - A small clear trickle of water runs through the lowest point
+    - The ambient pressure is mild but present
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_fallen_titan:
+    name: Fallen Titan
+    room_type: Forest
+    desc: 'The massive trunk of an ancient fallen tree lies across this section of
+      forest. The wood is soft with age and covered in moss and small plants. The
+      path detours around or over it.
+
+
+      The air is still. The scent of slow decay and new growth mixes.'
+    exits:
+      east: duskwood_vale_quiet_glade
+      west: duskwood_vale_fern_grotto
+      north: duskwood_vale_quiet_glade
+      south: duskwood_vale_fern_grotto
+    occupants: []
+    objects:
+    - Cold luminous moss glows on the shadier side of the trunk
+    - A hollow in the larger end shows signs of past use as a shelter
+    - Animal trails pass both under and around the fallen giant
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_quiet_glade:
+    name: Quiet Glade
+    room_type: Grove
+    desc: 'A small natural glade opens among the trees. The canopy is thinner here
+      and a little more light reaches the ground. The air feels slightly less heavy
+      than the surrounding wood.
+
+
+      The scent of the forest is clean.'
+    exits:
+      north: duskwood_vale_shadowed_stream
+      south: duskwood_vale_fallen_titan
+      east: duskwood_vale_shadowed_stream
+      west: duskwood_vale_fallen_titan
+    occupants: []
+    objects:
+    - A few flat stones form a natural resting place
+    - Cold moss is present but less dominant
+    - The sense of attention is milder and more diffuse
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_shadowed_stream:
+    name: Shadowed Stream
+    room_type: Forest Stream
+    desc: 'A dark, slow stream runs through a cut in the forest floor. The water is
+      clear but the light that reaches it is dim, giving it a shadowed appearance.
+      Stepping stones cross at the narrowest point.
+
+
+      The air is cooler near the water. The sound of the stream is soft and constant.'
+    exits:
+      east: duskwood_vale_overlook_root
+      west: duskwood_vale_quiet_glade
+      north: duskwood_vale_overlook_root
+      south: duskwood_vale_quiet_glade
+    occupants: []
+    objects:
+    - Moss and ferns grow thickly along the banks
+    - Cold luminous patches appear on the wetter stones
+    - The water carries a faint mineral taste
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_overlook_root:
+    name: Overlook Root
+    room_type: Forest
+    desc: 'A large, elevated root system forms a natural platform above the surrounding
+      forest floor. From here the canopy can be seen more clearly and the air is a
+      little fresher.
+
+
+      The view is limited by the density of the trees.'
+    exits:
+      down: duskwood_vale_boundary_marker_south
+      north: duskwood_vale_boundary_marker_south
+      south: duskwood_vale_shadowed_stream
+      east: duskwood_vale_boundary_marker_south
+    occupants: []
+    objects:
+    - Cold moss grows on the lower curves of the roots
+    - Soft whispers rise from the deeper network below
+    - The platform is sometimes used as a temporary lookout or rest point
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_boundary_marker_south:
+    name: Boundary Marker South
+    room_type: Forest Edge
+    desc: 'A dark stone marker stands near the southern edge of the more traveled
+      Vale. Beyond it the forest grows older and less frequented. The carvings on
+      the stone are worn.
+
+
+      The air is heavier and the light more muted.'
+    exits:
+      north: duskwood_vale_ravenwatch_outer_yard
+      south: duskwood_vale_overlook_root
+      east: duskwood_vale_ravenwatch_outer_yard
+      west: duskwood_vale_overlook_root
+    occupants: []
+    objects:
+    - A few faded offerings sit at the base of the marker
+    - Trails continue both back into the known Vale and farther south
+    - The sense of the deeper wild intensifies beyond this point
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_ravenwatch_outer_yard:
+    name: Ravenwatch Outer Yard
+    room_type: Outer Yard
+    desc: 'An open yard just inside the main gate of Ravenwatch serves for wagons,
+      temporary storage, and mustering. A small open-sided shelter provides cover.
+
+
+      The air smells of wood, dust, and the surrounding forest.'
+    exits:
+      south: duskwood_vale_boundary_marker_south
+      north: duskwood_vale_moonshade_herb_garden
+      east: duskwood_vale_moonshade_herb_garden
+      west: duskwood_vale_boundary_marker_south
+    occupants:
+    - A watchman checks a arriving traveler
+    objects:
+    - Stacks of timber and supply crates sit under the shelter
+    - A water trough stands near the gate
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_moonshade_herb_garden:
+    name: Moonshade Herb Garden
+    room_type: Garden
+    desc: 'A small, carefully tended garden of shade-tolerant herbs and plants sits
+      behind several of the Moonshade houses. The air is scented with mint, yarrow,
+      and other growing things.
+
+
+      The light is soft and filtered.'
+    exits:
+      west: duskwood_vale_ravenwatch_outer_yard
+      north: duskwood_vale_twilight_watch_post
+      south: duskwood_vale_ravenwatch_outer_yard
+    occupants:
+    - Clay labels mark many of the beds
+    objects:
+    - A wooden bench sits at the edge of the garden
+    - The reflective quality of the air is milder here
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_twilight_watch_post:
+    name: Twilight Watch Post
+    room_type: Forest
+    desc: 'A simple wooden platform built into the lower branches of a large tree
+      serves as a basic watch post overlooking part of Twilight Grove. The climb is
+      short but requires care.
+
+
+      The air is a little clearer above the ground.'
+    exits:
+      down: duskwood_vale_forester_s_camp
+      north: duskwood_vale_forester_s_camp
+      south: duskwood_vale_moonshade_herb_garden
+    occupants: []
+    objects:
+    - The view takes in the dim grove and the surrounding paths
+    - Cold moss clings to the trunk near the platform
+    - The ambient presence of the grove is still felt
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_forester_s_camp:
+    name: Forester's Camp
+    room_type: Camp
+    desc: 'A small, semi-permanent camp used by local foresters sits in a relatively
+      clear patch of wood. A lean-to of timber and canvas provides shelter and a fire
+      ring sits in the center.
+
+
+      The air carries the scent of woodsmoke and the forest.'
+    exits:
+      north: duskwood_vale_abandoned_waystation
+      south: duskwood_vale_twilight_watch_post
+      east: duskwood_vale_abandoned_waystation
+      west: duskwood_vale_twilight_watch_post
+    occupants: []
+    objects:
+    - A few tools and supply crates are stored under the lean-to
+    - A simple bench has been made from a split log
+    - The camp is currently empty but shows recent use
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_abandoned_waystation:
+    name: Abandoned Waystation
+    room_type: Ruin
+    desc: 'The remains of an older waystation stand beside one of the forest tracks.
+      Only the stone foundations and parts of the lower walls remain. Travelers sometimes
+      rest among the ruins.
+
+
+      The air is open relative to the deeper wood.'
+    exits:
+      east: duskwood_vale_deep_vale_crossroads
+      west: duskwood_vale_forester_s_camp
+      north: duskwood_vale_deep_vale_crossroads
+      south: duskwood_vale_forester_s_camp
+    occupants: []
+    objects:
+    - A few stones have been arranged into a rough fire ring
+    - Grass and moss grow among the old foundations
+    - A faded milestone stands nearby
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  duskwood_vale_deep_vale_crossroads:
+    name: Deep Vale Crossroads
+    room_type: Crossroads
+    desc: 'Four faint tracks meet in a small clearing of packed earth. A simple wooden
+      post marks the junction, its carvings weathered. The canopy is thick overhead.
+
+
+      The air is still and cool.'
+    exits:
+      north: duskwood_vale_deep_vale_crossroads
+      south: duskwood_vale_abandoned_waystation
+      east: duskwood_vale_deep_vale_crossroads
+      west: duskwood_vale_abandoned_waystation
+    occupants: []
+    objects:
+    - Cold moss grows at the base of the post
+    - Soft root-creaks can be heard beneath the soil
+    - The tracks lead toward Ravenwatch, Moonshade, Twilight Grove, and the deeper
+      south
+    replace: true
+    tags:
+    - aethryn
+    - duskwood_vale
+    - imported_text_drop
+  ravenwatch:
+    name: Ravenwatch
+    desc: A timber town under the eaves, its roofs black with roosting ravens. It
+      lies within Duskwood Vale (levels 20-50); the zone road runs back out to the
+      wider land.
+    exits:
+      out: duskwood_vale
+      in: ravenwatch_inn
+      market: ravenwatch_store
+      square: ravenwatch_market
+      gate: duskwood_vale_ravenwatch_gate
+    replace: true
+    tags:
+    - aethryn
+    - room_drop_anchor
+    notes: Adds gate -> duskwood_vale_ravenwatch_gate to enter the imported drop.

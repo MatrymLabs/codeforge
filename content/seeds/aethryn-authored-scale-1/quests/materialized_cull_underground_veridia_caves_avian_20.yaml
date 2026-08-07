@@ -1,0 +1,111 @@
+id: cull_underground_veridia_caves_avian_20
+name: 'A great Cull: the avian-kind of Veridia''s River Caves'
+start: s0
+reward_xp: 160
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_veridia_caves|avian
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_veridia_caves|avian
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_veridia_caves|avian
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_veridia_caves|avian
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_veridia_caves|avian
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_veridia_caves|avian
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_veridia_caves|avian
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_veridia_caves|avian
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_veridia_caves|avian
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_veridia_caves|avian
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_veridia_caves|avian
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_veridia_caves|avian
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_veridia_caves|avian
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_veridia_caves|avian
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_veridia_caves|avian
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_veridia_caves|avian
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_veridia_caves|avian
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_veridia_caves|avian
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_veridia_caves|avian
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_veridia_caves|avian
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the avian-kind of Veridia''s River Caves: 0/20 down (160 XP).'
+  s1: 'Cull the avian-kind of Veridia''s River Caves: 1/20 down (160 XP).'
+  s2: 'Cull the avian-kind of Veridia''s River Caves: 2/20 down (160 XP).'
+  s3: 'Cull the avian-kind of Veridia''s River Caves: 3/20 down (160 XP).'
+  s4: 'Cull the avian-kind of Veridia''s River Caves: 4/20 down (160 XP).'
+  s5: 'Cull the avian-kind of Veridia''s River Caves: 5/20 down (160 XP).'
+  s6: 'Cull the avian-kind of Veridia''s River Caves: 6/20 down (160 XP).'
+  s7: 'Cull the avian-kind of Veridia''s River Caves: 7/20 down (160 XP).'
+  s8: 'Cull the avian-kind of Veridia''s River Caves: 8/20 down (160 XP).'
+  s9: 'Cull the avian-kind of Veridia''s River Caves: 9/20 down (160 XP).'
+  s10: 'Cull the avian-kind of Veridia''s River Caves: 10/20 down (160 XP).'
+  s11: 'Cull the avian-kind of Veridia''s River Caves: 11/20 down (160 XP).'
+  s12: 'Cull the avian-kind of Veridia''s River Caves: 12/20 down (160 XP).'
+  s13: 'Cull the avian-kind of Veridia''s River Caves: 13/20 down (160 XP).'
+  s14: 'Cull the avian-kind of Veridia''s River Caves: 14/20 down (160 XP).'
+  s15: 'Cull the avian-kind of Veridia''s River Caves: 15/20 down (160 XP).'
+  s16: 'Cull the avian-kind of Veridia''s River Caves: 16/20 down (160 XP).'
+  s17: 'Cull the avian-kind of Veridia''s River Caves: 17/20 down (160 XP).'
+  s18: 'Cull the avian-kind of Veridia''s River Caves: 18/20 down (160 XP).'
+  s19: 'Cull the avian-kind of Veridia''s River Caves: 19/20 down (160 XP).'
+  done: The avian-kind of Veridia's River Caves are thinned. The farm-roads are the
+    safer for it.

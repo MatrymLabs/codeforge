@@ -1,0 +1,131 @@
+id: cull_underground_caeloria_underworks_jackal_20
+name: 'A great Contract: the jackal-kind of The Starfall Sublevels'
+start: s0
+reward_xp: 440
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_underworks|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_underworks|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_underworks|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_underworks|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_underworks|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_caeloria_underworks|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_caeloria_underworks|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_caeloria_underworks|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_caeloria_underworks|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_caeloria_underworks|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_caeloria_underworks|jackal
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_caeloria_underworks|jackal
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_caeloria_underworks|jackal
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_caeloria_underworks|jackal
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_caeloria_underworks|jackal
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_caeloria_underworks|jackal
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_caeloria_underworks|jackal
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_caeloria_underworks|jackal
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_caeloria_underworks|jackal
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_caeloria_underworks|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 0/20 down
+    (440 XP).'
+  s1: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 1/20 down
+    (440 XP).'
+  s2: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 2/20 down
+    (440 XP).'
+  s3: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 3/20 down
+    (440 XP).'
+  s4: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 4/20 down
+    (440 XP).'
+  s5: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 5/20 down
+    (440 XP).'
+  s6: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 6/20 down
+    (440 XP).'
+  s7: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 7/20 down
+    (440 XP).'
+  s8: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 8/20 down
+    (440 XP).'
+  s9: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 9/20 down
+    (440 XP).'
+  s10: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 10/20 down
+    (440 XP).'
+  s11: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 11/20 down
+    (440 XP).'
+  s12: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 12/20 down
+    (440 XP).'
+  s13: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 13/20 down
+    (440 XP).'
+  s14: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 14/20 down
+    (440 XP).'
+  s15: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 15/20 down
+    (440 XP).'
+  s16: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 16/20 down
+    (440 XP).'
+  s17: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 17/20 down
+    (440 XP).'
+  s18: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 18/20 down
+    (440 XP).'
+  s19: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 19/20 down
+    (440 XP).'
+  done: The jackal-kind of The Starfall Sublevels are put down. The farm-roads are
+    the safer for it.

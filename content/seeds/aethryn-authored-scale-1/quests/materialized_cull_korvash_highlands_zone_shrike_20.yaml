@@ -1,0 +1,110 @@
+id: cull_korvash_highlands_zone_shrike_20
+name: 'A great Cull: the shrike-kind of Korvash Highlands'
+start: s0
+reward_xp: 1320
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: korvash_highlands_zone|shrike
+- state: s1
+  event: cull
+  to: s2
+  on_cull: korvash_highlands_zone|shrike
+- state: s2
+  event: cull
+  to: s3
+  on_cull: korvash_highlands_zone|shrike
+- state: s3
+  event: cull
+  to: s4
+  on_cull: korvash_highlands_zone|shrike
+- state: s4
+  event: cull
+  to: s5
+  on_cull: korvash_highlands_zone|shrike
+- state: s5
+  event: cull
+  to: s6
+  on_cull: korvash_highlands_zone|shrike
+- state: s6
+  event: cull
+  to: s7
+  on_cull: korvash_highlands_zone|shrike
+- state: s7
+  event: cull
+  to: s8
+  on_cull: korvash_highlands_zone|shrike
+- state: s8
+  event: cull
+  to: s9
+  on_cull: korvash_highlands_zone|shrike
+- state: s9
+  event: cull
+  to: s10
+  on_cull: korvash_highlands_zone|shrike
+- state: s10
+  event: cull
+  to: s11
+  on_cull: korvash_highlands_zone|shrike
+- state: s11
+  event: cull
+  to: s12
+  on_cull: korvash_highlands_zone|shrike
+- state: s12
+  event: cull
+  to: s13
+  on_cull: korvash_highlands_zone|shrike
+- state: s13
+  event: cull
+  to: s14
+  on_cull: korvash_highlands_zone|shrike
+- state: s14
+  event: cull
+  to: s15
+  on_cull: korvash_highlands_zone|shrike
+- state: s15
+  event: cull
+  to: s16
+  on_cull: korvash_highlands_zone|shrike
+- state: s16
+  event: cull
+  to: s17
+  on_cull: korvash_highlands_zone|shrike
+- state: s17
+  event: cull
+  to: s18
+  on_cull: korvash_highlands_zone|shrike
+- state: s18
+  event: cull
+  to: s19
+  on_cull: korvash_highlands_zone|shrike
+- state: s19
+  event: cull
+  to: done
+  on_cull: korvash_highlands_zone|shrike
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the shrike-kind of Korvash Highlands: 0/20 down (1320 XP).'
+  s1: 'Cull the shrike-kind of Korvash Highlands: 1/20 down (1320 XP).'
+  s2: 'Cull the shrike-kind of Korvash Highlands: 2/20 down (1320 XP).'
+  s3: 'Cull the shrike-kind of Korvash Highlands: 3/20 down (1320 XP).'
+  s4: 'Cull the shrike-kind of Korvash Highlands: 4/20 down (1320 XP).'
+  s5: 'Cull the shrike-kind of Korvash Highlands: 5/20 down (1320 XP).'
+  s6: 'Cull the shrike-kind of Korvash Highlands: 6/20 down (1320 XP).'
+  s7: 'Cull the shrike-kind of Korvash Highlands: 7/20 down (1320 XP).'
+  s8: 'Cull the shrike-kind of Korvash Highlands: 8/20 down (1320 XP).'
+  s9: 'Cull the shrike-kind of Korvash Highlands: 9/20 down (1320 XP).'
+  s10: 'Cull the shrike-kind of Korvash Highlands: 10/20 down (1320 XP).'
+  s11: 'Cull the shrike-kind of Korvash Highlands: 11/20 down (1320 XP).'
+  s12: 'Cull the shrike-kind of Korvash Highlands: 12/20 down (1320 XP).'
+  s13: 'Cull the shrike-kind of Korvash Highlands: 13/20 down (1320 XP).'
+  s14: 'Cull the shrike-kind of Korvash Highlands: 14/20 down (1320 XP).'
+  s15: 'Cull the shrike-kind of Korvash Highlands: 15/20 down (1320 XP).'
+  s16: 'Cull the shrike-kind of Korvash Highlands: 16/20 down (1320 XP).'
+  s17: 'Cull the shrike-kind of Korvash Highlands: 17/20 down (1320 XP).'
+  s18: 'Cull the shrike-kind of Korvash Highlands: 18/20 down (1320 XP).'
+  s19: 'Cull the shrike-kind of Korvash Highlands: 19/20 down (1320 XP).'
+  done: The shrike-kind of Korvash Highlands are thinned. The region breathes easier.

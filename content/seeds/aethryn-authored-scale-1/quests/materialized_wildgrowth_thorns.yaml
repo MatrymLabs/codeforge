@@ -1,0 +1,23 @@
+id: wildgrowth_thorns
+name: The Thornwall Maw
+start: offered
+reward_xp: 65
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: wildgrowth_thornwall
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:25
+  on_defeat: wildgrowth_thornbeast
+terminal:
+- done
+labels:
+  offered: Road-Keeper Oren says a beast dens past the thornwall. Go EAST from the
+    green to the wild edge and see.
+  hunting: The thorn-tangled maw-stalker unfolds from the briars. Put it down so the
+    road-crews can work again.
+  done: '*** The maw-stalker is dead and the crews can cut the road again. Wildgrowth''s
+    road-keepers owe you the way itself, and Oren says so. ***'

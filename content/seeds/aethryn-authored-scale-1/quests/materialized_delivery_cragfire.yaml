@@ -1,0 +1,20 @@
+id: delivery_cragfire
+name: 'Delivery: Cinderfire to Moltenhold'
+start: posted
+reward_xp: 1440
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_cragfire
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: moltenhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Cinderfire is bound for Moltenhold. Take it up (1440 XP).
+  carrying: Carry the parcel to Moltenhold.
+  done: The parcel is delivered to Moltenhold. The road keeps its promise.

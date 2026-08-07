@@ -1,0 +1,36 @@
+id: forage_field_duskwood_vale_fernshade_5
+name: 'A small Collection: fernshade of The Duskwood Vale Wilds'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_duskwood_vale|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_duskwood_vale|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_duskwood_vale|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_duskwood_vale|fernshade
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_duskwood_vale|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect fernshade in The Duskwood Vale Wilds: 0/5 (60 XP).'
+  s1: 'Collect fernshade in The Duskwood Vale Wilds: 1/5 (60 XP).'
+  s2: 'Collect fernshade in The Duskwood Vale Wilds: 2/5 (60 XP).'
+  s3: 'Collect fernshade in The Duskwood Vale Wilds: 3/5 (60 XP).'
+  s4: 'Collect fernshade in The Duskwood Vale Wilds: 4/5 (60 XP).'
+  done: You have brought in fernshade enough for The Duskwood Vale Wilds. The wood's
+    craftfolk have what they need.

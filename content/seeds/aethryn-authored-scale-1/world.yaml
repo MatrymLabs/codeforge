@@ -1,0 +1,39 @@
+# The declared identity of the bundled flagship Seed.
+world_id: aethryn
+title: Aethryn
+start_room: veridia
+version: "1"
+description: >-
+  Aethryn is CodeForge's bundled flagship Seed and first-party MMORPG. It is
+  loaded through the standard Seed Runtime and demonstrates the platform's
+  world, persistence, command, progression, and creator capabilities.
+authors:
+  - Matrym Labs
+tags:
+  - flagship
+  - bundled
+  - mmorpg
+  - first-party
+  - seed
+
+# Aethryn's campaign, zones, rewards, and endgame all span levels 1-300. Keep this curve declared
+# by the Seed rather than silently inheriting first-forge's historical 255-player cap. The first
+# five tiers preserve the established curve exactly; the final tier carries it through the flagship
+# summit without changing other Seeds.
+progression:
+  xp:
+    base: 25
+    cap: 300
+    tiers:
+      - [1, 50, 1]
+      - [51, 99, 2]
+      - [100, 150, 3]
+      - [151, 200, 6]
+      - [201, 300, 15]
+  jp:
+    base: 20
+    cap: 30
+    tiers:
+      - [1, 10, 1]
+      - [11, 20, 3]
+      - [21, 30, 8]

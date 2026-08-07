@@ -1,0 +1,21 @@
+id: crawl_the_obsidian_pit
+name: 'Descent: The Obsidian Pit'
+start: above
+reward_xp: 2600
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: the_obsidian_pit
+- state: delving
+  event: reach
+  to: done
+  on_enter: the_obsidian_pit_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of The Obsidian Pit. Cross its mouth and
+    descend.
+  delving: You are within The Obsidian Pit. Press on to its deepest chamber.
+  done: You have reached the heart of The Obsidian Pit and lived. Few can (2600 XP).

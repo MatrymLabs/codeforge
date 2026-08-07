@@ -1,0 +1,23 @@
+id: sunscar_dunes
+name: The Sand-Wyrm
+start: offered
+reward_xp: 82
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: sunscar_dunes
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:32
+  on_defeat: sunscar_wyrm
+terminal:
+- done
+labels:
+  offered: Caravan-Captain Doran says a sand-wyrm dens in the dig-dunes. Go EAST from
+    the bazaar onto the sand and see.
+  hunting: The pale sand-wyrm rises from the old bones. Put it down so the dune-crews
+    can work the shafts again.
+  done: '*** The sand-wyrm is dead and the dig-dunes can be worked again. Sunscar''s
+    caravan-guard call you one of their own now, and Doran says so. ***'

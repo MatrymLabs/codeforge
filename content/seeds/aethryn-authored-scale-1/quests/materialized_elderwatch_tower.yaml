@@ -1,0 +1,18 @@
+id: elderwatch_tower
+name: The Long View
+start: offered
+reward_xp: 25
+steps:
+- state: offered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:15
+  on_enter: elderwatch_tower
+terminal:
+- done
+labels:
+  offered: They say Elderwatch's tower holds the finest view in Veridia, and a forgotten
+    cache with it. Climb the stair UP from the muster yard and see for yourself.
+  done: '*** From the tower crown the whole cradle lies open, and in the wall-niche
+    an old-world far-lens waits to be taken. You have found the long view Elderwatch
+    was raised to keep. ***'

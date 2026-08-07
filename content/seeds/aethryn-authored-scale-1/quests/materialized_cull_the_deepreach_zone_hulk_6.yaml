@@ -1,0 +1,40 @@
+id: cull_the_deepreach_zone_hulk_6
+name: 'A small Cull: the hulk-kind of The Deepreach'
+start: s0
+reward_xp: 498
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: the_deepreach_zone|hulk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: the_deepreach_zone|hulk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: the_deepreach_zone|hulk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: the_deepreach_zone|hulk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: the_deepreach_zone|hulk
+- state: s5
+  event: cull
+  to: done
+  on_cull: the_deepreach_zone|hulk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the hulk-kind of The Deepreach: 0/6 down (498 XP).'
+  s1: 'Cull the hulk-kind of The Deepreach: 1/6 down (498 XP).'
+  s2: 'Cull the hulk-kind of The Deepreach: 2/6 down (498 XP).'
+  s3: 'Cull the hulk-kind of The Deepreach: 3/6 down (498 XP).'
+  s4: 'Cull the hulk-kind of The Deepreach: 4/6 down (498 XP).'
+  s5: 'Cull the hulk-kind of The Deepreach: 5/6 down (498 XP).'
+  done: The hulk-kind of The Deepreach are thinned. The ash-tracks are a shade safer.

@@ -1,0 +1,36 @@
+id: forage_underground_eldryn_forest_underworks_fernshade_5
+name: 'A small Draw: fernshade of The Rotwood Root-Chambers'
+start: s0
+reward_xp: 105
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_eldryn_forest_underworks|fernshade
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_eldryn_forest_underworks|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Draw fernshade in The Rotwood Root-Chambers: 0/5 (105 XP).'
+  s1: 'Draw fernshade in The Rotwood Root-Chambers: 1/5 (105 XP).'
+  s2: 'Draw fernshade in The Rotwood Root-Chambers: 2/5 (105 XP).'
+  s3: 'Draw fernshade in The Rotwood Root-Chambers: 3/5 (105 XP).'
+  s4: 'Draw fernshade in The Rotwood Root-Chambers: 4/5 (105 XP).'
+  done: You have drawn fernshade enough for The Rotwood Root-Chambers. The wood's
+    craftfolk have what they need.

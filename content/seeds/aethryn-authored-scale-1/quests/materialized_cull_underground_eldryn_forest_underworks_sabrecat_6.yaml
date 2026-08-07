@@ -1,0 +1,47 @@
+id: cull_underground_eldryn_forest_underworks_sabrecat_6
+name: 'A small Warrant: the sabrecat-kind of The Rotwood Root-Chambers'
+start: s0
+reward_xp: 168
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_eldryn_forest_underworks|sabrecat
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 0/6 down
+    (168 XP).'
+  s1: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 1/6 down
+    (168 XP).'
+  s2: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 2/6 down
+    (168 XP).'
+  s3: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 3/6 down
+    (168 XP).'
+  s4: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 4/6 down
+    (168 XP).'
+  s5: 'Answer the warrant on the sabrecat-kind of The Rotwood Root-Chambers: 5/6 down
+    (168 XP).'
+  done: The sabrecat-kind of The Rotwood Root-Chambers are answered for. The wardens
+    of the wood send their thanks.

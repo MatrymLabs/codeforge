@@ -1,0 +1,28 @@
+id: frosthold_observatory
+name: Where the Storm Falls
+start: offered
+reward_xp: 80
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: frosthold_wardroom
+- state: accepted
+  event: take
+  to: recovered
+  on_take: frosthold_reading_core
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:warcraft:30
+  on_enter: frosthold_wardroom
+terminal:
+- done
+labels:
+  offered: In Frosthold, the ice-watch needs a hand that can stand the cold. Step
+    into the wardroom and hear the captain.
+  accepted: Descend to the buried observatory and pull the reading-core from the instrument
+    (mind the frost-bound dead).
+  recovered: Carry the reading-core back UP to Ice-Captain Bryn in the wardroom.
+  done: '*** The core reads the sky for the watch now, and Frosthold will know where
+    the storm falls. A season of lives, bought with a cold walk. ***'

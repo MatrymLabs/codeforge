@@ -1,0 +1,15 @@
+id: bounty_aurelian_windwraith
+name: 'Bounty: a keening wind-wraith'
+start: posted
+reward_xp: 2412
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: aurelian_windwraith
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a keening wind-wraith (level 201). Fell it for 2412 XP.
+  collected: 'Bounty collected: a keening wind-wraith is felled. Well hunted.'

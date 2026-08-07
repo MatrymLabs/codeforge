@@ -27,9 +27,11 @@ from kernel.shelf import affixes, target_disambig
 from kernel.shelf.reward_curve import jp_for_kill, xp_for_kill
 from kernel.shelf.weighted_table import WeightedTable
 from kernel.world import items, threat
+from kernel.world.aethryn_models import content_digest
 from kernel.world.boss_phases import boss_phase
 from kernel.world.coinage import purse
 from kernel.world.combat_clock import advance as advance_clock
+from kernel.world.economy_transactions import TransactionError, move_currency
 from kernel.world.encounter_log import witness
 from kernel.world.engineer import emergency_repair
 from kernel.world.events import announce, announce_frame
@@ -97,7 +99,26 @@ def _death_toll(session: Session) -> int:
     """Scatter DEATH_COIN_PENALTY of the hero's carried coins on a fall; return the coins lost
     (0 for an empty purse). Banked/vaulted coins are safe -- only the carried purse is staked."""
     lost = int(session.coins * DEATH_COIN_PENALTY)
-    session.coins -= lost
+    if lost <= 0:
+        return 0
+    token = content_digest(
+        {"kind": "death_toll", "player": session.player_id, "coins": session.coins}
+    )[:32]
+    wallets = {session.player_id: session.coins}
+    try:
+        move_currency(
+            transaction_id=f"death-toll-{token}",
+            idempotency_key=f"death-toll-{token}",
+            actor=session.player_id,
+            source=session.player_id,
+            destination="",
+            amount=lost,
+            reason="death_toll",
+            wallets=wallets,
+        )
+    except TransactionError:
+        return 0
+    session.coins = wallets[session.player_id]
     return lost
 
 
@@ -487,7 +508,24 @@ def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
             cohort_note = (
                 f" (a cohort of {cohort} splits the raid, and the bounty scales with them)"
             )
-    session.coins += bonus
+    token = content_digest(
+        {"kind": "bounty", "player": session.player_id, "npc": nid, "bonus": bonus, "key": key}
+    )[:32]
+    wallets = {session.player_id: session.coins}
+    try:
+        move_currency(
+            transaction_id=f"bounty-{token}",
+            idempotency_key=f"bounty-{token}",
+            actor=session.player_id,
+            source="",
+            destination=session.player_id,
+            amount=bonus,
+            reason="combat_bounty",
+            wallets=wallets,
+        )
+    except TransactionError:
+        return "The bounty ledger refuses the reward; report this combat receipt."
+    session.coins = wallets[session.player_id]
     return (
         f"{label} bounty! The first {npc['name']} falls: you claim {purse(bonus)} extra."
         f"{cohort_note} (purse: {purse(session.coins)})"
@@ -536,7 +574,33 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     if shared:
         rewards = f"{rewards}\n{shared}"
     coins = _coin_reward(npc)
-    session.coins += coins
+    from kernel.world import climate
+
+    token = content_digest(
+        {
+            "kind": "combat_reward",
+            "player": session.player_id,
+            "npc": nid,
+            "coins": coins,
+            "beat": climate.now(),
+        }
+    )[:32]
+    wallets = {session.player_id: session.coins}
+    try:
+        move_currency(
+            transaction_id=f"combat-reward-{token}",
+            idempotency_key=f"combat-reward-{token}",
+            actor=session.player_id,
+            source="",
+            destination=session.player_id,
+            amount=coins,
+            reason="combat_reward",
+            wallets=wallets,
+        )
+    except TransactionError:
+        rewards = f"{rewards}\nThe reward ledger refused the coin drop; report this combat receipt."
+        coins = 0
+    session.coins = wallets[session.player_id]
     rewards = f"{rewards}\nYou find {purse(coins)}. (purse: {purse(session.coins)})"
     bounty = _kill_bounty(
         session, npc, nid

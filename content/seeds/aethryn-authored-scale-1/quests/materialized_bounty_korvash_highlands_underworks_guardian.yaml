@@ -1,0 +1,16 @@
+id: bounty_korvash_highlands_underworks_guardian
+name: 'Bounty: Balaar the Scree Scourge'
+start: posted
+reward_xp: 2496
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: korvash_highlands_underworks_guardian
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Balaar the Scree Scourge (level 208). Fell it for 2496
+    XP.
+  collected: 'Bounty collected: Balaar the Scree Scourge is felled. Well hunted.'

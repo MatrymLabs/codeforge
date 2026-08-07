@@ -1,0 +1,131 @@
+id: cull_underground_ashen_wastes_caves_basilisk_20
+name: 'A great Warrant: the basilisk-kind of Ashen Slag Hollows'
+start: s0
+reward_xp: 1060
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_ashen_wastes_caves|basilisk
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_ashen_wastes_caves|basilisk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 0/20 down (1060
+    XP).'
+  s1: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 1/20 down (1060
+    XP).'
+  s2: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 2/20 down (1060
+    XP).'
+  s3: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 3/20 down (1060
+    XP).'
+  s4: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 4/20 down (1060
+    XP).'
+  s5: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 5/20 down (1060
+    XP).'
+  s6: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 6/20 down (1060
+    XP).'
+  s7: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 7/20 down (1060
+    XP).'
+  s8: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 8/20 down (1060
+    XP).'
+  s9: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 9/20 down (1060
+    XP).'
+  s10: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 10/20 down
+    (1060 XP).'
+  s11: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 11/20 down
+    (1060 XP).'
+  s12: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 12/20 down
+    (1060 XP).'
+  s13: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 13/20 down
+    (1060 XP).'
+  s14: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 14/20 down
+    (1060 XP).'
+  s15: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 15/20 down
+    (1060 XP).'
+  s16: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 16/20 down
+    (1060 XP).'
+  s17: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 17/20 down
+    (1060 XP).'
+  s18: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 18/20 down
+    (1060 XP).'
+  s19: 'Answer the warrant on the basilisk-kind of Ashen Slag Hollows: 19/20 down
+    (1060 XP).'
+  done: The basilisk-kind of Ashen Slag Hollows are answered for. The ash-tracks are
+    a shade safer.

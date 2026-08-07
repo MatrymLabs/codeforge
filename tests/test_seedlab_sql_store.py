@@ -40,9 +40,7 @@ def test_sql_seed_store_round_trip_survives_new_kernel(tmp_path: Path) -> None:
     actual = recovered.get("seed-engineering")
 
     assert actual == running
-    assert [record.identity.seed_id for record in recovered.list_seeds()] == [
-        "seed-engineering"
-    ]
+    assert [record.identity.seed_id for record in recovered.list_seeds()] == ["seed-engineering"]
     assert actual.identity.domain_modules == ("api", "testing")
     assert [event.action for event in actual.audit] == ["created", "started"]
 

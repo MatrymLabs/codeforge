@@ -1,0 +1,13 @@
+id: aethryn_universal_rules
+canon_status: CANON_LOCKED
+rules:
+  canonical_topology_source: content/seeds/aethryn/world_graph.yaml
+  poster_is_orientation_only: true
+  decorative_map_routes_are_playable: false
+  shared_sea_creates_room_route: false
+  runtime_model_calls: forbidden
+  generated_status_promotion: explicit_human_authorization_required
+  unresolved_questions: rumor_or_disputed_evidence_only
+  superseded_metaphysics_as_current: forbidden
+  package_publication: staged_manifest_digest_and_restore_required
+  state_owner: validated_engine_or_published_seed_data

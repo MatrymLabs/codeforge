@@ -1,0 +1,131 @@
+id: cull_field_frostspire_peaks_ursine_20
+name: 'A great Contract: the ursine-kind of The Frostspire Peaks Wilds'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_frostspire_peaks|ursine
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_frostspire_peaks|ursine
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_frostspire_peaks|ursine
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_frostspire_peaks|ursine
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_frostspire_peaks|ursine
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_frostspire_peaks|ursine
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_frostspire_peaks|ursine
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_frostspire_peaks|ursine
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_frostspire_peaks|ursine
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_frostspire_peaks|ursine
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_frostspire_peaks|ursine
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_frostspire_peaks|ursine
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_frostspire_peaks|ursine
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_frostspire_peaks|ursine
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_frostspire_peaks|ursine
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_frostspire_peaks|ursine
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_frostspire_peaks|ursine
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_frostspire_peaks|ursine
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_frostspire_peaks|ursine
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_frostspire_peaks|ursine
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 0/20
+    down (600 XP).'
+  s1: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 1/20
+    down (600 XP).'
+  s2: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 2/20
+    down (600 XP).'
+  s3: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 3/20
+    down (600 XP).'
+  s4: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 4/20
+    down (600 XP).'
+  s5: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 5/20
+    down (600 XP).'
+  s6: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 6/20
+    down (600 XP).'
+  s7: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 7/20
+    down (600 XP).'
+  s8: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 8/20
+    down (600 XP).'
+  s9: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 9/20
+    down (600 XP).'
+  s10: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 10/20
+    down (600 XP).'
+  s11: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 11/20
+    down (600 XP).'
+  s12: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 12/20
+    down (600 XP).'
+  s13: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 13/20
+    down (600 XP).'
+  s14: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 14/20
+    down (600 XP).'
+  s15: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 15/20
+    down (600 XP).'
+  s16: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 16/20
+    down (600 XP).'
+  s17: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 17/20
+    down (600 XP).'
+  s18: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 18/20
+    down (600 XP).'
+  s19: 'Fulfil the contract on the ursine-kind of The Frostspire Peaks Wilds: 19/20
+    down (600 XP).'
+  done: The ursine-kind of The Frostspire Peaks Wilds are put down. The high passes
+    will hold a little longer.

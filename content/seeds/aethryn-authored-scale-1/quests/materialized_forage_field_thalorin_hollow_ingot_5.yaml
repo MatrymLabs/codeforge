@@ -1,0 +1,36 @@
+id: forage_field_thalorin_hollow_ingot_5
+name: 'A small Harvest: hollow ingot of The Thalorin Wilds'
+start: s0
+reward_xp: 175
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_thalorin|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_thalorin|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_thalorin|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_thalorin|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_thalorin|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest hollow ingot in The Thalorin Wilds: 0/5 (175 XP).'
+  s1: 'Harvest hollow ingot in The Thalorin Wilds: 1/5 (175 XP).'
+  s2: 'Harvest hollow ingot in The Thalorin Wilds: 2/5 (175 XP).'
+  s3: 'Harvest hollow ingot in The Thalorin Wilds: 3/5 (175 XP).'
+  s4: 'Harvest hollow ingot in The Thalorin Wilds: 4/5 (175 XP).'
+  done: You have harvested hollow ingot enough for The Thalorin Wilds. The region's
+    makers will put it to use.

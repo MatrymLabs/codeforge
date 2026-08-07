@@ -1,0 +1,17 @@
+id: bounty_the_crystal_labyrinth_guardian
+name: 'Bounty: the guardian of The Crystal Labyrinth'
+start: posted
+reward_xp: 3000
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_crystal_labyrinth_guardian
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the guardian of The Crystal Labyrinth (level 250). Fell
+    it for 3000 XP.
+  collected: 'Bounty collected: the guardian of The Crystal Labyrinth is felled. Well
+    hunted.'

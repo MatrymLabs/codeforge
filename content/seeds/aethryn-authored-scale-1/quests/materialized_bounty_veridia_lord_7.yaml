@@ -1,0 +1,16 @@
+id: bounty_veridia_lord_7
+name: 'Bounty: Morune the Hedgerow Stalker'
+start: posted
+reward_xp: 192
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: veridia_lord_7
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Morune the Hedgerow Stalker (level 16). Fell it for 192
+    XP.
+  collected: 'Bounty collected: Morune the Hedgerow Stalker is felled. Well hunted.'

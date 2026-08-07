@@ -1,0 +1,77 @@
+id: spine_forgeward_road
+name: The Forgeward Road
+start: leg_0
+reward_xp: 12000
+steps:
+- state: leg_0
+  event: reach_1
+  to: leg_1
+  on_enter: duskwood_vale
+- state: leg_1
+  event: reach_2
+  to: leg_2
+  on_enter: caeloria
+- state: leg_2
+  event: reach_3
+  to: leg_3
+  on_enter: eldryn_forest
+- state: leg_3
+  event: reach_4
+  to: leg_4
+  on_enter: frostspire_peaks
+- state: leg_4
+  event: reach_5
+  to: leg_5
+  on_enter: zhaar_desert
+- state: leg_5
+  event: reach_6
+  to: leg_6
+  on_enter: xilnath_jungle
+- state: leg_6
+  event: reach_7
+  to: leg_7
+  on_enter: thalorin
+- state: leg_7
+  event: reach_8
+  to: leg_8
+  on_enter: the_deepreach
+- state: leg_8
+  event: reach_9
+  to: leg_9
+  on_enter: ashen_wastes
+- state: leg_9
+  event: reach_10
+  to: leg_10
+  on_enter: korvash_highlands
+- state: leg_10
+  event: reach_11
+  to: leg_11
+  on_enter: shattered_isles
+- state: leg_11
+  event: reach_12
+  to: leg_12
+  on_enter: skyward_spires
+- state: leg_12
+  event: reach_13
+  to: done
+  on_enter: the_voidscar
+  effect: award_xp
+terminal:
+- done
+labels:
+  leg_0: The Forgeward Road runs the length of Aethryn, from Veridia to The Voidscar.
+    Press on to Duskwood Vale.
+  leg_1: You have reached Duskwood Vale. The road runs on to Caeloria.
+  leg_2: You have reached Caeloria. The road runs on to Eldryn Forest.
+  leg_3: You have reached Eldryn Forest. The road runs on to Frostspire Peaks.
+  leg_4: You have reached Frostspire Peaks. The road runs on to Zhaar Desert.
+  leg_5: You have reached Zhaar Desert. The road runs on to Xil'nath Jungle.
+  leg_6: You have reached Xil'nath Jungle. The road runs on to Thalorin.
+  leg_7: You have reached Thalorin. The road runs on to The Deepreach.
+  leg_8: You have reached The Deepreach. The road runs on to Ashen Wastes.
+  leg_9: You have reached Ashen Wastes. The road runs on to Korvash Highlands.
+  leg_10: You have reached Korvash Highlands. The road runs on to The Shattered Isles.
+  leg_11: You have reached The Shattered Isles. The road runs on to Skyward Spires.
+  leg_12: You have reached Skyward Spires. The road runs on to The Voidscar.
+  done: '*** You have walked the Forgeward Road from Veridia to The Voidscar. Aethryn
+    is yours to roam. ***'

@@ -1,0 +1,25 @@
+packet_id: veridia_greenhold_living_slice
+quest_ids:
+- greenhold_water_discovery
+- greenhold_water_repair
+- greenhold_boar_pressure
+- greenhold_ledger_delivery
+- greenhold_meadowfoil_commission
+- greenhold_conflicting_testimony
+- greenhold_field_repairs
+- greenhold_hollow_patrol
+- greenhold_repeating_field_contract
+- greenhold_public_water_day
+pressure_ids:
+- living_water_shortage
+- living_crop_damage
+- living_civic_dispute
+- living_vermin_hollow_pressure
+contract_ids:
+- greenhold_seasonal_field_watch
+arc_ids:
+- greenhold_water_and_work_arc
+public_event_ids:
+- greenhold_water_day_event
+digest: 4347e02715d1a9b81068aaed71a8377630a9d43dc9362cb816c9dfb076cdf38b
+generator_version: 1.0.0

@@ -1,0 +1,61 @@
+id: forage_underground_korvash_highlands_caves_hollow_ingot_10
+name: 'A standing Harvest: hollow ingot of Korvash Oath-Caves'
+start: s0
+reward_xp: 470
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_korvash_highlands_caves|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest hollow ingot in Korvash Oath-Caves: 0/10 (470 XP).'
+  s1: 'Harvest hollow ingot in Korvash Oath-Caves: 1/10 (470 XP).'
+  s2: 'Harvest hollow ingot in Korvash Oath-Caves: 2/10 (470 XP).'
+  s3: 'Harvest hollow ingot in Korvash Oath-Caves: 3/10 (470 XP).'
+  s4: 'Harvest hollow ingot in Korvash Oath-Caves: 4/10 (470 XP).'
+  s5: 'Harvest hollow ingot in Korvash Oath-Caves: 5/10 (470 XP).'
+  s6: 'Harvest hollow ingot in Korvash Oath-Caves: 6/10 (470 XP).'
+  s7: 'Harvest hollow ingot in Korvash Oath-Caves: 7/10 (470 XP).'
+  s8: 'Harvest hollow ingot in Korvash Oath-Caves: 8/10 (470 XP).'
+  s9: 'Harvest hollow ingot in Korvash Oath-Caves: 9/10 (470 XP).'
+  done: You have harvested hollow ingot enough for Korvash Oath-Caves. The region's
+    makers will put it to use.

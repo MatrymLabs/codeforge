@@ -1,0 +1,36 @@
+id: forage_underground_shattered_isles_underworks_saltkelp_5
+name: 'A small Collection: saltkelp of The Blackreef Gateworks'
+start: s0
+reward_xp: 295
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_shattered_isles_underworks|saltkelp
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_shattered_isles_underworks|saltkelp
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_shattered_isles_underworks|saltkelp
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_shattered_isles_underworks|saltkelp
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_shattered_isles_underworks|saltkelp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect saltkelp in The Blackreef Gateworks: 0/5 (295 XP).'
+  s1: 'Collect saltkelp in The Blackreef Gateworks: 1/5 (295 XP).'
+  s2: 'Collect saltkelp in The Blackreef Gateworks: 2/5 (295 XP).'
+  s3: 'Collect saltkelp in The Blackreef Gateworks: 3/5 (295 XP).'
+  s4: 'Collect saltkelp in The Blackreef Gateworks: 4/5 (295 XP).'
+  done: You have brought in saltkelp enough for The Blackreef Gateworks. The harbour
+    makers are glad of it.

@@ -1,0 +1,30 @@
+id: westgate_writ
+name: The Unlisted Line
+start: offered
+reward_xp: 44
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: westgate_tollhouse
+- state: accepted
+  event: take
+  to: recovered
+  on_take: westgate_writ
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:26
+  on_enter: westgate_tollhouse
+terminal:
+- done
+labels:
+  offered: In Westgate, the tollkeeper cannot close his road-register over an unlisted
+    writ. Step into the toll house and hear him.
+  accepted: A sealed writ came up the road from the reaches and was set down at the
+    milestone unaccounted. Take it up from the western road.
+  recovered: Carry the sealed writ back to Tollkeeper Cassian in the toll house.
+  done: '*** The sealed writ is on Cassian''s desk and the unlisted line is written
+    at last, so the register squares and the heartland knows one more thing that came
+    up the road. What the wax holds, and who sent it up unlisted from the fraying
+    reaches, the record does not say. ***'

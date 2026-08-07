@@ -1,0 +1,29 @@
+id: elderwatch_beacon
+name: The Dark Watch
+start: offered
+reward_xp: 42
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: elderwatch_hall
+- state: accepted
+  event: defeat
+  to: slain
+  on_defeat: elderwatch_denbeast
+- state: slain
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:warcraft:20
+  on_enter: elderwatch_hall
+terminal:
+- done
+labels:
+  offered: Somewhere in Elderwatch, a warden needs a strong arm. Step into the garrison
+    hall and hear her out.
+  accepted: Warden Aldith needs the dark beacon cleared. Go EAST along the beacon-walk
+    to the den and put the lurker down.
+  slain: The lurker is dead. Carry the word back WEST to Warden Aldith in the garrison
+    hall.
+  done: '*** The den is cleared and the watchers relight the beacon. The Veridia line
+    is whole again, and Warden Aldith marks your name in the watch-log. ***'

@@ -1,0 +1,1261 @@
+settlements:
+- id: ravenwatch_black_hollow_edge
+  display_name: Ravenwatch Hollow Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  population_band: warden and gatherer edge of a small timber settlement
+  government: wardens and chapel custom with local forester testimony
+  food_sources:
+  - forest game
+  - root crops
+  - gathered fernshade
+  water_source: spring cisterns and rain collection
+  fuel_source: deadfall charcoal and lantern oil trade
+  labor_base:
+  - warding
+  - gathering
+  - hunting
+  - carpentry
+  - lantern repair
+  waste_handling: ash pits and marked compost clearings away from the Hollow
+  economy: fernshade, lantern salve, route guidance, and safe timber work
+  architecture: timber camp structures with covered lantern posts and warden stakes
+  culture: boundary memory, practical mourning, and careful testimony
+  services:
+  - warden report
+  - lantern repair
+  - route guidance
+  - gathering exchange
+  external_connections:
+  - ravenwatch
+  - the_black_hollow
+  - duskwood_vale
+  active_conflicts:
+  - black_hollow_lantern_shortage
+  - disputed_hollow_access
+  daily_rhythm: dawn boundary walk, daylight gathering, dusk lantern check, night
+    watch
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f8793f49a3880dd6b25d430b5a56960a1d5d117049bea03bfebeb3a04e889838
+districts:
+- id: ravenwatch_hollowward
+  display_name: Hollowward
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  settlement_id: ravenwatch_black_hollow_edge
+  purpose:
+  - civic
+  - service
+  - threshold
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1195740058124672e0c12b4d0ddfc36d767dc09f69a90ef8331714165b21d810
+neighborhoods:
+- id: ravenwatch_lantern_edge
+  display_name: Lantern Edge
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  settlement_id: ravenwatch_black_hollow_edge
+  district_id: ravenwatch_hollowward
+  purpose:
+  - civic
+  - service
+  - recovery
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1f802d886df80716057d1af32038c677284b560a22ff814ed8c498a8bdf63619
+- id: ravenwatch_fern_margin
+  display_name: Fernshade Margin
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  settlement_id: ravenwatch_black_hollow_edge
+  district_id: ravenwatch_hollowward
+  purpose:
+  - economic
+  - ecological
+  - resource
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: b112184781c87370151a1c0d557c4a42ca83824cfec378bb6674595332cda02e
+wilderness:
+- id: black_hollow_fringe
+  display_name: Black Hollow Fringe
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  habitat: old forest margin, root fields, fernshade, and damp pools
+  traversal_identity: a marked path loops from the warden camp through forage and
+    back to the Hollow
+  purpose:
+  - traversal
+  - ecological
+  - resource
+  - encounter
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 2f03619f403eaebd6c3dfc2db91b0f13ebd60c62679f17ee3ca42ef0f4d0e7ed
+rooms:
+- id: the_black_hollow
+  display_name: The Black Hollow
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - black_hollow
+  parent_wilderness: black_hollow_fringe
+  purpose:
+  - threshold
+  - landmark
+  - narrative
+  description: The Black Hollow waits beneath its split oak while old path marks,
+    a warden lantern, and a new threshold east make the choice to enter or return
+    legible.
+  room_type: Dungeon Mouth
+  tags:
+  - duskwood_vale
+  - black_hollow
+  - compiler_slice
+  replace: true
+  exits:
+    out: duskwood_vale
+    side_depths: duskwood_vale_underworks_r0
+    down: the_black_hollow_delve_1
+    fringe: duskwood_black_hollow_duskwood_fringe_path
+    threshold: duskwood_hollow_threshold
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - black_hollow
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ab25ee0c8b1ec87404f10ea7d1ffb2ebd528ae8c062bba62025ea17fe6e12262
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - threshold
+  - landmark
+  - narrative
+  short_description: The Black Hollow waits beneath its split oak while old path marks,
+    a warden lantern, and a new threshold east make the choice to enter or return
+    legible.
+  long_description: 'The Black Hollow waits beneath its split oak while old path marks,
+    a warden lantern, and a new threshold east make the choice to enter or return
+    legible.
+
+
+    Its materials and position belong to Duskwood Vale: old forest, root fields, fernshade
+    margins, and a shallow mirror pool meets Ravenwatch timber and covered lantern
+    stations at this threshold.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_threshold
+  display_name: Hollowward Threshold
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - black_hollow
+  - ravenwatch
+  parent_settlement: ravenwatch_black_hollow_edge
+  district_id: ravenwatch_hollowward
+  neighborhood_id: ravenwatch_lantern_edge
+  purpose:
+  - threshold
+  - civic
+  - traversal
+  description: A covered lantern post stands between the Black Hollow and the warden
+    route, its wet boards marked with return signs, warning names, and a duty that
+    has outlasted several keepers.
+  room_type: Warden Threshold
+  tags:
+  - duskwood_vale
+  - black_hollow
+  - lantern
+  - compiler_slice
+  exits:
+    in: the_black_hollow
+    east: duskwood_hollow_warden_camp
+    south: duskwood_hollow_fernway
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - black_hollow
+    - ravenwatch
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 8d75385039079abeadea663e20afbb9f40f14d2a27a3d6949499da63685b5792
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - threshold
+  - civic
+  - traversal
+  short_description: A covered lantern post stands between the Black Hollow and the
+    warden route, its wet boards marked with return signs, warning names, and a duty
+    that has outlasted several keepers.
+  long_description: 'A covered lantern post stands between the Black Hollow and the
+    warden route, its wet boards marked with return signs, warning names, and a duty
+    that has outlasted several keepers.
+
+
+    Its materials and position belong to Duskwood Vale: old forest, root fields, fernshade
+    margins, and a shallow mirror pool meets Ravenwatch timber and covered lantern
+    stations at this threshold.'
+  points_of_interest: []
+  conditions:
+  - id: pressure:duskwood_lantern_shortage
+    kind: pressure
+    source_record: duskwood_lantern_shortage
+    display: missing salve leaves the return route dim at the worst threshold
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_warden_camp
+  display_name: Warden Lantern Camp
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  - duskwood_ravenwatch_economy
+  parent_settlement: ravenwatch_black_hollow_edge
+  district_id: ravenwatch_hollowward
+  neighborhood_id: ravenwatch_lantern_edge
+  purpose:
+  - civic
+  - service
+  - social
+  - recovery
+  description: A rain-dark camp shelters spare lanterns, route stakes, and a warden's
+    record board carrying route warnings, duty names, and a maintenance argument.
+  room_type: Warden Camp
+  tags:
+  - duskwood_vale
+  - ravenwatch
+  - service
+  - compiler_slice
+  exits:
+    west: duskwood_hollow_threshold
+    south: duskwood_hollow_root_loop
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f335c9b2879511dfa987a97f74c4a98bad227ca01e96dde39163d95bdc698243
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - civic
+  - service
+  - social
+  - recovery
+  short_description: A rain-dark camp shelters spare lanterns, route stakes, and a
+    warden's record board carrying route warnings, duty names, and a maintenance argument.
+  long_description: 'A rain-dark camp shelters spare lanterns, route stakes, and a
+    warden''s record board carrying route warnings, duty names, and a maintenance
+    argument.
+
+
+    In Duskwood Vale, this warden camp exists for civic, service, and social work;
+    old forest, root fields, fernshade margins, and a shallow mirror pool gives the
+    work its shape.'
+  points_of_interest:
+  - id: duskwood_lantern_salver
+    display: the warden lantern salve
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: duskwood_lantern_salver
+  conditions:
+  - id: state:duskwood.hollow_lantern
+    kind: state
+    state_key: duskwood.hollow_lantern
+    values:
+    - dim
+    - lit
+    display: The warden lantern burns {value} along the return markers.
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_fernway
+  display_name: Fernshade Way
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  - duskwood_black_hollow_ecology
+  parent_settlement: ravenwatch_black_hollow_edge
+  district_id: ravenwatch_hollowward
+  neighborhood_id: ravenwatch_fern_margin
+  purpose:
+  - resource
+  - economic
+  - ecological
+  - traversal
+  description: Fernshade grows beneath the dripping branches along a marked way, and
+    the cut stems show how gatherers feed both Ravenwatch lamps and the forest creatures
+    that follow them.
+  room_type: Gathering Margin
+  tags:
+  - duskwood_vale
+  - fernshade
+  - gathering
+  - compiler_slice
+  exits:
+    north: duskwood_hollow_threshold
+    east: duskwood_hollow_root_loop
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 382cfde8839225bcf77f39454a9c7985c3a1c91c5760e1f28e315b165332b4df
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - resource
+  - economic
+  - ecological
+  - traversal
+  short_description: Fernshade grows beneath the dripping branches along a marked
+    way, and the cut stems show how gatherers feed both Ravenwatch lamps and the forest
+    creatures that follow them.
+  long_description: 'Fernshade grows beneath the dripping branches along a marked
+    way, and the cut stems show how gatherers feed both Ravenwatch lamps and the forest
+    creatures that follow them.
+
+
+    Its materials and position belong to Duskwood Vale: old forest, root fields, fernshade
+    margins, and a shallow mirror pool meets Ravenwatch timber and covered lantern
+    stations at this threshold.'
+  points_of_interest:
+  - id: duskwood_fernshade_node
+    display: fernshade margin
+    kind: resource
+    actions:
+    - examine
+    - gather
+    source_record: duskwood_fernshade_node
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_root_loop
+  display_name: Rootbound Loop
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  parent_wilderness: black_hollow_fringe
+  purpose:
+  - traversal
+  - ecological
+  - encounter
+  - landmark
+  description: The path bends around exposed roots and a line of old warden stakes,
+    closing a safe loop while fresh tracks show that the forest is using the boundary
+    for its own purposes.
+  room_type: Forest Loop
+  tags:
+  - duskwood_vale
+  - wilderness
+  - ecology
+  - compiler_slice
+  exits:
+    west: duskwood_hollow_fernway
+    north: duskwood_hollow_warden_camp
+    east: duskwood_hollow_mirror_pool
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 290315cc6c7fc18e33618db14f34b3b06cd0599fd059ca1b42d725aa4d5df883
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - traversal
+  - ecological
+  - encounter
+  - landmark
+  short_description: The path bends around exposed roots and a line of old warden
+    stakes, closing a safe loop while fresh tracks show that the forest is using the
+    boundary for its own purposes.
+  long_description: 'The path bends around exposed roots and a line of old warden
+    stakes, closing a safe loop while fresh tracks show that the forest is using the
+    boundary for its own purposes.
+
+
+    The Duskwood Vale setting makes its traversal, ecological, and encounter work
+    purpose visible in the Ravenwatch timber and covered lantern stations built where
+    old forest, root fields, fernshade margins, and a shallow mirror pool meets the
+    route.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_mirror_pool
+  display_name: Mirror Pool Margin
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  - black_hollow
+  parent_wilderness: black_hollow_fringe
+  purpose:
+  - narrative
+  - ecological
+  - puzzle
+  - landmark
+  description: A dark pool reflects branches too clearly beneath the rain, and an
+    old lantern line ends beside it where roots have lifted a small buried gate.
+  room_type: Forest Landmark
+  tags:
+  - duskwood_vale
+  - pool
+  - old_world
+  - compiler_slice
+  exits:
+    west: duskwood_hollow_root_loop
+    down: duskwood_hollow_barrow_gate
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    - black_hollow
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 20380914edf6f1a22366a98a40b31ffc1a6a92fea3847abe478172c7d93c7d82
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - narrative
+  - ecological
+  - puzzle
+  - landmark
+  short_description: A dark pool reflects branches too clearly beneath the rain, and
+    an old lantern line ends beside it where roots have lifted a small buried gate.
+  long_description: 'A dark pool reflects branches too clearly beneath the rain, and
+    an old lantern line ends beside it where roots have lifted a small buried gate.
+
+
+    Its materials and position belong to Duskwood Vale: old forest, root fields, fernshade
+    margins, and a shallow mirror pool meets Ravenwatch timber and covered lantern
+    stations at this threshold.'
+  points_of_interest: []
+  conditions: []
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+- id: duskwood_hollow_barrow_gate
+  display_name: Buried Return Gate
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_threshold
+  parent_wilderness: black_hollow_fringe
+  purpose:
+  - encounter
+  - threshold
+  - narrative
+  - puzzle
+  description: A shallow gate of fitted stone lies beneath the pool bank, its inward
+    face scored by roots and its return latch still shaped for a hand that no longer
+    remembers the work.
+  room_type: Minor Hazardous Site
+  tags:
+  - duskwood_vale
+  - black_hollow
+  - threshold
+  - compiler_slice
+  exits:
+    up: duskwood_hollow_mirror_pool
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_threshold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 8891b8d03af40b158fe72df3be64f6c61d79b1400f5270b105abba53e5ce0cd6
+  presentation_version: aethryn-room-v1
+  area_name: Duskwood Vale
+  primary_purpose:
+  - encounter
+  - threshold
+  - narrative
+  - puzzle
+  short_description: A shallow gate of fitted stone lies beneath the pool bank, its
+    inward face scored by roots and its return latch still shaped for a hand that
+    no longer remembers the work.
+  long_description: 'A shallow gate of fitted stone lies beneath the pool bank, its
+    inward face scored by roots and its return latch still shaped for a hand that
+    no longer remembers the work.
+
+
+    In Duskwood Vale, this minor hazardous site exists for encounter, threshold, and
+    narrative work; old forest, root fields, fernshade margins, and a shallow mirror
+    pool gives the work its shape.'
+  points_of_interest:
+  - id: duskwood_return_marker
+    display: the old return marker
+    kind: object
+    actions:
+    - examine
+    - take
+    source_record: duskwood_return_marker
+  conditions:
+  - id: pressure:duskwood_hollow_access
+    kind: pressure
+    source_record: duskwood_hollow_access
+    display: wardens and investigators disagree about opening the buried return gate
+  prose_status: GENERATED_LOCAL
+  prose_source: packet_description
+npcs:
+- id: ravenwatch_lantern_keeper
+  display_name: Lantern Keeper Sela
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  - duskwood_ravenwatch_economy
+  role:
+  - maintenance
+  - governance
+  - trade
+  - information
+  location: duskwood_hollow_warden_camp
+  schedule:
+  - dawn marker check
+  - midday salve accounting
+  - dusk lantern lighting
+  - night watch handoff
+  relationship_to_civilization: keeps the route legible between Ravenwatch and the
+    Black Hollow
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 2e728e0101fb3f89af94f5f82afc4055629acc6be347594705ce198c530d2404
+- id: ravenwatch_boundary_warden
+  display_name: Boundary Warden Corren
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - ravenwatch
+  - duskwood_wardens_dispute
+  role:
+  - military
+  - governance
+  - conflict
+  - information
+  location: duskwood_hollow_threshold
+  schedule:
+  - sunrise boundary walk
+  - afternoon testimony
+  - dusk route closure
+  relationship_to_civilization: balances public access against containment duty
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - ravenwatch
+    - duskwood_wardens_dispute
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 992158793a272a7582c6b64f94a4bb5ce5567a4e56fa679bf1babe5fbed8f83b
+creatures:
+- id: duskwood_hollow_stag
+  display_name: moss-antlered hollow stag
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  habitat: rootbound loop and mirror pool margin
+  diet_or_energy_source: fernshade, wet bark, and ordinary forest forage
+  predators: pack hunters and the Hollow's larger night predators
+  prey_or_resource_pressure: lantern warmth and shrinking forage draw it toward the
+    marked route
+  reproduction_or_recurrence: ordinary seasonal reproduction and recurring route pressure
+  seasonal_behavior: follows wet growth toward the pool during spring rain
+  ecological_role: makes altered boundary pressure visible without making the forest
+    an enemy
+  relationship_to_civilization: a dangerous crossing animal and an indicator of route
+    imbalance
+  reason_for_persistence: reliable forage and shelter along the maintained loop
+  keywords:
+  - stag
+  - hollow-stag
+  - antler
+  creature_category: biological
+  allowed_regions:
+  - duskwood_vale
+  climate_tolerance:
+  - temperate
+  - wet
+  - forest
+  threat_range:
+  - 4
+  - 10
+  description: A moss-antlered stag keeps to the rootbound loop where forage still
+    survives.
+  room_presence_description: Wet bark has been stripped from a root, and antler marks
+    score the nearby mud.
+  examine_description: Moss clings to its antlers and dark water beads on its coat;
+    it watches the marked route for danger.
+  behavior: feeds, listens, and charges when the route is pressed
+  intelligence: animal cunning
+  disposition: wary and territorial
+  social_organization: solitary or seasonal pair
+  activity_period: dawn and dusk
+  movement_behavior: follows the root loop and mirror pool margin
+  combat_role: charger
+  abilities:
+  - antler_charge
+  - route_scent
+  retreat_behavior: crosses back toward the pool after a hard wound
+  pursuit_behavior: pursues only along the rootbound loop
+  assistance_behavior: none
+  loot_outputs:
+  - raw_hide
+  crafting_outputs:
+  - raw_hide
+  rarity: uncommon
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 1fa8b6c2a8886b030a7dbc636023434aaa615144909f693ccb5eeb0a0f6c6725
+- id: duskwood_root_moths
+  display_name: root-moths
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  habitat: damp roots around the buried return gate
+  diet_or_energy_source: sap, leaf mold, and warm lantern residue
+  predators: bats, spiders, and duskwood songbirds
+  prey_or_resource_pressure: lantern residue and root shelter concentrate the swarm
+  reproduction_or_recurrence: ordinary moth recurrence wherever damp root shelter
+    remains
+  seasonal_behavior: expands after rain and retreats from a fully lit route
+  ecological_role: reveals the relationship between maintenance and Hollow-side habitat
+  relationship_to_civilization: nuisance and useful warning of a neglected gate
+  reason_for_persistence: sheltered roots and repeated warmth from the failing lantern
+    line
+  keywords:
+  - moth
+  - root-moth
+  - swarm
+  creature_category: biological
+  allowed_regions:
+  - duskwood_vale
+  climate_tolerance:
+  - temperate
+  - wet
+  - forest
+  threat_range:
+  - 1
+  - 3
+  description: Root-moths gather in a loose cloud where sap, leaf mold, and lantern
+    warmth meet.
+  room_presence_description: A powdery flutter gathers near the warm roots, then thins
+    when the lantern brightens.
+  examine_description: Their wings carry root-colored scales and their recurrence
+    follows damp shelter rather than any single nest.
+  behavior: feeds on sap, gathers around warmth, and scatters from bright flame
+  intelligence: insect instinct
+  disposition: harmless unless disturbed
+  social_organization: swarm
+  activity_period: night and after rain
+  movement_behavior: follows warmth between roots and the return gate
+  combat_role: nuisance swarm
+  abilities:
+  - clouding
+  - scale_dust
+  retreat_behavior: disperses into the root mat
+  pursuit_behavior: does not pursue
+  assistance_behavior: the swarm thickens around a disturbed member
+  loot_outputs:
+  - fernshade
+  crafting_outputs:
+  - fernshade
+  rarity: common
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c0366eda0cc8a7335cfeb5d0d71b99d998c1b81423a5100542720f9f2ac8c648
+items:
+- id: duskwood_lantern_salver
+  display_name: the warden lantern salve
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  source_room: duskwood_hollow_warden_camp
+  origin: Ravenwatch's maintained forest-lantern practice
+  material: fernshade oil, wax, ash, and a sealed clay cup
+  maker_or_tradition: Ravenwatch lantern keepers
+  use: ordinary route light and boundary marking
+  custody: Lantern Keeper Sela
+  maintenance_state: shortage, with enough for one repair
+  regional_relevance: ties gathering work to safe movement and mourning rites
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ed9c8fac6a357e3faa7f989ac610968c6dee90c88410fe8578715d63954be802
+- id: duskwood_return_marker
+  display_name: the old return marker
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_threshold
+  source_room: duskwood_hollow_barrow_gate
+  origin: unknown boundary maintenance tradition
+  material: fitted grey stone, iron pin, and root-polished wood
+  maker_or_tradition: locally attributed to the first Hollow wardens
+  use: input is a hand-sized latch turn; output is a marked return signal; failure
+    is root seizure
+  custody: disputed between the wardens and the Crownseekers
+  maintenance_state: buried, intact, and not yet opened
+  regional_relevance: makes old infrastructure a local obligation rather than generic
+    magic
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_threshold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c6dc8824dc6f8b60271d0c1aa81a2d289ce1e472a507628f1ded56ec6dcc8b08
+resource_nodes:
+- id: duskwood_fernshade_node
+  display_name: fernshade margin
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  resource: fernshade
+  habitat: damp forest edge beneath marked branches
+  recurrence: regrowth after careful seasonal cutting
+  source_room: duskwood_hollow_fernway
+  economic_use: lantern salve and Ravenwatch warden rites
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 06c240e6ce0f8aa8d9c4cd8931529e78c86837cde8eee4a509d21819e0c0caf0
+economy_flows:
+- id: duskwood_fernshade_trade
+  display_name: fernshade to Ravenwatch
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  source: duskwood_fernshade_node
+  sink: ravenwatch_lantern_keeper
+  resource: fernshade
+  purpose: produce lantern salve and support safe routes
+  transport: hand bundles along the marked forest path
+  surplus_or_shortage: shortage while the wet route and Hollow pressure reduce gathering
+  inventory_provenance: gathered locally and logged by Ravenwatch keepers
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: c662c3530d69bac46269cfcd1934c696a75009b7f055f270789506f2300b5226
+- id: duskwood_lantern_route
+  display_name: salve to Hollow route
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  source: ravenwatch_lantern_keeper
+  sink: duskwood_hollow_lantern
+  resource: lantern_oil
+  purpose: mark a safe return and keep ordinary maintenance possible
+  transport: warden handcart and covered lantern post
+  surplus_or_shortage: shortage at the threshold
+  inventory_provenance: made from gathered fernshade and traded oil
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 32cd9f124d08977af88272f9b736bf53bdeb4d4745a1f312e3d164272091951f
+ecology_flows:
+- id: duskwood_stag_boundary_pressure
+  display_name: stag and lantern pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  habitat: black_hollow_fringe
+  creature: duskwood_hollow_stag
+  energy_source: fernshade and wet forest forage
+  pressure: warmth and forage draw the stag toward the route
+  recurrence: seasonal movement with persistent shelter
+  civilization_relation: route safety and forest balance are the same local problem
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: ec6cf15e7a2b1b046374d67f1a9bcc8d1c8bcb09a9acd7f9e32319f42d71c347
+- id: duskwood_moth_gate_pressure
+  display_name: root-moth gate pressure
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_ecology
+  habitat: duskwood_hollow_barrow_gate
+  creature: duskwood_root_moths
+  energy_source: sap, leaf mold, and lantern residue
+  pressure: a neglected return gate becomes a stable shelter
+  recurrence: ordinary recurrence while damp roots and warmth remain
+  civilization_relation: maintenance delay increases the hazard around the threshold
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_ecology
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: a9978b490319eb3c0dbd1e8a5a31379643509aaec18a2fd0d781392945a6a787
+quest_pressures:
+- id: duskwood_lantern_shortage
+  display_name: Black Hollow lantern shortage
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  pressure_type: shortage
+  pressure: missing salve leaves the return route dim at the worst threshold
+  affected_records:
+  - ravenwatch_lantern_keeper
+  - duskwood_lantern_salver
+  - duskwood_hollow_threshold
+  competing_interests:
+  - safe_access
+  - scarce_material
+  - containment
+  resolution_scope: local and reversible
+  state_gate:
+    key: duskwood.hollow_lantern
+    active_values:
+    - dim
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: f7371001edd19a863ac1ae0cb850f647452bbfb874d194d062c31514b8d2c871
+- id: duskwood_hollow_access
+  display_name: disputed Hollow access
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_wardens_dispute
+  pressure_type: disputed_authority
+  pressure: wardens and investigators disagree about opening the buried return gate
+  affected_records:
+  - ravenwatch_boundary_warden
+  - duskwood_return_marker
+  - duskwood_hollow_barrow_gate
+  competing_interests:
+  - knowledge
+  - safety
+  - local obligation
+  resolution_scope: local, visible, and reversible
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_wardens_dispute
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: d79122a86b2d18687665e47cf5de11d214b2bb6f4193656dcc35bae872b79da4
+state_changes:
+- id: duskwood_lantern_status
+  display_name: Black Hollow lantern status
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_ravenwatch_economy
+  key: duskwood.hollow_lantern
+  room_id: duskwood_hollow_warden_camp
+  initial_value: dim
+  reversible_values:
+  - dim
+  - lit
+  visible_projection: The warden lantern burns {value} along the return markers.
+  persistence_scope: character_and_world_package
+  actions:
+  - command: maintain
+    target: lantern
+    aliases:
+    - warden lantern
+    - return light
+    required_item: duskwood_lantern_salver
+    from: dim
+    to: lit
+    success_message: You work the fernshade salve into the wick and the warden lantern
+      catches along the return markers.
+    already_message: The warden lantern is already lit along the return markers.
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_ravenwatch_economy
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 78c6999d7f8fbf9dac1f06153f2925874aac98c274c8045590aa43946ea8bb70
+dungeons:
+- id: duskwood_threshold_buried_gate
+  display_name: The Buried Return Gate
+  canon_status: AUTHORED_LOCAL
+  parent_region: duskwood_vale
+  parent_zone: duskwood_vale
+  source_design_ids:
+  - duskwood_black_hollow_threshold
+  built_by: unknown successor-era wardens or earlier keepers
+  original_purpose: preserve a marked return route beside the Black Hollow
+  historical_layer: successor_era
+  failure: roots lifted the marker and moths occupied the damp gate
+  current_occupants:
+  - duskwood_root_moths
+  - duskwood_hollow_stag
+  why_not_reclaimed: the route shifts and the main Hollow remains dangerous
+  entrance_logic: mirror pool down to the buried return gate
+  traversal_grammar:
+  - threshold
+  - orientation
+  - escalation
+  - revelation
+  - choice
+  - aftermath
+  gameplay_purpose: turn local maintenance and ecology into a small hazardous choice
+  revelation: boundary infrastructure carries ordinary obligations and incomplete
+    history
+  aftermath: the marker may be secured without resolving what the Hollow remembers
+  state_change: reversible
+  generation_seed: 52023
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  provenance:
+    source_design_ids:
+    - duskwood_black_hollow_threshold
+    source_paths:
+    - content/seeds/aethryn/design
+    - content/seeds/aethryn/room_batches/duskwood_black_hollow_0010.yaml
+    packet_id: duskwood_black_hollow_threshold
+    generation_seed: 52023
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    authority: AUTHORED_LOCAL
+    note: ''
+  content_digest: 3e6fc5f3e20536c6ad795f486aeea96c9e963f9d826ee2382ba6158d1d3d15a8

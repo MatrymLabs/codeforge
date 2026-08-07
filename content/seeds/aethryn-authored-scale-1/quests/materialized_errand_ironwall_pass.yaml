@@ -1,0 +1,15 @@
+id: errand_ironwall_pass
+name: 'Errand: Moonshade'
+start: posted
+reward_xp: 900
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: moonshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Moonshade (900 XP).
+  done: You bring word to Moonshade. It is gratefully received.

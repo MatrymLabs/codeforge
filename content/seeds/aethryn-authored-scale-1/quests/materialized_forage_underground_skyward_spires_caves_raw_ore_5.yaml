@@ -1,0 +1,36 @@
+id: forage_underground_skyward_spires_caves_raw_ore_5
+name: 'A small Gleaning: raw ore of The Broken Skychain Hollows'
+start: s0
+reward_xp: 300
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_skyward_spires_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_skyward_spires_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_skyward_spires_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_skyward_spires_caves|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_skyward_spires_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Glean raw ore in The Broken Skychain Hollows: 0/5 (300 XP).'
+  s1: 'Glean raw ore in The Broken Skychain Hollows: 1/5 (300 XP).'
+  s2: 'Glean raw ore in The Broken Skychain Hollows: 2/5 (300 XP).'
+  s3: 'Glean raw ore in The Broken Skychain Hollows: 3/5 (300 XP).'
+  s4: 'Glean raw ore in The Broken Skychain Hollows: 4/5 (300 XP).'
+  done: You have gleaned raw ore enough for The Broken Skychain Hollows. The region's
+    makers will put it to use.

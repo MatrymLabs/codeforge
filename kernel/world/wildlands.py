@@ -30,11 +30,13 @@ import yaml
 from kernel.world.bestiary import make_beast, make_notable
 from kernel.world.seed import Npc, Room, SeedError, Zone
 
-# CODEFORGE_WILD_SCALE multiplies every region's trail_length at load, so ONE seed scales from a
-# laptop/demo world to an MMO world without re-authoring the config. Default 1 (the seed's shipped
-# size, safe for CI and the free-tier demo); set it higher on capable hardware -- aethryn reaches
-# ~1,000,000 rooms at scale 19 (~1.9 GB / ~22 s boot). Populate density is separate (guardians are
-# capped per region), so scaling adds land, not bounty-board flood.
+# CODEFORGE_WILD_SCALE grows the active surface at load, so ONE seed scales from a laptop/demo world
+# to an MMO world without re-authoring the config. Trail regions multiply their length; field
+# regions grow width and height by the square root of the same value. Default 1 is the shipped size,
+# safe for CI and the free-tier demo. Populate density is separate (guardians are capped per
+# region), so scaling adds land, not bounty-board flood. With Aethryn's all-region fields, scale 38
+# is the
+# approximately million-room generated-surface profile; scale 19 is the half-million-room profile.
 _WILD_SCALE_ENV = "CODEFORGE_WILD_SCALE"
 
 # The compass a trail can run and its reverse, so every generated exit is reciprocal.
@@ -439,6 +441,22 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
         merged["trail_length"] = max(1, round(merged["trail_length"] * scale))
         configs.append(merged)
     return configs
+
+
+def without_field_backed(
+    configs: list[dict[str, Any]], field_configs: list[dict[str, Any]] | None
+) -> list[dict[str, Any]]:
+    """Return fallback trail configs for regions that do not have an active field.
+
+    A field and a trail are two competing surface representations of the same region. Keeping
+    both active would either steal the configured attach exit or leave one representation
+    unreachable. The seed may still retain the compact trail manifest as a fallback and for scale
+    accounting, but the live world uses exactly one surface generator per region.
+    """
+    if not field_configs:
+        return list(configs)
+    field_regions = {str(cfg["region"]) for cfg in field_configs}
+    return [cfg for cfg in configs if str(cfg["region"]) not in field_regions]
 
 
 def _band_level(cfg: dict[str, Any], step: int, span: int) -> int:

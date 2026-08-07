@@ -112,9 +112,7 @@ def test_failed_migration_restores_verified_deployment_backup_and_records_author
         artifact_id="validator",
         backup_id="backup-1",
     )
-    policy = PermissionPolicy(
-        rules=(PermissionRule("hardware.migrate", scope="seed-a"),)
-    )
+    policy = PermissionPolicy(rules=(PermissionRule("hardware.migrate", scope="seed-a"),))
     permission = PermissionContext(
         "operator",
         capabilities=frozenset({"hardware.migrate"}),
@@ -131,9 +129,7 @@ def test_failed_migration_restores_verified_deployment_backup_and_records_author
         tmp_path,
         migrate=mutate,
         health_check=lambda _record: False,
-        compensate=lambda _record: pytest.fail(
-            "verified backup should be the compensation path"
-        ),
+        compensate=lambda _record: pytest.fail("verified backup should be the compensation path"),
         backup_reference="backup-1",
         backup=DeploymentMigrationBackup(controller, "component"),
         policy=policy,

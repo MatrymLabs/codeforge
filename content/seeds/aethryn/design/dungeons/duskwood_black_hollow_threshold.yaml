@@ -1,0 +1,18 @@
+id: duskwood_black_hollow_threshold
+display_name: The Black Hollow Threshold
+canon_status: AUTHORED_LOCAL
+parent_region: duskwood_vale
+parent_zone: duskwood_vale
+source_design_ids: [duskwood_vale, black_hollow]
+built_by: unknown successor-era wardens or earlier keepers
+original_purpose: regulate approach to a dangerous hollow and preserve a marked return route
+historical_layer: successor_era
+failure: root pressure has broken the lantern line and opened a buried side gate
+current_occupants: [duskwood_hollow_stag, duskwood_root_moths]
+why_not_reclaimed: the forest changes the route and the Hollow's danger is not confined to one chamber
+entrance_logic: the_black_hollow threshold east to the warden camp and field loop
+traversal_grammar: [threshold, orientation, escalation, revelation, choice, aftermath]
+gameplay_purpose: connect Ravenwatch route work, gathering, ecology, and cautious Hollow access
+revelation: the wardens maintain a living boundary rather than a simple dungeon door
+aftermath: the lantern line can be relit without resolving what the Hollow ultimately remembers
+state_change: reversible

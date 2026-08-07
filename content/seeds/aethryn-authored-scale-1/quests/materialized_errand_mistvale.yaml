@@ -1,0 +1,15 @@
+id: errand_mistvale
+name: 'Errand: Thalorin'
+start: posted
+reward_xp: 1350
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: thalorin
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Thalorin (1350 XP).
+  done: You set the token at Thalorin. The stone answers.

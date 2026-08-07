@@ -1,0 +1,36 @@
+id: forage_underground_veridia_underworks_meadowfoil_5
+name: 'A small Collection: meadowfoil of The Cradle Underworks'
+start: s0
+reward_xp: 40
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_veridia_underworks|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_veridia_underworks|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect meadowfoil in The Cradle Underworks: 0/5 (40 XP).'
+  s1: 'Collect meadowfoil in The Cradle Underworks: 1/5 (40 XP).'
+  s2: 'Collect meadowfoil in The Cradle Underworks: 2/5 (40 XP).'
+  s3: 'Collect meadowfoil in The Cradle Underworks: 3/5 (40 XP).'
+  s4: 'Collect meadowfoil in The Cradle Underworks: 4/5 (40 XP).'
+  done: You have brought in meadowfoil enough for The Cradle Underworks. The village
+    makers will put it to use.

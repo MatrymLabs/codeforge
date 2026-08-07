@@ -1,0 +1,41 @@
+id: cull_underground_the_voidscar_underworks_scarab_6
+name: 'A small Thinning: the scarab-kind of The God-Mirror Approach'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_voidscar_underworks|scarab
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_voidscar_underworks|scarab
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_voidscar_underworks|scarab
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_voidscar_underworks|scarab
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_voidscar_underworks|scarab
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_the_voidscar_underworks|scarab
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the scarab-kind of The God-Mirror Approach: 0/6 down (600 XP).'
+  s1: 'Thin out the scarab-kind of The God-Mirror Approach: 1/6 down (600 XP).'
+  s2: 'Thin out the scarab-kind of The God-Mirror Approach: 2/6 down (600 XP).'
+  s3: 'Thin out the scarab-kind of The God-Mirror Approach: 3/6 down (600 XP).'
+  s4: 'Thin out the scarab-kind of The God-Mirror Approach: 4/6 down (600 XP).'
+  s5: 'Thin out the scarab-kind of The God-Mirror Approach: 5/6 down (600 XP).'
+  done: The scarab-kind of The God-Mirror Approach are thinned back. The ash-tracks
+    are a shade safer.

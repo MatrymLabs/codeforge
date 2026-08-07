@@ -1,0 +1,16 @@
+id: bounty_veridia_lord_6
+name: 'Bounty: Thaneaya the Upland Tyrant'
+start: posted
+reward_xp: 168
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: veridia_lord_6
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Thaneaya the Upland Tyrant (level 14). Fell it for 168
+    XP.
+  collected: 'Bounty collected: Thaneaya the Upland Tyrant is felled. Well hunted.'

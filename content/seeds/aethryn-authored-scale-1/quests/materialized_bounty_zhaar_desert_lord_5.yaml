@@ -1,0 +1,16 @@
+id: bounty_zhaar_desert_lord_5
+name: 'Bounty: Voroth the Salt Sovereign'
+start: posted
+reward_xp: 1020
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: zhaar_desert_lord_5
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Voroth the Salt Sovereign (level 85). Fell it for 1020
+    XP.
+  collected: 'Bounty collected: Voroth the Salt Sovereign is felled. Well hunted.'

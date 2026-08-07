@@ -1,0 +1,20 @@
+id: delivery_eldryn_city
+name: 'Delivery: Eldryn City to Greenmist'
+start: posted
+reward_xp: 600
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_eldryn_city
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: greenmist
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Eldryn City is bound for Greenmist. Take it up (600 XP).
+  carrying: Carry the parcel to Greenmist.
+  done: The parcel is delivered to Greenmist. The road keeps its promise.

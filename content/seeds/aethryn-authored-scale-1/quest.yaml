@@ -1,0 +1,19 @@
+id: the_endless_journey
+name: The Endless Journey
+start: offered
+reward_xp: 60
+steps:
+- state: offered
+  event: accept
+  to: accepted
+- state: accepted
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:making:40
+  on_enter: greenhold
+terminal:
+- done
+labels:
+  offered: Aethryn is vast. Accept the road, and begin.
+  accepted: Make for Greenhold in Veridia, and take your first step into the world.
+  done: '*** The journey has begun. The whole world is open. ***'

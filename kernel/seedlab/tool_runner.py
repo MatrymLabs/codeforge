@@ -104,6 +104,7 @@ def _resource_preexec(limits: dict[str, object]) -> Callable[[], None] | None:
 
     return apply
 
+
 # The default approved command profile: build/test tools as fixed, shell-free argv. Only a NAMED
 # entry here can run; a caller may pass its own allowlist. NEVER built from user input.
 DEFAULT_PROFILE: dict[str, list[str]] = {
@@ -197,10 +198,7 @@ class ToolRunResult:
     @property
     def ok(self) -> bool:
         return (
-            self.exit_code == 0
-            and not self.timed_out
-            and not self.cancelled
-            and not self.revoked
+            self.exit_code == 0 and not self.timed_out and not self.cancelled and not self.revoked
         )
 
     def to_dict(self) -> dict:
@@ -382,9 +380,12 @@ def run_tool(
         )
     output_digest = "sha256:" + hashlib.sha256(output.encode("utf-8")).hexdigest()
     when = clock()
-    audit_id = "audit:tool-" + hashlib.sha256(
-        f"{seed_id}:{correlation_id}:{profile}:{when}:{output_digest}".encode()
-    ).hexdigest()[:32]
+    audit_id = (
+        "audit:tool-"
+        + hashlib.sha256(
+            f"{seed_id}:{correlation_id}:{profile}:{when}:{output_digest}".encode()
+        ).hexdigest()[:32]
+    )
     result = ToolRunResult(
         seed_id=seed_id,
         kind=kind,
@@ -412,13 +413,7 @@ def run_tool(
         worker_id=worker_id,
     )
     outcome = (
-        "passed"
-        if result.ok
-        else "cancelled"
-        if cancelled
-        else "revoked"
-        if revoked
-        else "failed"
+        "passed" if result.ok else "cancelled" if cancelled else "revoked" if revoked else "failed"
     )
     emit_log(
         "tool.completed",
@@ -446,9 +441,9 @@ def render_run(result: ToolRunResult) -> str:
             else "REVOKED"
             if result.revoked
             else (
-            f"TIMED OUT ({int(result.duration)}s)"
-            if result.timed_out
-            else f"FAILED (exit {result.exit_code})"
+                f"TIMED OUT ({int(result.duration)}s)"
+                if result.timed_out
+                else f"FAILED (exit {result.exit_code})"
             )
         )
     )
@@ -529,9 +524,7 @@ class SqlRunLog:
                 SeedRunRow(
                     seed_id=result.seed_id,
                     kind=result.kind,
-                    run_json=json.dumps(
-                        result.to_dict(), sort_keys=True, separators=(",", ":")
-                    ),
+                    run_json=json.dumps(result.to_dict(), sort_keys=True, separators=(",", ":")),
                 )
             )
 
@@ -583,9 +576,7 @@ def run_log(backend: str, home: Path) -> RunLog:
         return primary
     if backend == "sql-dual-read":
         return DualReadRunLog(primary, FileRunLog(Path(home) / "runs"))
-    raise RunLogError(
-        f"unknown run log backend {backend!r}; expected file, sql, or sql-dual-read"
-    )
+    raise RunLogError(f"unknown run log backend {backend!r}; expected file, sql, or sql-dual-read")
 
 
 def configured_run_log(home: Path) -> RunLog:

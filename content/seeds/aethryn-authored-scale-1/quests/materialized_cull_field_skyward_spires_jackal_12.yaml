@@ -1,0 +1,71 @@
+id: cull_field_skyward_spires_jackal_12
+name: 'A standing Purge: the jackal-kind of The Skyward Spires Wilds'
+start: s0
+reward_xp: 996
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_skyward_spires|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_skyward_spires|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_skyward_spires|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_skyward_spires|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_skyward_spires|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_skyward_spires|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_skyward_spires|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_skyward_spires|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_skyward_spires|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_skyward_spires|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_skyward_spires|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_skyward_spires|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the jackal-kind of The Skyward Spires Wilds: 0/12 down (996 XP).'
+  s1: 'Purge the jackal-kind of The Skyward Spires Wilds: 1/12 down (996 XP).'
+  s2: 'Purge the jackal-kind of The Skyward Spires Wilds: 2/12 down (996 XP).'
+  s3: 'Purge the jackal-kind of The Skyward Spires Wilds: 3/12 down (996 XP).'
+  s4: 'Purge the jackal-kind of The Skyward Spires Wilds: 4/12 down (996 XP).'
+  s5: 'Purge the jackal-kind of The Skyward Spires Wilds: 5/12 down (996 XP).'
+  s6: 'Purge the jackal-kind of The Skyward Spires Wilds: 6/12 down (996 XP).'
+  s7: 'Purge the jackal-kind of The Skyward Spires Wilds: 7/12 down (996 XP).'
+  s8: 'Purge the jackal-kind of The Skyward Spires Wilds: 8/12 down (996 XP).'
+  s9: 'Purge the jackal-kind of The Skyward Spires Wilds: 9/12 down (996 XP).'
+  s10: 'Purge the jackal-kind of The Skyward Spires Wilds: 10/12 down (996 XP).'
+  s11: 'Purge the jackal-kind of The Skyward Spires Wilds: 11/12 down (996 XP).'
+  done: The jackal-kind of The Skyward Spires Wilds are purged. The region breathes
+    easier.

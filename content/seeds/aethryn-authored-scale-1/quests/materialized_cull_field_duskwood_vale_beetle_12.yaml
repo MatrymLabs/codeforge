@@ -1,0 +1,71 @@
+id: cull_field_duskwood_vale_beetle_12
+name: 'A standing Purge: the beetle-kind of The Duskwood Vale Wilds'
+start: s0
+reward_xp: 192
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_duskwood_vale|beetle
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_duskwood_vale|beetle
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_duskwood_vale|beetle
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_duskwood_vale|beetle
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_duskwood_vale|beetle
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_duskwood_vale|beetle
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_duskwood_vale|beetle
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_duskwood_vale|beetle
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_duskwood_vale|beetle
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_duskwood_vale|beetle
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_duskwood_vale|beetle
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_duskwood_vale|beetle
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the beetle-kind of The Duskwood Vale Wilds: 0/12 down (192 XP).'
+  s1: 'Purge the beetle-kind of The Duskwood Vale Wilds: 1/12 down (192 XP).'
+  s2: 'Purge the beetle-kind of The Duskwood Vale Wilds: 2/12 down (192 XP).'
+  s3: 'Purge the beetle-kind of The Duskwood Vale Wilds: 3/12 down (192 XP).'
+  s4: 'Purge the beetle-kind of The Duskwood Vale Wilds: 4/12 down (192 XP).'
+  s5: 'Purge the beetle-kind of The Duskwood Vale Wilds: 5/12 down (192 XP).'
+  s6: 'Purge the beetle-kind of The Duskwood Vale Wilds: 6/12 down (192 XP).'
+  s7: 'Purge the beetle-kind of The Duskwood Vale Wilds: 7/12 down (192 XP).'
+  s8: 'Purge the beetle-kind of The Duskwood Vale Wilds: 8/12 down (192 XP).'
+  s9: 'Purge the beetle-kind of The Duskwood Vale Wilds: 9/12 down (192 XP).'
+  s10: 'Purge the beetle-kind of The Duskwood Vale Wilds: 10/12 down (192 XP).'
+  s11: 'Purge the beetle-kind of The Duskwood Vale Wilds: 11/12 down (192 XP).'
+  done: The beetle-kind of The Duskwood Vale Wilds are purged. The wardens of the
+    wood send their thanks.

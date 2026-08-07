@@ -1,0 +1,20 @@
+id: delivery_brightwater
+name: 'Delivery: Brightwater to Caeloria City'
+start: posted
+reward_xp: 360
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_brightwater
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: caeloria_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Brightwater is bound for Caeloria City. Take it up (360 XP).
+  carrying: Carry the parcel to Caeloria City.
+  done: The parcel is delivered to Caeloria City. The road keeps its promise.

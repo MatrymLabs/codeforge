@@ -1,0 +1,23 @@
+id: stonefang_stope
+name: The Deep-Delver
+start: offered
+reward_xp: 92
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: stonefang_stope
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:34
+  on_defeat: stonefang_delver
+terminal:
+- done
+labels:
+  offered: Mine-Captain Bral says a stone-hided thing has come up into the working
+    stope. Go EAST from the market and see.
+  hunting: The stone-hided deep-delver hauls into the stope. Put it down so the cutters
+    can work the ore-face again.
+  done: '*** The deep-delver is dead and the richest vein is worked again. The Stonefangs
+    owe you steel, and Bral says so. ***'

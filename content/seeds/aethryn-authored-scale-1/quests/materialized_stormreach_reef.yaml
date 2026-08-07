@@ -1,0 +1,23 @@
+id: stormreach_reef
+name: The Reef-Horror
+start: offered
+reward_xp: 150
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: stormreach_reef
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:warcraft:42
+  on_defeat: stormreach_horror
+terminal:
+- done
+labels:
+  offered: Reef-Warden Halloran says something is rising to feed on the storm reef.
+    Go EAST from the harbour and see.
+  hunting: The rising reef-horror boils up over the breakwater. Put it down so the
+    deep divers can work the far wrecks again.
+  done: '*** The reef-horror is dead and the far wrecks can be worked again. Stormreach''s
+    League cuts you a full share, and Halloran says so. ***'

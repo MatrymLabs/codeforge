@@ -1,0 +1,15 @@
+id: errand_cragfire
+name: 'Errand: Korvash Highlands'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: korvash_highlands
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Korvash Highlands (1800 XP).
+  done: You set the token at Korvash Highlands. The stone answers.

@@ -1,0 +1,15 @@
+id: bounty_elderwatch_denbeast
+name: 'Bounty: the beacon-den lurker'
+start: posted
+reward_xp: 72
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: elderwatch_denbeast
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on the beacon-den lurker (level 6). Fell it for 72 XP.
+  collected: 'Bounty collected: the beacon-den lurker is felled. Well hunted.'

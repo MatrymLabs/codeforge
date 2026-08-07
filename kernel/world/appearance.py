@@ -32,4 +32,3 @@ def deserialize(raw: str) -> dict[str, str]:
         return dict(DEFAULT_APPEARANCE)
     skin = normalize_skin_color(str(value.get("skin_color", ""))) or ""
     return {"skin_color": skin}
-

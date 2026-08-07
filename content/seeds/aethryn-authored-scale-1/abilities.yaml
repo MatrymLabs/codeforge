@@ -1,0 +1,1199 @@
+# SEED: aethryn -- abilities.yaml (each calling's ember-forged moveset)
+# `use <ability> [on <target>]` fires one; `skills` lists what your calling can wield.
+
+# Vanguard -- ward and edge, strength and stamina.
+ember_edge:
+  name: Ember Edge
+  kind: strike
+  power: 6
+  scales: strength
+  mp_cost: 3
+  jobs: [vanguard]
+
+ward:
+  name: Ward
+  kind: heal
+  power: 7
+  scales: stamina
+  mp_cost: 5
+  cooldown: 3
+  jobs: [vanguard]
+
+guard_challenge:
+  name: Guard's Challenge
+  kind: taunt  # the tank's lever: forces the foe's aggro onto the wielder (no damage)
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [vanguard]
+war_cry:
+  name: War Cry
+  kind: buff  # empower an ally's blows (+50% strike damage) for a spell -- the party leader's rally
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [vanguard]
+
+# Pathfinder -- reads the wilds, strikes from the flank; speed over brute force.
+flank_strike:
+  name: Flank Strike
+  kind: strike
+  power: 6
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+hunters_mark:
+  name: Hunter's Mark
+  kind: strike
+  power: 9
+  scales: speed
+  mp_cost: 5
+  cooldown: 2
+  jobs: [pathfinder]
+
+# Emberwright -- a maker who bends raw ember; patient hands, deep magic.
+ember_bolt:
+  name: Ember Bolt
+  kind: strike
+  power: 5
+  scales: magic
+  mp_cost: 3
+  element: FIR  # flame: the Cinder-Wight drinks it in -- bring frost to that fight
+  jobs: [emberwright]
+
+kindle:
+  name: Kindle
+  kind: heal
+  power: 8
+  scales: magic
+  mp_cost: 5
+  cooldown: 3
+  jobs: [emberwright]
+
+cinder_brand:
+  name: Cinder Brand
+  kind: brand
+  power: 4  # HP the burn saps each world beat, plus a third of magic
+  scales: magic
+  mp_cost: 4
+  cooldown: 3
+  jobs: [emberwright]
+
+# --- Batch 1 movesets (Martial + Precision families). strike scales on the family's key stat. ---
+
+# Duelist -- read and punish.
+riposte:
+  name: Riposte
+  kind: strike
+  power: 7
+  scales: speed
+  mp_cost: 3
+  jobs: [duelist]
+closing_sentence:
+  name: Closing Sentence
+  kind: strike
+  power: 11
+  scales: strength
+  mp_cost: 6
+  cooldown: 2
+  jobs: [duelist]
+
+# Sentinel -- guard and turn.
+shield_bash:
+  name: Shield Bash
+  kind: strike
+  power: 6
+  scales: stamina
+  mp_cost: 3
+  jobs: [sentinel]
+longwatch:
+  name: Longwatch
+  kind: heal
+  power: 9
+  scales: stamina
+  mp_cost: 5
+  cooldown: 3
+  jobs: [sentinel]
+break_guard:
+  name: Break Guard
+  kind: weaken  # a sentinel reads the opening and softens the foe's next blows (no damage)
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [sentinel]
+
+# Berserker -- escalate.
+frenzy_strike:
+  name: Frenzy Strike
+  kind: strike
+  power: 9
+  scales: strength
+  mp_cost: 3
+  cooldown: 2
+  jobs: [berserker]
+bloodrush:
+  name: Bloodrush
+  kind: strike
+  power: 14
+  scales: strength
+  mp_cost: 7
+  cooldown: 2
+  jobs: [berserker]
+
+# Ranger -- aim.
+aimed_shot:
+  name: Aimed Shot
+  kind: strike
+  power: 7
+  scales: speed
+  mp_cost: 3
+  jobs: [ranger]
+snipe:
+  name: Snipe
+  kind: strike
+  power: 12
+  scales: luck
+  mp_cost: 6
+  cooldown: 2
+  jobs: [ranger]
+
+# Scout -- evade and jab.
+quick_shot:
+  name: Quick Shot
+  kind: strike
+  power: 6
+  scales: speed
+  mp_cost: 2
+  jobs: [scout]
+second_wind:
+  name: Second Wind
+  kind: heal
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 3
+  jobs: [scout]
+
+# Shadowblade -- open from the dark.
+backstab:
+  name: Backstab
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [shadowblade]
+killing_dark:
+  name: Killing Dark
+  kind: strike
+  power: 15
+  scales: luck
+  mp_cost: 7
+  cooldown: 2
+  element: DRK
+  jobs: [shadowblade]
+
+# Saboteur -- unmake.
+toxin:
+  name: Toxin
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  cooldown: 2
+  element: PSN
+  jobs: [saboteur]
+disable:
+  name: Disable
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 2
+  jobs: [saboteur]
+
+# --- Batch 2 movesets (Arcane + Divine families). ---
+
+# Arcanist -- raw force.
+arcane_bolt_a:
+  name: Arcane Lance
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 3
+  cooldown: 2
+  jobs: [arcanist]
+mana_ward:
+  name: Mana Ward
+  kind: heal
+  power: 9
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 3
+  jobs: [arcanist]
+
+# Elementalist -- let it run.
+firestorm:
+  name: Firestorm
+  kind: strike
+  power: 13
+  scales: magic
+  mp_cost: 6
+  cooldown: 2
+  element: FIR
+  jobs: [elementalist]
+frostbite:
+  name: Frostbite
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  cooldown: 2
+  element: ICE  # frost: it shatters the Cinder-Wight (Weak to ICE) for half again the damage
+  jobs: [elementalist]
+
+# Chronomancer -- steal time.
+haste_strike:
+  name: Quicken
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 3
+  cooldown: 2
+  jobs: [chronomancer]
+rewind:
+  name: Rewind
+  kind: heal
+  power: 12
+  scales: wisdom
+  mp_cost: 6
+  cooldown: 3
+  jobs: [chronomancer]
+stasis:
+  name: Stasis
+  kind: daze  # steal time: the foe skips its next beats' strikes (no damage)
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [chronomancer]
+
+# Summoner -- fight through the spirit.
+spirit_lash:
+  name: Spirit Lash
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  jobs: [summoner]
+emberkin:
+  name: Emberkin's Mending
+  kind: heal
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 3
+  jobs: [summoner]
+
+# Cleric -- mend and smite.
+smite:
+  name: Smite
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: HLY
+  jobs: [cleric]
+heal:
+  name: Heal
+  kind: heal
+  power: 13
+  scales: wisdom
+  mp_cost: 6
+  cooldown: 3
+  jobs: [cleric]
+purify:
+  name: Purify
+  kind: cleanse  # the Divine counter to a boss's venom + stuns: purge an ally's afflictions
+  power: 0
+  mp_cost: 5
+  cooldown: 2
+  jobs: [cleric]
+
+# Oracle -- bend the odds.
+hex:
+  name: Hex
+  kind: strike
+  power: 9
+  scales: luck
+  mp_cost: 4
+  cooldown: 2
+  element: CRS
+  jobs: [oracle]
+foresight:
+  name: Foresight
+  kind: heal
+  power: 9
+  scales: luck
+  mp_cost: 5
+  cooldown: 3
+  jobs: [oracle]
+
+# Templar -- faith made armor.
+holy_strike:
+  name: Holy Strike
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 3
+  cooldown: 2
+  element: HLY
+  jobs: [templar]
+consecrate:
+  name: Consecrate
+  kind: heal
+  power: 8
+  scales: stamina
+  mp_cost: 5
+  cooldown: 3
+  jobs: [templar]
+
+# Warden -- keep the line whole.
+ward_line:
+  name: Ward Line
+  kind: heal
+  power: 10
+  scales: stamina
+  mp_cost: 5
+  cooldown: 3
+  jobs: [warden]
+banish:
+  name: Banish
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  jobs: [warden]
+
+# --- Batch 3 movesets (Engineering + Nature + cross-family). ---
+turret_fire:
+  {name: Turret Fire, kind: strike, power: 8, scales: magic, mp_cost: 3, element: FIR, jobs: [engineer]}
+field_mend:
+  {name: Field Mend, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [engineer]}
+relic_burst:
+  {name: Relic Burst, kind: strike, power: 12, scales: magic, mp_cost: 6, jobs: [artificer]}
+overcharge:
+  {name: Overcharge, kind: strike, power: 9, scales: magic, mp_cost: 4, jobs: [artificer]}
+rapid_fire:
+  {name: Rapid Fire, kind: strike, power: 7, scales: speed, mp_cost: 2, jobs: [gunsmith]}
+called_shot:
+  {name: Called Shot, kind: strike, power: 13, scales: luck, mp_cost: 6, jobs: [gunsmith]}
+rig_slam:
+  {name: Rig Slam, kind: strike, power: 10, scales: stamina, mp_cost: 4, jobs: [mechanist]}
+plating:
+  {name: Plating, kind: heal, power: 10, scales: stamina, mp_cost: 5, jobs: [mechanist]}
+thornlash:
+  {name: Thornlash, kind: strike, power: 9, scales: wisdom, mp_cost: 3, jobs: [druid]}
+regrowth:
+  {name: Regrowth, kind: heal, power: 12, scales: wisdom, mp_cost: 6, jobs: [druid]}
+maul:
+  {name: Maul, kind: strike, power: 11, scales: strength, mp_cost: 4, jobs: [beastmaster]}
+pack_bond:
+  {name: Pack Bond, kind: heal, power: 8, scales: stamina, mp_cost: 4, jobs: [beastmaster]}
+chain_lightning:
+  {name: Chain Lightning, kind: strike, power: 13, scales: magic, mp_cost: 6, element: LGT, jobs: [stormcaller]}
+gale:
+  {name: Gale, kind: strike, power: 8, scales: magic, mp_cost: 3, element: WND, jobs: [stormcaller]}
+stonefall:
+  {name: Stonefall, kind: strike, power: 11, scales: stamina, mp_cost: 5, element: ERT, jobs: [geomancer]}
+terraheal:
+  {name: Terraheal, kind: heal, power: 10, scales: wisdom, mp_cost: 5, jobs: [geomancer]}
+reap:
+  {name: Reap, kind: strike, power: 12, scales: strength, mp_cost: 5, jobs: [reaver]}
+soul_eater:
+  {name: Soul Eater, kind: strike, power: 15, scales: strength, mp_cost: 7, jobs: [reaver]}
+sleight:
+  {name: Sleight, kind: strike, power: 8, scales: luck, mp_cost: 3, jobs: [trickster]}
+lucky_break:
+  {name: Lucky Break, kind: heal, power: 10, scales: luck, mp_cost: 5, jobs: [trickster]}
+rune_blast:
+  {name: Rune Blast, kind: strike, power: 12, scales: magic, mp_cost: 5, jobs: [runesmith]}
+ward_rune:
+  {name: Ward Rune, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [runesmith]}
+word_of_ruin:
+  {name: Word of Ruin, kind: strike, power: 14, scales: wisdom, mp_cost: 7, element: DRK, jobs: [hierophant]}
+benediction:
+  {name: Benediction, kind: heal, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}
+
+# --- Deeper kits: lifesteal (drain), burns (brand), and control (daze/weaken). The engine has long
+# carried these mechanics; these movesets give the callings that fight by them a real kit to wield.
+
+life_siphon:
+  name: Life Siphon
+  kind: drain
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [shadowblade]
+
+ruin_siphon:
+  name: Ruin Siphon
+  kind: drain
+  power: 8
+  scales: strength
+  mp_cost: 5
+  cooldown: 2
+  element: DRK
+  jobs: [reaver]
+
+sap_vitality:
+  name: Sap Vitality
+  kind: drain
+  power: 6
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [warden]
+
+soul_leech:
+  name: Soul Leech
+  kind: drain
+  power: 9
+  scales: wisdom
+  mp_cost: 6
+  cooldown: 3
+  element: DRK
+  jobs: [hierophant]
+
+cinderbrand:
+  name: Cinderbrand
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [emberwright]
+
+venom_spores:
+  name: Venom Spores
+  kind: brand
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [druid]
+
+blinding_dust:
+  name: Blinding Dust
+  kind: daze  # crowd control: the foe skips its next beats' strikes (no damage)
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [trickster]
+
+temporal_lock:
+  name: Temporal Lock
+  kind: daze
+  power: 3
+  mp_cost: 6
+  cooldown: 5
+  jobs: [chronomancer]
+
+hamstring:
+  name: Hamstring
+  kind: weaken  # debuff: softens the foe's next blows (no damage)
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [saboteur]
+
+curse_of_frailty:
+  name: Curse of Frailty
+  kind: weaken
+  power: 3
+  mp_cost: 5
+  cooldown: 4
+  jobs: [oracle]
+
+# === Kit density pass: give iconic callings a coherent ~5-ability kit with a role identity, ========
+# using the full 9-kind engine (strike/drain/brand/daze/weaken/buff/heal/cleanse/taunt).
+
+# Berserker -- rage melee: lifesteal fury, a bleed, and a self-empower.
+bloodthirst:
+  name: Bloodthirst
+  kind: drain
+  power: 8
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [berserker]
+rend:
+  name: Rend
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 3
+  cooldown: 2
+  jobs: [berserker]
+frenzy:
+  name: Frenzy
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [berserker]
+
+# Duelist -- precise blade: a riposte stun, a disarm, a gap-closing lunge.
+feint:
+  name: Feint
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [duelist]
+disarm:
+  name: Disarm
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [duelist]
+lunge:
+  name: Lunge
+  kind: strike
+  power: 9
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [duelist]
+
+# Ranger -- ranged bow: a poison arrow, a crippling shot, an aimed shot.
+serpent_arrow:
+  name: Serpent Arrow
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [ranger]
+crippling_shot:
+  name: Crippling Shot
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [ranger]
+precise_shot:
+  name: Precise Shot
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [ranger]
+
+# Elementalist -- turn the elements: ignite (fire DoT), frost lance, arc bolt.
+ignite:
+  name: Ignite
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [elementalist]
+frost_lance:
+  name: Frost Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  element: ICE
+  jobs: [elementalist]
+arc_bolt:
+  name: Arc Bolt
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  element: LGT
+  jobs: [elementalist]
+
+# Stormcaller -- the storm: a thunderclap stun, a static burn, a squall.
+thunderclap:
+  name: Thunderclap
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [stormcaller]
+static_field:
+  name: Static Field
+  kind: brand
+  power: 5
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [stormcaller]
+squall:
+  name: Squall
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: WND
+  jobs: [stormcaller]
+
+# Scout -- from the shadows: a smoke daze, an expose, an ambush lifesteal.
+smoke_bomb:
+  name: Smoke Bomb
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [scout]
+expose_weakness:
+  name: Expose Weakness
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [scout]
+ambush:
+  name: Ambush
+  kind: drain
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [scout]
+
+# Arcanist -- arcane control: missiles, an enfeeble, a mana leech.
+arcane_missiles:
+  name: Arcane Missiles
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [arcanist]
+enfeeble:
+  name: Enfeeble
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [arcanist]
+mana_leech:
+  name: Mana Leech
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [arcanist]
+
+# Gunsmith -- powder and lead: a pistol-whip daze, suppressive fire, a deadeye shot.
+pistol_whip:
+  name: Pistol Whip
+  kind: daze
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [gunsmith]
+suppressive_fire:
+  name: Suppressive Fire
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [gunsmith]
+deadeye:
+  name: Deadeye
+  kind: strike
+  power: 11
+  scales: speed
+  mp_cost: 5
+  cooldown: 3
+  jobs: [gunsmith]
+
+# === Kit density, batch 2: the remaining thin callings get their coherent ~5-ability role kits. ===
+
+# Pathfinder -- survival ranger: a snare, a venom trap, a quick shot.
+trappers_snare:
+  name: Trapper's Snare
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [pathfinder]
+venom_trap:
+  name: Venom Trap
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [pathfinder]
+snap_shot:
+  name: Snap Shot
+  kind: strike
+  power: 8
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+# Summoner -- pact caster: an eldritch bolt, a soul-bond lifesteal, a familiar empower.
+eldritch_bolt:
+  name: Eldritch Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: DRK
+  jobs: [summoner]
+soul_bond:
+  name: Soul Bond
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [summoner]
+empower_familiar:
+  name: Empower Familiar
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [summoner]
+
+# Templar -- holy knight: a taunt, a blessing, a smite (a second tank-capable calling).
+holy_challenge:
+  name: Holy Challenge
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [templar]
+blessing:
+  name: Blessing
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [templar]
+radiant_smite:
+  name: Radiant Smite
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 2
+  element: HLY
+  jobs: [templar]
+
+# Engineer -- tech control: an EMP daze, an overload, a corrosive charge.
+emp_burst:
+  name: EMP Burst
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [engineer]
+overload_surge:
+  name: Overload Surge
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: LGT
+  jobs: [engineer]
+corrosive_charge:
+  name: Corrosive Charge
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [engineer]
+
+# Artificer -- tinker DPS: an incendiary bomb, a siphon coil, a precision bolt.
+incendiary_bomb:
+  name: Incendiary Bomb
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [artificer]
+siphon_coil:
+  name: Siphon Coil
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [artificer]
+precision_bolt:
+  name: Precision Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [artificer]
+
+# Mechanist -- war machines: a stun bot, a laser lance, a rust field.
+stun_bot:
+  name: Stun Bot
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [mechanist]
+laser_lance:
+  name: Laser Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: LGT
+  jobs: [mechanist]
+rust_field:
+  name: Rust Field
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [mechanist]
+
+# Beastmaster -- the wild: a rabid bite, a maul, an intimidate.
+rabid_bite:
+  name: Rabid Bite
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [beastmaster]
+savage_maul:
+  name: Savage Maul
+  kind: strike
+  power: 10
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [beastmaster]
+intimidate:
+  name: Intimidate
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [beastmaster]
+
+# Geomancer -- the earth: a tremor stun, an entomb, a boulder (has Stonefall).
+tremor:
+  name: Tremor
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [geomancer]
+entomb:
+  name: Entomb
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [geomancer]
+boulder_toss:
+  name: Boulder Toss
+  kind: strike
+  power: 11
+  scales: stamina
+  mp_cost: 5
+  cooldown: 2
+  element: ERT
+  jobs: [geomancer]
+
+# Runesmith -- graven power: a rune of power, a searing rune, a rune blast.
+rune_of_power:
+  name: Rune of Power
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [runesmith]
+searing_rune:
+  name: Searing Rune
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [runesmith]
+runic_blast:
+  name: Runic Blast
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [runesmith]
+
+# === Kit density, batch 3: round out the mid-tier callings (3-4 -> 5) to finish the roster. =======
+
+# Sentinel -- the wall: a taunt and a shield bash (a 2nd tank-capable calling; had weaken).
+guardians_call:
+  name: Guardian's Call
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+shield_slam:
+  name: Shield Slam
+  kind: strike
+  power: 8
+  scales: stamina
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+
+# Cleric -- the light: a benediction and a censure (support kit; had heal + cleanse).
+sanctuary:
+  name: Sanctuary
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+censure:
+  name: Censure
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  element: HLY
+  jobs: [cleric]
+
+# Oracle -- the seer: a premonition stun and a mind spike (control; had weaken).
+premonition:
+  name: Premonition
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [oracle]
+mind_spike:
+  name: Mind Spike
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  jobs: [oracle]
+
+# Warden -- nature's guard: a thornlash and a nature's wrath taunt (tank; had drain).
+bramble_snare:
+  name: Bramble Snare
+  kind: brand
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [warden]
+natures_wrath:
+  name: Nature's Wrath
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [warden]
+
+# Druid -- the wild: a wild leech and an entangle root (had brand).
+wild_leech:
+  name: Wild Leech
+  kind: drain
+  power: 7
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [druid]
+entangle:
+  name: Entangle
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [druid]
+
+# Trickster -- the cheat: a cheap-shot leech and a sabotage (had daze).
+cheap_shot:
+  name: Cheap Shot
+  kind: drain
+  power: 6
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [trickster]
+sabotage:
+  name: Sabotage
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [trickster]
+
+# Hierophant -- dark rites: a blight and a word of silence (had drain).
+dark_blight:
+  name: Dark Blight
+  kind: brand
+  power: 6
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [hierophant]
+word_of_silence:
+  name: Word of Silence
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [hierophant]
+
+# Shadowblade -- the assassin: a poison blade and a blindside (had drain).
+poison_blade:
+  name: Poison Blade
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [shadowblade]
+blindside:
+  name: Blindside
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [shadowblade]
+
+# Saboteur -- the wrecker: an acid vial and flashpowder (had weaken).
+acid_vial:
+  name: Acid Vial
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [saboteur]
+flashpowder:
+  name: Flashpowder
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [saboteur]
+
+# Reaver -- brutal: a gore bleed and a devastating blow (had drain).
+gore:
+  name: Gore
+  kind: brand
+  power: 6
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [reaver]
+devastate:
+  name: Devastate
+  kind: strike
+  power: 12
+  scales: strength
+  mp_cost: 5
+  cooldown: 3
+  element: DRK
+  jobs: [reaver]
+
+# Round out the last three (were at 4) so every calling carries a full 5-ability kit.
+cleave:
+  name: Cleave
+  kind: strike
+  power: 9
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [vanguard]
+immolate:
+  name: Immolate
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: FIR
+  jobs: [emberwright]
+temporal_slow:
+  name: Temporal Slow
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [chronomancer]
+
+# === Heal-over-time (regen): the support callings gain a woven mend that ticks over the beats. ====
+renewal:
+  name: Renewal
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+verdant_mend:
+  name: Verdant Mend
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [druid]
+lifebloom:
+  name: Lifebloom
+  kind: regen
+  power: 4
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [warden]
+sacrament:
+  name: Sacrament
+  kind: regen
+  power: 6
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 3
+  jobs: [hierophant]

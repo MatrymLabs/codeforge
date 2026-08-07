@@ -1,0 +1,20 @@
+id: delivery_moonshade
+name: 'Delivery: Moonshade to Ravenwatch'
+start: posted
+reward_xp: 240
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_moonshade
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: ravenwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Moonshade is bound for Ravenwatch. Take it up (240 XP).
+  carrying: Carry the parcel to Ravenwatch.
+  done: The parcel is delivered to Ravenwatch. The road keeps its promise.

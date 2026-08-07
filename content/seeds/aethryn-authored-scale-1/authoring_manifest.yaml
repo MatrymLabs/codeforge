@@ -1,0 +1,22 @@
+mode: pure_authoring
+seed: aethryn
+scale: 1
+source_contract: content/seeds/aethryn/generation_contract.yaml
+topography: content/seeds/aethryn/world_graph.yaml
+lore: docs/aethryn_lore_bible.md
+canon: content/seeds/aethryn/canon.yaml
+prose: kernel/world/authoring_prose.py
+prose_status: authored_regional_landmark_and_enemy_pass
+room_batch_status: validated_and_baked
+counts:
+  rooms: 28044
+  npcs: 27765
+  items: 1534
+  base_zones: 14
+  authored_zones: 42
+  dungeons: 18
+  settlements: 45
+  quests: 3394
+  room_batches: 4
+  batched_room_descriptions: 356
+runtime_generators: disabled; this package is the authored output

@@ -1,0 +1,61 @@
+id: forage_shattered_isles_zone_ember_shard_10
+name: 'A standing Collection: ember shard of The Shattered Isles'
+start: s0
+reward_xp: 570
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: shattered_isles_zone|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: shattered_isles_zone|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: shattered_isles_zone|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: shattered_isles_zone|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: shattered_isles_zone|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: shattered_isles_zone|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: shattered_isles_zone|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: shattered_isles_zone|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: shattered_isles_zone|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: shattered_isles_zone|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect ember shard in The Shattered Isles: 0/10 (570 XP).'
+  s1: 'Collect ember shard in The Shattered Isles: 1/10 (570 XP).'
+  s2: 'Collect ember shard in The Shattered Isles: 2/10 (570 XP).'
+  s3: 'Collect ember shard in The Shattered Isles: 3/10 (570 XP).'
+  s4: 'Collect ember shard in The Shattered Isles: 4/10 (570 XP).'
+  s5: 'Collect ember shard in The Shattered Isles: 5/10 (570 XP).'
+  s6: 'Collect ember shard in The Shattered Isles: 6/10 (570 XP).'
+  s7: 'Collect ember shard in The Shattered Isles: 7/10 (570 XP).'
+  s8: 'Collect ember shard in The Shattered Isles: 8/10 (570 XP).'
+  s9: 'Collect ember shard in The Shattered Isles: 9/10 (570 XP).'
+  done: You have brought in ember shard enough for The Shattered Isles. The harbour
+    makers are glad of it.

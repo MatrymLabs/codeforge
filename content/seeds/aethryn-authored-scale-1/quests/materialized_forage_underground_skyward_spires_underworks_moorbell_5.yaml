@@ -1,0 +1,36 @@
+id: forage_underground_skyward_spires_underworks_moorbell_5
+name: 'A small Haul: moorbell of The Spire Nexus Foundations'
+start: s0
+reward_xp: 320
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_skyward_spires_underworks|moorbell
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_skyward_spires_underworks|moorbell
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in moorbell in The Spire Nexus Foundations: 0/5 (320 XP).'
+  s1: 'Haul in moorbell in The Spire Nexus Foundations: 1/5 (320 XP).'
+  s2: 'Haul in moorbell in The Spire Nexus Foundations: 2/5 (320 XP).'
+  s3: 'Haul in moorbell in The Spire Nexus Foundations: 3/5 (320 XP).'
+  s4: 'Haul in moorbell in The Spire Nexus Foundations: 4/5 (320 XP).'
+  done: You have hauled in moorbell enough for The Spire Nexus Foundations. The region's
+    makers will put it to use.

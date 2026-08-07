@@ -1,0 +1,16 @@
+id: bounty_stonehelm_stormrider
+name: 'Bounty: a storm-walking wraith'
+start: posted
+reward_xp: 1812
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: stonehelm_stormrider
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a storm-walking wraith (level 151). Fell it for 1812
+    XP.
+  collected: 'Bounty collected: a storm-walking wraith is felled. Well hunted.'

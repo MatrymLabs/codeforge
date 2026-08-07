@@ -1,0 +1,20 @@
+id: delivery_thunderhold
+name: 'Delivery: Thunderhold to Saltwind Harbor'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_thunderhold
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: saltwind_harbor
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Thunderhold is bound for Saltwind Harbor. Take it up (1800 XP).
+  carrying: Carry the parcel to Saltwind Harbor.
+  done: The parcel is delivered to Saltwind Harbor. The road keeps its promise.

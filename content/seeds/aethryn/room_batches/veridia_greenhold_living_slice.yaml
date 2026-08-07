@@ -1,0 +1,693 @@
+batch:
+  id: veridia_greenhold_living_slice
+  sequence: 14
+  status: ready
+  size: 9
+  final: true
+  canon_status: AUTHORED_LOCAL
+  source_design_ids:
+  - veridia
+  - greenhold
+  - veridia_greenhold_economy
+  - veridia_greenhold_ecology
+  generation_seed: 41017
+  generator_name: aethryn_world_compiler
+  generator_version: 1.0.0
+  presentation_spec: aethryn-room-v1
+rooms:
+  greenhold:
+    name: Greenhold
+    presentation_version: aethryn-room-v1
+    desc: 'Greenhold gathers market, memory, and road traffic around a well while
+      the working edge opens south toward fields, drainage, and an old water threshold.
+
+
+      The Veridia setting makes its social, civic, and economic work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    short_description: Greenhold gathers market, memory, and road traffic around a
+      well while the working edge opens south toward fields, drainage, and an old
+      water threshold.
+    long_description: 'Greenhold gathers market, memory, and road traffic around a
+      well while the working edge opens south toward fields, drainage, and an old
+      water threshold.
+
+
+      The Veridia setting makes its social, civic, and economic work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    area_name: Veridia
+    primary_purpose:
+    - social
+    - civic
+    - economic
+    points_of_interest: []
+    conditions:
+    - id: pressure:living_water_shortage
+      kind: pressure
+      source_record: living_water_shortage
+      display: the town cistern is below service level
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - greenhold
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - greenhold
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: c939da0ed34249459ae7d7dc3d99d0f50404fb91da53139fbbb548fe00e75d95
+    room_type: Town Hub
+    tags:
+    - veridia
+    - greenhold
+    - compiler_slice
+    - authored_local
+    exits:
+      out: veridia
+      in: greenhold_inn
+      market: greenhold_store
+      square: greenhold_market
+      wards: veridia_massive_alder_court
+      south: veridia_living_civic_gate
+    replace: true
+    population_refs:
+    - greenhold_civilian_population
+    crowd_refs:
+    - greenhold_market_crowd
+  veridia_living_civic_gate:
+    name: Greenhold Civic Edge
+    presentation_version: aethryn-room-v1
+    desc: 'The town wall gives way to a maintained civic edge where a public notice,
+      a drainage map, and a low stone channel explain how Greenhold keeps people and
+      water moving together.
+
+
+      The Veridia setting makes its threshold, civic, and traversal work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    short_description: The town wall gives way to a maintained civic edge where a
+      public notice, a drainage map, and a low stone channel explain how Greenhold
+      keeps people and water moving together.
+    long_description: 'The town wall gives way to a maintained civic edge where a
+      public notice, a drainage map, and a low stone channel explain how Greenhold
+      keeps people and water moving together.
+
+
+      The Veridia setting makes its threshold, civic, and traversal work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    area_name: Veridia
+    primary_purpose:
+    - threshold
+    - civic
+    - traversal
+    points_of_interest: []
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - greenhold
+    - greenhold_civic_edge
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - greenhold
+      - greenhold_civic_edge
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: f1a957306205d27c98d9ec514b934e5bde5a20490a4c080d87e8ce68d643f1fb
+    room_type: Civic Threshold
+    tags:
+    - veridia
+    - greenhold
+    - civic
+    - compiler_slice
+    exits:
+      north: greenhold
+      east: veridia_living_cistern_court
+      south: veridia_living_road_threshold
+    occupants:
+    - Ditchwarden Mara
+    occupant_refs:
+    - living_ditchwarden
+    population_refs:
+    - greenhold_civilian_population
+  veridia_living_cistern_court:
+    name: Cistern Court
+    presentation_version: aethryn-room-v1
+    desc: 'A shallow court surrounds a capped cistern where clean water should rise
+      on a working day; a brass gauge and repair ledger record three competing explanations.
+
+
+      The Veridia setting makes its civic, service, and narrative work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    short_description: A shallow court surrounds a capped cistern where clean water
+      should rise on a working day; a brass gauge and repair ledger record three competing
+      explanations.
+    long_description: 'A shallow court surrounds a capped cistern where clean water
+      should rise on a working day; a brass gauge and repair ledger record three competing
+      explanations.
+
+
+      The Veridia setting makes its civic, service, and narrative work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    area_name: Veridia
+    primary_purpose:
+    - civic
+    - service
+    - narrative
+    points_of_interest:
+    - id: living_drainage_ledger
+      display: the drainage ledger
+      kind: object
+      actions:
+      - examine
+      - take
+      source_record: living_drainage_ledger
+    conditions:
+    - id: state:greenhold.cistern_status
+      kind: state
+      state_key: greenhold.cistern_status
+      values:
+      - low
+      - flowing
+      display: civic cistern gauge and public water description
+    - id: pressure:living_water_shortage
+      kind: pressure
+      source_record: living_water_shortage
+      display: the town cistern is below service level
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_economy
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - greenhold
+      - veridia_greenhold_economy
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: 92f02952aa6ba9aa58db0db0f30b45d316cde64e78c972a8f185643ce3421036
+    room_type: Water Service Court
+    tags:
+    - veridia
+    - greenhold
+    - water
+    - compiler_slice
+    exits:
+      west: veridia_living_civic_gate
+      east: veridia_living_waste_yard
+    population_refs:
+    - greenhold_civilian_population
+    ambient_evidence_refs:
+    - greenhold_quiet_hollow_sign
+  veridia_living_waste_yard:
+    name: Alder Waste Yard
+    presentation_version: aethryn-room-v1
+    desc: 'Alder bins, compost frames, and a swept runoff trench make this yard a
+      quiet piece of settlement infrastructure, though a blocked grate now sends foul
+      water toward the field road.
+
+
+      This waste and maintenance yard is a working part of Veridia, where civic, service,
+      and recovery work follows low fields, drainage ditches, hedgerows, and an old
+      waterworks threshold and the local weather.'
+    short_description: Alder bins, compost frames, and a swept runoff trench make
+      this yard a quiet piece of settlement infrastructure, though a blocked grate
+      now sends foul water toward the field road.
+    long_description: 'Alder bins, compost frames, and a swept runoff trench make
+      this yard a quiet piece of settlement infrastructure, though a blocked grate
+      now sends foul water toward the field road.
+
+
+      This waste and maintenance yard is a working part of Veridia, where civic, service,
+      and recovery work follows low fields, drainage ditches, hedgerows, and an old
+      waterworks threshold and the local weather.'
+    area_name: Veridia
+    primary_purpose:
+    - civic
+    - service
+    - recovery
+    points_of_interest: []
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - greenhold
+    - veridia_greenhold_economy
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - greenhold
+      - veridia_greenhold_economy
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: f9814519c1a7307d2c073bc749c2be6649329803babd48b9f3651d60d5a163ef
+    room_type: Waste and Maintenance Yard
+    tags:
+    - veridia
+    - greenhold
+    - waste
+    - maintenance
+    - compiler_slice
+    exits:
+      west: veridia_living_cistern_court
+      south: veridia_living_road_threshold
+    population_refs:
+    - greenhold_field_work_crews
+    - greenhold_hollow_vermin
+    ambient_evidence_refs:
+    - greenhold_work_sounds
+  veridia_living_road_threshold:
+    name: South Cartway Threshold
+    presentation_version: aethryn-room-v1
+    desc: 'The cartway leaves Greenhold between low hedges, a repaired milestone,
+      and a ditch that carries both rain and the town''s arguments about who must
+      clear it.
+
+
+      This road threshold is a working part of Veridia, where threshold, traversal,
+      and economic work follows low fields, drainage ditches, hedgerows, and an old
+      waterworks threshold and the local weather.'
+    short_description: The cartway leaves Greenhold between low hedges, a repaired
+      milestone, and a ditch that carries both rain and the town's arguments about
+      who must clear it.
+    long_description: 'The cartway leaves Greenhold between low hedges, a repaired
+      milestone, and a ditch that carries both rain and the town''s arguments about
+      who must clear it.
+
+
+      This road threshold is a working part of Veridia, where threshold, traversal,
+      and economic work follows low fields, drainage ditches, hedgerows, and an old
+      waterworks threshold and the local weather.'
+    area_name: Veridia
+    primary_purpose:
+    - threshold
+    - traversal
+    - economic
+    points_of_interest: []
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - veridia
+    - greenhold
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - veridia
+      - greenhold
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: c99c6e3145d5f0e13ade715e9d7399d52a320040c5f1e09c367ea4776a216a6a
+    room_type: Road Threshold
+    tags:
+    - veridia
+    - road
+    - trade
+    - compiler_slice
+    exits:
+      north: veridia_living_civic_gate
+      east: veridia_living_wild_loop
+      south: veridia_living_farm_lane
+      west: veridia_living_waste_yard
+    population_refs:
+    - greenhold_field_work_crews
+    ambient_evidence_refs:
+    - greenhold_work_sounds
+  veridia_living_farm_lane:
+    name: Alder Farm Lane
+    presentation_version: aethryn-room-v1
+    desc: 'Furrows and alder windbreaks flank a narrow farm lane where barley stubble,
+      meadowfoil, and wagon ruts show the season''s work and the crop''s recent trouble.
+
+
+      In Veridia, this farm road exists for traversal, resource, and economic work;
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold gives
+      the work its shape.'
+    short_description: Furrows and alder windbreaks flank a narrow farm lane where
+      barley stubble, meadowfoil, and wagon ruts show the season's work and the crop's
+      recent trouble.
+    long_description: 'Furrows and alder windbreaks flank a narrow farm lane where
+      barley stubble, meadowfoil, and wagon ruts show the season''s work and the crop''s
+      recent trouble.
+
+
+      In Veridia, this farm road exists for traversal, resource, and economic work;
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold gives
+      the work its shape.'
+    area_name: Veridia
+    primary_purpose:
+    - traversal
+    - resource
+    - economic
+    points_of_interest: []
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_ecology
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - veridia
+      - veridia_greenhold_ecology
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: b0035135836c1b66f4b56c8da165abfc7c49f2d2e412cd13160ab53b163fc379
+    room_type: Farm Road
+    tags:
+    - veridia
+    - fields
+    - gathering
+    - compiler_slice
+    exits:
+      north: veridia_living_road_threshold
+      east: veridia_living_farmstead
+      south: veridia_living_wild_loop
+    population_refs:
+    - greenhold_field_work_crews
+    - greenhold_field_rabbits
+    ambient_evidence_refs:
+    - greenhold_field_tracks
+    - greenhold_rabbit_sign
+  veridia_living_farmstead:
+    name: Alder Farmstead
+    presentation_version: aethryn-room-v1
+    desc: 'A small barley holding sits behind a split rail fence, with a hand mill,
+      drying rack, and meadowfoil baskets ready for the trader if the damaged rows
+      can be kept productive.
+
+
+      The Veridia setting makes its economic, resource, and social work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    short_description: A small barley holding sits behind a split rail fence, with
+      a hand mill, drying rack, and meadowfoil baskets ready for the trader if the
+      damaged rows can be kept productive.
+    long_description: 'A small barley holding sits behind a split rail fence, with
+      a hand mill, drying rack, and meadowfoil baskets ready for the trader if the
+      damaged rows can be kept productive.
+
+
+      The Veridia setting makes its economic, resource, and social work purpose visible
+      in the timber and riverstone town edge over pale old-world masonry built where
+      low fields, drainage ditches, hedgerows, and an old waterworks threshold meets
+      the route.'
+    area_name: Veridia
+    primary_purpose:
+    - economic
+    - resource
+    - social
+    points_of_interest:
+    - id: living_meadowfoil_node
+      display: meadowfoil margin
+      kind: resource
+      actions:
+      - examine
+      - gather
+      source_record: living_meadowfoil_node
+    - id: living_barley_node
+      display: damaged barley rows
+      kind: resource
+      actions:
+      - examine
+      - gather
+      source_record: living_barley_node
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_economy
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - veridia
+      - veridia_greenhold_economy
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: 4b5b91cf5268b984e203315986387114bf0053f0dcb3b62216188baa7bfd5a81
+    room_type: Agricultural Worksite
+    tags:
+    - veridia
+    - farm
+    - food
+    - trade
+    - compiler_slice
+    exits:
+      west: veridia_living_farm_lane
+    occupants:
+    - Fieldhand Oren
+    occupant_refs:
+    - living_fieldhand
+    population_refs:
+    - greenhold_field_work_crews
+    - greenhold_livestock
+  veridia_living_wild_loop:
+    name: Hedgerow Loop
+    presentation_version: aethryn-room-v1
+    desc: 'The path bends through wet grass and thorn hedges in a deliberate loop,
+      passing forage, torn barley stems, and tracks too broad for the foxes that usually
+      keep this edge balanced.
+
+
+      In Veridia, this managed wilderness loop exists for traversal, ecological, and
+      encounter work; low fields, drainage ditches, hedgerows, and an old waterworks
+      threshold gives the work its shape.'
+    short_description: The path bends through wet grass and thorn hedges in a deliberate
+      loop, passing forage, torn barley stems, and tracks too broad for the foxes
+      that usually keep this edge balanced.
+    long_description: 'The path bends through wet grass and thorn hedges in a deliberate
+      loop, passing forage, torn barley stems, and tracks too broad for the foxes
+      that usually keep this edge balanced.
+
+
+      In Veridia, this managed wilderness loop exists for traversal, ecological, and
+      encounter work; low fields, drainage ditches, hedgerows, and an old waterworks
+      threshold gives the work its shape.'
+    area_name: Veridia
+    primary_purpose:
+    - traversal
+    - ecological
+    - encounter
+    - resource
+    points_of_interest: []
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - veridia
+    - veridia_greenhold_ecology
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - veridia
+      - veridia_greenhold_ecology
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: 6290a80b42991d5c0d1e783d3d45613dcb545836dbd914dcc318b237263ec26a
+    room_type: Managed Wilderness Loop
+    tags:
+    - veridia
+    - wilderness
+    - ecology
+    - compiler_slice
+    exits:
+      west: veridia_living_road_threshold
+      north: veridia_living_farm_lane
+      east: veridia_living_hollow
+    population_refs:
+    - greenhold_field_rabbits
+    - greenhold_boar_pressure
+    ambient_evidence_refs:
+    - greenhold_field_tracks
+    - greenhold_rabbit_sign
+  veridia_living_hollow:
+    name: The Shallow Service Hollow
+    presentation_version: aethryn-room-v1
+    desc: 'A shallow cut in the field reveals pale masonry, a seized sluice wheel,
+      and a line of conduit disappearing under roots, while fresh boar tracks make
+      the old work unsafe to study slowly.
+
+
+      Its materials and position belong to Veridia: low fields, drainage ditches,
+      hedgerows, and an old waterworks threshold meets timber and riverstone town
+      edge over pale old-world masonry at this threshold.'
+    short_description: A shallow cut in the field reveals pale masonry, a seized sluice
+      wheel, and a line of conduit disappearing under roots, while fresh boar tracks
+      make the old work unsafe to study slowly.
+    long_description: 'A shallow cut in the field reveals pale masonry, a seized sluice
+      wheel, and a line of conduit disappearing under roots, while fresh boar tracks
+      make the old work unsafe to study slowly.
+
+
+      Its materials and position belong to Veridia: low fields, drainage ditches,
+      hedgerows, and an old waterworks threshold meets timber and riverstone town
+      edge over pale old-world masonry at this threshold.'
+    area_name: Veridia
+    primary_purpose:
+    - encounter
+    - landmark
+    - puzzle
+    - narrative
+    points_of_interest:
+    - id: living_sluice_wheel
+      display: the pale sluice wheel
+      kind: object
+      actions:
+      - examine
+      - take
+      source_record: living_sluice_wheel
+    conditions: []
+    prose_status: GENERATED_LOCAL
+    prose_source: packet_description
+    canon_status: AUTHORED_LOCAL
+    parent_region: veridia
+    parent_zone: veridia_zone
+    source_design_ids:
+    - veridia
+    - greenhold_minor_site
+    generation_seed: 41017
+    generator_name: aethryn_world_compiler
+    generator_version: 1.0.0
+    provenance:
+      source_design_ids:
+      - veridia
+      - greenhold_minor_site
+      source_paths:
+      - content/seeds/aethryn/design
+      - content/seeds/aethryn/authored/greenhold.yaml
+      packet_id: veridia_greenhold_living_slice
+      generation_seed: 41017
+      generator_name: aethryn_world_compiler
+      generator_version: 1.0.0
+      authority: AUTHORED_LOCAL
+      note: ''
+    content_digest: 4c739ca6f5a608c85890fe0dbfa22e17e647801f9d0b0c25a81dded02dfff5f4
+    room_type: Minor Hazardous Site
+    tags:
+    - veridia
+    - old_world
+    - hazard
+    - compiler_slice
+    exits:
+      west: veridia_living_wild_loop
+    occupants:
+    - Repairer Sen
+    - displaced field-boar
+    occupant_refs:
+    - living_repairer
+    - living_field_boar
+    population_refs:
+    - greenhold_boar_pressure
+    - greenhold_hollow_vermin

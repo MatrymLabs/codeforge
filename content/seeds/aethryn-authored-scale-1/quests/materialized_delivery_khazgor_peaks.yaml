@@ -1,0 +1,20 @@
+id: delivery_khazgor_peaks
+name: 'Delivery: Khazgor Peaks to Lumengrotto'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_khazgor_peaks
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: lumengrotto
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Khazgor Peaks is bound for Lumengrotto. Take it up (1200 XP).
+  carrying: Carry the parcel to Lumengrotto.
+  done: The parcel is delivered to Lumengrotto. The road keeps its promise.

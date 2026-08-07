@@ -1,0 +1,47 @@
+id: cull_field_xilnath_jungle_sabrecat_6
+name: 'A small Warrant: the sabrecat-kind of The Xil''nath Jungle Wilds'
+start: s0
+reward_xp: 300
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_xilnath_jungle|sabrecat
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_xilnath_jungle|sabrecat
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_xilnath_jungle|sabrecat
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_xilnath_jungle|sabrecat
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_xilnath_jungle|sabrecat
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_xilnath_jungle|sabrecat
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 0/6
+    down (300 XP).'
+  s1: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 1/6
+    down (300 XP).'
+  s2: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 2/6
+    down (300 XP).'
+  s3: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 3/6
+    down (300 XP).'
+  s4: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 4/6
+    down (300 XP).'
+  s5: 'Answer the warrant on the sabrecat-kind of The Xil''nath Jungle Wilds: 5/6
+    down (300 XP).'
+  done: The sabrecat-kind of The Xil'nath Jungle Wilds are answered for. The physic-paths
+    are a shade clearer.

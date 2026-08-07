@@ -1,0 +1,20 @@
+id: delivery_caeloria_city
+name: 'Delivery: Caeloria City to Silverwatch'
+start: posted
+reward_xp: 360
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_caeloria_city
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: silverwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Caeloria City is bound for Silverwatch. Take it up (360 XP).
+  carrying: Carry the parcel to Silverwatch.
+  done: The parcel is delivered to Silverwatch. The road keeps its promise.

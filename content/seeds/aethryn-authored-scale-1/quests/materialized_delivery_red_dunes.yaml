@@ -1,0 +1,20 @@
+id: delivery_red_dunes
+name: 'Delivery: Red Dune to Sandspire Ruins'
+start: posted
+reward_xp: 960
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_red_dunes
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: sandspire_ruins
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Red Dune is bound for Sandspire Ruins. Take it up (960 XP).
+  carrying: Carry the parcel to Sandspire Ruins.
+  done: The parcel is delivered to Sandspire Ruins. The road keeps its promise.

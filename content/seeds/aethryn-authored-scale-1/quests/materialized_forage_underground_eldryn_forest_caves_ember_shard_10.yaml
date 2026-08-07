@@ -1,0 +1,61 @@
+id: forage_underground_eldryn_forest_caves_ember_shard_10
+name: 'A standing Harvest: ember shard of Eldryn''s Living Tunnels'
+start: s0
+reward_xp: 180
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_eldryn_forest_caves|ember_shard
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_eldryn_forest_caves|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Harvest ember shard in Eldryn''s Living Tunnels: 0/10 (180 XP).'
+  s1: 'Harvest ember shard in Eldryn''s Living Tunnels: 1/10 (180 XP).'
+  s2: 'Harvest ember shard in Eldryn''s Living Tunnels: 2/10 (180 XP).'
+  s3: 'Harvest ember shard in Eldryn''s Living Tunnels: 3/10 (180 XP).'
+  s4: 'Harvest ember shard in Eldryn''s Living Tunnels: 4/10 (180 XP).'
+  s5: 'Harvest ember shard in Eldryn''s Living Tunnels: 5/10 (180 XP).'
+  s6: 'Harvest ember shard in Eldryn''s Living Tunnels: 6/10 (180 XP).'
+  s7: 'Harvest ember shard in Eldryn''s Living Tunnels: 7/10 (180 XP).'
+  s8: 'Harvest ember shard in Eldryn''s Living Tunnels: 8/10 (180 XP).'
+  s9: 'Harvest ember shard in Eldryn''s Living Tunnels: 9/10 (180 XP).'
+  done: You have harvested ember shard enough for Eldryn's Living Tunnels. The wood's
+    craftfolk have what they need.

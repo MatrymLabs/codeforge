@@ -1,0 +1,36 @@
+id: forage_skyward_spires_zone_raw_ore_5
+name: 'A small Provision: raw ore of Skyward Spires'
+start: s0
+reward_xp: 310
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: skyward_spires_zone|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: skyward_spires_zone|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: skyward_spires_zone|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: skyward_spires_zone|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: skyward_spires_zone|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in raw ore in Skyward Spires: 0/5 (310 XP).'
+  s1: 'Lay in raw ore in Skyward Spires: 1/5 (310 XP).'
+  s2: 'Lay in raw ore in Skyward Spires: 2/5 (310 XP).'
+  s3: 'Lay in raw ore in Skyward Spires: 3/5 (310 XP).'
+  s4: 'Lay in raw ore in Skyward Spires: 4/5 (310 XP).'
+  done: You have laid in raw ore enough for Skyward Spires. The region's makers will
+    put it to use.

@@ -1,0 +1,36 @@
+id: forage_underground_xilnath_jungle_underworks_vinesilk_5
+name: 'A small Forage: vinesilk of The Verdant Loom Below'
+start: s0
+reward_xp: 195
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_xilnath_jungle_underworks|vinesilk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather vinesilk in The Verdant Loom Below: 0/5 (195 XP).'
+  s1: 'Gather vinesilk in The Verdant Loom Below: 1/5 (195 XP).'
+  s2: 'Gather vinesilk in The Verdant Loom Below: 2/5 (195 XP).'
+  s3: 'Gather vinesilk in The Verdant Loom Below: 3/5 (195 XP).'
+  s4: 'Gather vinesilk in The Verdant Loom Below: 4/5 (195 XP).'
+  done: You have gathered vinesilk enough for The Verdant Loom Below. The physicians
+    can work with this.

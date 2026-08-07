@@ -1,0 +1,47 @@
+id: cull_underground_thalorin_caves_hound_6
+name: 'A small Warrant: the hound-kind of Thalorin''s Moor Mines'
+start: s0
+reward_xp: 264
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_thalorin_caves|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_thalorin_caves|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_thalorin_caves|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_thalorin_caves|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_thalorin_caves|hound
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_thalorin_caves|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 0/6 down (264
+    XP).'
+  s1: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 1/6 down (264
+    XP).'
+  s2: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 2/6 down (264
+    XP).'
+  s3: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 3/6 down (264
+    XP).'
+  s4: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 4/6 down (264
+    XP).'
+  s5: 'Answer the warrant on the hound-kind of Thalorin''s Moor Mines: 5/6 down (264
+    XP).'
+  done: The hound-kind of Thalorin's Moor Mines are answered for. The region breathes
+    easier.

@@ -1,0 +1,36 @@
+id: forage_field_ashen_wastes_ember_shard_5
+name: 'A small Provision: ember shard of The Ashen Wastes Wilds'
+start: s0
+reward_xp: 210
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_ashen_wastes|ember_shard
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_ashen_wastes|ember_shard
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_ashen_wastes|ember_shard
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_ashen_wastes|ember_shard
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_ashen_wastes|ember_shard
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in ember shard in The Ashen Wastes Wilds: 0/5 (210 XP).'
+  s1: 'Lay in ember shard in The Ashen Wastes Wilds: 1/5 (210 XP).'
+  s2: 'Lay in ember shard in The Ashen Wastes Wilds: 2/5 (210 XP).'
+  s3: 'Lay in ember shard in The Ashen Wastes Wilds: 3/5 (210 XP).'
+  s4: 'Lay in ember shard in The Ashen Wastes Wilds: 4/5 (210 XP).'
+  done: You have laid in ember shard enough for The Ashen Wastes Wilds. The forge-crews
+    can feed the fires now.

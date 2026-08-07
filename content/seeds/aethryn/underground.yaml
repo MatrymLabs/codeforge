@@ -1,0 +1,370 @@
+# SEED: aethryn -- underground.yaml
+#
+# The middle layer between surface fields and dungeon delves. Each region owns a regional cave and
+# a deeper underzone. The cave forge supplies the navigable room graph and local history; these rows
+# author the placement, life biome, level band, and the lore thread that makes the space part of
+# Aethryn rather than an anonymous procedural pocket.
+
+veridia_caves:
+  name: Veridia's River Caves
+  region: veridia
+  kind: cave
+  attach: veridia
+  attach_exit: caves
+  biome: temperate-meadow
+  level_min: 4
+  level_max: 24
+  seed: 1001
+  size: 14
+  lore_anchor: "The old cradle water still remembers four distant works."
+
+veridia_underworks:
+  name: The Cradle Underworks
+  region: veridia
+  kind: underzone
+  attach: the_sunken_barrow
+  attach_exit: side_depths
+  biome: temperate-meadow
+  level_min: 18
+  level_max: 32
+  seed: 1002
+  size: 18
+  lore_anchor: "Pale conduits converge here, but the machine's maker remains unnamed."
+
+duskwood_vale_caves:
+  name: Duskwood Root Hollows
+  region: duskwood_vale
+  kind: cave
+  attach: duskwood_vale
+  attach_exit: caves
+  biome: wild-forest
+  level_min: 24
+  level_max: 44
+  seed: 1011
+  size: 14
+  lore_anchor: "Roots have grown around a history the living wood refuses to release."
+
+duskwood_vale_underworks:
+  name: The Black Root Below
+  region: duskwood_vale
+  kind: underzone
+  attach: the_black_hollow
+  attach_exit: side_depths
+  biome: wild-forest
+  level_min: 42
+  level_max: 56
+  seed: 1012
+  size: 18
+  lore_anchor: "The hollow descends into a shrine-road older than the forest's oldest oath."
+
+caeloria_caves:
+  name: Caeloria's Sealed Aqueducts
+  region: caeloria
+  kind: cave
+  attach: caeloria
+  attach_exit: aqueducts
+  biome: temperate-meadow
+  level_min: 34
+  level_max: 54
+  seed: 1021
+  size: 14
+  lore_anchor: "Licensed masons found a second water-system beneath the kingdom's official one."
+
+caeloria_underworks:
+  name: The Starfall Sublevels
+  region: caeloria
+  kind: underzone
+  attach: starfall_temple
+  attach_exit: side_depths
+  biome: temperate-meadow
+  level_min: 54
+  level_max: 66
+  seed: 1022
+  size: 18
+  lore_anchor: "The crater's lower chambers preserve light as if the strike happened yesterday."
+
+eldryn_forest_caves:
+  name: Eldryn's Living Tunnels
+  region: eldryn_forest
+  kind: cave
+  attach: eldryn_forest
+  attach_exit: rootways
+  biome: wild-forest
+  level_min: 54
+  level_max: 74
+  seed: 1031
+  size: 14
+  lore_anchor: "The forest has not reclaimed these tunnels; it has made them part of itself."
+
+eldryn_forest_underworks:
+  name: The Rotwood Root-Chambers
+  region: eldryn_forest
+  kind: underzone
+  attach: rotwood_deep
+  attach_exit: side_depths
+  biome: wild-forest
+  level_min: 74
+  level_max: 86
+  seed: 1032
+  size: 18
+  lore_anchor: "A maintenance hollow runs beneath the roots, tending an ecology no one remembers planting."
+
+frostspire_peaks_caves:
+  name: Frostspire Blue-Ice Caves
+  region: frostspire_peaks
+  kind: cave
+  attach: frostspire_peaks
+  attach_exit: ice_caves
+  biome: glacier-waste
+  level_min: 64
+  level_max: 84
+  seed: 1041
+  size: 14
+  lore_anchor: "The ice keeps a warm metal heartbeat far below the old beacon line."
+
+frostspire_peaks_underworks:
+  name: The Glacial Bastion Foundations
+  region: frostspire_peaks
+  kind: underzone
+  attach: glacial_bastion
+  attach_exit: side_depths
+  biome: glacier-waste
+  level_min: 84
+  level_max: 96
+  seed: 1042
+  size: 18
+  lore_anchor: "The fortress was built over a transit foundation that does not appear on any surviving plan."
+
+zhaar_desert_caves:
+  name: The Red Dunes Sinkholes
+  region: zhaar_desert
+  kind: cave
+  attach: zhaar_desert
+  attach_exit: sinkholes
+  biome: salt-desert
+  level_min: 84
+  level_max: 120
+  seed: 1051
+  size: 14
+  lore_anchor: "Wind exposes one buried room for every room it buries."
+
+zhaar_desert_underworks:
+  name: The Obsidian Pit Galleries
+  region: zhaar_desert
+  kind: underzone
+  attach: the_obsidian_pit
+  attach_exit: side_depths
+  biome: salt-desert
+  level_min: 120
+  level_max: 138
+  seed: 1052
+  size: 18
+  lore_anchor: "The pit's galleries measure stone, memory, and ownership with the same cold precision."
+
+xilnath_jungle_caves:
+  name: Xil'nath's Green Tunnels
+  region: xilnath_jungle
+  kind: cave
+  attach: xilnath_jungle
+  attach_exit: green_tunnels
+  biome: living-jungle
+  level_min: 94
+  level_max: 140
+  seed: 1061
+  size: 14
+  lore_anchor: "The jungle grows through the old healing works and changes what healing means."
+
+xilnath_jungle_underworks:
+  name: The Verdant Loom Below
+  region: xilnath_jungle
+  kind: underzone
+  attach: heart_of_xilnath
+  attach_exit: side_depths
+  biome: living-jungle
+  level_min: 138
+  level_max: 158
+  seed: 1062
+  size: 18
+  lore_anchor: "Roots and conduits share one pulse beneath the Heart, and neither yields the right of way."
+
+thalorin_caves:
+  name: Thalorin's Moor Mines
+  region: thalorin
+  kind: cave
+  attach: thalorin
+  attach_exit: old_mines
+  biome: highland-moor
+  level_min: 104
+  level_max: 132
+  seed: 1071
+  size: 14
+  lore_anchor: "Miners still follow a seam laid down before the highland borders had names."
+
+thalorin_underworks:
+  name: The Irondeep Command Vaults
+  region: thalorin
+  kind: underzone
+  attach: dreadmaw_hold
+  attach_exit: side_depths
+  biome: highland-moor
+  level_min: 132
+  level_max: 148
+  seed: 1072
+  size: 18
+  lore_anchor: "The vaults record resource commands in a language the keep's rulers cannot read."
+
+ashen_wastes_caves:
+  name: Ashen Slag Hollows
+  region: ashen_wastes
+  kind: cave
+  attach: ashen_wastes
+  attach_exit: slag_hollows
+  biome: volcanic-flats
+  level_min: 124
+  level_max: 160
+  seed: 1081
+  size: 14
+  lore_anchor: "The cooled slag still carries the shape of a factory that was never meant to fail."
+
+ashen_wastes_underworks:
+  name: The Flamewrought Service Depths
+  region: ashen_wastes
+  kind: underzone
+  attach: the_flamewrought_forge
+  attach_exit: side_depths
+  biome: volcanic-flats
+  level_min: 160
+  level_max: 178
+  seed: 1082
+  size: 18
+  lore_anchor: "Obsolete instructions continue below the Forge, producing answers to questions no one asked."
+
+korvash_highlands_caves:
+  name: Korvash Oath-Caves
+  region: korvash_highlands
+  kind: cave
+  attach: korvash_highlands
+  attach_exit: oath_caves
+  biome: highland-moor
+  level_min: 154
+  level_max: 190
+  seed: 1091
+  size: 14
+  lore_anchor: "Every chamber carries a mark of authority, but none agrees who still holds it."
+
+korvash_highlands_underworks:
+  name: The Measured Throne Below
+  region: korvash_highlands
+  kind: underzone
+  attach: korvash_crater
+  attach_exit: side_depths
+  biome: highland-moor
+  level_min: 190
+  level_max: 208
+  seed: 1092
+  size: 18
+  lore_anchor: "The crater's command systems recognize names as keys and silence as consent."
+
+shattered_isles_caves:
+  name: The Drowned Isle Caves
+  region: shattered_isles
+  kind: cave
+  attach: shattered_isles
+  attach_exit: sea_caves
+  biome: coastal-strand
+  level_min: 184
+  level_max: 220
+  seed: 1101
+  size: 14
+  lore_anchor: "Tide and stone reveal a route that should connect two islands but rarely reaches the same one twice."
+
+shattered_isles_underworks:
+  name: The Blackreef Gateworks
+  region: shattered_isles
+  kind: underzone
+  attach: blackreef_citadel
+  attach_exit: side_depths
+  biome: coastal-strand
+  level_min: 220
+  level_max: 238
+  seed: 1102
+  size: 18
+  lore_anchor: "The old gateworks sorted cargo, travelers, and memories with equal indifference."
+
+skyward_spires_caves:
+  name: The Broken Skychain Hollows
+  region: skyward_spires
+  kind: cave
+  attach: skyward_spires
+  attach_exit: broken_spans
+  biome: highland-moor
+  level_min: 204
+  level_max: 242
+  seed: 1111
+  size: 14
+  lore_anchor: "These hollows are inside the floating stone, where gravity remembers an older route."
+
+skyward_spires_underworks:
+  name: The Spire Nexus Foundations
+  region: skyward_spires
+  kind: underzone
+  attach: the_spire_nexus
+  attach_exit: side_depths
+  biome: highland-moor
+  level_min: 242
+  level_max: 258
+  seed: 1112
+  size: 18
+  lore_anchor: "A route-coordination engine keeps asking the sky for destinations that no longer exist."
+
+the_deepreach_caves:
+  name: Deepreach Memory Grottos
+  region: the_deepreach
+  kind: cave
+  attach: the_deepreach
+  attach_exit: memory_grottos
+  biome: volcanic-flats
+  level_min: 108
+  level_max: 220
+  seed: 1121
+  size: 14
+  lore_anchor: "The walls preserve impressions of people who disagree about whether they ever lived."
+
+the_deepreach_underworks:
+  name: The Crystal Labyrinth Approach
+  region: the_deepreach
+  kind: underzone
+  attach: the_crystal_labyrinth
+  attach_exit: side_depths
+  biome: volcanic-flats
+  level_min: 220
+  level_max: 258
+  seed: 1122
+  size: 18
+  lore_anchor: "Every turn is an archive index, but the record at the center has been deliberately left blank."
+
+the_voidscar_caves:
+  name: Voidscar Fracture Caves
+  region: the_voidscar
+  kind: cave
+  attach: the_voidscar
+  attach_exit: fractures
+  biome: volcanic-flats
+  level_min: 254
+  level_max: 292
+  seed: 1131
+  size: 14
+  lore_anchor: "The rock cannot agree on its own shape, and the safest route changes when witnessed."
+
+the_voidscar_underworks:
+  name: The God-Mirror Approach
+  region: the_voidscar
+  kind: underzone
+  attach: netharions_throne
+  attach_exit: side_depths
+  biome: volcanic-flats
+  level_min: 292
+  level_max: 300
+  seed: 1132
+  size: 18
+  lore_anchor: "The approach records every theory about Netharion and confirms none of them."

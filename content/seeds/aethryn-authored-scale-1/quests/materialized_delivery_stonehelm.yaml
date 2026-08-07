@@ -1,0 +1,20 @@
+id: delivery_stonehelm
+name: 'Delivery: Stonehelm to Thunderhold'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_stonehelm
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: thunderhold
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Stonehelm is bound for Thunderhold. Take it up (1800 XP).
+  carrying: Carry the parcel to Thunderhold.
+  done: The parcel is delivered to Thunderhold. The road keeps its promise.

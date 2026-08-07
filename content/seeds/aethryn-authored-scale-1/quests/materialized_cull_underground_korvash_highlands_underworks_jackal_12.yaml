@@ -1,0 +1,83 @@
+id: cull_underground_korvash_highlands_underworks_jackal_12
+name: 'A standing Warrant: the jackal-kind of The Measured Throne Below'
+start: s0
+reward_xp: 828
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_korvash_highlands_underworks|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_underworks|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 0/12 down
+    (828 XP).'
+  s1: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 1/12 down
+    (828 XP).'
+  s2: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 2/12 down
+    (828 XP).'
+  s3: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 3/12 down
+    (828 XP).'
+  s4: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 4/12 down
+    (828 XP).'
+  s5: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 5/12 down
+    (828 XP).'
+  s6: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 6/12 down
+    (828 XP).'
+  s7: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 7/12 down
+    (828 XP).'
+  s8: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 8/12 down
+    (828 XP).'
+  s9: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 9/12 down
+    (828 XP).'
+  s10: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 10/12
+    down (828 XP).'
+  s11: 'Answer the warrant on the jackal-kind of The Measured Throne Below: 11/12
+    down (828 XP).'
+  done: The jackal-kind of The Measured Throne Below are answered for. The region
+    breathes easier.

@@ -1,0 +1,28 @@
+id: story_stormreach
+name: The Tale of Stormreach
+start: afoot
+reward_xp: 5750
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: blackreef_citadel
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: blackreef_citadel_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: stormreach
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of The Shattered Isles: Blackreef Citadel festers, and Stormreach
+    lives in its shadow.'
+  at_heart: You stand within Blackreef Citadel. Its deep terror waits below. Fell
+    it.
+  homeward: The terror of Blackreef Citadel is slain. Bear word to Stormreach (5750
+    XP).
+  done: '*** Stormreach breathes free. The Shattered Isles will remember you. ***'

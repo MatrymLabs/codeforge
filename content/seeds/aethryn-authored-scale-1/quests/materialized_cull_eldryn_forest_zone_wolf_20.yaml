@@ -1,0 +1,111 @@
+id: cull_eldryn_forest_zone_wolf_20
+name: 'A great Purge: the wolf-kind of Eldryn Forest'
+start: s0
+reward_xp: 520
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: eldryn_forest_zone|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: eldryn_forest_zone|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: eldryn_forest_zone|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: eldryn_forest_zone|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: eldryn_forest_zone|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: eldryn_forest_zone|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: eldryn_forest_zone|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: eldryn_forest_zone|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: eldryn_forest_zone|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: eldryn_forest_zone|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: eldryn_forest_zone|wolf
+- state: s11
+  event: cull
+  to: s12
+  on_cull: eldryn_forest_zone|wolf
+- state: s12
+  event: cull
+  to: s13
+  on_cull: eldryn_forest_zone|wolf
+- state: s13
+  event: cull
+  to: s14
+  on_cull: eldryn_forest_zone|wolf
+- state: s14
+  event: cull
+  to: s15
+  on_cull: eldryn_forest_zone|wolf
+- state: s15
+  event: cull
+  to: s16
+  on_cull: eldryn_forest_zone|wolf
+- state: s16
+  event: cull
+  to: s17
+  on_cull: eldryn_forest_zone|wolf
+- state: s17
+  event: cull
+  to: s18
+  on_cull: eldryn_forest_zone|wolf
+- state: s18
+  event: cull
+  to: s19
+  on_cull: eldryn_forest_zone|wolf
+- state: s19
+  event: cull
+  to: done
+  on_cull: eldryn_forest_zone|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the wolf-kind of Eldryn Forest: 0/20 down (520 XP).'
+  s1: 'Purge the wolf-kind of Eldryn Forest: 1/20 down (520 XP).'
+  s2: 'Purge the wolf-kind of Eldryn Forest: 2/20 down (520 XP).'
+  s3: 'Purge the wolf-kind of Eldryn Forest: 3/20 down (520 XP).'
+  s4: 'Purge the wolf-kind of Eldryn Forest: 4/20 down (520 XP).'
+  s5: 'Purge the wolf-kind of Eldryn Forest: 5/20 down (520 XP).'
+  s6: 'Purge the wolf-kind of Eldryn Forest: 6/20 down (520 XP).'
+  s7: 'Purge the wolf-kind of Eldryn Forest: 7/20 down (520 XP).'
+  s8: 'Purge the wolf-kind of Eldryn Forest: 8/20 down (520 XP).'
+  s9: 'Purge the wolf-kind of Eldryn Forest: 9/20 down (520 XP).'
+  s10: 'Purge the wolf-kind of Eldryn Forest: 10/20 down (520 XP).'
+  s11: 'Purge the wolf-kind of Eldryn Forest: 11/20 down (520 XP).'
+  s12: 'Purge the wolf-kind of Eldryn Forest: 12/20 down (520 XP).'
+  s13: 'Purge the wolf-kind of Eldryn Forest: 13/20 down (520 XP).'
+  s14: 'Purge the wolf-kind of Eldryn Forest: 14/20 down (520 XP).'
+  s15: 'Purge the wolf-kind of Eldryn Forest: 15/20 down (520 XP).'
+  s16: 'Purge the wolf-kind of Eldryn Forest: 16/20 down (520 XP).'
+  s17: 'Purge the wolf-kind of Eldryn Forest: 17/20 down (520 XP).'
+  s18: 'Purge the wolf-kind of Eldryn Forest: 18/20 down (520 XP).'
+  s19: 'Purge the wolf-kind of Eldryn Forest: 19/20 down (520 XP).'
+  done: The wolf-kind of Eldryn Forest are purged. The wardens of the wood send their
+    thanks.

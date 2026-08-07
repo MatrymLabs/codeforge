@@ -1,0 +1,15 @@
+id: errand_ravenwatch
+name: 'Errand: Duskwood Vale'
+start: posted
+reward_xp: 300
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: duskwood_vale
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Duskwood Vale (300 XP).
+  done: You set the token at Duskwood Vale. The stone answers.

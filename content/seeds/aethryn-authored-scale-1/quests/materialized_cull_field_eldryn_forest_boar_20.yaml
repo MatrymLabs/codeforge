@@ -1,0 +1,111 @@
+id: cull_field_eldryn_forest_boar_20
+name: 'A great Reckoning: the boar-kind of The Eldryn Forest Wilds'
+start: s0
+reward_xp: 520
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_eldryn_forest|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_eldryn_forest|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_eldryn_forest|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_eldryn_forest|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_eldryn_forest|boar
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_eldryn_forest|boar
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_eldryn_forest|boar
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_eldryn_forest|boar
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_eldryn_forest|boar
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_eldryn_forest|boar
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_eldryn_forest|boar
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_eldryn_forest|boar
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_eldryn_forest|boar
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_eldryn_forest|boar
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_eldryn_forest|boar
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_eldryn_forest|boar
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_eldryn_forest|boar
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_eldryn_forest|boar
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_eldryn_forest|boar
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_eldryn_forest|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 0/20 down (520 XP).'
+  s1: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 1/20 down (520 XP).'
+  s2: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 2/20 down (520 XP).'
+  s3: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 3/20 down (520 XP).'
+  s4: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 4/20 down (520 XP).'
+  s5: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 5/20 down (520 XP).'
+  s6: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 6/20 down (520 XP).'
+  s7: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 7/20 down (520 XP).'
+  s8: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 8/20 down (520 XP).'
+  s9: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 9/20 down (520 XP).'
+  s10: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 10/20 down (520 XP).'
+  s11: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 11/20 down (520 XP).'
+  s12: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 12/20 down (520 XP).'
+  s13: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 13/20 down (520 XP).'
+  s14: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 14/20 down (520 XP).'
+  s15: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 15/20 down (520 XP).'
+  s16: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 16/20 down (520 XP).'
+  s17: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 17/20 down (520 XP).'
+  s18: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 18/20 down (520 XP).'
+  s19: 'Reckon with the boar-kind of The Eldryn Forest Wilds: 19/20 down (520 XP).'
+  done: The boar-kind of The Eldryn Forest Wilds are settled with. The wardens of
+    the wood send their thanks.

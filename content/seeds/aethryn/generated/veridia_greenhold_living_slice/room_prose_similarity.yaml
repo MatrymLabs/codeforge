@@ -1,0 +1,46 @@
+presentation_version: aethryn-room-v1
+room_count: 9
+unique_long_descriptions: 9
+duplicate_groups: []
+reused_phrases:
+- phrase: low fields drainage ditches hedgerows
+  count: 9
+- phrase: fields drainage ditches hedgerows and
+  count: 9
+- phrase: drainage ditches hedgerows and an
+  count: 9
+- phrase: ditches hedgerows and an old
+  count: 9
+- phrase: hedgerows and an old waterworks
+  count: 9
+- phrase: and an old waterworks threshold
+  count: 9
+- phrase: timber and riverstone town edge
+  count: 5
+- phrase: and riverstone town edge over
+  count: 5
+- phrase: riverstone town edge over pale
+  count: 5
+- phrase: town edge over pale old
+  count: 5
+- phrase: edge over pale old world
+  count: 5
+- phrase: over pale old world masonry
+  count: 5
+- phrase: an old waterworks threshold meets
+  count: 5
+- phrase: the veridia setting makes its
+  count: 4
+- phrase: work purpose visible in the
+  count: 4
+- phrase: purpose visible in the timber
+  count: 4
+- phrase: visible in the timber and
+  count: 4
+- phrase: in the timber and riverstone
+  count: 4
+- phrase: the timber and riverstone town
+  count: 4
+- phrase: pale old world masonry built
+  count: 4
+flags: []

@@ -1,0 +1,20 @@
+id: delivery_ironwall_pass
+name: 'Delivery: Ironwall Pass to Winter''s Grasp'
+start: posted
+reward_xp: 720
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_ironwall_pass
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: winters_grasp
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Ironwall Pass is bound for Winter's Grasp. Take it up (720 XP).
+  carrying: Carry the parcel to Winter's Grasp.
+  done: The parcel is delivered to Winter's Grasp. The road keeps its promise.

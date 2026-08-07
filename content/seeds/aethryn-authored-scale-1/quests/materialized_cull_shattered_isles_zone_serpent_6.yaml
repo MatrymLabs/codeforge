@@ -1,0 +1,41 @@
+id: cull_shattered_isles_zone_serpent_6
+name: 'A small Reckoning: the serpent-kind of The Shattered Isles'
+start: s0
+reward_xp: 456
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: shattered_isles_zone|serpent
+- state: s1
+  event: cull
+  to: s2
+  on_cull: shattered_isles_zone|serpent
+- state: s2
+  event: cull
+  to: s3
+  on_cull: shattered_isles_zone|serpent
+- state: s3
+  event: cull
+  to: s4
+  on_cull: shattered_isles_zone|serpent
+- state: s4
+  event: cull
+  to: s5
+  on_cull: shattered_isles_zone|serpent
+- state: s5
+  event: cull
+  to: done
+  on_cull: shattered_isles_zone|serpent
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the serpent-kind of The Shattered Isles: 0/6 down (456 XP).'
+  s1: 'Reckon with the serpent-kind of The Shattered Isles: 1/6 down (456 XP).'
+  s2: 'Reckon with the serpent-kind of The Shattered Isles: 2/6 down (456 XP).'
+  s3: 'Reckon with the serpent-kind of The Shattered Isles: 3/6 down (456 XP).'
+  s4: 'Reckon with the serpent-kind of The Shattered Isles: 4/6 down (456 XP).'
+  s5: 'Reckon with the serpent-kind of The Shattered Isles: 5/6 down (456 XP).'
+  done: The serpent-kind of The Shattered Isles are settled with. The tide-roads are
+    the safer for it.

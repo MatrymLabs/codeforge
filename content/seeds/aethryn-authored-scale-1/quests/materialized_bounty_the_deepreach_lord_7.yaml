@@ -1,0 +1,16 @@
+id: bounty_the_deepreach_lord_7
+name: 'Bounty: Morune the Obsidian Stalker'
+start: posted
+reward_xp: 1392
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: the_deepreach_lord_7
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Morune the Obsidian Stalker (level 116). Fell it for
+    1392 XP.
+  collected: 'Bounty collected: Morune the Obsidian Stalker is felled. Well hunted.'

@@ -1,0 +1,71 @@
+id: cull_eldryn_forest_zone_boar_12
+name: 'A standing Reckoning: the boar-kind of Eldryn Forest'
+start: s0
+reward_xp: 312
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: eldryn_forest_zone|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: eldryn_forest_zone|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: eldryn_forest_zone|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: eldryn_forest_zone|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: eldryn_forest_zone|boar
+- state: s5
+  event: cull
+  to: s6
+  on_cull: eldryn_forest_zone|boar
+- state: s6
+  event: cull
+  to: s7
+  on_cull: eldryn_forest_zone|boar
+- state: s7
+  event: cull
+  to: s8
+  on_cull: eldryn_forest_zone|boar
+- state: s8
+  event: cull
+  to: s9
+  on_cull: eldryn_forest_zone|boar
+- state: s9
+  event: cull
+  to: s10
+  on_cull: eldryn_forest_zone|boar
+- state: s10
+  event: cull
+  to: s11
+  on_cull: eldryn_forest_zone|boar
+- state: s11
+  event: cull
+  to: done
+  on_cull: eldryn_forest_zone|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the boar-kind of Eldryn Forest: 0/12 down (312 XP).'
+  s1: 'Reckon with the boar-kind of Eldryn Forest: 1/12 down (312 XP).'
+  s2: 'Reckon with the boar-kind of Eldryn Forest: 2/12 down (312 XP).'
+  s3: 'Reckon with the boar-kind of Eldryn Forest: 3/12 down (312 XP).'
+  s4: 'Reckon with the boar-kind of Eldryn Forest: 4/12 down (312 XP).'
+  s5: 'Reckon with the boar-kind of Eldryn Forest: 5/12 down (312 XP).'
+  s6: 'Reckon with the boar-kind of Eldryn Forest: 6/12 down (312 XP).'
+  s7: 'Reckon with the boar-kind of Eldryn Forest: 7/12 down (312 XP).'
+  s8: 'Reckon with the boar-kind of Eldryn Forest: 8/12 down (312 XP).'
+  s9: 'Reckon with the boar-kind of Eldryn Forest: 9/12 down (312 XP).'
+  s10: 'Reckon with the boar-kind of Eldryn Forest: 10/12 down (312 XP).'
+  s11: 'Reckon with the boar-kind of Eldryn Forest: 11/12 down (312 XP).'
+  done: The boar-kind of Eldryn Forest are settled with. The wardens of the wood send
+    their thanks.

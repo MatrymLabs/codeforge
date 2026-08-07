@@ -1,0 +1,47 @@
+id: cull_underground_frostspire_peaks_underworks_revenant_6
+name: 'A small Thinning: the revenant-kind of The Glacial Bastion Foundations'
+start: s0
+reward_xp: 192
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_frostspire_peaks_underworks|revenant
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_frostspire_peaks_underworks|revenant
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_frostspire_peaks_underworks|revenant
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_frostspire_peaks_underworks|revenant
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_frostspire_peaks_underworks|revenant
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_frostspire_peaks_underworks|revenant
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 0/6 down (192
+    XP).'
+  s1: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 1/6 down (192
+    XP).'
+  s2: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 2/6 down (192
+    XP).'
+  s3: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 3/6 down (192
+    XP).'
+  s4: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 4/6 down (192
+    XP).'
+  s5: 'Thin out the revenant-kind of The Glacial Bastion Foundations: 5/6 down (192
+    XP).'
+  done: The revenant-kind of The Glacial Bastion Foundations are thinned back. The
+    high passes will hold a little longer.

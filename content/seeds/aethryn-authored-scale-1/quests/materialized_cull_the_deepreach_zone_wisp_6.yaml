@@ -1,0 +1,41 @@
+id: cull_the_deepreach_zone_wisp_6
+name: 'A small Reckoning: the wisp-kind of The Deepreach'
+start: s0
+reward_xp: 498
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: the_deepreach_zone|wisp
+- state: s1
+  event: cull
+  to: s2
+  on_cull: the_deepreach_zone|wisp
+- state: s2
+  event: cull
+  to: s3
+  on_cull: the_deepreach_zone|wisp
+- state: s3
+  event: cull
+  to: s4
+  on_cull: the_deepreach_zone|wisp
+- state: s4
+  event: cull
+  to: s5
+  on_cull: the_deepreach_zone|wisp
+- state: s5
+  event: cull
+  to: done
+  on_cull: the_deepreach_zone|wisp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the wisp-kind of The Deepreach: 0/6 down (498 XP).'
+  s1: 'Reckon with the wisp-kind of The Deepreach: 1/6 down (498 XP).'
+  s2: 'Reckon with the wisp-kind of The Deepreach: 2/6 down (498 XP).'
+  s3: 'Reckon with the wisp-kind of The Deepreach: 3/6 down (498 XP).'
+  s4: 'Reckon with the wisp-kind of The Deepreach: 4/6 down (498 XP).'
+  s5: 'Reckon with the wisp-kind of The Deepreach: 5/6 down (498 XP).'
+  done: The wisp-kind of The Deepreach are settled with. The ash-tracks are a shade
+    safer.

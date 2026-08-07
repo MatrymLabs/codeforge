@@ -1,0 +1,15 @@
+id: bounty_eldryn_forest_lord_3
+name: 'Bounty: Hrothka the Timber Maw'
+start: posted
+reward_xp: 624
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: eldryn_forest_lord_3
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothka the Timber Maw (level 52). Fell it for 624 XP.
+  collected: 'Bounty collected: Hrothka the Timber Maw is felled. Well hunted.'

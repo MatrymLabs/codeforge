@@ -15,8 +15,17 @@ a `take` uses; it mutates no world state of its own beyond the swap it is asked 
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 
+from kernel.world.aethryn_models import content_digest
+from kernel.world.economy_transactions import (
+    CurrencyTransfer,
+    EconomyTransactionService,
+    ItemTransfer,
+    SqlTransactionStore,
+    TransactionError,
+    TransactionRequest,
+)
 from kernel.world.events import announce_to
 from kernel.world.items import ITEMS, carrier, items_in, trace_item
 from kernel.world.session import SESSIONS, display_name
@@ -184,13 +193,45 @@ def _execute(trade: Trade) -> str:
         session = SESSIONS[owner_id]
         if offer.coins > session.coins:
             return _abort(trade, "The trade fails: the coin is no longer there.")
-    # Everything validated. Apply the swap in one pass; no partial state is possible now.
+    # Everything validated. Commit the bidirectional swap through the durable transaction
+    # boundary; the session/item maps are only projections updated after the receipt is accepted.
+    currency_legs = tuple(
+        CurrencyTransfer(giver, receiver, trade.offers[giver].coins, "player_trade")
+        for giver, receiver in ((a, b), (b, a))
+        if trade.offers[giver].coins
+    )
+    item_legs = tuple(
+        ItemTransfer(iid, carrier(giver), carrier(receiver))
+        for giver, receiver in ((a, b), (b, a))
+        for iid in trade.offers[giver].items
+    )
+    wallets = {a: SESSIONS[a].coins, b: SESSIONS[b].coins}
+    owners = {iid: item.get("location", "") for iid, item in ITEMS.items()}
+    transaction_id = content_digest(
+        {
+            "trade": (a, b),
+            "currency": [asdict(leg) for leg in currency_legs],
+            "items": [asdict(leg) for leg in item_legs],
+        }
+    )[:32]
+    request = TransactionRequest(
+        transaction_id=f"trade-{transaction_id}",
+        idempotency_key=f"trade-{transaction_id}",
+        actor=a,
+        reason="player_trade",
+        currency_transfers=currency_legs,
+        item_transfers=item_legs,
+    )
+    try:
+        EconomyTransactionService(SqlTransactionStore()).execute(
+            request, wallets=wallets, item_owners=owners
+        )
+    except TransactionError as exc:
+        return _abort(trade, f"The trade fails: {exc}")
     for giver, receiver in ((a, b), (b, a)):
-        offer = trade.offers[giver]
-        for iid in offer.items:
+        SESSIONS[giver].coins = wallets[giver]
+        for iid in trade.offers[giver].items:
             ITEMS[iid]["location"] = carrier(receiver)
-        SESSIONS[giver].coins -= offer.coins
-        SESSIONS[receiver].coins += offer.coins
     _TRADES.pop(a, None)
     _TRADES.pop(b, None)
     announce_to([a, b], "\nThe trade is sealed. The goods change hands.")

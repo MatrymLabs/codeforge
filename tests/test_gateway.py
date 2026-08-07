@@ -124,9 +124,7 @@ def _live_runtime(path, seed_id, consumer, ledger_path, *, activate=True):
         now + timedelta(minutes=30),
         f"corr-{seed_id}",
         roles=frozenset({"operator"}),
-        capabilities=frozenset(
-            {"component.activate", "component.restore", "component.disable"}
-        ),
+        capabilities=frozenset({"component.activate", "component.restore", "component.disable"}),
     )
     policy = PermissionPolicy(
         tuple(
@@ -840,9 +838,7 @@ def test_an_owner_login_pushes_live_engineering_evidence(server, tmp_path, monke
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     kernel = SeedKernel(configured_seed_store(tmp_path))
-    kernel.create_seed(
-        "First Forge", "matrym", "live evidence proof", seed_id="first-forge"
-    )
+    kernel.create_seed("First Forge", "matrym", "live evidence proof", seed_id="first-forge")
     CreatorWorkshopService.durable(tmp_path / "workshop").create_draft(
         "gateway-draft", "first-forge", "matrym", {"command": "inspect"}
     )
@@ -1336,9 +1332,7 @@ def test_live_gateway_runtime_reports_restart_recovery_and_independent_seed_bind
     _hardware, aethryn_runtime, identity, policy = _live_runtime(
         aethryn_path, "aethryn", "aethryn", ledger
     )
-    first = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, hardware_runtime=aethryn_runtime
-    )
+    first = ForgeGateServer(("127.0.0.1", 0), _GateHandler, hardware_runtime=aethryn_runtime)
     threading.Thread(target=first.serve_forever, daemon=True).start()
     try:
         _saved_account("runtimeaethryn", "runtimeaethrynco")
@@ -1363,9 +1357,7 @@ def test_live_gateway_runtime_reports_restart_recovery_and_independent_seed_bind
     recovered_runtime.restore_active(
         "validator", identity=identity, policy=policy, now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC)
     )
-    restarted = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, hardware_runtime=recovered_runtime
-    )
+    restarted = ForgeGateServer(("127.0.0.1", 0), _GateHandler, hardware_runtime=recovered_runtime)
     threading.Thread(target=restarted.serve_forever, daemon=True).start()
     try:
         _saved_account("runtimerestart", "runtimerestartco")
@@ -1384,9 +1376,7 @@ def test_live_gateway_runtime_reports_restart_recovery_and_independent_seed_bind
     _forge_hardware, forge_runtime, _forge_identity, _forge_policy = _live_runtime(
         tmp_path / "first-forge-hardware.json", "first-forge", "first-forge", ledger
     )
-    second = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, hardware_runtime=forge_runtime
-    )
+    second = ForgeGateServer(("127.0.0.1", 0), _GateHandler, hardware_runtime=forge_runtime)
     threading.Thread(target=second.serve_forever, daemon=True).start()
     try:
         _saved_account("runtimeforge", "runtimeforgeco")
@@ -1499,6 +1489,7 @@ def test_character_location_survives_gateway_restart(tmp_path):
 
     from kernel.world.jobs import bind_calling
     from kernel.world.world import START_ROOM, WORLD
+
     expected_destination = WORLD[WORLD[START_ROOM]["exits"]["north"]]["name"]
 
     token = uuid4().hex[:6]
@@ -1514,9 +1505,7 @@ def test_character_location_survives_gateway_restart(tmp_path):
     adopt(character, account)
 
     registry = FileSessionRegistry(tmp_path / "sessions")
-    first = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    first = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=first.serve_forever, daemon=True).start()
     try:
         sock = _login(first, character, account, password, timeout=30.0)
@@ -1529,9 +1518,7 @@ def test_character_location_survives_gateway_restart(tmp_path):
         first.shutdown()
         first.server_close()
 
-    second = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    second = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=second.serve_forever, daemon=True).start()
     try:
         sock = _login(second, character, account, password, timeout=30.0)
@@ -1560,9 +1547,7 @@ def test_live_aethryn_entry_navigation_combat_progression_and_restart(tmp_path):
     account = f"journey{token}co"
     registry = FileSessionRegistry(tmp_path / "sessions")
 
-    first = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    first = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=first.serve_forever, daemon=True).start()
     try:
         sock = _connect(first)
@@ -1613,9 +1598,7 @@ def test_live_aethryn_entry_navigation_combat_progression_and_restart(tmp_path):
     assert saved["job"] == "vanguard"
     assert saved["appearance"]
 
-    second = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    second = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=second.serve_forever, daemon=True).start()
     try:
         sock = _login(second, character, account, "swordfish9", timeout=30.0)
@@ -1663,9 +1646,7 @@ def test_live_aethryn_technique_item_equipment_social_and_exactly_once(tmp_path)
     adopt(friend, friend_account)
 
     registry = FileSessionRegistry(tmp_path / "sessions")
-    server = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    server = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     first_sock = None
     second_sock = None
@@ -1725,9 +1706,7 @@ def test_live_aethryn_technique_item_equipment_social_and_exactly_once(tmp_path)
     assert "cinder_hammer" in saved["equipped_gear"]
     assert saved["location"] == "the_sunken_barrow"
 
-    restarted = ForgeGateServer(
-        ("127.0.0.1", 0), _GateHandler, session_registry=registry
-    )
+    restarted = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
     threading.Thread(target=restarted.serve_forever, daemon=True).start()
     try:
         sock = _login(restarted, character, account, password, timeout=30.0)

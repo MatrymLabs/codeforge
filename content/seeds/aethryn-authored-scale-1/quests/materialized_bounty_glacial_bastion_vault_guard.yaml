@@ -1,0 +1,16 @@
+id: bounty_glacial_bastion_vault_guard
+name: 'Bounty: Hrothune the Glacier Scourge'
+start: posted
+reward_xp: 1116
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: glacial_bastion_vault_guard
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothune the Glacier Scourge (level 93). Fell it for
+    1116 XP.
+  collected: 'Bounty collected: Hrothune the Glacier Scourge is felled. Well hunted.'

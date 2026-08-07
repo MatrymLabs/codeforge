@@ -1,0 +1,41 @@
+id: cull_field_veridia_boar_6
+name: 'A small Purge: the boar-kind of The Veridia Wilds'
+start: s0
+reward_xp: 60
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_veridia|boar
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_veridia|boar
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_veridia|boar
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_veridia|boar
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_veridia|boar
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_veridia|boar
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the boar-kind of The Veridia Wilds: 0/6 down (60 XP).'
+  s1: 'Purge the boar-kind of The Veridia Wilds: 1/6 down (60 XP).'
+  s2: 'Purge the boar-kind of The Veridia Wilds: 2/6 down (60 XP).'
+  s3: 'Purge the boar-kind of The Veridia Wilds: 3/6 down (60 XP).'
+  s4: 'Purge the boar-kind of The Veridia Wilds: 4/6 down (60 XP).'
+  s5: 'Purge the boar-kind of The Veridia Wilds: 5/6 down (60 XP).'
+  done: The boar-kind of The Veridia Wilds are purged. The farm-roads are the safer
+    for it.

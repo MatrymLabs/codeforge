@@ -1,0 +1,111 @@
+id: cull_underground_the_voidscar_caves_wisp_20
+name: 'A great Purge: the wisp-kind of Voidscar Fracture Caves'
+start: s0
+reward_xp: 1940
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s11
+  event: cull
+  to: s12
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s12
+  event: cull
+  to: s13
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s13
+  event: cull
+  to: s14
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s14
+  event: cull
+  to: s15
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s15
+  event: cull
+  to: s16
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s16
+  event: cull
+  to: s17
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s17
+  event: cull
+  to: s18
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s18
+  event: cull
+  to: s19
+  on_cull: underground_the_voidscar_caves|wisp
+- state: s19
+  event: cull
+  to: done
+  on_cull: underground_the_voidscar_caves|wisp
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the wisp-kind of Voidscar Fracture Caves: 0/20 down (1940 XP).'
+  s1: 'Purge the wisp-kind of Voidscar Fracture Caves: 1/20 down (1940 XP).'
+  s2: 'Purge the wisp-kind of Voidscar Fracture Caves: 2/20 down (1940 XP).'
+  s3: 'Purge the wisp-kind of Voidscar Fracture Caves: 3/20 down (1940 XP).'
+  s4: 'Purge the wisp-kind of Voidscar Fracture Caves: 4/20 down (1940 XP).'
+  s5: 'Purge the wisp-kind of Voidscar Fracture Caves: 5/20 down (1940 XP).'
+  s6: 'Purge the wisp-kind of Voidscar Fracture Caves: 6/20 down (1940 XP).'
+  s7: 'Purge the wisp-kind of Voidscar Fracture Caves: 7/20 down (1940 XP).'
+  s8: 'Purge the wisp-kind of Voidscar Fracture Caves: 8/20 down (1940 XP).'
+  s9: 'Purge the wisp-kind of Voidscar Fracture Caves: 9/20 down (1940 XP).'
+  s10: 'Purge the wisp-kind of Voidscar Fracture Caves: 10/20 down (1940 XP).'
+  s11: 'Purge the wisp-kind of Voidscar Fracture Caves: 11/20 down (1940 XP).'
+  s12: 'Purge the wisp-kind of Voidscar Fracture Caves: 12/20 down (1940 XP).'
+  s13: 'Purge the wisp-kind of Voidscar Fracture Caves: 13/20 down (1940 XP).'
+  s14: 'Purge the wisp-kind of Voidscar Fracture Caves: 14/20 down (1940 XP).'
+  s15: 'Purge the wisp-kind of Voidscar Fracture Caves: 15/20 down (1940 XP).'
+  s16: 'Purge the wisp-kind of Voidscar Fracture Caves: 16/20 down (1940 XP).'
+  s17: 'Purge the wisp-kind of Voidscar Fracture Caves: 17/20 down (1940 XP).'
+  s18: 'Purge the wisp-kind of Voidscar Fracture Caves: 18/20 down (1940 XP).'
+  s19: 'Purge the wisp-kind of Voidscar Fracture Caves: 19/20 down (1940 XP).'
+  done: The wisp-kind of Voidscar Fracture Caves are purged. The ash-tracks are a
+    shade safer.

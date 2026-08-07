@@ -1,0 +1,15 @@
+id: errand_greenhold
+name: 'Errand: The Sunken Barrow'
+start: posted
+reward_xp: 15
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_sunken_barrow
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to The Sunken Barrow (15 XP).
+  done: You reach The Sunken Barrow and mark the way. Well scouted.

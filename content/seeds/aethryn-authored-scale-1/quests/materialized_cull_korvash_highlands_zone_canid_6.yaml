@@ -1,0 +1,40 @@
+id: cull_korvash_highlands_zone_canid_6
+name: 'A small Bounty: the canid-kind of Korvash Highlands'
+start: s0
+reward_xp: 396
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: korvash_highlands_zone|canid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: korvash_highlands_zone|canid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: korvash_highlands_zone|canid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: korvash_highlands_zone|canid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: korvash_highlands_zone|canid
+- state: s5
+  event: cull
+  to: done
+  on_cull: korvash_highlands_zone|canid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the canid-kind of Korvash Highlands: 0/6 down (396 XP).'
+  s1: 'Bring down the canid-kind of Korvash Highlands: 1/6 down (396 XP).'
+  s2: 'Bring down the canid-kind of Korvash Highlands: 2/6 down (396 XP).'
+  s3: 'Bring down the canid-kind of Korvash Highlands: 3/6 down (396 XP).'
+  s4: 'Bring down the canid-kind of Korvash Highlands: 4/6 down (396 XP).'
+  s5: 'Bring down the canid-kind of Korvash Highlands: 5/6 down (396 XP).'
+  done: The canid-kind of Korvash Highlands are hunted down. The region breathes easier.

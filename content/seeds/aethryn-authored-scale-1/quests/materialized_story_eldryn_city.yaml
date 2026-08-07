@@ -1,0 +1,26 @@
+id: story_eldryn_city
+name: The Tale of Eldryn City
+start: afoot
+reward_xp: 2000
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: rotwood_deep
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: rotwood_deep_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: eldryn_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Eldryn Forest: Rotwood Deep festers, and Eldryn City lives in
+    its shadow.'
+  at_heart: You stand within Rotwood Deep. Its deep terror waits below. Fell it.
+  homeward: The terror of Rotwood Deep is slain. Bear word to Eldryn City (2000 XP).
+  done: '*** Eldryn City breathes free. Eldryn Forest will remember you. ***'

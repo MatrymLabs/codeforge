@@ -1,0 +1,21 @@
+id: delivery_stonefang_keep
+name: 'Delivery: Stonefang Keep to Ashen Monoliths'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_stonefang_keep
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: ashen_monoliths
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Stonefang Keep is bound for Ashen Monoliths. Take it up (1200
+    XP).
+  carrying: Carry the parcel to Ashen Monoliths.
+  done: The parcel is delivered to Ashen Monoliths. The road keeps its promise.

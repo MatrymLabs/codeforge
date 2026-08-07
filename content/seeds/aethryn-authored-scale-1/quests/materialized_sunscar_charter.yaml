@@ -1,0 +1,28 @@
+id: sunscar_charter
+name: The Buried Charter
+start: offered
+reward_xp: 85
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: sunscar_guild
+- state: accepted
+  event: take
+  to: recovered
+  on_take: sunscar_charter_seal
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:gathering:30
+  on_enter: sunscar_guild
+terminal:
+- done
+labels:
+  offered: In Sunscar City, the Diggers' Guild has need of a hand that can walk in
+    glass. Step into the guild-hall and hear the master.
+  accepted: Descend into the glass vault of the buried city and recover the guild's
+    charter-seal (mind what the glass still holds).
+  recovered: Carry the charter-seal back UP to Guild-Master Ravi in the guild-hall.
+  done: '*** The charter-seal is back at the shaft-head, and the digs are licensed
+    and orderly again. The Guild will remember the favour. ***'

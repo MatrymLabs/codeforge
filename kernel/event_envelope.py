@@ -111,9 +111,7 @@ class EventEnvelope:
             raise EventEnvelopeError("localization_key must be a string")
         channel = _required_text(self.semantic_channel, "semantic_channel")
         if channel not in SEMANTIC_CHANNELS:
-            raise EventEnvelopeError(
-                f"semantic_channel must be one of {sorted(SEMANTIC_CHANNELS)}"
-            )
+            raise EventEnvelopeError(f"semantic_channel must be one of {sorted(SEMANTIC_CHANNELS)}")
         object.__setattr__(self, "semantic_channel", channel)
 
     def to_dict(self) -> dict[str, object]:

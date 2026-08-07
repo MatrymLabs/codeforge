@@ -1,0 +1,40 @@
+id: cull_skyward_spires_zone_hound_6
+name: 'A small Purge: the hound-kind of Skyward Spires'
+start: s0
+reward_xp: 498
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: skyward_spires_zone|hound
+- state: s1
+  event: cull
+  to: s2
+  on_cull: skyward_spires_zone|hound
+- state: s2
+  event: cull
+  to: s3
+  on_cull: skyward_spires_zone|hound
+- state: s3
+  event: cull
+  to: s4
+  on_cull: skyward_spires_zone|hound
+- state: s4
+  event: cull
+  to: s5
+  on_cull: skyward_spires_zone|hound
+- state: s5
+  event: cull
+  to: done
+  on_cull: skyward_spires_zone|hound
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Purge the hound-kind of Skyward Spires: 0/6 down (498 XP).'
+  s1: 'Purge the hound-kind of Skyward Spires: 1/6 down (498 XP).'
+  s2: 'Purge the hound-kind of Skyward Spires: 2/6 down (498 XP).'
+  s3: 'Purge the hound-kind of Skyward Spires: 3/6 down (498 XP).'
+  s4: 'Purge the hound-kind of Skyward Spires: 4/6 down (498 XP).'
+  s5: 'Purge the hound-kind of Skyward Spires: 5/6 down (498 XP).'
+  done: The hound-kind of Skyward Spires are purged. The region breathes easier.

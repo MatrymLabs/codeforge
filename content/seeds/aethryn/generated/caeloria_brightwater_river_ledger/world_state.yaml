@@ -1,0 +1,20 @@
+brightwater.sluice_status:
+  initial_value: ticking
+  reversible_values:
+  - ticking
+  - quiet
+  visible_projection: The buried flow-gates remain {value} behind the flooded channels.
+  persistence_scope: character_and_world_package
+  room_id: brightwater_sluice
+  actions:
+  - command: maintain
+    target: sluice
+    aliases:
+    - old sluice
+    - flow-gates
+    required_item: brightwater_sluice_token
+    from: ticking
+    to: quiet
+    success_message: You set the recovered sluice-token into the old control and the
+      buried flow-gates settle quiet behind the water.
+    already_message: The buried flow-gates are already quiet.

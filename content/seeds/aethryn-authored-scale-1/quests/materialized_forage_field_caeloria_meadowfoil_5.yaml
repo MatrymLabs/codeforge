@@ -1,0 +1,36 @@
+id: forage_field_caeloria_meadowfoil_5
+name: 'A small Collection: meadowfoil of The Caeloria Wilds'
+start: s0
+reward_xp: 75
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_caeloria|meadowfoil
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_caeloria|meadowfoil
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_caeloria|meadowfoil
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_caeloria|meadowfoil
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_caeloria|meadowfoil
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect meadowfoil in The Caeloria Wilds: 0/5 (75 XP).'
+  s1: 'Collect meadowfoil in The Caeloria Wilds: 1/5 (75 XP).'
+  s2: 'Collect meadowfoil in The Caeloria Wilds: 2/5 (75 XP).'
+  s3: 'Collect meadowfoil in The Caeloria Wilds: 3/5 (75 XP).'
+  s4: 'Collect meadowfoil in The Caeloria Wilds: 4/5 (75 XP).'
+  done: You have brought in meadowfoil enough for The Caeloria Wilds. The village
+    makers will put it to use.

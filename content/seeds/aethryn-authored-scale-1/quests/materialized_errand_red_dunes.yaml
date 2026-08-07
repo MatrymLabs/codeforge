@@ -1,0 +1,15 @@
+id: errand_red_dunes
+name: 'Errand: Xil''nath Jungle'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: xilnath_jungle
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Xil'nath Jungle (1200 XP).
+  done: You set the token at Xil'nath Jungle. The stone answers.

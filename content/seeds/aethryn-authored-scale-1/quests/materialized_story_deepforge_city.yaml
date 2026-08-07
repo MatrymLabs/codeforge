@@ -1,0 +1,28 @@
+id: story_deepforge_city
+name: The Tale of Deepforge City
+start: afoot
+reward_xp: 6250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_crystal_labyrinth
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_crystal_labyrinth_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: deepforge_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of The Deepreach: The Crystal Labyrinth festers, and Deepforge City
+    lives in its shadow.'
+  at_heart: You stand within The Crystal Labyrinth. Its deep terror waits below. Fell
+    it.
+  homeward: The terror of The Crystal Labyrinth is slain. Bear word to Deepforge City
+    (6250 XP).
+  done: '*** Deepforge City breathes free. The Deepreach will remember you. ***'

@@ -1,0 +1,77 @@
+# SEED: aethryn -- professions.yaml (the maker's trades)
+#
+# A profession is a data-driven skill TRACK you level by DOING: gather a material a trade works, or
+# craft a recipe it knows, and that trade's skill climbs. Professions are distinct from the combat
+# callings (jobs.yaml) -- a hero swears to one calling but may practice many trades. Skill persists
+# per character; level recomputes from earned practice on restore (derive, don't store).
+#
+# Each trade names its `kind` (gather | craft) and what it governs: a GATHER trade lists the
+# material prototypes it `works` (items.yaml); a CRAFT trade lists the recipe labels it `makes`
+# (recipes.yaml). Every recipe belongs to exactly one craft trade, and every gatherable material to
+# one gather trade -- the conformance test pins it, so nothing a maker does goes unclaimed.
+
+# --- Gathering trades (advance on `gather`) ---
+prospecting:
+  name: Prospecting
+  kind: gather
+  works: [ember_shard]
+mining:
+  name: Mining
+  kind: gather
+  works: [raw_ore, hollow_ingot, cinderium]
+herbalism:
+  name: Herbalism
+  kind: gather
+  works: [meadowfoil, fernshade, moorbell, saltkelp, frostmoss, cinderroot, vinesilk, dustbloom]
+
+# --- Crafting trades (advance on `craft`) ---
+smithing:
+  name: Smithing
+  kind: craft
+  makes:
+    - forge_a_hammer
+    - forge_plate
+    - forge_reaver_blade
+    - forge_reachlord_signet
+    - smelt_wrought_ingot
+    - forge_iron_fitting
+    - assemble_travelers_buckler
+leatherworking:
+  name: Leatherworking
+  kind: craft
+  makes:
+    - stitch_emberhide_hood
+    - stitch_emberhide_jerkin
+    - stitch_emberhide_wraps
+    - tan_leather
+    - stitch_hide_jerkin
+    - harden_scale
+    - forge_scale_bracer
+alchemy:
+  name: Alchemy
+  kind: craft
+  makes:
+    - field_draught
+    - focusing_draught
+    - brew_greater_healing
+    - brew_grand_healing
+    - brew_greater_mana
+    - brew_grand_mana
+    - brew_forgefire_elixir
+    - meadowfoil_salve
+    - fernshade_salve
+    - moorbell_salve
+    - saltkelp_salve
+    - frostmoss_salve
+    - cinderroot_salve
+    - vinesilk_salve
+    - dustbloom_salve
+    - distil_meadowfoil_reagent
+    - distil_fernshade_reagent
+    - distil_moorbell_reagent
+    - distil_saltkelp_reagent
+    - distil_frostmoss_reagent
+    - distil_cinderroot_reagent
+    - distil_vinesilk_reagent
+    - distil_dustbloom_reagent
+    - brew_restorative_tonic

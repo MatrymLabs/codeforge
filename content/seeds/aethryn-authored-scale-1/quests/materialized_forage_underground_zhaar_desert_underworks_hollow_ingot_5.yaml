@@ -1,0 +1,36 @@
+id: forage_underground_zhaar_desert_underworks_hollow_ingot_5
+name: 'A small Forage: hollow ingot of The Obsidian Pit Galleries'
+start: s0
+reward_xp: 170
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_zhaar_desert_underworks|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_zhaar_desert_underworks|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_zhaar_desert_underworks|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_zhaar_desert_underworks|hollow_ingot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_zhaar_desert_underworks|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Gather hollow ingot in The Obsidian Pit Galleries: 0/5 (170 XP).'
+  s1: 'Gather hollow ingot in The Obsidian Pit Galleries: 1/5 (170 XP).'
+  s2: 'Gather hollow ingot in The Obsidian Pit Galleries: 2/5 (170 XP).'
+  s3: 'Gather hollow ingot in The Obsidian Pit Galleries: 3/5 (170 XP).'
+  s4: 'Gather hollow ingot in The Obsidian Pit Galleries: 4/5 (170 XP).'
+  done: You have gathered hollow ingot enough for The Obsidian Pit Galleries. The
+    caravan traders will pay well for it.

@@ -1,0 +1,15 @@
+id: errand_the_maelstrom_rise
+name: 'Errand: The Deepreach'
+start: posted
+reward_xp: 2700
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_deepreach
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to The Deepreach (2700 XP).
+  done: You set the token at The Deepreach. The stone answers.

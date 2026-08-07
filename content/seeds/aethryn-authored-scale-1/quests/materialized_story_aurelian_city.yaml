@@ -1,0 +1,27 @@
+id: story_aurelian_city
+name: The Tale of Aurelian City
+start: afoot
+reward_xp: 6250
+steps:
+- state: afoot
+  event: reach
+  to: at_heart
+  on_enter: the_spire_nexus
+- state: at_heart
+  event: slay
+  to: homeward
+  on_defeat: the_spire_nexus_deep_boss
+- state: homeward
+  event: deliver
+  to: done
+  on_enter: aurelian_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  afoot: 'A tale of Skyward Spires: The Spire Nexus festers, and Aurelian City lives
+    in its shadow.'
+  at_heart: You stand within The Spire Nexus. Its deep terror waits below. Fell it.
+  homeward: The terror of The Spire Nexus is slain. Bear word to Aurelian City (6250
+    XP).
+  done: '*** Aurelian City breathes free. Skyward Spires will remember you. ***'

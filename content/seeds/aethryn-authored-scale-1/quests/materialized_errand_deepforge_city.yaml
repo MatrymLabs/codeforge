@@ -1,0 +1,15 @@
+id: errand_deepforge_city
+name: 'Errand: The Voidscar'
+start: posted
+reward_xp: 1500
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: the_voidscar
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to The Voidscar (1500 XP).
+  done: You set the token at The Voidscar. The stone answers.

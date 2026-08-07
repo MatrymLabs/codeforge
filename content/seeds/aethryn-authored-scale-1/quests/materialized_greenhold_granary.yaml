@@ -1,0 +1,28 @@
+id: greenhold_granary
+name: The Granary's Thirst
+start: offered
+reward_xp: 40
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: greenhold_granary
+- state: accepted
+  event: take
+  to: recovered
+  on_take: greenhold_valve_key
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:making:20
+  on_enter: greenhold_granary
+terminal:
+- done
+labels:
+  offered: Somewhere in Greenhold, a keeper needs a hand. Step into the granary and
+    hear her out.
+  accepted: Keeper Wenna's cistern has failed. Go DOWN into the undercroft and take
+    the valve-key (mind the vermin).
+  recovered: Carry the valve-key back UP to Keeper Wenna in the granary.
+  done: '*** The valve turns, and clean water wakes in the old fountain. Greenhold
+    will not go thirsty. ***'

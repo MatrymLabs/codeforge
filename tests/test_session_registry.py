@@ -68,13 +68,9 @@ def test_registry_rejects_authority_substitution_and_expired_resume(tmp_path: Pa
     registry = _registry(tmp_path)
     registry.issue(identity)
     with pytest.raises(SessionRegistryError, match="different authority"):
-        registry.issue(
-            SessionIdentity.from_dict({**identity.to_dict(), "seed_id": "other"})
-        )
+        registry.issue(SessionIdentity.from_dict({**identity.to_dict(), "seed_id": "other"}))
     with pytest.raises(SessionRegistryError, match="expired"):
-        registry.resume(
-            identity.session_id, now=datetime(2026, 8, 5, 0, 11, tzinfo=UTC)
-        )
+        registry.resume(identity.session_id, now=datetime(2026, 8, 5, 0, 11, tzinfo=UTC))
 
 
 def test_renewal_preserves_authority_and_is_durable(tmp_path: Path) -> None:
@@ -94,9 +90,7 @@ def test_renewal_preserves_authority_and_is_durable(tmp_path: Path) -> None:
     assert renewed.capabilities == identity.capabilities
     assert renewed.expires_at == datetime(2026, 8, 5, 0, 25, tzinfo=UTC)
     assert (
-        _registry(tmp_path).resume(
-            identity.session_id, now=datetime(2026, 8, 5, 0, 6, tzinfo=UTC)
-        )
+        _registry(tmp_path).resume(identity.session_id, now=datetime(2026, 8, 5, 0, 6, tzinfo=UTC))
         == renewed
     )
     assert [entry["action"] for entry in registry.audit.all_records()] == [  # type: ignore[union-attr]

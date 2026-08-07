@@ -60,8 +60,7 @@ class Settings(BaseModel):
                 database_url=e.get("DATABASE_URL", "").strip(),
                 codeforge_db=e.get("CODEFORGE_DB", "").strip(),
                 seed=e.get("FORGE_SEED", "").strip(),
-                seed_registry_backend=e.get("CODEFORGE_SEED_REGISTRY", "file").strip()
-                or "file",
+                seed_registry_backend=e.get("CODEFORGE_SEED_REGISTRY", "file").strip() or "file",
                 anthropic_key_present=bool(e.get("ANTHROPIC_API_KEY", "").strip()),
             )
         except ValidationError as exc:

@@ -1,0 +1,71 @@
+id: cull_underground_duskwood_vale_underworks_insectoid_12
+name: 'A standing Cull: the insectoid-kind of The Black Root Below'
+start: s0
+reward_xp: 216
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_duskwood_vale_underworks|insectoid
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_duskwood_vale_underworks|insectoid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Cull the insectoid-kind of The Black Root Below: 0/12 down (216 XP).'
+  s1: 'Cull the insectoid-kind of The Black Root Below: 1/12 down (216 XP).'
+  s2: 'Cull the insectoid-kind of The Black Root Below: 2/12 down (216 XP).'
+  s3: 'Cull the insectoid-kind of The Black Root Below: 3/12 down (216 XP).'
+  s4: 'Cull the insectoid-kind of The Black Root Below: 4/12 down (216 XP).'
+  s5: 'Cull the insectoid-kind of The Black Root Below: 5/12 down (216 XP).'
+  s6: 'Cull the insectoid-kind of The Black Root Below: 6/12 down (216 XP).'
+  s7: 'Cull the insectoid-kind of The Black Root Below: 7/12 down (216 XP).'
+  s8: 'Cull the insectoid-kind of The Black Root Below: 8/12 down (216 XP).'
+  s9: 'Cull the insectoid-kind of The Black Root Below: 9/12 down (216 XP).'
+  s10: 'Cull the insectoid-kind of The Black Root Below: 10/12 down (216 XP).'
+  s11: 'Cull the insectoid-kind of The Black Root Below: 11/12 down (216 XP).'
+  done: The insectoid-kind of The Black Root Below are thinned. The wardens of the
+    wood send their thanks.

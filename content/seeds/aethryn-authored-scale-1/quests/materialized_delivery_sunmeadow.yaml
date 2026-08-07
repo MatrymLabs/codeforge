@@ -1,0 +1,20 @@
+id: delivery_sunmeadow
+name: 'Delivery: Sunmeadow to Moonshade'
+start: posted
+reward_xp: 12
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_sunmeadow
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: moonshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Sunmeadow is bound for Moonshade. Take it up (12 XP).
+  carrying: Carry the parcel to Moonshade.
+  done: The parcel is delivered to Moonshade. The road keeps its promise.

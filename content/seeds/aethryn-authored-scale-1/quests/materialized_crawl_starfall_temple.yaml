@@ -1,0 +1,21 @@
+id: crawl_starfall_temple
+name: 'Descent: Starfall Temple'
+start: above
+reward_xp: 1200
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: starfall_temple
+- state: delving
+  event: reach
+  to: done
+  on_enter: starfall_temple_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of Starfall Temple. Cross its mouth and
+    descend.
+  delving: You are within Starfall Temple. Press on to its deepest chamber.
+  done: You have reached the heart of Starfall Temple and lived. Few can (1200 XP).

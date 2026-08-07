@@ -1,0 +1,36 @@
+id: forage_underground_the_voidscar_underworks_cinderroot_5
+name: 'A small Requisition: cinderroot of The God-Mirror Approach'
+start: s0
+reward_xp: 375
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_the_voidscar_underworks|cinderroot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_the_voidscar_underworks|cinderroot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_the_voidscar_underworks|cinderroot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_the_voidscar_underworks|cinderroot
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_the_voidscar_underworks|cinderroot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in cinderroot in The God-Mirror Approach: 0/5 (375 XP).'
+  s1: 'Bring in cinderroot in The God-Mirror Approach: 1/5 (375 XP).'
+  s2: 'Bring in cinderroot in The God-Mirror Approach: 2/5 (375 XP).'
+  s3: 'Bring in cinderroot in The God-Mirror Approach: 3/5 (375 XP).'
+  s4: 'Bring in cinderroot in The God-Mirror Approach: 4/5 (375 XP).'
+  done: You have requisitioned cinderroot enough for The God-Mirror Approach. The
+    forge-crews can feed the fires now.

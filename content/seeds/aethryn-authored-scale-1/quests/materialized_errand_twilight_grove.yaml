@@ -1,0 +1,15 @@
+id: errand_twilight_grove
+name: 'Errand: Starfall Temple'
+start: posted
+reward_xp: 300
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: starfall_temple
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Starfall Temple (300 XP).
+  done: You reach Starfall Temple and mark the way. Well scouted.

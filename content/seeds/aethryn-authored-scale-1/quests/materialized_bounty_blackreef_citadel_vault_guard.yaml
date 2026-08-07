@@ -1,0 +1,16 @@
+id: bounty_blackreef_citadel_vault_guard
+name: 'Bounty: Hrothune the Tide Scourge'
+start: posted
+reward_xp: 2796
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: blackreef_citadel_vault_guard
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Hrothune the Tide Scourge (level 233). Fell it for 2796
+    XP.
+  collected: 'Bounty collected: Hrothune the Tide Scourge is felled. Well hunted.'

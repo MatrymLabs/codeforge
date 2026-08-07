@@ -1,0 +1,83 @@
+id: cull_underground_caeloria_caves_razorback_12
+name: 'A standing Warrant: the razorback-kind of Caeloria''s Sealed Aqueducts'
+start: s0
+reward_xp: 216
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_caves|razorback
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_caves|razorback
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_caves|razorback
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_caves|razorback
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_caves|razorback
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_caeloria_caves|razorback
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_caeloria_caves|razorback
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_caeloria_caves|razorback
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_caeloria_caves|razorback
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_caeloria_caves|razorback
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_caeloria_caves|razorback
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_caeloria_caves|razorback
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 0/12
+    down (216 XP).'
+  s1: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 1/12
+    down (216 XP).'
+  s2: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 2/12
+    down (216 XP).'
+  s3: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 3/12
+    down (216 XP).'
+  s4: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 4/12
+    down (216 XP).'
+  s5: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 5/12
+    down (216 XP).'
+  s6: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 6/12
+    down (216 XP).'
+  s7: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 7/12
+    down (216 XP).'
+  s8: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 8/12
+    down (216 XP).'
+  s9: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts: 9/12
+    down (216 XP).'
+  s10: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts:
+    10/12 down (216 XP).'
+  s11: 'Answer the warrant on the razorback-kind of Caeloria''s Sealed Aqueducts:
+    11/12 down (216 XP).'
+  done: The razorback-kind of Caeloria's Sealed Aqueducts are answered for. The farm-roads
+    are the safer for it.

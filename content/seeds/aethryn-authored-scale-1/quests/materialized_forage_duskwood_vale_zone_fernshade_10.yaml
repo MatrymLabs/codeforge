@@ -1,0 +1,61 @@
+id: forage_duskwood_vale_zone_fernshade_10
+name: 'A standing Collection: fernshade of Duskwood Vale'
+start: s0
+reward_xp: 120
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: duskwood_vale_zone|fernshade
+- state: s1
+  event: forage
+  to: s2
+  on_forage: duskwood_vale_zone|fernshade
+- state: s2
+  event: forage
+  to: s3
+  on_forage: duskwood_vale_zone|fernshade
+- state: s3
+  event: forage
+  to: s4
+  on_forage: duskwood_vale_zone|fernshade
+- state: s4
+  event: forage
+  to: s5
+  on_forage: duskwood_vale_zone|fernshade
+- state: s5
+  event: forage
+  to: s6
+  on_forage: duskwood_vale_zone|fernshade
+- state: s6
+  event: forage
+  to: s7
+  on_forage: duskwood_vale_zone|fernshade
+- state: s7
+  event: forage
+  to: s8
+  on_forage: duskwood_vale_zone|fernshade
+- state: s8
+  event: forage
+  to: s9
+  on_forage: duskwood_vale_zone|fernshade
+- state: s9
+  event: forage
+  to: done
+  on_forage: duskwood_vale_zone|fernshade
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect fernshade in Duskwood Vale: 0/10 (120 XP).'
+  s1: 'Collect fernshade in Duskwood Vale: 1/10 (120 XP).'
+  s2: 'Collect fernshade in Duskwood Vale: 2/10 (120 XP).'
+  s3: 'Collect fernshade in Duskwood Vale: 3/10 (120 XP).'
+  s4: 'Collect fernshade in Duskwood Vale: 4/10 (120 XP).'
+  s5: 'Collect fernshade in Duskwood Vale: 5/10 (120 XP).'
+  s6: 'Collect fernshade in Duskwood Vale: 6/10 (120 XP).'
+  s7: 'Collect fernshade in Duskwood Vale: 7/10 (120 XP).'
+  s8: 'Collect fernshade in Duskwood Vale: 8/10 (120 XP).'
+  s9: 'Collect fernshade in Duskwood Vale: 9/10 (120 XP).'
+  done: You have brought in fernshade enough for Duskwood Vale. The wood's craftfolk
+    have what they need.

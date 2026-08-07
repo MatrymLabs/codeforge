@@ -1,0 +1,15 @@
+id: errand_silverwatch
+name: 'Errand: Rotwood Deep'
+start: posted
+reward_xp: 450
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: rotwood_deep
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Rotwood Deep (450 XP).
+  done: You reach Rotwood Deep and mark the way. Well scouted.

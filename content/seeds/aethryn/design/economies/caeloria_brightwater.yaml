@@ -1,0 +1,32 @@
+id: caeloria_brightwater_economy
+canon_status: AUTHORED_LOCAL
+parent_region: caeloria
+parent_zone: caeloria_zone
+source_design_ids: [brightwater, authored_brightwater]
+flows:
+  - id: brightwater_meadowfoil_trade
+    source: brightwater_millrace
+    sink: brightwater_chandler
+    resource: meadowfoil
+    purpose: supply dyers and keep river-travel provisions liquid
+    transport: gathered bundles carried along the millrace bank
+    inventory_provenance: gathered locally and weighed by the market chandler
+    surplus_or_shortage: shortage when mill maintenance restricts safe bank access
+  - id: brightwater_river_provisions
+    source: brightwater_chandler
+    sink: brightwater_market
+    resource: draughts_and_rations
+    purpose: feed mill labor, river wardens, and high-road travelers
+    transport: covered stall stock from the chandler counter
+    inventory_provenance: purchased ingredients and local meadowfoil recorded in the chandler ledger
+    surplus_or_shortage: steady supply under ordinary river conditions
+  - id: brightwater_sluice_licensing
+    source: brightwater_sluice
+    sink: brightwater_licensor
+    resource: recovered_sluice_token
+    purpose: establish custody before an old-world object enters private trade
+    transport: warden escort from the flooded chamber to the Licensing Hall
+    inventory_provenance: recovered from the old sluice and entered into the civic flood-ledger
+    surplus_or_shortage: shortage of trustworthy provenance, not a shortage of metal
+dependencies: [river access, mill labor, gathering labor, licensing records, safe transport]
+

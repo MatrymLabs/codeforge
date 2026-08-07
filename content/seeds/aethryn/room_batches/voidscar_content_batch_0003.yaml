@@ -1,0 +1,404 @@
+batch:
+  id: aethryn_voidscar_csv_0003
+  sequence: 3
+  status: ready
+  size: 15
+  final: true
+  link_inference: ordered_route
+rooms:
+  voidscar_0001:
+    name: Riven Threshold
+    room_type: Voidscar Verge
+    desc: 'Here, a strip of gray-black gravel lies within dead scrub beneath a bruised
+      sky. A mile marker has been melted into a twisted hook. Nearby, loose stones
+      rise a handspan before dropping again.
+
+
+      The scene remains strained by unseen pressure beneath ashen afternoon light.
+      The smell of rain that never reaches the ground follows every movement. Nearby,
+      something heavy drags far beyond the ridge. The last intact watchtower stands
+      far to the northwest.'
+    exits:
+      east: voidscar_0002
+      south: voidscar_0001
+    occupants: []
+    objects:
+    - Three iron warning stakes have been driven into the gravel
+    - A tethered pack lizard refuses to face the rift
+    - A strip of red cloth marks ground declared unsafe
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0002:
+    name: Silent Crossing
+    room_type: Voidscar Verge
+    desc: 'The route narrows at a narrow shelf of volcanic rock, within broken hills
+      whose shadows point the wrong way. A barricade of fused shields blocks half
+      the road. A moment later, the ground shivers as though something enormous turned
+      below.
+
+
+      Under the colorless daylight, distance is difficult to judge. The atmosphere
+      feels watchful and exposed. The air tastes of ozone and scorched leather, while
+      distant thunder rolls beneath the earth. The Voidscar opens wider to the east.'
+    exits:
+      east: voidscar_0003
+      south: voidscar_0001
+      west: voidscar_0001
+    occupants: []
+    objects:
+    - An empty suit of frontier armor kneels beside the wall
+    - A pale scavenger bird watches from a broken spear
+    - A weather-stained evacuation notice hangs from a stone post
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0003:
+    name: Ashen Crossing
+    room_type: Voidscar Verge
+    desc: 'The route follows the edge of a cracked basalt road, with abandoned earthworks
+      facing the rift on either side. An abandoned checkpoint crouches behind a shattered
+      wall. At intervals, the horizon bends inward for a heartbeat.
+
+
+      Nothing here settles into ordinary stillness. Under the cold shine of the rift,
+      the surroundings take on a severe clarity. The air carries metallic dust, and
+      a cracked bell rings once without being touched. No living vegetation is visible
+      ahead.'
+    exits:
+      east: voidscar_0004
+      south: voidscar_0002
+      southeast: voidscar_0004
+      west: voidscar_0002
+    occupants: []
+    objects:
+    - A bundle of unused bridge rope has hardened like stone
+    - A strip of red cloth marks ground declared unsafe
+    - A collapsed supply wagon rests beside the road
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0004:
+    name: Hollow Crossing
+    room_type: Voidscar Verge
+    desc: 'A break in shallow trenches filled with black dust reveals a road paved
+      with fused stone. A watch platform overlooks the first visible fracture. Without
+      warning, a distant silhouette repeats itself several paces apart.
+
+
+      The place feels like the edge of a held breath beneath a dim radiance without
+      a source. A trace of cold ash and iron lingers in the air. Nearby, a warning
+      chain knocks against stone. The safer western road has vanished behind the hills.'
+    exits:
+      east: voidscar_0005
+      south: voidscar_0003
+      southwest: voidscar_0003
+      west: voidscar_0003
+    occupants: []
+    objects:
+    - A scarred frontier warden studies the eastern horizon
+    - An empty suit of frontier armor kneels beside the wall
+    - Three iron warning stakes have been driven into the gravel
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0005:
+    name: Broken Crossing
+    room_type: Voidscar Verge
+    desc: 'A difficult path continues through low ridges split by violet seams and
+      reaches a worn military causeway. Here, a line of warning obelisks leans toward
+      the south. Elsewhere, a violet seam opens and seals without sound.
+
+
+      Under a thin violet glow, every hard edge becomes visible, leaving the place
+      abandoned but not empty. The air smells of dry stone and old smoke. Nearby,
+      wind whistles through arrow slits. Dark Expanse lies beyond the broken ridges.'
+    exits:
+      south: voidscar_0006
+      west: voidscar_0004
+    occupants: []
+    objects:
+    - A collapsed supply wagon rests beside the road
+    - A tethered pack lizard refuses to face the rift
+    - A strip of red cloth marks ground declared unsafe
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0006:
+    name: Sundered Road
+    room_type: Voidscar Verge
+    desc: 'The way opens onto a strip of gray-black gravel, with dead scrub beneath
+      a bruised sky beyond. A mile marker has been melted into a twisted hook. Nearby,
+      loose stones rise a handspan before dropping again.
+
+
+      There is no comfortable silence here. Beneath ashen afternoon light, the place
+      feels strained by unseen pressure. The air smells of rain that never reaches
+      the ground, and something heavy drags far beyond the ridge. The last intact
+      watchtower stands far to the northwest.'
+    exits:
+      north: voidscar_0007
+      east: voidscar_0007
+      south: voidscar_0005
+    occupants: []
+    objects:
+    - A pale scavenger bird watches from a broken spear
+    - A strip of red cloth marks ground declared unsafe
+    - A collapsed supply wagon rests beside the road
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0007:
+    name: Riven Approach
+    room_type: Voidscar Verge
+    desc: 'The way reaches a narrow shelf of volcanic rock, one of the few stable
+      places within broken hills whose shadows point the wrong way. A barricade of
+      fused shields blocks half the road. Close by, the ground shivers as though something
+      enormous turned below.
+
+
+      The surrounding scale makes the route feel watchful and exposed. Under the colorless
+      daylight, every fracture stands exposed. A trace of cold ash and iron lingers
+      while distant thunder rolls beneath the earth. The Voidscar opens wider to the
+      east.'
+    exits:
+      north: voidscar_0008
+      east: voidscar_0008
+      south: voidscar_0006
+      west: voidscar_0006
+    occupants: []
+    objects:
+    - A cracked map case lies open beneath a slab of basalt
+    - A pale scavenger bird watches from a broken spear
+    - A strip of red cloth marks ground declared unsafe
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0008:
+    name: Silent Approach
+    room_type: Voidscar Verge
+    desc: 'The path emerges from abandoned earthworks facing the rift onto a cracked
+      basalt road. An abandoned checkpoint crouches behind a shattered wall. Around
+      it, the horizon bends inward for a heartbeat.
+
+
+      Even at rest, the area seems too still for open country. Under the cold shine
+      of the rift, shifting highlights move across the ground. The air carries dry
+      stone and old smoke, and a cracked bell rings once without being touched. No
+      living vegetation is visible ahead.'
+    exits:
+      north: voidscar_0009
+      east: voidscar_0009
+      south: voidscar_0007
+      west: voidscar_0007
+    occupants: []
+    objects:
+    - A bundle of unused bridge rope has hardened like stone
+    - A locked field chest bears the seal of the final border company
+    - A scarred frontier warden studies the eastern horizon
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0009:
+    name: Black Verge
+    room_type: Voidscar Verge
+    desc: 'You stand where a road paved with fused stone meets shallow trenches filled
+      with black dust. A watch platform overlooks the first visible fracture. Beyond
+      it, a distant silhouette repeats itself several paces apart.
+
+
+      The scene remains like the edge of a held breath beneath a dim radiance without
+      a source. The smell of rain that never reaches the ground follows every movement.
+      Nearby, a warning chain knocks against stone. The safer western road has vanished
+      behind the hills.'
+    exits:
+      north: voidscar_0010
+      northeast: voidscar_0010
+      east: voidscar_0010
+      south: voidscar_0008
+      west: voidscar_0008
+    occupants: []
+    objects:
+    - Three iron warning stakes have been driven into the gravel
+    - A scarred frontier warden studies the eastern horizon
+    - A weather-stained evacuation notice hangs from a stone post
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0010:
+    name: Fading Reach
+    room_type: Voidscar Verge
+    desc: 'You arrive at a worn military causeway after passing through low ridges
+      split by violet seams. A line of warning obelisks leans toward the south. In
+      the surrounding distance, a violet seam opens and seals without sound.
+
+
+      Under a thin violet glow, distance is difficult to judge. The atmosphere feels
+      abandoned but not empty. The air tastes of ozone and scorched leather, while
+      wind whistles through arrow slits. Dark Expanse lies beyond the broken ridges.'
+    exits:
+      north: voidscar_0011
+      south: voidscar_0009
+      west: voidscar_0009
+    occupants: []
+    objects:
+    - A locked field chest bears the seal of the final border company
+    - A weather-stained evacuation notice hangs from a stone post
+    - A scarred frontier warden studies the eastern horizon
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0011:
+    name: Ashen Road
+    room_type: Voidscar Verge
+    desc: 'Here, a strip of gray-black gravel lies within dead scrub beneath a bruised
+      sky. A mile marker has been melted into a twisted hook. Nearby, loose stones
+      rise a handspan before dropping again.
+
+
+      Nothing here settles into ordinary stillness. Under ashen afternoon light, the
+      surroundings take on a severe clarity. The air carries metallic dust, and something
+      heavy drags far beyond the ridge. The last intact watchtower stands far to the
+      northwest.'
+    exits:
+      north: voidscar_0012
+      east: voidscar_0012
+      south: voidscar_0010
+    occupants: []
+    objects:
+    - A strip of red cloth marks ground declared unsafe
+    - A dead signal brazier contains glassy black ash
+    - Three iron warning stakes have been driven into the gravel
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0012:
+    name: Silent Boundary
+    room_type: Voidscar Verge
+    desc: 'The route narrows at a narrow shelf of volcanic rock, within broken hills
+      whose shadows point the wrong way. A barricade of fused shields blocks half
+      the road. A moment later, the ground shivers as though something enormous turned
+      below.
+
+
+      The place feels watchful and exposed beneath the colorless daylight. A trace
+      of cold ash and iron lingers in the air. Nearby, distant thunder rolls beneath
+      the earth. The Voidscar opens wider to the east.'
+    exits:
+      north: voidscar_0013
+      northwest: voidscar_0011
+      east: voidscar_0013
+      south: voidscar_0011
+      west: voidscar_0011
+    occupants: []
+    objects:
+    - A bundle of unused bridge rope has hardened like stone
+    - An empty suit of frontier armor kneels beside the wall
+    - A tethered pack lizard refuses to face the rift
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0013:
+    name: Crooked Road
+    room_type: Voidscar Verge
+    desc: 'The route follows the edge of a cracked basalt road, with abandoned earthworks
+      facing the rift on either side. An abandoned checkpoint crouches behind a shattered
+      wall. At intervals, the horizon bends inward for a heartbeat.
+
+
+      Under the cold shine of the rift, every hard edge becomes visible, leaving the
+      place too still for open country. The air smells of dry stone and old smoke.
+      Nearby, a cracked bell rings once without being touched. No living vegetation
+      is visible ahead.'
+    exits:
+      north: voidscar_0014
+      east: voidscar_0014
+      south: voidscar_0012
+      west: voidscar_0012
+    occupants: []
+    objects:
+    - An empty suit of frontier armor kneels beside the wall
+    - A collapsed supply wagon rests beside the road
+    - A scarred frontier warden studies the eastern horizon
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0014:
+    name: Silent Road
+    room_type: Voidscar Verge
+    desc: 'A break in shallow trenches filled with black dust reveals a road paved
+      with fused stone. A watch platform overlooks the first visible fracture. Without
+      warning, a distant silhouette repeats itself several paces apart.
+
+
+      There is no comfortable silence here. Beneath a dim radiance without a source,
+      the place feels like the edge of a held breath. The air smells of rain that
+      never reaches the ground, and a warning chain knocks against stone. The safer
+      western road has vanished behind the hills.'
+    exits:
+      north: voidscar_0015
+      east: voidscar_0015
+      south: voidscar_0013
+      west: voidscar_0013
+    occupants: []
+    objects:
+    - A tethered pack lizard refuses to face the rift
+    - A collapsed supply wagon rests beside the road
+    - A scarred frontier warden studies the eastern horizon
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252
+  voidscar_0015:
+    name: Black Reach
+    room_type: Voidscar Verge
+    desc: 'A difficult path continues through low ridges split by violet seams and
+      reaches a worn military causeway. Here, a line of warning obelisks leans toward
+      the south. Elsewhere, a violet seam opens and seals without sound.
+
+
+      The surrounding scale makes the route feel abandoned but not empty. Under a
+      thin violet glow, every fracture stands exposed. A trace of ozone and scorched
+      leather lingers while wind whistles through arrow slits. Dark Expanse lies beyond
+      the broken ridges.'
+    exits:
+      north: voidscar_0015
+      south: voidscar_0014
+      west: voidscar_0014
+    occupants: []
+    objects:
+    - A weather-stained evacuation notice hangs from a stone post
+    - A bundle of unused bridge rope has hardened like stone
+    - Three iron warning stakes have been driven into the gravel
+    replace: true
+    tags:
+    - voidscar
+    - imported_csv_drop
+    notes: The Voidscar / The Voidscar Boundary / levels 250-252

@@ -1,0 +1,16 @@
+id: bounty_caeloria_lord_1
+name: 'Bounty: Draumur the Hedgerow Warden'
+start: posted
+reward_xp: 372
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: caeloria_lord_1
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Draumur the Hedgerow Warden (level 31). Fell it for 372
+    XP.
+  collected: 'Bounty collected: Draumur the Hedgerow Warden is felled. Well hunted.'

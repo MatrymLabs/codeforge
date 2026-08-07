@@ -1,0 +1,1387 @@
+batch:
+  id: aethryn_caeloria_text_drop_0004
+  sequence: 4
+  status: ready
+  size: 66
+  final: true
+  link_inference: ordered_route
+rooms:
+  caeloria_high_square:
+    name: Caeloria High Square
+    room_type: City Square
+    desc: 'Broad flagstones of pale gray stone form the central square of Caeloria
+      City. A tall statue of a crowned figure stands at the center, its base carved
+      with the names of past rulers. Tall buildings of stone and timber surround the
+      open space.
+
+
+      The air carries the mixed scents of the city — cooking, horses, incense, and
+      distant sea. Voices and the clatter of carts fill the square.'
+    exits:
+      north: royal_avenue
+      south: caeloria_high_square
+      east: royal_avenue
+      west: caeloria_high_square
+    occupants:
+    - A pair of city guards stand near the statue
+    - Street musicians play near the northern edge of the square
+    objects:
+    - A public notice board is fixed to the base of the monument
+    replace: true
+    tags: &id001
+    - caeloria
+    - imported_text_drop
+  royal_avenue:
+    name: Royal Avenue
+    room_type: City Street
+    desc: 'A wide, well-paved avenue runs north from the High Square toward the upper
+      districts. Stone buildings with ornate facades line both sides and iron lanterns
+      hang at regular intervals.
+
+
+      The air is cleaner here than in the lower markets. The sound of the city is
+      present but less chaotic.'
+    exits:
+      north: merchant_s_row
+      south: caeloria_high_square
+      east: merchant_s_row
+      west: caeloria_high_square
+    occupants:
+    - A well-dressed merchant walks with purpose
+    - Flower boxes brighten many of the upper windows
+    objects:
+    - A city official carries a sealed scroll case
+    replace: true
+    tags: *id001
+  merchant_s_row:
+    name: Merchant's Row
+    room_type: Market District
+    desc: 'This long street is lined with permanent shops and open-fronted stalls
+      selling goods from across the region and beyond. Cloth, spices, tools, and finished
+      goods are all on display.
+
+
+      The air is thick with the competing smells of spices, leather, and fresh bread.'
+    exits:
+      north: temple_district
+      south: royal_avenue
+      east: temple_district
+      west: royal_avenue
+    occupants:
+    - A spice merchant calls out prices from behind a low counter
+    objects:
+    - Stacks of colorful cloth are arranged under an awning
+    - A pair of porters move a heavy crate between them
+    replace: true
+    tags: *id001
+  temple_district:
+    name: Temple District
+    room_type: Sacred
+    desc: 'Wide steps lead up to a cluster of temples and shrines. The largest is
+      dedicated to the city''s patron, but smaller houses of worship stand nearby.
+      The stone here is lighter and better kept than in the lower city.
+
+
+      The air is quieter and carries the scent of incense and old stone.'
+    exits:
+      south: merchant_s_row
+      east: guard_barracks_courtyard
+      west: merchant_s_row
+      north: guard_barracks_courtyard
+    occupants:
+    - An acolyte sweeps the steps of the main temple
+    objects:
+    - Offerings of flowers and coins sit on low altars
+    - A bronze collection box is fixed near the main entrance
+    replace: true
+    tags: *id001
+  guard_barracks_courtyard:
+    name: Guard Barracks Courtyard
+    room_type: Military
+    desc: 'A large paved courtyard sits between the main barracks buildings. Weapon
+      racks stand under covered walks and a training circle is marked in the center
+      of the yard.
+
+
+      The air smells of oil, leather, and stone. The sound of drills carries at times.'
+    exits:
+      north: lower_market
+      south: temple_district
+      east: lower_market
+      west: temple_district
+    occupants:
+    - A sergeant inspects a line of recruits
+    objects:
+    - A water trough and several benches stand along one wall
+    - Practice weapons are stacked neatly near the training circle
+    replace: true
+    tags: *id001
+  lower_market:
+    name: Lower Market
+    room_type: Market
+    desc: 'A busier, more crowded market occupies the lower part of the city nearer
+      the gates. The stalls are denser and the goods more everyday — food, simple
+      tools, second-hand clothing, and livestock on market days.
+
+
+      The air is heavier with the smells of food, animals, and people.'
+    exits:
+      north: river_gate
+      south: guard_barracks_courtyard
+      east: river_gate
+      west: guard_barracks_courtyard
+    occupants:
+    - A vegetable seller arranges produce on a low table
+    objects:
+    - A live chicken flaps in a wicker cage
+    - A town crier reads notices from a small raised platform
+    replace: true
+    tags: *id001
+  river_gate:
+    name: River Gate
+    room_type: City Gate
+    desc: 'The River Gate opens toward the water and the roads that lead south and
+      west. The gatehouse is solid stone with heavy timber doors that stand open during
+      the day. Guards check the larger wagons.
+
+
+      The air carries the scent of the river and the open land beyond.'
+    exits:
+      north: north_gate
+      south: lower_market
+      east: north_gate
+      west: lower_market
+    occupants:
+    - A pair of guards inspect a merchant's papers
+    objects:
+    - A toll chest sits inside the gatehouse
+    - Muddy tracks lead both into and out of the city
+    replace: true
+    tags: *id001
+  north_gate:
+    name: North Gate
+    room_type: City Gate
+    desc: 'The North Gate is the main land entrance for traffic coming from the higher
+      lands and the roads toward Thalorin. The gate is larger and more heavily fortified
+      than the others.
+
+
+      The air is cooler and carries less of the city smell.'
+    exits:
+      south: river_gate
+      north: east_gate
+      east: east_gate
+      west: river_gate
+    occupants:
+    - A squad of guards stands ready near the gate
+    objects:
+    - A large notice board lists current regulations and tariffs
+    - The road beyond rises gently into open country
+    replace: true
+    tags: *id001
+  east_gate:
+    name: East Gate
+    room_type: City Gate
+    desc: 'The East Gate faces toward the Central Sea and the coastal roads. The stonework
+      shows more weathering from the salt air and the gates are reinforced against
+      the stronger winds.
+
+
+      The air carries a faint salt tang even this far inland.'
+    exits:
+      west: north_gate
+      east: west_gate
+      north: west_gate
+      south: north_gate
+    occupants:
+    - A guard leans on a spear watching the road
+    objects:
+    - A small shrine to safe sea travel stands just inside the gate
+    - Wagon ruts deepen immediately beyond the threshold
+    replace: true
+    tags: *id001
+  west_gate:
+    name: West Gate
+    room_type: City Gate
+    desc: 'The West Gate opens onto the roads that lead toward Veridia and the lower
+      lands. It is busy with traffic in both directions and the gatehouse is well
+      staffed.
+
+
+      The air mixes the city scents with the cleaner air of the open road.'
+    exits:
+      east: artisan_s_quarter
+      west: east_gate
+      north: artisan_s_quarter
+      south: east_gate
+    occupants:
+    - A caravan master argues mildly with a gate guard over fees
+    objects:
+    - A water trough stands just inside for arriving animals
+    - The road beyond is wide and well maintained
+    replace: true
+    tags: *id001
+  artisan_s_quarter:
+    name: Artisan's Quarter
+    room_type: Craft District
+    desc: 'Narrow streets of workshops fill this part of the city. Smiths, leatherworkers,
+      carpenters, and other craftsmen work behind open fronts or in small enclosed
+      yards. The sounds of hammering and sawing are constant.
+
+
+      The air smells of hot metal, wood shavings, and leather.'
+    exits:
+      north: old_stone_court
+      south: west_gate
+      east: old_stone_court
+      west: west_gate
+    occupants:
+    - A smith works a glowing piece of iron on an anvil
+    - A young apprentice sweeps shavings into a pile
+    objects:
+    - Finished tools hang from the beams of an open workshop
+    replace: true
+    tags: *id001
+  old_stone_court:
+    name: Old Stone Court
+    room_type: Residential
+    desc: 'A quiet residential court of older stone houses surrounds a small central
+      garden. The buildings are well maintained and the atmosphere is calmer than
+      the main streets.
+
+
+      The air is still and carries the scent of flowers and old stone.'
+    exits:
+      north: harbor_approach
+      south: artisan_s_quarter
+      east: harbor_approach
+      west: artisan_s_quarter
+    occupants: []
+    objects:
+    - A wooden bench sits beneath a small tree in the garden
+    - Clay pots of bright flowers stand near several doors
+    - A cat sleeps in a patch of sun on a windowsill
+    replace: true
+    tags: *id001
+  harbor_approach:
+    name: Harbor Approach
+    room_type: City Street
+    desc: 'The street slopes gently downward toward the river and the small harbor
+      district. The buildings become more practical and the smell of the water grows
+      stronger.
+
+
+      The air is cooler and carries the scent of wet wood and river.'
+    exits:
+      north: harbor_front
+      south: old_stone_court
+      east: harbor_front
+      west: old_stone_court
+    occupants: []
+    objects:
+    - A fishmonger pushes a cart of iced fish up the slope
+    - Ropes and netting hang from several upper windows
+    - The sound of the river becomes clearer ahead
+    replace: true
+    tags: *id001
+  harbor_front:
+    name: Harbor Front
+    room_type: Harbor
+    desc: 'A short stretch of stone quay runs along the river within the city. Small
+      boats and barges are moored alongside and warehouses stand behind the quay.
+      The water moves steadily past.
+
+
+      The air smells of river, tar, and wet rope. Gulls call overhead.'
+    exits:
+      west: harbor_approach
+      north: upper_terrace
+      south: harbor_approach
+      east: upper_terrace
+    occupants:
+    - A boatman coils rope on the quay
+    objects:
+    - Crates and barrels are stacked under a covered area
+    - A wooden crane stands ready for unloading
+    replace: true
+    tags: *id001
+  upper_terrace:
+    name: Upper Terrace
+    room_type: Overlook
+    desc: 'A raised terrace on the northern side of the city offers views across the
+      rooftops and out toward the open country. Stone benches line the low wall and
+      the air is clearer here.
+
+
+      The city spreads out below. Distant landmarks are visible on clear days.'
+    exits:
+      south: harbor_front
+      east: library_steps
+      west: harbor_front
+      down: library_steps
+    occupants: []
+    objects:
+    - A pair of older citizens sit talking on a bench
+    - Flower boxes brighten the terrace wall
+    - A narrow stair leads down to the streets below
+    replace: true
+    tags: *id001
+  library_steps:
+    name: Library Steps
+    room_type: Civic
+    desc: 'Broad stone steps lead up to the city''s main library and archive. The
+      building is of pale stone with tall narrow windows. Iron lanterns flank the
+      heavy wooden doors.
+
+
+      The air is quiet and carries the faint scent of old paper and wax.'
+    exits:
+      south: upper_terrace
+      east: candle_street
+      west: upper_terrace
+    occupants:
+    - A clerk adjusts a notice board beside the entrance
+    objects:
+    - A stone bench sits on the landing
+    - A small collection box for the library is fixed to the wall
+    replace: true
+    tags: *id001
+  candle_street:
+    name: Candle Street
+    room_type: Craft Street
+    desc: 'The smell of beeswax and tallow is strong along this street of candle makers
+      and lamp sellers. Windows display rows of finished candles and lanterns of many
+      designs.
+
+
+      Warm light spills from several open workshops.'
+    exits:
+      north: quiet_alley
+      south: library_steps
+      east: quiet_alley
+      west: library_steps
+    occupants:
+    - An apprentice dips wicks into melted wax
+    objects:
+    - Racks of cooling candles stand in neat rows
+    - A large iron cauldron of wax simmers over a low fire
+    replace: true
+    tags: *id001
+  quiet_alley:
+    name: Quiet Alley
+    room_type: Side Alley
+    desc: 'A narrow alley runs between higher buildings, always in shadow. The ground
+      is clean and the walls show less of the city''s wear. It is used mainly by those
+      who know the back ways.
+
+
+      The air is still and cooler. City sounds are muffled.'
+    exits:
+      north: north_outer_market
+      south: candle_street
+      east: north_outer_market
+    occupants: []
+    objects:
+    - A wooden door set deep in the wall leads into a private court
+    - Moss grows in the damper cracks between stones
+    - A thin cat watches from a high ledge
+    replace: true
+    tags: *id001
+  north_outer_market:
+    name: North Outer Market
+    room_type: Outer Market
+    desc: 'Just inside the North Gate an open market serves traffic arriving from
+      the higher lands. Stalls offer food, fodder, simple repairs, and information
+      about the road ahead.
+
+
+      The air mixes city and open-road scents.'
+    exits:
+      south: quiet_alley
+      north: south_outer_yard
+      east: south_outer_yard
+      west: quiet_alley
+    occupants: []
+    objects:
+    - A farrier checks a horse's shoe at the edge of the market
+    - Bales of hay and sacks of grain sit under a canvas shelter
+    - A board lists current prices for common goods
+    replace: true
+    tags: *id001
+  south_outer_yard:
+    name: South Outer Yard
+    room_type: Outer Yard
+    desc: 'An open yard just inside the River Gate is used for wagons and caravans
+      preparing to leave or rest after arrival. Several large wagons stand with their
+      teams.
+
+
+      The air smells of horses, dust, and woodsmoke from small cookfires.'
+    exits:
+      north: east_outer_paddock
+      south: north_outer_market
+      east: east_outer_paddock
+      west: north_outer_market
+    occupants:
+    - A caravan guard sits on a wagon bed cleaning a blade
+    objects:
+    - Water barrels and feed sacks are stacked under a lean-to
+    - Spare wheels lean against the wall in a neat row
+    replace: true
+    tags: *id001
+  east_outer_paddock:
+    name: East Outer Paddock
+    room_type: Paddock
+    desc: 'A grassy paddock outside the East Gate is used for horses and sometimes
+      for small livestock markets. The fence is solid and the grass is kept short
+      by regular grazing.
+
+
+      The air smells of grass and animals. The road toward the coast continues east.'
+    exits:
+      west: south_outer_yard
+      east: west_approach_road
+      north: west_approach_road
+      south: south_outer_yard
+    occupants:
+    - Manure has been collected into a neat pile at one end
+    objects:
+    - A horse grazes near the fence line
+    - A wooden gate opens onto the road
+    replace: true
+    tags: *id001
+  west_approach_road:
+    name: West Approach Road
+    room_type: Trade Road
+    desc: 'The main road west from Caeloria City is wide and well maintained. It runs
+      through open land with scattered farms and the occasional roadside shrine. Traffic
+      is steady in both directions.
+
+
+      The air is cleaner than in the city. The walls of Caeloria are still visible
+      behind.'
+    exits:
+      east: north_approach_road
+      west: east_outer_paddock
+      north: north_approach_road
+      south: east_outer_paddock
+    occupants: []
+    objects:
+    - A milestone marks the distance back to the city
+    - A wayside shrine of stacked stones holds a few flowers
+    - Wagon tracks are deep and continuous
+    replace: true
+    tags: *id001
+  north_approach_road:
+    name: North Approach Road
+    room_type: Trade Road
+    desc: 'The northern road climbs gently into higher country. The land is more open
+      and the farms are larger. The air is cooler and the views begin to open out.
+
+
+      The road surface is firm and well used.'
+    exits:
+      south: west_approach_road
+      north: brightwater_gate
+      east: brightwater_gate
+      west: west_approach_road
+    occupants: []
+    objects:
+    - A stone marker shows distances to the next settlements
+    - A small lean-to offers limited shelter
+    - The first low hills are visible ahead
+    replace: true
+    tags: *id001
+  brightwater_gate:
+    name: Brightwater Gate
+    room_type: Town Gate
+    desc: 'A solid timber gate set in a low stone wall marks the entrance to Brightwater.
+      The town sits near a clear tributary that feeds into the larger river system.
+      The gate stands open during the day.
+
+
+      The air smells of woodsmoke and clean water.'
+    exits:
+      west: north_approach_road
+      east: brightwater_square
+      north: brightwater_square
+      south: north_approach_road
+    occupants:
+    - A guard nods to known faces and watches strangers
+    objects:
+    - A wooden sign welcomes travelers to Brightwater
+    - Wagon ruts deepen as they pass through the gate
+    replace: true
+    tags: *id001
+  brightwater_square:
+    name: Brightwater Square
+    room_type: Town Square
+    desc: 'The central square of Brightwater is open and well kept. A large stone
+      well stands in the center and timber buildings surround the space. The sound
+      of the nearby stream is constant.
+
+
+      The air is quieter than the city and carries the scent of water and wood.'
+    exits:
+      north: brightwater_inn
+      south: brightwater_gate
+      east: brightwater_inn
+      west: brightwater_gate
+    occupants: []
+    objects:
+    - Locals gather near the well to talk
+    - A notice board is fixed to a post near the well
+    - Benches of rough timber sit in the shade
+    replace: true
+    tags: *id001
+  brightwater_inn:
+    name: Brightwater Inn
+    room_type: Inn
+    desc: 'A two-story timber inn with a steep roof stands on the north side of the
+      square. The painted sign shows a leaping fish in clear water. The smell of cooking
+      and ale drifts from the open door.
+
+
+      Travelers and locals move in and out through the day.'
+    exits:
+      south: brightwater_square
+      east: brightwater_mill
+      west: brightwater_square
+      north: brightwater_mill
+    occupants:
+    - A stablehand takes horses around to the rear yard
+    objects:
+    - Wooden tables and benches stand outside in good weather
+    - A water trough sits near the stable entrance
+    replace: true
+    tags: *id001
+  brightwater_mill:
+    name: Brightwater Mill
+    room_type: Mill
+    desc: 'A working water mill stands on the stream that gives the town its name.
+      The large wheel turns steadily and the sound of grinding is constant during
+      the day. Sacks of grain and flour are stacked nearby.
+
+
+      The air smells of flour, water, and wood.'
+    exits:
+      west: brightwater_inn
+      east: streamside_path
+      north: streamside_path
+      south: brightwater_inn
+    occupants:
+    - A miller checks the flow of grain
+    objects:
+    - A wooden walkway runs alongside the wheel for maintenance
+    - The stream runs clear and strong past the mill
+    replace: true
+    tags: *id001
+  streamside_path:
+    name: Streamside Path
+    room_type: Town Edge
+    desc: 'A pleasant path follows the clear stream through the edge of Brightwater.
+      Willows and alders grow along the banks and the water runs bright over pale
+      stones.
+
+
+      The air is cool and clean. The sound of the stream is constant and pleasant.'
+    exits:
+      north: brightwater_market
+      south: brightwater_mill
+      east: brightwater_market
+      west: brightwater_mill
+    occupants:
+    - Children sometimes play along the banks
+    objects:
+    - A simple wooden bridge crosses the stream at one point
+    - The path continues both into town and out toward the open land
+    replace: true
+    tags: *id001
+  brightwater_market:
+    name: Brightwater Market
+    room_type: Market
+    desc: 'A small open market operates along one side of the square and into a short
+      side street. Local produce, fish from the stream, and simple crafts are offered.
+
+
+      The air smells of fresh bread, fish, and wood.'
+    exits:
+      west: streamside_path
+      east: fishers_row
+      north: fishers_row
+      south: streamside_path
+    occupants:
+    - A woman sells honey and beeswax from a small stall
+    objects:
+    - Baskets of early vegetables sit on a table
+    - A woodcarver displays simple spoons and bowls
+    replace: true
+    tags: *id001
+  fishers_row:
+    name: Fishers' Row
+    room_type: Residential
+    desc: 'A short street of smaller houses runs down toward the stream. Nets and
+      fishing gear hang near several doors and the smell of the water is strong.
+
+
+      The air is damp and carries the constant sound of the stream.'
+    exits:
+      north: brightwater_temple
+      south: brightwater_market
+      east: brightwater_temple
+      west: brightwater_market
+    occupants:
+    - A fisherman mends a net on his doorstep
+    objects:
+    - Fish racks stand in several small yards
+    - A narrow path leads down to a private landing
+    replace: true
+    tags: *id001
+  brightwater_temple:
+    name: Brightwater Temple
+    room_type: Sacred
+    desc: 'A modest stone temple stands near the eastern edge of town. The entrance
+      faces the stream and a simple fountain of clear water plays in the small courtyard.
+
+
+      The air is cooler and quieter. The sound of the fountain is calming.'
+    exits:
+      west: fishers_row
+      north: silverwatch_gate
+      south: fishers_row
+    occupants:
+    - An acolyte tends the fountain and sweeps the courtyard
+    objects:
+    - Offerings of small carved fish and river stones sit on a low altar
+    - A wooden collection box is fixed beside the door
+    replace: true
+    tags: *id001
+  silverwatch_gate:
+    name: Silverwatch Gate
+    room_type: Town Gate
+    desc: 'The gate of Silverwatch is of solid timber bound with iron. The town sits
+      on slightly higher ground and the walls are better maintained than many smaller
+      settlements. Guards are more alert here.
+
+
+      The air is cooler and carries a faint mineral scent from the nearby hills.'
+    exits:
+      south: brightwater_temple
+      north: silverwatch_square
+      east: silverwatch_square
+      west: brightwater_temple
+    occupants:
+    - A guard checks papers more carefully than in the lower towns
+    objects:
+    - A wooden sign names the town and lists basic regulations
+    - The road beyond continues toward the higher lands
+    replace: true
+    tags: *id001
+  silverwatch_square:
+    name: Silverwatch Square
+    room_type: Town Square
+    desc: 'The central square is paved with darker stone and feels more formal than
+      Brightwater. A tall post holds the town''s banner and a stone well stands to
+      one side.
+
+
+      The air is quieter and the buildings are of better construction.'
+    exits:
+      north: silverwatch_keep_approach
+      south: silverwatch_gate
+      east: silverwatch_keep_approach
+      west: silverwatch_gate
+    occupants: []
+    objects:
+    - Locals move with purpose across the square
+    - A notice board is fixed to the banner post
+    - Stone benches sit in the shade of the larger buildings
+    replace: true
+    tags: *id001
+  silverwatch_keep_approach:
+    name: Silverwatch Keep Approach
+    room_type: Military
+    desc: 'A short road leads from the square up to the small keep that overlooks
+      the town. The keep is of solid stone and serves as both strongpoint and administrative
+      center.
+
+
+      The air is cooler and the view opens out as the ground rises.'
+    exits:
+      south: silverwatch_square
+      north: silverwatch_market
+      east: silverwatch_market
+      west: silverwatch_square
+    occupants:
+    - A pair of guards stand at the base of the keep steps
+    objects:
+    - The banner of Silverwatch flies from the highest tower
+    - The stonework is clean and well maintained
+    replace: true
+    tags: *id001
+  silverwatch_market:
+    name: Silverwatch Market
+    room_type: Market
+    desc: 'The market here is smaller but the goods are of higher average quality.
+      Local metalwork, better cloth, and goods from the higher lands are more common.
+
+
+      The air smells of metal, leather, and cooking.'
+    exits:
+      west: silverwatch_keep_approach
+      east: watch_hill_path
+      north: watch_hill_path
+      south: silverwatch_keep_approach
+    occupants:
+    - A smith displays finished tools and simple weapons
+    - A trader from the north haggles over a length of cloth
+    objects:
+    - Baskets of mountain herbs sit on a low table
+    replace: true
+    tags: *id001
+  watch_hill_path:
+    name: Watch Hill Path
+    room_type: Town Edge
+    desc: 'A path climbs the low hill on which Silverwatch sits. From higher points
+      the surrounding country is visible — the roads, the distant city, and the first
+      true hills to the north.
+
+
+      The air is clearer and the wind stronger.'
+    exits:
+      south: silverwatch_market
+      north: silverwatch_inn
+      east: silverwatch_inn
+      west: silverwatch_market
+    occupants: []
+    objects:
+    - A wooden bench sits at a good viewpoint
+    - The town roofs lie below to the south
+    - The path continues both up to the higher slopes and back down to town
+    replace: true
+    tags: *id001
+  silverwatch_inn:
+    name: Silverwatch Inn
+    room_type: Inn
+    desc: 'A solid three-story inn of stone and timber stands near the square. The
+      painted sign shows a silver watchman''s lantern. The common room is larger and
+      quieter than in the lower towns.
+
+
+      The air inside carries the scent of good cooking and woodsmoke.'
+    exits:
+      south: watch_hill_path
+      east: smiths_lane
+      west: watch_hill_path
+      north: smiths_lane
+    occupants: []
+    objects:
+    - A stable yard sits behind the inn
+    - Wooden tables and benches stand outside in good weather
+    - A water trough sits near the stable entrance
+    replace: true
+    tags: *id001
+  smiths_lane:
+    name: Smiths' Lane
+    room_type: Craft Street
+    desc: 'The sound of hammer on anvil is common along this short street. Several
+      smiths work here, producing tools, fittings, and the occasional weapon for the
+      local watch.
+
+
+      The air smells of hot metal and coal smoke.'
+    exits:
+      north: westgate_entrance
+      south: silverwatch_inn
+      east: westgate_entrance
+      west: silverwatch_inn
+    occupants:
+    - A burly smith works a glowing billet on a large anvil
+    objects:
+    - Finished work hangs from the beams of an open forge
+    - A water trough for quenching stands outside the nearest workshop
+    replace: true
+    tags: *id001
+  westgate_entrance:
+    name: Westgate Entrance
+    room_type: Town Gate
+    desc: 'Westgate is the smallest of the three satellite towns and sits closest
+      to the main road toward Veridia. The gate is simple but solid and the town is
+      clearly oriented toward road traffic.
+
+
+      The air mixes the scents of the road with those of a small settlement.'
+    exits:
+      east: westgate_yard
+      west: smiths_lane
+      north: westgate_yard
+      south: smiths_lane
+    occupants:
+    - A guard leans on a spear watching the road
+    objects:
+    - A wooden sign names the town and offers basic services
+    - Wagon traffic is steady through the gate
+    replace: true
+    tags: *id001
+  westgate_yard:
+    name: Westgate Yard
+    room_type: Town Yard
+    desc: 'An open yard just inside the gate serves as a resting and trading place
+      for travelers. Several wagons stand here between journeys and a small open-sided
+      shelter provides cover.
+
+
+      The air smells of horses, dust, and woodsmoke.'
+    exits:
+      east: westgate_inn
+      west: westgate_entrance
+      north: westgate_inn
+      south: westgate_entrance
+    occupants:
+    - A carter checks the bindings on a load
+    objects:
+    - Water barrels and feed sacks are stacked under the shelter
+    - Spare wheels lean against the wall
+    replace: true
+    tags: *id001
+  westgate_inn:
+    name: Westgate Inn
+    room_type: Inn
+    desc: 'A practical two-story inn stands near the yard. The painted sign shows
+      an open gate and a road stretching away. The common room is busy with road traffic.
+
+
+      The air carries the scent of cooking, ale, and the road.'
+    exits:
+      south: westgate_yard
+      east: westgate_market
+      west: westgate_yard
+      north: westgate_market
+    occupants:
+    - A stablehand takes horses around to the rear
+    objects:
+    - Wooden tables and benches stand outside in good weather
+    - A water trough sits near the stable entrance
+    replace: true
+    tags: *id001
+  westgate_market:
+    name: Westgate Market
+    room_type: Market
+    desc: 'A small market caters mainly to travelers and local farmers. Food, simple
+      repairs, fodder, and information about the road are the main goods.
+
+
+      The air smells of food, leather, and dust.'
+    exits:
+      west: westgate_inn
+      east: roadside_shrine
+      north: roadside_shrine
+      south: westgate_inn
+    occupants: []
+    objects:
+    - A farrier works on a horse at the edge of the market
+    - Bales of hay sit under a canvas shelter
+    - A board lists current tolls and road conditions
+    replace: true
+    tags: *id001
+  roadside_shrine:
+    name: Roadside Shrine
+    room_type: Sacred
+    desc: 'A small stone shrine stands just outside Westgate on the main road. Travelers
+      often leave small offerings for safe journeys. The shrine is simple but well
+      tended.
+
+
+      The air is open and the road stretches away in both directions.'
+    exits:
+      east: starfall_approach_road
+      west: westgate_market
+      north: starfall_approach_road
+      south: westgate_market
+    occupants: []
+    objects:
+    - A few coins and flowers sit on the low altar stone
+    - A wooden bench allows travelers to rest
+    - The walls of Westgate are visible a short distance away
+    replace: true
+    tags: *id001
+  starfall_approach_road:
+    name: Starfall Approach Road
+    room_type: Trade Road
+    desc: 'The road to Starfall Temple is quieter and better kept than many. It climbs
+      gently through open land with scattered stands of trees. The temple itself is
+      visible as a pale structure on a low rise ahead.
+
+
+      The air is cleaner and carries a faint scent of incense on the wind at times.'
+    exits:
+      south: roadside_shrine
+      north: starfall_outer_court
+      east: starfall_outer_court
+      west: roadside_shrine
+    occupants: []
+    objects:
+    - A milestone marks the remaining distance to the temple
+    - A wayside shrine of stacked stones holds fresh flowers
+    - The road surface is firm and well maintained
+    replace: true
+    tags: *id001
+  starfall_outer_court:
+    name: Starfall Outer Court
+    room_type: Sacred
+    desc: 'A broad outer court of pale stone lies before the main temple buildings.
+      Low walls enclose the space and carefully tended trees grow in regular rows.
+      The atmosphere is quiet and ordered.
+
+
+      The air is still and carries the scent of incense and clean stone.'
+    exits:
+      south: starfall_approach_road
+      north: starfall_temple_entrance
+      east: starfall_temple_entrance
+      west: starfall_approach_road
+    occupants:
+    - An acolyte sweeps the court with a long broom
+    objects:
+    - Clay bowls of water sit on low plinths
+    - Visitors move quietly across the open space
+    replace: true
+    tags: *id001
+  starfall_temple_entrance:
+    name: Starfall Temple Entrance
+    room_type: Sacred
+    desc: 'Wide steps of pale stone lead up to the main doors of Starfall Temple.
+      The facade is simple but well proportioned and the doors are of dark wood bound
+      with bronze. The carvings above the doors show stars and a falling light.
+
+
+      The air is cooler and quieter. Soft chanting drifts from within at times.'
+    exits:
+      south: starfall_outer_court
+      north: starfall_inner_garden
+      east: starfall_inner_garden
+      west: starfall_outer_court
+    occupants:
+    - A senior acolyte stands near the doors to greet visitors
+    objects:
+    - Offerings of flowers and small carved stars sit on the steps
+    - A bronze collection box is fixed beside the entrance
+    replace: true
+    tags: *id001
+  starfall_inner_garden:
+    name: Starfall Inner Garden
+    room_type: Sacred Garden
+    desc: 'A quiet enclosed garden lies within the temple grounds. Paths of pale gravel
+      wind between beds of white flowers and low evergreen shrubs. A central fountain
+      sends a thin stream of water into a clear basin.
+
+
+      The air is still and scented with flowers and water.'
+    exits:
+      south: starfall_temple_entrance
+      east: starfall_observation_terrace
+      west: starfall_temple_entrance
+    occupants: []
+    objects:
+    - A wooden bench sits in the shade of a small tree
+    - The sound of the fountain is soft and constant
+    - The walls of the temple buildings rise on all sides
+    replace: true
+    tags: *id001
+  starfall_observation_terrace:
+    name: Starfall Observation Terrace
+    room_type: Overlook
+    desc: 'A raised terrace on the northern side of the temple offers clear views
+      of the night sky and the surrounding country. Stone benches are arranged for
+      watching the stars and the parapet is low.
+
+
+      The air is clear and the wind is stronger here. On clear nights the view of
+      the heavens is excellent.'
+    exits:
+      south: starfall_inner_garden
+      east: caeloria_to_veridia_road_1
+      west: starfall_inner_garden
+      down: caeloria_to_veridia_road_1
+    occupants: []
+    objects:
+    - A simple brass instrument for measuring angles sits on a stone pedestal
+    - Several small cairns have been left by previous visitors
+    - The temple roofs lie below to the south
+    replace: true
+    tags: *id001
+  caeloria_to_veridia_road_1:
+    name: Caeloria to Veridia Road 1
+    room_type: Trade Road
+    desc: 'The main road south and west toward Veridia is wide and heavily traveled.
+      Farms and small holdings line the route and the land is open and fertile.
+
+
+      The air is clean and the traffic is steady in both directions.'
+    exits:
+      northeast: caeloria_to_veridia_road_2
+      southwest: starfall_observation_terrace
+      north: caeloria_to_veridia_road_2
+      south: starfall_observation_terrace
+    occupants: []
+    objects:
+    - A milestone marks the distance back to Caeloria City
+    - A wayside shrine holds a few wilted flowers
+    - Wagon tracks are deep and continuous
+    replace: true
+    tags: *id001
+  caeloria_to_veridia_road_2:
+    name: Caeloria to Veridia Road 2
+    room_type: Trade Road
+    desc: 'Further along the road the land becomes a little more rolling. The farms
+      continue and the occasional stand of trees breaks the open country. The road
+      remains in good condition.
+
+
+      The air is warm and full of the sound of insects and distant birds.'
+    exits:
+      northeast: caeloria_to_veridia_road_3
+      southwest: caeloria_to_veridia_road_1
+      north: caeloria_to_veridia_road_3
+      south: caeloria_to_veridia_road_1
+    occupants: []
+    objects:
+    - A second milestone stands beside the road
+    - A small lean-to offers limited shelter
+    - A track leads off toward a visible farmhouse
+    replace: true
+    tags: *id001
+  caeloria_to_veridia_road_3:
+    name: Caeloria to Veridia Road 3
+    room_type: Trade Road
+    desc: 'The road continues through more open land with fewer immediate farms. The
+      sense of the lower country grows stronger and the first hints of the Veridian
+      landscape begin to appear.
+
+
+      The air is open and clean. Distant landmarks are visible on clear days.'
+    exits:
+      northeast: brightwater_connector
+      southwest: caeloria_to_veridia_road_2
+      east: brightwater_connector
+      west: caeloria_to_veridia_road_2
+    occupants: []
+    objects:
+    - A stone marker shows the remaining distance toward the Veridian border
+    - A rough track leads off toward higher ground to the north
+    - The surface of the road remains firm
+    replace: true
+    tags: *id001
+  brightwater_connector:
+    name: Brightwater Connector
+    room_type: Trade Road
+    desc: 'A well-used road links Brightwater to the main Caeloria road system. The
+      surface is good and the land on both sides is a mix of pasture and cultivated
+      fields.
+
+
+      The air smells of the surrounding farmland and the nearby stream.'
+    exits:
+      east: silverwatch_connector
+      west: caeloria_to_veridia_road_3
+      north: silverwatch_connector
+      south: caeloria_to_veridia_road_3
+    occupants: []
+    objects:
+    - A milestone marks distances to Brightwater and the main road
+    - A wayside bench sits under a large tree
+    - Wagon tracks show regular traffic
+    replace: true
+    tags: *id001
+  silverwatch_connector:
+    name: Silverwatch Connector
+    room_type: Trade Road
+    desc: 'The road to Silverwatch climbs more noticeably as it approaches the higher
+      ground. The land becomes less fertile and the farms fewer. The air is cooler.
+
+
+      The road surface is still good but the gradient is steady.'
+    exits:
+      south: brightwater_connector
+      north: westgate_connector
+      east: westgate_connector
+      west: brightwater_connector
+    occupants: []
+    objects:
+    - A stone marker shows the remaining climb to Silverwatch
+    - A small shrine stands at a bend in the road
+    - The views back toward the lower country improve with height
+    replace: true
+    tags: *id001
+  westgate_connector:
+    name: Westgate Connector
+    room_type: Trade Road
+    desc: 'The short road linking Westgate to the main route is busy with through
+      traffic. The land is open and the road is wide enough for wagons to pass easily.
+
+
+      The air mixes the scents of the road and the small town.'
+    exits:
+      east: open_pasture_north
+      west: silverwatch_connector
+      north: open_pasture_north
+      south: silverwatch_connector
+    occupants: []
+    objects:
+    - A simple wooden post marks the junction
+    - Deep ruts show the volume of traffic
+    - The walls of Westgate are visible a short distance away
+    replace: true
+    tags: *id001
+  open_pasture_north:
+    name: Open Pasture North
+    room_type: Open Field
+    desc: 'Wide grazing land north of the main roads supports mixed herds of cattle
+      and sheep. Low stone walls divide the larger pastures and the grass is kept
+      short by regular use.
+
+
+      The air is clean and full of the sound of wind and distant bells.'
+    exits:
+      south: westgate_connector
+      north: open_pasture_south
+      east: open_pasture_south
+      west: westgate_connector
+    occupants: []
+    objects:
+    - A solitary tree stands in the middle of one pasture
+    - A wooden stile crosses the nearest wall
+    - Rabbit holes pock the softer ground near the walls
+    replace: true
+    tags: *id001
+  open_pasture_south:
+    name: Open Pasture South
+    room_type: Open Field
+    desc: 'The southern pastures are a little richer and more closely managed. The
+      walls are better maintained and the herds are larger. The road system is never
+      far away.
+
+
+      The air smells of warm grass and animals.'
+    exits:
+      north: river_meadow_east
+      south: open_pasture_north
+      east: river_meadow_east
+      west: open_pasture_north
+    occupants: []
+    objects:
+    - A herd of cattle grazes slowly across the open ground
+    - A stone water trough stands in the shade of a large oak
+    - The walls run in long straight lines across the land
+    replace: true
+    tags: *id001
+  river_meadow_east:
+    name: River Meadow East
+    room_type: River Meadow
+    desc: 'Open meadow runs down toward a tributary of the larger river system. The
+      grass is lush and the ground is soft near the water. Willows grow along the
+      banks.
+
+
+      The air is cooler and carries the scent of water and wet earth.'
+    exits:
+      west: open_pasture_south
+      east: hill_edge_track
+      north: hill_edge_track
+      south: open_pasture_south
+    occupants: []
+    objects:
+    - A low stone wall marks the edge of the meadow
+    - Cattle stand knee-deep in the shallows at times
+    - A simple stile crosses the wall toward the water
+    replace: true
+    tags: *id001
+  hill_edge_track:
+    name: Hill Edge Track
+    room_type: Hills
+    desc: 'A track runs along the edge of the higher ground north of Silverwatch.
+      The land drops away to the south and the views across Caeloria are wide. The
+      air is clearer and the wind stronger.
+
+
+      Rocky outcrops break the grass in places.'
+    exits:
+      south: river_meadow_east
+      north: caeloria_south_ward
+      east: caeloria_south_ward
+      west: river_meadow_east
+    occupants: []
+    objects:
+    - A large flat boulder offers a natural resting place
+    - Sheep tracks cross the main track frequently
+    - The track continues both higher into the hills and back down toward the settled
+      lands
+    replace: true
+    tags: *id001
+  caeloria_south_ward:
+    name: Caeloria South Ward
+    room_type: Residential
+    desc: 'A quieter residential ward on the southern side of the city. The houses
+      are of mixed stone and timber and the streets are less crowded than the central
+      districts.
+
+
+      The air is stiller and carries more of the domestic scents of cooking and woodsmoke.'
+    exits:
+      north: caeloria_east_ward
+      south: hill_edge_track
+      east: caeloria_east_ward
+      west: hill_edge_track
+    occupants:
+    - A woman sweeps her doorstep while talking to a neighbor
+    objects:
+    - Clay pots of herbs sit on several sunny windowsills
+    - A thin cat watches from a fence post
+    replace: true
+    tags: *id001
+  caeloria_east_ward:
+    name: Caeloria East Ward
+    room_type: Residential
+    desc: 'The eastern residential streets feel the influence of the nearby sea roads.
+      The buildings show a little more weathering and the occasional net or rope hangs
+      from upper windows.
+
+
+      The air carries a faint salt tang at times.'
+    exits:
+      west: caeloria_south_ward
+      east: farmer_s_track_north
+      north: farmer_s_track_north
+      south: caeloria_south_ward
+    occupants:
+    - Children play in a small open court
+    objects:
+    - Laundry hangs between upper windows in the breeze
+    - A wooden bench sits against a sunny wall
+    replace: true
+    tags: *id001
+  farmer_s_track_north:
+    name: Farmer's Track North
+    room_type: Farm Track
+    desc: 'A narrower track leaves the main road and runs toward a cluster of farm
+      buildings visible in the distance. The surface is rougher and the ruts are deeper.
+
+
+      The air smells of the surrounding fields and animals.'
+    exits:
+      south: caeloria_east_ward
+      north: farmer_s_track_south
+      east: farmer_s_track_south
+      west: caeloria_east_ward
+    occupants: []
+    objects:
+    - A wooden gate stands open across the track
+    - A scarecrow leans at an angle in a nearby field
+    - The track continues toward the farm and back to the main road
+    replace: true
+    tags: *id001
+  farmer_s_track_south:
+    name: Farmer's Track South
+    room_type: Farm Track
+    desc: 'Another farm track leads south from the main road into a cluster of well-kept
+      fields and buildings. The land here is fertile and carefully managed.
+
+
+      The air smells of turned earth and growing crops.'
+    exits:
+      north: orchard_road
+      south: farmer_s_track_north
+      east: orchard_road
+      west: farmer_s_track_north
+    occupants: []
+    objects:
+    - A wooden gate opens onto the farm track
+    - Irrigation ditches run in straight lines across the fields
+    - The farm buildings are visible ahead
+    replace: true
+    tags: *id001
+  orchard_road:
+    name: Orchard Road
+    room_type: Farm Road
+    desc: 'A pleasant road runs between two large orchards. The trees are mature and
+      the air is sweet with the scent of blossom or fruit according to the season.
+      Bees move steadily among the trees.
+
+
+      The road surface is good and the shade is welcome on hot days.'
+    exits:
+      east: mill_stream_crossing
+      west: farmer_s_track_south
+      north: mill_stream_crossing
+      south: farmer_s_track_south
+    occupants: []
+    objects:
+    - A wooden ladder leans against one of the taller trees
+    - Wicker baskets are stacked under a lean-to at the roadside
+    - A stone bench sits in the shade at the end of a row
+    replace: true
+    tags: *id001
+  mill_stream_crossing:
+    name: Mill Stream Crossing
+    room_type: Bridge
+    desc: 'A solid wooden bridge crosses a clear stream that feeds the local mills.
+      The water runs bright over pale stones and the banks are green with water plants.
+
+
+      The sound of the water is constant and pleasant. The air is cooler over the
+      stream.'
+    exits:
+      east: wayside_inn_ruin
+      west: orchard_road
+      north: wayside_inn_ruin
+      south: orchard_road
+    occupants: []
+    objects:
+    - A simple wooden railing runs along both sides of the bridge
+    - Moss grows on the lower supports
+    - The road continues on both sides into open land
+    replace: true
+    tags: *id001
+  wayside_inn_ruin:
+    name: Wayside Inn Ruin
+    room_type: Ruin
+    desc: 'The remains of an older wayside inn stand beside the road. Only the stone
+      foundations and parts of the lower walls remain. Travelers sometimes rest among
+      the ruins.
+
+
+      The air is open and the road stretches away in both directions.'
+    exits:
+      east: border_marker_stone
+      west: mill_stream_crossing
+      north: border_marker_stone
+      south: mill_stream_crossing
+    occupants: []
+    objects:
+    - A few stones have been arranged into a rough fire ring
+    - Grass grows thickly among the old foundations
+    - A faded milestone stands nearby
+    replace: true
+    tags: *id001
+  border_marker_stone:
+    name: Border Marker Stone
+    room_type: Boundary
+    desc: 'A tall stone pillar marks the approximate boundary between the more settled
+      Caelorian lands and the approaches to Veridia. Carved letters give distances
+      in both directions.
+
+
+      The air is open and the landscape begins to show more of the lower country''s
+      character.'
+    exits:
+      northeast: border_marker_stone
+      southwest: wayside_inn_ruin
+      north: border_marker_stone
+      south: wayside_inn_ruin
+    occupants: []
+    objects:
+    - A small shrine of stacked stones sits at the base of the pillar
+    - Fresh tracks show recent traffic in both directions
+    - The land continues open and green on both sides
+    replace: true
+    tags: *id001

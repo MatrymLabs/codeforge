@@ -1,0 +1,8 @@
+id: caeloria
+display_name: Caeloria
+canon_status: CANON_LOCKED
+threat_range: [30, 60]
+source_canon_id: caeloria
+topology_source: content/seeds/aethryn/world_graph.yaml
+world_purpose: Heartland kingdom of golden plains, records, and the high road.
+

@@ -1,0 +1,46 @@
+presentation_version: aethryn-room-v1
+room_count: 7
+unique_long_descriptions: 7
+duplicate_groups: []
+reused_phrases:
+- phrase: old forest root fields fernshade
+  count: 7
+- phrase: forest root fields fernshade margins
+  count: 7
+- phrase: root fields fernshade margins and
+  count: 7
+- phrase: fields fernshade margins and a
+  count: 7
+- phrase: fernshade margins and a shallow
+  count: 7
+- phrase: margins and a shallow mirror
+  count: 7
+- phrase: and a shallow mirror pool
+  count: 7
+- phrase: a shallow mirror pool meets
+  count: 5
+- phrase: ravenwatch timber and covered lantern
+  count: 5
+- phrase: timber and covered lantern stations
+  count: 5
+- phrase: its materials and position belong
+  count: 4
+- phrase: materials and position belong to
+  count: 4
+- phrase: and position belong to duskwood
+  count: 4
+- phrase: position belong to duskwood vale
+  count: 4
+- phrase: belong to duskwood vale old
+  count: 4
+- phrase: to duskwood vale old forest
+  count: 4
+- phrase: duskwood vale old forest root
+  count: 4
+- phrase: vale old forest root fields
+  count: 4
+- phrase: shallow mirror pool meets ravenwatch
+  count: 4
+- phrase: mirror pool meets ravenwatch timber
+  count: 4
+flags: []

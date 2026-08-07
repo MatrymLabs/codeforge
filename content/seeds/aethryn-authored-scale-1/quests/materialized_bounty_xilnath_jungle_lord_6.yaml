@@ -1,0 +1,16 @@
+id: bounty_xilnath_jungle_lord_6
+name: 'Bounty: Thaneaya the Sap Tyrant'
+start: posted
+reward_xp: 1164
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: xilnath_jungle_lord_6
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on Thaneaya the Sap Tyrant (level 97). Fell it for 1164
+    XP.
+  collected: 'Bounty collected: Thaneaya the Sap Tyrant is felled. Well hunted.'

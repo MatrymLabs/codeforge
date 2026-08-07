@@ -1,0 +1,15 @@
+id: bounty_sunscar_wyrm
+name: 'Bounty: a pale sand-wyrm'
+start: posted
+reward_xp: 972
+steps:
+- state: posted
+  event: collect
+  to: collected
+  on_defeat: sunscar_wyrm
+  effect: award_xp
+terminal:
+- collected
+labels:
+  posted: A bounty stands on a pale sand-wyrm (level 81). Fell it for 972 XP.
+  collected: 'Bounty collected: a pale sand-wyrm is felled. Well hunted.'

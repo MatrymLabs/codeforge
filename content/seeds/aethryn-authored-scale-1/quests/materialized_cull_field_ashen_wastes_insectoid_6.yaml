@@ -1,0 +1,41 @@
+id: cull_field_ashen_wastes_insectoid_6
+name: 'A small Clearance: the insectoid-kind of The Ashen Wastes Wilds'
+start: s0
+reward_xp: 336
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_ashen_wastes|insectoid
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_ashen_wastes|insectoid
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_ashen_wastes|insectoid
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_ashen_wastes|insectoid
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_ashen_wastes|insectoid
+- state: s5
+  event: cull
+  to: done
+  on_cull: field_ashen_wastes|insectoid
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 0/6 down (336 XP).'
+  s1: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 1/6 down (336 XP).'
+  s2: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 2/6 down (336 XP).'
+  s3: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 3/6 down (336 XP).'
+  s4: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 4/6 down (336 XP).'
+  s5: 'Clear out the insectoid-kind of The Ashen Wastes Wilds: 5/6 down (336 XP).'
+  done: The insectoid-kind of The Ashen Wastes Wilds are cleared out. The ash-tracks
+    are a shade safer.

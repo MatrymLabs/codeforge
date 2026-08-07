@@ -1,0 +1,20 @@
+id: delivery_winters_grasp
+name: 'Delivery: Winter''s Grasp to Red Dune'
+start: posted
+reward_xp: 720
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_winters_grasp
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: red_dunes
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Winter's Grasp is bound for Red Dune. Take it up (720 XP).
+  carrying: Carry the parcel to Red Dune.
+  done: The parcel is delivered to Red Dune. The road keeps its promise.

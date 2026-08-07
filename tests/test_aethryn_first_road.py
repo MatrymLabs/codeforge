@@ -7,7 +7,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 _REPO = Path(__file__).resolve().parent.parent
 
 
@@ -42,7 +41,9 @@ assert s.location == "veridia" and "Veridia" in out
 play("go greenhold")
 play("go square")
 assert s.location == "greenhold_market"
-assert "Greenhold's water" in play("look") or "Greenhold's water" in play("quest veridia_first_road")
+assert "Greenhold's water" in play(
+    "look"
+) or "Greenhold's water" in play("quest veridia_first_road")
 play("out")
 play("out")
 play("go elderwatch")

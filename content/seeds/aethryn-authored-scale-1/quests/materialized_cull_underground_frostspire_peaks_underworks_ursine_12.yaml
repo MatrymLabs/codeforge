@@ -1,0 +1,83 @@
+id: cull_underground_frostspire_peaks_underworks_ursine_12
+name: 'A standing Bounty: the ursine-kind of The Glacial Bastion Foundations'
+start: s0
+reward_xp: 384
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_frostspire_peaks_underworks|ursine
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_frostspire_peaks_underworks|ursine
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 0/12 down (384
+    XP).'
+  s1: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 1/12 down (384
+    XP).'
+  s2: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 2/12 down (384
+    XP).'
+  s3: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 3/12 down (384
+    XP).'
+  s4: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 4/12 down (384
+    XP).'
+  s5: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 5/12 down (384
+    XP).'
+  s6: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 6/12 down (384
+    XP).'
+  s7: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 7/12 down (384
+    XP).'
+  s8: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 8/12 down (384
+    XP).'
+  s9: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 9/12 down (384
+    XP).'
+  s10: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 10/12 down
+    (384 XP).'
+  s11: 'Bring down the ursine-kind of The Glacial Bastion Foundations: 11/12 down
+    (384 XP).'
+  done: The ursine-kind of The Glacial Bastion Foundations are hunted down. The high
+    passes will hold a little longer.

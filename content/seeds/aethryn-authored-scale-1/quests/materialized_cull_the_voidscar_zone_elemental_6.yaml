@@ -1,0 +1,41 @@
+id: cull_the_voidscar_zone_elemental_6
+name: 'A small Contract: the elemental-kind of The Voidscar'
+start: s0
+reward_xp: 600
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: the_voidscar_zone|elemental
+- state: s1
+  event: cull
+  to: s2
+  on_cull: the_voidscar_zone|elemental
+- state: s2
+  event: cull
+  to: s3
+  on_cull: the_voidscar_zone|elemental
+- state: s3
+  event: cull
+  to: s4
+  on_cull: the_voidscar_zone|elemental
+- state: s4
+  event: cull
+  to: s5
+  on_cull: the_voidscar_zone|elemental
+- state: s5
+  event: cull
+  to: done
+  on_cull: the_voidscar_zone|elemental
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the elemental-kind of The Voidscar: 0/6 down (600 XP).'
+  s1: 'Fulfil the contract on the elemental-kind of The Voidscar: 1/6 down (600 XP).'
+  s2: 'Fulfil the contract on the elemental-kind of The Voidscar: 2/6 down (600 XP).'
+  s3: 'Fulfil the contract on the elemental-kind of The Voidscar: 3/6 down (600 XP).'
+  s4: 'Fulfil the contract on the elemental-kind of The Voidscar: 4/6 down (600 XP).'
+  s5: 'Fulfil the contract on the elemental-kind of The Voidscar: 5/6 down (600 XP).'
+  done: The elemental-kind of The Voidscar are put down. The ash-tracks are a shade
+    safer.

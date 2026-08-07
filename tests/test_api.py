@@ -243,9 +243,7 @@ def test_seedlab_task_creation_is_owner_authenticated_idempotent_and_projected(
     assert conflict.status_code == 400
     assert "different content" in conflict.json()["detail"]
 
-    projected = client.get(
-        "/api/seedlab/workspaces/seed-task-api", auth=(account, password)
-    )
+    projected = client.get("/api/seedlab/workspaces/seed-task-api", auth=(account, password))
     assert projected.status_code == 200
     assert projected.json()["project"]["tasks"] == [payload["task"]]
 

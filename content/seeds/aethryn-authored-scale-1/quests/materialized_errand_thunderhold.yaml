@@ -1,0 +1,15 @@
+id: errand_thunderhold
+name: 'Errand: Westgate'
+start: posted
+reward_xp: 2250
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: westgate
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Westgate (2250 XP).
+  done: You bring word to Westgate. It is gratefully received.

@@ -1,0 +1,15 @@
+id: errand_elderwatch
+name: 'Errand: Veridia'
+start: posted
+reward_xp: 15
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: veridia
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Bear a waystone-token to Veridia (15 XP).
+  done: You set the token at Veridia. The stone answers.

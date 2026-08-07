@@ -1,0 +1,17 @@
+id: duskwood_ravenwatch_economy
+canon_status: AUTHORED_LOCAL
+parent_region: duskwood_vale
+parent_zone: duskwood_vale
+flows:
+  - id: fernshade_to_ravenwatch
+    source: duskwood_fernshade_node
+    sink: ravenwatch_lantern_keeper
+    resource: fernshade
+    purpose: warden rites and lantern salve
+    status: modeled
+  - id: lantern_oil_to_hollow_route
+    source: ravenwatch_lantern_keeper
+    sink: duskwood_hollow_lantern
+    resource: lantern_oil
+    purpose: safe boundary marking and return guidance
+    status: modeled_with_reversible_shortage

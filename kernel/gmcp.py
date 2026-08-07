@@ -125,11 +125,7 @@ def aethryn_profile(
 ) -> dict[str, object]:
     """The canonical game profile, loading only a validated current-contract data file."""
     path = (
-        Path(__file__).resolve().parents[1]
-        / "content"
-        / "seeds"
-        / seed_id
-        / "client_profile.yaml"
+        Path(__file__).resolve().parents[1] / "content" / "seeds" / seed_id / "client_profile.yaml"
     )
     if path.exists():
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -145,9 +141,7 @@ def aethryn_profile(
                 for key in ("name", "binding", "fallback")
             ):
                 raise ValueError(f"client profile panel needs name, binding, and fallback: {path}")
-            clean_panels.append(
-                {key: str(panel[key]) for key in ("name", "binding", "fallback")}
-            )
+            clean_panels.append({key: str(panel[key]) for key in ("name", "binding", "fallback")})
         terminology = data.get("terminology", {})
         accessibility = data.get("accessibility", [])
         if not isinstance(terminology, dict) or not all(

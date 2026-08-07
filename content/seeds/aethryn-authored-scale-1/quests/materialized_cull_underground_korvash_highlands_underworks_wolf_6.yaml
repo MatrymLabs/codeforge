@@ -1,0 +1,41 @@
+id: cull_underground_korvash_highlands_underworks_wolf_6
+name: 'A small Thinning: the wolf-kind of The Measured Throne Below'
+start: s0
+reward_xp: 414
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_korvash_highlands_underworks|wolf
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_korvash_highlands_underworks|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Thin out the wolf-kind of The Measured Throne Below: 0/6 down (414 XP).'
+  s1: 'Thin out the wolf-kind of The Measured Throne Below: 1/6 down (414 XP).'
+  s2: 'Thin out the wolf-kind of The Measured Throne Below: 2/6 down (414 XP).'
+  s3: 'Thin out the wolf-kind of The Measured Throne Below: 3/6 down (414 XP).'
+  s4: 'Thin out the wolf-kind of The Measured Throne Below: 4/6 down (414 XP).'
+  s5: 'Thin out the wolf-kind of The Measured Throne Below: 5/6 down (414 XP).'
+  done: The wolf-kind of The Measured Throne Below are thinned back. The region breathes
+    easier.

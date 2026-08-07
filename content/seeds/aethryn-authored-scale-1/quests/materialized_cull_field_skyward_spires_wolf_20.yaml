@@ -1,0 +1,131 @@
+id: cull_field_skyward_spires_wolf_20
+name: 'A great Contract: the wolf-kind of The Skyward Spires Wilds'
+start: s0
+reward_xp: 1660
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_skyward_spires|wolf
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_skyward_spires|wolf
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_skyward_spires|wolf
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_skyward_spires|wolf
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_skyward_spires|wolf
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_skyward_spires|wolf
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_skyward_spires|wolf
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_skyward_spires|wolf
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_skyward_spires|wolf
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_skyward_spires|wolf
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_skyward_spires|wolf
+- state: s11
+  event: cull
+  to: s12
+  on_cull: field_skyward_spires|wolf
+- state: s12
+  event: cull
+  to: s13
+  on_cull: field_skyward_spires|wolf
+- state: s13
+  event: cull
+  to: s14
+  on_cull: field_skyward_spires|wolf
+- state: s14
+  event: cull
+  to: s15
+  on_cull: field_skyward_spires|wolf
+- state: s15
+  event: cull
+  to: s16
+  on_cull: field_skyward_spires|wolf
+- state: s16
+  event: cull
+  to: s17
+  on_cull: field_skyward_spires|wolf
+- state: s17
+  event: cull
+  to: s18
+  on_cull: field_skyward_spires|wolf
+- state: s18
+  event: cull
+  to: s19
+  on_cull: field_skyward_spires|wolf
+- state: s19
+  event: cull
+  to: done
+  on_cull: field_skyward_spires|wolf
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 0/20 down
+    (1660 XP).'
+  s1: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 1/20 down
+    (1660 XP).'
+  s2: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 2/20 down
+    (1660 XP).'
+  s3: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 3/20 down
+    (1660 XP).'
+  s4: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 4/20 down
+    (1660 XP).'
+  s5: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 5/20 down
+    (1660 XP).'
+  s6: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 6/20 down
+    (1660 XP).'
+  s7: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 7/20 down
+    (1660 XP).'
+  s8: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 8/20 down
+    (1660 XP).'
+  s9: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 9/20 down
+    (1660 XP).'
+  s10: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 10/20 down
+    (1660 XP).'
+  s11: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 11/20 down
+    (1660 XP).'
+  s12: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 12/20 down
+    (1660 XP).'
+  s13: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 13/20 down
+    (1660 XP).'
+  s14: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 14/20 down
+    (1660 XP).'
+  s15: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 15/20 down
+    (1660 XP).'
+  s16: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 16/20 down
+    (1660 XP).'
+  s17: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 17/20 down
+    (1660 XP).'
+  s18: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 18/20 down
+    (1660 XP).'
+  s19: 'Fulfil the contract on the wolf-kind of The Skyward Spires Wilds: 19/20 down
+    (1660 XP).'
+  done: The wolf-kind of The Skyward Spires Wilds are put down. The region breathes
+    easier.

@@ -1,0 +1,20 @@
+id: delivery_boulderfall
+name: 'Delivery: Boulderfall to Deepforge City'
+start: posted
+reward_xp: 1200
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_boulderfall
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: deepforge_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Boulderfall is bound for Deepforge City. Take it up (1200 XP).
+  carrying: Carry the parcel to Deepforge City.
+  done: The parcel is delivered to Deepforge City. The road keeps its promise.

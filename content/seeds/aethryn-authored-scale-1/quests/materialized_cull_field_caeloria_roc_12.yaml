@@ -1,0 +1,71 @@
+id: cull_field_caeloria_roc_12
+name: 'A standing Reckoning: the roc-kind of The Caeloria Wilds'
+start: s0
+reward_xp: 240
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: field_caeloria|roc
+- state: s1
+  event: cull
+  to: s2
+  on_cull: field_caeloria|roc
+- state: s2
+  event: cull
+  to: s3
+  on_cull: field_caeloria|roc
+- state: s3
+  event: cull
+  to: s4
+  on_cull: field_caeloria|roc
+- state: s4
+  event: cull
+  to: s5
+  on_cull: field_caeloria|roc
+- state: s5
+  event: cull
+  to: s6
+  on_cull: field_caeloria|roc
+- state: s6
+  event: cull
+  to: s7
+  on_cull: field_caeloria|roc
+- state: s7
+  event: cull
+  to: s8
+  on_cull: field_caeloria|roc
+- state: s8
+  event: cull
+  to: s9
+  on_cull: field_caeloria|roc
+- state: s9
+  event: cull
+  to: s10
+  on_cull: field_caeloria|roc
+- state: s10
+  event: cull
+  to: s11
+  on_cull: field_caeloria|roc
+- state: s11
+  event: cull
+  to: done
+  on_cull: field_caeloria|roc
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the roc-kind of The Caeloria Wilds: 0/12 down (240 XP).'
+  s1: 'Reckon with the roc-kind of The Caeloria Wilds: 1/12 down (240 XP).'
+  s2: 'Reckon with the roc-kind of The Caeloria Wilds: 2/12 down (240 XP).'
+  s3: 'Reckon with the roc-kind of The Caeloria Wilds: 3/12 down (240 XP).'
+  s4: 'Reckon with the roc-kind of The Caeloria Wilds: 4/12 down (240 XP).'
+  s5: 'Reckon with the roc-kind of The Caeloria Wilds: 5/12 down (240 XP).'
+  s6: 'Reckon with the roc-kind of The Caeloria Wilds: 6/12 down (240 XP).'
+  s7: 'Reckon with the roc-kind of The Caeloria Wilds: 7/12 down (240 XP).'
+  s8: 'Reckon with the roc-kind of The Caeloria Wilds: 8/12 down (240 XP).'
+  s9: 'Reckon with the roc-kind of The Caeloria Wilds: 9/12 down (240 XP).'
+  s10: 'Reckon with the roc-kind of The Caeloria Wilds: 10/12 down (240 XP).'
+  s11: 'Reckon with the roc-kind of The Caeloria Wilds: 11/12 down (240 XP).'
+  done: The roc-kind of The Caeloria Wilds are settled with. The farm-roads are the
+    safer for it.

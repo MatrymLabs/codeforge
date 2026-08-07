@@ -1,0 +1,61 @@
+id: forage_underground_zhaar_desert_underworks_dustbloom_10
+name: 'A standing Provision: dustbloom of The Obsidian Pit Galleries'
+start: s0
+reward_xp: 340
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s4
+  event: forage
+  to: s5
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s5
+  event: forage
+  to: s6
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s6
+  event: forage
+  to: s7
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s7
+  event: forage
+  to: s8
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s8
+  event: forage
+  to: s9
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+- state: s9
+  event: forage
+  to: done
+  on_forage: underground_zhaar_desert_underworks|dustbloom
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Lay in dustbloom in The Obsidian Pit Galleries: 0/10 (340 XP).'
+  s1: 'Lay in dustbloom in The Obsidian Pit Galleries: 1/10 (340 XP).'
+  s2: 'Lay in dustbloom in The Obsidian Pit Galleries: 2/10 (340 XP).'
+  s3: 'Lay in dustbloom in The Obsidian Pit Galleries: 3/10 (340 XP).'
+  s4: 'Lay in dustbloom in The Obsidian Pit Galleries: 4/10 (340 XP).'
+  s5: 'Lay in dustbloom in The Obsidian Pit Galleries: 5/10 (340 XP).'
+  s6: 'Lay in dustbloom in The Obsidian Pit Galleries: 6/10 (340 XP).'
+  s7: 'Lay in dustbloom in The Obsidian Pit Galleries: 7/10 (340 XP).'
+  s8: 'Lay in dustbloom in The Obsidian Pit Galleries: 8/10 (340 XP).'
+  s9: 'Lay in dustbloom in The Obsidian Pit Galleries: 9/10 (340 XP).'
+  done: You have laid in dustbloom enough for The Obsidian Pit Galleries. The caravan
+    traders will pay well for it.

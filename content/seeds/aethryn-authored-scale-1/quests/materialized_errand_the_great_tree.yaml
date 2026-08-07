@@ -1,0 +1,15 @@
+id: errand_the_great_tree
+name: 'Errand: Ravenwatch'
+start: posted
+reward_xp: 750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: ravenwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Ravenwatch (750 XP).
+  done: You bring word to Ravenwatch. It is gratefully received.

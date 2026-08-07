@@ -1,0 +1,21 @@
+id: crawl_the_rifted_abyss
+name: 'Descent: The Rifted Abyss'
+start: above
+reward_xp: 6000
+steps:
+- state: above
+  event: enter
+  to: delving
+  on_enter: the_rifted_abyss
+- state: delving
+  event: reach
+  to: done
+  on_enter: the_rifted_abyss_delve_6
+  effect: award_xp
+terminal:
+- done
+labels:
+  above: They say none walk the full depth of The Rifted Abyss. Cross its mouth and
+    descend.
+  delving: You are within The Rifted Abyss. Press on to its deepest chamber.
+  done: You have reached the heart of The Rifted Abyss and lived. Few can (6000 XP).

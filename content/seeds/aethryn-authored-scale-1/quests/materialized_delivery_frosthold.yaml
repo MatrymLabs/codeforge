@@ -1,0 +1,20 @@
+id: delivery_frosthold
+name: 'Delivery: Frosthold to Ironwall Pass'
+start: posted
+reward_xp: 720
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_frosthold
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: ironwall_pass
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Frosthold is bound for Ironwall Pass. Take it up (720 XP).
+  carrying: Carry the parcel to Ironwall Pass.
+  done: The parcel is delivered to Ironwall Pass. The road keeps its promise.

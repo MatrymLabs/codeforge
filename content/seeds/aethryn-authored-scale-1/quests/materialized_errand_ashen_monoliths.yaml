@@ -1,0 +1,15 @@
+id: errand_ashen_monoliths
+name: 'Errand: Silverwatch'
+start: posted
+reward_xp: 1800
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: silverwatch
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Carry word to Silverwatch (1800 XP).
+  done: You bring word to Silverwatch. It is gratefully received.

@@ -23,6 +23,22 @@ from kernel.world.session import Session
 #: no professions.yaml -- the maker simply has no trades to practise, and `advance` is a no-op.
 PROFESSIONS = load_professions(SEED_DIR / "professions.yaml")
 
+try:
+    from kernel.world.material_culture import catalog_professions, load_catalog
+
+    for _profession_id, _profession in catalog_professions(load_catalog()).items():
+        if _profession_id not in PROFESSIONS:
+            PROFESSIONS[_profession_id] = _profession
+        else:
+            # Existing profession ids retain their authored display name and kind; only the
+            # catalog's additional governed records are appended.
+            for _field in ("works", "makes"):
+                for _label in _profession.get(_field, []):
+                    if _label not in PROFESSIONS[_profession_id][_field]:
+                        PROFESSIONS[_profession_id][_field].append(_label)
+except (ImportError, ValueError):
+    pass
+
 #: The skill curve: PER_LEVEL units of practice per level, capped at LEVEL_CAP. Deliberately simple
 #: and legible -- every ten harvests or crafts is a rank, so a maker feels the climb without a
 #: grind wall. Level is DERIVED from earned practice, never stored.

@@ -1,0 +1,20 @@
+id: delivery_twilight_grove
+name: 'Delivery: Twilight Grove to Brightwater'
+start: posted
+reward_xp: 240
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_twilight_grove
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: brightwater
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in Twilight Grove is bound for Brightwater. Take it up (240 XP).
+  carrying: Carry the parcel to Brightwater.
+  done: The parcel is delivered to Brightwater. The road keeps its promise.

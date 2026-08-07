@@ -1,0 +1,40 @@
+id: cull_thalorin_zone_husk_6
+name: 'A small Reckoning: the husk-kind of Thalorin'
+start: s0
+reward_xp: 276
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: thalorin_zone|husk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: thalorin_zone|husk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: thalorin_zone|husk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: thalorin_zone|husk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: thalorin_zone|husk
+- state: s5
+  event: cull
+  to: done
+  on_cull: thalorin_zone|husk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Reckon with the husk-kind of Thalorin: 0/6 down (276 XP).'
+  s1: 'Reckon with the husk-kind of Thalorin: 1/6 down (276 XP).'
+  s2: 'Reckon with the husk-kind of Thalorin: 2/6 down (276 XP).'
+  s3: 'Reckon with the husk-kind of Thalorin: 3/6 down (276 XP).'
+  s4: 'Reckon with the husk-kind of Thalorin: 4/6 down (276 XP).'
+  s5: 'Reckon with the husk-kind of Thalorin: 5/6 down (276 XP).'
+  done: The husk-kind of Thalorin are settled with. The region breathes easier.

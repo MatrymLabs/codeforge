@@ -1,0 +1,21 @@
+id: delivery_the_maelstrom_rise
+name: 'Delivery: The Maelstrom Rise to Aurelian City'
+start: posted
+reward_xp: 2160
+steps:
+- state: posted
+  event: take
+  to: carrying
+  on_take: parcel_the_maelstrom_rise
+- state: carrying
+  event: deliver
+  to: done
+  on_enter: aurelian_city
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: A parcel in The Maelstrom Rise is bound for Aurelian City. Take it up (2160
+    XP).
+  carrying: Carry the parcel to Aurelian City.
+  done: The parcel is delivered to Aurelian City. The road keeps its promise.

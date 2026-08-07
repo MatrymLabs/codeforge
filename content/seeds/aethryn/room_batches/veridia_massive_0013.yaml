@@ -1,0 +1,2531 @@
+batch:
+  id: aethryn_veridia_massive_0013
+  sequence: 13
+  status: ready
+  size: 105
+  final: true
+  link_inference: ordered_route
+  source: Aethryn_Veridia_Massive_Batch_MaxEffort.txt
+  imported_rooms: 104
+  anchor_room: greenhold
+  anchor_exit: wards
+rooms:
+  veridia_massive_alder_court:
+    name: Alder Court
+    room_type: Town Street
+    desc: 'You stand on pale riverstone cobbles between timber houses with painted
+      shutters, where a carved public fountain sends a thin stream into a circular
+      basin.
+
+
+      The air carries lamp oil, wool, and rain, and a smith''s measured hammering
+      drifts between the roofs. The town wall rises above the houses to the west.'
+    exits:
+      east: veridia_massive_copper_square
+      south: veridia_massive_alder_court
+      west: veridia_massive_alder_court
+      north: veridia_massive_copper_square
+      out: greenhold
+    occupants:
+    - A lampwright's apprentice waits beside a loaded handcart
+    objects:
+    - A rack of walking staffs stands near the drainage channel
+    - Rows of clay jars have been arranged beneath the sheltering eaves
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_copper_square:
+    name: Copper Square
+    room_type: Market Lane
+    desc: 'Dark brick paving runs through a close district of old guildhalls faced
+      in gray stone, its course marked by a mosaic of the River Verin that winds across
+      the paving.
+
+
+      Children calling across the lane echoes through the district while roasted roots
+      and chimney smoke lingers near the open doorways.'
+    exits:
+      east: veridia_massive_lantern_walk
+      south: veridia_massive_alder_court
+      west: veridia_massive_alder_court
+      north: veridia_massive_lantern_walk
+    occupants:
+    - A retired watchman sorts a stack of delivery tags
+    objects:
+    - A painted notice board stands near the nearest doorway
+    - Freshly cut flowers have been arranged beneath a striped awning
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_lantern_walk:
+    name: Lantern Walk
+    room_type: Civic Square
+    desc: 'Wide flagstones of river-worn slate form a quiet civic square lit by hanging
+      iron lanterns that sway gently even in still air. Tall alder trees grow in iron
+      cages at each corner, their leaves whispering against the stone.
+
+
+      The air is cooler here and carries the faint scent of beeswax and old parchment.'
+    exits:
+      north: veridia_massive_riverstone_gate
+      east: veridia_massive_riverstone_gate
+      south: veridia_massive_copper_square
+      west: veridia_massive_copper_square
+    occupants:
+    - A young clerk carries a ledger under one arm
+    - A pair of street musicians tune a fiddle and a small drum
+    objects:
+    - Stacks of folded pamphlets rest on a public table
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverstone_gate:
+    name: Riverstone Gate
+    room_type: Town Gate
+    desc: 'Massive double doors of iron-banded oak stand open within a deep arch of
+      pale riverstone. The gatehouse towers rise on either side, their arrow slits
+      dark and watchful.
+
+
+      The smell of wet wool and horse sweat mixes with the cleaner air of the open
+      fields.'
+    exits:
+      north: veridia_massive_woolwright_s_row
+      south: veridia_massive_lantern_walk
+      east: veridia_massive_woolwright_s_row
+      west: veridia_massive_lantern_walk
+    occupants: []
+    objects:
+    - A toll chest sits bolted to the gatehouse wall
+    - A weather-stained map of Veridia is pinned beside the postern door
+    - Muddy boot prints track in both directions across the threshold
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_woolwright_s_row:
+    name: Woolwright's Row
+    room_type: Craft Lane
+    desc: 'Narrow timber houses lean toward one another over a lane paved with uneven
+      river cobbles. Every doorway displays a hanging sign of spun wool or dyed cloth.
+      Steam rises from open vats behind the houses.
+
+
+      The air is thick with the smell of lanolin, woodsmoke, and wet fleece.'
+    exits:
+      north: veridia_massive_temple_court
+      south: veridia_massive_riverstone_gate
+      west: veridia_massive_riverstone_gate
+      east: veridia_massive_temple_court
+    occupants:
+    - A woman cards wool on a low stool outside her door
+    objects:
+    - Bales of raw fleece are stacked under a canvas lean-to
+    - A length of bright green cloth has been stretched on a wooden frame to dry
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_temple_court:
+    name: Temple Court
+    room_type: Sacred Ground
+    desc: 'Smooth gray flagstones form a quiet courtyard before the Temple of the
+      Verdant. Tall white-barked birches grow in careful rows, their leaves casting
+      shifting green light across the stones.
+
+
+      The air is cooler here and carries the faint scent of crushed mint and old incense.'
+    exits:
+      east: veridia_massive_guard_barracks_yard
+      south: veridia_massive_woolwright_s_row
+      west: veridia_massive_woolwright_s_row
+      north: veridia_massive_guard_barracks_yard
+    occupants:
+    - A young acolyte sweeps the courtyard with a birch-twig broom
+    objects:
+    - Clay bowls of spring water rest on the altar steps
+    - A wooden collection box is bolted to the temple wall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_guard_barracks_yard:
+    name: Guard Barracks Yard
+    room_type: Military
+    desc: 'A square of hard-packed earth lies between the town wall and a long stone
+      building with narrow windows. Weapon racks stand under a sloping roof and a
+      pair of practice dummies lean against the wall.
+
+
+      The smell of oil, leather, and damp stone is strong.'
+    exits:
+      south: veridia_massive_temple_court
+      west: veridia_massive_temple_court
+      east: veridia_massive_baker_s_alley
+      north: veridia_massive_baker_s_alley
+    occupants:
+    - A young recruit sits on a bench polishing a helmet
+    objects:
+    - A water barrel and a dipper stand near the door
+    - A notice board lists watch rotations in neat handwriting
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_baker_s_alley:
+    name: Baker's Alley
+    room_type: Side Street
+    desc: 'This narrow alley smells strongly of fresh bread and woodsmoke. Low timber
+      buildings lean close overhead and the cobbles are scattered with flour dust
+      and fallen crumbs.
+
+
+      Warm light spills from an open bakery door.'
+    exits:
+      north: veridia_massive_tannery_lane
+      south: veridia_massive_guard_barracks_yard
+      east: veridia_massive_tannery_lane
+      west: veridia_massive_guard_barracks_yard
+    occupants:
+    - A flour-dusted apprentice carries a tray of cooling loaves
+    objects:
+    - A small cat sleeps on a windowsill above a stack of empty flour sacks
+    - A wooden bench has been placed against the warm bakery wall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_tannery_lane:
+    name: Tannery Lane
+    room_type: Craft District
+    desc: The air here is sharp with the smell of curing hides and woodsmoke. Low
+      stone buildings with wide open doors line a sloping lane that drains toward
+      the river. Stretched hides hang on wooden frames.
+    exits:
+      north: veridia_massive_harbor_watch_steps
+      south: veridia_massive_baker_s_alley
+      west: veridia_massive_baker_s_alley
+      east: veridia_massive_harbor_watch_steps
+    occupants:
+    - A tanner works a hide over a wooden beam
+    objects:
+    - Bundles of bark and vats of dark liquid stand under a rough shelter
+    - A large wooden drying rack holds several finished pieces of leather
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_harbor_watch_steps:
+    name: Harbor Watch Steps
+    room_type: River Access
+    desc: 'Wide stone steps lead down from the town level toward a small wooden landing
+      on the River Verin. Mooring posts stand in the water and a pair of small boats
+      are tied alongside.
+
+
+      The river smells clean and cold. Gulls call overhead.'
+    exits:
+      up: veridia_massive_tannery_lane
+      north: veridia_massive_civic_hall_entrance
+      south: veridia_massive_tannery_lane
+      east: veridia_massive_civic_hall_entrance
+    occupants:
+    - A fisherman mends a net on the lowest step
+    objects:
+    - A coil of rope and a wooden bucket sit near the posts
+    - A simple sign warns of the current's strength after heavy rain
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_civic_hall_entrance:
+    name: Civic Hall Entrance
+    room_type: Civic
+    desc: 'Broad stone steps rise to the heavy oak doors of Greenhold''s civic hall.
+      Carved river stones form the lintel and two iron lanterns flank the entrance.
+
+
+      The air smells of old wood and beeswax.'
+    exits:
+      south: veridia_massive_harbor_watch_steps
+      east: veridia_massive_old_well_court
+      west: veridia_massive_harbor_watch_steps
+      north: veridia_massive_old_well_court
+    occupants:
+    - A clerk stands just inside the doorway with a ledger
+    objects:
+    - A pair of stone benches face each other across the steps
+    - A bronze plaque records the founding year of the current hall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_old_well_court:
+    name: Old Well Court
+    room_type: Residential
+    desc: 'A quiet residential court centers on an ancient stone well whose wooden
+      cover is worn smooth by generations of hands. Timber houses with flower boxes
+      surround the space.
+
+
+      The air is still and carries the scent of cooking herbs and damp stone.'
+    exits:
+      north: veridia_massive_smithy_lane
+      east: veridia_massive_smithy_lane
+      south: veridia_massive_civic_hall_entrance
+      west: veridia_massive_civic_hall_entrance
+    occupants:
+    - A child turns the well handle while an older woman holds a bucket
+    objects:
+    - Clay pots of herbs grow along the sunny side of the court
+    - A wooden bench circles part of the well
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_smithy_lane:
+    name: Smithy Lane
+    room_type: Craft Street
+    desc: 'The ringing of hammer on anvil is constant here. Open-fronted forges line
+      both sides of a short, soot-stained street. Sparks fly into the air with every
+      strike and the heat is noticeable even from the middle of the lane.
+
+
+      The air smells of hot metal, coal smoke, and quenched iron.'
+    exits:
+      north: veridia_massive_herbalist_s_row
+      south: veridia_massive_old_well_court
+      east: veridia_massive_herbalist_s_row
+      west: veridia_massive_old_well_court
+    occupants:
+    - A burly smith works a glowing billet on a large anvil
+    objects:
+    - Tongs, hammers, and unfinished tools hang from the forge walls
+    - A water trough for quenching stands outside the nearest forge
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_herbalist_s_row:
+    name: Herbalist's Row
+    room_type: Quiet Street
+    desc: 'Narrow timber houses with green-painted shutters line this quieter street.
+      Bundles of drying herbs hang from almost every eave and the air is thick with
+      the scent of mint, yarrow, and dried lavender.
+
+
+      A small garden of medicinal plants grows in a fenced plot beside one house.'
+    exits:
+      north: veridia_massive_candlewright_street
+      south: veridia_massive_smithy_lane
+      east: veridia_massive_candlewright_street
+      west: veridia_massive_smithy_lane
+    occupants:
+    - An older woman sorts dried leaves on a long wooden table
+    objects:
+    - Clay jars and small cloth bags are arranged neatly on a shelf under the eaves
+    - A wooden sign shaped like a mortar and pestle hangs above the nearest door
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_candlewright_street:
+    name: Candlewright Street
+    room_type: Craft Street
+    desc: 'The smell of beeswax and tallow is strong along this short street of candle
+      makers. Windows display rows of finished candles in many sizes and the occasional
+      colored taper.
+
+
+      Warm yellow light spills from several open workshops even in daylight.'
+    exits:
+      north: veridia_massive_river_view_terrace
+      south: veridia_massive_herbalist_s_row
+      west: veridia_massive_herbalist_s_row
+      east: veridia_massive_river_view_terrace
+    occupants:
+    - A young apprentice dips wicks into a pot of melted wax
+    objects:
+    - Racks of cooling candles stand in neat rows under a lean-to
+    - A large iron cauldron of wax simmers over a low fire
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_view_terrace:
+    name: River View Terrace
+    room_type: Overlook
+    desc: 'A short row of houses stands on a slight rise with clear views down to
+      the River Verin. The street is paved with the same pale riverstone as the rest
+      of the inner wards and a low stone wall runs along the river side.
+
+
+      The air is fresher here and carries the scent of the water below.'
+    exits:
+      north: veridia_massive_market_lane_east
+      south: veridia_massive_candlewright_street
+      east: veridia_massive_market_lane_east
+      down: veridia_massive_market_lane_east
+    occupants:
+    - A woman sits on the wall sewing while watching the river
+    objects:
+    - Clay flower pots line several windowsills
+    - A narrow set of steps leads down toward the harbor landing
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_market_lane_east:
+    name: Market Lane East
+    room_type: Market
+    desc: 'This continuation of the market district is narrower and more crowded with
+      permanent stalls. Cloth awnings create a patchwork of shade and the ground is
+      littered with discarded vegetable leaves and straw.
+
+
+      The mixed smells of produce, cheese, and fresh bread fill the air.'
+    exits:
+      west: veridia_massive_river_view_terrace
+      east: veridia_massive_quiet_court
+      north: veridia_massive_quiet_court
+      south: veridia_massive_river_view_terrace
+    occupants:
+    - A cheese seller cuts samples from a large wheel
+    - A small boy tries to interest passersby in wooden whistles
+    objects:
+    - Baskets of early apples and root vegetables sit on low tables
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_quiet_court:
+    name: Quiet Court
+    room_type: Residential
+    desc: 'A small, almost hidden court opens off the main streets. The cobbles are
+      cleaner here and a single young tree grows in the center. The surrounding houses
+      are modest but well-kept.
+
+
+      The air is still and quiet. Only distant town sounds reach this place.'
+    exits:
+      west: veridia_massive_wallside_alley
+      south: veridia_massive_market_lane_east
+    occupants: []
+    objects:
+    - A wooden bench sits beneath the tree
+    - A pair of laundry lines stretch between upper windows
+    - A cat watches from a sunny windowsill
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_wallside_alley:
+    name: Wallside Alley
+    room_type: Side Alley
+    desc: 'This narrow alley runs hard against the inner face of the town wall. The
+      stones of the wall are cool and damp and the alley itself is always in shadow.
+      Drainage channels run along the base of the wall.
+
+
+      The air smells of wet stone and moss.'
+    exits:
+      north: veridia_massive_fountain_square
+      south: veridia_massive_quiet_court
+      east: veridia_massive_fountain_square
+    occupants: []
+    objects:
+    - A stack of firewood has been piled against the wall
+    - A narrow wooden door set into the wall leads to a postern
+    - Moss and small ferns grow in the cracks between the wall stones
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_fountain_square:
+    name: Fountain Square
+    room_type: Civic
+    desc: 'A larger public fountain dominates this open square. Water spills from
+      the mouths of carved river fish into a wide circular basin. Benches of pale
+      stone surround the fountain and the square is popular at most hours.
+
+
+      The sound of falling water is constant and pleasant. The air is cooler near
+      the basin.'
+    exits:
+      north: veridia_massive_north_market
+      south: veridia_massive_wallside_alley
+      east: veridia_massive_north_market
+      west: veridia_massive_wallside_alley
+    occupants:
+    - Children sail small wooden boats in the fountain
+    - A street vendor sells roasted nuts from a small cart
+    objects:
+    - Pigeons strut around the basin edge looking for scraps
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_north_market:
+    name: North Market
+    room_type: Outer Market
+    desc: 'Open-air stalls of rough timber and canvas fill a broad packed-earth square
+      just inside the northern wall. Merchants call their wares while carts rattle
+      in from the river road.
+
+
+      The mixed smells of fresh bread, smoked fish, and horse dung hang in the air.'
+    exits:
+      south: veridia_massive_fountain_square
+      east: veridia_massive_south_pasture_gate
+      west: veridia_massive_fountain_square
+      north: veridia_massive_south_pasture_gate
+    occupants:
+    - A spice merchant arranges clay jars on a low table
+    - A boy sells roasted chestnuts from a handcart
+    - A pair of dogs sleep beneath an empty stall
+    objects: []
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_south_pasture_gate:
+    name: South Pasture Gate
+    room_type: Town Edge
+    desc: 'A simple wooden gate stands open in the low stone wall that marks the southern
+      edge of Greenhold. Beyond it the land falls away into rolling green pasture
+      dotted with sheep.
+
+
+      The wind carries the clean smell of grass and damp earth.'
+    exits:
+      north: veridia_massive_east_wall_path
+      south: veridia_massive_north_market
+      east: veridia_massive_east_wall_path
+      west: veridia_massive_north_market
+    occupants:
+    - A shepherd leans on the gatepost chewing a stem of grass
+    objects:
+    - A half-empty water trough stands just inside the wall
+    - Fresh hoofprints and sheep droppings mark the track
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_east_wall_path:
+    name: East Wall Path
+    room_type: Town Wall
+    desc: 'A narrow path of packed earth runs along the inside of Greenhold''s eastern
+      wall. Arrow slits open at regular intervals and the wall walk can be reached
+      by wooden ladders.
+
+
+      The wind is stronger here and carries the scent of the open fields beyond the
+      wall.'
+    exits:
+      north: veridia_massive_west_wall_path
+      south: veridia_massive_south_pasture_gate
+      west: veridia_massive_south_pasture_gate
+      up: veridia_massive_south_pasture_gate
+    occupants: []
+    objects:
+    - A ladder leans against the wall leading up to the walk
+    - A stack of spare spears rests under a small shelter
+    - Moss grows thick on the lower stones of the wall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_west_wall_path:
+    name: West Wall Path
+    room_type: Town Wall
+    desc: 'This stretch of wall path runs along the western side of Greenhold where
+      the land drops more sharply toward the river. The stones are darker with age
+      and damp.
+
+
+      The river can be heard faintly below. The air smells of wet stone and willow.'
+    exits:
+      north: veridia_massive_stable_yard
+      south: veridia_massive_east_wall_path
+      east: veridia_massive_stable_yard
+      down: veridia_massive_stable_yard
+    occupants:
+    - A guard leans on the parapet looking westward
+    objects:
+    - A small iron-bound chest is bolted near the postern
+    - Ivy has begun to climb the lower courses of the wall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_stable_yard:
+    name: Stable Yard
+    room_type: Outer Ward
+    desc: A wide yard of hard earth and scattered straw stands beside a long timber
+      stable. Horses shift in their stalls and the smell of hay, manure, and leather
+      is strong.
+    exits:
+      north: veridia_massive_carters_rest
+      east: veridia_massive_carters_rest
+      south: veridia_massive_west_wall_path
+      west: veridia_massive_west_wall_path
+    occupants:
+    - A stablehand brushes down a bay mare
+    objects:
+    - Bales of hay are stacked against the stable wall
+    - A wooden mounting block stands near the yard entrance
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_carters_rest:
+    name: Carters' Rest
+    room_type: Outer Yard
+    desc: 'An open yard just inside the southern gate serves as a resting place for
+      wagons and carters. Several carts stand with their shafts raised and horses
+      crop grass along the wall.
+
+
+      The air smells of dust, horse, and woodsmoke from a small cookfire.'
+    exits:
+      north: veridia_massive_north_gate_approach
+      south: veridia_massive_stable_yard
+      east: veridia_massive_north_gate_approach
+      west: veridia_massive_stable_yard
+    occupants:
+    - A carter sits on a wagon bed eating bread and cheese
+    objects:
+    - A water barrel and dipper stand under a lean-to
+    - Spare wagon wheels lean against the wall in a neat row
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_north_gate_approach:
+    name: North Gate Approach
+    room_type: Outer Gate
+    desc: 'The northern gate of Greenhold is smaller than the main riverstone gate
+      but still solid. Two guard towers flank a heavy wooden door that stands open
+      during daylight hours. The road beyond leads into the northern pastures.
+
+
+      The air is cooler and carries the scent of open grassland.'
+    exits:
+      south: veridia_massive_carters_rest
+      north: veridia_massive_east_gate_path
+      east: veridia_massive_east_gate_path
+      west: veridia_massive_carters_rest
+    occupants:
+    - A pair of guards check the occasional cart
+    objects:
+    - A wooden board lists current tolls and notices
+    - Mud from the road has been tracked across the threshold
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_east_gate_path:
+    name: East Gate Path
+    room_type: Outer Gate
+    desc: 'A secondary gate opens eastward toward the meadows and the road to Elderwatch.
+      The gate is simpler, with a single tower and a reinforced wooden door. Outside,
+      the land opens quickly into pasture.
+
+
+      The wind carries the smell of grass and distant forest.'
+    exits:
+      west: veridia_massive_north_gate_approach
+      east: veridia_massive_wall_walk_north
+      north: veridia_massive_wall_walk_north
+      south: veridia_massive_north_gate_approach
+    occupants:
+    - A guard sits on a stool just inside the gate
+    objects:
+    - A small shrine to safe travel stands beside the gatepost
+    - Wagon ruts deepen immediately beyond the threshold
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_wall_walk_north:
+    name: Wall Walk North
+    room_type: Town Wall
+    desc: 'The wall walk here offers a clear view northward across the pastures. The
+      stone parapet is chest-high and worn smooth by years of weather and watchmen.
+      Ladders lead down to the outer wards at intervals.
+
+
+      The wind is strong and clean. Greenhold''s rooftops spread out to the south.'
+    exits:
+      south: veridia_massive_east_gate_path
+      east: veridia_massive_wall_walk_south
+      west: veridia_massive_east_gate_path
+      down: veridia_massive_wall_walk_south
+    occupants:
+    - A guard paces slowly along the walk
+    objects:
+    - A covered signal fire pit sits ready but unlit
+    - Arrow slits look outward across the open land
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_wall_walk_south:
+    name: Wall Walk South
+    room_type: Town Wall
+    desc: 'From this section of the wall the southern meadows and the distant tree
+      line of Duskwood are visible. The stones underfoot are uneven in places where
+      repairs have been made over the years.
+
+
+      The air smells of the open fields. A hawk circles high above the meadows.'
+    exits:
+      north: veridia_massive_outer_stable_paddock
+      east: veridia_massive_outer_stable_paddock
+      west: veridia_massive_wall_walk_north
+      down: veridia_massive_outer_stable_paddock
+    occupants: []
+    objects:
+    - A spare quiver of arrows hangs from a peg on the parapet
+    - A wooden shelter offers brief protection from rain
+    - The town roofs fall away to the north
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_outer_stable_paddock:
+    name: Outer Stable Paddock
+    room_type: Paddock
+    desc: 'A larger paddock of open grass lies just outside the stable yard, enclosed
+      by a solid wooden fence. Several horses graze here during the day. A water trough
+      and a hay rack stand at one end.
+
+
+      The air smells of grass and horse. Flies buzz around the trough.'
+    exits:
+      west: veridia_massive_wall_walk_south
+      east: veridia_massive_riverbend_outer_market
+      north: veridia_massive_riverbend_outer_market
+    occupants:
+    - A stablehand moves among the horses with a halter
+    - Manure has been piled neatly in one corner for later removal
+    objects:
+    - The fence gate opens back toward the stable yard
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_outer_market:
+    name: Riverbend Outer Market
+    room_type: Town Edge
+    desc: 'The first stalls of Riverbend appear along the road as it enters the town.
+      Fishmongers, net-makers, and boatwrights display their goods under canvas awnings.
+      The river is only a short walk to the east.
+
+
+      The air smells strongly of fish, tar, and wet rope. Gulls cry overhead.'
+    exits:
+      north: veridia_massive_riverbend_docks
+      south: veridia_massive_outer_stable_paddock
+      east: veridia_massive_riverbend_docks
+      west: veridia_massive_outer_stable_paddock
+    occupants: []
+    objects:
+    - A net-mender works on a large fishing net stretched between two posts
+    - Barrels of salted fish are stacked under an open shed
+    - A small shrine to the river spirits stands at the edge of the market
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_docks:
+    name: Riverbend Docks
+    room_type: Harbor
+    desc: 'A long wooden dock extends into the River Verin. Several fishing boats
+      and a pair of small cargo barges are moored alongside. The planks underfoot
+      are worn smooth and stained with tar.
+
+
+      The river moves steadily past. The air is full of the smell of water, fish,
+      and wet wood.'
+    exits:
+      west: veridia_massive_riverbend_outer_market
+      north: veridia_massive_riverbend_market_square
+      south: veridia_massive_riverbend_outer_market
+      east: veridia_massive_riverbend_market_square
+    occupants:
+    - A boatman coils rope on the dock
+    objects:
+    - Fish crates are stacked near the shore end of the dock
+    - A wooden crane stands ready for unloading heavier cargo
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_market_square:
+    name: Riverbend Market Square
+    room_type: Market
+    desc: 'A broad open square forms the commercial heart of Riverbend. Stalls and
+      permanent shops surround a central space where carts can turn. The river is
+      visible between buildings to the east.
+
+
+      The mixed smells of fish, bread, and river mud fill the air. Voices call constantly.'
+    exits:
+      north: veridia_massive_boatwright_s_yard
+      south: veridia_massive_riverbend_docks
+      east: veridia_massive_boatwright_s_yard
+      west: veridia_massive_riverbend_docks
+    occupants: []
+    objects:
+    - A fishwife gutting fish works at a long table
+    - Baskets of smoked eels hang from a stall frame
+    - A public notice board is covered with local messages and job offers
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_boatwright_s_yard:
+    name: Boatwright's Yard
+    room_type: Craft Yard
+    desc: 'An open yard beside the river is filled with the skeletons of boats under
+      construction or repair. Wood shavings cover the ground and the smell of fresh-cut
+      timber and tar is strong.
+
+
+      The sound of saws and hammers is constant during daylight.'
+    exits:
+      west: veridia_massive_riverbend_market_square
+      east: veridia_massive_net_makers_row
+      north: veridia_massive_net_makers_row
+      south: veridia_massive_riverbend_market_square
+    occupants: []
+    objects:
+    - A boatwright shapes a curved timber with an adze
+    - Stacks of seasoned planks lean against a long shed
+    - A pot of hot tar simmers over a small fire
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_net_makers_row:
+    name: Net Makers' Row
+    room_type: Craft Street
+    desc: This short street is lined with workshops where fishing nets are made and
+      repaired. Large nets hang drying between buildings and the air smells of hemp,
+      tar, and river water.
+    exits:
+      north: veridia_massive_riverbend_inn_yard
+      south: veridia_massive_boatwright_s_yard
+      east: veridia_massive_riverbend_inn_yard
+      west: veridia_massive_boatwright_s_yard
+    occupants: []
+    objects:
+    - An old net maker sits in a doorway splicing rope
+    - Coils of heavy line are stacked under the eaves
+    - A finished net hangs from a high beam for final inspection
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_inn_yard:
+    name: Riverbend Inn Yard
+    room_type: Inn
+    desc: 'A spacious yard in front of a three-story timber inn offers space for wagons
+      and horses. A painted sign showing a leaping fish hangs above the main door.
+      The smell of cooking and ale drifts from within.
+
+
+      Travelers and locals move in and out of the inn at all hours.'
+    exits:
+      north: veridia_massive_fishermen_s_quarters
+      south: veridia_massive_net_makers_row
+      east: veridia_massive_fishermen_s_quarters
+      west: veridia_massive_net_makers_row
+    occupants:
+    - A stablehand takes a horse's reins from a newly arrived rider
+    objects:
+    - Benches and tables stand under a large oak in the yard
+    - A water trough sits near the stable entrance
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_fishermen_s_quarters:
+    name: Fishermen's Quarters
+    room_type: Residential
+    desc: 'Narrow streets of small timber houses run down toward the river. Nets hang
+      drying from almost every wall and the smell of fish is permanent here. Children
+      play between the houses.
+
+
+      The air is damp and carries the constant sound of the river.'
+    exits:
+      north: veridia_massive_riverbend_temple
+      south: veridia_massive_riverbend_inn_yard
+      east: veridia_massive_riverbend_temple
+      west: veridia_massive_riverbend_inn_yard
+    occupants:
+    - A woman mends a net on her doorstep
+    objects:
+    - Fish racks stand in several small yards
+    - A narrow alley leads down to a private landing
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_temple:
+    name: Riverbend Temple
+    room_type: Sacred
+    desc: 'A modest stone temple dedicated to the river and the cycle of water stands
+      near the center of town. The entrance faces the river and a simple fountain
+      of clear water plays in the courtyard.
+
+
+      The air is cooler and quieter here. The sound of the fountain is calming.'
+    exits:
+      south: veridia_massive_fishermen_s_quarters
+      east: veridia_massive_upper_riverbend
+      west: veridia_massive_fishermen_s_quarters
+      north: veridia_massive_upper_riverbend
+    occupants:
+    - An acolyte tends the fountain and sweeps the courtyard
+    objects:
+    - Offerings of small carved fish and river stones sit on a low altar
+    - A wooden collection box is fixed beside the door
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_upper_riverbend:
+    name: Upper Riverbend
+    room_type: Residential
+    desc: 'The ground rises slightly as the town moves away from the river. The houses
+      here are a little larger and the streets a little wider. Gardens and small orchards
+      appear between the buildings.
+
+
+      The air is cleaner and carries less of the river smell.'
+    exits:
+      north: veridia_massive_riverbend_south_gate
+      south: veridia_massive_riverbend_temple
+      east: veridia_massive_riverbend_south_gate
+      west: veridia_massive_riverbend_temple
+    occupants: []
+    objects:
+    - A gardener works among rows of vegetables
+    - Laundry hangs between houses in the breeze
+    - A stone well stands at a small crossroads
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_south_gate:
+    name: Riverbend South Gate
+    room_type: Town Gate
+    desc: 'The southern gate of Riverbend is a simple but solid timber structure with
+      a single guard post. Beyond it the road continues south along the river toward
+      the lower meadows.
+
+
+      The air carries the scent of the open land beyond.'
+    exits:
+      north: veridia_massive_riverbend_north_gate
+      south: veridia_massive_upper_riverbend
+      east: veridia_massive_riverbend_north_gate
+      west: veridia_massive_upper_riverbend
+    occupants:
+    - A guard leans on a spear watching the road
+    objects:
+    - A small toll box sits on a post beside the gate
+    - Wagon tracks lead both into and out of town
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_north_gate:
+    name: Riverbend North Gate
+    room_type: Town Gate
+    desc: 'The northern approach to Riverbend is marked by a low stone arch and a
+      wooden gate that stands open. The road from Greenhold arrives here after following
+      the river.
+
+
+      The smell of the town and the river mixes with the cleaner air of the road.'
+    exits:
+      south: veridia_massive_riverbend_south_gate
+      north: veridia_massive_tanner_s_bend
+      east: veridia_massive_tanner_s_bend
+      west: veridia_massive_riverbend_south_gate
+    occupants:
+    - A pair of children sit on the wall watching travelers
+    objects:
+    - A weathered sign welcomes visitors to Riverbend
+    - Muddy ruts show the volume of recent traffic
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_tanner_s_bend:
+    name: Tanner's Bend
+    room_type: Craft District
+    desc: On a slight bend of the river just outside the main docks, a small tanning
+      operation processes hides and nets. The smell is strong and the ground is stained.
+    exits:
+      north: veridia_massive_river_verin_bank_west_1
+      south: veridia_massive_riverbend_north_gate
+      west: veridia_massive_riverbend_north_gate
+    occupants:
+    - Workers move between vats and drying racks
+    objects:
+    - Stretched hides hang on frames facing the sun
+    - A wooden walkway keeps feet out of the worst of the mud
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_verin_bank_west_1:
+    name: River Verin Bank West 1
+    room_type: Riverbank
+    desc: 'The River Verin runs broad and clear, its surface broken by slow eddies
+      around half-submerged stones. Willows lean far out over the water, their long
+      leaves trailing in the current.
+
+
+      The air smells of wet earth, willow, and cold water. Dragonflies skim the surface.'
+    exits:
+      north: veridia_massive_river_verin_bank_west_2
+      south: veridia_massive_tanner_s_bend
+      east: veridia_massive_river_verin_bank_west_2
+      west: veridia_massive_tanner_s_bend
+    occupants:
+    - A fisherman sits on a large flat stone with a simple line in the water
+    objects:
+    - A flat-bottomed ferry boat is tied to a leaning post
+    - A path of packed earth follows the bank both north and south
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_verin_bank_west_2:
+    name: River Verin Bank West 2
+    room_type: Riverbank
+    desc: 'Further along the western bank the willows grow thicker and the current
+      is a little stronger. A natural shelf of stone provides a good place to sit
+      above the water.
+
+
+      The smell of the river is clean and constant. Birds move in the branches overhead.'
+    exits:
+      north: veridia_massive_river_verin_bank_west_3
+      south: veridia_massive_river_verin_bank_west_1
+      east: veridia_massive_river_verin_bank_west_3
+      west: veridia_massive_river_verin_bank_west_1
+    occupants: []
+    objects:
+    - A discarded fishing line is tangled in the roots of a willow
+    - Smooth stones have been stacked into a small cairn by previous travelers
+    - The path continues clearly in both directions
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_verin_bank_west_3:
+    name: River Verin Bank West 3
+    room_type: Riverbank
+    desc: 'The bank opens into a small grassy clearing beside the water. The river
+      is wider here and the far bank is clearly visible. A few large boulders sit
+      half in the water.
+
+
+      The air is warm in the clearing. The sound of the current is steady and soothing.'
+    exits:
+      north: veridia_massive_river_verin_bank_east_1
+      south: veridia_massive_river_verin_bank_west_2
+      east: veridia_massive_river_verin_bank_east_1
+      west: veridia_massive_river_verin_bank_west_2
+    occupants: []
+    objects:
+    - A simple fire ring of stones shows signs of recent use
+    - A log has been dragged close to the water to serve as a seat
+    - Otter tracks mark the soft mud at the water's edge
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_verin_bank_east_1:
+    name: River Verin Bank East 1
+    room_type: Riverbank
+    desc: 'The eastern bank is steeper and rockier. Pale stones form a natural landing
+      in places and the current runs a little faster here. Tall reeds grow in the
+      shallows.
+
+
+      The smell of river water and crushed reed is strong.'
+    exits:
+      north: veridia_massive_river_verin_bank_east_2
+      south: veridia_massive_river_verin_bank_west_3
+      west: veridia_massive_river_verin_bank_west_3
+      east: veridia_massive_river_verin_bank_east_2
+    occupants: []
+    objects:
+    - A narrow path climbs the bank toward the eastern meadows
+    - A half-sunken log serves as a rough seat near the water
+    - Fresh otter tracks mark the mud at the water's edge
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_verin_bank_east_2:
+    name: River Verin Bank East 2
+    room_type: Riverbank
+    desc: 'Reeds and sedges grow thick along this stretch of the eastern bank. The
+      ground is softer and the path is narrower, sometimes almost disappearing among
+      the plants.
+
+
+      The air is still and full of the smell of water plants. Hidden birds call from
+      the reeds.'
+    exits:
+      north: veridia_massive_willow_crossing
+      south: veridia_massive_river_verin_bank_east_1
+      west: veridia_massive_river_verin_bank_east_1
+      east: veridia_massive_willow_crossing
+    occupants: []
+    objects:
+    - A narrow channel of open water winds through the denser growth
+    - A wooden stake marks a safe place to step down to the water
+    - Dragonflies hover in the warmer air above the reeds
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_willow_crossing:
+    name: Willow Crossing
+    room_type: Ford
+    desc: 'Here the River Verin shallows over a bed of pale stones, forming a natural
+      ford. Willow trees grow thick on both banks, their roots tangled in the water.
+      Wagon ruts and hoofprints mark the crossing clearly.
+
+
+      The water runs cold and clear around the ankles of anyone who wades.'
+    exits:
+      east: veridia_massive_north_river_bend
+      west: veridia_massive_river_verin_bank_east_2
+      north: veridia_massive_north_river_bend
+      south: veridia_massive_river_verin_bank_east_2
+    occupants: []
+    objects:
+    - A simple wooden post marks the safest line across the stones
+    - A pair of herons stand motionless in the shallows downstream
+    - Driftwood has been piled on the western bank by previous travelers
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_north_river_bend:
+    name: North River Bend
+    room_type: Riverbank
+    desc: 'The river curves gently northward, creating a broad shallow eddy on the
+      western side. Large smooth stones form natural seats and the bank is thick with
+      wild mint and watercress.
+
+
+      The current is quieter in the bend. The air is cool and smells of mint and clean
+      water.'
+    exits:
+      south: veridia_massive_willow_crossing
+      north: veridia_massive_south_river_meadow_bank
+      east: veridia_massive_south_river_meadow_bank
+      west: veridia_massive_willow_crossing
+    occupants: []
+    objects:
+    - A small wooden fishing platform extends a few feet over the water
+    - Someone has left a clay jug cooling in the shallows
+    - A narrow footpath continues along the bank in both directions
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_south_river_meadow_bank:
+    name: South River Meadow Bank
+    room_type: River Meadow
+    desc: 'Open meadow runs right down to the river''s edge. The grass is rich and
+      green, kept short by regular grazing. The Verin moves past in slow silver curves.
+
+
+      The air smells of warm grass and river. Bees work the clover.'
+    exits:
+      north: veridia_massive_ferry_landing_north
+      south: veridia_massive_north_river_bend
+      east: veridia_massive_ferry_landing_north
+      west: veridia_massive_north_river_bend
+    occupants: []
+    objects:
+    - A low stone wall marks the edge of a nearby farm's pasture
+    - A pair of cows stand knee-deep in the shallows drinking
+    - A simple stile crosses the wall toward the farm track
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_ferry_landing_north:
+    name: Ferry Landing North
+    room_type: River Crossing
+    desc: 'A solid wooden landing juts into the river where the current is moderate.
+      Heavy posts and thick ropes secure a larger flat-bottomed ferry. A small hut
+      of weathered timber stands on the bank.
+
+
+      The smell of wet wood, rope, and river is constant.'
+    exits:
+      west: veridia_massive_south_river_meadow_bank
+      east: veridia_massive_ferry_landing_south
+      north: veridia_massive_ferry_landing_south
+      south: veridia_massive_south_river_meadow_bank
+    occupants:
+    - A ferry keeper sits on a stool mending a rope
+    objects:
+    - A brass bell hangs from a post to summon the ferry
+    - A painted board lists the crossing fee in neat letters
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_ferry_landing_south:
+    name: Ferry Landing South
+    room_type: River Crossing
+    desc: 'A second ferry point serves the southern stretches of the river. The landing
+      is simpler, with a single large boat and a lean-to for the keeper. The current
+      is a little stronger here.
+
+
+      The air smells of the river and wet rope.'
+    exits:
+      west: veridia_massive_ferry_landing_north
+      east: veridia_massive_reed_beds_north
+      north: veridia_massive_reed_beds_north
+      south: veridia_massive_ferry_landing_north
+    occupants: []
+    objects:
+    - A heavy rope is used to help guide the ferry across
+    - A wooden bench sits under the lean-to for waiting passengers
+    - Deep water runs close to the eastern side of the landing
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_reed_beds_north:
+    name: Reed Beds North
+    room_type: River Edge
+    desc: 'Dense beds of tall green reeds stretch along a quiet stretch of the Verin.
+      Narrow channels of open water wind through them and the ground underfoot is
+      soft and springy.
+
+
+      The air is still and full of the smell of water and crushed stems.'
+    exits:
+      north: veridia_massive_reed_beds_south
+      south: veridia_massive_ferry_landing_south
+      west: veridia_massive_ferry_landing_south
+      east: veridia_massive_reed_beds_south
+    occupants: []
+    objects:
+    - A narrow path of packed mud winds through the denser stands
+    - A half-hidden duck blind of woven reeds stands near the water
+    - Scattered feathers float in the still channels
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_reed_beds_south:
+    name: Reed Beds South
+    room_type: River Edge
+    desc: 'The reed beds continue southward, growing even thicker in places. The main
+      river current is only a short distance away but is almost hidden by the dense
+      growth.
+
+
+      The air is humid and full of insect life. Birds call constantly from cover.'
+    exits:
+      north: veridia_massive_river_island_approach
+      south: veridia_massive_reed_beds_north
+      west: veridia_massive_reed_beds_north
+      east: veridia_massive_river_island_approach
+    occupants: []
+    objects:
+    - A clearer channel has been cut through the reeds by regular use
+    - A small wooden platform sits just above the water for fishing
+    - The path becomes less distinct further south
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_island_approach:
+    name: River Island Approach
+    room_type: River
+    desc: 'A low, willow-covered island sits in the middle of a wider stretch of the
+      Verin. A shallow ford or a short swim is required to reach it. The island is
+      small but offers privacy and good fishing.
+
+
+      The current splits around the island. The air is cooler over the water.'
+    exits:
+      west: veridia_massive_reed_beds_south
+      east: veridia_massive_north_pasture_1
+      north: veridia_massive_north_pasture_1
+      south: veridia_massive_reed_beds_south
+    occupants: []
+    objects:
+    - A half-submerged log forms a natural bridge at the shallowest point
+    - Birds nest in the dense willows on the island
+    - Smooth stones line the island's small beaches
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_north_pasture_1:
+    name: North Pasture 1
+    room_type: Open Field
+    desc: 'Wide green pasture rolls gently northward, broken only by low stone walls
+      and the occasional solitary oak. Sheep graze in scattered groups while a pair
+      of black-and-white dogs keep watch.
+
+
+      The wind is strong and clean, carrying the scent of crushed grass and distant
+      rain.'
+    exits:
+      south: veridia_massive_river_island_approach
+      east: veridia_massive_north_pasture_2
+      west: veridia_massive_river_island_approach
+      northeast: veridia_massive_north_pasture_2
+      northwest: veridia_massive_river_island_approach
+    occupants:
+    - A shepherd's hut of turf and timber sits against a low rise
+    objects:
+    - A weathered wooden stile crosses the nearest wall
+    - A stone watering trough stands half-sunk in the earth
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_north_pasture_2:
+    name: North Pasture 2
+    room_type: Open Field
+    desc: 'The pasture continues northward with fewer walls and more open grazing.
+      The ground rises slightly and the wind is stronger. A few scattered thorn bushes
+      break the green expanse.
+
+
+      Skylarks sing high overhead. The air smells of grass and open land.'
+    exits:
+      south: veridia_massive_north_pasture_1
+      north: veridia_massive_south_meadow_1
+      east: veridia_massive_south_meadow_1
+      west: veridia_massive_north_pasture_1
+    occupants:
+    - A lone shepherd moves slowly among a large flock
+    objects:
+    - A dry stone wall runs along the eastern edge of the pasture
+    - Rabbit holes pock the softer ground near the bushes
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_south_meadow_1:
+    name: South Meadow 1
+    room_type: Open Field
+    desc: 'Rolling grassland stretches south toward the distant tree line of Duskwood.
+      The grass is knee-high and rich, broken by low thickets of gorse and the occasional
+      standing stone.
+
+
+      The air is full of the smell of warm grass and wild thyme. Bees move steadily
+      among the flowers.'
+    exits:
+      north: veridia_massive_south_meadow_2
+      south: veridia_massive_north_pasture_2
+      east: veridia_massive_south_meadow_2
+      west: veridia_massive_north_pasture_2
+    occupants: []
+    objects:
+    - A circle of standing stones rises on a low knoll
+    - A flock of sheep grazes near a solitary thorn tree
+    - A half-buried plowshare lies rusting in the grass
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_south_meadow_2:
+    name: South Meadow 2
+    room_type: Open Field
+    desc: 'Further south the meadow becomes more uneven, with low rises and shallow
+      hollows. Gorse grows thicker and the standing stones are left behind. The tree
+      line of Duskwood is closer and darker.
+
+
+      The wind carries the first scents of the forest. The grass is longer here.'
+    exits:
+      north: veridia_massive_east_meadow_1
+      south: veridia_massive_south_meadow_1
+      east: veridia_massive_east_meadow_1
+      west: veridia_massive_south_meadow_1
+    occupants: []
+    objects:
+    - A faint track winds through the taller grass toward the south
+    - A large flat stone offers a place to rest
+    - A pair of deer raise their heads and watch from a distance
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_east_meadow_1:
+    name: East Meadow 1
+    room_type: Open Field
+    desc: 'Open grassland slopes gently eastward toward the first trees of the Elderwood.
+      The grass is mixed with clover and small yellow flowers. Low stone walls divide
+      the land into irregular pastures.
+
+
+      The wind carries the scent of the approaching forest.'
+    exits:
+      west: veridia_massive_south_meadow_2
+      east: veridia_massive_east_meadow_2
+      north: veridia_massive_east_meadow_2
+      south: veridia_massive_south_meadow_2
+    occupants: []
+    objects:
+    - A lone oak stands in the middle of the largest pasture
+    - A wooden gate opens onto a farm track leading further east
+    - Rabbit holes pock the softer ground near the walls
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_east_meadow_2:
+    name: East Meadow 2
+    room_type: Open Field
+    desc: 'The eastern meadows continue with more frequent stone walls and the occasional
+      small farm building visible in the distance. The grass is shorter where it has
+      been grazed more heavily.
+
+
+      The air is warm and full of the sound of insects.'
+    exits:
+      west: veridia_massive_east_meadow_1
+      east: veridia_massive_west_fields_1
+      north: veridia_massive_west_fields_1
+      south: veridia_massive_east_meadow_1
+    occupants: []
+    objects:
+    - A stile crosses a particularly high wall
+    - A flock of geese grazes near a small pond
+    - The first trees of the eastern wood are clearly visible ahead
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_west_fields_1:
+    name: West Fields 1
+    room_type: Open Field
+    desc: 'These western fields lie between Greenhold and the river. The soil is darker
+      and richer here. Neat rows of vegetables and grain grow in the nearer plots
+      while the farther land remains open pasture.
+
+
+      The air smells of turned earth and growing crops.'
+    exits:
+      east: veridia_massive_west_fields_2
+      west: veridia_massive_east_meadow_2
+      north: veridia_massive_west_fields_2
+      south: veridia_massive_east_meadow_2
+    occupants:
+    - A farmer works a hoe between rows of young plants
+    objects:
+    - A low stone barn stands near the field edge
+    - Irrigation ditches run in straight lines toward the river
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_west_fields_2:
+    name: West Fields 2
+    room_type: Open Field
+    desc: 'Further west the fields give way more completely to open pasture as the
+      land approaches the river. The soil remains good and the grass is lush. A few
+      isolated trees provide shade.
+
+
+      The river is visible ahead. The air is fresher and carries the scent of water.'
+    exits:
+      east: veridia_massive_sunmeadow_1
+      west: veridia_massive_west_fields_1
+      north: veridia_massive_sunmeadow_1
+      south: veridia_massive_west_fields_1
+    occupants: []
+    objects:
+    - A herd of cattle grazes slowly across the pasture
+    - A wooden fence runs along the river side of the fields
+    - A narrow track leads down toward the river bank
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_sunmeadow_1:
+    name: Sunmeadow 1
+    room_type: Open Meadow
+    desc: 'A broad, sunny meadow opens where the land levels after the river hills.
+      The grass is short and thick, kept by regular grazing, and scattered with ox-eye
+      daisies and buttercups. A clear stream crosses the meadow.
+
+
+      The air is warm and full of the scent of flowers and warm earth.'
+    exits:
+      north: veridia_massive_sunmeadow_2
+      south: veridia_massive_west_fields_2
+      east: veridia_massive_sunmeadow_2
+      west: veridia_massive_west_fields_2
+    occupants: []
+    objects:
+    - A small wooden bridge crosses the stream
+    - A circle of flat stones forms a natural resting place
+    - Cattle graze peacefully in the southern half of the meadow
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_sunmeadow_2:
+    name: Sunmeadow 2
+    room_type: Open Meadow
+    desc: 'The meadow continues eastward, becoming slightly more rolling. The stream
+      winds through it and the flowers are even thicker in the damper ground near
+      the water.
+
+
+      Bees and butterflies move constantly among the blossoms. The air is sweet.'
+    exits:
+      west: veridia_massive_sunmeadow_1
+      east: veridia_massive_oakfarm_pasture
+      north: veridia_massive_oakfarm_pasture
+      south: veridia_massive_sunmeadow_1
+    occupants: []
+    objects:
+    - A second, smaller bridge crosses a narrow side channel of the stream
+    - A large solitary oak stands near the northern edge
+    - A faint path leads toward the eastern woods
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_oakfarm_pasture:
+    name: Oakfarm Pasture
+    room_type: Farmland
+    desc: 'This well-kept pasture belongs to Oakfarm. The grass is rich and the stone
+      walls are carefully maintained. A small herd of cattle and a few sheep share
+      the space. The farm buildings are visible to the north.
+
+
+      The air smells of grass, dung, and woodsmoke from the farmhouse.'
+    exits:
+      north: veridia_massive_oakfarm_yard
+      south: veridia_massive_sunmeadow_2
+      east: veridia_massive_oakfarm_yard
+      west: veridia_massive_sunmeadow_2
+    occupants: []
+    objects:
+    - A wooden gate opens onto the farm track
+    - A stone water trough stands in the shade of a large oak
+    - A broken plow has been left near the wall for repair
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_oakfarm_yard:
+    name: Oakfarm Yard
+    room_type: Farm
+    desc: 'The central yard of Oakfarm is enclosed by the farmhouse, a barn, and a
+      pair of smaller outbuildings. Chickens scratch in the dirt and a dog lies in
+      the shade of the house.
+
+
+      The smell of woodsmoke, animals, and cooking is strong.'
+    exits:
+      south: veridia_massive_oakfarm_pasture
+      east: veridia_massive_willowfarm_orchard
+      west: veridia_massive_oakfarm_pasture
+      north: veridia_massive_willowfarm_orchard
+    occupants:
+    - A farmer mends a piece of harness on a bench
+    objects:
+    - A well with a wooden cover stands in the center of the yard
+    - Stacks of firewood are piled against the barn wall
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_willowfarm_orchard:
+    name: Willowfarm Orchard
+    room_type: Orchard
+    desc: 'Rows of apple and pear trees stand in neat lines on a gentle south-facing
+      slope. The ground beneath is short grass mixed with fallen blossom and early
+      fruit. Beehives sit in a sunny corner.
+
+
+      The air is sweet with the scent of blossom and honey.'
+    exits:
+      north: veridia_massive_willowfarm_house
+      south: veridia_massive_oakfarm_yard
+      east: veridia_massive_willowfarm_house
+      west: veridia_massive_oakfarm_yard
+    occupants: []
+    objects:
+    - A wooden ladder leans against one of the taller trees
+    - Wicker baskets are stacked under a lean-to
+    - A stone bench sits in the shade at the end of a row
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_willowfarm_house:
+    name: Willowfarm House
+    room_type: Farm
+    desc: 'A solid timber farmhouse with a thatched roof stands at the edge of the
+      orchard. A kitchen garden of herbs and vegetables grows beside the house and
+      a small barn sits a short distance away.
+
+
+      The air smells of cooking and the orchard.'
+    exits:
+      south: veridia_massive_willowfarm_orchard
+      east: veridia_massive_standing_stone_field
+      west: veridia_massive_willowfarm_orchard
+      north: veridia_massive_standing_stone_field
+    occupants:
+    - A woman works in the kitchen garden
+    objects:
+    - A cat sleeps on a sunny windowsill
+    - A wooden fence encloses a small yard for poultry
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_standing_stone_field:
+    name: Standing Stone Field
+    room_type: Open Field
+    desc: 'A single tall standing stone rises from the center of this open field.
+      The stone is pale gray and covered on its north face with soft green lichen.
+      The surrounding grass is shorter, as if the area is often visited.
+
+
+      The wind moves freely across the open ground. The air feels slightly cooler
+      near the stone.'
+    exits:
+      north: veridia_massive_low_knoll
+      south: veridia_massive_willowfarm_house
+      east: veridia_massive_low_knoll
+      west: veridia_massive_willowfarm_house
+    occupants: []
+    objects:
+    - Offerings of flowers and small stones have been left at the base of the standing
+      stone
+    - A faint path circles the stone and continues south
+    - Rabbits have made a warren in the softer ground nearby
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_low_knoll:
+    name: Low Knoll
+    room_type: Open Field
+    desc: 'A gentle rise in the land offers a slightly better view of the surrounding
+      countryside. The grass is shorter on the top of the knoll and a few scattered
+      stones break the surface.
+
+
+      The wind is stronger here. Greenhold, the river, and the distant woods are all
+      visible.'
+    exits:
+      north: veridia_massive_gorse_thicket
+      south: veridia_massive_standing_stone_field
+      east: veridia_massive_gorse_thicket
+      west: veridia_massive_standing_stone_field
+    occupants: []
+    objects:
+    - A flat stone near the top makes a natural seat
+    - A small cairn of stones has been built by previous travelers
+    - Sheep tracks cross the knoll in several directions
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_gorse_thicket:
+    name: Gorse Thicket
+    room_type: Rough Ground
+    desc: 'A dense thicket of gorse and low thorn bushes occupies a shallow depression
+      in the meadows. The yellow flowers are bright against the green and the spines
+      are sharp.
+
+
+      The air is still inside the thicket and smells strongly of the flowers. Small
+      birds move constantly in the cover.'
+    exits:
+      north: veridia_massive_sunmeadow_road_1
+      south: veridia_massive_low_knoll
+      east: veridia_massive_sunmeadow_road_1
+      west: veridia_massive_low_knoll
+    occupants: []
+    objects:
+    - A narrow animal path winds through the denser growth
+    - A few open pockets of grass exist within the thicket
+    - The spines catch at clothing and skin
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_sunmeadow_road_1:
+    name: Sunmeadow Road 1
+    room_type: Trade Road
+    desc: 'A broad packed-earth road runs east-west between low grassy banks. Wildflowers
+      grow thick along the margins and the occasional milestone of pale riverstone
+      marks the distance to Greenhold.
+
+
+      The road smells of dust and warm grass. A light breeze keeps the air moving.'
+    exits:
+      east: veridia_massive_sunmeadow_road_2
+      west: veridia_massive_gorse_thicket
+      north: veridia_massive_sunmeadow_road_2
+      south: veridia_massive_gorse_thicket
+    occupants: []
+    objects:
+    - A broken cartwheel leans against a milestone
+    - A wayside shrine of stacked stones holds a few wilted flowers
+    - Fresh wagon tracks run in both directions
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_sunmeadow_road_2:
+    name: Sunmeadow Road 2
+    room_type: Trade Road
+    desc: 'The road continues through more open land. The milestones are regular and
+      the surface is well maintained by local traffic. Meadows stretch away on both
+      sides.
+
+
+      The air is warm and full of the sound of insects and distant birds.'
+    exits:
+      east: veridia_massive_elder_path_1
+      west: veridia_massive_sunmeadow_road_1
+      north: veridia_massive_elder_path_1
+      south: veridia_massive_sunmeadow_road_1
+    occupants: []
+    objects:
+    - A second wayside shrine stands under a small tree
+    - Deep ruts show where carts have passed in wetter weather
+    - A narrow footpath leads off toward a nearby farm
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_elder_path_1:
+    name: Elder Path 1
+    room_type: Forest Edge Road
+    desc: 'The road narrows as it enters the first trees of the eastern woods. Old
+      oaks and beeches rise on either side, their canopy filtering the light into
+      shifting green and gold.
+
+
+      The air cools and grows damp. The smell of leaf mold and wet bark replaces the
+      open meadow scents.'
+    exits:
+      east: veridia_massive_elder_path_2
+      west: veridia_massive_sunmeadow_road_2
+      north: veridia_massive_elder_path_2
+      south: veridia_massive_sunmeadow_road_2
+    occupants: []
+    objects:
+    - A wooden signpost points east toward Elderwatch and west back to Greenhold
+    - A large flat stone serves as a natural resting place beside the path
+    - Fresh deer tracks cross the road and disappear into the undergrowth
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_elder_path_2:
+    name: Elder Path 2
+    room_type: Forest Edge Road
+    desc: 'Deeper into the edge of the wood the trees grow closer and the undergrowth
+      thicker. The road remains clear but the feeling of the forest is stronger. Moss
+      covers many of the stones and roots.
+
+
+      The light is dimmer and greener. Birdsong is constant but the birds themselves
+      are hard to see.'
+    exits:
+      east: veridia_massive_river_road_north_1
+      west: veridia_massive_elder_path_1
+      north: veridia_massive_river_road_north_1
+      south: veridia_massive_elder_path_1
+    occupants: []
+    objects:
+    - A fallen tree has been cut through to keep the road open
+    - A small spring rises beside the path and forms a tiny clear pool
+    - The path continues both deeper into the wood and back toward the open land
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_road_north_1:
+    name: River Road North 1
+    room_type: Trade Road
+    desc: 'The well-traveled road follows the western bank of the River Verin. Willows
+      and alders line the water while open pasture stretches inland. Wagon ruts are
+      deep and the road is wide enough for two carts to pass.
+
+
+      The river runs close on the right, its surface bright. The smell of water and
+      wet earth is constant.'
+    exits:
+      north: veridia_massive_river_road_north_2
+      south: veridia_massive_elder_path_2
+      east: veridia_massive_river_road_north_2
+      west: veridia_massive_elder_path_2
+    occupants: []
+    objects:
+    - A stone milestone marks the remaining distance to Riverbend
+    - A pair of otters play in the shallows near the bank
+    - A simple wooden bench has been placed under a large willow for travelers
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_road_north_2:
+    name: River Road North 2
+    room_type: Trade Road
+    desc: 'The river road continues northward with the Verin always close on one side.
+      The land on the inland side is a mix of pasture and small cultivated plots.
+
+
+      The air is cool near the water. Occasional fishing platforms jut out over the
+      current.'
+    exits:
+      north: veridia_massive_river_road_south_1
+      south: veridia_massive_river_road_north_1
+      east: veridia_massive_river_road_south_1
+      west: veridia_massive_river_road_north_1
+    occupants: []
+    objects:
+    - A second milestone stands beside the road
+    - A narrow track leads down to a private fishing spot
+    - The roofs of Riverbend are not yet visible but the traffic has increased
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_road_south_1:
+    name: River Road South 1
+    room_type: Trade Road
+    desc: 'Further south the river road climbs a low rise before dropping again toward
+      the southern meadows. The Verin is visible through gaps in the trees and the
+      land opens into broader pasture.
+
+
+      The road surface is firmer here, packed by long use. The air smells of warm
+      dust and distant woodsmoke.'
+    exits:
+      north: veridia_massive_river_road_south_2
+      south: veridia_massive_river_road_north_2
+      east: veridia_massive_river_road_south_2
+      west: veridia_massive_river_road_north_2
+    occupants: []
+    objects:
+    - A roadside well stands under a small wooden roof
+    - A weathered wooden sign points toward Riverbend and Greenhold
+    - Deep wagon ruts show where carts have struggled in wet weather
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_river_road_south_2:
+    name: River Road South 2
+    room_type: Trade Road
+    desc: 'The southern stretch of the river road runs through more open country.
+      The river is sometimes close, sometimes a short distance away through a belt
+      of trees. Farms appear more frequently.
+
+
+      The air is warmer and the smell of the land is stronger than the river.'
+    exits:
+      north: veridia_massive_riverbend_approach
+      south: veridia_massive_river_road_south_1
+      east: veridia_massive_riverbend_approach
+      west: veridia_massive_river_road_south_1
+    occupants: []
+    objects:
+    - A small roadside shrine stands under an oak
+    - A track leads off toward a visible farmhouse
+    - The road remains wide and well used
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_riverbend_approach:
+    name: Riverbend Approach
+    room_type: Trade Road
+    desc: 'The road drops gently toward the river town of Riverbend. The River Verin
+      glints between the trees to the south. Small farms and orchards begin to appear
+      on either side of the road.
+
+
+      The air carries woodsmoke and the faint sweetness of apple blossom. A dog barks
+      in the distance.'
+    exits:
+      north: veridia_massive_crossroads_marker
+      south: veridia_massive_river_road_south_2
+      east: veridia_massive_crossroads_marker
+      west: veridia_massive_river_road_south_2
+    occupants:
+    - A child sits on a fence post watching travelers pass
+    objects:
+    - A roadside well stands under a small wooden roof
+    - Stacks of cut firewood are piled beside the nearest farm gate
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_crossroads_marker:
+    name: Crossroads Marker
+    room_type: Crossroads
+    desc: 'Four roads meet at a broad open space marked by a tall riverstone pillar.
+      Carved letters on the pillar give distances to Greenhold, Riverbend, Elderwatch,
+      and the southern meadows.
+
+
+      The wind moves freely here. The air smells of dust and warm grass.'
+    exits:
+      north: veridia_massive_duskwood_boundary
+      south: veridia_massive_riverbend_approach
+      east: veridia_massive_duskwood_boundary
+      west: veridia_massive_riverbend_approach
+    occupants: []
+    objects:
+    - A low stone bench has been built against the base of the pillar
+    - A small shrine of stacked stones holds a few coins and flowers
+    - Fresh tracks show recent traffic on all four roads
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_duskwood_boundary:
+    name: Duskwood Boundary
+    room_type: Forest Edge
+    desc: 'The open meadows end abruptly at the edge of denser woodland. The trees
+      here are older and closer together, their canopy thicker. A rough path continues
+      into the shadows while a clearer track runs along the tree line.
+
+
+      The air cools and the light dims. The smell of leaf mold and damp earth is strong.'
+    exits:
+      north: veridia_massive_elderwatch_road_marker
+      south: veridia_massive_crossroads_marker
+      east: veridia_massive_elderwatch_road_marker
+      west: veridia_massive_crossroads_marker
+    occupants: []
+    objects:
+    - A wooden boundary marker stands at the edge of the wood
+    - A game trail crosses the path and disappears into the undergrowth
+    - Fallen leaves carpet the ground in thick layers
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_elderwatch_road_marker:
+    name: Elderwatch Road Marker
+    room_type: Road
+    desc: 'A tall milestone of pale stone stands where the road to Elderwatch becomes
+      more distinct. The carving is clear and the distances are marked in the local
+      measure.
+
+
+      The surrounding land is a mix of meadow and the first true trees of the eastern
+      wood.'
+    exits:
+      west: veridia_massive_duskwood_boundary
+      east: veridia_massive_farm_track_north
+      north: veridia_massive_farm_track_north
+      south: veridia_massive_duskwood_boundary
+    occupants: []
+    objects:
+    - A small lean-to of rough timber offers shelter from rain
+    - Wagon tracks continue strongly eastward
+    - The air carries the scent of both open land and forest
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_farm_track_north:
+    name: Farm Track North
+    room_type: Farm Track
+    desc: 'A narrower track leaves the main road and runs toward a cluster of farm
+      buildings visible in the distance. The surface is rougher and the ruts are deeper.
+
+
+      The air smells of the surrounding fields and animals.'
+    exits:
+      south: veridia_massive_elderwatch_road_marker
+      north: veridia_massive_hill_path_1
+      east: veridia_massive_hill_path_1
+      west: veridia_massive_elderwatch_road_marker
+    occupants: []
+    objects:
+    - A wooden gate stands open across the track
+    - A scarecrow leans at an angle in a nearby field
+    - The track continues toward the farm and back to the main road
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_hill_path_1:
+    name: Hill Path 1
+    room_type: Rolling Hills
+    desc: 'The ground rises into low green hills dotted with outcrops of pale gray
+      stone. Sheep trails wind between the rocks and the wind is stronger here.
+
+
+      The air is clear and carries the scent of thyme and sun-warmed stone. Hawks
+      circle high overhead.'
+    exits:
+      north: veridia_massive_hill_path_2
+      south: veridia_massive_farm_track_north
+      east: veridia_massive_hill_path_2
+      west: veridia_massive_farm_track_north
+      down: veridia_massive_hill_path_2
+    occupants: []
+    objects:
+    - A narrow goat track climbs toward a dark cleft in the nearest outcrop
+    - A single standing stone leans at a slight angle on the hilltop
+    - Scattered white bones of a long-dead sheep lie in a hollow
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_hill_path_2:
+    name: Hill Path 2
+    room_type: Rolling Hills
+    desc: 'The hills continue with more frequent rocky outcrops and thinner soil.
+      The grass is shorter and mixed with low herbs. The view from the higher points
+      is wide.
+
+
+      The wind is constant. The river and Greenhold are visible to the west on clear
+      days.'
+    exits:
+      north: veridia_massive_moss_cave_mouth
+      south: veridia_massive_hill_path_1
+      east: veridia_massive_moss_cave_mouth
+      west: veridia_massive_hill_path_1
+      down: veridia_massive_moss_cave_mouth
+    occupants: []
+    objects:
+    - A second dark cleft suggests another cave entrance
+    - A large flat boulder makes a natural lookout point
+    - Sheep have worn clear paths between the better grazing spots
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_moss_cave_mouth:
+    name: Moss Cave Mouth
+    room_type: Cave Entrance
+    desc: 'A low, wide opening in the hillside is half-hidden by hanging moss and
+      ferns. Cool air breathes from the darkness within. The stone around the entrance
+      is smooth and damp.
+
+
+      The smell of wet rock and earth is strong. Water drips steadily somewhere inside.'
+    exits:
+      out: veridia_massive_hill_path_2
+      down: veridia_massive_moss_cave
+      east: veridia_massive_moss_cave
+      west: veridia_massive_hill_path_2
+    occupants: []
+    objects:
+    - A small pile of dry wood has been left just inside the entrance by previous
+      travelers
+    - Scratches on the stone suggest something has used this cave as a den
+    - A faint green glow is visible deeper in the passage
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_moss_cave:
+    name: Moss Cave
+    room_type: Shallow Cave
+    desc: 'The passage opens into a low chamber whose floor is soft with centuries
+      of leaf mold and moss. Pale roots hang from the ceiling and a thin stream of
+      water runs along one wall into a clear pool.
+
+
+      The air is cool and still. The only light comes from the entrance and a faint
+      green phosphorescence on the damp walls.'
+    exits:
+      west: veridia_massive_moss_cave_mouth
+      down: veridia_massive_lower_moss_passage
+      out: veridia_massive_moss_cave_mouth
+      east: veridia_massive_lower_moss_passage
+    occupants: []
+    objects:
+    - A flat stone near the pool shows signs of old campfires
+    - A few scattered animal bones lie in a far corner
+    - The stream continues into a narrower passage leading deeper
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_lower_moss_passage:
+    name: Lower Moss Passage
+    room_type: Cave
+    desc: 'The passage narrows and slopes downward. The green glow grows stronger,
+      coming from patches of luminous moss on the walls. The air is colder and the
+      sound of running water is louder ahead.
+
+
+      The floor is uneven and slick in places. Roots still hang from the ceiling but
+      they are thicker and older here.'
+    exits:
+      up: veridia_massive_moss_cave
+      down: veridia_massive_glowing_pool_chamber
+      east: veridia_massive_glowing_pool_chamber
+      west: veridia_massive_moss_cave
+    occupants: []
+    objects:
+    - A small side alcove contains a nest of dried grass and fur
+    - Water seeps from a crack in the wall and joins the main stream
+    - The passage continues both downward and slightly to the east
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_glowing_pool_chamber:
+    name: Glowing Pool Chamber
+    room_type: Cave
+    desc: 'The passage opens into a rounded chamber dominated by a clear pool that
+      glows with the same soft green light as the moss. The water is cold and still.
+      Stalactites hang from the ceiling and the walls are slick with moisture.
+
+
+      The air is very still and carries only the smell of wet stone and mineral. The
+      glow is strong enough to read by.'
+    exits:
+      west: veridia_massive_lower_moss_passage
+      up: veridia_massive_lower_moss_passage
+      north: veridia_massive_side_alcove
+    occupants: []
+    objects:
+    - A flat ledge of stone runs along one side of the pool
+    - Small pale fish move slowly in the glowing water
+    - A narrow crack in the far wall suggests a possible continuation
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_side_alcove:
+    name: Side Alcove
+    room_type: Cave
+    desc: 'A small dry alcove opens off the main passage. The floor is higher and
+      the air is a little less damp. Someone has used this space as a temporary camp
+      in the past.
+
+
+      The green glow from the main passage provides dim light.'
+    exits:
+      out: veridia_massive_forest_edge_clearing
+    occupants: []
+    objects:
+    - A ring of stones forms an old fire pit
+    - A few pieces of dry wood and some discarded bones remain
+    - The alcove offers a place to rest out of the main draft
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_forest_edge_clearing:
+    name: Forest Edge Clearing
+    room_type: Forest Edge
+    desc: 'A small natural clearing opens among the first true trees of the eastern
+      wood. Sunlight reaches the ground here in shifting patches. The undergrowth
+      is thick around the edges but the center is open and grassy.
+
+
+      The air is cooler and smells strongly of leaf mold and growing things.'
+    exits:
+      west: veridia_massive_side_alcove
+      east: veridia_massive_old_oak_grove
+      north: veridia_massive_old_oak_grove
+      south: veridia_massive_side_alcove
+    occupants: []
+    objects:
+    - A fallen oak provides a natural seat and table
+    - A faint trail continues deeper into the wood to the east
+    - Animal tracks of several kinds cross the clearing
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_old_oak_grove:
+    name: Old Oak Grove
+    room_type: Light Forest
+    desc: 'Several massive oaks grow close together here, their branches interlocking
+      overhead. The ground is thick with centuries of leaf litter and soft moss. Little
+      undergrowth survives in the deep shade.
+
+
+      The air is still and cool. The only sounds are the occasional creak of old wood
+      and the drip of water from the canopy after rain.'
+    exits:
+      north: veridia_massive_deer_trail_1
+      south: veridia_massive_forest_edge_clearing
+      east: veridia_massive_deer_trail_1
+      west: veridia_massive_forest_edge_clearing
+    occupants: []
+    objects:
+    - A hollow in the largest oak shows signs of old use as a shelter
+    - A scatter of acorn shells and small bones lies near the hollow
+    - Faint paths lead outward between the trunks in several directions
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_deer_trail_1:
+    name: Deer Trail 1
+    room_type: Light Forest
+    desc: 'A narrow but clear game trail winds between the trees. The ground is soft
+      and marked with many hoofprints. The canopy is high and the undergrowth is thinner
+      along the trail itself.
+
+
+      The air smells of damp earth and green leaves. Occasional shafts of light reach
+      the forest floor.'
+    exits:
+      northeast: veridia_massive_deer_trail_2
+      southwest: veridia_massive_old_oak_grove
+      northwest: veridia_massive_old_oak_grove
+      southeast: veridia_massive_deer_trail_2
+    occupants: []
+    objects:
+    - A large patch of disturbed earth shows where deer have been bedding
+    - A broken branch hangs at head height where a large animal passed
+    - Birds fall silent as travelers move along the trail
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_deer_trail_2:
+    name: Deer Trail 2
+    room_type: Light Forest
+    desc: 'The game trail continues deeper into the wood, becoming slightly less distinct
+      in places where the undergrowth closes in. The trees are older and the light
+      is dimmer.
+
+
+      The smell of the forest is strong and complex. Distant bird calls echo among
+      the trunks.'
+    exits:
+      southwest: veridia_massive_beech_hollow
+      northeast: veridia_massive_beech_hollow
+      north: veridia_massive_beech_hollow
+      south: veridia_massive_deer_trail_1
+    occupants:
+    - The trail shows signs of regular use by both animals and the occasional human
+    objects:
+    - A large fallen tree creates a natural obstacle that the trail detours around
+    - Moss-covered stones break the surface of the ground in several places
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_beech_hollow:
+    name: Beech Hollow
+    room_type: Light Forest
+    desc: 'A shallow hollow among mature beech trees holds a thicker carpet of leaf
+      litter and a few scattered boulders. The light that reaches the ground is soft
+      and green.
+
+
+      The air is still and quiet. The beech mast underfoot is thick in places.'
+    exits:
+      north: veridia_massive_stream_crossing
+      south: veridia_massive_deer_trail_2
+      east: veridia_massive_stream_crossing
+      west: veridia_massive_deer_trail_2
+    occupants: []
+    objects:
+    - A large boulder offers a place to sit and rest
+    - Animal paths cross the hollow in several directions
+    - The surrounding trees form a natural shelter from wind and light rain
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_stream_crossing:
+    name: Stream Crossing (Forest)
+    room_type: Light Forest
+    desc: 'A small clear stream runs through the eastern wood, its banks soft and
+      muddy. Stepping stones have been placed at the best crossing point and the trail
+      continues on the far side.
+
+
+      The sound of running water is pleasant and constant. The air is cooler near
+      the stream.'
+    exits:
+      east: veridia_massive_deep_thicket
+      west: veridia_massive_beech_hollow
+      north: veridia_massive_deep_thicket
+      south: veridia_massive_beech_hollow
+    occupants: []
+    objects:
+    - Moss and ferns grow thickly along the banks
+    - A fallen log provides an alternative crossing a short distance upstream
+    - Animal tracks are thick in the soft ground near the water
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_deep_thicket:
+    name: Deep Thicket
+    room_type: Dense Undergrowth
+    desc: 'The undergrowth here is thick with brambles, young trees, and tangled vines.
+      Progress is slow and the trail is faint. The canopy overhead is almost continuous.
+
+
+      The air is still and humid. Visibility is limited to a few paces in any direction.'
+    exits:
+      north: veridia_massive_second_cave_mouth
+      south: veridia_massive_stream_crossing
+      east: veridia_massive_second_cave_mouth
+      west: veridia_massive_stream_crossing
+    occupants: []
+    objects:
+    - Thorns catch at clothing and skin with every movement
+    - A few clearer animal tunnels run through the denser growth
+    - The sound of the wider forest is muffled by the thickness of the plants
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_second_cave_mouth:
+    name: Second Cave Mouth
+    room_type: Cave Entrance
+    desc: 'A narrower opening in a different rocky outcrop leads into another small
+      cave system. The entrance is partially blocked by a fallen stone and the air
+      that issues from it is cool and slightly musty.
+
+
+      Ferns grow thickly around the entrance. The smell of earth and stone is strong.'
+    exits:
+      out: veridia_massive_deep_thicket
+      down: veridia_massive_second_cave_chamber
+      east: veridia_massive_second_cave_chamber
+    occupants: []
+    objects:
+    - Scratches on the rock suggest regular use by small animals
+    - A faint draft indicates the cave continues some distance
+    - Loose stones make the first steps into the darkness careful work
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_second_cave_chamber:
+    name: Second Cave Chamber
+    room_type: Cave
+    desc: 'A low, irregular chamber opens beyond the entrance. The floor is uneven
+      rock and the ceiling is low enough that taller travelers must stoop. A few bones
+      and scraps of fur litter one corner.
+
+
+      The air is still and cool. Only faint light reaches this far from the entrance.'
+    exits:
+      out: veridia_massive_second_cave_mouth
+      down: veridia_massive_root_chamber
+      west: veridia_massive_second_cave_mouth
+    occupants: []
+    objects:
+    - A narrow passage continues deeper into the hill
+    - Water seeps slowly down one wall, leaving a dark stain
+    - The chamber has the feeling of a place used more by animals than by people
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_root_chamber:
+    name: Root Chamber
+    room_type: Cave
+    desc: 'Thick tree roots push through the ceiling and walls of this small chamber,
+      creating a tangle of living wood and stone. The air is damp and smells strongly
+      of earth and growing things.
+
+
+      A thin stream of water runs among the roots and disappears into a crack in the
+      floor.'
+    exits:
+      up: veridia_massive_second_cave_chamber
+      east: veridia_massive_overlook_crag
+      west: veridia_massive_second_cave_chamber
+    occupants: []
+    objects:
+    - The green glow of luminous moss is present but weaker here
+    - A small dry ledge offers a place to sit out of the worst of the damp
+    - The roots form natural handholds and obstacles
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  veridia_massive_overlook_crag:
+    name: Overlook Crag
+    room_type: Hills
+    desc: 'A rocky crag rises above the surrounding hills, offering a wide view across
+      Veridia. The top is mostly bare stone with a few hardy plants growing in cracks.
+      The wind is strong and constant.
+
+
+      From here Greenhold, the river, the meadows, and the edge of the eastern wood
+      are all clearly visible on a clear day.'
+    exits:
+      down: veridia_massive_overlook_crag
+      north: veridia_massive_overlook_crag
+      south: veridia_massive_root_chamber
+      east: veridia_massive_overlook_crag
+      west: veridia_massive_root_chamber
+    occupants:
+    - The path down is steep but manageable with care
+    objects:
+    - A natural seat has been worn into the stone by weather and use
+    - A small cairn of stones stands at the highest point
+    replace: true
+    tags:
+    - aethryn
+    - veridia
+    - imported_text_drop
+  greenhold:
+    name: Greenhold
+    desc: A walled market-town of green fields, the first stop of every new traveller.
+      It lies within Veridia (levels 1-30); the zone road runs back out to the wider
+      land.
+    exits:
+      out: veridia
+      in: greenhold_inn
+      market: greenhold_store
+      square: greenhold_market
+      wards: veridia_massive_alder_court
+    replace: true
+    tags:
+    - aethryn
+    - room_drop_anchor
+    notes: Adds wards -> veridia_massive_alder_court to enter the imported drop.

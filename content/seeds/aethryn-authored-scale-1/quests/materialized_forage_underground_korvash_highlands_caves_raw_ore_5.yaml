@@ -1,0 +1,36 @@
+id: forage_underground_korvash_highlands_caves_raw_ore_5
+name: 'A small Requisition: raw ore of Korvash Oath-Caves'
+start: s0
+reward_xp: 235
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: underground_korvash_highlands_caves|raw_ore
+- state: s1
+  event: forage
+  to: s2
+  on_forage: underground_korvash_highlands_caves|raw_ore
+- state: s2
+  event: forage
+  to: s3
+  on_forage: underground_korvash_highlands_caves|raw_ore
+- state: s3
+  event: forage
+  to: s4
+  on_forage: underground_korvash_highlands_caves|raw_ore
+- state: s4
+  event: forage
+  to: done
+  on_forage: underground_korvash_highlands_caves|raw_ore
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Bring in raw ore in Korvash Oath-Caves: 0/5 (235 XP).'
+  s1: 'Bring in raw ore in Korvash Oath-Caves: 1/5 (235 XP).'
+  s2: 'Bring in raw ore in Korvash Oath-Caves: 2/5 (235 XP).'
+  s3: 'Bring in raw ore in Korvash Oath-Caves: 3/5 (235 XP).'
+  s4: 'Bring in raw ore in Korvash Oath-Caves: 4/5 (235 XP).'
+  done: You have requisitioned raw ore enough for Korvash Oath-Caves. The region's
+    makers will put it to use.

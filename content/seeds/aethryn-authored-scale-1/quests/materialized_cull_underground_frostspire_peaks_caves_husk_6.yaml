@@ -1,0 +1,47 @@
+id: cull_underground_frostspire_peaks_caves_husk_6
+name: 'A small Warrant: the husk-kind of Frostspire Blue-Ice Caves'
+start: s0
+reward_xp: 168
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_frostspire_peaks_caves|husk
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_frostspire_peaks_caves|husk
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_frostspire_peaks_caves|husk
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_frostspire_peaks_caves|husk
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_frostspire_peaks_caves|husk
+- state: s5
+  event: cull
+  to: done
+  on_cull: underground_frostspire_peaks_caves|husk
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 0/6 down
+    (168 XP).'
+  s1: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 1/6 down
+    (168 XP).'
+  s2: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 2/6 down
+    (168 XP).'
+  s3: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 3/6 down
+    (168 XP).'
+  s4: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 4/6 down
+    (168 XP).'
+  s5: 'Answer the warrant on the husk-kind of Frostspire Blue-Ice Caves: 5/6 down
+    (168 XP).'
+  done: The husk-kind of Frostspire Blue-Ice Caves are answered for. The high passes
+    will hold a little longer.

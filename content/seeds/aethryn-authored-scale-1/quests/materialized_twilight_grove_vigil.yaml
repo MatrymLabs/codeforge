@@ -1,0 +1,31 @@
+id: twilight_grove_vigil
+name: The Kept Vigil
+start: offered
+reward_xp: 34
+steps:
+- state: offered
+  event: enter
+  to: accepted
+  on_enter: twilight_grove_hearth
+- state: accepted
+  event: take
+  to: recovered
+  on_take: twilight_grove_dusklamp
+- state: recovered
+  event: enter
+  to: done
+  effect: award_xp;grant_rep:knowing:20
+  on_enter: twilight_grove_hearth
+terminal:
+- done
+labels:
+  offered: In Twilight Grove the lantern-keeper tends the wicks that hold the dusk.
+    Step into the twilit hearth and hear Sable.
+  accepted: Go DOWN past the fading veil into the grief-hollow and lift the failing
+    mourning-lantern gently (mind the grief-shaped thing, and do not put the wick
+    out).
+  recovered: Carry the mourning-lantern back UP to Lantern-Keeper Sable at the twilit
+    hearth.
+  done: '*** The lantern hangs trimmed and lit among its kin, one more grief kept
+    and not lost. Whose sorrow it holds, and whether the shape in the hollow was ever
+    the one who set it there, Sable does not say and the dusk does not tell. ***'

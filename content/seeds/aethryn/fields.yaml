@@ -28,3 +28,215 @@ veridia:
     - {at: [4, 4], name: "The Cradle Cairn", kind: site}
     - {at: [13, 10], name: "Meadowmoot", kind: site}
     - {at: [23, 17], name: "The Old Watchtower", kind: dungeon}
+
+# The remaining regions use the same world-shaped field contract. Their dimensions are deliberately
+# tied to their existing wildland budgets: the old trails remain a fallback manifest, while these
+# fields become the active surface once the runtime sees a row for the region. Every field carries
+# three anchors so roads, landmarks, and the life gradient have a real mission spine.
+duskwood_vale:
+  name: The Duskwood Vale Wilds
+  region: Duskwood Vale
+  biome: wild-forest
+  attach: duskwood_vale
+  attach_dir: west
+  level_min: 20
+  level_max: 50
+  width: 46
+  height: 38
+  seed: 21
+  landmarks:
+    - {at: [8, 8], name: "Ravenwatch Wilds", kind: site}
+    - {at: [23, 19], name: "The Rooted Shrine", kind: site}
+    - {at: [38, 30], name: "The Black Hollow Wilds", kind: dungeon}
+
+caeloria:
+  name: The Caeloria Wilds
+  region: Caeloria
+  biome: temperate-meadow
+  attach: caeloria
+  attach_dir: north
+  level_min: 30
+  level_max: 60
+  width: 42
+  height: 34
+  seed: 33
+  landmarks:
+    - {at: [8, 8], name: "The Caeloria Road", kind: site}
+    - {at: [21, 17], name: "The Aqueduct Gate", kind: site}
+    - {at: [34, 27], name: "Starfall Temple Wilds", kind: dungeon}
+
+eldryn_forest:
+  name: The Eldryn Forest Wilds
+  region: Eldryn Forest
+  biome: wild-forest
+  attach: eldryn_forest
+  attach_dir: up
+  level_min: 50
+  level_max: 80
+  width: 50
+  height: 42
+  seed: 45
+  landmarks:
+    - {at: [10, 9], name: "The Great Tree Verge", kind: site}
+    - {at: [25, 21], name: "Greenmist Wilds", kind: site}
+    - {at: [41, 33], name: "Rotwood Deep Wilds", kind: dungeon}
+
+frostspire_peaks:
+  name: The Frostspire Peaks Wilds
+  region: Frostspire Peaks
+  biome: glacier-waste
+  attach: frostspire_peaks
+  attach_dir: north
+  level_min: 60
+  level_max: 90
+  width: 50
+  height: 46
+  seed: 57
+  landmarks:
+    - {at: [10, 10], name: "The Frost Beacon", kind: peak}
+    - {at: [25, 23], name: "The Silent Anvil", kind: site}
+    - {at: [41, 36], name: "Glacial Bastion Wilds", kind: dungeon}
+
+zhaar_desert:
+  name: The Zhaar Desert Wilds
+  region: Zhaar Desert
+  biome: salt-desert
+  attach: zhaar_desert
+  attach_dir: south
+  level_min: 80
+  level_max: 130
+  width: 50
+  height: 46
+  seed: 69
+  landmarks:
+    - {at: [10, 10], name: "The Red Dunes Expanse", kind: site}
+    - {at: [25, 23], name: "The Obsidian Road", kind: site}
+    - {at: [41, 36], name: "The Obsidian Pit Wilds", kind: dungeon}
+
+xilnath_jungle:
+  name: The Xil'nath Jungle Wilds
+  region: Xil'nath Jungle
+  biome: living-jungle
+  attach: xilnath_jungle
+  attach_dir: south
+  level_min: 90
+  level_max: 150
+  width: 50
+  height: 46
+  seed: 81
+  landmarks:
+    - {at: [10, 10], name: "Zul'karak Wilds", kind: site}
+    - {at: [25, 23], name: "The Verdant Loom Verge", kind: site}
+    - {at: [41, 36], name: "Heart of Xil'nath Wilds", kind: dungeon}
+
+thalorin:
+  name: The Thalorin Wilds
+  region: Thalorin
+  biome: highland-moor
+  attach: thalorin
+  attach_dir: north
+  level_min: 100
+  level_max: 140
+  width: 50
+  height: 46
+  seed: 93
+  landmarks:
+    - {at: [10, 10], name: "Stonefang Reach", kind: site}
+    - {at: [25, 23], name: "The Irondeep Road", kind: site}
+    - {at: [41, 36], name: "Dreadmaw Hold Wilds", kind: dungeon}
+
+ashen_wastes:
+  name: The Ashen Wastes Wilds
+  region: Ashen Wastes
+  biome: volcanic-flats
+  attach: ashen_wastes
+  attach_dir: up
+  level_min: 120
+  level_max: 170
+  width: 46
+  height: 38
+  seed: 105
+  landmarks:
+    - {at: [9, 8], name: "Moltenhold Wilds", kind: site}
+    - {at: [23, 19], name: "The Ashen Monoliths", kind: site}
+    - {at: [37, 30], name: "The Flamewrought Forge Wilds", kind: dungeon}
+
+korvash_highlands:
+  name: The Korvash Highlands Wilds
+  region: Korvash Highlands
+  biome: highland-moor
+  attach: korvash_highlands
+  attach_dir: south
+  level_min: 150
+  level_max: 200
+  width: 50
+  height: 46
+  seed: 117
+  landmarks:
+    - {at: [10, 10], name: "Stonehelm Wilds", kind: site}
+    - {at: [25, 23], name: "The Measured Throne Verge", kind: site}
+    - {at: [41, 36], name: "Korvash Crater Wilds", kind: dungeon}
+
+shattered_isles:
+  name: The Shattered Isles Wilds
+  region: The Shattered Isles
+  biome: coastal-strand
+  attach: shattered_isles
+  attach_dir: north
+  level_min: 180
+  level_max: 230
+  width: 46
+  height: 38
+  seed: 129
+  landmarks:
+    - {at: [9, 8], name: "Stormreach Wilds", kind: site}
+    - {at: [23, 19], name: "The Drowned Causeway", kind: site}
+    - {at: [37, 30], name: "Blackreef Citadel Wilds", kind: dungeon}
+
+skyward_spires:
+  name: The Skyward Spires Wilds
+  region: Skyward Spires
+  biome: highland-moor
+  attach: skyward_spires
+  attach_dir: north
+  level_min: 200
+  level_max: 250
+  width: 40
+  height: 32
+  seed: 141
+  landmarks:
+    - {at: [8, 7], name: "Aurelian Wilds", kind: peak}
+    - {at: [20, 16], name: "The Broken Skychain", kind: site}
+    - {at: [33, 25], name: "The Spire Nexus Wilds", kind: dungeon}
+
+the_deepreach:
+  name: The Deepreach Wilds
+  region: The Deepreach
+  biome: volcanic-flats
+  attach: the_deepreach
+  attach_dir: north
+  level_min: 100
+  level_max: 250
+  width: 56
+  height: 52
+  seed: 153
+  landmarks:
+    - {at: [11, 10], name: "Deepforge Wilds", kind: site}
+    - {at: [28, 26], name: "The Memory Deep", kind: site}
+    - {at: [46, 41], name: "The Crystal Labyrinth Wilds", kind: dungeon}
+
+the_voidscar:
+  name: The Voidscar Wilds
+  region: The Voidscar
+  biome: volcanic-flats
+  attach: the_voidscar
+  attach_dir: south
+  level_min: 250
+  level_max: 300
+  width: 46
+  height: 38
+  seed: 165
+  landmarks:
+    - {at: [9, 8], name: "Voidspire Wilds", kind: site}
+    - {at: [23, 19], name: "The Rifted Expanse", kind: site}
+    - {at: [37, 30], name: "Netharion's Throne Wilds", kind: dungeon}

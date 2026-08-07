@@ -1,0 +1,61 @@
+id: forage_skyward_spires_zone_hollow_ingot_10
+name: 'A standing Collection: hollow ingot of Skyward Spires'
+start: s0
+reward_xp: 620
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s4
+  event: forage
+  to: s5
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s5
+  event: forage
+  to: s6
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s6
+  event: forage
+  to: s7
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s7
+  event: forage
+  to: s8
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s8
+  event: forage
+  to: s9
+  on_forage: skyward_spires_zone|hollow_ingot
+- state: s9
+  event: forage
+  to: done
+  on_forage: skyward_spires_zone|hollow_ingot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Collect hollow ingot in Skyward Spires: 0/10 (620 XP).'
+  s1: 'Collect hollow ingot in Skyward Spires: 1/10 (620 XP).'
+  s2: 'Collect hollow ingot in Skyward Spires: 2/10 (620 XP).'
+  s3: 'Collect hollow ingot in Skyward Spires: 3/10 (620 XP).'
+  s4: 'Collect hollow ingot in Skyward Spires: 4/10 (620 XP).'
+  s5: 'Collect hollow ingot in Skyward Spires: 5/10 (620 XP).'
+  s6: 'Collect hollow ingot in Skyward Spires: 6/10 (620 XP).'
+  s7: 'Collect hollow ingot in Skyward Spires: 7/10 (620 XP).'
+  s8: 'Collect hollow ingot in Skyward Spires: 8/10 (620 XP).'
+  s9: 'Collect hollow ingot in Skyward Spires: 9/10 (620 XP).'
+  done: You have brought in hollow ingot enough for Skyward Spires. The region's makers
+    will put it to use.

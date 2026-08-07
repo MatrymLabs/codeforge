@@ -1,0 +1,15 @@
+id: errand_wildgrowth
+name: 'Errand: Glacial Bastion'
+start: posted
+reward_xp: 750
+steps:
+- state: posted
+  event: arrive
+  to: done
+  on_enter: glacial_bastion
+  effect: award_xp
+terminal:
+- done
+labels:
+  posted: Scout the approach to Glacial Bastion (750 XP).
+  done: You reach Glacial Bastion and mark the way. Well scouted.

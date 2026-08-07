@@ -1,0 +1,83 @@
+id: cull_underground_caeloria_underworks_jackal_12
+name: 'A standing Contract: the jackal-kind of The Starfall Sublevels'
+start: s0
+reward_xp: 264
+steps:
+- state: s0
+  event: cull
+  to: s1
+  on_cull: underground_caeloria_underworks|jackal
+- state: s1
+  event: cull
+  to: s2
+  on_cull: underground_caeloria_underworks|jackal
+- state: s2
+  event: cull
+  to: s3
+  on_cull: underground_caeloria_underworks|jackal
+- state: s3
+  event: cull
+  to: s4
+  on_cull: underground_caeloria_underworks|jackal
+- state: s4
+  event: cull
+  to: s5
+  on_cull: underground_caeloria_underworks|jackal
+- state: s5
+  event: cull
+  to: s6
+  on_cull: underground_caeloria_underworks|jackal
+- state: s6
+  event: cull
+  to: s7
+  on_cull: underground_caeloria_underworks|jackal
+- state: s7
+  event: cull
+  to: s8
+  on_cull: underground_caeloria_underworks|jackal
+- state: s8
+  event: cull
+  to: s9
+  on_cull: underground_caeloria_underworks|jackal
+- state: s9
+  event: cull
+  to: s10
+  on_cull: underground_caeloria_underworks|jackal
+- state: s10
+  event: cull
+  to: s11
+  on_cull: underground_caeloria_underworks|jackal
+- state: s11
+  event: cull
+  to: done
+  on_cull: underground_caeloria_underworks|jackal
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 0/12 down
+    (264 XP).'
+  s1: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 1/12 down
+    (264 XP).'
+  s2: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 2/12 down
+    (264 XP).'
+  s3: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 3/12 down
+    (264 XP).'
+  s4: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 4/12 down
+    (264 XP).'
+  s5: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 5/12 down
+    (264 XP).'
+  s6: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 6/12 down
+    (264 XP).'
+  s7: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 7/12 down
+    (264 XP).'
+  s8: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 8/12 down
+    (264 XP).'
+  s9: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 9/12 down
+    (264 XP).'
+  s10: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 10/12 down
+    (264 XP).'
+  s11: 'Fulfil the contract on the jackal-kind of The Starfall Sublevels: 11/12 down
+    (264 XP).'
+  done: The jackal-kind of The Starfall Sublevels are put down. The farm-roads are
+    the safer for it.

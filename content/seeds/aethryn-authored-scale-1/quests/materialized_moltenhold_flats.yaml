@@ -1,0 +1,23 @@
+id: moltenhold_flats
+name: The Slag-Drake
+start: offered
+reward_xp: 118
+steps:
+- state: offered
+  event: enter
+  to: hunting
+  on_enter: moltenhold_flats
+- state: hunting
+  event: defeat
+  to: done
+  effect: award_xp;grant_rep:making:35
+  on_defeat: moltenhold_drake
+terminal:
+- done
+labels:
+  offered: Cinder-Marshal Bex says a slag-drake is burning the fuel-crews on the flats.
+    Go EAST from the gate and see.
+  hunting: The slag-scaled drake wheels over the cinder flats. Put it down so the
+    cutters can work the cinderroot again.
+  done: '*** The slag-drake is dead and the cinder flats can be worked again. Moltenhold''s
+    casters owe you fire and forge both, and Bex says so. ***'

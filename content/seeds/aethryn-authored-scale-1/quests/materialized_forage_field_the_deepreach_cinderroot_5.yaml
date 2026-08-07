@@ -1,0 +1,36 @@
+id: forage_field_the_deepreach_cinderroot_5
+name: 'A small Haul: cinderroot of The Deepreach Wilds'
+start: s0
+reward_xp: 310
+steps:
+- state: s0
+  event: forage
+  to: s1
+  on_forage: field_the_deepreach|cinderroot
+- state: s1
+  event: forage
+  to: s2
+  on_forage: field_the_deepreach|cinderroot
+- state: s2
+  event: forage
+  to: s3
+  on_forage: field_the_deepreach|cinderroot
+- state: s3
+  event: forage
+  to: s4
+  on_forage: field_the_deepreach|cinderroot
+- state: s4
+  event: forage
+  to: done
+  on_forage: field_the_deepreach|cinderroot
+  effect: award_xp
+terminal:
+- done
+labels:
+  s0: 'Haul in cinderroot in The Deepreach Wilds: 0/5 (310 XP).'
+  s1: 'Haul in cinderroot in The Deepreach Wilds: 1/5 (310 XP).'
+  s2: 'Haul in cinderroot in The Deepreach Wilds: 2/5 (310 XP).'
+  s3: 'Haul in cinderroot in The Deepreach Wilds: 3/5 (310 XP).'
+  s4: 'Haul in cinderroot in The Deepreach Wilds: 4/5 (310 XP).'
+  done: You have hauled in cinderroot enough for The Deepreach Wilds. The forge-crews
+    can feed the fires now.

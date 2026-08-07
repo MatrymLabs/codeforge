@@ -1,0 +1,167 @@
+# SEED: aethryn -- jobs.yaml (callings)
+# The Forger's three first paths, from the world bible: how you shape ember decides
+# how you fight. Stats recompute on restore (derive, don't store).
+
+template:
+  description: A path not yet chosen.
+
+vanguard:
+  name: Vanguard
+  description: Shapes ember into ward and edge, and stands in the front line. Strength and stamina.
+  stats: {strength: 12, speed: 10, stamina: 12, magic: 2}
+
+pathfinder:
+  name: Pathfinder
+  description: Reads the wilds and strikes from the flank. Speed and skill over brute force.
+  stats: {strength: 10, speed: 14, stamina: 9, magic: 3}
+
+emberwright:
+  name: Emberwright
+  description: "A maker first: forges gear and bends raw ember to the will. Patient hands, deep magic."
+  stats: {strength: 9, speed: 9, stamina: 11, magic: 6}
+  resistances: {FIR: Resist}  # a life at the forge: flame does half (the Cinder-Wight burns less)
+
+# --- Batch 1 of the 30 callings (job_system.md families). Distinct stat spreads; each carries a
+# --- two-move kit in abilities.yaml. Switchable in/out via primary + subjob (the kit is lent).
+
+# Martial family: close-quarters specialists (strength/stamina).
+duelist:
+  name: Duelist
+  description: Wins isolated exchanges by baiting the read and punishing it. Speed married to strength.
+  stats: {strength: 12, speed: 12, stamina: 9, magic: 3, wisdom: 4, luck: 8}
+
+sentinel:
+  name: Sentinel
+  description: Stands between harm and the line, and turns blows aside. Stamina above all.
+  stats: {strength: 10, speed: 6, stamina: 15, magic: 4, wisdom: 6, luck: 5}
+
+berserker:
+  name: Berserker
+  description: Spends its own safety to buy runaway power. Raw strength, little restraint.
+  stats: {strength: 16, speed: 8, stamina: 12, magic: 1, wisdom: 2, luck: 6}
+
+# Precision family: agile strikers who win by speed and angle (speed/luck).
+ranger:
+  name: Ranger
+  description: Strikes from range and reads the ground. Speed and a keen, lucky eye.
+  stats: {strength: 9, speed: 15, stamina: 9, magic: 4, wisdom: 7, luck: 8}
+
+scout:
+  name: Scout
+  description: Fast, elusive, and never where the blow lands. Speed and luck over armor.
+  stats: {strength: 7, speed: 16, stamina: 8, magic: 5, wisdom: 8, luck: 10}
+
+shadowblade:
+  name: Shadowblade
+  description: Ends fights from the dark in a single opened throat. Speed, edge, and fortune.
+  stats: {strength: 11, speed: 14, stamina: 8, magic: 6, wisdom: 5, luck: 9}
+
+saboteur:
+  name: Saboteur
+  description: Poisons, snares, and unmakes a foe before it swings. Cunning over muscle.
+  stats: {strength: 8, speed: 13, stamina: 9, magic: 8, wisdom: 9, luck: 8}
+
+# Arcane family: casters who bend ember to force and time (magic/wisdom).
+arcanist:
+  name: Arcanist
+  description: "Raw force made law: bolts, wards, and the patient shaping of power. Deep magic."
+  stats: {strength: 3, speed: 7, stamina: 8, magic: 16, wisdom: 12, luck: 6}
+
+elementalist:
+  name: Elementalist
+  description: Calls fire, frost, and storm and lets them run. Magic first, wisdom to steer it.
+  stats: {strength: 4, speed: 8, stamina: 8, magic: 15, wisdom: 11, luck: 7}
+
+chronomancer:
+  name: Chronomancer
+  description: Steals time from the enemy and lends it to allies. Wisdom married to deep magic.
+  stats: {strength: 3, speed: 9, stamina: 8, magic: 13, wisdom: 15, luck: 8}
+
+summoner:
+  name: Summoner
+  description: Binds a spirit of the deep ember and fights through it. Magic, wisdom, and nerve.
+  stats: {strength: 4, speed: 7, stamina: 9, magic: 14, wisdom: 13, luck: 8}
+
+# Divine family: menders and wardens who turn faith into force (wisdom/magic).
+cleric:
+  name: Cleric
+  description: Mends the line and calls light down on what breaks it. Wisdom above all.
+  stats: {strength: 5, speed: 7, stamina: 10, magic: 12, wisdom: 15, luck: 7}
+
+oracle:
+  name: Oracle
+  description: Reads what comes and bends the odds toward it. Wisdom and an uncanny luck.
+  stats: {strength: 4, speed: 8, stamina: 9, magic: 11, wisdom: 14, luck: 12}
+
+templar:
+  name: Templar
+  description: "Faith made armor: smites the unmade and shields the living. Wisdom and iron."
+  stats: {strength: 11, speed: 6, stamina: 13, magic: 8, wisdom: 12, luck: 5}
+
+warden:
+  name: Warden
+  description: Keeps the ward-line whole and turns curses aside. Stamina and steady wisdom.
+  stats: {strength: 8, speed: 6, stamina: 14, magic: 9, wisdom: 13, luck: 6}
+
+# Engineering family: makers who fight through gadgetry (magic/speed).
+engineer:
+  name: Engineer
+  description: Deploys barriers and turrets and keeps the works running. Clever hands, quick feet.
+  stats: {strength: 7, speed: 12, stamina: 11, magic: 11, wisdom: 10, luck: 6}
+
+artificer:
+  name: Artificer
+  description: Forges relics mid-fight and spends them for effect. Magic and a maker's patience.
+  stats: {strength: 6, speed: 10, stamina: 10, magic: 13, wisdom: 12, luck: 7}
+
+gunsmith:
+  name: Gunsmith
+  description: Trades in range and rate of fire. Speed on the trigger, a lucky bead.
+  stats: {strength: 8, speed: 14, stamina: 9, magic: 8, wisdom: 8, luck: 10}
+
+mechanist:
+  name: Mechanist
+  description: Rides a walking rig and lets it soak what it dishes. Stamina bolted to magic.
+  stats: {strength: 10, speed: 8, stamina: 14, magic: 10, wisdom: 9, luck: 5}
+
+# Nature family: those who fight with the wilds themselves (stamina/wisdom).
+druid:
+  name: Druid
+  description: Bends grove and storm and shifts shape to suit the fight. Wisdom and deep roots.
+  stats: {strength: 8, speed: 9, stamina: 13, magic: 11, wisdom: 13, luck: 6}
+
+beastmaster:
+  name: Beastmaster
+  description: Fights beside a bound beast and shares its ferocity. Stamina and a wild bond.
+  stats: {strength: 12, speed: 11, stamina: 12, magic: 5, wisdom: 9, luck: 8}
+
+stormcaller:
+  name: Stormcaller
+  description: Calls the sky down in chain and gale. Magic to summon it, wisdom to aim it.
+  stats: {strength: 5, speed: 10, stamina: 9, magic: 14, wisdom: 12, luck: 8}
+
+geomancer:
+  name: Geomancer
+  description: Reads the land and turns its temper into a weapon. Stamina and steady wisdom.
+  stats: {strength: 9, speed: 7, stamina: 13, magic: 12, wisdom: 12, luck: 6}
+
+# Cross-family specialists that round the roster to thirty.
+reaver:
+  name: Reaver
+  description: Reaps a felled foe's strength to fuel the next kill. Strength that feeds on itself.
+  stats: {strength: 15, speed: 10, stamina: 11, magic: 3, wisdom: 4, luck: 7}
+
+trickster:
+  name: Trickster
+  description: Wins on angles, feints, and a stolen edge. Speed and outrageous luck.
+  stats: {strength: 6, speed: 15, stamina: 8, magic: 7, wisdom: 8, luck: 13}
+
+runesmith:
+  name: Runesmith
+  description: Carves force into rune and lets it detonate. Deep magic, a smith's patience.
+  stats: {strength: 7, speed: 8, stamina: 10, magic: 15, wisdom: 11, luck: 6}
+
+hierophant:
+  name: Hierophant
+  description: Turns a whole line's faith into a single ruinous word. Wisdom raised to law.
+  stats: {strength: 6, speed: 7, stamina: 11, magic: 12, wisdom: 16, luck: 6}
