@@ -68,6 +68,10 @@ adapters = ["web/*.html"]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+# Evidence artifacts record what a run actually produced. A formatter must never
+# rewrite a record, so the code blocks under docs/evidence/ stay byte-for-byte as
+# they were generated, even where ruff would reformat them.
+extend-exclude = ["docs/evidence"]
 
 [tool.ruff.lint]
 # E/F: core errors  I: import sorting  UP: modernize syntax
