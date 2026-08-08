@@ -9513,7 +9513,7 @@
   "updated": "2026-08-08"
  },
  {
-  "designation": "MOD-10.092",
+  "designation": "MOD-10.147",
   "name": "world_compiler",
   "status": "active",
   "function": "assemble selected Aethryn regions into one connected deterministic World Package",
