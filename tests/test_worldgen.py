@@ -113,6 +113,55 @@ def test_roads_can_be_turned_off_for_a_pure_wild_zone() -> None:
     assert not any("the road runs on" in r["desc"] for r in region.rooms.values())
 
 
+# --- topographic variety: terrain reads the biome ------------------------------------------------
+
+
+def _descs(biome: str, seed: int = 4) -> set[str]:
+    # terrain shows in the room DESCRIPTION (rooms carry name/desc/exits, not a raw terrain key)
+    region = generate_region(RegionSpec("z", 26, 20, seed=seed, biome=biome))
+    return {r["desc"] for r in region.rooms.values()}
+
+
+def test_terrain_varies_by_biome_not_one_world_for_all() -> None:
+    # a desert is flat sand with no forest; a jungle is dense forest over marsh: the same heightmap,
+    # read through different profiles, yields visibly different lands (the point of the variety).
+    desert = _descs("salt-desert")
+    jungle = _descs("living-jungle")
+    assert any("sand" in d for d in desert) and not any(
+        "trees" in d for d in desert
+    )  # sand, no wood
+    assert any("trees" in d for d in jungle) and any(
+        "Boggy" in d for d in jungle
+    )  # wood over swamp
+    assert desert != jungle
+
+
+def test_a_glacier_breaks_into_impassable_cliffs() -> None:
+    # the glacier's high ground is CLIFF (impassable) -- real elevation the field routes around, so
+    # its walkable graph has FEWER rooms than the full grid a plains field fills, still world-shape.
+    ice = generate_region(RegionSpec("ice", 26, 20, seed=4, biome="glacier-waste"))
+    plains = generate_region(
+        RegionSpec("flat", 26, 20, seed=4)
+    )  # default profile: no impassable land
+    assert ice.topology.verdict == WORLD_SHAPED  # the cliffs did not sever the field
+    assert len(ice.rooms) < len(plains.rooms)  # cliff cells are gaps -- real obstacles, fewer rooms
+
+
+def test_an_unknown_biome_falls_back_to_the_plains_default() -> None:
+    from kernel.world.worldgen import _DEFAULT_PROFILE, _profile
+
+    assert _profile("no-such-biome") is _DEFAULT_PROFILE
+    assert _descs("") == _descs("no-such-biome")  # empty + unknown both read through the default
+
+
+def test_roads_pave_desert_sand_too() -> None:
+    # a road threads a desert field between landmarks (sand carries roads, not just grass)
+    region = generate_region(
+        RegionSpec("dune", 26, 20, seed=4, biome="salt-desert", landmarks=(_TOWN, _KEEP))
+    )
+    assert any("the road runs on" in r["desc"] for r in region.rooms.values())
+
+
 # --- the SABOTAGE: a corridor must be caught -----------------------------------------------------
 
 
@@ -185,8 +234,8 @@ def test_a_landmark_on_impassable_terrain_is_refused_loud(monkeypatch) -> None:
 
     real = wg._terrain
 
-    def sabotaged(hm, river, crossings, w, h):
-        cells = real(hm, river, crossings, w, h)
+    def sabotaged(hm, river, crossings, prof):
+        cells = real(hm, river, crossings, prof)
         cells[(5, 5)] = Cell("river")  # a wall exactly where the landmark wants to stand
         return cells
 

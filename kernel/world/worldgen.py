@@ -62,6 +62,9 @@ class RegionSpec:
     width: int
     height: int
     seed: int = 0
+    biome: str = (
+        ""  # picks the terrain PROFILE (desert/glacier/jungle/...); "" = the plains default
+    )
     landmarks: tuple[Landmark, ...] = ()
     river_source: tuple[int, int] | None = None
     crossings: tuple[tuple[int, int, str], ...] = ()
@@ -153,27 +156,64 @@ def _trace_river(
     return river
 
 
+@dataclass(frozen=True)
+class TerrainProfile:
+    """How a biome reads elevation into terrain: the open GROUND, the LOW-lying cover below
+    `low_below`, and the HIGH ground above `high_above`. One heightmap, many worlds -- a desert is
+    flat sand, a glacier is cliff-broken peaks, a jungle is dense forest over marsh."""
+
+    ground: str
+    low: str
+    low_below: float
+    high: str
+    high_above: float
+
+
+# The plains default (the original hill/forest/plain reading) plus a profile per Aethryn biome, so a
+# field's TERRAIN matches its zone: sand and rare mesas in the salt-desert, cliff-broken ice on the
+# glacier, dense forest over marsh in the jungle, boggy hills on the moor, broken ash on the
+# volcanic flats, shore and sea-inlets on the coast. `high`/`low` may be IMPASSABLE (cliff, water):
+# those become obstacles the open field routes around -- real elevation and coastline, not scenery.
+_DEFAULT_PROFILE = TerrainProfile("plain", "forest", 0.28, "hill", 0.70)
+_PROFILES: dict[str, TerrainProfile] = {
+    "temperate-meadow": TerrainProfile("meadow", "forest", 0.30, "hill", 0.72),
+    "wild-forest": TerrainProfile("forest", "forest", 0.50, "hill", 0.76),
+    "living-jungle": TerrainProfile("forest", "marsh", 0.34, "hill", 0.80),
+    "highland-moor": TerrainProfile("plain", "marsh", 0.30, "hill", 0.55),
+    "coastal-strand": TerrainProfile("shore", "water", 0.16, "hill", 0.78),
+    "glacier-waste": TerrainProfile("snow", "hill", 0.34, "cliff", 0.82),
+    "salt-desert": TerrainProfile("desert", "desert", 0.0, "hill", 0.84),
+    "volcanic-flats": TerrainProfile("ash", "hill", 0.30, "cliff", 0.82),
+}
+
+
+def _profile(biome: str) -> TerrainProfile:
+    """The terrain profile for a biome (the plains default for an unknown or empty biome)."""
+    return _PROFILES.get(biome, _DEFAULT_PROFILE)
+
+
 def _terrain(
     hm: dict[tuple[int, int], float],
     river: set[tuple[int, int]],
     crossings: dict[tuple[int, int], str],
-    w: int,
-    h: int,
+    prof: TerrainProfile,
 ) -> dict[tuple[int, int], Cell]:
-    """Read terrain from elevation: a crossing cell is its ford/bridge; a river-channel cell is
-    impassable water; a high cell is a hill; a low cell is forest; the rest is open plain."""
+    """Read terrain from elevation through a biome PROFILE: a crossing cell is its ford/bridge; a
+    river-channel cell is impassable water; a high cell is the profile's `high` (hill, or an
+    impassable cliff); a low cell its `low` (forest, marsh, or impassable water); the rest its open
+    `ground` (plain, meadow, sand, shore). So a desert reads flat and a glacier reads broken."""
     cells: dict[tuple[int, int], Cell] = {}
     for (x, y), height in hm.items():
         if (x, y) in crossings:
             terrain = crossings[(x, y)]
         elif (x, y) in river:
             terrain = "river"
-        elif height > 0.70:
-            terrain = "hill"
-        elif height < 0.28:
-            terrain = "forest"
+        elif height > prof.high_above:
+            terrain = prof.high
+        elif height < prof.low_below:
+            terrain = prof.low
         else:
-            terrain = "plain"
+            terrain = prof.ground
         cells[(x, y)] = Cell(terrain, elevation=int(height * 3))
     return cells
 
@@ -218,7 +258,8 @@ def _pave_roads(cells: dict[tuple[int, int], Cell], landmarks: tuple[Landmark, .
     for a, b in zip(anchors, anchors[1:], strict=False):
         for xy in _road_between(a, b, passable):
             c = cells[xy]
-            if c.terrain in ("plain", "meadow", "forest", "hill"):
+            # pave any walkable land (sand + shore too); a crossing keeps its ford/bridge
+            if c.terrain not in ("ford", "bridge", "road"):
                 cells[xy] = Cell("road", c.elevation)
 
 
@@ -275,7 +316,7 @@ def generate_region(spec: RegionSpec) -> Region:
                 # half the region -- two crossings keep two routes, so no undeclared bottleneck).
                 crossmap = {river[len(river) // 3]: "ford", river[2 * len(river) // 3]: "bridge"}
         river_set = set(river) - set(crossmap)  # a crossing overrides the river channel
-        cells = _terrain(hm, river_set, crossmap, spec.width, spec.height)
+        cells = _terrain(hm, river_set, crossmap, _profile(spec.biome))
         if spec.roads and len(spec.landmarks) >= 2:
             _pave_roads(cells, spec.landmarks)  # trails threading the field between living places
         declared = _declared_crossings(spec.name, cells, crossmap)
