@@ -76,7 +76,7 @@ class ClaudeImplementer:
     def implement(self, goal: str, tests: TargetFiles, feedback: str) -> TargetFiles:
         response = self._client.messages.parse(
             model=self._model,
-            max_tokens=4096,
+            max_tokens=16000,
             system=_IMPLEMENT_SYSTEM,
             messages=[{"role": "user", "content": _prompt(goal, tests, feedback)}],
             output_format=_GeneratedSource,

@@ -60,7 +60,7 @@ def test_structured_output_becomes_target_files() -> None:
     source = ClaudeImplementer(client).implement("an add(a, b)", {"tests/t.py": "x"}, "")
     assert source == {"calc.py": "def add(a, b):\n    return a + b\n"}
     # It called the schema-enforced API with the right model and schema.
-    assert client.messages.seen["model"] == "claude-opus-4-8"
+    assert client.messages.seen["model"] == "claude-opus-5"
     assert client.messages.seen["output_format"] is _GeneratedSource
 
 
