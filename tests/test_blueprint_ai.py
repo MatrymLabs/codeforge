@@ -59,7 +59,7 @@ def test_draft_becomes_a_validated_blueprint():
     assert bp.blueprint_id == "ai_idea"
     assert bp.status == "draft"  # AI output is always a Tier-4 draft
     # It called the structured-output API with the schema and the right model.
-    assert client.messages.seen["model"] == "claude-opus-4-8"
+    assert client.messages.seen["model"] == "claude-opus-5"
     assert client.messages.seen["output_format"] is BlueprintDraft
 
 

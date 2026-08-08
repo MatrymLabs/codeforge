@@ -92,7 +92,8 @@ class SocketBus:
                 with self._subs_lock:
                     handlers = list(self._subs.get(topic, ()))
                 for handler in handlers:
-                    with suppress(Exception):  # nosec B110 -- one bad handler never breaks delivery
+                    # One bad handler must not break delivery.
+                    with suppress(Exception):  # nosec B110
                         handler(payload)
         except OSError:
             pass  # the broker went away; close() handles the rest

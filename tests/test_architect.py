@@ -92,7 +92,7 @@ def test_claude_advisor_calls_the_messages_api_with_the_right_model():
     client = _FakeClient(reply="Try `reuse audit`.")
     out = ClaudeAdvisor(client).advise("how do I find an audit part?")
     assert "Try `reuse audit`." in out
-    assert client.messages.seen["model"] == "claude-opus-4-8"
+    assert client.messages.seen["model"] == "claude-opus-5"
     assert client.messages.seen["system"].startswith("You are the Architect")
 
 

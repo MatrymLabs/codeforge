@@ -72,7 +72,8 @@ def _load_function(src: str, func_name: str, tag: str) -> Any:
     """Exec a source string in a fresh namespace and return the named function (trusted code)."""
     namespace: dict[str, Any] = {}
     try:
-        exec(compile(src, f"<{tag}>", "exec"), namespace)  # noqa: S102  # nosec B102
+        # Bandit B102: authorized code-equivalence verifier, not a sandbox.
+        exec(compile(src, f"<{tag}>", "exec"), namespace)  # noqa: S102  # nosec
     except SyntaxError as exc:
         raise VerifySmtError(f"{tag} source does not parse: {exc}") from exc
     fn = namespace.get(func_name)

@@ -9,7 +9,7 @@
 # 3.13); it is installed just-in-time by `make mutation`, not carried in the default dev deps.
 
 [cosmic-ray]
-module-path = "parts/hashchain.py"
+module-path = "kernel/shelf/hashchain.py"
 timeout = 30.0
 excluded-modules = []
 test-command = "python -m pytest -x -q tests/test_hashchain.py"

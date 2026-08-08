@@ -43,7 +43,8 @@ class InProcessBus:
 
     def publish(self, topic: str, payload: dict[str, Any]) -> None:
         for handler in list(self._subs.get(topic, ())):  # snapshot: a handler may unsubscribe
-            with suppress(Exception):  # nosec B110 -- one bad subscriber never breaks a publish
+            # One bad subscriber must not break a publish.
+            with suppress(Exception):  # nosec B110
                 handler(payload)
 
     def subscribe(self, topic: str, handler: Handler) -> None:
@@ -72,7 +73,8 @@ def on_rewire(hook: Callable[[], None]) -> None:
 
 def _fire_rewire() -> None:
     for hook in list(_REWIRE_HOOKS):
-        with suppress(Exception):  # nosec B110 -- one bad rewire hook never blocks the others
+        # One bad rewire hook must not block the others.
+        with suppress(Exception):  # nosec B110
             hook()
 
 

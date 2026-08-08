@@ -2,7 +2,7 @@
   "career_board": {
     "title": "Career Evidence Sign",
     "purpose": "Map CodeForge work to real software-career skills -- each with the exact repo artifact that proves it, and the honest gaps.",
-    "last_updated": "2026-07-23",
+    "last_updated": "2026-08-08",
     "market_note": "Basis: BLS 2024 medians (Software Developers $133,080 - QA/Testers $102,610 - Technical Writers $91,670; ~317,700 CS/IT openings/yr through 2034) + O*NET work styles + current public postings (Roblox, Extreme Networks, Wyetech, Veeva, BioIntelliSense, PlayOn, Xsolla). CodeForge's strongest overlap: internal tools - release/build - DevOps/SRE - QA automation - technical docs.",
     "status_legend": "proven=current repo artifact | partial=some proof, needs more | missing=no proof | planned=idea only | needs_update=stale | human_review_required=uncertain",
     "levels": [
@@ -44,7 +44,7 @@
             "skill": "Show solid Python understanding",
             "why_it_matters": "The core of every entry Python/tools role.",
             "repo_proof": [
-              "parts/",
+              "kernel/",
               "forge.py",
               "tests/"
             ],
@@ -281,7 +281,7 @@
             "why_it_matters": "A cataloged reusable component is concrete platform evidence.",
             "repo_proof": [
               "catalog/parts.yaml",
-              "parts/reporting.py",
+              "kernel/shelf/reporting.py",
               "tests/test_reporting.py",
               "kernel/shelf/__init__.py",
               "kernel/shelf_boundary.py"
@@ -307,7 +307,7 @@
             "skill": "Model a relational database and evolve it with migrations",
             "why_it_matters": "PostgreSQL + schema migrations is the single most-named production-data ask in 2026 postings.",
             "repo_proof": [
-              "parts/db.py",
+              "kernel/world/db.py",
               "migrations/env.py",
               "migrations/versions",
               "docker-compose.yml",
@@ -376,7 +376,7 @@
             "repo_proof": [
               "CONTRIBUTING.md",
               "docs/adr/",
-              "CLAUDE.md"
+              "docs/python/style_guide.md"
             ],
             "status": "proven",
             "next_proof_task": "Add a review rubric for incoming changes.",
@@ -483,7 +483,7 @@
             "skill": "Instrument a service with structured logs and metrics",
             "why_it_matters": "Seniors are judged on operability; structured logs + a Prometheus /metrics endpoint are a recurring observability ask.",
             "repo_proof": [
-              "parts/observability.py",
+              "kernel/shelf/observability.py",
               "tests/test_observability.py",
               "docs/observability.md"
             ],
@@ -537,6 +537,19 @@
             ],
             "status": "proven",
             "next_proof_task": "Surface forge-audit's four-layer license scorecard (SBOM validation + freshness) in the codeforge README Evaluation section."
+          },
+          {
+            "skill_id": "adv.ai.spec_driven_synthesis",
+            "skill": "Generate verified business logic from a spec, and prove the verdict was earned",
+            "why_it_matters": "Wiring an LLM into a product is common; proving what it produced is not. The reverse-TDD harness turns a behavioral spec into tests, hands the goal (never the tests) to a real model, and iterates until the suite is green, then returns a verdict rather than a boolean. The integrity guard drops any generated file whose path matches a spec test, so the model cannot fake green by rewriting what judges it. On 2026-08-08 a live claude-opus-5 implementer passed on the first iteration, recorded verbatim in a dated artifact.",
+            "repo_proof": [
+              "kernel/seedlab/synthesis.py",
+              "adapters/synthesis_ai.py",
+              "tests/test_synthesis.py",
+              "docs/evidence/2026-08-08-first-real-synthesis-run.md"
+            ],
+            "status": "partial",
+            "next_proof_task": "P-08: implement the cosmic-ray-backed MutationScorer so a run can return TESTS_TOO_WEAK. Until then no synthesis result is mutation-verified and this skill stays partial, not proven."
           }
         ]
       }

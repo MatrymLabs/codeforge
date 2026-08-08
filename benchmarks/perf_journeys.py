@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import statistics
-import subprocess  # nosec B404 -- fixed argv, no shell, used only to time a cold `import forge`
+import subprocess  # nosec B404
 import sys
 import time
 from collections.abc import Callable
@@ -53,7 +53,8 @@ def measure_startup(reps: int = 15) -> dict:
     out: list[float] = []
     for _ in range(reps):
         t = perf()
-        subprocess.run(  # nosec B603 -- fixed argv, no shell, no user input
+        # Fixed argv, no shell, no user input.
+        subprocess.run(  # nosec B603
             [sys.executable, "-c", "import forge"],
             cwd=_ROOT,
             check=True,

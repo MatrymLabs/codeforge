@@ -14,6 +14,7 @@ docs/classification/CLASSIFICATION_SYSTEM.md.
 """
 
 import json
+import posixpath
 import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -304,6 +305,18 @@ def registry_status(status: str, registry_dir: Path | None = None) -> str:
     return _filtered(hits, f"Status '{status}':")
 
 
+def _canonical_file(path: str) -> str:
+    """Normalize registry paths for duplicate detection across spelling conventions."""
+    return posixpath.normpath(path.replace("\\", "/")).casefold()
+
+
+def _is_live(record: Designation) -> bool:
+    """Return whether a record claims a current file rather than historical ownership."""
+    return (
+        record.status not in {"superseded", "deprecated", "archived"} and not record.superseded_by
+    )
+
+
 def validate(
     records: list[Designation], root: Path | None = None, check_files: bool = True
 ) -> list[str]:
@@ -322,6 +335,15 @@ def validate(
     for (type_, label), ids in by_type_label.items():
         if len(ids) > 1:
             problems.append(f"label '{label}' filed {len(ids)}x under {type_}: {', '.join(ids)}")
+    by_file: dict[str, list[str]] = {}
+    for record in records:
+        if record.type == "MOD" and _is_live(record):
+            by_file.setdefault(_canonical_file(record.file), []).append(record.designation)
+    for file_path, designations in by_file.items():
+        if len(designations) > 1:
+            problems.append(
+                f"duplicate file '{file_path}' filed under {', '.join(sorted(designations))}"
+            )
     if check_files:
         base = root if root is not None else _ROOT
         for r in records:

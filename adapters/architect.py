@@ -79,7 +79,7 @@ class LocalArchitect:
 # The Anthropic SDK is touched ONLY here, behind the Advisor protocol, so codeforge core
 # never hard-depends on it and CI (no key, fake injected) never reaches the network.
 
-CLAUDE_MODEL = "claude-opus-4-8"
+CLAUDE_MODEL = "claude-opus-5"
 
 _ARCHITECT_SYSTEM = (
     "You are the Architect, a senior engineering pair-programmer standing in the Workshop "
@@ -117,7 +117,7 @@ class ClaudeAdvisor:
             return "The Architect waits. Ask a question."
         message = self._client.messages.create(
             model=self._model,
-            max_tokens=400,
+            max_tokens=4000,
             system=_ARCHITECT_SYSTEM,
             messages=[{"role": "user", "content": question}],
         )

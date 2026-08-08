@@ -11,7 +11,7 @@ jobs:
   gap:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       - name: SBOM (Syft, CycloneDX)
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610  # v0
         with:
@@ -19,7 +19,7 @@ jobs:
           output-file: sbom.cdx.json
       - name: CVE scan (Grype) - OBSERVE
         id: grype
-        uses: anchore/scan-action@64a33b277ea7a1215a3c142735a1091341939ff5  # v4
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2  # v7.4.0
         with:
           path: "."
           fail-build: false

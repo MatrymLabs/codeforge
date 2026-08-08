@@ -69,7 +69,7 @@ class ClaudeBlueprintDrafter:
             raise BlueprintDraftError("describe the idea to draft a blueprint")
         response = self._client.messages.parse(
             model=self._model,
-            max_tokens=1024,
+            max_tokens=8000,
             system=_DRAFT_SYSTEM,
             messages=[{"role": "user", "content": text}],
             output_format=BlueprintDraft,

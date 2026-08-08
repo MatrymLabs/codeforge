@@ -22,12 +22,12 @@ verify = ["crosshair-tool>=0.0.109"]
 # tool reports refactor_available() False and fails loud with an install hint; nothing else is
 # affected. LibCST is the only lossless scope-aware codemod path (stdlib ast is lossy). deep=True
 # additionally uses the [verify] extra. CI runs without it (the scope-correctness tests skip).
-refactor = ["libcst>=1.8.6"]
+refactor = ["libcst>=1.9.0"]
 dev = [
     # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
     # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
     # Bump this deliberately (change the pin, then `make fix`), never by drift.
-    "ruff==0.16.0",
+    "ruff==0.16.1",
     "mypy",
     "types-PyYAML",
     "import-linter",  # style-guide section 2: enforce the kernel/adapters/content dependency direction
@@ -68,6 +68,10 @@ adapters = ["web/*.html"]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+# Evidence artifacts record what a run actually produced. A formatter must never
+# rewrite a record, so the code blocks under docs/evidence/ stay byte-for-byte as
+# they were generated, even where ruff would reformat them.
+extend-exclude = ["docs/evidence"]
 
 [tool.ruff.lint]
 # E/F: core errors  I: import sorting  UP: modernize syntax
