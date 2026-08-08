@@ -5,6 +5,19 @@ on:
   push:
     branches: [main]
 
+# Cancel superseded runs on the SAME ref: pushing three commits to a PR otherwise runs three
+# full workflows to completion and only the last answer is ever read.
+#
+# PULL REQUESTS ONLY, deliberately. An earlier draft used `github.ref != 'refs/heads/main'`,
+# which is TRUE for a release event (its ref is the tag) and could cancel a release
+# mid-publish. It is also true for schedules and tags. Cancelling main's run is its own
+# hazard: "we cancelled the proof" is indistinguishable from "the proof never ran", and this
+# fleet has already lost a day to exactly that ambiguity. So: cancel PR iterations, nothing
+# else, ever.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
