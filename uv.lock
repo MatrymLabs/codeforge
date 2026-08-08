@@ -349,7 +349,7 @@ requires-dist = [
     { name = "httpx2", marker = "extra == 'dev'" },
     { name = "hypothesis", marker = "extra == 'dev'" },
     { name = "import-linter", marker = "extra == 'dev'" },
-    { name = "libcst", marker = "extra == 'refactor'", specifier = ">=1.8.6" },
+    { name = "libcst", marker = "extra == 'refactor'", specifier = ">=1.9.0" },
     { name = "lupa", marker = "extra == 'lua'", specifier = ">=2.8" },
     { name = "mkdocs-material", marker = "extra == 'dev'" },
     { name = "mypy", marker = "extra == 'dev'" },
