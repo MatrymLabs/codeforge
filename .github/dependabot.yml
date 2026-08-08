@@ -33,3 +33,13 @@ updates:
     labels:
       - "dependencies"
       - "ci"
+    groups:
+      # codeql-action's init, analyze and upload-sarif are ONE action published from one
+      # repo, and they refuse to run at different versions:
+      #   "Loaded a configuration file for version '4.37.6', but running version '4.37.5'"
+      # Ungrouped, Dependabot opened a PR per sub-action (#879, #880, #881); each was red
+      # on its own and merging any one of them turned main red once already (#857, where a
+      # `skipping` codeql check was misread as a pass). They move together or not at all.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
