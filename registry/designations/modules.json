@@ -9537,7 +9537,7 @@
   "designation": "MOD-10.148",
   "name": "env_parity",
   "status": "active",
-  "function": "compare the local Python environment with the CI dev install and report extras, versions, interpreter, checkout location, and absent CI signals",
+  "function": "compare the local Python environment with the CI dev install and report extras, version, interpreter, and checkout-location drift",
   "label": "env_parity",
   "file": "kernel/env_parity.py",
   "type": "MOD",

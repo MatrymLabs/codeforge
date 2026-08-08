@@ -138,7 +138,14 @@ def check_checkout_location(repo_root: Path, fleet_root: Path | None = None) -> 
 
 
 def check_ci_signals(signals: Mapping[str, str | None]) -> ParityReport:
-    """Classify CI results so skipped or absent signals never count as success."""
+    """Classify CI results so skipped or absent signals never count as success.
+
+    Deliberately NOT part of ``build_report``: reading real CI status needs the network, and this
+    gate stays offline. It is the executable form of the fleet rule that a ``skipping`` or absent
+    check is not a passing check (a codeql break once hid behind ``skipping`` and reached main),
+    for a caller that already holds the statuses. ``make env-parity`` does not report this
+    dimension, and the registry record must not claim it does.
+    """
     report = ParityReport()
     for name, raw_status in sorted(signals.items()):
         status = (raw_status or "missing").casefold()
