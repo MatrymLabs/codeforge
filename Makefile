@@ -54,7 +54,7 @@ fuzz:
 # read it as the mutation_kill_rate KPI (MEASURED, or NOT_COMPUTABLE + stale past its freshness
 # window). This keeps mutation off the PR path while still turning its number into tracked evidence.
 mutation:
-	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- run: pip install cosmic-ray"; exit 1; }
+	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- installing it for this on-demand run"; python -m pip install cosmic-ray; }
 	cosmic-ray init cosmic-ray.toml .cosmic-ray-session.sqlite
 	cosmic-ray exec cosmic-ray.toml .cosmic-ray-session.sqlite
 	cr-rate .cosmic-ray-session.sqlite
