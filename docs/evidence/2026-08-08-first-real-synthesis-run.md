@@ -78,6 +78,10 @@ def test_case_1(capsys):
 
 ## The generated source
 
+Reproduced byte-for-byte, unformatted. `ruff format` would collapse one `raise` onto a single
+line; that edit is not applied, because a formatter must never rewrite a record. `docs/evidence/`
+is excluded from ruff in `pyproject.toml` for exactly this reason.
+
 ```python
 """Minimal greeting CLI.
 
