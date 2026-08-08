@@ -10,10 +10,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import secrets
 import shutil
+import signal
+import subprocess  # nosec B404
+import time
 from collections.abc import Callable
+from contextlib import suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -58,6 +63,7 @@ class DeploymentProfile:
     operator_id: str = ""
     artifact_evidence_id: str = ""
     backup_reference: str = ""
+    process_argv: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         _safe(self.profile_id, "profile_id")
@@ -69,6 +75,9 @@ class DeploymentProfile:
             raise DeploymentError("artifact_path must not be empty")
         if not self.health_check.strip():
             raise DeploymentError("health_check must not be empty")
+        object.__setattr__(self, "process_argv", tuple(self.process_argv))
+        if any(not isinstance(argument, str) or not argument for argument in self.process_argv):
+            raise DeploymentError("process_argv must contain only non-empty strings")
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -82,6 +91,7 @@ class DeploymentProfile:
             "operator_id": self.operator_id,
             "artifact_evidence_id": self.artifact_evidence_id,
             "backup_reference": self.backup_reference,
+            "process_argv": list(self.process_argv),
         }
 
 
@@ -104,6 +114,9 @@ class DeploymentRun:
     operator_id: str = ""
     artifact_evidence_id: str = ""
     backup_reference: str = ""
+    process_id: int = 0
+    process_status: str = "not_configured"
+    process_argv: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -122,6 +135,9 @@ class DeploymentRun:
             "operator_id": self.operator_id,
             "artifact_evidence_id": self.artifact_evidence_id,
             "backup_reference": self.backup_reference,
+            "process_id": self.process_id,
+            "process_status": self.process_status,
+            "process_argv": list(self.process_argv),
         }
 
     @classmethod
@@ -145,6 +161,9 @@ class DeploymentRun:
                 operator_id=str(raw.get("operator_id", "")),
                 artifact_evidence_id=str(raw.get("artifact_evidence_id", "")),
                 backup_reference=str(raw.get("backup_reference", "")),
+                process_id=int(raw.get("process_id", 0)),
+                process_status=str(raw.get("process_status", "not_configured")),
+                process_argv=tuple(str(item) for item in raw.get("process_argv", [])),
             )
         except (KeyError, TypeError, ValueError) as exc:
             raise DeploymentError(f"malformed deployment run: {exc}") from exc
@@ -164,6 +183,7 @@ class DeploymentBackup:
     state_digest: str = ""
     state_is_dir: bool = False
     created_at: str = ""
+    process_argv: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -177,6 +197,7 @@ class DeploymentBackup:
             "state_digest": self.state_digest,
             "state_is_dir": self.state_is_dir,
             "created_at": self.created_at,
+            "process_argv": list(self.process_argv),
         }
 
     @classmethod
@@ -195,6 +216,7 @@ class DeploymentBackup:
                 state_digest=str(raw.get("state_digest", "")),
                 state_is_dir=bool(raw.get("state_is_dir", False)),
                 created_at=str(raw.get("created_at", "")),
+                process_argv=tuple(str(item) for item in raw.get("process_argv", [])),
             )
         except (KeyError, TypeError, ValueError) as exc:
             raise DeploymentError(f"malformed deployment backup: {exc}") from exc
@@ -261,17 +283,94 @@ class LocalDeploymentController:
     def _backup_record_path(self, profile_id: str, backup_id: str) -> Path:
         return self._backup_path(profile_id, backup_id) / "backup.json"
 
-    def _read_current(self, profile_id: str) -> str:
+    def _read_current_state(self, profile_id: str) -> dict[str, object]:
         path = self._current_path(profile_id)
         if not path.is_file():
-            return ""
+            return {}
         try:
             raw = json.loads(path.read_text(encoding="utf-8"))
-            return str(raw["release_path"])
+            if not isinstance(raw, dict):
+                raise TypeError("current deployment must be an object")
+            return raw
         except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError) as exc:
             raise DeploymentError(
                 f"cannot read current deployment for {profile_id!r}: {exc}"
             ) from exc
+
+    def _read_current(self, profile_id: str) -> str:
+        return str(self._read_current_state(profile_id).get("release_path", ""))
+
+    @staticmethod
+    def _process_alive(process_id: int) -> bool:
+        if process_id <= 0:
+            return False
+        proc_stat = Path(f"/proc/{process_id}/stat")
+        if proc_stat.is_file():
+            try:
+                state = proc_stat.read_text(encoding="ascii").rsplit(") ", 1)[-1][:1]
+                if state == "Z":
+                    return False
+            except (OSError, UnicodeDecodeError):
+                pass
+        try:
+            os.kill(process_id, 0)
+        except ProcessLookupError:
+            return False
+        except PermissionError:
+            return True
+        return True
+
+    @classmethod
+    def _stop_process(cls, process_id: int) -> None:
+        if process_id <= 0 or not cls._process_alive(process_id):
+            return
+        try:
+            os.killpg(process_id, signal.SIGTERM)
+        except ProcessLookupError:
+            return
+        for _ in range(20):
+            if not cls._process_alive(process_id):
+                return
+            time.sleep(0.01)
+        with suppress(ProcessLookupError):
+            os.killpg(process_id, signal.SIGKILL)
+
+    @staticmethod
+    def _start_process(argv: tuple[str, ...], release: Path) -> subprocess.Popen[bytes]:
+        try:
+            return subprocess.Popen(  # nosec B603
+                list(argv),
+                cwd=release,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                shell=False,
+                start_new_session=True,
+            )
+        except OSError as exc:
+            raise DeploymentError(f"deployment process could not start: {exc}") from exc
+
+    def process_status(self, profile_id: str) -> str:
+        """Observe the persisted local process without claiming artifact health."""
+        state = self._read_current_state(profile_id)
+        argv = tuple(str(item) for item in state.get("process_argv", []))
+        if not argv:
+            return "not_configured"
+        return "running" if self._process_alive(int(state.get("process_id", 0))) else "stopped"
+
+    def stop_process(self, profile_id: str) -> str:
+        """Stop a supervised process and persist the stopped observation."""
+        state = self._read_current_state(profile_id)
+        argv = tuple(str(item) for item in state.get("process_argv", []))
+        if not argv:
+            return "not_configured"
+        self._stop_process(int(state.get("process_id", 0)))
+        state["process_id"] = 0
+        state["process_status"] = "stopped"
+        atomic_write_text(
+            self._current_path(profile_id), json.dumps(state, sort_keys=True) + "\n"
+        )
+        return "stopped"
 
     def _save_run(self, run: DeploymentRun) -> None:
         path = self._run_path(run.run_id)
@@ -311,6 +410,8 @@ class LocalDeploymentController:
         release = self.current_release(profile_id)
         if release is None:
             raise DeploymentError("cannot back up a profile without a current release")
+        current_state = self._read_current_state(profile_id)
+        process_argv = tuple(str(item) for item in current_state.get("process_argv", []))
         backup_id = _safe(backup_id or f"backup-{secrets.token_hex(4)}", "backup_id")
         destination = self._backup_path(profile_id, backup_id)
         if destination.exists():
@@ -345,6 +446,7 @@ class LocalDeploymentController:
             state_digest=state_digest,
             state_is_dir=state_is_dir,
             created_at=self.clock(),
+            process_argv=process_argv,
         )
         atomic_write_text(
             self._backup_record_path(profile_id, backup_id),
@@ -395,6 +497,11 @@ class LocalDeploymentController:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(first, target)
         previous = self._read_current(profile_id)
+        current_state = self._read_current_state(profile_id)
+        self._stop_process(int(current_state.get("process_id", 0)))
+        process = None
+        if backup.process_argv:
+            process = self._start_process(backup.process_argv, restored)
         atomic_write_text(
             self._current_path(profile_id),
             json.dumps(
@@ -402,6 +509,9 @@ class LocalDeploymentController:
                     "profile_id": profile_id,
                     "artifact_id": backup.artifact_id,
                     "release_path": str(restored),
+                    "process_id": process.pid if process is not None else 0,
+                    "process_status": "running" if process is not None else "not_configured",
+                    "process_argv": list(backup.process_argv),
                 },
                 sort_keys=True,
             )
@@ -419,6 +529,9 @@ class LocalDeploymentController:
             started_at=self.clock(),
             completed_at=self.clock(),
             backup_reference=backup.backup_id,
+            process_id=process.pid if process is not None else 0,
+            process_status="running" if process is not None else "not_configured",
+            process_argv=backup.process_argv,
         )
         self._save_run(run)
         return run
@@ -437,16 +550,22 @@ class LocalDeploymentController:
         run_id = _safe(self.id_minter(), "run_id")
         started = self.clock()
         previous = self._read_current(profile.profile_id)
+        previous_state = self._read_current_state(profile.profile_id)
         staged = staging_root / run_id
         release = release_root / run_id
         check = self.health_checks.get(profile.health_check)
         if check is None:
             raise DeploymentError(f"unknown health check: {profile.health_check!r}")
+        process: subprocess.Popen[bytes] | None = None
         try:
             shutil.copytree(source, staged)
             healthy = check(staged)
             if not healthy:
                 raise DeploymentError(f"health check {profile.health_check!r} failed")
+            if profile.process_argv:
+                process = self._start_process(profile.process_argv, staged)
+                if process.poll() is not None:
+                    raise DeploymentError("deployment process exited during startup")
             staged.replace(release)
             atomic_write_text(
                 self._current_path(profile.profile_id),
@@ -455,6 +574,9 @@ class LocalDeploymentController:
                         "profile_id": profile.profile_id,
                         "artifact_id": profile.artifact_id,
                         "release_path": str(release),
+                        "process_id": process.pid if process is not None else 0,
+                        "process_status": "running" if process is not None else "not_configured",
+                        "process_argv": list(profile.process_argv),
                     },
                     sort_keys=True,
                 )
@@ -475,8 +597,14 @@ class LocalDeploymentController:
                 operator_id=profile.operator_id,
                 artifact_evidence_id=profile.artifact_evidence_id,
                 backup_reference=profile.backup_reference,
+                process_id=process.pid if process is not None else 0,
+                process_status="running" if process is not None else "not_configured",
+                process_argv=profile.process_argv,
             )
+            self._stop_process(int(previous_state.get("process_id", 0)))
         except (OSError, DeploymentError) as exc:
+            if process is not None:
+                self._stop_process(process.pid)
             shutil.rmtree(staged, ignore_errors=True)
             run = DeploymentRun(
                 run_id=run_id,
@@ -494,6 +622,8 @@ class LocalDeploymentController:
                 operator_id=profile.operator_id,
                 artifact_evidence_id=profile.artifact_evidence_id,
                 backup_reference=profile.backup_reference,
+                process_status="stopped" if profile.process_argv else "not_configured",
+                process_argv=profile.process_argv,
             )
         self._save_run(run)
         return run
@@ -511,6 +641,13 @@ class LocalDeploymentController:
             raise DeploymentError("rollback release escapes the profile root") from exc
         if not previous.is_dir():
             raise DeploymentError("rollback release is missing")
+        current_state = self._read_current_state(deployed.profile_id)
+        self._stop_process(int(current_state.get("process_id", 0)))
+        process = (
+            self._start_process(deployed.process_argv, previous)
+            if deployed.process_argv
+            else None
+        )
         atomic_write_text(
             self._current_path(deployed.profile_id),
             json.dumps(
@@ -518,6 +655,9 @@ class LocalDeploymentController:
                     "profile_id": deployed.profile_id,
                     "artifact_id": "previous-release",
                     "release_path": str(previous),
+                    "process_id": process.pid if process is not None else 0,
+                    "process_status": "running" if process is not None else "not_configured",
+                    "process_argv": list(deployed.process_argv),
                 },
                 sort_keys=True,
             )
@@ -538,6 +678,9 @@ class LocalDeploymentController:
             operator_id=deployed.operator_id,
             artifact_evidence_id=deployed.artifact_evidence_id,
             backup_reference=deployed.backup_reference,
+            process_id=process.pid if process is not None else 0,
+            process_status="running" if process is not None else "not_configured",
+            process_argv=deployed.process_argv,
         )
         self._save_run(rollback)
         return rollback

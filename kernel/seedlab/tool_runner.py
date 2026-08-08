@@ -24,7 +24,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import signal
 import subprocess  # nosec B404
 import sys
 import time
@@ -32,8 +34,8 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from threading import Thread
-from typing import Protocol, runtime_checkable
+from threading import Lock, Thread
+from typing import BinaryIO, Protocol, cast, runtime_checkable
 
 from sqlalchemy.orm import Session as SqlSession
 
@@ -162,6 +164,63 @@ def authorize_tool_run(
     )
 
 
+def _stop_process_tree(proc: subprocess.Popen[bytes], *, force: bool = False) -> None:
+    """Stop the run's process group so descendants cannot outlive a cancelled run."""
+    if proc.poll() is not None:
+        return
+    if os.name == "posix":
+        try:
+            os.killpg(proc.pid, signal.SIGKILL if force else signal.SIGTERM)
+            return
+        except ProcessLookupError:
+            return
+        except OSError:
+            # Fall through to the portable parent-only operation if the group vanished or the
+            # platform rejected process-group signalling.
+            pass
+    try:
+        if force:
+            proc.kill()
+        else:
+            proc.terminate()
+    except ProcessLookupError:
+        pass
+
+
+def _bounded_output(proc: subprocess.Popen[bytes], cap: int) -> tuple[str, bool]:
+    """Drain both pipes without retaining more than `cap` bytes in memory."""
+    captured = bytearray()
+    lock = Lock()
+    truncated = False
+
+    def drain(stream: BinaryIO) -> None:
+        nonlocal truncated
+        try:
+            while True:
+                chunk = stream.read(4096)
+                if not chunk:
+                    return
+                with lock:
+                    remaining = cap - len(captured)
+                    if remaining > 0:
+                        captured.extend(chunk[:remaining])
+                    if len(chunk) > max(remaining, 0):
+                        truncated = True
+        finally:
+            stream.close()
+
+    assert proc.stdout is not None and proc.stderr is not None
+    threads = [
+        Thread(target=drain, args=(proc.stdout,), name="codeforge-tool-stdout", daemon=True),
+        Thread(target=drain, args=(proc.stderr,), name="codeforge-tool-stderr", daemon=True),
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    return bytes(captured).decode("utf-8", errors="replace"), truncated
+
+
 class RunLogError(Exception):
     """A persisted run record is corrupt. Fails loud."""
 
@@ -284,6 +343,7 @@ def run_tool(
     root = Path(source.root)  # the connector already resolved + bounded this
     correlation_id = correlation_id.strip()
     limits = _normalize_resource_limits(timeout, cap, resource_limits)
+    output_cap = int(cast(int | float | str, limits["output_bytes"]))
     input_digest = source.digest()
     principal_id = identity.principal_id if identity is not None else ""
     principal_kind = identity.principal_kind if identity is not None else ""
@@ -313,6 +373,7 @@ def run_tool(
         resource_limits=limits,
     )
     cancelled = False
+    output_truncated = False
     try:
         # Fixed allowlisted argv, shell=False, cwd-bounded.  Popen gives the control plane a
         # cancellation observation point while the command is running; subprocess.run cannot.
@@ -321,24 +382,22 @@ def run_tool(
             cwd=root,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True,
             start_new_session=True,
             preexec_fn=_resource_preexec(limits),  # nosec B603
         )
-        captured: dict[str, str] = {}
+        # Drain continuously in bounded helpers so a verbose build cannot fill the OS pipe or
+        # grow the runner's memory without limit while the control thread watches the run.
+        output_holder: list[tuple[str, bool]] = []
 
-        def drain() -> None:
-            stdout, stderr = proc.communicate()
-            captured["output"] = (stdout or "") + (stderr or "")
+        def collect() -> None:
+            output_holder.append(_bounded_output(proc, output_cap))
 
-        # Drain continuously in a small helper so a verbose build cannot fill the OS pipe while
-        # the control thread watches for cancellation and wall-time expiry.
-        collector = Thread(target=drain, name="codeforge-tool-output", daemon=True)
-        collector.start()
+        output_thread = Thread(target=collect, name="codeforge-tool-output", daemon=True)
+        output_thread.start()
         while True:
             if cancel_check():
                 cancelled = True
-                proc.terminate()
+                _stop_process_tree(proc)
                 break
             if time.monotonic() - started >= timeout:
                 break
@@ -346,24 +405,28 @@ def run_tool(
                 break
             time.sleep(min(0.05, max(0.001, timeout - (time.monotonic() - started))))
         if cancelled:
-            collector.join(timeout=1.0)
-            if collector.is_alive():
-                proc.kill()
-                collector.join(timeout=1.0)
-            output = captured.get("output", "")
+            try:
+                proc.wait(timeout=1.0)
+            except subprocess.TimeoutExpired:
+                _stop_process_tree(proc, force=True)
+                proc.wait(timeout=1.0)
+            output_thread.join(timeout=1.0)
+            output, output_truncated = output_holder[0] if output_holder else ("", False)
             exit_code, timed_out = 125, False
         elif proc.poll() is None:
             timed_out = True
-            proc.terminate()
-            collector.join(timeout=1.0)
-            if collector.is_alive():
-                proc.kill()
-                collector.join(timeout=1.0)
-            output = captured.get("output", "")
+            _stop_process_tree(proc)
+            try:
+                proc.wait(timeout=1.0)
+            except subprocess.TimeoutExpired:
+                _stop_process_tree(proc, force=True)
+                proc.wait(timeout=1.0)
+            output_thread.join(timeout=1.0)
+            output, output_truncated = output_holder[0] if output_holder else ("", False)
             exit_code = 124
         else:
-            collector.join(timeout=1.0)
-            output = captured.get("output", "")
+            output_thread.join(timeout=1.0)
+            output, output_truncated = output_holder[0] if output_holder else ("", False)
             exit_code, timed_out = proc.returncode, False
     except subprocess.TimeoutExpired:
         output, exit_code, timed_out = "", 124, True
@@ -371,8 +434,10 @@ def run_tool(
         output, exit_code, timed_out = f"command not found: {argv[0]}", 127, False
     duration = time.monotonic() - started
     output = redact(output)
-    if len(output) > cap:
-        output = output[:cap] + f"\n... (truncated at {cap} chars)"
+    if len(output.encode("utf-8")) > output_cap:
+        output = output.encode("utf-8")[:output_cap].decode("utf-8", errors="ignore")
+    if output_truncated:
+        output += f"\n... (truncated at {output_cap} bytes)"
     revoked = False
     if identity is not None and policy is not None:
         revoked = policy.is_revoked(

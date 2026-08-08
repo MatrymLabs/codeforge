@@ -89,6 +89,18 @@ _counter = 0
 _LOG = structlog.get_logger("gateway")
 
 
+def _log_trace_event(event: str, identity: SessionIdentity, **fields: object) -> None:
+    """Emit a correlation-safe gateway record for one authenticated platform hop."""
+    _LOG.info(
+        event,
+        correlation_id=identity.correlation_id,
+        session_id=identity.session_id,
+        seed_id=identity.seed_id,
+        worker_id="gateway",
+        **fields,
+    )
+
+
 def _configure_logging() -> None:
     """Emit gateway events as structured JSON lines. Idempotent; called once from serve() so tests
     (which drive the server directly, never serve()) keep structlog's default readable config."""
@@ -109,6 +121,7 @@ AUTOSAVE_EVERY = 25  # a named hero is autosaved every this many of their own co
 IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
 AUTHENTICATED_SESSION_TTL = timedelta(hours=12)
 AUTHENTICATED_SESSION_RENEWAL_WINDOW = timedelta(hours=1)
+SESSION_IDENTITY_PACKAGE = "Core.Session"
 MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
 MAX_LINE_BYTES = (
     4096  # cap a single client line: a newline-less flood must not be an unbounded read
@@ -380,6 +393,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_friends: dict[str, object] = {}  # {} = no friends; clears the friends line
         self._last_observation: dict[str, object] = {}
         self._authenticated_identity: object | None = None
+        self._published_session_identity: object | None = None
         # Privileged engineering operations get separate, narrowly scoped identities.  The
         # registry is the authority when one is injected; these are only the handler's references.
         self._gateway_identities: dict[str, object] = {}
@@ -415,6 +429,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
         )
         registry.issue(identity, actor=account)
         self._authenticated_identity = identity
+        _log_trace_event("session_authenticated", identity, principal_kind=identity.principal_kind)
+        self._push_session_identity()
 
     def _refresh_authenticated_identity(self, session: Session) -> SessionIdentity | None:
         """Renew the authenticated platform identity near expiry without widening authority."""
@@ -432,6 +448,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 now=now,
             )
             self._authenticated_identity = identity
+            self._push_session_identity()
         return identity
 
     def _authorize_game_command(self, session: Session) -> None:
@@ -517,6 +534,17 @@ class _GateHandler(socketserver.StreamRequestHandler):
             except Exception:
                 _LOG.exception("session_revoke_failed", session_id=identity.session_id)
 
+    def _push_session_identity(self) -> None:
+        """Publish the server-issued identity only after GMCP and account authentication."""
+        identity = getattr(self, "_authenticated_identity", None)
+        if (
+            identity is not None
+            and getattr(self, "_gmcp_enabled", False)
+            and identity != getattr(self, "_published_session_identity", None)
+        ):
+            self._send_gmcp(SESSION_IDENTITY_PACKAGE, identity.to_dict())
+            self._published_session_identity = identity
+
     def _note_gmcp(self, raw: bytes) -> None:
         """Read a client's GMCP negotiation reply out of raw input and record its choice. When a
         client first enables GMCP, announce the loaded Seed with a `Seed.Hello` frame (once), so a
@@ -540,6 +568,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     name=SEED_NAME.replace("-", " ").title(),
                 ),
             )
+        if self._session is not None:
+            self._push_session_identity()
         # Additive engineering-workspace wire: a logged-in owner's client can create a Seed and get
         # its workspace pushed back, all over GMCP. Only after the front desk (self._session set),
         # and orthogonal to the game path -- a non-workspace frame is ignored here.
@@ -622,6 +652,13 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     correlation_id=request_identity.correlation_id,
                 )
             self._send_gmcp(SEED_CREATED_PACKAGE, verdict)
+            _log_trace_event(
+                "workspace_seed_create",
+                request_identity,
+                package=name,
+                status="accepted" if verdict.get("ok") else "denied",
+                result_seed_id=str(verdict.get("id", "")) if verdict.get("ok") else "",
+            )
             if verdict.get("ok"):
                 record = kernel.get(str(verdict.get("id", "")))
                 for pkg, data in workspace_packages(record):
@@ -1231,6 +1268,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             # this connection, and (for an owner) push the creation Form so their Native-Seed
             # client's Wizard can render. Orthogonal to the game path below.
             self._session = session
+            self._push_session_identity()
             if has_rank(session, "owner"):
                 self._push_workspace_form()
                 self._push_reference_workspace()

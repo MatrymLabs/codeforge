@@ -26,7 +26,9 @@ import socket
 import subprocess
 import sys
 import tempfile
+import threading
 import time
+from collections import deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -43,6 +45,7 @@ IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password pro
 PROMPT = b"\n> "
 
 results: list[tuple[str, bool, float, str]] = []
+_active_server: subprocess.Popen[bytes] | None = None
 
 
 def wait_for_server(server: subprocess.Popen[bytes], timeout: float, name: str) -> None:
@@ -67,11 +70,42 @@ def wait_for_server(server: subprocess.Popen[bytes], timeout: float, name: str) 
             # The gateway's structured lifecycle event is authoritative; retain the
             # human-readable phrase for older/alternate gateway implementations.
             if "gateway_start" in line.lower() or "listening on" in line.lower():
+                _drain_server_output(server, output)
+                global _active_server
+                _active_server = server
                 return
     finally:
         selector.close()
     detail = "".join(output).strip() or "no child output"
     raise SystemExit(f"{name} did not report readiness within {timeout:g}s: {detail}")
+
+
+def _drain_server_output(server: subprocess.Popen[bytes], initial: list[str]) -> None:
+    """Keep a bounded child-log tail flowing so a verbose gateway cannot fill its pipe and stall.
+
+    The smoke test needs the gateway's stdout during boot, but Aethryn combat can emit enough
+    structured logs to fill a pipe if nobody reads it after readiness. The drain is deliberately
+    daemonized and bounded: it prevents the test harness from changing server behavior while
+    preserving the last lines for a useful failure diagnosis.
+    """
+    assert server.stdout is not None
+    tail: deque[str] = deque(initial[-80:], maxlen=80)
+    server._smoke_log_tail = tail  # type: ignore[attr-defined]
+
+    def drain() -> None:
+        assert server.stdout is not None
+        for raw in iter(server.stdout.readline, b""):
+            tail.append(raw.decode(errors="replace"))
+
+    threading.Thread(target=drain, name="smoke-gateway-log", daemon=True).start()
+
+
+def _child_log_tail() -> str:
+    """Return the active gateway's bounded diagnostic tail for a live-session failure."""
+    if _active_server is None:
+        return "no child log"
+    tail = getattr(_active_server, "_smoke_log_tail", ())
+    return "".join(tail).strip() or "no child log"
 
 
 def _recv_until(sock: socket.socket, marker: bytes, timeout: float = 6.0) -> str:
@@ -93,10 +127,18 @@ def step(
 ) -> str:
     """Send one command, read the reply, assert every expected substring is present."""
     start = time.monotonic()
-    sock.sendall(line.encode() + b"\n")
+    try:
+        sock.sendall(line.encode() + b"\n")
+    except BrokenPipeError as exc:
+        raise SystemExit(f"{name} lost the gateway connection:\n{_child_log_tail()}") from exc
     out = _recv_until(sock, marker)
     dt = (time.monotonic() - start) * 1000
     ok = all(e.lower() in out.lower() for e in expect)
+    if not ok:
+        print(
+            f"SMOKE FAIL {name}: `{line}` -> {out[:300].replace(chr(10), ' | ')}",
+            flush=True,
+        )
     results.append((f"{name}: `{line}`", ok, dt, "" if ok else out[:100].replace("\n", " | ")))
     return out
 
@@ -165,6 +207,8 @@ def register(
     if calling is not None:
         _recv_until(sock, b"Calling (name):")
         sock.sendall(calling.encode() + b"\n")
+        _recv_until(sock, b"Skin color:")
+        sock.sendall(b"copper\n")
     _recv_until(sock, IAC_WILL_ECHO)
     sock.sendall(password.encode() + b"\n")
     return _recv_until(sock, PROMPT)
@@ -201,15 +245,7 @@ def aethryn_journey() -> None:
         results.append(("AETHRYN boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
 
         s = connect(AETHRYN_PORT)
-        _recv_until(s, b"NEW:")
-        s.sendall(b"new\n")
-        _recv_until(s, b"account:")
-        s.sendall(b"ranger@aethryn\n")
-        _recv_until(s, b"Calling (name):")
-        s.sendall(b"vanguard\n")
-        _recv_until(s, IAC_WILL_ECHO)
-        s.sendall(b"lumos_1234\n")
-        welcome = _recv_until(s, PROMPT)
+        welcome = register(s, "ranger@aethryn", calling="vanguard")
         entered = "veridia" in welcome.lower()
         results.append(
             (

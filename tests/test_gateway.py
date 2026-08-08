@@ -811,6 +811,33 @@ def _login_gmcp(srv, char, account, pw="swordfish"):
     return sock, _read_until_raw(sock, b"> ")
 
 
+def test_authenticated_gmcp_receives_one_server_session_identity_and_revocation(tmp_path):
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    server = ForgeGateServer(("127.0.0.1", 0), _GateHandler, session_registry=registry)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        _saved_hero_with_calling()
+        sock, out = _login_gmcp(server, "mira", "mlabs")
+        try:
+            assert out.count(b"Core.Session") == 1
+            assert b'Core.Session {"principal_id":"mlabs"' in out
+            assert b'"capabilities":["game.command"]' in out
+            assert b'"seed_id":"first-forge"' in out
+            assert len(list(registry.root.glob("*.json"))) == 1
+        finally:
+            sock.close()
+        for _ in range(20):
+            records = list(registry.root.glob("*.json"))
+            if records and registry.load(records[0].stem).state == "invalidated":
+                break
+            time.sleep(0.05)
+        else:
+            pytest.fail("gateway did not revoke the published session identity")
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
 def test_an_owner_login_pushes_the_creation_form_over_gmcp(server, tmp_path, monkeypatch):
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -885,6 +912,51 @@ def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_pa
     assert b"Project.Status" in out and b"Onboarding" in out  # its workspace was pushed back
     assert list((tmp_path / "seeds").glob("*.json"))  # and it persisted to the file store
     sock.close()
+
+
+def test_owner_seed_creation_emits_a_traceable_gateway_log(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "Logged Onboarding",
+            "purpose": "trace gateway creation",
+            "scenarios": "structured logs",
+            "competencies": "correlation",
+            "certification": False,
+        },
+    }
+    logs = []
+
+    def record_log(event, identity, **fields):
+        logs.append(
+            {
+                "event": event,
+                "correlation_id": identity.correlation_id,
+                "session_id": identity.session_id,
+                "seed_id": identity.seed_id,
+                "worker_id": "gateway",
+                **fields,
+            }
+        )
+
+    monkeypatch.setattr(gateway, "_log_trace_event", record_log)
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    try:
+        sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")
+        _read_until_raw(sock, b"> ")
+    finally:
+        sock.close()
+
+    event = next(item for item in logs if item["event"] == "workspace_seed_create")
+    assert event["correlation_id"] == "gateway-seed-create-wren"
+    assert event["seed_id"] == "seedlab"
+    assert event["worker_id"] == "gateway"
+    assert event["status"] == "accepted"
+    assert "password" not in str(event).lower()
 
 
 def test_repeated_owner_form_submit_is_idempotent_over_gmcp(server, tmp_path, monkeypatch):

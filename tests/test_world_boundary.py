@@ -30,6 +30,31 @@ _WORLD = _ROOT / "kernel" / "world"
 # the directory must equal that closure, or a new game module would escape the boundary check.
 _GAME_SEED = {
     "world",
+    # Aethryn's authored-world compiler is a game entry surface as well as runtime content. Keep
+    # its modules in the seed closure so a newly added compiler stage cannot sit outside the
+    # world-boundary completeness proof.
+    "aethryn_actions",
+    "aethryn_cli",
+    "aethryn_compiler",
+    "aethryn_corpus",
+    "aethryn_delivery",
+    "aethryn_diagnostics",
+    "aethryn_ir",
+    "aethryn_models",
+    "aethryn_passes",
+    "aethryn_population",
+    "aethryn_quests",
+    "aethryn_references",
+    "aethryn_room_prose",
+    "aethryn_runtime",
+    "aethryn_schema",
+    "aethryn_state",
+    "aethryn_validation",
+    "authoring_prose",
+    "economy_transactions",
+    "material_culture",
+    "room_batches",
+    "underground",
     "allocate",
     "artifact",
     "armory",

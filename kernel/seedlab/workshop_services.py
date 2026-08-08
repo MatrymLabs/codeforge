@@ -7,6 +7,8 @@ correlation that a future text, native, or Console projection can call.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -26,6 +28,7 @@ from kernel.seedlab.jobs import (
     OUTPUT_CAP,
     FileJobStore,
     InMemoryJobStore,
+    JobError,
     JobRecord,
     JobRunner,
     JobStore,
@@ -161,6 +164,8 @@ class CreatorWorkshopService:
         approval_store: ApprovalStore | None = None,
         approval_id: str = "",
         approval_evidence_digest: str = "",
+        activity_id: str = "",
+        idempotency_key: str = "",
         clock: Callable[[], str] = _utcnow,
     ) -> JobRecord:
         if not source_license.strip():
@@ -184,6 +189,37 @@ class CreatorWorkshopService:
                 allowed_use=allowed_use,
             ),
         )
+        resolved_idempotency_key = idempotency_key.strip() or (
+            f"{kind}:{seed_id}:{source_id}:{profile}"
+        )
+        request_fingerprint = _job_request_fingerprint(
+            kind=kind,
+            seed_id=seed_id,
+            actor_id=actor_id,
+            profile=profile,
+            source_root=source_root,
+            source_id=source_id,
+            source_license=source_license,
+            allowlist=allowlist,
+            timeout=timeout,
+            cap=cap,
+            activity_id=activity_id,
+            approval_id=approval_id,
+            approval_evidence_digest=approval_evidence_digest,
+        )
+        existing = _latest_idempotent_job(self.jobs.for_seed(seed_id), resolved_idempotency_key)
+        if existing is not None:
+            if (
+                existing.requested_by != actor_id
+                or existing.kind != kind
+                or existing.profile != profile
+            ):
+                raise JobError("idempotency key was reused with different job intent")
+            if existing.request_fingerprint and existing.request_fingerprint != request_fingerprint:
+                raise JobError("idempotency key was reused with different request fingerprint")
+            if activity_id and existing.activity_id and existing.activity_id != activity_id:
+                raise JobError("idempotency key was reused with different activity")
+            return existing
         runner = JobRunner(
             source,
             seed_id=seed_id,
@@ -193,6 +229,9 @@ class CreatorWorkshopService:
             identity=identity,
             policy=policy,
             correlation_id=identity.correlation_id if identity else "",
+            activity_id=activity_id,
+            idempotency_key=resolved_idempotency_key,
+            request_fingerprint=request_fingerprint,
             checkpoint=self.jobs.save,
             approval_store=approval_store or self.approval_store,
             approval_id=approval_id,
@@ -225,3 +264,46 @@ class CreatorWorkshopService:
 
     def jobs_for_seed(self, seed_id: str) -> tuple[JobRecord, ...]:
         return self.jobs.for_seed(seed_id)
+
+
+def _latest_idempotent_job(jobs: tuple[JobRecord, ...], key: str) -> JobRecord | None:
+    """Return the latest durable attempt for an idempotency key, if one exists."""
+    matches = [job for job in jobs if job.idempotency_key == key]
+    if not matches:
+        return None
+    return max(matches, key=lambda job: (job.attempt, job.created_at, job.job_id))
+
+
+def _job_request_fingerprint(
+    *,
+    kind: str,
+    seed_id: str,
+    actor_id: str,
+    profile: str,
+    source_root: Path,
+    source_id: str,
+    source_license: str,
+    allowlist: dict[str, list[str]] | None,
+    timeout: float,
+    cap: int,
+    activity_id: str,
+    approval_id: str,
+    approval_evidence_digest: str,
+) -> str:
+    payload = {
+        "kind": kind,
+        "seed_id": seed_id,
+        "actor_id": actor_id,
+        "profile": profile,
+        "source_root": str(Path(source_root).resolve()),
+        "source_id": source_id,
+        "source_license": source_license,
+        "allowlist": allowlist or {},
+        "timeout": timeout,
+        "cap": cap,
+        "activity_id": activity_id,
+        "approval_id": approval_id,
+        "approval_evidence_digest": approval_evidence_digest,
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()

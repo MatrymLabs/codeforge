@@ -224,7 +224,7 @@ ZONES = [
             ),
             (
                 "red_dunes",
-                "Red Dune",
+                "Red Dunes",
                 "village",
                 "a caravan-outpost among the great red dunes of the deep desert",
             ),
@@ -768,11 +768,11 @@ def emit(out_root: Path | None = None) -> None:
         else Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     )
     root.mkdir(parents=True, exist_ok=True)
-    (root / "rooms.yaml").write_text("\n".join(rooms) + "\n")
+    (root / "rooms.yaml").write_text("\n".join(rooms).rstrip("\n") + "\n")
     (root / "npcs.yaml").write_text("\n".join(npcs).rstrip("\n") + "\n")
     (root / "zones.yaml").write_text("\n".join(zones_y) + "\n")
     (root / "wildlands.yaml").write_text("\n".join(wild).rstrip("\n") + "\n")
-    (root / "settlements.yaml").write_text("\n".join(settles) + "\n")
+    (root / "settlements.yaml").write_text("\n".join(settles).rstrip("\n") + "\n")
     (root / "dungeons.yaml").write_text("\n".join(delves) + "\n")
     (root / "waystones.yaml").write_text("\n".join(ways) + "\n")
     print(
@@ -798,6 +798,11 @@ def _resident(kind: str, name: str) -> str:
 # drops on the bosses that anchor progression. Keeping them here means the map source stays the one
 # source of truth: `python tools/emit_map_world.py` rebuilds the world exactly as committed.
 _FOLK_WANDER = {"greenhold_folk", "riverbend_folk", "sunmeadow_folk"}
+
+# Canonical vocabulary fixes for generated resident keywords.  The room's display name is plural
+# "Red Dunes", but the singular keyword remains "Dune" so the existing player-facing command
+# vocabulary stays stable across regeneration.
+_NPC_KEYWORDS: dict[str, list[str]] = {"red_dunes_folk": ["villager", "Red", "Dune"]}
 _WANDER_LINE = "wander: true  # ambient: strolls the town on the beat (world life)"
 
 _FOE_TUNING: dict[str, dict[str, Any]] = {
@@ -847,8 +852,11 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
 def _npc(out: list[str], nid: str, name: str, room: str, line: str) -> None:
     out.append(f"{nid}:")
     out.append(f"{SP}name: {name}")
+    keywords = _NPC_KEYWORDS.get(
+        nid, [w.strip(chr(39)) for w in name.split() if w not in ("a", "an", "of", "the")]
+    )
     out.append(
-        f"{SP}keywords: [{', '.join(w.strip(chr(39)) for w in name.split() if w not in ('a', 'an', 'of', 'the'))}]"
+        f"{SP}keywords: [{', '.join(keywords)}]"
     )
     out.append(f"{SP}location: {room}")
     out.append(f"{SP}dialogue:")

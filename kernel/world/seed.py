@@ -1164,8 +1164,10 @@ def load_quest(path: Path) -> QuestSpec | None:
         raise SeedError(f"{path}: quest needs 'start' or 'start_state'")
     steps = data.get("steps", [])
     transitions = data.get("transitions", [])
-    if not isinstance(steps, list) or (not steps and not isinstance(transitions, list)):
+    if not isinstance(steps, list):
         raise SeedError(f"{path}: quest 'steps' or 'transitions' must be a list")
+    if not steps and not (isinstance(transitions, list) and transitions):
+        raise SeedError(f"{path}: quest steps must be a non-empty list")
     clean_steps: list[QuestStep] = []
     for raw in steps:
         if not isinstance(raw, dict) or not all(k in raw for k in ("state", "event", "to")):

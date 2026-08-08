@@ -282,6 +282,7 @@ def run_manifest_test(
                 else "The manifest test failed; inspect the linked job evidence."
             ),
             correlation_id=job.job_id,
+            semantic_channel="test",
         )
     )
     return evidence

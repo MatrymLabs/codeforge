@@ -10,7 +10,7 @@ evidence paths. OSHA-informed, never OSHA-certified; maturity is never assumed.
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from kernel.registry import Designation, load_collective
+from kernel.registry import Designation, load_collective, unfiled_modules
 from kernel.verdicts import FAIL, NA, PASS, WATCH
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -134,10 +134,34 @@ def run_gate(
 def gate_all(
     records: list[Designation] | None = None, root: Path | None = None
 ) -> list[GateResult]:
-    """Run the gate over the whole collective -- the self-audit (part + part)."""
+    """Run the gate over the whole collective and source tree.
+
+    Registered objects are not enough: an unfiled source module would otherwise be invisible to
+    the board. Emit one explicit hard failure per unfiled module so ``qa gate all`` cannot report a
+    clean board while registry completeness is broken.
+    """
     recs = records if records is not None else load_collective()
     stat_cache: dict[str, bool] = {}  # one shared existence memo for the whole audit (EXP-002)
-    return [run_gate(r, root, stat_cache) for r in recs]
+    results = [run_gate(r, root, stat_cache) for r in recs]
+    results.extend(
+        GateResult(
+            designation=f"UNFILED:{path}",
+            object_type="MOD",
+            declared_status="active",
+            verdict=FAIL,
+            checks=[
+                GateCheck(
+                    "QG00",
+                    "Source module is filed in the classification registry",
+                    FAIL,
+                    evidence=path,
+                    notes="add a MOD designation before trusting qa gate all",
+                )
+            ],
+        )
+        for path in unfiled_modules(records=recs, root=root)
+    )
+    return results
 
 
 # --- Safety review ----------------------------------------------------------

@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from kernel.hardware_activation import ActivationApproval, ActivationApprovalLed
 from kernel.hardware_lifecycle import HardwareRegistry
 from kernel.hardware_runtime import HardwareRuntimeController, HardwareRuntimeError
 from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
+from kernel.seedlab.audit_registry import FileAuditStore
 from kernel.seedlab.workshop_services import CreatorWorkshopService
 from kernel.session_identity import SessionIdentity
 from kernel.session_registry import FileSessionRegistry, SessionRegistryError
@@ -114,6 +116,32 @@ def test_controller_enforces_seed_scoped_permission_and_separate_reviewer(tmp_pa
             policy=PermissionPolicy(),
             now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC),
         )
+
+
+def test_controller_persists_a_denied_execution_decision(tmp_path):
+    hardware, controller, _plugin = _controller(tmp_path)
+    audit = FileAuditStore(tmp_path / "permission-audit.jsonl")
+    policy = PermissionPolicy(
+        (PermissionRule("component.activate", scope="seed-a"),),
+        audit_sink=audit.append,
+    )
+    identity = replace(_identity("seed-a"), capabilities=frozenset())
+
+    with pytest.raises(PermissionDenied, match="missing capability"):
+        controller.activate(
+            "validator",
+            approval=_approval(hardware),
+            ledger=ActivationApprovalLedger(tmp_path / "approvals.json"),
+            identity=identity,
+            policy=policy,
+            now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC),
+        )
+
+    record = audit.all_records()[0]
+    assert record["action"] == "permission.decision"
+    assert record["allowed"] is False
+    assert record["capability"] == "component.activate"
+    assert hardware.get("validator").state == "installed"
     with pytest.raises(PermissionDenied, match="separate approval"):
         controller.activate(
             "validator",

@@ -223,6 +223,29 @@ def test_a_hung_command_times_out(tmp_path: Path) -> None:
     assert result.timed_out is True and result.exit_code == 124
 
 
+def test_timeout_stops_descendants_before_durable_completion(tmp_path: Path) -> None:
+    marker = tmp_path / "child-survived"
+    child_code = (
+        "import pathlib, sys, time; time.sleep(0.8); pathlib.Path(sys.argv[1]).write_text('alive')"
+    )
+    parent_code = (
+        "import subprocess, sys, time; subprocess.Popen([sys.executable, '-c', "
+        f"{child_code!r}, sys.argv[1]]); time.sleep(5)"
+    )
+
+    result = _run(
+        _source(tmp_path), [sys.executable, "-c", parent_code, str(marker)], timeout=0.3
+    )
+
+    assert result.timed_out is True and result.exit_code == 124
+    # The child would create this after the parent was stopped if the runner only terminated the
+    # direct process. Give a surviving child enough time to do so before asserting the boundary.
+    import time
+
+    time.sleep(1.0)
+    assert not marker.exists()
+
+
 def test_a_running_command_can_be_cancelled(tmp_path: Path) -> None:
     checks = 0
 
@@ -376,6 +399,18 @@ def test_uses_a_real_clock_by_default(tmp_path: Path) -> None:
 def test_output_is_capped(tmp_path: Path) -> None:
     result = _run(_source(tmp_path), [sys.executable, "-c", "print('x' * 500)"], cap=50)
     assert "truncated" in result.output and len(result.output) < 200
+
+
+def test_explicit_output_resource_limit_is_enforced_and_recorded(tmp_path: Path) -> None:
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        allowlist={"job": [sys.executable, "-c", "print('x' * 500)"]},
+        resource_limits={"output_bytes": 50},
+    )
+    assert result.resource_limits["output_bytes"] == 50
+    assert "truncated at 50 bytes" in result.output
 
 
 def test_for_seed_is_empty_when_no_runs(tmp_path: Path) -> None:

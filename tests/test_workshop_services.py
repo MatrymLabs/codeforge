@@ -9,7 +9,7 @@ from kernel.hardware_activation import activate_hardware_component
 from kernel.hardware_lifecycle import HardwareRegistry
 from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
 from kernel.seedlab.event_bridge import SEED_EVENT_TOPIC, publish_seed_event
-from kernel.seedlab.jobs import SUCCEEDED
+from kernel.seedlab.jobs import RUNNING, SUCCEEDED, JobError, JobRecord
 from kernel.seedlab.workshop_services import CreatorWorkshopService
 from kernel.session_identity import SessionIdentity
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
@@ -92,6 +92,76 @@ def test_workshop_job_propagates_identity_scope_and_correlation(tmp_path: Path) 
             identity=identity,
             policy=PermissionPolicy((PermissionRule("tool.test", scope="other-seed"),)),
         )
+
+
+def test_durable_workshop_replays_a_job_by_idempotency_key_without_rerunning(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "workshop"
+    first_service = CreatorWorkshopService.durable(root)
+    first = first_service.run_test(
+        tmp_path,
+        seed_id="seed-one",
+        actor_id="alice",
+        profile="python-version",
+        source_id="internal-fixture",
+        source_license="Matrym Labs internal",
+        idempotency_key="request-1",
+    )
+
+    recovered_service = CreatorWorkshopService.durable(root)
+    replay = recovered_service.run_test(
+        tmp_path,
+        seed_id="seed-one",
+        actor_id="alice",
+        profile="python-version",
+        source_id="internal-fixture",
+        source_license="Matrym Labs internal",
+        idempotency_key="request-1",
+    )
+
+    assert replay == first
+    assert recovered_service.jobs_for_seed("seed-one") == (first,)
+    with pytest.raises(JobError, match="fingerprint"):
+        recovered_service.run_test(
+            tmp_path,
+            seed_id="seed-one",
+            actor_id="alice",
+            profile="python-version",
+            source_id="internal-fixture",
+            source_license="Matrym Labs internal",
+            idempotency_key="request-1",
+            timeout=1.0,
+        )
+
+
+def test_durable_workshop_does_not_rerun_an_interrupted_activity(tmp_path: Path) -> None:
+    service = CreatorWorkshopService.durable(tmp_path / "workshop")
+    interrupted = JobRecord(
+        job_id="job-interrupted",
+        seed_id="seed-one",
+        requested_by="alice",
+        kind="test",
+        profile="python-version",
+        status=RUNNING,
+        created_at="2026-08-05T12:00:00+00:00",
+        activity_id="activity-1",
+        idempotency_key="request-interrupted",
+    )
+    service.jobs.save(interrupted)
+
+    replay = service.run_test(
+        tmp_path,
+        seed_id="seed-one",
+        actor_id="alice",
+        profile="python-version",
+        source_id="internal-fixture",
+        source_license="Matrym Labs internal",
+        idempotency_key="request-interrupted",
+    )
+
+    assert replay == interrupted
+    assert service.jobs_for_seed("seed-one") == (interrupted,)
 
 
 def test_authoritative_shelf_component_runs_for_aethryn_and_second_seed(

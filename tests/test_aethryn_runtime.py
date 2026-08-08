@@ -62,6 +62,9 @@ def test_live_room_renderer_includes_compiled_runtime_signals(monkeypatch) -> No
 
     catalog = load_catalog(GENERATED)
     assert catalog is not None
+    # The renderer intentionally reads the shared world beat. Freeze it here so this projection
+    # test remains about catalog injection, not whichever earlier test advanced the global clock.
+    monkeypatch.setattr(world, "_world_beat", lambda: 0)
     monkeypatch.setitem(
         world.WORLD,
         "brightwater_market",

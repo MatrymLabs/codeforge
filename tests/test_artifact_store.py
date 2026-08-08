@@ -66,6 +66,14 @@ def test_artifact_id_is_stable_and_slugged(tmp_path: Path) -> None:
     assert first.startswith("artifact-seed-1-task-ledger-")
 
 
+def test_artifact_id_keeps_the_full_content_digest(tmp_path: Path) -> None:
+    artifact = generate_cli(_model(), tmp_path / "out")
+    first = replace(artifact, manifest_hash="sha256:" + "a" * 64)
+    second = replace(artifact, manifest_hash="sha256:" + "a" * 12 + "b" * 52)
+
+    assert artifact_id_for("seed-1", first) != artifact_id_for("seed-1", second)
+
+
 def test_record_generated_artifact_carries_provenance_runs_and_size(tmp_path: Path) -> None:
     record = _record(tmp_path)
     assert record.name == "task-ledger"

@@ -545,6 +545,7 @@ def _semantic_events(
         {"seed_id": seed_id, "deployment_id": deployment_id},
         {"seed_id": seed_id, "deployment_id": deployment_id},
     )
+    channels = ("status", "status", "build", "test", "status", "deployment", "status")
     return tuple(
         EventEnvelope(
             protocol="codeforge.seed",
@@ -560,8 +561,9 @@ def _semantic_events(
             accessibility_summary=summary,
             correlation_id=correlation_id,
             localization_key=event_type.replace(".", "_"),
+            semantic_channel=channel,
         )
-        for index, ((event_type, text, summary), payload) in enumerate(
-            zip(stages, payloads, strict=True), 1
+        for index, ((event_type, text, summary), payload, channel) in enumerate(
+            zip(stages, payloads, channels, strict=True), 1
         )
     )

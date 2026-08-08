@@ -45,6 +45,15 @@ def test_first_platform_proof_creates_generates_validates_and_recovers(tmp_path:
     assert all(
         event.text_fallback and event.accessibility_summary for event in result.semantic_events
     )
+    assert [event.semantic_channel for event in result.semantic_events] == [
+        "status",
+        "status",
+        "build",
+        "test",
+        "status",
+        "deployment",
+        "status",
+    ]
     assert result.semantic_release.human_validation == "pending"
     assert not result.semantic_release.release_ready
     assert result.recovered_deployment == result.deployment

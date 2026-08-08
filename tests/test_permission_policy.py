@@ -8,6 +8,7 @@ from kernel.permission_policy import (
     PermissionPolicy,
     PermissionRule,
 )
+from kernel.seedlab.audit_registry import FileAuditStore
 
 
 def test_role_and_capability_are_required_before_allow():
@@ -51,3 +52,25 @@ def test_explicit_revocation_wins_and_is_visible_in_audit():
     assert "revocation" in decision.reason
     with pytest.raises(PermissionDenied, match="revocation"):
         policy.require(context, capability="build", scope="seed-a")
+
+
+def test_policy_can_persist_structured_allow_and_deny_decisions(tmp_path):
+    audit = FileAuditStore(tmp_path / "permission-audit.jsonl")
+    policy = PermissionPolicy(
+        (PermissionRule("build", scope="seed-a"),),
+        audit_sink=audit.append,
+    )
+    context = PermissionContext(
+        actor_id="agent:builder",
+        roles=frozenset({"operator"}),
+        capabilities=frozenset({"build", "deploy"}),
+    )
+
+    assert policy.decide(context, capability="build", scope="seed-a").allowed
+    assert not policy.decide(context, capability="deploy", scope="seed-a").allowed
+
+    records = audit.all_records()
+    assert [record["allowed"] for record in records] == [True, False]
+    assert records[0]["action"] == "permission.decision"
+    assert records[1]["reason"] == "no grant: deploy"
+    assert audit.verify()

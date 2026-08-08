@@ -17,10 +17,12 @@ The Safety + QA spine is a second *part* that **plugs into the first**:
 QualityGate ∘ registry  =  a self-audit
 ```
 
-`qa gate all` reads every filed designation and grades each one. That composition -
-**part + part = a new capability** - is the whole thesis: the engine can take the
-pieces it already has and assemble a system that checks its own work, without
-hand-writing a bespoke auditor. See it: type `qa gate all` in the MUD.
+`qa gate all` reads every filed designation, grades each one, and compares the registry
+against the source tree. An unfiled source module is emitted as an explicit hard failure,
+so the board cannot be green while code is invisible to it. That composition - **part +
+part = a new capability** - is the whole thesis: the engine can take the pieces it already
+has and assemble a system that checks its own work, without hand-writing a bespoke auditor.
+See it: type `qa gate all` in the MUD.
 
 ## The four questions (the readiness model)
 
@@ -46,6 +48,7 @@ hand-writing a bespoke auditor. See it: type `qa gate all` in the MUD.
 
 | ID | Requirement | Kind |
 |----|-------------|------|
+| QG00 | Every source module is filed in the classification registry | **hard** |
 | QG01 | Has a clear purpose | soft |
 | QG02 | Source file exists (n/a for prototypes) | **hard** |
 | QG03 | Has tests (n/a for prototypes) | **hard** |
@@ -65,7 +68,7 @@ require human approval *before* implementation.
 ## MUD commands (read-only, on the command spine)
 
 ```
-qa gate all            grade every filed object (the self-audit)
+qa gate all            grade every filed object and fail on unfiled source modules
 qa gate <designation>  one object's full checklist
 safety review <id>     one object's risk rating
 docs check             sweep the key docs for gaps

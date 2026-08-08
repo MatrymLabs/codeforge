@@ -7,6 +7,7 @@ scope, and audit-friendly refusal reasons.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 
@@ -57,6 +58,9 @@ class PermissionPolicy:
     default_allow: bool = False
     _audit: list[PermissionDecision] = field(default_factory=list, compare=False, repr=False)
     _revoked: set[tuple[str, str, str]] = field(default_factory=set, compare=False, repr=False)
+    audit_sink: Callable[[dict[str, object]], None] | None = field(
+        default=None, compare=False, repr=False
+    )
 
     def decide(
         self,
@@ -67,13 +71,33 @@ class PermissionPolicy:
         required_role: str = "",
     ) -> PermissionDecision:
         if not capability.strip():
-            return self._record(PermissionDecision(True, "unprotected action"))
+            return self._record(
+                PermissionDecision(True, "unprotected action"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
         if self.is_revoked(context, capability=capability, scope=scope):
-            return self._record(PermissionDecision(False, f"policy revocation: {capability}"))
+            return self._record(
+                PermissionDecision(False, f"policy revocation: {capability}"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
         if required_role and required_role not in context.roles:
-            return self._record(PermissionDecision(False, f"missing role: {required_role}"))
+            return self._record(
+                PermissionDecision(False, f"missing role: {required_role}"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
         if capability not in context.capabilities:
-            return self._record(PermissionDecision(False, f"missing capability: {capability}"))
+            return self._record(
+                PermissionDecision(False, f"missing capability: {capability}"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
         matching = [
             rule
             for rule in self.rules
@@ -82,10 +106,25 @@ class PermissionPolicy:
             and (rule.actor_id == "*" or rule.actor_id == context.actor_id)
         ]
         if any(rule.effect == "deny" for rule in matching):
-            return self._record(PermissionDecision(False, f"explicit denial: {capability}"))
+            return self._record(
+                PermissionDecision(False, f"explicit denial: {capability}"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
         if matching or self.default_allow:
-            return self._record(PermissionDecision(True, "authorized"))
-        return self._record(PermissionDecision(False, f"no grant: {capability}"))
+            return self._record(
+                PermissionDecision(True, "authorized"),
+                context=context,
+                capability=capability,
+                scope=scope,
+            )
+        return self._record(
+            PermissionDecision(False, f"no grant: {capability}"),
+            context=context,
+            capability=capability,
+            scope=scope,
+        )
 
     def require(self, context: PermissionContext, **request: str) -> None:
         """Raise a deterministic, user-safe refusal when authorization fails."""
@@ -123,6 +162,29 @@ class PermissionPolicy:
             for revoked_capability, revoked_scope, revoked_actor in self._revoked
         )
 
-    def _record(self, decision: PermissionDecision) -> PermissionDecision:
+    def _record(
+        self,
+        decision: PermissionDecision,
+        *,
+        context: PermissionContext,
+        capability: str,
+        scope: str,
+    ) -> PermissionDecision:
         self._audit.append(decision)
+        if self.audit_sink is not None:
+            try:
+                self.audit_sink(
+                    {
+                        "action": "permission.decision",
+                        "actor_id": context.actor_id,
+                        "roles": sorted(context.roles),
+                        "capabilities": sorted(context.capabilities),
+                        "capability": capability,
+                        "scope": scope,
+                        "allowed": decision.allowed,
+                        "reason": decision.reason,
+                    }
+                )
+            except Exception as exc:
+                raise PermissionDenied("authorization audit could not be persisted") from exc
         return decision

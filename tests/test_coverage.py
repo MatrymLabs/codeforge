@@ -111,10 +111,12 @@ def _world_without_aggression(tmp_path):
 
     world = tmp_path / "seeds"
     shutil.copytree(cov.SEEDS_ROOT, world)
-    npcs = world / "aethryn" / "npcs.yaml"
-    npcs.write_text(
-        "\n".join(x for x in npcs.read_text().splitlines() if "aggressive: true" not in x)
-    )
+    # The authored scale pack is a shipped seed too; disarm every copied pack so this fixture
+    # actually isolates the detector's dark-capability branch as the helper name promises.
+    for npcs in world.rglob("npcs.yaml"):
+        npcs.write_text(
+            "\n".join(x for x in npcs.read_text().splitlines() if "aggressive: true" not in x)
+        )
     return world
 
 

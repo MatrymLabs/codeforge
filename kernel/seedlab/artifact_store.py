@@ -41,9 +41,11 @@ def _safe_segment(value: str) -> str:
 def artifact_id_for(seed_id: str, artifact: GeneratedArtifact) -> str:
     """A stable, filesystem-safe id for one generated artifact under one Seed."""
     slug = _SLUG.sub("-", artifact.name.strip().lower()).strip("-") or "artifact"
-    digest = artifact.manifest_hash[:12] or "unknown"
+    digest = artifact.manifest_hash.removeprefix("sha256:") or "unknown"
     prefix = _SLUG.sub("-", seed_id.strip().lower()).strip("-") or "seed"
-    return f"artifact-{prefix}-{slug}-{digest}"[:120]
+    # Keep the complete content digest in the identity. A short display prefix is useful in
+    # labels, but truncating the persisted ID would let two distinct immutable artifacts alias.
+    return f"artifact-{prefix}-{slug}-{digest}"
 
 
 @dataclass(frozen=True)

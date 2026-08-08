@@ -20,7 +20,7 @@ than the evidence supports.
 | README makes no drift-prone hardcoded test count | regex scan | no `\d+ tests` - the CI badge is the live source (the exact count drifted 3×) |
 | Key documentation is present | `presence_gaps` | README · CHANGELOG · SECURITY · CONTRIBUTING · docs present |
 | Classification registry validates | `validate()` | no duplicate / orphaned designations |
-| QA board has no failing objects | `qa gate all` | every `active` object is backed by a file + tests |
+| QA board has no failing objects or unfiled modules | `qa gate all` | every `active` object is backed by a file + tests, and every source module is filed |
 
 Verdict: **ALL VERIFIED** (claims correspond to reality) or **N FLAGGED** (correct the
 claim, or the code, before trusting it).

@@ -68,6 +68,7 @@ class JobRecord:
     correlation_id: str = ""
     activity_id: str = ""
     idempotency_key: str = ""
+    request_fingerprint: str = ""
     outcome_reason: str = ""
 
     @property
@@ -105,6 +106,7 @@ class JobRecord:
                 correlation_id=str(raw.get("correlation_id", "")),
                 activity_id=str(raw.get("activity_id", "")),
                 idempotency_key=str(raw.get("idempotency_key", "")),
+                request_fingerprint=str(raw.get("request_fingerprint", "")),
                 outcome_reason=str(raw.get("outcome_reason", "")),
             )
         except (KeyError, TypeError, ValueError) as exc:
@@ -153,6 +155,7 @@ class JobRecord:
             accessibility_summary=summary,
             correlation_id=self.correlation_id or self.job_id,
             localization_key=f"{self.kind}.completed",
+            semantic_channel=self.kind,
         )
 
 
@@ -174,6 +177,7 @@ class JobRunner:
         correlation_id: str = "",
         activity_id: str = "",
         idempotency_key: str = "",
+        request_fingerprint: str = "",
         checkpoint: Callable[[JobRecord], None] | None = None,
         approval_store: ApprovalStore | None = None,
         approval_id: str = "",
@@ -195,6 +199,7 @@ class JobRunner:
         self.correlation_id = correlation_id.strip()
         self.activity_id = activity_id.strip()
         self.idempotency_key = idempotency_key.strip()
+        self.request_fingerprint = request_fingerprint.strip()
         self.checkpoint = checkpoint
         if approval_id and approval_store is None:
             raise ApprovalError("approval_store is required when approval_id is supplied")
@@ -279,6 +284,7 @@ class JobRunner:
                 correlation_id=self.correlation_id,
                 activity_id=activity_id,
                 idempotency_key=idempotency_key,
+                request_fingerprint=self.request_fingerprint,
             )
         if self.approval_store is not None and self.approval_id:
             try:
@@ -306,6 +312,7 @@ class JobRunner:
                     correlation_id=self.correlation_id,
                     activity_id=activity_id,
                     idempotency_key=idempotency_key,
+                    request_fingerprint=self.request_fingerprint,
                     outcome_reason=str(exc),
                 )
                 if self.checkpoint is not None:
@@ -324,6 +331,7 @@ class JobRunner:
             correlation_id=self.correlation_id,
             activity_id=activity_id,
             idempotency_key=idempotency_key,
+            request_fingerprint=self.request_fingerprint,
         )
         if self.checkpoint is not None:
             self.checkpoint(running)
@@ -368,6 +376,7 @@ class JobRunner:
             correlation_id=self.correlation_id,
             activity_id=activity_id,
             idempotency_key=idempotency_key,
+            request_fingerprint=self.request_fingerprint,
         )
 
 

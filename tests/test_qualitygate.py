@@ -103,6 +103,31 @@ def test_gate_all_audits_the_real_registry() -> None:
     assert all(r.verdict in (PASS, "watch", FAIL) for r in results)
 
 
+def test_gate_all_fails_loud_on_an_unfiled_source_module(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Registry validation alone cannot see a module that has no record. The QA board must make
+    # that omission a visible hard failure instead of auditing only the records it was handed.
+    monkeypatch.setattr(
+        "kernel.qualitygate.unfiled_modules",
+        lambda records, root: ["kernel/world/ghost_alpha.py"],
+    )
+    results = gate_all([_rec()])
+    missing = [r for r in results if r.designation == "UNFILED:kernel/world/ghost_alpha.py"]
+    assert len(missing) == 1
+    assert missing[0].verdict == FAIL
+    assert missing[0].checks[0].check_id == "QG00"
+    assert missing[0].checks[0].evidence == "kernel/world/ghost_alpha.py"
+
+
+def test_gate_all_discovers_an_unfiled_module_in_the_supplied_root(tmp_path: Path) -> None:
+    (tmp_path / "kernel").mkdir()
+    (tmp_path / "kernel" / "ghost_alpha.py").write_text("VALUE = 1\n")
+    results = gate_all([], root=tmp_path)
+    assert [r.designation for r in results] == ["UNFILED:kernel/ghost_alpha.py"]
+    assert results[0].verdict == FAIL
+
+
 def test_the_shipped_board_has_no_failures() -> None:
     # The growth gate (hard bar): no filed object may be `active` without a file + tests
     # -- that would be a FAIL. A missing docs link is only a soft `watch`. So a red board

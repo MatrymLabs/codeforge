@@ -71,9 +71,9 @@ Status vocabulary follows the audit contract. A green local unit test is not a p
 
 | Proof | Exact command | Result |
 | --- | --- | --- |
-| Transaction contract | `PYTHONPATH=. .venv/bin/pytest -q tests/test_economy_transactions.py` | pass, 5 tests including SQL receipt replay |
+| Transaction contract | `PYTHONPATH=. .venv/bin/pytest -q tests/test_economy_transactions.py` | pass; includes SQL receipt replay |
 | Transaction typing and lint | `.venv/bin/mypy` and `.venv/bin/ruff check` on transaction, database, migration, and test files | pass |
-| Migration round trip | `PYTHONPATH=. .venv/bin/pytest -q tests/test_migrations.py` | pass, 2 tests; economy tables upgrade and downgrade cleanly |
+| Migration round trip | `PYTHONPATH=. .venv/bin/pytest -q tests/test_migrations.py` | pass; economy tables upgrade and downgrade cleanly |
 | Full economy authority | Existing trade, shop, crafting, mail, auction, and loot paths through one durable mutation boundary | not yet proven; integration remains open |
 
 ## Vertical-slice evidence currently present
@@ -107,10 +107,10 @@ boundaries:
 | Proof | Exact command | Result |
 | --- | --- | --- |
 | Full-world corpus | `FORGE_SEED=aethryn PYTHONPATH=. .venv/bin/python -m tools.world full-world-check` | pass, `CLEAN`; 70 source files, 14 regions, 1,136 normalized source rooms, 204 items, 46 recipes, 42 legacy quests, 79 NPCs, 28 underground specs |
-| Full-world determinism | `PYTHONPATH=. .venv/bin/pytest -q tests/test_aethryn_corpus.py` | pass, 2 tests; stable source and WorldIR digests |
-| Unified economy boundary | `PYTHONPATH=. .venv/bin/pytest -q tests/test_economy_transactions.py tests/test_trade.py tests/test_shop.py tests/test_crafting.py tests/test_auction.py` | pass, 54 tests; multi-leg receipts now cover trade, merchant, crafting, and auction flows |
-| Currency authority | `PYTHONPATH=. .venv/bin/pytest -q tests/test_combat.py tests/test_durability.py tests/test_travel.py tests/test_guild.py` | pass, 135 tests; repair, travel, guild, combat faucet, bounty, and death toll use the durable ledger |
-| Live identity/recovery | `PYTHONPATH=. .venv/bin/pytest -q tests/test_gateway_session_authority.py tests/test_persistence_doctor.py tests/test_hosted_recovery.py` | pass, 17 tests |
+| Full-world determinism | `PYTHONPATH=. .venv/bin/pytest -q tests/test_aethryn_corpus.py` | pass; stable source and WorldIR digests |
+| Unified economy boundary | `PYTHONPATH=. .venv/bin/pytest -q tests/test_economy_transactions.py tests/test_trade.py tests/test_shop.py tests/test_crafting.py tests/test_auction.py` | pass; multi-leg receipts cover trade, merchant, crafting, and auction flows |
+| Currency authority | `PYTHONPATH=. .venv/bin/pytest -q tests/test_combat.py tests/test_durability.py tests/test_travel.py tests/test_guild.py` | pass; repair, travel, guild, combat faucet, bounty, and death toll use the durable ledger |
+| Live identity/recovery | `PYTHONPATH=. .venv/bin/pytest -q tests/test_gateway_session_authority.py tests/test_persistence_doctor.py tests/test_hosted_recovery.py` | pass |
 
 The remaining release-gate items are operational proof rather than missing Aethryn compiler or
 economy implementation: the complete repository baseline still needs its unrelated lint/type/test

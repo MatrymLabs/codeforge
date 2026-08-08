@@ -3764,6 +3764,27 @@
   "superseded_by": "",
   "aliases": [],
   "created": "2026-08-03",
-  "updated": "2026-08-03"
+ "updated": "2026-08-03"
+ },
+ {
+  "designation": "CMD-04.117",
+  "name": "maintain",
+  "status": "active",
+  "function": "run a packet-declared local world maintenance action",
+  "label": "maintain",
+  "file": "forge.py",
+  "type": "CMD",
+  "domain": "04",
+  "docs": "docs/aethryn/implementation/AETHRYN_MMO_PROOF_MATRIX.md",
+  "tests": "tests/test_aethryn_actions.py",
+  "depends_on": [],
+  "related": ["MOD-04.158"],
+  "reuse": "",
+  "tags": ["command", "seed", "aethryn"],
+  "notes": "SEED verb over packet-declared Aethryn maintenance actions; requires the authored action token where the packet declares one.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-07",
+  "updated": "2026-08-07"
  }
 ]

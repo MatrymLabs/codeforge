@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import pytest
@@ -58,6 +59,60 @@ def test_failed_health_check_does_not_replace_current_release(tmp_path: Path) ->
     run = controller.deploy(profile)
 
     assert run.status == FAILED and run.health == "unhealthy"
+    assert controller.current_release("local-proof") is None
+
+
+def test_supervised_process_is_persisted_observed_and_stopped_across_restart(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "artifact"
+    source.mkdir()
+    (source / "app.txt").write_text("version one", encoding="utf-8")
+    process_argv = (sys.executable, "-c", "import time; time.sleep(30)")
+    controller = LocalDeploymentController(
+        tmp_path / "deployments", id_minter=iter(["deploy-process"]).__next__
+    )
+    profile = DeploymentProfile(
+        "local-proof",
+        "seed-proof",
+        "artifact-proof-process",
+        str(source),
+        process_argv=process_argv,
+    )
+
+    run = controller.deploy(profile)
+    assert run.status == DEPLOYED
+    assert run.process_id > 0 and run.process_status == "running"
+    assert controller.process_status("local-proof") == "running"
+    assert LocalDeploymentController(tmp_path / "deployments").process_status("local-proof") == (
+        "running"
+    )
+
+    assert controller.stop_process("local-proof") == "stopped"
+    assert controller.process_status("local-proof") == "stopped"
+    assert LocalDeploymentController(tmp_path / "deployments").process_status("local-proof") == (
+        "stopped"
+    )
+
+
+def test_supervised_process_start_failure_is_a_durable_failed_deployment(tmp_path: Path) -> None:
+    source = tmp_path / "artifact"
+    source.mkdir()
+    (source / "app.txt").write_text("present", encoding="utf-8")
+    controller = LocalDeploymentController(
+        tmp_path / "deployments", id_minter=iter(["deploy-process-failed"]).__next__
+    )
+    profile = DeploymentProfile(
+        "local-proof",
+        "seed-proof",
+        "artifact-proof-process-failed",
+        str(source),
+        process_argv=(str(tmp_path / "missing-command"),),
+    )
+
+    run = controller.deploy(profile)
+
+    assert run.status == FAILED and "could not start" in run.error
     assert controller.current_release("local-proof") is None
 
 
