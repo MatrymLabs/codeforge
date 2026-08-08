@@ -10,7 +10,7 @@ import pytest
 from adapters.mutation_scorer import CosmicRayMutationScorer
 from kernel.seedlab.synthesis import MutationScorer
 
-Runner = Callable[[Path, Path, float, int], str | None]
+Runner = Callable[[Path, Path, float, float, int], str | None]
 
 PARTIAL_REPORT = """\
 total jobs: 10
@@ -41,16 +41,22 @@ def _workdir(tmp_path: Path) -> Path:
 
 
 def test_scores_a_workdir_from_a_cosmic_ray_report(tmp_path: Path) -> None:
-    calls: list[tuple[Path, Path, float, int]] = []
+    calls: list[tuple[Path, Path, float, float, int]] = []
 
-    def runner(workdir: Path, config: Path, timeout: float, max_mutants: int) -> str:
-        calls.append((workdir, config, timeout, max_mutants))
+    def runner(
+        workdir: Path,
+        config: Path,
+        per_mutant_timeout: float,
+        whole_run_budget: float,
+        max_mutants: int,
+    ) -> str:
+        calls.append((workdir, config, per_mutant_timeout, whole_run_budget, max_mutants))
         return PARTIAL_REPORT
 
     scorer = CosmicRayMutationScorer(runner=runner)
 
     assert scorer.score(_workdir(tmp_path)) == pytest.approx(0.8)
-    assert calls == [(tmp_path, tmp_path / ".cosmic-ray.toml", 30.0, 50)]
+    assert calls == [(tmp_path, tmp_path / ".cosmic-ray.toml", 30.0, 300.0, 50)]
 
 
 def test_returns_none_when_cosmic_ray_is_absent(tmp_path: Path) -> None:
@@ -66,16 +72,25 @@ def test_returns_none_when_no_mutants_were_generated(tmp_path: Path) -> None:
 
 
 def test_returns_none_on_timeout_and_does_not_hang(tmp_path: Path) -> None:
-    calls: list[tuple[Path, Path, float, int]] = []
+    calls: list[tuple[Path, Path, float, float, int]] = []
 
-    def timed_out(workdir: Path, config: Path, timeout: float, max_mutants: int) -> None:
-        calls.append((workdir, config, timeout, max_mutants))
+    def timed_out(
+        workdir: Path,
+        config: Path,
+        per_mutant_timeout: float,
+        whole_run_budget: float,
+        max_mutants: int,
+    ) -> None:
+        calls.append((workdir, config, per_mutant_timeout, whole_run_budget, max_mutants))
         return None
 
-    scorer = CosmicRayMutationScorer(runner=timed_out, timeout_seconds=0.01)
+    scorer = CosmicRayMutationScorer(
+        runner=timed_out, per_mutant_timeout_seconds=0.01, whole_run_budget_seconds=120.0
+    )
 
     assert scorer.score(_workdir(tmp_path)) is None
-    assert calls == [(tmp_path, tmp_path / ".cosmic-ray.toml", 0.01, 50)]
+    assert calls == [(tmp_path, tmp_path / ".cosmic-ray.toml", 0.01, 120.0, 50)]
+    assert "timeout = 0.01" in (tmp_path / ".cosmic-ray.toml").read_text(encoding="utf-8")
 
 
 def test_a_total_survival_result_scores_zero_not_none(tmp_path: Path) -> None:

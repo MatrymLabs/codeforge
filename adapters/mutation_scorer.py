@@ -17,11 +17,14 @@ from pathlib import Path
 
 from kernel.shelf.mutation_kpi import MutationKpiError, parse_cr_report
 
-DEFAULT_TIMEOUT_SECONDS = 30.0
+DEFAULT_PER_MUTANT_TIMEOUT_SECONDS = 30.0
+# P-06 measured about 3.1 seconds per mutant. 300 seconds gives 50 capped mutants about twice
+# that measured time for test and process startup overhead before the whole run is abandoned.
+DEFAULT_WHOLE_RUN_BUDGET_SECONDS = 300.0
 DEFAULT_MAX_MUTANTS = 50
 
 # The runner is injected so the acceptance twin stays offline and does not need cosmic-ray.
-CosmicRayRunner = Callable[[Path, Path, float, int], str | None]
+CosmicRayRunner = Callable[[Path, Path, float, float, int], str | None]
 
 
 def _source_module(workdir: Path) -> Path | None:
@@ -36,7 +39,7 @@ def _source_module(workdir: Path) -> Path | None:
     return candidates[0] if len(candidates) == 1 else None
 
 
-def _write_config(workdir: Path, source: Path, timeout_seconds: float) -> Path:
+def _write_config(workdir: Path, source: Path, per_mutant_timeout_seconds: float) -> Path:
     """Write the per-run config that targets only this generated source module."""
     config = workdir / ".cosmic-ray.toml"
     module_path = source.relative_to(workdir).as_posix()
@@ -45,7 +48,7 @@ def _write_config(workdir: Path, source: Path, timeout_seconds: float) -> Path:
             (
                 "[cosmic-ray]",
                 f'module-path = "{module_path}"',
-                f"timeout = {timeout_seconds}",
+                f"timeout = {per_mutant_timeout_seconds}",
                 "excluded-modules = []",
                 'test-command = "python -m pytest -x -q tests"',
                 "",
@@ -78,7 +81,11 @@ def _run_command(argv: list[str], workdir: Path, timeout_seconds: float) -> str 
 
 
 def _cap_session(session: Path, max_mutants: int) -> bool:
-    """Keep only the first bounded set of initialized work items in a private session."""
+    """Keep only bounded work items in a private session.
+
+    This reads cosmic-ray's private ``work_items`` and ``mutation_specs`` schema. A future
+    cosmic-ray rename becomes False here, so the caller degrades to None rather than a wrong score.
+    """
     try:
         with sqlite3.connect(session) as connection:
             rows = connection.execute(
@@ -88,11 +95,15 @@ def _cap_session(session: Path, max_mutants: int) -> bool:
             if not job_ids:
                 return True
             placeholders = ", ".join("?" for _ in job_ids)
+            # Safe: placeholder count only, values are parameterized.
             connection.execute(
-                f"DELETE FROM mutation_specs WHERE job_id NOT IN ({placeholders})", job_ids
+                f"DELETE FROM mutation_specs WHERE job_id NOT IN ({placeholders})",  # nosec B608
+                job_ids,
             )
+            # Safe: placeholder count only, values are parameterized.
             connection.execute(
-                f"DELETE FROM work_items WHERE job_id NOT IN ({placeholders})", job_ids
+                f"DELETE FROM work_items WHERE job_id NOT IN ({placeholders})",  # nosec B608
+                job_ids,
             )
     except sqlite3.Error:
         return False
@@ -100,7 +111,11 @@ def _cap_session(session: Path, max_mutants: int) -> bool:
 
 
 def _run_cosmic_ray(
-    workdir: Path, config: Path, timeout_seconds: float, max_mutants: int
+    workdir: Path,
+    config: Path,
+    per_mutant_timeout_seconds: float,
+    whole_run_budget_seconds: float,
+    max_mutants: int,
 ) -> str | None:
     """Run cosmic-ray in the generated workdir and return its report, or None if unmeasurable."""
     cosmic_ray = shutil.which("cosmic-ray")
@@ -111,7 +126,9 @@ def _run_cosmic_ray(
     session = workdir / ".cosmic-ray-session.sqlite"
     if (
         _run_command(
-            [cosmic_ray, "init", "--force", str(config), str(session)], workdir, timeout_seconds
+            [cosmic_ray, "init", "--force", str(config), str(session)],
+            workdir,
+            whole_run_budget_seconds,
         )
         is None
     ):
@@ -119,11 +136,13 @@ def _run_cosmic_ray(
     if not _cap_session(session, max_mutants):
         return None
     if (
-        _run_command([cosmic_ray, "exec", str(config), str(session)], workdir, timeout_seconds)
+        _run_command(
+            [cosmic_ray, "exec", str(config), str(session)], workdir, whole_run_budget_seconds
+        )
         is None
     ):
         return None
-    return _run_command([report, str(session)], workdir, timeout_seconds)
+    return _run_command([report, str(session)], workdir, whole_run_budget_seconds)
 
 
 @dataclass(frozen=True)
@@ -131,12 +150,15 @@ class CosmicRayMutationScorer:
     """Score a generated workdir with a bounded, private cosmic-ray session."""
 
     runner: CosmicRayRunner = _run_cosmic_ray
-    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS
+    per_mutant_timeout_seconds: float = DEFAULT_PER_MUTANT_TIMEOUT_SECONDS
+    whole_run_budget_seconds: float = DEFAULT_WHOLE_RUN_BUDGET_SECONDS
     max_mutants: int = DEFAULT_MAX_MUTANTS
 
     def __post_init__(self) -> None:
-        if self.timeout_seconds <= 0:
-            raise ValueError("timeout_seconds must be positive")
+        if self.per_mutant_timeout_seconds <= 0:
+            raise ValueError("per_mutant_timeout_seconds must be positive")
+        if self.whole_run_budget_seconds <= 0:
+            raise ValueError("whole_run_budget_seconds must be positive")
         if self.max_mutants <= 0:
             raise ValueError("max_mutants must be positive")
 
@@ -146,8 +168,14 @@ class CosmicRayMutationScorer:
         source = _source_module(workdir)
         if source is None:
             return None
-        config = _write_config(workdir, source, self.timeout_seconds)
-        report = self.runner(workdir, config, self.timeout_seconds, self.max_mutants)
+        config = _write_config(workdir, source, self.per_mutant_timeout_seconds)
+        report = self.runner(
+            workdir,
+            config,
+            self.per_mutant_timeout_seconds,
+            self.whole_run_budget_seconds,
+            self.max_mutants,
+        )
         if report is None:
             return None
         try:
