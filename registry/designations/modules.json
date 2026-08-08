@@ -9553,5 +9553,34 @@
   "aliases": [],
   "created": "2026-08-08",
   "updated": "2026-08-08"
+ },
+ {
+  "designation": "MOD-10.149",
+  "name": "mutation_scorer",
+  "status": "active",
+  "function": "score one generated workdir with a bounded private cosmic-ray session, returning its measured mutation kill rate or None when no honest score can be computed",
+  "label": "mutation_scorer",
+  "file": "adapters/mutation_scorer.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/evidence/2026-08-08-first-real-synthesis-run.md",
+  "tests": "tests/test_mutation_scorer.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-05.090"
+  ],
+  "related": [
+   "MOD-10.080"
+  ],
+  "reuse": "A per-workdir mutation-test adapter with an injected runner seam. A second consumer must establish reuse before any Hardware Store verdict.",
+  "notes": "P-08 closes the MutationScorer Protocol gap without changing synthesis verdict logic or the repository cosmic-ray.toml. Each score writes its config and session only inside the generated workdir, bounds command runtime and mutant count, and returns None for absent, timed-out, malformed, or zero-mutant runs.",
+  "tags": [
+   "module",
+   "gate"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-08",
+  "updated": "2026-08-08"
  }
 ]
