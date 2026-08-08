@@ -211,11 +211,29 @@ _MAKEFILE = (
 )
 
 
+#: Fleet gate standard rule 1: pin the tools that decide a verdict. The poured shelf's
+#: pyproject is GENERATED, so pinning it by hand was a fix at the output and the next pour
+#: silently reverted it (caught by shelf-drift, 2026-08-08). The pin belongs here, at the
+#: generator. Runtime deps are deliberately absent: only gate tooling is pinned.
+GATE_TOOL_PINS = {
+    "hypothesis": "6.165.2",
+    "mypy": "2.3.0",
+    "pytest": "9.1.1",
+    "ruff": "0.16.1",
+}
+
+
+def _pinned(name: str) -> str:
+    """Attach the fleet-wide pin to a gate tool; leave every other dependency untouched."""
+    version = GATE_TOOL_PINS.get(name)
+    return f"{name}=={version}" if version else name
+
+
 def _pyproject(deps: list[str], test_deps: list[str]) -> str:
     # Heavy runtime deps (from the config + observability parts) are opt-in extras, so the base
     # install is pure stdlib. Tests import every part, so the test group carries the extras too.
     extras_lines = "".join(f'    "{d}",\n' for d in deps)
-    test_lines = "".join(f'    "{d}",\n' for d in sorted(set(test_deps) | set(deps)))
+    test_lines = "".join(f'    "{_pinned(d)}",\n' for d in sorted(set(test_deps) | set(deps)))
     # No "License ::" classifier: PEP 639 supersedes it with the SPDX `license` expression below,
     # and modern setuptools errors if both are present.
     classifiers = (
@@ -252,7 +270,7 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "test = [\n"
         f"{test_lines}"
         "]\n"
-        'dev = ["ruff", "mypy"]\n\n'
+        f'dev = ["{_pinned("ruff")}", "{_pinned("mypy")}"]\n\n'
         "[project.urls]\n"
         f'Homepage = "{_HOMEPAGE}"\n'
         f'Source = "{_HOMEPAGE}"\n\n'

@@ -123,7 +123,10 @@ def test_poolable_twins_splits_engine_free_from_coupled() -> None:
 def test_pyproject_declares_test_extras_and_markers(tmp_path: Path) -> None:
     pour_shelf(tmp_path)
     pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
-    assert "[project.optional-dependencies]" in pyproject and '"pytest"' in pyproject
+    # PINNED, per fleet gate standard rule 1. The poured pyproject is generated, so pinning
+    # the mirror by hand was a fix at the output that the next pour silently reverted.
+    assert "[project.optional-dependencies]" in pyproject
+    assert '"pytest==' in pyproject, "the poured test extra must pin pytest, not float it"
     assert "[tool.pytest.ini_options]" in pyproject  # the property mark is registered
 
 
@@ -174,7 +177,11 @@ def test_pour_ships_a_ruff_config_and_the_correct_python_floor(tmp_path: Path) -
     pour_shelf(tmp_path)
     pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
     assert "[tool.ruff]" in pyproject and "[tool.ruff.lint]" in pyproject
-    assert 'dev = ["ruff", "mypy"]' in pyproject and "[tool.mypy]" in pyproject
+    assert "[tool.mypy]" in pyproject
+    assert 'dev = ["ruff==' in pyproject and '"mypy==' in pyproject, (
+        "the poured dev extra must pin ruff and mypy: a gate's verdict must not depend on "
+        "the day it ran, and this file is generated so the pin has to come from the generator"
+    )
     # heavy deps are opt-in extras so the base install is stdlib-only; version tracks the pour
     assert "dependencies = []" in pyproject and "extras = [" in pyproject
     assert 'version = "0.3.0"' in pyproject
