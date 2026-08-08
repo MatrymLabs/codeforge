@@ -152,7 +152,19 @@ _HOMEPAGE = "https://github.com/MatrymLabs/codeforge"
 # gate the maintainer configures as the PyPI pending-publisher's environment.
 _TEST_WORKFLOW = """\
 name: test
-on: [push, pull_request]
+# push limited to main: `on: [push, pull_request]` fires BOTH events for a push to a PR
+# branch, running every job twice for one commit.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded PR runs. Pull requests ONLY: `github.ref != 'refs/heads/main'` is true
+# for a release event (its ref is the tag) and could cancel a release mid-publish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -174,6 +186,11 @@ name: release
 on:
   release:
     types: [published]
+
+# Serialise releases without ever cancelling one: a cancelled publish is worse than a
+# queued publish. cancel-in-progress stays false here by omission.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: read
 jobs:
