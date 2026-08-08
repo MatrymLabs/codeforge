@@ -4,8 +4,15 @@
 # (branch -> CI green -> merge); Dependabot never merges on its own.
 version: 2
 updates:
-  # Python runtime + dev dependencies (pyproject.toml).
-  - package-ecosystem: "pip"
+  # Python runtime + dev dependencies (pyproject.toml AND uv.lock).
+  #
+  # `uv`, not `pip`. The pip ecosystem edits pyproject.toml and never regenerates
+  # uv.lock, while ci.yml's FIRST step is `uv lock --check`. So every dependency PR
+  # the bot opened failed on arrival with "The lockfile at `uv.lock` needs to be
+  # updated" (PRs #855 and #856, both red for days on a defect that had nothing to
+  # do with the dependency being bumped). The uv ecosystem understands pyproject.toml
+  # and uv.lock together and updates both in the same PR.
+  - package-ecosystem: "uv"
     directory: "/"
     schedule:
       interval: "weekly"
