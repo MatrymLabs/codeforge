@@ -17,6 +17,7 @@ from kernel.world.db import (
     SeedRegistryRow,
     SeedRunRow,
     SeedSourceRow,
+    SessionIdentityRow,
     engine_url,
     open_archive_session,
 )
@@ -31,6 +32,7 @@ __all__ = [
     "SeedSourceRow",
     "SeedConnectorRow",
     "AuditEventRow",
+    "SessionIdentityRow",
     "engine_url",
     "open_archive_session",
 ]

@@ -239,6 +239,25 @@ class AuditEventRow(ArchiveBase):
     content_hash: Mapped[str] = mapped_column()
 
 
+class SessionIdentityRow(ArchiveBase):
+    """One durable platform SessionIdentity and its lifecycle tombstone."""
+
+    __tablename__ = "platform_sessions"
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('active', 'invalidated')",
+            name="ck_platform_sessions_state",
+        ),
+    )
+
+    session_id: Mapped[str] = mapped_column(primary_key=True)
+    identity_json: Mapped[str] = mapped_column(Text())
+    state: Mapped[str] = mapped_column(default="active", index=True)
+    updated_at: Mapped[str] = mapped_column(default="")
+    invalidated_by: Mapped[str] = mapped_column(default="")
+    invalidation_reason: Mapped[str] = mapped_column(default="")
+
+
 class GuildRow(ArchiveBase):
     """A guild's own record: guild-LEVEL state (its shared treasury), distinct from the per-member
     guild columns on characters. One row per guild, created on found, dropped on disband."""
