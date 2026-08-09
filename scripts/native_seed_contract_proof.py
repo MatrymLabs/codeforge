@@ -50,12 +50,12 @@ def main() -> int:
 
     clock = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(50))
     kernel = SeedKernel(InMemorySeedStore(), clock=lambda: next(clock))
-    record = kernel.create_seed("Job Tracker", "josh", "a tiny tracker", seed_id="seed-jt")
-    provenance = Provenance("demo", owner="josh")
+    record = kernel.create_seed("Job Tracker", "seed-owner", "a tiny tracker", seed_id="seed-jt")
+    provenance = Provenance("demo", owner="seed-owner")
     source_record = SourceRecord(
         source_id="demo",
         provenance=provenance,
-        root="/home/josh/projects/job-tracker",
+        root="/srv/seeds/job-tracker",
         file_count=1,
         branch="main",
         commit="a1b2c3d",
@@ -63,7 +63,7 @@ def main() -> int:
     project_model = extract_model(
         SpecSource(
             {"identity": "job-tracker", "entities": ["Application", "Tag"]},
-            Provenance("job-tracker", owner="josh"),
+            Provenance("job-tracker", owner="seed-owner"),
         )
     )
     runs = [
