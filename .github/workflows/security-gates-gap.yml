@@ -47,8 +47,24 @@ jobs:
         with:
           sarif_file: ${{ steps.grype.outputs.sarif }}
       - name: sign the SBOM (Cosign keyless)
-        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac  # v3
-      - run: cosign sign-blob --yes sbom.cdx.json --output-signature sbom.cdx.json.sig
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6  # v4.1.2
+      # --bundle, not --output-signature. Current cosign defaults to --new-bundle-format, which
+      # IGNORES --output-signature and writes a bundle instead; with no --bundle path given it
+      # tried to create one at the empty string and died with "open : no such file or directory".
+      # That failure was misread once as the v4 installer rejecting a cosign version. It was our
+      # command, not the action.
+      - run: cosign sign-blob --yes sbom.cdx.json --bundle sbom.cdx.json.sigbundle
+
+      # A signature nobody verifies is theatre. The previous step produced sbom.cdx.json.sig and
+      # NOTHING in this workflow ever read it, so the repo advertised keyless Sigstore signing
+      # while proving only that the signing command exited zero. This verifies the bundle against
+      # the identity that produced it, so a broken or forged signature fails the gate.
+      - name: verify the SBOM signature (proves the signing step did something)
+        run: |
+          cosign verify-blob sbom.cdx.json \
+            --bundle sbom.cdx.json.sigbundle \
+            --certificate-identity-regexp "^https://github.com/${{ github.repository }}/" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
       - name: checker - SBOM is schema-valid CycloneDX
         run: |
           python3 - <<'PY'
