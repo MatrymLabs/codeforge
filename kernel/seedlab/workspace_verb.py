@@ -16,9 +16,10 @@ platform verb imports NO game module. Live workspace GMCP frames ride an INJECTE
 verb, and with no transport injected (plain text, tests) a frame is simply dropped. Frames fire
 whenever a subcommand resolves that state: `Project.Status` when a workspace is inspected or its
 lifecycle changes,
-`Source.Tree` + `Model.Schema` when a source is connected and modeled, and `Model.Schema` when
-models are inspected, and `Build.Report` when `run` records an allowlisted tool run (or `report`
-replays the recorded runs). So a Native-Seed client's WHOLE Engineering Workspace - Project Hub,
+`Source.Tree` + `Source.Connection` + `Model.Schema` when a source is connected and modeled, and
+`Model.Schema` when models are inspected, and `Build.Report` when `run` records an allowlisted
+tool run (or `report` replays the recorded runs). So a Native-Seed client's WHOLE Engineering
+Workspace - Project Hub,
 Source Explorer, Model view, Build Report - updates the instant an owner acts; the last dark panel
 lit when the run verb landed. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
@@ -42,10 +43,12 @@ from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
+    SOURCE_CONNECTION_PACKAGE,
     SOURCE_TREE_PACKAGE,
     build_report,
     model_schema,
     project_status,
+    source_connection_package,
     source_tree,
 )
 
@@ -242,6 +245,12 @@ def workspace_command(
             SOURCE_TREE_PACKAGE,
             source_tree(source.register(), source.list_files(), seed=seed_name),
         )
+        _push_frame(
+            session,
+            push,
+            SOURCE_CONNECTION_PACKAGE,
+            source_connection_package(source.register(), seed=seed_name),
+        )
         _push_frame(session, push, MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed_name))
         return (
             f"Connected {path} to {seed_id} and modeled it: {model.identity} "
@@ -285,7 +294,17 @@ def workspace_command(
             session,
             push,
             BUILD_REPORT_PACKAGE,
-            build_report(log.for_seed(seed_id), seed=record.identity.name),
+            build_report(
+                log.for_seed(seed_id),
+                seed=record.identity.name,
+                tests={
+                    "passed": sum(1 for r in log.for_seed(seed_id) if r.kind == "test" and r.ok),
+                    "failed": sum(
+                        1 for r in log.for_seed(seed_id) if r.kind == "test" and not r.ok
+                    ),
+                    "skipped": 0,
+                },
+            ),
         )
         return render_run(result)
 
@@ -305,7 +324,18 @@ def workspace_command(
         # Inspecting the report resolves recorded run state: re-push it so the client's Build
         # Report panel refreshes, mirroring how `model` refreshes the Model view.
         _push_frame(
-            session, push, BUILD_REPORT_PACKAGE, build_report(runs, seed=record.identity.name)
+            session,
+            push,
+            BUILD_REPORT_PACKAGE,
+            build_report(
+                runs,
+                seed=record.identity.name,
+                tests={
+                    "passed": sum(1 for r in runs if r.kind == "test" and r.ok),
+                    "failed": sum(1 for r in runs if r.kind == "test" and not r.ok),
+                    "skipped": 0,
+                },
+            ),
         )
         ok = sum(1 for r in runs if r.ok)
         return f"{len(runs)} run(s), {ok} ok. Latest:\n" + render_run(runs[-1])

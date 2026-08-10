@@ -20,6 +20,8 @@ from kernel.seedlab.source_connector import (
     PathBoundaryError,
     ProtectedPathError,
     SourceConnectorError,
+    source_connection,
+    source_connector_label,
     source_label,
 )
 
@@ -99,6 +101,19 @@ def test_identify_classifies_files(tmp_path: Path) -> None:
 def test_source_label_is_hub_ready(tmp_path: Path) -> None:
     label = source_label(_source(tmp_path).register())
     assert label == f"local:demo-src (4 files, main@{_FAKE_SHORT})"
+
+
+def test_source_connector_label_is_hub_ready(tmp_path: Path) -> None:
+    label = source_connector_label(_source(tmp_path).register())
+    assert label.startswith("connector:local-source:demo-src")
+    assert "josh" in label and "private" in label and _FAKE_SHORT in label
+
+
+def test_source_connection_is_structured(tmp_path: Path) -> None:
+    payload = source_connection(_source(tmp_path).register())
+    assert payload["source_id"] == "demo-src"
+    assert payload["owner"] == "josh"
+    assert payload["file_count"] == 4
 
 
 def test_a_registered_source_lights_up_the_hub_sources_facet(tmp_path: Path) -> None:

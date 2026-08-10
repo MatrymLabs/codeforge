@@ -30,6 +30,7 @@ CONTRACT_VERSION = "seedlab.project_hub/1"
 # with the stage that first fills it -- so an empty facet reads as "not built yet", never as a lie.
 _FACETS: tuple[tuple[str, str], ...] = (
     ("sources", "Stage 3: source connector"),
+    ("connectors", "Stage 3: connector registry"),
     ("models", "Stage 4: project model"),
     ("builds", "Stage 5: build/test orchestration"),
     ("tests", "Stage 5: build/test orchestration"),
@@ -46,6 +47,7 @@ class ProjectState:
 
     seed_id: str
     sources: tuple[str, ...] = ()
+    connectors: tuple[str, ...] = ()
     models: tuple[str, ...] = ()
     builds: tuple[str, ...] = ()
     tests: tuple[str, ...] = ()
@@ -150,7 +152,7 @@ class ProjectHub:
             return self._render_facet(seed_id, "decisions", state)
         return (
             "Project Hub commands: look · show status · "
-            "list <sources|models|builds|tests|targets> · show risks · show history"
+            "list <sources|connectors|models|builds|tests|targets> · show risks · show history"
         )
 
     def _render_facet(self, seed_id: str, facet: str, state: ProjectState | None) -> str:

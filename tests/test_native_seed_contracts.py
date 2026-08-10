@@ -16,6 +16,7 @@ EXPECTED_PACKAGES = {
     "Seed.Profile",
     "Project.Status",
     "Source.Tree",
+    "Source.Connection",
     "Model.Schema",
     "Build.Report",
     "Architecture.Map",

@@ -101,6 +101,21 @@ def main() -> int:
         f"repo={parsed_tree.repository!r} files={len(parsed_tree.files)}",
     )
 
+    # Source.Connection is the connector/provenance surface. Same additive rule: prove it only when
+    # the client checkout already carries the parser.
+    connection = eng.source_connection_package(source_record, seed="Job Tracker")
+    if not hasattr(cli_source, "parse_source_connection"):
+        checks.append(("Source.Connection", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_connection = cli_source.parse_source_connection(connection)
+        record_check(
+            "Source.Connection",
+            eng.SOURCE_CONNECTION_PACKAGE,
+            cli_source.SOURCE_CONNECTION_PACKAGE,
+            parsed_connection.source_id == "demo" and parsed_connection.owner == "josh",
+            f"source_id={parsed_connection.source_id!r} owner={parsed_connection.owner!r}",
+        )
+
     schema = eng.model_schema(project_model, seed="Job Tracker")
     parsed_schema = cli_model.parse_model_schema(schema)
     record_check(

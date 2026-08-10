@@ -36,7 +36,7 @@ from kernel.world import guild, party, trade
 from kernel.world.accounts import password_fixable
 from kernel.world.characters import save_character
 from kernel.world.events import bind_echo, unbind_echo
-from kernel.world.seed import load_splash
+from kernel.world.seed import SEED_NAME, load_splash
 from kernel.world.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
@@ -120,12 +120,31 @@ async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session:
     wrong for an existing account) re-prompts the password in place -- keeping the
     chosen handle -- instead of dropping to the top menu. Returns the final response."""
     handle = await _ask(ws, outbox, "Choose your character@account:")
+    initial_calling: str | None = None
+    if SEED_NAME == "aethryn":
+        from kernel.world.jobs import calling_label, character_creation_menu
+
+        outbox.put_nowait(character_creation_menu())
+        for _ in range(3):
+            choice = await _ask(ws, outbox, "Calling (name):")
+            initial_calling = calling_label(choice)
+            if initial_calling is not None:
+                break
+            outbox.put_nowait("That calling is not available. Choose one from the menu.")
+        if initial_calling is None:
+            outbox.put_nowait("Character creation cancelled. Reconnect to try again.")
+            return ""
     response = ""
     for attempt in range(_REGISTER_TRIES):
         secret = await _ask(ws, outbox, "Choose a password:")
         with TICK_LOCK:
             response = handle_command(session, f"register {handle} {secret}")
         if not password_fixable(response) or attempt == _REGISTER_TRIES - 1:
+            if response.startswith("Welcome,") and initial_calling is not None:
+                with TICK_LOCK:
+                    chosen = handle_command(session, f"job {initial_calling}")
+                    save_character(session)
+                response = f"{response}\n{chosen}"
             return response
         outbox.put_nowait(response)  # nudge, then re-ask the password in place
     return response

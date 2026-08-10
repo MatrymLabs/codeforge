@@ -121,12 +121,20 @@ def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     _recv_until(sock, PROMPT)
 
 
-def register(sock: socket.socket, handle: str, password: str = "lumos_1234") -> str:
+def register(
+    sock: socket.socket,
+    handle: str,
+    password: str = "lumos_1234",
+    calling: str | None = None,
+) -> str:
     """Register a fresh account/character and land in the world; return the welcome text."""
     _recv_until(sock, b"NEW:")
     sock.sendall(b"new\n")
     _recv_until(sock, b"account:")
     sock.sendall(handle.encode() + b"\n")
+    if calling is not None:
+        _recv_until(sock, b"Calling (name):")
+        sock.sendall(calling.encode() + b"\n")
     _recv_until(sock, IAC_WILL_ECHO)
     sock.sendall(password.encode() + b"\n")
     return _recv_until(sock, PROMPT)
@@ -173,6 +181,8 @@ def aethryn_journey() -> None:
         s.sendall(b"new\n")
         _recv_until(s, b"account:")
         s.sendall(b"ranger@aethryn\n")
+        _recv_until(s, b"Calling (name):")
+        s.sendall(b"vanguard\n")
         _recv_until(s, IAC_WILL_ECHO)
         s.sendall(b"lumos_1234\n")
         welcome = _recv_until(s, PROMPT)
@@ -336,7 +346,7 @@ def spine_journey() -> None:
         # Register the wayfarer, then provision coins for every fare from the host shell (the same
         # store `grant` uses) -- so the smoke proves the ROAD, not a coin grind.
         s = connect(SPINE_PORT)
-        register(s, "wayfarer@aethryn")
+        register(s, "wayfarer@aethryn", calling="vanguard")
         s.sendall(b"quit\n")
         time.sleep(0.7)  # let the disconnect-save settle before we touch the record
         s.close()

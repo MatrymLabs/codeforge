@@ -108,6 +108,26 @@ def test_register_over_the_wire_creates_an_account_and_enters():
     assert account_password_ok("webco", "swordfish9")  # it really persisted
 
 
+def test_aethryn_new_character_gets_a_calling_menu_and_persists_choice(monkeypatch):
+    monkeypatch.setattr(web, "SEED_NAME", "aethryn")
+    client = TestClient(app)
+    with client.websocket_connect("/ws") as ws:
+        ws.receive_text()  # splash
+        ws.receive_text()  # front-desk prompt
+        ws.send_text("new")
+        ws.receive_text()  # character@account prompt
+        ws.send_text("aethrynweb@aethrynco")
+        menu = ws.receive_text()
+        assert "CHARACTER CREATION" in menu and "vanguard" in menu
+        assert "Calling (name)" in ws.receive_text()
+        ws.send_text("vanguard")
+        assert "password" in ws.receive_text().lower()
+        ws.send_text("swordfish9")
+        welcome = ws.receive_text()
+        assert "Welcome, Aethrynweb@aethrynco" in welcome
+        assert "way of the Vanguard" in welcome
+
+
 def test_quit_delivers_the_farewell_before_the_socket_closes():
     """Teardown flushes the outbox: the last line (the quit farewell) must
     reach the visitor, not get cut off by the close."""

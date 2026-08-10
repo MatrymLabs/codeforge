@@ -40,7 +40,7 @@ from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
 from kernel.seedlab.project_model import ProjectModel
-from kernel.seedlab.source_connector import SourceRecord
+from kernel.seedlab.source_connector import SourceRecord, source_connection
 from kernel.seedlab.tool_runner import ToolRunResult
 
 # --- the workspace package names (must match the client's core/*.py PACKAGE constants) -----------
@@ -48,6 +48,8 @@ from kernel.seedlab.tool_runner import ToolRunResult
 PROJECT_STATUS_PACKAGE = "Project.Status"
 #: An engineering Seed's source tree -> the client's Source Explorer (core/source.py).
 SOURCE_TREE_PACKAGE = "Source.Tree"
+#: The structured source connector record -> the client's connector surface.
+SOURCE_CONNECTION_PACKAGE = "Source.Connection"
 #: An engineering Seed's data model -> the client's Model view (core/model.py).
 MODEL_SCHEMA_PACKAGE = "Model.Schema"
 #: A client's request to CREATE a Seed (client -> engine); the verdict below is the reply.
@@ -132,6 +134,16 @@ def source_tree(source: SourceRecord, files: list[str], *, seed: str) -> dict[st
         payload["branch"] = source.branch
     if source.commit:
         payload["commit"] = source.commit
+    return payload
+
+
+def source_connection_package(
+    source: SourceRecord, *, seed: str | None = None
+) -> dict[str, object]:
+    """The `Source.Connection` payload for a registered local source connector."""
+    payload = source_connection(source)
+    if seed is not None:
+        payload["seed"] = seed
     return payload
 
 
@@ -449,6 +461,16 @@ def deploy_status(
     }
 
 
+def summarize_test_runs(runs: Sequence[ToolRunResult]) -> dict[str, int] | None:
+    """A minimal test summary derived from recorded test runs, or None when there are no tests."""
+    test_runs = [run for run in runs if run.kind == "test"]
+    if not test_runs:
+        return None
+    passed = sum(1 for run in test_runs if run.ok)
+    failed = sum(1 for run in test_runs if not run.ok)
+    return {"passed": passed, "failed": failed, "skipped": 0}
+
+
 # --- the creation Form: the Engineering Form -> the client's Seed Creation Wizard ---------------
 
 
@@ -573,6 +595,7 @@ def workspace_packages(
     files: list[str] | None = None,
     model: ProjectModel | None = None,
     runs: Sequence[ToolRunResult] | None = None,
+    artifacts: Sequence[Mapping[str, object]] | None = None,
     branch: str | None = None,
     modules: Sequence[Mapping[str, object]] | None = None,
     findings: Sequence[Mapping[str, object]] | None = None,
@@ -585,17 +608,29 @@ def workspace_packages(
     registry is supplied, a Research Findings package when the Seed has research to report, and a
     Blueprint List when the Seed has filed Blueprints, and a Deploy Manifest when a deployment-
     sizing manifest is supplied. The one call a live driver would loop over to push the workspace;
-    each pair frames with `kernel.gmcp.gmcp_frame`."""
+    each pair frames with `kernel.gmcp.gmcp_frame`. Artifact entries are passed only when a real
+    artifact registry supplied them; absent entries remain absent in `Build.Report`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
     ]
     if source is not None:
         packages.append((SOURCE_TREE_PACKAGE, source_tree(source, files or [], seed=seed)))
+        packages.append((SOURCE_CONNECTION_PACKAGE, source_connection_package(source, seed=seed)))
     if model is not None:
         packages.append((MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed)))
     if runs:
-        packages.append((BUILD_REPORT_PACKAGE, build_report(runs, seed=seed)))
+        packages.append(
+            (
+                BUILD_REPORT_PACKAGE,
+                build_report(
+                    runs,
+                    seed=seed,
+                    tests=summarize_test_runs(runs),
+                    artifacts=[dict(entry) for entry in artifacts] if artifacts else None,
+                ),
+            )
+        )
     if modules is not None:
         packages.append((ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=seed)))
     if findings is not None:

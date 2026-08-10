@@ -98,6 +98,23 @@
       }
     },
     {
+      "package": "Source.Connection",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "source_id": "job-tracker-src",
+        "owner": "seed-owner",
+        "license": "unknown",
+        "visibility": "private",
+        "allowed_use": "unknown",
+        "root": "/srv/seeds/job-tracker",
+        "file_count": 2,
+        "branch": "main",
+        "commit": "a1b2c3d",
+        "seed": "job-tracker"
+      }
+    },
+    {
       "package": "Model.Schema",
       "direction": "server_to_client",
       "status": "implemented",

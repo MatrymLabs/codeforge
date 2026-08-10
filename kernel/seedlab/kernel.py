@@ -32,6 +32,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from kernel.seedlab.safe_path import contained_path, safe_segment
 from kernel.shelf.atomic_write import atomic_write_text
 
 # --- lifecycle states + the only legal transitions between them --------------------------------
@@ -189,7 +190,7 @@ class FileSeedStore:
         self.root.mkdir(parents=True, exist_ok=True)
 
     def _path(self, seed_id: str) -> Path:
-        return self.root / f"{seed_id}.json"
+        return contained_path(self.root, f"{safe_segment(seed_id, what='seed id')}.json")
 
     def save(self, record: SeedRecord) -> None:
         # Durable atomic write via the shared shelf primitive (no partial record on a crash).

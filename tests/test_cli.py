@@ -239,6 +239,38 @@ def test_refactor_missing_args_is_a_usage_error(capsys):
     assert main(["refactor"]) == 2  # argparse: too few positionals, routed to exit code 2
 
 
+def test_seedlab_proof_writes_a_report_artifact(tmp_path, capsys, monkeypatch):
+    from dataclasses import dataclass
+
+    @dataclass
+    class _FakeResult:
+        seed_id: str = "seed-proof"
+        hub_text: str = "Project Hub :: proof"
+
+        def to_dict(self):
+            return {"seed_id": self.seed_id, "hub_text": self.hub_text}
+
+    monkeypatch.setattr(
+        "kernel.seedlab.platform_proof.run_first_platform_proof",
+        lambda root, owner="josh": _FakeResult(),
+    )
+    monkeypatch.setattr(
+        "kernel.seedlab.audit.audit_seedlab_modules",
+        lambda: type("Audit", (), {"to_dict": lambda self: {"root": "seedlab", "entries": []}})(),
+    )
+    report = tmp_path / "proof.json"
+    assert main(["seedlab", "proof", "--root", str(tmp_path), "--report", str(report)]) == 0
+    out = capsys.readouterr().out
+    assert "proof complete: seed-proof" in out
+    assert report.is_file()
+
+
+def test_seedlab_audit_writes_an_audit_report(tmp_path, capsys, monkeypatch):
+    assert main(["seedlab", "audit", "--report", str(tmp_path / "audit.json")]) == 0
+    out = capsys.readouterr().out
+    assert "SeedLab audit:" in out
+
+
 # --- journey: the whole game pipeline as one real CLI operation (Prime Law 3, no decorative rooms)
 
 
