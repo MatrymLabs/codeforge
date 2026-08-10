@@ -66,6 +66,6 @@ def test_native_seed_fixture_locks_the_provider_package_set() -> None:
 def test_source_connection_fixture_names_the_engine_package() -> None:
     payload = _packages()[SOURCE_CONNECTION_PACKAGE]["payload"]
     assert isinstance(payload, dict)
-    assert payload["source_id"] == "src-job-tracker"
-    assert payload["owner"] == "josh"
+    assert payload["source_id"] == "job-tracker-src"
+    assert payload["owner"] == "seed-owner"
     assert payload["visibility"] == "private"

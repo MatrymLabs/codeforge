@@ -279,6 +279,11 @@ def build_examples() -> dict[str, Any]:
                 "server_to_client",
                 gmcp.source_tree(source, ["src/app.py", "tests/test_app.py"], seed="job-tracker"),
             ),
+            _example(
+                gmcp.SOURCE_CONNECTION_PACKAGE,
+                "server_to_client",
+                gmcp.source_connection_package(source, seed="job-tracker"),
+            ),
             _example(gmcp.MODEL_SCHEMA_PACKAGE, "server_to_client", gmcp.model_schema(_model())),
             _example(
                 gmcp.BUILD_REPORT_PACKAGE,

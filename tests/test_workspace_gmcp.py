@@ -264,7 +264,7 @@ def test_source_connection_projects_the_registered_connector() -> None:
     payload = source_connection_package(_source(), seed="Job Tracker")
     assert payload["seed"] == "Job Tracker"
     assert payload["source_id"] == "demo-src"
-    assert payload["owner"] == "josh"
+    assert payload["owner"] == "seed-owner"
     assert payload["visibility"] == "private"
 
 
