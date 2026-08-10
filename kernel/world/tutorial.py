@@ -11,7 +11,16 @@ it once on first login, and a hero who has found their feet is never nagged agai
 
 from __future__ import annotations
 
+from kernel.world.seed import SEED_NAME
 from kernel.world.session import Session
+from kernel.world.world_manifest import describe_world
+
+# The world names ITSELF. This line used to read "Welcome to Aethryn", hardcoded, so a player on
+# any other seed was welcomed to a world they were not in, and a third-party seed had no way to
+# correct it without editing Python. The world is data: the title comes from the booted seed's
+# world.yaml, or is derived from its id when it ships none. Bound at import like the rest of the
+# seed surface, so the guidance costs no file read per step.
+WORLD_TITLE = describe_world(SEED_NAME).title
 
 
 def next_step(session: Session) -> str:
@@ -19,7 +28,7 @@ def next_step(session: Session) -> str:
     A ladder: no calling -> a calling untested -> tested but ungeared -> established."""
     if session.stats is None or not session.job:
         return (
-            "Welcome to Aethryn, Forger. First, choose a calling: type JOBS to see them, "
+            f"Welcome to {WORLD_TITLE}, Forger. First, choose a calling: type JOBS to see them, "
             "then JOB <name> to take one."
         )
     if session.level < 2:

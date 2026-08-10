@@ -59,3 +59,21 @@ def test_tutorial_reaches_through_the_engine_tick():
 
     out = handle_command(Session(player_id="new"), "tutorial")
     assert "choose a calling" in out  # the verb surfaces the current step
+
+
+def test_the_tutorial_names_the_booted_world_not_a_hardcoded_one() -> None:
+    """The world is data: a seed names itself, and Python does not name it for them.
+
+    This line read "Welcome to Aethryn" as a hardcoded literal, so a player on first-forge (the
+    DEFAULT seed) was welcomed to a world they were not in, and a third-party seed had no way to
+    correct it without editing the engine. Found by driving the actual login walk, not by a test.
+    """
+    from kernel.world.seed import SEED_NAME
+    from kernel.world.tutorial import WORLD_TITLE, next_step
+    from kernel.world.world_manifest import describe_world
+
+    assert describe_world(SEED_NAME).title == WORLD_TITLE
+    greeting = next_step(Session(player_id="newcomer"))
+    assert WORLD_TITLE in greeting
+    if SEED_NAME != "aethryn":
+        assert "Aethryn" not in greeting  # the defect: the wrong world, named in Python
