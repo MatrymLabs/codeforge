@@ -203,6 +203,7 @@ if _settlements:
 # (kernel.world.storylines). This is the DEPTH counterpart to the errands' VOLUME. The zone metadata
 # is loaded straight from the seed here (zones.py owns the live scheduler; we only need the room
 # grouping), so the story arcs thread the same rooms the reset areas do.
+from kernel.world.room_category import category_of, index_by_room  # noqa: E402
 from kernel.world.seed import load_zones  # noqa: E402 -- WORLD must exist for the room gate
 
 _story_zone_map = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
@@ -230,6 +231,13 @@ if _spiral_config is not None:
 if _wildlands_configs is not None:
     _all_zones.update(wildlands_zones(_wildlands_configs))
 _all_zones.update(FIELD_ZONES)  # field-backed zones live where their creatures do, too
+
+# The bracketed category the room-output standard asks for, indexed ONCE from the complete zone
+# map rather than scanned per look. Derived, never stored on the room: zones already carry biome
+# and region, so a room moved between zones gets the right category with no second edit and no
+# chance of two fields disagreeing. A seed with no zones (first-forge) yields an empty index and
+# renders no category, which is honest; "[Unknown]" under every title is noise wearing a label.
+_ROOM_CATEGORY = index_by_room(_all_zones)
 _cull_zones: list[dict[str, object]] = [
     {"label": lbl, "name": z["name"], "biome": z.get("biome", ""), "level_max": z.get("level_max")}
     for lbl, z in _all_zones.items()
@@ -305,9 +313,17 @@ DIRECTIONS: dict[str, str] = {
 
 
 def render_room(room_id: str) -> str:
+    """The room as a player reads it, in the standard's hierarchy.
+
+    title -> bracketed category -> authored prose -> the horizontal obvious-exits line. The
+    category is omitted entirely when the world does not declare one, rather than rendered blank
+    or filled with a placeholder.
+    """
     room = WORLD[room_id]
     exits = ", ".join(room["exits"]) or "none"
-    return f"\n== {room['name']} ==\n{room['desc']}\nExits: {exits}"
+    category = category_of(room_id, _ROOM_CATEGORY)
+    heading = f"== {room['name']} ==" + (f"\n[{category}]" if category else "")
+    return f"\n{heading}\n{room['desc']}\nExits: {exits}"
 
 
 def dynamic_capability(room_id: str) -> str:

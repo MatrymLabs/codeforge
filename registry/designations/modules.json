@@ -1129,6 +1129,27 @@
   "updated": "2026-07-09"
  },
  {
+  "designation": "MOD-04.158",
+  "name": "room_category",
+  "status": "active",
+  "function": "derive the bracketed category a room shows under its title, from the zone that already declares its biome",
+  "label": "room_category",
+  "file": "kernel/world/room_category.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "docs/character_system.md",
+  "tests": "tests/test_room_category.py",
+  "depends_on": [],
+  "related": ["MOD-04.022"],
+  "reuse": "Derived, never stored: a room moved between zones gets the right category with no second edit and no chance of two fields disagreeing.",
+  "notes": "The room-output standard names a bracketed category in its hierarchy; no room declared one and no renderer emitted one. A seed with no zones renders NO category rather than an invented one.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-10",
+  "updated": "2026-08-10"
+ },
+ {
   "designation": "MOD-04.022",
   "name": "world",
   "status": "active",
