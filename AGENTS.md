@@ -62,3 +62,32 @@ pass an interpreter explicitly with `make check PY=/path/to/python`.
 - No em-dash or en-dash glyphs anywhere: prose, code, comments, commit messages, or command output.
   This is a fleet HARD RULE and it is interviewer-facing.
 - A gate must be able to fail. If you add a check, prove it red before you trust it green.
+
+
+## The doctrine set (canonical at the fleet root, one directory above this repo)
+
+Read in this order. If any is unreadable, say so and stop; do not proceed on assumed context.
+
+| # | file | what it governs |
+|---|---|---|
+| 1 | `../MATRYM_NORTH_STAR.md` | the mission and the Law: who we are |
+| 2 | `../.ai/HANDOFF_PROTOCOL.md` | the exchange between Claude Code and Codex, the Verification Duty, extraction capture |
+| 3 | `../.ai/GREEN_BUILD_DIRECTIVE.md` | the MODE: build, consolidate, integrate, test, get green, keep moving |
+| 4 | `../.ai/ONE_FLEET_ONE_FLIGHT.md` | the FORMATION: one flight at a time, station-keeping, the six drift conditions |
+| 5 | `../.ai/RELAUNCH_SEQUENCE.md` | the ordered flights. Flight 1 is Aethryn Green |
+| 6 | `../.ai/CHIEF_ENGINEER.md` | register and duty: honest margins, the dissent duty, mentorship. Never permission |
+| 7 | `../.ai/handoff.md` | the live board. **CURRENT FLIGHT is at the top.** Read at open, update at close |
+| 8 | `../BUILD_STATE.md` | generated: the green line and the claims board. Never hand-edited |
+
+**Precedence.** 1 and 2 are the Law. 3 and 4 are the mode and the formation, layered on top. 6 is
+register only and overrides nothing. Where a lower number conflicts with a higher one, the LAW
+wins: flag the conflict, do not resolve it yourself.
+
+**Before editing any major file here:** read `../claims/CODEX.yaml` and
+`../claims/CLAUDE_CODE.yaml`, and record your own claim in your own file. Neither agent edits the
+other's. `make claims` at the fleet root refuses a board where two active claims from different
+agents own overlapping ground.
+
+**At session open, state it:** *"Current flight: X. My element: Y. This session serves it by: one
+sentence. Station: claimed paths. Drift check: clear, or condition N."* If that sentence cannot be
+said honestly, report the drift instead of starting work.
