@@ -75,7 +75,7 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | Textual | CLI | `integrate_later` | The terminal-control-panel vision (backlog), not this phase. |
 | pyinstrument / scalene / line_profiler | Perf | `research_only` | Command timing suffices in-repo; deep perf evidence lives in `pyg-perf-lab`. |
 | pluggy / stevedore | Plugins | `internal_custom` | The classification registry is the CodeForge-native version; build custom first. |
-| Pydantic | Data | `integrate_now` (done) | A direct runtime dep: the typed API request/response contract (OpenAPI) and the Settings env catalog (`parts/config.py`); imported in api/config/dashboard/blueprint_ai. |
+| Pydantic | Data | `integrate_now` (done) | A direct runtime dep: the typed API request/response contract (OpenAPI) and the Settings env catalog (`kernel/shelf/config.py`); imported in api/config/dashboard/blueprint_ai. |
 | Alembic | Data | `integrate_now` (done) | Schema migrations, live: `alembic.ini` + `make db-migrate` (`docs/database.md`). |
 | gitleaks / trufflehog | Security | `research_only` | detect-secrets already covers this; redundant. |
 | Semgrep | Security | `research_only` | bandit + CodeQL cover SAST; revisit only for custom rules. |

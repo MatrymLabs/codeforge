@@ -1,5 +1,7 @@
 # ADR-0003: Framework-free by design
 
+_Path note (2026-08-09): This ADR records the pre-2026-08-02 layout. Current modules live under `kernel/` rather than `parts/`._
+
 **Status:** accepted (revisable - this is a scope choice, not a permanent rule)
 
 ## Context

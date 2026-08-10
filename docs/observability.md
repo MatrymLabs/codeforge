@@ -1,6 +1,6 @@
 # Observability: structured logs + Prometheus metrics
 
-`parts/observability.py` gives the HTTP surface two senior-grade signals, wired on with one
+`kernel/shelf/observability.py` gives the HTTP surface two senior-grade signals, wired on with one
 middleware.
 
 ## Structured logs (structlog)
@@ -39,4 +39,4 @@ codeforge_request_duration_seconds_sum{method="GET",route="/health",status="200"
 `install_observability(app)` (called in `adapters/api.py`) adds an HTTP middleware that times
 each request, records the metric, and emits the structured log, plus the `/metrics` route. It
 touches only the HTTP surface; the MUD engine and the tick never log through it, so the
-`structlog` dependency stays bounded to `parts/observability.py`.
+`structlog` dependency stays bounded to `kernel/shelf/observability.py`.

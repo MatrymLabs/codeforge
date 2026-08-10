@@ -37,7 +37,7 @@ standard's own advice.
 
 ## Testing in layers
 
-1. **Unit tests** -- 1:1 test-twin per module (`parts/x.py` <-> `tests/test_x.py`).
+1. **Unit tests** -- 1:1 test-twin per module (`kernel/<area>/x.py` <-> `tests/test_x.py`).
 2. **Property tests** -- for invariant-heavy components: progression curves,
    state-machine laws, manifest round-trips, registry minting. Ravi and Coblenz (2025)
    found Python property-based tests detect ~50x more injected faults than the average

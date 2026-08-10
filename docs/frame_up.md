@@ -23,7 +23,7 @@ subviews simply gather them under one audit namespace.
 ## The ReportWriter
 
 `inspect save` and `make repo-integrity` both file their evidence through one seam,
-`parts/reporting.py`: `write_report(category, text, stamp, slug)` writes a dated report to
+`kernel/shelf/reporting.py`: `write_report(category, text, stamp, slug)` writes a dated report to
 `reports/<category>/`, so every producer files the same way. Contents are git-ignored
 (generated, reproducible); the writer just keeps the dated-path mechanics consistent.
 

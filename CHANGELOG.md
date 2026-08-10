@@ -1,5 +1,7 @@
 # Changelog
 
+> **2026-08-09 path note:** Entries before the 2026-08-02 restructure record the former `parts/` layout. Current modules live under `kernel/`.
+
 All notable changes to CodeForge. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/); versions are date-stamped while
 pre-1.0. Readiness language only - no compliance/OSHA/legal claims.

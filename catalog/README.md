@@ -21,7 +21,7 @@ path with `CODEFORGE_CATALOG`.
 ```yaml
 - id: rank-gate            # required · stable, lowercase-kebab, unique
   name: Rank Gate          # required · human name
-  source: parts/ranks.py   # required · the file that implements it
+  source: kernel/world/ranks.py   # required · the file that implements it
   category: authorization  # required · one word (authorization, messaging, …)
   maturity: shipped        # required · prototype | beta | shipped
   risk: low                # required · low | medium | high

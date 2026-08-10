@@ -106,7 +106,7 @@ stat to a flat amount, e.g. `{ATK: 6, ACC: 3}`).
 ### The derived-stat pipeline
 
 Derived combat stats (ATK, DEF, EVA, MAG DEF, ACC) are computed, never stored, in three
-layers - all folded through the same order-independent `ModifierStack` (`parts/stats.py`):
+layers - all folded through the same order-independent `ModifierStack` (`kernel/shelf/stats.py`):
 
 ```
 base = derived_stats(attributes, level)        # kernel/world/derived.py (prototype formulas)
