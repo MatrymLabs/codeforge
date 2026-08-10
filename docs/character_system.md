@@ -95,9 +95,25 @@ JRPG job declares its whole loadout. The full `Job` schema:
 | `power_cells` | int | size of the custom resource pool (0 = the job runs on MP) |
 | `power_regen` | int | power cells regained per combat tick |
 | `milestone_perks` | list | ordered `{name, target, amount}` perks, one unlocked per TP milestone |
+| `requires` | map | calling label to minimum `job_level` before this calling may be taken; empty (the default) means open to anyone |
 
 A malformed value (a non-integer stat, an unknown resistance level, a perk missing a key)
 **fails loud at load** - bad content never reaches the game.
+
+### Advanced callings
+
+`requires` makes a calling advanced. It is read against the character's own `JobProgress`
+records, so standing is derived from what was actually earned rather than stored a second time,
+and levelling a prerequisite unlocks the advanced calling with no migration.
+
+The loader refuses content a player could never reach: a prerequisite naming a calling that does
+not exist, a calling requiring itself, a level below 1, and any **cycle** of callings that
+require each other. A locked calling still LISTS, marked with what it asks for, because a road
+you cannot see is not a goal.
+
+The gate is consulted when a calling is TAKEN, on both the primary and the secondary slot. A
+character already walking a calling keeps it, so adding a prerequisite never strips a path from
+someone who already holds it.
 
 Equippable **items** (`seeds/<pack>/items.yaml`) add two optional fields to the normal item
 schema: `slot` (weapon/body/head/arm/accessory_1/accessory_2) and `mods` (a map of target

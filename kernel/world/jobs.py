@@ -8,6 +8,7 @@ this card only assembles the character; the sheet is its projection.
 """
 
 from kernel.shelf.stats import Stat, StatBlock
+from kernel.world.callings import gate_calling
 from kernel.world.job_progress import JobProgress
 from kernel.world.resources import Resource
 from kernel.world.seed import SEED_DIR, load_jobs
@@ -19,14 +20,24 @@ BASE_HP = 20  # starting HP is BASE_HP + stamina; leveling uses the progression 
 BASE_MP = 5  # starting MP is BASE_MP + magic
 
 
-def calling_index() -> str:
-    """The list a new soul reads before choosing."""
+def calling_index(held: dict | None = None) -> str:
+    """The list a new soul reads before choosing.
+
+    Given a character's standing, a locked calling still LISTS, marked with what it asks for. A
+    road you cannot see is not a goal, and the player is owed the road as much as the gate.
+    """
     lines = ["Callings:"]
     # The world is data: a seed may name a calling of any length ('forgewright',
     # 'emberwright' are 11), so size the column to the widest label, never a fixed 10.
     width = max((len(label) for label in JOBS), default=0)
+    names = {lbl: j["name"] for lbl, j in JOBS.items()}
     for label, job in JOBS.items():
-        lines.append(f"  {label:<{width}} {job['name']} -- {job['description']}")
+        line = f"  {label:<{width}} {job['name']} -- {job['description']}"
+        verdict = gate_calling(label, job, held or {})
+        if not verdict.open:
+            asks = ", ".join(need.phrase(names.get(need.calling)) for need in verdict.unmet)
+            line += f"  [LOCKED: needs {asks}]"
+        lines.append(line)
     lines.append("Choose with: job <calling>")
     return "\n".join(lines)
 
@@ -67,6 +78,11 @@ def bind_calling(session: Session, word: str) -> str:
     if label not in JOBS:
         return f"There is no calling named '{word}'. Type JOBS to see the paths."
     job = JOBS[label]
+    # Authority before capability: an advanced calling is refused before any state is touched,
+    # so a locked path cannot half-bind and leave a character wearing stats it never earned.
+    verdict = gate_calling(label, job, session.job_progress)
+    if not verdict.open:
+        return verdict.reason({lbl: j["name"] for lbl, j in JOBS.items()})
     session.job = label
     session.stats = build_stats(label, session.allocated)
     max_hp = BASE_HP + job["stats"]["stamina"]
@@ -92,6 +108,9 @@ def set_secondary(session: Session, word: str) -> str:
         return f"There is no calling named '{word}'. Type JOBS to see the paths."
     if label == session.job:
         return "That is already your primary calling."
+    verdict = gate_calling(label, JOBS[label], session.job_progress)
+    if not verdict.open:
+        return verdict.reason({lbl: j["name"] for lbl, j in JOBS.items()})
     session.secondary_job = label
     session.job_progress.setdefault(label, JobProgress(job_id=label))
     return f"You equip the {JOBS[label]['name']} as your secondary. Its kit is yours to borrow."
