@@ -1,0 +1,24 @@
+# gitleaks configuration for codeforge.
+#
+# Honest suppression, the fleet's rule: an exemption is explicit in the repository, justified in
+# place, and narrow enough that it cannot hide a real credential. A path-wide ignore or a disabled
+# rule would be the dishonest version.
+#
+# Established 2026-08-10, when gitleaks was finally installable on this host (the release tarball
+# had been truncating on download; `curl -C - --retry 5` fixed it). A full-history scan of all 29
+# checkouts found exactly ONE finding, and it is a test fixture asserting that secrets get redacted.
+
+[extend]
+useDefault = true
+
+[[rules]]
+  id = "generic-api-key"
+  [rules.allowlist]
+    description = """
+    tests/test_architect.py asserts that ClaudeAdvisor REDACTS secrets before they reach the model.
+    The test input necessarily CONTAINS a secret-shaped string, and `hunter2` next to it is the
+    internet's canonical joke password. Flagging it means flagging the test that proves redaction
+    works, which would train a reader to ignore this scanner.
+    """
+    paths = ['''tests/test_architect\.py''']
+    regexes = ['''sk-abcdef123''']
