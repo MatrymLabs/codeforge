@@ -1,6 +1,12 @@
 # SEED: aethryn -- jobs.yaml (callings)
 # The Forger's three first paths, from the world bible: how you shape ember decides
 # how you fight. Stats recompute on restore (derive, don't store).
+#
+# PREREQUISITES (`requires: {calling: level}`) are OPTIONAL and default to empty, so a calling
+# without them stays open to anyone. Only callings whose own description names an evident
+# foundation carry one today; this is a FIRST SLICE, not the final calling taxonomy, which is a
+# founder decision. Adding one here locks nothing retroactively: a character already walking a
+# calling keeps it, because the gate is consulted when a calling is TAKEN.
 
 template:
   description: A path not yet chosen.
@@ -55,6 +61,7 @@ shadowblade:
   name: Shadowblade
   description: Ends fights from the dark in a single opened throat. Speed, edge, and fortune.
   stats: {strength: 11, speed: 14, stamina: 8, magic: 6, wisdom: 5, luck: 9}
+  requires: {scout: 5}  # ends fights from the dark: it presumes the scout's footwork first
 
 saboteur:
   name: Saboteur
@@ -123,6 +130,7 @@ mechanist:
   name: Mechanist
   description: Rides a walking rig and lets it soak what it dishes. Stamina bolted to magic.
   stats: {strength: 10, speed: 8, stamina: 14, magic: 10, wisdom: 9, luck: 5}
+  requires: {engineer: 5}  # rides the rig the engineer learned to build and keep running
 
 # Nature family: those who fight with the wilds themselves (stamina/wisdom).
 druid:
@@ -165,3 +173,4 @@ hierophant:
   name: Hierophant
   description: Turns a whole line's faith into a single ruinous word. Wisdom raised to law.
   stats: {strength: 6, speed: 7, stamina: 11, magic: 12, wisdom: 16, luck: 6}
+  requires: {cleric: 5}  # a whole line's faith amplified: it presumes the cleric's calling first

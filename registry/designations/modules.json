@@ -658,6 +658,27 @@
   "updated": "2026-07-09"
  },
  {
+  "designation": "MOD-04.157",
+  "name": "callings",
+  "status": "active",
+  "function": "refuse a calling whose prerequisites a character has not yet earned, and name what is missing",
+  "label": "callings",
+  "file": "kernel/world/callings.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "docs/character_system.md",
+  "tests": "tests/test_callings.py",
+  "depends_on": [],
+  "related": ["MOD-04.012"],
+  "reuse": "The one gate between a character and an advanced calling; the seed loader reuses its cycle finder to refuse unreachable content at load.",
+  "notes": "Before this card every calling in every seed was choosable at level 1, and no test mentioned prerequisites. The rule lives in the seed data; this card only reads it.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-10",
+  "updated": "2026-08-10"
+ },
+ {
   "designation": "MOD-04.012",
   "name": "jobs",
   "status": "active",

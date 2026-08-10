@@ -28,6 +28,7 @@ import yaml
 
 from kernel.shelf.conditions import ConditionError, validate
 from kernel.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
+from kernel.world.callings import prerequisite_cycles
 from kernel.world.score_sheet_model import RESIST_ORDER  # the canonical element/status codes
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
@@ -287,6 +288,7 @@ class Job(TypedDict):
     power_cells: int  # size of the job's custom resource pool (0 = none, runs on MP)
     power_regen: int  # power cells regained per combat tick
     milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
+    requires: dict[str, int]  # calling label -> minimum job_level; empty means open to all
 
 
 class Ability(TypedDict):
@@ -1004,6 +1006,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
             "power_cells": 0,
             "power_regen": 0,
             "milestone_perks": [],
+            "requires": {},
         }
         merged.update(template)
         merged.update(fields)
@@ -1025,6 +1028,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 ("power_cells", int),
                 ("power_regen", int),
                 ("milestone_perks", list),
+                ("requires", dict),
             ),
         )
         for perk in merged["milestone_perks"]:
@@ -1050,6 +1054,21 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 raise SeedError(
                     f"job '{label}': resistance '{code}' must be one of {RESIST_LEVELS}"
                 )
+        for needed, needed_level in merged["requires"].items():
+            if not isinstance(needed, str) or not needed.strip():
+                raise SeedError(f"job '{label}': each requires key must be a calling label")
+            if not isinstance(needed_level, int) or isinstance(needed_level, bool):
+                raise SeedError(
+                    f"job '{label}': requires '{needed}' must be an integer level, "
+                    f"got {needed_level!r}"
+                )
+            if needed_level < 1:
+                raise SeedError(
+                    f"job '{label}': requires '{needed}' must be at least level 1, "
+                    f"got {needed_level}"
+                )
+            if needed == label:
+                raise SeedError(f"job '{label}': a calling cannot require itself")
         jobs[label] = Job(
             name=merged["name"],
             description=merged["description"],
@@ -1065,7 +1084,19 @@ def load_jobs(path: Path) -> dict[str, Job]:
             power_cells=merged["power_cells"],
             power_regen=merged["power_regen"],
             milestone_perks=[dict(p) for p in merged["milestone_perks"]],
+            requires={str(k): int(v) for k, v in merged["requires"].items()},
         )
+    # Cross-calling gates, only answerable once every calling is loaded. A prerequisite naming a
+    # calling that does not exist, or a ring of callings that require each other, makes a calling
+    # nobody can ever take. That is a content defect and it fails at load, not in front of a player.
+    for label, job in jobs.items():
+        for needed in job["requires"]:
+            if needed not in jobs:
+                raise SeedError(f"job '{label}': requires unknown calling '{needed}'")
+    cycles = prerequisite_cycles(jobs)
+    if cycles:
+        drawn = "; ".join(" -> ".join(cycle + (cycle[0],)) for cycle in cycles)
+        raise SeedError(f"job prerequisites form a cycle no character can enter: {drawn}")
     return jobs
 
 
