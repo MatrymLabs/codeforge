@@ -406,6 +406,45 @@ version tracks the pour, not hand edits.
 """
 
 
+_AGENTS = """\
+# AGENTS.md - codeforge-shelf
+
+The published Hardware Store mirror.
+
+## THIS REPOSITORY IS GENERATED. DO NOT EDIT IT.
+
+Every file here, including this one, is poured from `codeforge` by `kernel/shelf_pour.py`. A
+`shelf-drift` gate asserts `mirror == fresh pour of the engine`.
+
+Editing here, **including merging a dependency bump**, breaks that invariant and reddens CI on
+every later codeforge PR. That has happened three times: Dependabot PRs merged into this mirror
+left it out of sync, and two unrelated README-only changes went red as a result.
+
+**Fix the generator, never the file.** Changes belong in `codeforge/kernel/shelf_pour.py`, after
+which `shelf-sync` re-pours this repo automatically.
+
+## Required Reading
+
+The fleet's rulebook and live board are canonical in the `ship` repository:
+
+- `MATRYM_NORTH_STAR.md`
+- `.ai/HANDOFF_PROTOCOL.md`
+- `.ai/handoff.md`
+
+If you are working on the Store's CONTENTS, you are working in `codeforge`, and its `AGENTS.md`
+applies. Nothing in this repository is edited by hand.
+
+## The gate
+
+```bash
+make check
+```
+
+Runs the poured cores' own tests. It proves the pour is sound; it does not certify anything.
+Certification is R&D's Verdict Gate, in `hardware-store`.
+"""
+
+
 def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     """Vendor the shelf into `dest` as the standalone `codeforge_shelf` package.
 
@@ -445,6 +484,9 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     (dest / "pyproject.toml").write_text(_pyproject(deps, test_deps), encoding="utf-8")
     (dest / "README.md").write_text(_readme(names, deps, len(poured_tests), held), encoding="utf-8")
     (dest / "CHANGELOG.md").write_text(_CHANGELOG, encoding="utf-8")
+    # A generated repo still needs to tell an agent it is generated. Poured, not hand-written,
+    # so it cannot drift from the rule it states.
+    (dest / "AGENTS.md").write_text(_AGENTS, encoding="utf-8")
     (dest / "Makefile").write_text(_MAKEFILE, encoding="utf-8")
     license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
     if license_src.is_file():
