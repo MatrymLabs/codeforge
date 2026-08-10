@@ -39,7 +39,7 @@ Tools are integrations, not identity: this one is pulled only when a human choos
 
 ## Baseline (evidence)
 
-First run, 2026-07-16, `parts/hashchain.py` (the published tamper-evident ledger, 14 hostile-case
+First run, 2026-07-16, `kernel/shelf/hashchain.py` (the published tamper-evident ledger, 14 hostile-case
 tests):
 
 - **179 mutants**, **~32% survived / ~68% killed**.

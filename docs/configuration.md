@@ -1,6 +1,6 @@
 # Configuration (typed + validated)
 
-`parts/config.py` is the single, typed catalog of CodeForge's environment. Individual
+`kernel/shelf/config.py` is the single, typed catalog of CodeForge's environment. Individual
 modules still read their own variable at call time (so tests can monkeypatch them), but the
 `Settings` model names every knob in one place, types it, validates it, and renders it with
 credentials redacted. It proves typed, validated configuration with **Pydantic** - a
@@ -25,7 +25,7 @@ terminal config        # prints the effective, validated config (secrets redacte
 ```
 
 ```python
-from parts.config import Settings
+from kernel.shelf.config import Settings
 
 settings = Settings.load()  # reads + validates the process environment
 uvicorn.run(app, port=settings.port)  # e.g. the `web` entry point uses this
