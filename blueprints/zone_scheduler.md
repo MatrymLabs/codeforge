@@ -24,8 +24,8 @@
 
 ## Tasks
 
-- [ ] Add a Zone TypedDict, RESET_MODES, and a fail-loud load_zones gate to parts/seed.py.
-- [ ] Add parts/zones.py: grouping queries + a beat-driven scheduler that rides the world beat.
+- [ ] Add a Zone TypedDict, RESET_MODES, and a fail-loud load_zones gate to kernel/world/seed.py.
+- [ ] Add kernel/world/zones.py: grouping queries + a beat-driven scheduler that rides the world beat.
 - [ ] Wire an area banner into render_scene and tick_zones into handle_command.
 - [ ] Ship real areas for the flagship seed (seeds/aethryn/zones.yaml).
 - [ ] File the zone-scheduler Hardware Card with clean-room provenance (catalog/parts.yaml).

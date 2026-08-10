@@ -52,6 +52,20 @@ def test_daily_lockouts_survive_save_and_restore():
     assert fresh.lockouts == {"boss:warlord": "2026-07-29"}
 
 
+def test_restore_relocates_a_hero_from_a_removed_room():
+    # A world-topology migration can delete the room a hero was standing in. Restore must relocate
+    # them to the world start, never strand them in a room that no longer exists.
+    from kernel.world.characters import safe_location
+    from kernel.world.world import START_ROOM, WORLD
+
+    fresh = Session(player_id="ghost")
+    restore_character(
+        fresh, {"job": "vanguard", "level": 3, "xp": 40, "location": "veridia_wild_t9999_gone"}
+    )
+    assert fresh.location == START_ROOM  # relocated, not stranded in a dead room
+    assert safe_location(next(iter(WORLD))) in WORLD  # a real room is preserved untouched
+
+
 def test_save_and_load_roundtrip():
     s = _hero()
     s.level, s.xp = 2, 90

@@ -237,3 +237,139 @@ def test_refactor_missing_file_exits_two(capsys, monkeypatch):
 
 def test_refactor_missing_args_is_a_usage_error(capsys):
     assert main(["refactor"]) == 2  # argparse: too few positionals, routed to exit code 2
+
+
+# --- journey: the whole game pipeline as one real CLI operation (Prime Law 3, no decorative rooms)
+
+
+def test_journey_generates_and_proves_a_playable_region(capsys, tmp_path):
+    code = main(
+        [
+            "journey",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--dest",
+            str(tmp_path),
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "RESUMED" in out and "veridia" in out
+    # It wrote real, bootable seed content -- not just a description.
+    assert (tmp_path / "rooms.yaml").exists() and (tmp_path / "quest.yaml").exists()
+
+
+def test_journey_refuses_a_bad_waypoint(capsys, tmp_path):
+    code = main(
+        ["journey", "--region", "veridia", "--waypoints", "Bad Label", "--dest", str(tmp_path)]
+    )
+    assert code == 2
+    assert (
+        "refused" in capsys.readouterr().err
+    )  # a non-snake_case label fails loud, never a fake pass
+
+
+def test_journey_requires_its_arguments(capsys):
+    assert main(["journey"]) == 2  # argparse: --region / --waypoints are required
+
+
+# --- host: install a journey as a bootable World Package (North Star #5), one real CLI operation
+
+
+def test_host_installs_a_bootable_world_package(capsys, tmp_path):
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--seed-root",
+            str(tmp_path),
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "HOSTABLE" in out and "veridia" in out
+    # It installed a REAL seed the server can boot -- rooms + quest + a world.yaml manifest.
+    seed_dir = tmp_path / "content" / "seeds" / "veridia"
+    for f in ("rooms.yaml", "quest.yaml", "world.yaml"):
+        assert (seed_dir / f).exists()
+
+
+def test_host_surfaces_an_unhostable_world(capsys, tmp_path):
+    # An explicit --name that is not a valid world_id is caught by the engine's manifest gate:
+    # UNHOSTABLE, the problem surfaced on stderr, never a false HOSTABLE.
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "gate",
+            "--seed-root",
+            str(tmp_path),
+            "--name",
+            "Bad_ID",
+        ]
+    )
+    assert code == 1
+    assert "UNHOSTABLE" in capsys.readouterr().err
+
+
+def test_host_refuses_a_bad_waypoint(capsys, tmp_path):
+    code = main(
+        ["host", "--region", "veridia", "--waypoints", "Bad Label", "--seed-root", str(tmp_path)]
+    )
+    assert code == 2
+    assert "refused" in capsys.readouterr().err  # a non-snake_case label fails loud
+
+
+def test_host_requires_its_arguments(capsys):
+    assert main(["host"]) == 2  # argparse: --region / --waypoints are required
+
+
+def test_host_verify_recovery_proves_the_seed_is_restorable(capsys, tmp_path):
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--seed-root",
+            str(tmp_path),
+            "--verify-recovery",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "HOSTABLE" in out
+    assert "RECOVERED" in out and "survive backup" in out  # install AND restorability proven
+
+
+def test_host_verify_recovery_fails_loud_when_the_seed_is_corrupted(capsys, tmp_path, monkeypatch):
+    # If the installed seed does not survive backup + restore, the command fails loud (exit 1),
+    # never a false success. Force a CORRUPTED verdict at the recovery seam.
+    import kernel.domains.hosted_recovery as hr
+    from kernel.domains.game_lifecycle import CORRUPTED
+    from kernel.domains.hosted_recovery import HostedRecoveryReport
+
+    monkeypatch.setattr(
+        hr,
+        "verify_seed_recovery",
+        lambda name, root, snap: HostedRecoveryReport(CORRUPTED, name, detail="bytes changed: x"),
+    )
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold",
+            "--seed-root",
+            str(tmp_path),
+            "--verify-recovery",
+        ]
+    )
+    assert code == 1
+    assert "CORRUPTED" in capsys.readouterr().err  # the failed proof is surfaced, not hidden

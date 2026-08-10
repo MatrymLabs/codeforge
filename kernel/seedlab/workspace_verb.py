@@ -52,7 +52,8 @@ from kernel.seedlab.workspace_gmcp import (
 _USAGE = (
     "workspace commands: list | create <name> [purpose] | status <id> | "
     "start <id> | stop <id> | connect <id> <path> | model <id> | "
-    "run <id> <path> <profile> | report <id>"
+    "run <id> <path> <profile> | report <id> | "
+    "backup <id> | backups <id> | restore <id> <backup_id>"
 )
 
 #: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The Seed
@@ -101,6 +102,14 @@ def _default_kernel() -> SeedKernel:
     return SeedKernel(FileSeedStore(_home() / "seeds"))
 
 
+def _default_backups() -> Any:
+    """The Seed backup store under $SEEDLAB_HOME/backups (lazy import keeps backup off the load
+    path until a caller actually snapshots or restores)."""
+    from kernel.seedlab.backup import SeedBackups
+
+    return SeedBackups(_home() / "backups")
+
+
 def _actor(session: Any) -> str:
     """The owner identity for a workspace: the caller's account, else their player id."""
     return getattr(session, "account", "") or getattr(session, "player_id", "owner")
@@ -115,6 +124,7 @@ def workspace_command(
     gmcp_push: GmcpPush | None = None,
     run_log: Any | None = None,
     allowlist: dict[str, list[str]] | None = None,
+    backups: Any | None = None,
 ) -> str:
     """Dispatch a `workspace` subcommand over the Seed Kernel; returns a text projection for the
     tick. Owner-gated at the spine; the Kernel authorizes each mutation by the acting owner. When a
@@ -299,5 +309,51 @@ def workspace_command(
         )
         ok = sum(1 for r in runs if r.ok)
         return f"{len(runs)} run(s), {ok} ok. Latest:\n" + render_run(runs[-1])
+
+    if sub == "backup":
+        if not rest:
+            return "usage: workspace backup <seed_id>"
+        try:
+            record = kernel.get(rest[0])  # the workspace must exist to snapshot it
+        except SeedKernelError as exc:
+            return f"workspace: {exc}"
+        store = backups if backups is not None else _default_backups()
+        ref = store.backup(record)
+        return (
+            f"Backed up {rest[0]} -> {ref.backup_id} (sha256 {ref.sha256[:8]}). "
+            f"Restore with: workspace restore {rest[0]} {ref.backup_id}"
+        )
+
+    if sub in ("backups", "snapshots"):
+        if not rest:
+            return f"usage: workspace {sub} <seed_id>"
+        try:
+            kernel.get(rest[0])  # confirm the workspace exists before listing its snapshots
+        except SeedKernelError as exc:
+            return f"workspace: {exc}"
+        store = backups if backups is not None else _default_backups()
+        refs = store.list_backups(rest[0])
+        if not refs:
+            return f"No backups for {rest[0]} yet (workspace backup {rest[0]})."
+        lines = [f"== Backups for {rest[0]} (oldest first) =="]
+        lines += [
+            f"  {r.backup_id}  {store.verify(rest[0], r.backup_id).upper():7}  {r.when}"
+            for r in refs
+        ]
+        return "\n".join(lines)
+
+    if sub == "restore":
+        if len(rest) < 2:
+            return "usage: workspace restore <seed_id> <backup_id>"
+        from kernel.seedlab.backup import BackupError, restore
+
+        store = backups if backups is not None else _default_backups()
+        try:
+            record = restore(kernel, store, rest[0], rest[1], actor)
+        except (SeedKernelError, BackupError) as exc:
+            return f"workspace: {exc}"
+        # A restore rewrites live state (it is rollback), so refresh the client's Project Hub.
+        _emit_project_status(session, record, push)
+        return f"Restored {rest[0]} from {rest[1]} -> {record.status.upper()}."
 
     return _USAGE

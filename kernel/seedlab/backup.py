@@ -33,6 +33,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
+from kernel.shelf.atomic_write import atomic_write_text
 
 # --- integrity verdict words (a distinct vocabulary: "is this snapshot trustworthy?") ----------
 INTACT = "intact"  # the snapshot's bytes hash to its recorded sha256
@@ -103,9 +104,7 @@ class SeedBackups:
             "sha256": sha256,
             "record": record.to_dict(),
         }
-        tmp = target.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(wrapper, indent=2), encoding="utf-8")
-        tmp.replace(target)
+        atomic_write_text(target, json.dumps(wrapper, indent=2))
         return BackupRef(backup_id, record.identity.seed_id, when, sha256, str(target))
 
     def list_backups(self, seed_id: str) -> list[BackupRef]:

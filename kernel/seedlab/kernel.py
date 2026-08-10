@@ -32,6 +32,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from kernel.shelf.atomic_write import atomic_write_text
+
 # --- lifecycle states + the only legal transitions between them --------------------------------
 CREATED = "created"
 RUNNING = "running"
@@ -77,7 +79,12 @@ def _default_minter(name: str) -> str:
 
 @dataclass(frozen=True)
 class SeedIdentity:
-    """The immutable facts of one Seed. Frozen: identity never changes once minted."""
+    """The immutable facts of one Seed. Frozen: identity never changes once minted.
+
+    `product_type` and `domain_modules` are the Engineering Form's verdict recorded on the Seed:
+    what KIND of Seed this is and which domain modules it selected at creation. They default to
+    "" / () so a Seed minted directly (no Form) is still valid, and so a record persisted before
+    these fields existed still loads (backward-compatible)."""
 
     seed_id: str
     name: str
@@ -85,12 +92,16 @@ class SeedIdentity:
     purpose: str
     version: str = "0.1.0"
     created_at: str = ""
+    product_type: str = ""
+    domain_modules: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         for field_name in ("seed_id", "name", "owner"):
             value = getattr(self, field_name)
             if not isinstance(value, str) or not value.strip():
                 raise SeedKernelError(f"a Seed needs a non-empty {field_name}")
+        # Persisted JSON restores a list; coerce to a tuple so identity stays frozen + hashable.
+        object.__setattr__(self, "domain_modules", tuple(self.domain_modules))
 
 
 @dataclass(frozen=True)
@@ -181,11 +192,10 @@ class FileSeedStore:
         return self.root / f"{seed_id}.json"
 
     def save(self, record: SeedRecord) -> None:
-        # Write-to-temp-then-replace so a crash mid-write never leaves a half-written record.
-        target = self._path(record.identity.seed_id)
-        tmp = target.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(record.to_dict(), indent=2), encoding="utf-8")
-        tmp.replace(target)
+        # Durable atomic write via the shared shelf primitive (no partial record on a crash).
+        atomic_write_text(
+            self._path(record.identity.seed_id), json.dumps(record.to_dict(), indent=2)
+        )
 
     def load(self, seed_id: str) -> SeedRecord | None:
         path = self._path(seed_id)
@@ -242,9 +252,13 @@ class SeedKernel:
         *,
         seed_id: str | None = None,
         version: str = "0.1.0",
+        product_type: str = "",
+        domain_modules: tuple[str, ...] = (),
     ) -> SeedRecord:
         """Mint a Seed with a stable identity, record it CREATED, and persist it. A caller may pass
-        an explicit `seed_id` (deterministic tests); otherwise one is minted from the name."""
+        an explicit `seed_id` (deterministic tests); otherwise one is minted from the name.
+        `product_type`/`domain_modules` carry the Engineering Form's verdict onto the Seed (empty
+        when a Seed is minted directly)."""
         if not name or not name.strip():
             raise SeedKernelError("a Seed needs a non-empty name")
         chosen = seed_id or self._mint(name)
@@ -258,6 +272,8 @@ class SeedKernel:
             purpose=purpose,
             version=version,
             created_at=now,
+            product_type=product_type,
+            domain_modules=tuple(domain_modules),
         )
         record = SeedRecord(
             identity=identity,

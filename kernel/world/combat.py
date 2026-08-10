@@ -23,7 +23,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
-from kernel.shelf import affixes
+from kernel.shelf import affixes, target_disambig
 from kernel.shelf.reward_curve import jp_for_kill, xp_for_kill
 from kernel.shelf.weighted_table import WeightedTable
 from kernel.world import items, threat
@@ -34,20 +34,20 @@ from kernel.world.encounter_log import witness
 from kernel.world.engineer import emergency_repair
 from kernel.world.events import announce, announce_frame
 from kernel.world.frames import StrikeFrame
-from kernel.world.npcs import NPCS, npcs_in, trace_npc
+from kernel.world.npcs import NPCS, npcs_in, resolve_npc_target, trace_npc
 from kernel.world.progression_awards import award_jp, award_tp, award_xp
 from kernel.world.seed import Npc
 from kernel.world.session import Session, display_name, sentence_case
 
 # Loot-only randomness. A defeated foe's WEIGHTED loot table rolls here. A module-level RNG so tests
 # seed or replace it for exact draws.
-_LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for tests, not secrecy
+_LOOT_RNG = random.Random()  # nosec B311
 
 # Combat variance -- the ONE die on a blow. Damage MATH stays deterministic; this rolls whether a
 # blow whiffs, glances, crits, or lands normally. The test suite installs a NEUTRAL RNG (always a
 # normal hit, note below) so exact-number assertions hold; variance tests force an outcome. Live
 # play is stochastic -- fights breathe instead of reading off a table.
-_COMBAT_RNG = random.Random()  # nosec B311 -- game feel, not security; neutralized in tests
+_COMBAT_RNG = random.Random()  # nosec B311
 
 MISS_CHANCE = 0.05  # a blow goes wide: 0 damage
 CRIT_CHANCE = 0.10  # a critical strike: CRIT_MULT times damage
@@ -580,7 +580,10 @@ def attack(session: Session, word: str) -> str:
 
     if is_dazed(session):
         return "You are dazed and cannot strike -- it will pass."
-    nid = trace_npc(word, session.location)
+    try:
+        nid = resolve_npc_target(word, session.location)  # "2-goblin" strikes the second of several
+    except target_disambig.TargetError as exc:
+        return f"There is no one like that here ({exc})."
     if nid is None:
         return "There is no one like that here."
     npc = NPCS[nid]

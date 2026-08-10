@@ -14,7 +14,7 @@ veridia:
     elderwatch: elderwatch
     riverbend: riverbend
     sunmeadow: sunmeadow
-    the: the_sunken_barrow
+    sunken: the_sunken_barrow
 
 greenhold:
   name: Greenhold
@@ -62,7 +62,7 @@ duskwood_vale:
     ravenwatch: ravenwatch
     moonshade: moonshade
     twilight: twilight_grove
-    the: the_black_hollow
+    black: the_black_hollow
 
 ravenwatch:
   name: Ravenwatch
@@ -154,7 +154,7 @@ eldryn_forest:
     eldryn: eldryn_city
     wildgrowth: wildgrowth
     greenmist: greenmist
-    the: the_great_tree
+    great: the_great_tree
     rotwood: rotwood_deep
 
 eldryn_city:
@@ -244,7 +244,7 @@ zhaar_desert:
     sunscar: sunscar_city
     red: red_dunes
     sandspire: sandspire_ruins
-    the: the_obsidian_pit
+    obsidian: the_obsidian_pit
     scorchstone: scorchstone_keep
 
 sunscar_city:
@@ -384,8 +384,8 @@ ashen_wastes:
     moltenhold: moltenhold
     cinderfire: cragfire
     ashen: ashen_monoliths
-    the: the_flamewrought_forge
-    the_scorched_gate: the_scorched_gate
+    flamewrought: the_flamewrought_forge
+    scorched: the_scorched_gate
 
 moltenhold:
   name: Moltenhold
@@ -491,7 +491,7 @@ shattered_isles:
     stormreach: stormreach
     saltwind: saltwind_harbor
     blackreef: blackreef_citadel
-    the: the_maelstrom_rise
+    maelstrom: the_maelstrom_rise
 
 stormreach:
   name: Stormreach
@@ -530,7 +530,7 @@ skyward_spires:
     south: the_voidscar
     aurelian: aurelian_city
     celestial: celestial_observatory
-    the: the_spire_nexus
+    spire: the_spire_nexus
 
 aurelian_city:
   name: Aurelian City
@@ -563,7 +563,7 @@ the_deepreach:
     deepforge: deepforge_city
     lumengrotto: lumengrotto
     shadowfissure: shadowfissure
-    the: the_crystal_labyrinth
+    crystal: the_crystal_labyrinth
 
 deepforge_city:
   name: Deepforge City
@@ -604,7 +604,7 @@ the_voidscar:
     voidspire: voidspire
     dark: dark_expanse
     netharions: netharions_throne
-    the: the_rifted_abyss
+    rifted: the_rifted_abyss
 
 voidspire:
   name: Voidspire

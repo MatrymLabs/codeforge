@@ -25,10 +25,10 @@ can click straight into.
 >
 > | Concern | In the engine |
 > | --- | --- |
-> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`adapters/gateway.py`](adapters/gateway.py), [`adapters/web_gateway.py`](adapters/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
-> | Persistence & data modeling | SQLAlchemy 2.0 typed ORM ([`parts/db.py`](parts/db.py)); a parity test pins derive-on-restore == grow-in-play ([`tests/test_characters.py`](tests/test_characters.py)) |
+> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`adapters/gateway.py`](adapters/gateway.py), [`adapters/web_gateway.py`](adapters/web_gateway.py)); hand-rolled telnet negotiation ([`kernel/shelf/telnet_codec.py`](kernel/shelf/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
+> | Persistence & data modeling | SQLAlchemy 2.0 typed ORM ([`kernel/world/db.py`](kernel/world/db.py)); a parity test pins derive-on-restore == grow-in-play ([`tests/test_characters.py`](tests/test_characters.py)) |
 > | API surface | FastAPI status/admin behind owner-account Basic auth ([`adapters/api.py`](adapters/api.py)), consumed by a separate typed React client |
-> | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`parts/accounts.py`](parts/accounts.py)); authorization checked before capability on every admin verb ([`parts/ranks.py`](parts/ranks.py)) |
+> | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`kernel/world/accounts.py`](kernel/world/accounts.py)); authorization checked before capability on every admin verb ([`kernel/world/ranks.py`](kernel/world/ranks.py)) |
 
 > **The vision, honestly labelled:** CodeForge is the **language-extensible software-engineering
 > platform**. A game like **Aethryn** is one kind of **Seed** it produces (a persistent, MUD-based
@@ -145,7 +145,7 @@ flowchart LR
     T[Terminal driver] --> H
     G[TCP gateway + front desk<br/>Mudlet / telnet / nc] --> H
     H["handle_command(session, text)<br/><b>the engine tick</b>"]
-    H --> P[parts/*<br/>world · items · doors · npcs · jobs<br/>combat · ranks · accounts]
+    H --> P[kernel/world/*<br/>world · items · doors · npcs · jobs<br/>combat · ranks · accounts]
     P --> E[events bus<br/>echo sinks + room broadcasts]
     E --> G
     S[(seeds/*.yaml + splash.txt<br/>the world as data)] --> P
@@ -221,6 +221,33 @@ $ forge-audit --path ./codeforge --stage advanced --online --format md
 Grading yourself by a rule you don't get to bend is the whole point: an earlier version of
 this table showed `ci` as a `watchlist` with a single workflow file, so the repo added the
 gates the tool was asking for rather than argue with it.
+
+## Limitations
+
+A gate that cannot fail is not a gate, and a README that lists only strengths is not
+evidence. The honest limits of what is here:
+
+- **Single node.** The gateway is one process, a thread per connection
+  ([`adapters/gateway.py`](adapters/gateway.py), `ForgeGateServer(socketserver.ThreadingTCPServer)`).
+  The data tier does scale out (`DATABASE_URL` selects PostgreSQL, schema owned by Alembic),
+  but the game process itself does not shard or cluster. This is sized for a demo and for
+  hundreds of sessions, not for a horizontally-scaled MMO.
+- **`make backup` is SQLite-only.** It refuses loudly on PostgreSQL and points at `pg_dump`
+  rather than pretending to have run ([`kernel/world/db.py`](kernel/world/db.py)).
+- **Reuse is vendored, not packaged.** Hardware Store parts that have cleared R&D review are
+  copied into consumers *with a provenance citation that `store_check` enforces*; they are not
+  installed from a package index. The reuse claim is real, but it is copy-with-evidence, not a
+  dependency graph.
+- **No live players.** The evidence here is a test suite, an end-to-end `make smoke`, and a
+  demo you can click. It is not production traffic, and nothing in this repo has survived
+  contact with users at scale.
+- **Solo, and the collaboration signal is thin.** There is a genuine issue -> PR -> merge
+  history, but no second human reviewer. Independent review is automated (gates, an
+  adversarial audit tool, a second AI agent), which is not the same thing.
+- **The demo sleeps.** It runs on a free tier, so the first request after an idle period can
+  time out before it answers. A retry gets a normal response. If it looks down, it is cold.
+- **The Roadmap below is unbuilt, not in progress.** Typed event frames, installable seed
+  packs, and the in-MUD workshop are stated intent with no implementation behind them.
 
 ## Testing
 
@@ -375,7 +402,7 @@ and CLI verbs never take the metaphor). See [docs/naming_glossary.md](docs/namin
   (`passwd`, plus a bundled stdlib client that masks the prompt)
 - ~~NPCs that fight back: stakes, defeat, reawakening~~ - shipped (`combat._counter_attack`
   + seeded hostiles; a felled player reawakens via the training-ground failsafe)
-- ~~Proactive NPCs that strike first~~ - shipped (`parts/aggression.py` `menace()` on the world
+- ~~Proactive NPCs that strike first~~ - shipped (`kernel/world/aggression.py` `menace()` on the world
   beat, leashed and telegraphed; a seed `aggressive` flag arms a hostile, `test_play_smoke.py`
   drives the live boss)
 - Canonical event frames: typed MUD-IL payloads on the bus

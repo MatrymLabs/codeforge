@@ -259,6 +259,16 @@ def save_all(store: CharacterStore | None = None) -> int:
     return saved
 
 
+def safe_location(loc: str) -> str:
+    """The saved room, unless it no longer exists -- then the world's start. A world-topology
+    migration (or any content change) can remove a room a hero was standing in; without this a
+    returning player would wake in a dead room. The start is always present, so a reshape of the
+    world can never strand a save."""
+    from kernel.world.world import START_ROOM, WORLD
+
+    return loc if loc in WORLD else START_ROOM
+
+
 def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     """Rebuild the full sheet from minimal state. Resources return full:
     logging back in is a night's rest."""
@@ -271,7 +281,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.coins = int(casefile.get("coins", 0))
     session.level = int(casefile["level"])
     session.xp = int(casefile["xp"])
-    session.location = str(casefile["location"])
+    session.location = safe_location(str(casefile["location"]))  # never wake in a removed room
     session.secondary_job = str(casefile.get("secondary_job", ""))
     # A restore is a night's rest: clear transient combat/gear state so a rename into a saved hero
     # can't inherit the prior identity's cooldowns, statuses, or worn gear (which fold into stats).

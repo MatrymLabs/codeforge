@@ -8052,7 +8052,7 @@
   "designation": "MOD-10.060",
   "name": "workspace_verb",
   "status": "active",
-  "function": "The in-MUD `workspace` verb (text half of the workspace surface): an owner lists/creates/inspects/starts/stops engineering Seeds and lists their models from inside the running MUD, over the Seed Kernel + model store; owner-gated at the command spine, Kernel-authorized per mutation, file-backed under $SEEDLAB_HOME",
+  "function": "The in-MUD `workspace` verb (text half of the workspace surface): an owner lists/creates/inspects/starts/stops engineering Seeds, lists their models, connects+models sources, runs allowlisted tools, and backs up / lists backups / restores (rolls back) a Seed from inside the running MUD, over the Seed Kernel + model store + backup manager; owner-gated at the command spine, Kernel-authorized per mutation (restore routed through Kernel.reinstate), file-backed under $SEEDLAB_HOME",
   "label": "workspace_verb",
   "file": "kernel/seedlab/workspace_verb.py",
   "type": "MOD",
@@ -8061,7 +8061,8 @@
   "tests": "tests/test_workspace_verb.py",
   "depends_on": [
    "MOD-10.052",
-   "MOD-10.056"
+   "MOD-10.056",
+   "MOD-10.076"
   ],
   "related": [
    "MOD-10.053"
@@ -8664,6 +8665,29 @@
   "updated": "2026-08-01"
  },
  {
+  "designation": "MOD-05.090",
+  "name": "mutation_kpi",
+  "status": "active",
+  "function": "normalize a mutation-testing run into a posture-style evidence KPI (MEASURED kill-rate vs a target, or NOT_COMPUTABLE with the enabling action; never a faked zero) - tool-agnostic core plus a cosmic-ray cr-report/cr-rate adapter",
+  "label": "mutation_kpi",
+  "file": "kernel/shelf/mutation_kpi.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "docs/hardware_store/patterns/framing.md",
+  "tests": "tests/test_mutation_kpi.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "make the mutation score tracked evidence; the gated posture.py mutation_kill_rate KPI consumer; any acquirer-facing test-quality signal",
+  "tags": [
+   "module"
+  ],
+  "notes": "R&D field report RD-2026-0003 claim #2 (Five Capability Gaps; the report's #1 acquirer signal - mutation score proves tests bite); clean-room stdlib; posture.py consumer is the gated follow-up.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-10.066",
   "name": "blueprint_verb",
   "status": "active",
@@ -8770,5 +8794,793 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.075",
+  "name": "form",
+  "status": "active",
+  "function": "the Engineering Form: turn intent into a validated, machine-readable SeedSpec. One domain-neutral engine walks a DATA catalog (data/seedlab/engineering_form.json) of common + per-product-type questions (adaptive via applies_when) and emits a SeedSpec carrying the product type, identity, selected domain_modules, and validated answers -- an MMORPG spec selects the game module, a classroom spec selects education and never game",
+  "label": "form",
+  "file": "kernel/seedlab/form.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_form.py",
+  "depends_on": [],
+  "related": [
+   "MOD-10.052"
+  ],
+  "reuse": "Slice B of the Stream-1 engine directive, schema-first: new product types are DATA (a catalog entry), never a code fork. Fails loud on an unknown product type, a missing required answer, an out-of-range choice, an answer outside the chosen product type, or a dangling catalog reference. The SeedSpec is the seam that drives kernel configuration + domain-module selection + (later) Hardware Store matching. Grammar before worlds enforced by construction: the education product type simply never lists the game module.",
+  "notes": "Domain-neutral: no kernel/world/ import; the engine knows nothing about combat, lessons, or certificates -- only the catalog does. Catalog path is injectable (tests pass a definition directly). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.077",
+  "name": "provision",
+  "status": "active",
+  "function": "the seam from the Engineering Form to a live Seed: seed_from_spec(kernel, spec) creates a real Seed and records the spec's product_type + selected domain_modules on the Seed's identity (persisted, survives restart); a DomainModuleRegistry maps a module name to its loader; resolve_modules/provision resolve a spec's selected modules against the registry, failing loud (DomainModuleError) if any selected module is not registered, and provision refuses BEFORE creating a half-provisioned Seed",
+  "label": "provision",
+  "file": "kernel/seedlab/provision.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_provision.py",
+  "depends_on": [
+   "MOD-10.052",
+   "MOD-10.075"
+  ],
+  "related": [],
+  "reuse": "Closes the intent -> Seed pipeline: Engineering Form (MOD-10.075) emits a SeedSpec, this turns it into a live Seed via the Kernel (MOD-10.052) and resolves its domain modules. Grammar before worlds by construction and honesty: an education Seed resolves only modules registered under its own names and can never resolve to the game module; a selected module that does not exist is refused, never fake-loaded. Additive persistence change: SeedIdentity gains product_type + domain_modules with back-compat defaults (an old record loads; a JSON list coerces to a tuple).",
+  "notes": "Slice: SeedSpec -> create_seed + domain-module loading (the Stream-1 engine capstone). Domain-neutral: knows module NAMES, not their content; no kernel/world/ import. The DomainModuleRegistry is the seam a future real module loader plugs into; no domain modules ship yet, so provision fails loud until they are registered (honest). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.078",
+  "name": "domain",
+  "status": "active",
+  "function": "the neutral contract a domain module satisfies (DomainModule: a stable lowercase name matching SeedIdentity.domain_modules, a display title, and honest capabilities) plus register_module(registry, module) which files a module under its own name; the platform depends on this seam, never on a concrete domain module (grammar before worlds)",
+  "label": "domain",
+  "file": "kernel/seedlab/domain.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_domain.py",
+  "depends_on": [
+   "MOD-10.077"
+  ],
+  "related": [],
+  "reuse": "The seam between the domain-neutral Seed platform and the optional per-Seed domain modules: the platform resolves a module out of a DomainModuleRegistry (kernel/seedlab/provision.py) it was handed, it never imports one. Enforced by the import-linter contract platform-imports-no-domain-module (kernel.seedlab forbidden from kernel.domains), proven non-vacuous.",
+  "notes": "Slice: the first real domain module. Domain-neutral: no kernel/world/ and no kernel/domains/ import. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.079",
+  "name": "education",
+  "status": "active",
+  "function": "the FIRST real domain module: a minimal Education module (name education, capability lessons) satisfying the DomainModule contract, with a LessonBook (add + list, insertion order, fail loud on a duplicate or non-snake_case id or blank title); proves a Seed can LOAD a domain module, not just record that it selected one",
+  "label": "education",
+  "file": "kernel/domains/education.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_education.py",
+  "depends_on": [],
+  "related": [
+   "MOD-10.078",
+   "MOD-10.077"
+  ],
+  "reuse": "The first concrete domain module and the proof of the whole domain-module mechanism end to end: an education SeedSpec provisions and resolves to this LIVE module (its lesson book is reachable + mutable). Grammar before worlds from the module side: stdlib-only, imports NO game world; an education Seed loads exactly this and never combat, and an education-only registry can never resolve a game Seed's module (fails loud). Lives in the new kernel/domains/ domain layer, which the platform is forbidden to import.",
+  "notes": "Deliberately minimal (lessons are the seed of education; assessments/roles/paths are later honest slices). First module under kernel/domains/. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.080",
+  "name": "mutation_recorder",
+  "status": "active",
+  "function": "persist one `make mutation` run to security-evidence/mutation-latest.json so posture reads it as the mutation_kill_rate KPI (record/load + a `python -m` cr-report recorder); the codeforge I/O seam around the pure shelf part MOD-05.090",
+  "label": "mutation_recorder",
+  "file": "kernel/mutation_recorder.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/mutation_testing.md",
+  "tests": "tests/test_mutation_recorder.py",
+  "depends_on": [
+   "MOD-05.090"
+  ],
+  "related": [
+   "MOD-10.067"
+  ],
+  "reuse": "the disk-recorder + loader pattern that turns any on-demand tool run into freshness-gated evidence a KPI catalog can read",
+  "tags": [
+   "module"
+  ],
+  "notes": "AP-09 follow-up (RD-2026-0003). Keeps the shelf part MOD-05.090 pure (no filesystem, travels to codeforge-shelf); the repo-anchored path, JSON format, and CLI live here. `make mutation` pipes cr-report through it; posture.load_evidence reads it (independent of any pip-audit scan). Dogfood: the real 122/179 baseline -> MEASURED 68%, honestly breaches the 70% floor. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.081",
+  "name": "game",
+  "status": "active",
+  "function": "the game domain module (symmetric to education): GameModule satisfies the DomainModule contract (name game, title Aethryn) and each advertised capability (combat/items/callings/npcs/quests/progression/mortality) binds to a REAL kernel/world subsystem via subsystem() (lazy import, fail loud on an unknown capability); register_game_module files it into a DomainModuleRegistry at the composition root",
+  "label": "game",
+  "file": "kernel/domains/game.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game.py",
+  "depends_on": [
+   "MOD-10.078"
+  ],
+  "related": [
+   "MOD-10.079",
+   "MOD-10.077"
+  ],
+  "reuse": "The case that legitimately DEPENDS on the game world (a domain module may touch its own domain), proving the mechanism symmetric to the stdlib education module. The domain-neutral platform still never imports it (import-linter platform-imports-no-domain-module holds); the game world is pulled only lazily via subsystem(), so registering the module does not load the world graph. Composition root = forge.py domain_registry() (the tick, already world-aware) which registers game + education; a Seed still loads ONLY the modules it selected, so a classroom that selected education never loads game even when both are available.",
+  "notes": "Grammar before worlds from the game side: a game Seed loads combat, a classroom never resolves game. Capabilities map to real kernel/world modules (proven importable by the twin). First world-dependent domain module under kernel/domains/. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.091",
+  "name": "type_smell",
+  "status": "active",
+  "function": "detect risky type-related practices (type smells) in Python via ast - untyped/partial public signatures, Any on a public boundary, and one parameter name carrying two different types across a module",
+  "label": "type_smell",
+  "file": "kernel/shelf/type_smell.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "docs/hardware_store/patterns/validation.md",
+  "tests": "tests/test_type_smell.py",
+  "depends_on": [],
+  "related": [
+   "MOD-05.023"
+  ],
+  "reuse": "the type-hygiene sibling of the Fowler smell engine (MOD-05.023); the same analyze(source) -> findings shape over any Python codebase; suggestion-only",
+  "tags": [
+   "module"
+  ],
+  "notes": "R&D RD-2026-0001 (Python Coding Practices survey; Magalhaes & Montandon 2026, ICPC). Genuinely-new lens (fleet-searched): smell_engine covers structural/Fowler smells, this covers TYPE hygiene, which mypy is partly blind to (Any is a mypy-approved opt-out; mypy never checks one-name-two-types across functions). Clean-room stdlib ast; single-module, syntactic scope; SUGGEST-ONLY. Real consumer: test_type_hygiene.py gates the shelf's public surfaces against incomplete type contracts. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.092",
+  "name": "atomic_write",
+  "status": "active",
+  "function": "the Hardware Store atomic file-write primitive: atomic_write_text/atomic_write_bytes write full contents to a temp sibling in the target's own directory then os.replace (atomic same-filesystem rename), so a reader or a crash never sees a half-written/truncated file; temp cleaned up on failure; opt-in fsync for power-loss durability",
+  "label": "atomic_write",
+  "file": "kernel/shelf/atomic_write.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "catalog/parts.yaml",
+  "tests": "tests/test_atomic_write.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "Extracted on its THIRD real occurrence (second-consumer pull gate well cleared): the Seed store (kernel/seedlab/kernel.py), the model store (kernel/seedlab/model_store.py), and the backup manager (kernel/seedlab/backup.py) each independently re-derived tmp.write + tmp.replace; all three now consume this one certified primitive. Engine-free (stdlib), so it pours to the codeforge-shelf mirror and runs with no engine present. Catalogued as parts.yaml id atomic-write (persistence).",
+  "notes": "Priority-2 Hardware Store cycle (NORTH_STAR standing priorities): first parts through the full loop. Honest scope: guarantees ATOMICITY (no partial file), not fsync-durability unless asked. Clean-room (POSIX rename semantics, not copied code). Awaiting the R&D verdict + founder certification. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.082",
+  "name": "synthesis",
+  "status": "active",
+  "function": "the reverse-TDD generation harness (NORTH_STAR Gap 1): synthesize(goal, tests, implementer, run=, workdir=, scorer=) drives spec-derived tests to green by iterating an Implementer (feeds each red run's output back), then gates on a MutationScorer; returns a SynthesisResult with a verdict word (verified / tests_too_weak / red_budget_exhausted / refused), never a bare bool; pytest_runner() is the real tool_runner-backed test seam",
+  "label": "synthesis",
+  "file": "kernel/seedlab/synthesis.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_synthesis.py",
+  "depends_on": [
+   "MOD-10.057"
+  ],
+  "related": [
+   "MOD-10.058",
+   "MOD-05.090"
+  ],
+  "reuse": "The missing middle of business-logic generation: the existing target generators run generate->emit-tests->run->green but emit ok-stubs + self-affirming tests; this harness makes the tests come from a behavioral SPEC and drives an Implementer until they pass, then a mutation gate proves the tests BITE. Domain-neutral (grammar before worlds): knows only TargetFiles + seams (Implementer / TestRun / MutationScorer), nothing of CLIs or games. Every boundary is a seam so the whole loop is provable offline with fakes (proven end-to-end over REAL code via the real pytest runner: a wrong-then-right implementer converges to verified). The real Claude Implementer follows adapters/architect.py (Advisor pattern, [ai] extra) and is the next slice; wiring into cli_generator (spec-derived CLI acceptance cases -> synthesize) is Slice 2.",
+  "notes": "Slice 1 of NORTH_STAR Priority #3. Reuses tool_runner (MOD-10.057) for sandboxed test runs and mutation_kpi (MOD-05.090) as the gate backend. No kernel/world/ import. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.094",
+  "name": "table",
+  "status": "active",
+  "function": "render rows of cells as an aligned monospace table (auto width, word-wrap, per-column alignment)",
+  "label": "table",
+  "file": "kernel/shelf/table.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_table.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia utils/evtable.py (BSD-3-Clause); no code copied. Frameless, stdlib only. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.098",
+  "name": "help_index",
+  "status": "active",
+  "function": "a structured, searchable help system built from command metadata (name/purpose/namespace)",
+  "label": "help_index",
+  "file": "kernel/shelf/help_index.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_help_index.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "per-command and topic help auto-built from the command spine; replaces a static help blob",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia help system (BSD-3-Clause); no code copied. Frameless, stdlib only. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.101",
+  "name": "target_disambig",
+  "status": "active",
+  "function": "numbered target disambiguation (2-sword / sword-2) for one of N identically-named objects",
+  "label": "target_disambig",
+  "file": "kernel/shelf/target_disambig.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_target_disambig.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "target a specific one of several same-named items or foes; pairs with a first-match resolver",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia commands/cmdparser.py (BSD-3-Clause); no code copied. Frameless, stdlib only. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.102",
+  "name": "health_bar",
+  "status": "active",
+  "function": "render a numeric value as a proportional ASCII meter bar with honest edges",
+  "label": "health_bar",
+  "file": "kernel/shelf/health_bar.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_health_bar.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "visual HP/MP/XP/progress meters in any verb; composes with the color part",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia contrib rpg/health_bar (BSD-3-Clause); no code copied. Frameless, stdlib only. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.107",
+  "name": "minimap",
+  "status": "active",
+  "function": "render a small ASCII minimap of nearby rooms from a room+exit graph (BFS to a radius, cardinal layout)",
+  "label": "minimap",
+  "file": "kernel/shelf/minimap.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_minimap.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "a `map` verb over any room graph; a client minimap feed; any grid-walk-from-a-center render",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia contrib grid/ingame_map_display (BSD-3-Clause); no code copied. Consumed by the `map` verb (CMD-04.115). Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.084",
+  "name": "cli_synthesis",
+  "status": "active",
+  "function": "bind the CLI target to the reverse-TDD harness: CliAcceptanceCase (argv -> expected stdout/exit) + cli_acceptance_tests(model, cases) (spec-derived, biting, NOT self-affirming) + cli_goal(model, cases) + synthesize_cli(model, cases, implementer, workdir=, run=, scorer=) which composes acceptance tests -> synthesize and returns a SynthesisResult verdict, upgrading the CLI target from scaffold to VERIFIED logic",
+  "label": "cli_synthesis",
+  "file": "kernel/seedlab/cli_synthesis.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_cli_synthesis.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-10.058"
+  ],
+  "related": [
+   "MOD-10.083",
+   "MOD-05.090"
+  ],
+  "reuse": "Slice 3 of NORTH_STAR Priority #3: the CLI binding of the synthesis harness. The scaffold generator (cli_generator MOD-10.058) emits a '<cmd>: ok' stub with a self-affirming exit-code test; this module derives BITING tests from behavioral acceptance cases (argv -> expected stdout/exit) and drives an injected Implementer (the real Claude one is synthesis_ai MOD-10.083) until a cli.py satisfies them. Because the cases are independent, a hard-coded stub fails them -- proving the suite verifies real logic. Domain-neutral within the platform: no kernel/world/ or kernel/domains/ import. Proven offline (fakes) and end-to-end over the real pytest runner (a correct implementer reaches VERIFIED; the scaffold stub reaches RED_BUDGET_EXHAUSTED).",
+  "notes": "Composes cli_generator (MOD-10.058, GeneratorError + ProjectModel) with synthesis (MOD-10.082). The Implementer is injected; run defaults to the harness's pytest_runner. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.083",
+  "name": "synthesis_ai",
+  "status": "active",
+  "function": "the real Claude Implementer for the reverse-TDD harness: ClaudeImplementer.implement(goal, tests, feedback) fills a structured file schema via the Messages API's messages.parse and returns TargetFiles (source only), plugging into the synthesis Implementer seam; build_claude_implementer() is one API key away",
+  "label": "synthesis_ai",
+  "file": "adapters/synthesis_ai.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_synthesis_ai.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-09.001"
+  ],
+  "related": [
+   "MOD-10.018",
+   "MOD-10.058"
+  ],
+  "reuse": "Slice 2 of NORTH_STAR Priority #3: the production brain behind the synthesis harness's Implementer seam. Same seam discipline as the Architect and Blueprint drafter (injected Anthropic client, [ai] extra, mockable, CI network-free): codeforge core never imports anthropic. Schema-enforced structured output (messages.parse) so the model emits typed files, never prose we parse by hand. Integrity guard: any returned file whose path is a fixed spec test is DROPPED so the implementer cannot rewrite the tests to fake green.",
+  "notes": "Reuses adapters/architect.py (CLAUDE_MODEL, anthropic_client) and the pydantic structured-output pattern from adapters/blueprint_ai.py (MOD-10.018). Plugs into synthesis (MOD-10.082). Dormant by default; one API key away.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.085",
+  "name": "game_linker",
+  "status": "active",
+  "function": "the game domain's Spec->persistent-world Linker: link_region(spec, dest) emits a GameSpec's region as canonical rooms.yaml seed content (deterministic + checksummed), and validate_region(linked) judges it by loading through the real kernel.world.seed.load_rooms/load_quest (rooms + an optional quest arc) plus reachability (rooms from start; quest terminal from quest start) and rooms<->quest on_enter integrity -- returning a verdict word (linked / unreachable / refused), never a bare bool; the missing bridge from seedlab to a runnable, persistent (non-instanced) world",
+  "label": "game_linker",
+  "file": "kernel/domains/game_linker.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_linker.py",
+  "depends_on": ["MOD-10.081"],
+  "related": [
+   "MOD-10.058",
+   "MOD-10.077"
+  ],
+  "reuse": "First slice of the game pipeline under J3 (one integrated persistent MMORPG, not instanced): the missing seedlab->game bridge. Reuses the CLI generator's emit-then-validate-by-running discipline (cli_generator MOD-10.058) but the target is a game world and the validator is the engine's own world loader (load_rooms), so the emitted content is real, bootable, restart-surviving seed content. Grammar before worlds: lives in kernel/domains (world-aware) which the neutral platform is forbidden to import; a classroom Seed never loads it.",
+  "notes": "Reuses kernel/world/seed.load_rooms (real loader + its gates: label format, dupes, dangling exits) and adds reachability from the start room. Composes with the game DomainModule (MOD-10.081). Next sub-slices: quest arc via load_quest, then create->operate->backup->restore->verify lifecycle proof. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.086",
+  "name": "game_lifecycle",
+  "status": "active",
+  "function": "prove a linked game region survives create->backup->restore->verify: snapshot(linked) fingerprints the emitted files (sha256), verify_recovery(linked, snap) re-reads them from disk, re-hashes against the backup and re-validates through the real loader, and prove_lifecycle(spec, dest) runs the whole loop -- verdict word recovered / corrupted / refused, never a false recovered; North Star #4 (state surviving restart) for the generated world content",
+  "label": "game_lifecycle",
+  "file": "kernel/domains/game_lifecycle.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_lifecycle.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.076",
+   "MOD-05.092"
+  ],
+  "reuse": "Sub-slice 3 of the game-module Linker (Rung 1): proves a generated region is not just emitted but DURABLE. Composes game_linker (MOD-10.085) with the engine's own loaders; mirrors backup.py's (MOD-10.076) hash-verified survive-loss philosophy at the generated-content level. Grammar before worlds: kernel/domains (world-aware); kernel/seedlab imports no world/domain. Scope stated honestly: proves world-content durability; persisting a LIVE player's in-flight quest progress across restart (the global quest registry has no clean per-region teardown) is deferred, not faked.",
+  "notes": "CREATE->BACKUP->RESTORE->VERIFY over game_linker output; re-reads + re-hashes + re-validates. The 'byte-intact but no longer a valid world' branch is covered. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.087",
+  "name": "game_session",
+  "status": "active",
+  "function": "prove a linked region's quest can be OPERATED by a live player and RESUMED after a restart: operate_and_recover(spec, dest) registers the region's quest, travels the objective rooms (firing on_event) to a terminal, backs up the player's save_state + location, simulates a restart (unregister -> reset -> re-register -> restore_state), and verifies the resume -- verdict word resumed / inoperable / refused, never a false resumed; always unregisters so no global state leaks",
+  "label": "game_session",
+  "file": "kernel/domains/game_session.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_session.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.086",
+   "MOD-01.001"
+  ],
+  "reuse": "The operate+recover half of the game lifecycle that game_lifecycle (MOD-10.086) deferred. Composes the REAL quest engine (register_specs/unregister_specs/on_event/save_state/restore_state/reset_quests) into a full create->operate->backup->restore->verify loop with a live player, on a linked region, WITHOUT leaking global quest state (the new quest.unregister_specs teardown makes this clean). Travel-driven quests (steps fire on room entry) complete via on_event; a quest needing a manual step is honestly INOPERABLE. Grammar before worlds: kernel/domains (world-aware); kernel/seedlab imports no world/domain. Advances NORTH_STAR #4 (state surviving restart) to the RUNNING half; a step toward #5 (one hosted world).",
+  "notes": "Requires quest.unregister_specs (the clean per-region teardown). The engine already persists quest progress + location across restart via characters.py; this proves it for the Linker's dynamically-loaded regions. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.088",
+  "name": "journey",
+  "status": "active",
+  "function": "the first content GENERATOR for the game pipeline: journey_region(region, waypoints) turns a compact intent (an ordered list of waypoint room labels) into a full GameSpec -- a linear region (start + a room per waypoint, linked north/south) and a travel-driven QuestArc whose steps fire on entering each waypoint and complete at the last -- deterministic + pure; fails loud (JourneyError) on no waypoints / duplicate / non-snake_case label",
+  "label": "journey",
+  "file": "kernel/domains/journey.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_journey.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.087",
+   "MOD-10.086"
+  ],
+  "reuse": "The authoring layer above the Linker: derives a GameSpec from a one-line journey intent, so a whole playable, durable, recoverable region comes from a short description (the Oregon-Trail archetype, generated). Proven end to end: a generated journey LINKS (game_linker MOD-10.085) and OPERATES-AND-RESUMES (game_session MOD-10.087). Pure + deterministic (same waypoints -> byte-identical linked content); knows only game_linker's spec dataclasses, no world/engine. The natural consumer of a future Form->journey-answers bridge (the Ludii-trick step). Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
+  "notes": "First game content generator. Generated specs are built to pass the Linker's gates (reachable rooms, reachable quest terminal, on_enter names real rooms) and be travel-operable. Next: a Form(SeedSpec journey answers) -> journey_region bridge to close Form->Spec->Seed. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.108",
+  "name": "recognition",
+  "status": "active",
+  "function": "per-observer name resolution: a short-description for strangers, a personal recog alias once an observer recognizes a target",
+  "label": "recognition",
+  "file": "kernel/shelf/recognition.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_recognition.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "personal aliases / RP recognition for any actor-to-actor naming; the seam for viewer-relative names in a render",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room (pattern-not-code) of Evennia rpg/rpsystem sdesc+recog core (BSD-3-Clause). Consumed by the `recog` verb (CMD-04.116). Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.089",
+  "name": "journey_form",
+  "status": "active",
+  "function": "the last link that closes Form->Spec->Seed: journey_from_form(seed_spec) turns a validated `journey` Engineering-Form SeedSpec into a GameSpec (via journey_region MOD-10.088), so a filled Form becomes a playable, durable, recoverable game; refuses a non-journey spec, and CARRIES the persistence_tier answer (single_session = a personal instance / persistent = a shared region) rather than gating it -- honouring the revised founder ruling J3 (instancing is a valid mode WITHIN the one integrated MMORPG)",
+  "label": "journey_form",
+  "file": "kernel/domains/journey_form.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_journey_form.py",
+  "depends_on": ["MOD-10.088"],
+  "related": [
+   "MOD-10.085",
+   "MOD-10.087"
+  ],
+  "reuse": "The Form->journey adapter: the Ludii-trick binding between the Engineering Form (kernel/seedlab/form.py, which walks the DATA catalog data/seedlab/engineering_form.json and emits a validated SeedSpec) and the journey generator. Proven END TO END: EngineeringForm.build_spec('journey', answers) -> journey_from_form -> journey_region -> game_linker link -> game_session operate_and_recover -> RESUMED. Honours the revised J3: the persistence_tier is carried, not gated -- single_session (a personal instance) and persistent (a shared region) are both valid modes within the one MMORPG. Grammar before worlds: kernel/domains may read the neutral platform's SeedSpec (domains->seedlab allowed); the platform imports no domain (import-linter 4 contracts kept). Adds a `journey` product type + persistence_tier/region/waypoints questions to the Form catalog (data, not code).",
+  "notes": "Closes the game pipeline front-door: Form -> Spec -> Seed. The Form's required-answer gate catches empty answers before the bridge; a non-empty-but-label-less waypoints string surfaces as JourneyError. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.090",
+  "name": "hosted_world",
+  "status": "active",
+  "function": "the engine side of North Star #5 (one small hosted world): install_world(spec, seed_root) turns a generated region into a bootable World Package -- links it as a seed under content/seeds/<name>/ (rooms+quest, start-first so the seed spawns at the declared start) and writes a world.yaml MANIFEST (world_id/title/start_room/version), validated through the engine's own world_manifest.describe_world gate; verdict hostable / unhostable / refused, never a false hostable",
+  "label": "hosted_world",
+  "file": "kernel/domains/hosted_world.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_hosted_world.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.086",
+   "MOD-10.088"
+  ],
+  "reuse": "Makes a generated region a REAL seed the server can boot (North Star #5, engine side). Composes game_linker (MOD-10.085) with kernel.world.world_manifest (describe_world/check_world), the engine's OWN identity gate. Needed the game_linker start-first emit fix (a linked region must spawn at its declared start, since the engine spawns at the first room in rooms.yaml). READINESS not deployment: the live cloud deploy is a founder-gated action; this proves a world is ready to host (bootable + identified + restorable via game_lifecycle). Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
+  "notes": "Also fixed game_linker._rooms_yaml to emit the start room FIRST (bootability correctness). The check_world spawn-consistency gate can't fail for install's own output (guaranteed by construction), so the module gates on describe_world and the test proves check_world clean. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.091",
+  "name": "hosted_recovery",
+  "status": "active",
+  "function": "the RESTORABLE half of North Star #5: prove_hosted_recovery(spec, seed_root) installs a region as a World Package (hosted_world MOD-10.090), then BACKS UP the whole seed (rooms+quest+the world.yaml manifest) and RESTORES+VERIFIES it -- every file byte-identical AND the world's identity re-validated through the engine's own world_manifest gates (describe_world + check_world); verdict recovered / corrupted / refused, never a false recovered",
+  "label": "hosted_recovery",
+  "file": "kernel/domains/hosted_recovery.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_hosted_recovery.py",
+  "depends_on": ["MOD-10.090"],
+  "related": [
+   "MOD-10.086",
+   "MOD-10.088"
+  ],
+  "reuse": "Closes North Star #5 end to end (bootable + identified + RESTORABLE): where game_lifecycle (MOD-10.086) proves the region CONTENT is durable, this proves the installed World Package -- manifest included -- survives loss, so the thing the server actually hosts is provably recoverable, not just its rooms. snapshot_seed globs the whole seed dir (a dropped file is caught, not just the ones we expect); verify_seed_recovery is a general restore-verifier that re-validates identity through the engine's OWN gates, so a backup whose manifest was never valid is caught too. Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
+  "notes": "Byte-identity is the durability guarantee (install_world already validated LINKED + HOSTABLE); the manifest re-check confirms the bootable identity came back whole. The natural CLI consumer is `codeforge host --verify-recovery` (a follow-up wiring). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-04.152",
+  "name": "topology",
+  "status": "active",
+  "function": "judge whether a world graph is WORLD-SHAPED (a graph with area) or TRAIL-SHAPED (a path with scenery): the anti-trail gate of the World Topology Doctrine",
+  "label": "topology",
+  "file": "kernel/world/topology.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_topology.py",
+  "depends_on": [],
+  "related": [
+   "worldgraph",
+   "wildlands",
+   "navigation",
+   "zones"
+  ],
+  "reuse": "audit_topology(exits, start=, gates=, declared_bottlenecks=) returns a verdict WORLD_SHAPED / TRAIL_SHAPED / UNREACHABLE against measurable anti-trail gates: linearity (rooms with exactly 2 exits), mean exit degree, loop ratio (rooms on a cycle, via an iterative-Tarjan bridge analysis), and undeclared between-regions bottlenecks (a single route between two substantial areas; a leaf-spur to a deliberate dead end is exempt, and a declared bottleneck is passed in). Reachability from the start still applies. Thresholds are the doctrine's defaults (TopologyGates), tunable per terrain as a DECISION; the doctrine ships as DATA in content/world/topology.yaml (directions, terrain + passability, zone backings, gates, two-layer gen design). Dogfooded on the live Aethryn world -> TRAIL_SHAPED (loop_ratio 0.00%). Verdicts, not booleans; fails loud on an empty graph or a dangling exit. Fleet-wide: binds every world-shaped Seed's worldgen (the linear Oregon-Trail archetype opts out).",
+  "notes": "World Topology Doctrine, Phase 1 (branch aethryn/world-topology-v1). Phase 4 moved it into the World Package (kernel/world/, domain 04) so world.py generates fields at boot -- the boundary gate requires a runtime-imported world generator to live in the package, like wildlands.py. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-04.153",
+  "name": "field",
+  "status": "active",
+  "function": "a coordinate-backed FIELD backing: turn a terrain map into a WORLD-shaped graph of rooms (8-directional open movement, terrain-gated crossings, vertical stacks, named exits) -- the spatial-fill half of the World Topology Doctrine",
+  "label": "field",
+  "file": "kernel/world/field.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_field.py",
+  "depends_on": ["MOD-04.152"],
+  "related": [
+   "topology",
+   "wildlands",
+   "worldgraph"
+  ],
+  "reuse": "build_field(name, cells, *, stacks=) turns a dict of (x,y)->Cell(terrain, elevation) into the engine's Room dicts (name/desc/exits). Exits are DERIVED from terrain adjacency + the passability matrix (content/world/topology.yaml): a passable cell links to its 8 neighbours (cardinal + intercardinal, no corner-cutting across a wall), an impassable cell (river/cliff/water/wall) is a gap so terrain SHAPES movement (a river blocks except where a ford/bridge cell is passable, which also carries a NAMED crossing exit). A Stack adds true vertical (a summit above via up/climb, a cave below via down). Descriptions are terrain-driven with local features. PROVEN on the doctrine's 20x20 field (river + ford + bridge + hills + summit) -> topology gate WORLD_SHAPED. Fails loud on an empty field, unknown terrain, or a stack on an impassable cell. A generation backing (Hardware Store candidate); a World Package module (kernel/world/) so world.py can derive a zone's `backing: field` at boot.",
+  "notes": "World Topology Doctrine, Phase 2 (branch aethryn/world-topology-v1). Phase 4 moved it into the World Package (kernel/world/, domain 04) for the `backing: field` runtime path. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-04.154",
+  "name": "worldgen",
+  "status": "active",
+  "function": "the TWO-LAYER region generator of the World Topology Doctrine: mission layer (landmarks + declared river crossings) + spatial fill (seeded heightmap -> river-follows-elevation -> terrain -> field-derived exits), then a LIFE layer (foes + gather nodes + guardians), judged by every gate",
+  "label": "worldgen",
+  "file": "kernel/world/worldgen.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_worldgen.py",
+  "depends_on": ["MOD-04.152", "MOD-04.153"],
+  "related": [
+   "topology",
+   "field",
+   "wildlands"
+  ],
+  "reuse": "generate_region(RegionSpec(name,width,height,seed,landmarks,river_source,crossings,corridor)) -> a Region carrying the rooms, the topology verdict, and landmark reachability (progression). Two layers: MISSION (Landmark anchors + declared ford/bridge crossings) then SPATIAL (a deterministic bilinear heightmap; a river traced DOWNHILL from the source following elevation, auto-crossed by a ford + bridge so it stays passable; terrain read from height -- hill/forest/plain, river channel impassable; ROADS paved between consecutive landmarks (a trail THROUGH the open field -- the mixture of trail and field a living world wants, crossing rivers at their fords, toggle spec.roads); exits DERIVED by field.build_field; a peak landmark raises a summit Stack). Judged by ALL gates: audit_topology (anti-trail) + reachability + landmarks-reachable. It NEVER hides a bad shape -- spec.corridor=True forces a 1-wide chain and the region honestly returns TRAIL_SHAPED (the sabotage the gate must catch). Deterministic (seeded RNG, no wall-clock); fails loud on degenerate size or a landmark on impassable terrain. PROVEN: a complete 24x18 region -> WORLD_SHAPED + all landmarks reachable; the sabotage corridor -> TRAIL_SHAPED. populate_region(region, LifeSpec(biome, level_min, level_max)) then BREATHES LIFE onto the open field: ambient foes, gather nodes, and a handful of guardians scattered by a stable BFS index from the spawn (the wild deepens outward), reusing bestiary.make_beast / make_notable + wildlands.gatherable_materials so a zone's cull/forage boards keep routing after a trail flips to a field. A World Package module (kernel/world/) so world.py can build a zone's `backing: field` at boot, the way it generates wildlands trails.",
+  "notes": "World Topology Doctrine, Phase 3 + the Veridia pilot's life layer (branch aethryn/pilot-veridia-field). Phase 4 moved it into the World Package (kernel/world/, domain 04) and wires world.py's `backing: field` runtime path. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-04.155",
+  "name": "fieldzone",
+  "status": "active",
+  "function": "assemble a FIELD-backed wilderness zone from a compact seed config: bridge a fields.yaml row to the worldgen generator + life layer and graft the open field onto its zone hub -- the field twin of wildlands for the trails",
+  "label": "fieldzone",
+  "file": "kernel/world/fieldzone.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_fieldzone.py",
+  "depends_on": ["MOD-04.154"],
+  "related": [
+   "worldgen",
+   "wildlands",
+   "zones"
+  ],
+  "reuse": "load_field_configs(path) validates + loads every fields.yaml row (id injected from the key; fails loud on a malformed row). build_field_zone(cfg, taken) -> a FieldZone(label, rooms, npcs, gate, attach, attach_dir, zone): it generates a two-layer region (worldgen.generate_region), REFUSES loud unless it is world-shaped + every landmark reachable + free of id collisions with the built world, breathes life onto it (worldgen.populate_region: foes + gather nodes + guardians), wires the reciprocal exit from an edge GATE cell back to the hub, and carries the AREA metadata (every field cell a member) so zone_of resolves and the zone's cull/forage boards keep routing. world.py loads fields.yaml, grafts each field's `attach_dir` exit onto its hub, and publishes FIELD_ZONES; kernel.world.zones registers them for the scheduler + zone_of. Deterministic: same seed, same field, same life. The trail-to-field upgrade path of the World Topology Doctrine.",
+  "notes": "World Topology Doctrine, Phase 4 -- the `backing: field` runtime wiring (Veridia pilot, branch aethryn/pilot-veridia-field). Dormant until a seed ships a fields.yaml. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-10.059",
+  "name": "manifest_compiler",
+  "status": "active",
+  "function": "compile a BuildManifest into a deterministic Aethryn region and install it as a validated World Package",
+  "label": "manifest_compiler",
+  "file": "kernel/domains/manifest_compiler.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_manifest_compiler.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "",
+  "notes": "Manifest-driven Aethryn region compiler.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-08",
+  "updated": "2026-08-08"
+ },
+ {
+  "designation": "MOD-10.147",
+  "name": "world_compiler",
+  "status": "active",
+  "function": "assemble selected Aethryn regions into one connected deterministic World Package",
+  "label": "world_compiler",
+  "file": "kernel/domains/world_compiler.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_world_compiler.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "",
+  "notes": "Multi-region Aethryn World Package compiler.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-08",
+  "updated": "2026-08-08"
+ },
+ {
+  "designation": "MOD-10.148",
+  "name": "env_parity",
+  "status": "active",
+  "function": "compare the local Python environment with the CI dev install and report extras, version, interpreter, and checkout-location drift",
+  "label": "env_parity",
+  "file": "kernel/env_parity.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_env_parity.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "compare_packages(local, ci) returns a report-only parity result with actionable make env commands; run_parity accepts package-query and installer seams and never invokes the installer.",
+  "notes": "P-04 environment parity gate. Reports drift and exits zero; it never installs, upgrades, or removes packages.",
+  "tags": ["module", "gate"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-08",
+  "updated": "2026-08-08"
+ },
+ {
+  "designation": "MOD-10.149",
+  "name": "mutation_scorer",
+  "status": "active",
+  "function": "score one generated workdir with a bounded private cosmic-ray session, returning its measured mutation kill rate or None when no honest score can be computed",
+  "label": "mutation_scorer",
+  "file": "adapters/mutation_scorer.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/evidence/2026-08-08-first-real-synthesis-run.md",
+  "tests": "tests/test_mutation_scorer.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-05.090"
+  ],
+  "related": [
+   "MOD-10.080"
+  ],
+  "reuse": "A per-workdir mutation-test adapter with an injected runner seam. A second consumer must establish reuse before any Hardware Store verdict.",
+  "notes": "P-08 closes the MutationScorer Protocol gap without changing synthesis verdict logic or the repository cosmic-ray.toml. Each score writes its config and session only inside the generated workdir, bounds command runtime and mutant count, and returns None for absent, timed-out, malformed, or zero-mutant runs.",
+  "tags": [
+   "module",
+   "gate"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-08",
+  "updated": "2026-08-08"
  }
 ]

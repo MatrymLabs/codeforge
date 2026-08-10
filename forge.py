@@ -7,6 +7,10 @@ terminal driver around it -- a socket gateway will be another.
 
 import re
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from kernel.seedlab.provision import DomainModuleRegistry
 
 from kernel.addie import addie
 from kernel.arc import arc
@@ -43,6 +47,7 @@ from kernel.registry import (
 )
 from kernel.relay import channel
 from kernel.save import awaken_snapshot, seal_snapshot
+from kernel.shelf import help_index, minimap, recognition, target_disambig
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.store_index import store
 from kernel.telegraph import telegraph
@@ -112,9 +117,9 @@ from kernel.world.items import (
     inventory_text,
     prototype_of,
     read_item,
+    resolve_item_target,
     room_items_text,
     take,
-    trace_item,
 )
 from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from kernel.world.npcs import ask, room_npcs_text, talk, trace_npc
@@ -156,6 +161,28 @@ from kernel.world.world import (
 from kernel.world.zone_story import region_view
 from kernel.world.zones import area_line, tick_zones
 from kernel.world_cert import certify
+
+# Word-direction -> minimap cardinal token (the world uses "north", minimap draws on n/s/e/w/u/d).
+_MAP_DIRS = {"north": "n", "south": "s", "east": "e", "west": "w", "up": "u", "down": "d"}
+
+
+def _world_minimap(location: str) -> str:
+    """Project the live world graph around `location` into an ASCII minimap (cardinal exits only).
+
+    Consumer of the harvested minimap part (MOD-05.107): builds a {room -> {dir: neighbour}} graph
+    from WORLD, keeping only cardinal exits to real rooms (no dangling), and renders radius 2."""
+    graph: dict[str, dict[str, str]] = {}
+    for rid, room in WORLD.items():
+        nbrs: dict[str, str] = {}
+        for direction, dest in room.get("exits", {}).items():
+            token = _MAP_DIRS.get(direction)
+            if token and dest in WORLD:
+                nbrs[token] = dest
+        graph[rid] = nbrs
+    if location not in graph:
+        return "You are nowhere the map can chart."
+    return minimap.render(graph, location, radius=2)
+
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -343,6 +370,24 @@ def _workspace(session: Session, arg: str) -> str:
         push_gmcp([player_id], package, data)
 
     return workspace_command(session, arg, gmcp_push=push)
+
+
+def domain_registry() -> "DomainModuleRegistry":
+    """The composition root for domain modules: the tick (a world-aware layer) registers every
+    domain module a Seed provisioned here could load. The game module belongs here because it binds
+    to the game world; the domain-neutral platform never imports it (an import-linter contract holds
+    the line). A Seed still loads ONLY the modules it selected -- registering a module here just
+    makes it available, so a classroom that selected `education` never loads `game` even though both
+    sit in this registry."""
+    from kernel.domains.education import EducationModule
+    from kernel.domains.game import register_game_module
+    from kernel.seedlab.domain import register_module
+    from kernel.seedlab.provision import DomainModuleRegistry
+
+    registry = DomainModuleRegistry()
+    register_game_module(registry)  # the world-dependent module, bound at the tick
+    register_module(registry, EducationModule())  # the stdlib module, available alongside it
+    return registry
 
 
 def docs_check() -> str:
@@ -584,6 +629,37 @@ def _script_command(session: Session, arg: str) -> str:
     return "\n".join(lines) if lines else "(no output)"
 
 
+def _help_cmd(session: Session, arg: str) -> str:
+    """Help derived from the command spine (consumer of the help_index shelf part MOD-05.xxx).
+
+    Replaces the old static HELP_TEXT blob that ignored its argument. `help` lists the verbs this
+    player can use (grouped by namespace); `help <command>` explains one; `help <word>` searches.
+    The index is built per call from the commands available to this session, so it always reflects
+    what the caller may actually run and their rank."""
+    entries = [
+        help_index.HelpEntry(name=c.verb, purpose=c.summary, namespace=c.namespace)
+        for c in COMMANDS.available_to(session)
+    ]
+    index = help_index.HelpIndex.build(entries)
+    query = arg.strip()
+    if not query:
+        return (
+            f"{HELP_TEXT}\n\nType 'help <command>' for one verb, or 'help <word>' to search.\n\n"
+            f"{index.overview()}"
+        )
+    try:
+        return index.render_topic(query.lower())
+    except help_index.HelpError:
+        hits = index.search(query)
+        if hits:
+            return (
+                f"Commands matching '{query}': "
+                + ", ".join(hits)
+                + "\nType 'help <command>' for details."
+            )
+        return f"No help for '{query}'. Type 'help' for the command list."
+
+
 def _build_commands() -> CommandSet:
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
@@ -630,6 +706,24 @@ def _build_commands() -> CommandSet:
             "CMD-10.005",
             "filter by status",
             lambda _s, arg: registry_status(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "map",
+            "CMD-04.115",
+            "render a minimap of the nearby world",
+            lambda s, _a: _world_minimap(s.location),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "recog",
+            "CMD-04.116",
+            "privately name someone here (recog <who> as <name>)",
+            _recog_cmd,
             namespace=CORE,
         )
     )
@@ -2036,8 +2130,8 @@ def _build_commands() -> CommandSet:
         Command(
             "help",
             "CMD-04.065",
-            "the command help text",
-            lambda _s, _a: HELP_TEXT,
+            "help from the command spine: help, help <command>, or help <word>",
+            _help_cmd,
             namespace=CORE,
         )
     )
@@ -2083,6 +2177,69 @@ def _loop_trace_handler(arg: str) -> str:
 _DYNAMIC_PANELS = {"arc": lambda: arc("status")}
 
 
+# --- Recognition: personal per-viewer aliases (consumer of the recognition shelf part MOD-05.108).
+# The canonical recog state is a frozen recognition.Book; a projection (render) never mutates it.
+# In-memory for now (resets on restart) - a persistent recog store is the gated follow-up.
+_RECOG: recognition.Book = recognition.Book()
+
+
+def _players_in_room(location: str) -> set[str]:
+    """Every player id present in `location` (local sessions + the shared roster)."""
+    return {pid for pid, s in SESSIONS.items() if s.location == location} | presence.in_room(
+        location
+    )
+
+
+def _find_actor(location: str, word: str) -> str | None:
+    """Resolve `word` to a player id in `location` by id or (case-insensitive) display name."""
+    want = word.strip().lower()
+    for pid in _players_in_room(location):
+        if pid.lower() == want or display_name(pid).lower() == want:
+            return pid
+    return None
+
+
+def _recognized_name(viewer: str, target: str) -> str:
+    """The name `viewer` sees for `target`: their personal recog alias if set, else the real name.
+
+    Reads the recog Book directly (no validation) so a viewerless render is always safe."""
+    alias = _RECOG.recogs.get(viewer, {}).get(target)
+    return alias if alias is not None else display_name(target)
+
+
+def _recog_cmd(session: Session, arg: str) -> str:
+    """`recog` (list) | `recog <someone here> as <name>` | `recog forget <someone>`."""
+    global _RECOG
+    viewer = session.player_id
+    text = arg.strip()
+    if not text:
+        mine = _RECOG.recogs.get(viewer, {})
+        if not mine:
+            return "You have given no one a personal name. Try: recog <someone here> as <name>."
+        lines = [f"  {display_name(t)} -> {a}" for t, a in sorted(mine.items())]
+        return "You privately know:\n" + "\n".join(lines)
+    if text.lower().startswith("forget "):
+        pid = _find_actor(session.location, text[7:])
+        if pid is None:
+            return f"You see no one called '{text[7:].strip()}' here."
+        _RECOG = _RECOG.forget(viewer, pid)
+        return f"You let go of your private name for {display_name(pid)}."
+    parts = re.split(r"\s+as\s+", text, maxsplit=1, flags=re.IGNORECASE)
+    if len(parts) != 2:
+        return "Usage: recog <someone here> as <name>  |  recog forget <someone>  |  recog"
+    target_word, alias = parts[0].strip(), parts[1].strip()
+    pid = _find_actor(session.location, target_word)
+    if pid is None:
+        return f"You see no one called '{target_word}' here."
+    if pid == viewer:
+        return "You already know who you are."
+    try:
+        _RECOG = _RECOG.with_recog(viewer, pid, alias)
+    except recognition.RecognitionError as exc:
+        return f"That name will not stick: {exc}"
+    return f"From now on you see {display_name(pid)} as {alias}."
+
+
 def render_scene(location: str, viewer: str = "") -> str:
     """The full projection of a room: place, things, people, players."""
     scene = [render_room(location)]
@@ -2110,7 +2267,7 @@ def render_scene(location: str, viewer: str = "") -> str:
     local = {pid for pid, s in SESSIONS.items() if s.location == location}
     others = (local | presence.in_room(location)) - {viewer}
     for pid in sorted(others):
-        scene.append(f"{display_name(pid)} is here.")
+        scene.append(f"{_recognized_name(viewer, pid)} is here.")
     return "\n".join(scene)
 
 
@@ -2189,7 +2346,12 @@ def _job_cmd(session: Session, arg: str) -> str:
 def _take_cmd(session: Session, arg: str) -> str:
     """Pick up an item; announce it, and let a pickup advance the arc."""
     word = arg.lower()
-    picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
+    try:
+        # the CHOSEN item (honors a "2-sword" ordinal), captured before it moves so the quest hook
+        # fires on the item actually taken, not merely the first keyword match.
+        picked = resolve_item_target(word, f"room:{session.location}")
+    except target_disambig.TargetError:
+        picked = None
     verdict = take(word, session.location, carrier(session.player_id))
     if verdict.startswith("You take"):
         announce(

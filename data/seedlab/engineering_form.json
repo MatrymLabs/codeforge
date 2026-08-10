@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "note": "The Engineering Form catalog: DATA, not code. A new product type is a new entry here (common questions + a branch + the domain modules it selects), never a code fork. The engine in kernel/seedlab/form.py is domain-neutral and knows nothing about games, classrooms, or training -- it only walks this catalog and emits a validated SeedSpec.",
+  "common_question_ids": ["name", "owner", "purpose"],
+  "questions": {
+    "name": {"prompt": "What is this Seed called?", "kind": "text", "required": true},
+    "owner": {"prompt": "Who owns it (account)?", "kind": "text", "required": true},
+    "purpose": {"prompt": "In one line, what is it for?", "kind": "text", "required": true},
+
+    "world_scale": {"prompt": "World scale?", "kind": "choice", "choices": ["small", "large", "massive"], "required": true},
+    "combat": {"prompt": "Does it have combat?", "kind": "bool", "required": true},
+    "pvp": {"prompt": "PvP ruleset?", "kind": "choice", "choices": ["none", "consensual", "open"], "required": true, "applies_when": {"combat": true}},
+    "economy": {"prompt": "A player-driven economy?", "kind": "bool", "required": true},
+    "progression": {"prompt": "Character progression (levels/skills)?", "kind": "bool", "required": true},
+    "moderation": {"prompt": "Moderation posture?", "kind": "choice", "choices": ["light", "standard", "strict"], "required": true},
+
+    "grade_levels": {"prompt": "Which grade level(s)?", "kind": "text", "required": true},
+    "curriculum": {"prompt": "Curriculum or subject?", "kind": "text", "required": true},
+    "assessments": {"prompt": "Include assessments?", "kind": "bool", "required": true},
+    "roles": {"prompt": "Which roles participate?", "kind": "multi", "choices": ["teacher", "parent", "student"], "required": true},
+    "privacy": {"prompt": "Student-data privacy posture?", "kind": "choice", "choices": ["standard", "coppa", "ferpa"], "required": true},
+    "safety_review": {"prompt": "Require a safety review before publish?", "kind": "bool", "required": true},
+
+    "scenarios": {"prompt": "Training scenario(s)?", "kind": "text", "required": true},
+    "competencies": {"prompt": "Competencies covered?", "kind": "text", "required": true},
+    "certification": {"prompt": "Issue a completion certificate?", "kind": "bool", "required": true},
+
+    "persistence_tier": {"prompt": "Persistence tier? (single_session = a personal instance within the world; persistent = a shared region)", "kind": "choice", "choices": ["single_session", "persistent"], "required": true},
+    "region": {"prompt": "Region name for the journey?", "kind": "text", "required": true},
+    "waypoints": {"prompt": "Waypoints, in order (comma-separated snake_case room labels)?", "kind": "text", "required": true}
+  },
+  "product_types": {
+    "mmorpg": {
+      "name": "MMORPG",
+      "description": "A persistent multiplayer game world.",
+      "question_ids": ["world_scale", "combat", "pvp", "economy", "progression", "moderation"],
+      "domain_modules": ["game"]
+    },
+    "education": {
+      "name": "Education",
+      "description": "A classroom Seed: lessons, assessments, teacher/parent/student roles.",
+      "question_ids": ["grade_levels", "curriculum", "assessments", "roles", "privacy", "safety_review"],
+      "domain_modules": ["education"]
+    },
+    "training": {
+      "name": "Training",
+      "description": "A scenario-based training course with competencies and certification.",
+      "question_ids": ["scenarios", "competencies", "certification"],
+      "domain_modules": ["training"]
+    },
+    "journey": {
+      "name": "Journey",
+      "description": "A waypoint journey (Oregon-Trail style): a linear region + a travel-driven quest, in the persistent world.",
+      "question_ids": ["persistence_tier", "region", "waypoints"],
+      "domain_modules": ["game"]
+    }
+  }
+}

@@ -12,7 +12,7 @@ make check   # everything green before you start
 ## The workshop rules
 
 1. **Every part is a card.** One module in `parts/`, one clear job, a `CARD:` first
-   docstring line, and a test twin in `tests/` (`parts/x.py` -> `tests/test_x.py`).
+   docstring line, and a test twin in `tests/` (`kernel/<area>/x.py` -> `tests/test_x.py`).
 2. **New commands get a tick test.** A feature isn't wired until
    `handle_command(session, "...")` proves a player can reach it.
 3. **The world is data.** Content belongs in `seeds/`, validated by loader gates --

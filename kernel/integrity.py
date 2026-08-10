@@ -16,7 +16,7 @@ import json
 import os
 import re
 import shutil
-import subprocess  # nosec B404 -- fixed argv, no shell; reads `git log` for one date, read-only
+import subprocess  # nosec B404
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -163,7 +163,8 @@ def _latest_capability_change(root: Path | None = None) -> date | None:
     of failing. Injected into `career_currency_gaps` so the pure check never shells git in tests."""
     base = root if root is not None else _ROOT
     try:
-        proc = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; git log, read-only
+        # Fixed argv, no shell; reads git log for one date, read-only.
+        proc = subprocess.run(  # nosec B603 B607
             [
                 "git",
                 "-C",

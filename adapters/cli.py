@@ -20,6 +20,8 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge play                       solo terminal session
   codeforge play --seed <game>         boot a different game (see: codeforge seeds)
   codeforge onboard                    run the onboarding workflow (same engine as the game quest)
+  codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
+  codeforge host --region R --waypoints a,b,c      install a journey as a bootable World Package
   codeforge seeds                      list installed games (seeds)
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
@@ -241,12 +243,128 @@ def _cmd_refactor(args: list[str]) -> int:
     return 0
 
 
+def _cmd_journey(args: list[str]) -> int:
+    """Generate, link, and PROVE a waypoint-journey game region end to end: the whole pipeline
+    (Form-grade intent -> generate -> link -> operate -> recover) as one real operation. Writes
+    playable seed content to `--dest` and reports whether a live player can travel it and it
+    survives a restart. No decorative rooms: the command performs the real operation."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="codeforge journey",
+        description="Generate a waypoint journey, write it as seed content, and prove it plays.",
+    )
+    parser.add_argument("--region", required=True, help="the region name")
+    parser.add_argument(
+        "--waypoints", required=True, help="comma-separated snake_case room labels, in order"
+    )
+    parser.add_argument("--dest", default="journey_out", help="where to write the seed content")
+    try:
+        ns = parser.parse_args(args[1:])
+    except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
+        return int(exc.code or 0)
+
+    from kernel.domains.game_session import RESUMED, operate_and_recover
+    from kernel.domains.journey import JourneyError, journey_region
+
+    waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
+    try:
+        spec = journey_region(ns.region, waypoints)
+    except JourneyError as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 2
+
+    dest = Path(ns.dest)
+    report = operate_and_recover(spec, dest)
+    if report.verdict == RESUMED:
+        print(
+            f"RESUMED: '{report.region}' -- {len(waypoints)} waypoint(s); "
+            f"quest '{report.quest_id}' reaches '{report.terminal}'."
+        )
+        print(f"  playable seed content written to {dest}")
+        return 0
+    print(f"{report.verdict.upper()}: {report.detail}", file=sys.stderr)
+    return 1
+
+
+def _cmd_host(args: list[str]) -> int:
+    """Install a generated journey region as a bootable World Package the server can serve:
+    generate -> link -> install (rooms + quest + a `world.yaml` MANIFEST) under
+    `<seed-root>/content/seeds/<name>/`, validated through the engine's OWN manifest gate. Prints
+    HOSTABLE and how to boot it. No decorative rooms: the command performs the real install, so a
+    default `--seed-root .` writes into the live seed directory the server reads."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="codeforge host",
+        description="Generate a journey region and install it as a bootable World Package (seed).",
+    )
+    parser.add_argument("--region", required=True, help="the region name (slugged to the seed id)")
+    parser.add_argument(
+        "--waypoints", required=True, help="comma-separated snake_case room labels, in order"
+    )
+    parser.add_argument(
+        "--seed-root", default=".", help="repo root holding content/seeds/ (default: cwd)"
+    )
+    parser.add_argument("--name", default="", help="override the seed name (default: region slug)")
+    parser.add_argument("--title", default="", help="override the world title (default: from name)")
+    parser.add_argument(
+        "--verify-recovery",
+        action="store_true",
+        help="after install, prove the seed survives backup + restore (loss + restart)",
+    )
+    try:
+        ns = parser.parse_args(args[1:])
+    except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
+        return int(exc.code or 0)
+
+    from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world
+    from kernel.domains.journey import JourneyError, journey_region
+
+    seed_root = Path(ns.seed_root)
+    waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
+    try:
+        spec = journey_region(ns.region, waypoints)
+        world = install_world(spec, seed_root, seed_name=ns.name, title=ns.title)
+    except (JourneyError, HostedWorldError) as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 2
+
+    if world.verdict != HOSTABLE:
+        print(f"{world.verdict.upper()}: {'; '.join(world.problems)}", file=sys.stderr)
+        return 1
+
+    print(f"HOSTABLE: '{world.seed_name}' installed at {world.seed_dir}")
+    print(f"  spawn: {world.start_room};  boot: codeforge play --seed {world.seed_name}")
+
+    if ns.verify_recovery:
+        # Prove the seed the server hosts is RESTORABLE: back up the installed package and restore
+        # + verify it (byte-identical AND identity re-validated through the engine's own gates). The
+        # seed is already installed, so compose the two primitives on the live artifact -- no
+        # redundant re-install. A failed proof fails the command loud (never a false success).
+        from kernel.domains.game_lifecycle import RECOVERED
+        from kernel.domains.hosted_recovery import snapshot_seed, verify_seed_recovery
+
+        report = verify_seed_recovery(
+            world.seed_name, seed_root, snapshot_seed(Path(world.seed_dir))
+        )
+        if report.verdict != RECOVERED:
+            print(f"  {report.verdict.upper()}: {report.detail}", file=sys.stderr)
+            return 1
+        n = len(report.files)
+        print(f"  RECOVERED: {n} file(s) survive backup + restore; identity re-validated")
+
+    return 0
+
+
 # Verb -> handler. The strings are the frozen public CLI surface; order is display order only.
 _DISPATCH: dict[str, Command] = {
     "seeds": _cmd_seeds,
     "serve": _cmd_serve,
     "play": _cmd_play,
     "onboard": _cmd_onboard,
+    "journey": _cmd_journey,
+    "host": _cmd_host,
     "grant": _cmd_grant,
     "migrate": _cmd_migrate,
     "api": _cmd_api,

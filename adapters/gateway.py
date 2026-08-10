@@ -9,6 +9,18 @@ Security: plaintext by default (the compatibility transport for a home
 LAN). Set CODEFORGE_TLS_CERT + CODEFORGE_TLS_KEY to serve over TLS for an
 internet-facing deployment; the message layer is identical behind either.
 Account auth (salted pbkdf2) gates entry at the login front desk.
+
+Beyond the game, this server also serves the engineering-workspace surface over GMCP, additively
+and orthogonally to the game path: once an OWNER logs in, their Native-Seed client is pushed the
+creation `Form.Schema` plus the reference Seed's read-only workspace (its `Architecture.Map` and
+`Blueprint.List`, real engine state, so the Master Client's panels light up from the running
+server), an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated, mirroring
+the in-MUD `workspace` verb) and pushes its `workspace_packages` back, and a `Workspace.Request`
+frame serves this instance's live `Deploy.Status` (version, uptime, connections, TLS), the
+reference Seed's `Deploy.Manifest` (for a requested tier), and its `Research.Findings` when a
+research manifest is mounted (`SEEDLAB_RESEARCH`).
+Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
+under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
 
 import contextlib
@@ -20,6 +32,7 @@ import ssl
 import sys
 import threading
 import time
+from typing import TYPE_CHECKING, Protocol
 
 import structlog
 
@@ -34,6 +47,7 @@ from kernel.gmcp import (
     mail_report,
     party_report,
     quest_report,
+    read_gmcp_package,
     resists_report,
     room_report,
     seed_hello,
@@ -42,7 +56,7 @@ from kernel.gmcp import (
     vitals_report,
 )
 from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
-from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
+from kernel.shelf.telnet_codec import IAC, SE, WILL, WONT, strip_iac
 from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
 from kernel.world.accounts import password_fixable
 from kernel.world.characters import save_all, save_character
@@ -52,7 +66,14 @@ from kernel.world.seed import SEED_NAME, load_splash
 from kernel.world.session import SESSIONS, Session
 from kernel.world.socket_bus import maybe_wire_broker
 
+if TYPE_CHECKING:
+    from kernel.seedlab.kernel import SeedKernel
+
 TICK_LOCK = threading.Lock()
+# Serializes seedlab (engineering-workspace) mutations across connection threads. The seedlab Kernel
+# and its file store carry no lock of their own, so two connections minting/mutating Seeds could
+# lost-update; this guards the additive workspace wire without touching the game tick's TICK_LOCK.
+SEEDLAB_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
 _counter = 0
 
@@ -92,6 +113,22 @@ LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
 _SEATS = Bulkhead(MAX_CONNECTIONS)
 _turnaway_ledger: dict[str, list[float]] = {}
 _ledger_lock = threading.Lock()
+
+# When this process started serving, for the instance's self-reported uptime (Deploy.Status). Set at
+# import (~process start); monotonic so a wall-clock change never makes uptime jump or go negative.
+_STARTED_AT = time.monotonic()
+
+
+def _server_version() -> str:
+    """The running engine's version, from the installed distribution (unknown when run un-packaged,
+    e.g. a source checkout with no metadata) -- an honest self-report, never a hardcoded guess."""
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _dist_version
+
+    try:
+        return _dist_version("codeforge")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def _next_player_id() -> str:
@@ -207,6 +244,45 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
         return sock, addr
 
 
+class _ByteReader(Protocol):
+    """Just enough of a binary stream for `_read_message`: read exactly `size` bytes (the buffered
+    `rfile` and an in-memory `BytesIO` both satisfy it, so the reader is testable off a socket)."""
+
+    def read(self, size: int, /) -> bytes: ...
+
+
+def _read_message(reader: _ByteReader, max_bytes: int) -> tuple[bytes, bool]:
+    """Read one client MESSAGE: a newline-terminated line, OR a complete standalone GMCP
+    subnegotiation frame (`IAC SB GMCP ... IAC SE`), whichever completes first. Returns
+    `(raw_bytes, is_frame)`.
+
+    This lets an out-of-band GMCP frame -- which carries NO trailing newline -- be processed the
+    instant it arrives, instead of waiting for the next line the user types (the engineering-
+    workspace wire's `Form.Submit` is exactly such a bare frame). A line still comes back whole at
+    its newline, with any IAC negotiation the client glued before the text left intact for the
+    caller's codec (exactly as `readline` delivered it). Only a GMCP frame that stands alone (its
+    `IAC SE` reached before any newline) returns early as a frame; a bare non-GMCP subnegotiation is
+    read through as before, and EOF or the size cap returns whatever was read, as a line."""
+    buf = bytearray()
+    while len(buf) < max_bytes:
+        chunk = reader.read(1)
+        if not chunk:
+            return bytes(buf), False  # EOF: hand back whatever we have (a line, maybe empty)
+        buf += chunk
+        if chunk == b"\n":
+            return bytes(buf), False  # a complete line
+        # A GMCP subnegotiation closes on IAC SE. If what we have is now a complete GMCP frame with
+        # no newline, it is a standalone out-of-band package -- return it now, not at the next line.
+        if (
+            chunk == bytes([SE])
+            and len(buf) >= 2
+            and buf[-2] == IAC
+            and read_gmcp_package(bytes(buf)) is not None
+        ):
+            return bytes(buf), True
+    return bytes(buf), False  # hit the cap: treat as a line (the tick parses what it can)
+
+
 class _GateHandler(socketserver.StreamRequestHandler):
     timeout = IDLE_TIMEOUT  # StreamRequestHandler applies this to the socket
 
@@ -223,6 +299,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._seed_announced = (
             False  # Native Seed handshake: Seed.Hello is sent once on GMCP enable
         )
+        # The authenticated session, set once the front desk lets a player in. None while at the
+        # login desk, which GATES the additive engineering-workspace wire: no inbound Seed.Create /
+        # Form.Submit is dispatched until a real account is behind the connection.
+        self._session: Session | None = None
         self._last_vitals: dict[str, int] | None = None
         self._last_room: dict[str, object] | None = None
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
@@ -248,6 +328,187 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if self._gmcp_enabled and not self._seed_announced:
             self._seed_announced = True
             self._send_gmcp("Seed.Hello", seed_hello(SEED_NAME))
+        # Additive engineering-workspace wire: a logged-in owner's client can create a Seed and get
+        # its workspace pushed back, all over GMCP. Only after the front desk (self._session set),
+        # and orthogonal to the game path -- a non-workspace frame is ignored here.
+        if self._session is not None:
+            self._handle_workspace_gmcp(raw)
+
+    def _handle_workspace_gmcp(self, raw: bytes) -> None:
+        """Dispatch an inbound engineering-workspace GMCP package on an authenticated connection:
+        `Seed.Create` / `Form.Submit` create a Seed and push its workspace; `Workspace.Request`
+        serves the reference Seed's `Deploy.Manifest` for a requested tier (a read, no mutation).
+        Authorization before capability (architecture law 5): the whole surface is OWNER-gated,
+        mirroring the in-MUD `workspace` verb's `min_rank='owner'` -- a non-owner's create request
+        gets an honest `ok:false` verdict, and a non-owner's read request is silently ignored (there
+        is nothing to serve). Any other inbound package (or none) is ignored, so the game path is
+        never touched.
+
+        The read loop (`_read_message`) recognizes a standalone GMCP subnegotiation, so a bare
+        out-of-band frame (no trailing newline) is dispatched here the instant it arrives, not only
+        at the next line boundary."""
+        package = read_gmcp_package(raw)
+        if package is None:
+            return  # the common case: a normal command line carries no GMCP data frame
+        from kernel.seedlab.workspace_gmcp import (
+            FORM_SUBMIT_PACKAGE,
+            SEED_CREATE_PACKAGE,
+            SEED_CREATED_PACKAGE,
+            WORKSPACE_REQUEST_PACKAGE,
+            create_from_form_submit,
+            create_from_request,
+            seed_created,
+            workspace_packages,
+        )
+
+        name, payload = package
+        create_packages = (SEED_CREATE_PACKAGE, FORM_SUBMIT_PACKAGE)
+        if name not in (*create_packages, WORKSPACE_REQUEST_PACKAGE):
+            return
+        session = self._session
+        assert session is not None  # dispatch is only reached once the front desk set it
+        if not has_rank(session, "owner"):
+            if (
+                name in create_packages
+            ):  # a create is refused with a verdict; a read is just ignored
+                self._send_gmcp(
+                    SEED_CREATED_PACKAGE,
+                    seed_created("", False, reason="creating a workspace requires owner rank"),
+                )
+            return
+        if name == WORKSPACE_REQUEST_PACKAGE:
+            self._serve_requested_workspace(payload)
+            return
+        owner = session.account or session.player_id
+        with SEEDLAB_LOCK:
+            kernel = self._workspace_kernel()
+            if name == SEED_CREATE_PACKAGE:
+                verdict = create_from_request(kernel, payload, owner=owner)
+            else:
+                from kernel.seedlab.form import load_definition
+
+                verdict = create_from_form_submit(kernel, load_definition(), payload, owner=owner)
+            self._send_gmcp(SEED_CREATED_PACKAGE, verdict)
+            if verdict.get("ok"):
+                record = kernel.get(str(verdict.get("id", "")))
+                for pkg, data in workspace_packages(record):
+                    self._send_gmcp(pkg, data)
+
+    def _serve_requested_workspace(self, payload: object) -> None:
+        """Serve the requestable read panels for the reference Seed on a `Workspace.Request`: its
+        `Deploy.Manifest` (for the tier the client picked, default `prototype`) and, WHEN a research
+        manifest is mounted, its `Research.Findings`. Owner-gated by the caller. Both are honest
+        about absence: an unknown tier serves no manifest, and an unmounted or unreadable research
+        source serves no findings (the panel stays empty rather than showing invented research).
+
+        The research source is a MOUNT, like the Federal Guidance Library: `SEEDLAB_RESEARCH` (or,
+        by default, `$SEEDLAB_HOME/research.json`) points at a JSON list of finding records. The
+        engine never vendors research; a deployment mounts it, and an absent mount is a legible
+        empty panel, not a fabricated one."""
+        from pathlib import Path
+
+        from kernel.seed_package import SeedPackageError, compile_manifest
+        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.workspace_gmcp import (
+            DEPLOY_MANIFEST_PACKAGE,
+            DEPLOY_STATUS_PACKAGE,
+            RESEARCH_FINDINGS_PACKAGE,
+            deploy_manifest,
+            deploy_status,
+            load_research_findings,
+            research_findings,
+        )
+
+        # The running instance's own live status: real facts the node knows about itself, no cloud.
+        self._send_gmcp(
+            DEPLOY_STATUS_PACKAGE,
+            deploy_status(
+                version=_server_version(),
+                seed=SEED_NAME,
+                uptime_seconds=time.monotonic() - _STARTED_AT,
+                connections=_SEATS.active,
+                max_connections=_SEATS.limit,
+                tls=bool(os.environ.get("CODEFORGE_TLS_CERT", "").strip()),
+            ),
+        )
+        tier_id = "prototype"
+        if isinstance(payload, dict):
+            requested = payload.get("tier")
+            if isinstance(requested, str) and requested.strip():
+                tier_id = requested.strip()
+        try:
+            manifest = compile_manifest(SEED_NAME, tier_id)
+        except SeedPackageError as exc:
+            _LOG.warning("workspace_deploy_unavailable", tier=tier_id, error=str(exc))
+        else:
+            self._send_gmcp(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=SEED_NAME))
+
+        research_path = Path(
+            os.environ.get("SEEDLAB_RESEARCH")
+            or Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "research.json"
+        )
+        try:
+            findings = load_research_findings(research_path)
+        except (OSError, ValueError, SeedKernelError):
+            return  # no research mounted (or unreadable): the panel stays honestly empty
+        self._send_gmcp(RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=SEED_NAME))
+
+    def _workspace_kernel(self) -> "SeedKernel":
+        """A Kernel over the file-backed seedlab store at `$SEEDLAB_HOME/seeds` (default
+        `.seedlab/seeds`), the same store the in-MUD `workspace` verb uses. Read at call time so a
+        test can point `SEEDLAB_HOME` at a tmp dir; lazy-imported so seedlab stays off the gateway's
+        load path (the game path never imports it)."""
+        from pathlib import Path
+
+        from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+
+        root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "seeds"
+        return SeedKernel(FileSeedStore(root))
+
+    def _push_workspace_form(self) -> None:
+        """Push the engineering creation Form (`Form.Schema`) to a logged-in owner's Native-Seed
+        client, so its Seed Creation Wizard can render. Owner-gated by the caller; additive and
+        optional (a game client ignores the package). A missing catalog is logged, never a crash."""
+        from kernel.seedlab.form import FormError, load_definition
+        from kernel.seedlab.workspace_gmcp import FORM_SCHEMA_PACKAGE, form_schema
+
+        try:
+            definition = load_definition()
+        except FormError as exc:
+            _LOG.warning("workspace_form_unavailable", error=str(exc))
+            return
+        self._send_gmcp(FORM_SCHEMA_PACKAGE, form_schema(definition, seed=SEED_NAME))
+
+    def _push_reference_workspace(self) -> None:
+        """Push the reference engineering Seed's READ-ONLY workspace to a logged-in owner's client,
+        so the Master Client's read panels light up from the RUNNING server (not just a fixture):
+        its own module map (`Architecture.Map`, the classification registry) and its filed
+        Blueprints (`Blueprint.List`). Real engine state, parameter-free, owner-gated by the caller;
+        additive and optional (a game client ignores them). A missing or broken source is logged and
+        skipped, never a crash. `Deploy.Manifest` (needs a chosen tier) and `Research.Findings` (a
+        per-Seed manifest) are request-driven, not auto-pushed."""
+        from kernel.blueprint import load_all
+        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.workspace_gmcp import (
+            ARCHITECTURE_MAP_PACKAGE,
+            BLUEPRINT_LIST_PACKAGE,
+            architecture_map,
+            blueprint_list,
+            load_module_designations,
+        )
+
+        try:
+            modules = load_module_designations()
+        except (OSError, ValueError, SeedKernelError) as exc:
+            _LOG.warning("workspace_architecture_unavailable", error=str(exc))
+        else:
+            self._send_gmcp(ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=SEED_NAME))
+        try:
+            blueprints = load_all()
+        except (OSError, ValueError) as exc:
+            _LOG.warning("workspace_blueprints_unavailable", error=str(exc))
+        else:
+            self._send_gmcp(BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=SEED_NAME))
 
     def _send_gmcp(self, package: str, data: object) -> None:
         """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""
@@ -474,25 +735,41 @@ class _GateHandler(socketserver.StreamRequestHandler):
             entered = self._front_desk(session)
             if not entered:
                 return
+            # The account is now authenticated: open the additive engineering-workspace wire for
+            # this connection, and (for an owner) push the creation Form so their Native-Seed
+            # client's Wizard can render. Orthogonal to the game path below.
+            self._session = session
+            if has_rank(session, "owner"):
+                self._push_workspace_form()
+                self._push_reference_workspace()
             presence.mark_online(
                 session.player_id, session.location
             )  # joins the shared roster + room
             last_room = session.location  # track moves so the cross-process room view stays current
             self._push_state(session)  # first frames: the scene they logged into
+            need_prompt = True
             while session.alive:
-                self.wfile.write(b"> ")
+                if need_prompt:
+                    self.wfile.write(b"> ")
                 try:
-                    line = self.rfile.readline(MAX_LINE_BYTES)
+                    message, is_frame = _read_message(self.rfile, MAX_LINE_BYTES)
                 except OSError:
                     break  # idle timeout or broken pipe -> disconnect
-                if not line:
+                if not message:
                     break  # client hung up
-                self._note_gmcp(line)  # a client can enable/disable GMCP mid-session
+                self._note_gmcp(message)  # negotiation + the engineering-workspace wire
+                if is_frame:
+                    # A standalone out-of-band GMCP frame: handled by _note_gmcp, it is not a game
+                    # command, and it did not consume the prompt already on screen -- so process the
+                    # next input without reprinting "> ".
+                    need_prompt = False
+                    continue
+                need_prompt = True
                 # Strip mid-session IAC negotiation (window-size, terminal-type, GMCP frames a
                 # client glues to input) before the tick reads it -- the same codec the login
                 # prompts (`_ask_line`/`_ask_secret`) already run. Without it, a client's answering
                 # IAC bytes leak into the command line as decoded garbage and route to "Huh?".
-                text = _strip_telnet(line).decode("utf-8", errors="ignore")
+                text = _strip_telnet(message).decode("utf-8", errors="ignore")
                 if text.strip().lower() == "passwd":
                     self._passwd(session)  # multi-prompt dialogue with echo blackout
                     continue

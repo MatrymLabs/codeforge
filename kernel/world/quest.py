@@ -214,6 +214,25 @@ def register_specs(specs: list[QuestSpec]) -> None:
     _fold_in(specs)
 
 
+def unregister_specs(quest_ids: list[str]) -> None:
+    """The clean inverse of register_specs: UNLOAD the named quests -- drop each from the registry,
+    remove its world-event routes, and clear any in-flight runs -- so a region (or a test) can load
+    quests and later unload them without leaking global state. Unknown ids are ignored (idempotent).
+    The missing per-region teardown a persistent world needs to swap content in and out."""
+    for quest_id in quest_ids:
+        quest = _QUESTS.pop(quest_id, None)
+        if quest is None:
+            continue
+        for trigger in quest.triggers:
+            routes = _EVENT_ROUTES.get(trigger)
+            if routes and quest_id in routes:
+                routes.remove(quest_id)
+                if not routes:
+                    del _EVENT_ROUTES[trigger]
+        for player_runs in _RUNS.values():
+            player_runs.pop(quest_id, None)
+
+
 def _fold_in(specs: list[QuestSpec]) -> None:
     """Register generated QuestSpecs into the engine (skipping any already known) and route their
     triggers. The shared tail of register_bounties/register_errands."""

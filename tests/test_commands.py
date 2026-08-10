@@ -361,7 +361,11 @@ def test_unlock_without_with_prompts() -> None:
 def test_help_returns_the_help_text_through_the_spine() -> None:
     from forge import HELP_TEXT
 
-    assert handle_command(_player(), "help") == HELP_TEXT
+    # bare `help` still carries the intro banner, now followed by the spine-derived command list
+    # (help_index consumer, RD-2026-0007). `help <command>` answers the specific question instead.
+    bare = handle_command(_player(), "help")
+    assert HELP_TEXT in bare
+    assert bare != handle_command(_player(), "help look")
 
 
 def test_save_and_load_round_trip_through_the_spine() -> None:

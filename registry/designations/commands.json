@@ -2344,7 +2344,7 @@
     "designation": "CMD-04.065",
     "name": "help",
     "status": "active",
-    "function": "the command help text",
+    "function": "help from the command spine: help, help <command>, or help <word>",
     "label": "help",
     "file": "forge.py",
     "type": "CMD",
@@ -3715,5 +3715,55 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
-  }
+  },
+ {
+  "designation": "CMD-04.115",
+  "name": "map",
+  "status": "active",
+  "function": "render a minimap of the nearby world",
+  "label": "map",
+  "file": "forge.py",
+  "type": "CMD",
+  "domain": "04",
+  "docs": "",
+  "tests": "tests/test_map_verb.py",
+  "depends_on": [
+   "MOD-05.107"
+  ],
+  "related": [],
+  "reuse": "",
+  "tags": [
+   "command"
+  ],
+  "notes": "RD-2026-0007 Evennia harvest wave 2: consumer of the minimap part (MOD-05.107); renders the world graph around the player as an ASCII minimap.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "CMD-04.116",
+  "name": "recog",
+  "status": "active",
+  "function": "privately name someone here (recog <who> as <name>)",
+  "label": "recog",
+  "file": "forge.py",
+  "type": "CMD",
+  "domain": "04",
+  "docs": "",
+  "tests": "tests/test_recog_verb.py",
+  "depends_on": [
+   "MOD-05.108"
+  ],
+  "related": [],
+  "reuse": "",
+  "tags": [
+   "command"
+  ],
+  "notes": "RD-2026-0007 Evennia harvest: consumer of the recognition part (MOD-05.108). Per-viewer personal aliases shown in render_scene.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ }
 ]

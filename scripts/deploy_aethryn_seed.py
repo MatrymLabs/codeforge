@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess  # nosec B404 -- fixed argv, no shell; boots the poured cast to measure its world
+import subprocess  # nosec B404
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -86,7 +86,8 @@ def measure_scale(cast_dir: Path, *, timeout: float = 120.0) -> tuple[int, str]:
     honest scale number, measured from the deployed artifact. Returns (0, "") if the probe fails."""
     env = dict(os.environ, FORGE_SEED=AETHRYN_SEED)
     try:
-        result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
+        # Fixed argv, no shell; boots the poured cast to measure its world.
+        result = subprocess.run(  # nosec B603
             [sys.executable, "-c", _SCALE_PROBE],
             cwd=cast_dir,
             capture_output=True,

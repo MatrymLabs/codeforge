@@ -12,9 +12,11 @@ from the models, so codeforge can never silently diverge from its own published 
 
 from __future__ import annotations
 
+import importlib
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from pydantic.json_schema import models_json_schema
 
@@ -80,6 +82,18 @@ def write() -> Path:
     return SCHEMA_PATH
 
 
+def _native_seed_writer() -> Callable[[], Path]:
+    """Load the Native Seed contract writer in both package and direct-script execution."""
+    try:
+        module = importlib.import_module("contracts.native_seed")
+    except ModuleNotFoundError as exc:  # pragma: no cover - direct `python contracts/generate.py`
+        if exc.name != "contracts":
+            raise
+        module = importlib.import_module("native_seed")
+    return cast(Callable[[], Path], module.write)
+
+
 if __name__ == "__main__":
-    path = write()
-    print(f"wrote {path}")
+    paths = [write(), _native_seed_writer()()]
+    for path in paths:
+        print(f"wrote {path}")

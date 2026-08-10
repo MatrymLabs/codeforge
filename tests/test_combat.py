@@ -1300,3 +1300,51 @@ def test_a_lethal_fall_also_scatters_coins():
     assert s.resources[
         "hp"
     ].is_full  # full health at the start room (the trip home is its own stake)
+
+
+# --- numbered-target disambiguation: attack the Nth of several identical foes ---------------------
+def _spawn_two_goblins(location: str = "courtyard") -> None:
+    """Two identical foes sharing the keyword 'goblin', so a bare 'goblin' is ambiguous."""
+    for i in (1, 2):
+        npcs.NPCS[f"goblin_{i}"] = {
+            "name": f"goblin {i}",
+            "keywords": ["goblin"],
+            "location": location,
+            "dialogue": ["..."],
+            "next_line": 0,
+            "hp": 50,
+            "hp_now": 50,
+            "xp": 10,
+            "atk": 0,
+        }
+    npcs.reindex_npcs()
+
+
+def test_bare_attack_hits_the_first_of_two_identical_foes():
+    s = _fighter()
+    _spawn_two_goblins()
+    out = attack(s, "goblin")
+    assert "goblin 1" in out
+    assert npcs.NPCS["goblin_1"]["hp_now"] < 50  # the first took the blow
+    assert npcs.NPCS["goblin_2"]["hp_now"] == 50  # the second is untouched
+
+
+def test_attack_ordinal_strikes_the_second_identical_foe():
+    """The defect this fixes: first-match-only targeting left a second identical foe unhittable."""
+    s = _fighter()
+    _spawn_two_goblins()
+    out = attack(s, "2-goblin")
+    assert "goblin 2" in out
+    assert npcs.NPCS["goblin_2"]["hp_now"] < 50  # the SECOND took the blow
+    assert npcs.NPCS["goblin_1"]["hp_now"] == 50  # the first is untouched
+
+
+def test_attack_overshoot_is_refused_with_a_count():
+    s = _fighter()
+    _spawn_two_goblins()
+    out = attack(s, "3-goblin")
+    assert "There is no one like that here" in out
+    assert "only 2 here" in out
+    # nobody was struck
+    assert npcs.NPCS["goblin_1"]["hp_now"] == 50
+    assert npcs.NPCS["goblin_2"]["hp_now"] == 50

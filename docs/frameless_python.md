@@ -33,7 +33,7 @@ What CodeForge is **not defined by** any one tool:
 | Config / content | YAML seeds validated by my own loader gates | `kernel/world/seed.py` |
 | State | SQLite via SQLAlchemy (a data tool, behind my own `kernel/world/db.py`) | `kernel/world/db.py` |
 | Events | my own in-process event bus | `kernel/world/events.py` |
-| Reports | my own `ReportWriter`, plain Markdown | `parts/reporting.py` |
+| Reports | my own `ReportWriter`, plain Markdown | `kernel/shelf/reporting.py` |
 | Classification | my own registry + designations, not a plugin framework | `kernel/registry.py` |
 | Task running | Make + shell, the Ritual | `Makefile` |
 | Diagnostics UI | plain-text renders, deterministic and testable, no TUI library | `adapters/terminal.py`, `kernel/frameup.py` |

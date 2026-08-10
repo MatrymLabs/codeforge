@@ -22,27 +22,33 @@ verify = ["crosshair-tool>=0.0.109"]
 # tool reports refactor_available() False and fails loud with an install hint; nothing else is
 # affected. LibCST is the only lossless scope-aware codemod path (stdlib ast is lossy). deep=True
 # additionally uses the [verify] extra. CI runs without it (the scope-correctness tests skip).
-refactor = ["libcst>=1.8.6"]
+refactor = ["libcst>=1.9.0"]
 dev = [
-    # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
-    # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
-    # Bump this deliberately (change the pin, then `make fix`), never by drift.
-    "ruff==0.16.0",
-    "mypy",
-    "types-PyYAML",
-    "import-linter",  # style-guide section 2: enforce the kernel/adapters/content dependency direction
-    "pytest",
-    "pytest-cov",
-    "pytest-xdist",
-    "pip-audit",
-    "bandit[toml]",
-    "detect-secrets",
-    "cyclonedx-bom",
-    "hypothesis",
-    "httpx2",
-    "alembic",
-    "mkdocs-material",
-    "playwright",
+    # ALL PINNED, deliberately. Every tool here decides a gate verdict, and a verdict must not
+    # depend on the day it ran. The lesson was learned once for ruff alone: unpinned, CI installed
+    # the latest and local lagged, and a minor bump (0.15 -> 0.16) reformatted and reddened CI. The
+    # same exposure was live for every other tool below, because CI runs `uv pip install -e ".[dev]"`
+    # (a fresh resolve from PyPI) at 13 sites and never installs from uv.lock. `make check` could
+    # change its mind with no commit behind it.
+    # Bump deliberately: Dependabot proposes (uv ecosystem, so pyproject and uv.lock move together),
+    # CI verifies, the founder merges. Never by drift.
+    "ruff==0.16.1",
+    "mypy==2.3.0",
+    "types-PyYAML==6.0.12.20260724",
+    "import-linter==2.13",  # style-guide section 2: enforce the kernel/adapters/content direction
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "pytest-xdist==3.8.0",
+    "coverage==7.15.4",  # named explicitly: the coverage threshold is a gate, pytest-cov floats it
+    "pip-audit==2.10.1",
+    "bandit[toml]==1.9.4",
+    "detect-secrets==1.5.0",
+    "cyclonedx-bom==7.3.1",
+    "hypothesis==6.165.2",
+    "httpx2==2.9.1",
+    "alembic==1.19.1",
+    "mkdocs-material==9.7.7",
+    "playwright==1.62.0",
 ]
 
 [project.scripts]
@@ -68,6 +74,10 @@ adapters = ["web/*.html"]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+# Evidence artifacts record what a run actually produced. A formatter must never
+# rewrite a record, so the code blocks under docs/evidence/ stay byte-for-byte as
+# they were generated, even where ruff would reformat them.
+extend-exclude = ["docs/evidence"]
 
 [tool.ruff.lint]
 # E/F: core errors  I: import sorting  UP: modernize syntax

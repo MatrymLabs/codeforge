@@ -12,6 +12,7 @@ from kernel.world.creator_workshop import install_workshop
 from kernel.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from kernel.world.delve_sets import forge_delve_sets
 from kernel.world.doors import DOORS, barred_door_for
+from kernel.world.fieldzone import FieldZone, build_field_zone, load_field_configs
 from kernel.world.gearsets import register_sets
 from kernel.world.inscriptions import carve_inscriptions
 from kernel.world.items import ITEMS, register_prototypes
@@ -19,7 +20,7 @@ from kernel.world.landmarks import raise_landmarks
 from kernel.world.npcs import NPCS
 from kernel.world.relics import arm_deep_bosses
 from kernel.world.rumors import seed_rumors
-from kernel.world.seed import SEED_DIR, Npc, Room, inspect_world_links, load_rooms
+from kernel.world.seed import SEED_DIR, Npc, Room, Zone, inspect_world_links, load_rooms
 from kernel.world.spiral import extend_world_with_road, load_spiral_config
 from kernel.world.townsfolk import load_settlements, populate_settlements
 from kernel.world.travel import load_waystones
@@ -56,6 +57,23 @@ if _wildlands_configs is not None:
     # Registered as prototypes (not just appended to ITEMS) before the link audit, so a guardian's
     # drop can be cloned and passes the same gate as authored gear.
     register_prototypes(arm_guardians(_wild_npcs))
+
+# Grow FIELD-backed wilderness zones if the seed opts in (fields.yaml): a zone that wants an OPEN
+# WORLD instead of a linear trail-chain declares a compact field row (size, seed, biome, levels,
+# optional river + landmarks) and kernel.world.fieldzone expands it into a WORLD-shaped LIVING field
+# (rivers, elevation, roads, foes, gather nodes, guardians) grafted onto its hub. This is the
+# trail-to-field upgrade of the World Topology Doctrine; each field's AREA metadata is published in
+# FIELD_ZONES so kernel.world.zones registers it for the scheduler + zone_of, exactly like a trail.
+FIELD_ZONES: dict[str, Zone] = {}
+_field_configs = load_field_configs(SEED_DIR / "fields.yaml")
+if _field_configs is not None:
+    for _cfg in _field_configs:
+        _fz: FieldZone = build_field_zone(_cfg, set(WORLD))
+        WORLD.update(_fz.rooms)
+        NPCS.update(_fz.npcs)
+        WORLD[_fz.attach]["exits"].setdefault(_fz.attach_dir, _fz.gate)  # hub -> field entrance
+        register_prototypes(arm_guardians(_fz.npcs))
+        FIELD_ZONES[_fz.label] = _fz.zone
 
 # Sink a multi-room delve below every dungeon mouth (seeds/<world>/dungeons.yaml): a descent of
 # escalating foes ending in a named deep boss (kernel.world.delve). The bosses are armed with gear
@@ -209,6 +227,7 @@ if _spiral_config is not None:
     _all_zones.update(spiral_zones(_spiral_config))
 if _wildlands_configs is not None:
     _all_zones.update(wildlands_zones(_wildlands_configs))
+_all_zones.update(FIELD_ZONES)  # field-backed zones live where their creatures do, too
 _cull_zones: list[dict[str, object]] = [
     {"label": lbl, "name": z["name"], "biome": z.get("biome", ""), "level_max": z.get("level_max")}
     for lbl, z in _all_zones.items()

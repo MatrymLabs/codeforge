@@ -1706,6 +1706,27 @@
     compliance: a maintainability signal with a named, sourced remediation
     general: an ast-based Python code-smell detector for any codebase
 
+- id: type-smell
+  name: Type Smell
+  source: kernel/shelf/type_smell.py
+  category: quality
+  tags: [type-hints, ast, static-analysis, maintainability, mypy]
+  maturity: beta
+  source_status: original
+  influence: 'Python Coding Practices survey (RD-2026-0001); Magalhaes & Montandon 2026, "Understanding Type Hints in Python Libraries and Frameworks" (ICPC)'
+  license: MIT
+  experimental: 'resolve imported aliases and honor `if TYPE_CHECKING` for cross-module type inference, and encode the detectors as TYPE_SMELL.* records in the coding corpus so the lens and corpus stay in sync. Traded away (v1): the auto-fix half - it detects and suggests, never rewrites a signature; and cross-module resolution, keeping the honest single-module syntactic scope.'
+  risk: low
+  purpose: 'Detect risky type-related practices via the stdlib ast - a public function left untyped (UNTYPED_PUBLIC_API) or half-typed (PARTIAL_ANNOTATION), `Any` on a public boundary (ANY_ON_PUBLIC), and one parameter name carrying two different types across a module (INCONSISTENT_PARAM_TYPE). The type-hygiene sibling of the Fowler smell engine, catching what mypy is partly blind to (Any is a mypy-approved opt-out; mypy never checks one-name-two-types across functions). Single-module, syntactic scope; it SUGGESTS, it never rewrites.
+
+    '
+  reuse:
+    game: a type-hygiene line in a `make smells` / qa maintainability report
+    education: show why a half-typed public signature is a latent defect, not just a style nit
+    security: an untyped boundary is where unvalidated values slip past a contract
+    compliance: a typed-contract coverage signal with a named remediation
+    general: an ast-based Python type-smell detector for any codebase
+
 - id: source-analyzer
   name: Source Analyzer
   source: kernel/shelf/source_analyzer.py
@@ -2032,6 +2053,24 @@
     security: catch a transform (human or LLM) that silently changed behavior
     compliance: an auditable pre/post-transform evidence record with an honest caveat
     general: a dependency-free stand-in for CrossHair diffbehavior on any Python function
+- id: mutation-kpi
+  name: Mutation-Score Evidence KPI
+  source: kernel/shelf/mutation_kpi.py
+  category: validation
+  tags: [mutation-testing, evidence, kpi, posture, test-quality]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D field report RD-2026-0003 (Closing the Five Capability Gaps; claim #2; the report's #1 acquirer signal - mutation score proves tests bite where coverage cannot; clean-room stdlib)
+  experimental: 'wire a mutation_kill_rate KpiSpec into kernel/posture.py fed by a recorded `make mutation` result (the gated posture consumer). Traded away (v1): a live cosmic-ray invocation, keeping a tool-agnostic core + a text adapter so mutation stays off the fast PR path.'
+  risk: low
+  purpose: 'Turn a mutation-testing run into a tracked evidence KPI in the posture MEASURED / NOT_COMPUTABLE honesty shape: MEASURED kill-rate vs a target, or NOT_COMPUTABLE (no run / stale / zero mutants) naming the exact action that would make it measurable - never a faked zero. Tool-agnostic core over a structured MutationResult, plus a cosmic-ray cr-report/cr-rate adapter (format verified-real). Incomplete mutants excluded from the denominator; incoherent counts fail loud.'
+  reuse:
+    game: track whether the engine's test suite actually bites, not just its line coverage
+    education: teach mutation testing and why coverage theater does not prove tests catch bugs
+    security: surface a thin test suite around a security-critical module as measured evidence
+    compliance: an acquirer-facing, anti-gaming test-quality KPI with honest not-computable states
+    general: normalize any mutation tool's output (cosmic-ray/mutmut/PIT/Stryker) into one KPI
 - id: path-bounded-reader
   name: Path-Bounded Source Reader
   source: kernel/seedlab/source_connector.py
@@ -2140,3 +2179,135 @@
     security: tamper-evident generated output (checksummed + provenance)
     compliance: reproducible-build evidence for generated artifacts
     general: a deterministic, checksummed code and file generator
+- id: atomic-write
+  name: Atomic Write
+  source: kernel/shelf/atomic_write.py
+  category: persistence
+  tags:
+  - durability
+  - atomicity
+  - crash-safety
+  - filesystem
+  - temp-then-rename
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the write-to-temp-then-rename atomic-file-write idiom (POSIX rename(2) atomicity; standard technique, independently implemented)
+  experimental: 'an O_TMPFILE + linkat variant, or a parent-directory fsync for crash-consistent renames. Traded away (v1): fsync-by-default durability, keeping the callers'' existing atomicity-only behavior with an opt-in fsync.'
+  risk: low
+  purpose: 'Write a file so a reader (or a crash) never sees a half-written or truncated file: full write to a temp sibling in the target''s own directory, then an atomic os.replace. Guarantees atomicity (no partial file), not fsync-durability unless asked. Extracted on its third real occurrence (the Seed store, model store, and backup manager each re-derived it).
+
+    '
+  reuse:
+    game: persist world or save state so a crash mid-write never corrupts the save file
+    business: write config, ledgers, or exported reports without a reader ever seeing a partial file
+    security: avoid a partial-file read of a credential or policy file while it is being rewritten
+    general: any durable file store that persists records and must never expose a torn write
+
+- id: table
+  name: Table
+  source: kernel/shelf/table.py
+  category: presentation
+  tags: [ascii, table, rendering, ui, text]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia utils/evtable.py (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add unicode-width awareness and color-tag-aware widths (compose with the color part). Traded away (v1): evtable''s nested-table + box-style breadth, keeping headers + align + wrap.'
+  risk: low
+  purpose: 'Render rows of cells as an aligned monospace table (auto width, word-wrap, per-column alignment).'
+  reuse:
+    game: aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)
+    education: teach the pattern with a real, tested, reusable implementation
+    security: aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)
+    general: aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)
+
+- id: help-index
+  name: Help Index
+  source: kernel/shelf/help_index.py
+  category: quality
+  tags: [help, search, commands, ui, documentation]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia help system (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add fuzzy search and auto-generated see-also links. Traded away (v1): Evennia''s db + file help stores, keeping an in-memory index over the spine.'
+  risk: low
+  purpose: 'A structured, searchable help system built from command metadata (name/purpose/namespace).'
+  reuse:
+    game: per-command and topic help auto-built from the command spine; replaces a static help blob
+    education: teach the pattern with a real, tested, reusable implementation
+    security: per-command and topic help auto-built from the command spine; replaces a static help blob
+    general: per-command and topic help auto-built from the command spine; replaces a static help blob
+
+- id: target-disambig
+  name: Target Disambig
+  source: kernel/shelf/target_disambig.py
+  category: quality
+  tags: [parsing, disambiguation, targeting, commands]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia commands/cmdparser.py (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add quality-of-match ranking across partial names. Traded away (v1): Evennia''s full multimatch parser, keeping the ordinal split + pick.'
+  risk: low
+  purpose: 'Numbered target disambiguation (2-sword / sword-2) for one of N identically-named objects.'
+  reuse:
+    game: target a specific one of several same-named items or foes; pairs with a first-match resolver
+    education: teach the pattern with a real, tested, reusable implementation
+    security: target a specific one of several same-named items or foes; pairs with a first-match resolver
+    general: target a specific one of several same-named items or foes; pairs with a first-match resolver
+
+- id: health-bar
+  name: Health Bar
+  source: kernel/shelf/health_bar.py
+  category: presentation
+  tags: [ui, meter, hp, rendering, bar]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia contrib rpg/health_bar (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add gradient color thresholds (compose with color). Traded away (v1): a screen-reader ARIA layer, keeping the meter + honest edges.'
+  risk: low
+  purpose: 'Render a numeric value as a proportional ASCII meter bar with honest edges.'
+  reuse:
+    game: visual HP/MP/XP/progress meters in any verb; composes with the color part
+    education: teach the pattern with a real, tested, reusable implementation
+    security: visual HP/MP/XP/progress meters in any verb; composes with the color part
+    general: visual HP/MP/XP/progress meters in any verb; composes with the color part
+
+- id: minimap
+  name: Minimap
+  source: kernel/shelf/minimap.py
+  category: presentation
+  tags: [map, ascii, rendering, navigation, grid]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia contrib grid/ingame_map_display (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add diagonal (ne/nw/se/sw) placement and up/down layer markers on the plane. Traded away (v1): non-Euclidean exit handling, keeping a clean cardinal BFS layout with a footer note for u/d.'
+  risk: low
+  purpose: 'Render a small ASCII minimap of nearby rooms from a room+exit graph: BFS out to a radius over cardinal exits, place rooms on a 2D grid, paint the center and connectors. Fails loud on a dangling exit or a missing center.'
+  reuse:
+    game: an in-game `map` verb over the world graph
+    education: teach BFS + 2D grid layout with a real, tested renderer
+    security: none
+    general: an ASCII map renderer for any directed room/node graph with cardinal edges
+
+- id: recognition
+  name: Recognition
+  source: kernel/shelf/recognition.py
+  category: presentation
+  tags: [rp, recognition, sdesc, naming, aliases]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia rpg/rpsystem sdesc+recog core (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add the emote-parse DSL (per-observer name substitution inside a pose) and masks. Traded away (v1): the 1693-line rpsystem breadth, keeping the sdesc + per-observer recog + resolve core.'
+  risk: low
+  purpose: 'Per-observer name resolution: an observer sees a short-description for strangers and a personal recog alias once they recognize a target. Frozen copy-on-write Book; a projection never mutates state.'
+  reuse:
+    game: personal aliases / RP recognition shown per-viewer in a room render
+    education: teach per-observer projection (state canonical, text a projection)
+    security: none
+    general: a per-observer name-resolution layer for any actor-to-actor naming

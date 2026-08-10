@@ -21,7 +21,8 @@ def test_seed_path_points_at_the_live_world():
 def test_world_scale_counts_a_real_world():
     scale = census.world_scale()
     assert scale["authored_rooms"] > 0
-    assert scale["wildlands_regions"] > 0
+    # the procedural wilderness (trail-chains and/or open fields) adds regions and rooms
+    assert scale["generated_regions"] > 0
     assert scale["total_rooms_default_scale"] > scale["authored_rooms"]  # generators add rooms
 
 

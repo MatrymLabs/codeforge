@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from kernel.seedlab.project_model import ProjectModel
+from kernel.shelf.atomic_write import atomic_write_text
 
 _SLUG = re.compile(r"[^a-z0-9]+")
 
@@ -91,9 +92,7 @@ class FileModelStore:
 
     def save(self, seed_id: str, model_id: str, model: ProjectModel) -> None:
         target = self._dir(seed_id) / f"{model_id}.json"
-        tmp = target.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(model.to_dict(), indent=2), encoding="utf-8")
-        tmp.replace(target)
+        atomic_write_text(target, json.dumps(model.to_dict(), indent=2))
 
     def load(self, seed_id: str, model_id: str) -> ProjectModel | None:
         path = self.root / seed_id / f"{model_id}.json"

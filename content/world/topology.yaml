@@ -1,0 +1,87 @@
+# SEED-AGNOSTIC WORLD TOPOLOGY DOCTRINE (as data)
+#
+# "A world is a graph with area, not a path with scenery." This file is the fleet-wide topology
+# spec: the direction vocabulary, the terrain + passability matrix, the zone-backing options, the
+# anti-trail gate thresholds, and the two-layer generation design. It binds Aethryn and every future
+# world-shaped Seed (the Oregon-Trail archetype is linear BY DESIGN and opts out via its Form's
+# world_model answer). kernel/world/topology.py loads this; the gates here are the validator's
+# defaults. Changing a threshold requires a DECISION comment (per the doctrine).
+
+# --- 1. Direction vocabulary (all applicable, everywhere) ----------------------------------------
+directions:
+  cardinal: [north, south, east, west]
+  intercardinal: [northeast, northwest, southeast, southwest]
+  vertical: [up, down]
+  # Named (noun) exits are OPEN vocabulary -- any noun a landmark makes clearer than a compass
+  # (enter cave, cross bridge, ford river, climb cliff, descend stairs, through gate). They COEXIST
+  # with compass exits; they never replace them fleet-wide. Listed here are the canonical verbs.
+  named_verbs: [enter, cross, ford, climb, descend, ascend, through, into, out]
+
+# --- 2. Terrain types + passability matrix -------------------------------------------------------
+# Each coordinate/room carries a terrain type. `passable` false means the tile blocks movement
+# except via the listed `cross_via` named exits. `cost` is optional movement cost (1 = default).
+# `gives` names directions a terrain implies (a slope gives up/down). Used by the Phase-2 movement
+# model + Phase-3 exit-derivation; the Phase-1 validator only reads `gates`.
+terrain:
+  plain:  {passable: true,  cost: 1}
+  meadow: {passable: true,  cost: 1}
+  road:   {passable: true,  cost: 1}
+  forest: {passable: true,  cost: 2}
+  hill:   {passable: true,  cost: 2, gives: [up, down]}
+  slope:  {passable: true,  cost: 2, gives: [up, down]}
+  marsh:  {passable: true,  cost: 3}
+  desert: {passable: true,  cost: 2}
+  snow:   {passable: true,  cost: 2}
+  ash:    {passable: true,  cost: 2}
+  shore:  {passable: true,  cost: 1}
+  river:  {passable: false, cross_via: [ford, cross bridge, swim]}
+  ford:   {passable: true,  cost: 1}
+  bridge: {passable: true,  cost: 1}
+  cliff:  {passable: false, cross_via: [climb]}
+  water:  {passable: false, cross_via: [swim, cross bridge, board ship]}
+  wall:   {passable: false, cross_via: [through gate]}
+
+# --- 3. Zone-backing options ---------------------------------------------------------------------
+# A zone declares which backing it uses; travel between backings is seamless to the player. The
+# codeforge equivalents of Evennia's spatial contribs (NO Evennia dependency -- the fleet is
+# frameless; these are our own or Hardware Store candidates).
+zone_backings:
+  keyed:
+    intent: hand-authored landmark interiors and story spaces (towns, boss rooms, quest sets)
+    codeforge_home: kernel/world/authored_towns.py + content/seeds/<seed>/authored/*.yaml
+  field:
+    intent: large open procedural areas (plains, forests, deserts) backed by a coordinate map,
+      rooms created/recycled on demand -- a 100x100 plain costs a handful of live rooms, not 10,000
+    codeforge_home: kernel/world/wildlands.py (the upgrade target -- today emits chains, not fields)
+  grid:
+    intent: mapped zones with real coordinates + pathfinding (dungeons, authored regions with a map)
+    codeforge_home: NEW (a coordinate/XYZ-grid backing does not exist yet; Phase-2 build)
+
+# --- 4. Anti-trail gate thresholds (the validator's defaults) ------------------------------------
+# A generated or hand-built zone FAILS validation if it breaches these. Tune per terrain in
+# `terrain_overrides`; a change is a DECISION.
+gates:
+  max_linearity: 0.60      # > 60% of rooms with EXACTLY 2 exits = a corridor wearing a costume
+  min_mean_degree: 2.80    # open-terrain zones should average 4-8; 2.8 is the floor
+  min_loop_ratio: 0.25     # < 25% of rooms lying on a cycle = a tree, not a world
+  require_choice: true     # >= 2 routes between substantial areas; an undeclared bridge fails it
+  # (declared deliberate bottlenecks -- the one bridge over the river -- are exempt, passed to the
+  #  validator as declared_bottlenecks; a leaf-spur to a dead-end cave is never a bottleneck)
+terrain_overrides: {}      # e.g. dungeon: {min_mean_degree: 2.4}  -- requires a DECISION comment
+
+# --- 5. Two-layer generation design (Phase 3 wires this) -----------------------------------------
+generation:
+  mission_layer:
+    what: a graph grammar places landmarks, zones, quest anchors, and the DELIBERATE bottlenecks
+      (the one bridge over the river is a declared story feature, not an accident)
+    output: the region skeleton + declared_bottlenecks
+  spatial_layer:
+    what: terrain generation (heightmap / noise / WFC) fills each zone with fields, rivers flowing
+      downhill from the heightmap (rivers follow elevation, not decoration), forests, hills; exits
+      derived from terrain adjacency + the passability matrix above
+    output: the walkable graph -- the trail the player walks is one path THROUGH the field, never
+      the field itself
+  descriptions:
+    what: terrain-driven with variation -- no 400 identical "You are in a field." rooms; templates
+      with local features (distant landmarks visible across open terrain is what makes a field feel
+      like a field)

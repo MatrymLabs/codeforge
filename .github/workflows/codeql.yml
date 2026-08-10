@@ -11,7 +11,21 @@ on:
   schedule:
     - cron: "23 6 * * 1"  # weekly sweep (Monday), catches newly-published queries
 
+# Cancel superseded runs on the SAME ref: pushing three commits to a PR otherwise runs three
+# full workflows to completion and only the last answer is ever read.
+#
+# PULL REQUESTS ONLY, deliberately. An earlier draft used `github.ref != 'refs/heads/main'`,
+# which is TRUE for a release event (its ref is the tag) and could cancel a release
+# mid-publish. It is also true for schedules and tags. Cancelling main's run is its own
+# hazard: "we cancelled the proof" is indistinguishable from "the proof never ran", and this
+# fleet has already lost a day to exactly that ambiguity. So: cancel PR iterations, nothing
+# else, ever.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
+  actions: read  # required: the analyze step reads the workflow run (get-a-workflow-run) and the `actions` language scans workflows; without it CodeQL 403s after exporting SARIF
   contents: read
   security-events: write
 
@@ -27,12 +41,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@f205ea1c3313d32999d8d6a48b4f6530d4437b38  # v4
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3  # v4
         with:
           languages: ${{ matrix.language }}
 
       # Python is interpreted -- no build step needed; CodeQL analyzes the source directly.
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@f205ea1c3313d32999d8d6a48b4f6530d4437b38  # v4
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3  # v4
         with:
           category: "/language:${{ matrix.language }}"

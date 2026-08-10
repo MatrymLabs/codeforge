@@ -19,7 +19,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Current Baseline:** catalog search median **39 ms**, p95 67 ms (the catalog never changes within a process).
 - **Hypothesis:** memoizing the parsed catalog (parse once per process, or per file-mtime) removes the repeated parse; search drops toward the pure substring cost (< 1 ms).
 - **Proposed Change:** cache `load_catalog()` (e.g. `functools.lru_cache` keyed on path+mtime, or a module-level parsed cache), preserving the loud-fail-on-bad-row behavior.
-- **Alternative Options:** parse at import (like `parts/jobs.py` loads `JOBS`); or an mtime-guarded reload for hot-edit during dev.
+- **Alternative Options:** parse at import (like `kernel/world/jobs.py` loads `JOBS`); or an mtime-guarded reload for hot-edit during dev.
 - **Correctness Tests:** assert cached result == freshly parsed result; the existing `test_hardware.py` EvidenceGate (every part maps to a domain) still passes; a bad row still fails loud.
 - **Benchmark Workload:** `reuse_search` and `find_part` over the shipped catalog. Input sizes: current catalog, plus a synthetic large catalog. Warmup 200, reps 2000.
 - **Metrics:** median/p95 latency, `yaml.safe_load` call count, peak memory.
@@ -32,7 +32,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   bad edit fails loud and is never cached. Full suite passed (+4 cache tests) with branch
   coverage green. No behavior change, no new dependency. Regression guard: the parse-once and
   mtime-invalidation tests in `test_hardware.py`. **Reuse (SHIPPED 2026-07-11):** the mtime-guarded
-  loader cache was promoted to a shared part, `parts/loader_cache.py` (its own test twin), and now
+  loader cache was promoted to a shared part, `kernel/shelf/loader_cache.py` (its own test twin), and now
   serves the catalog AND the classification registry (see EXP-002). One solution, three customers.
   Workload class: serialization/I-O-bound. Level 1.
 
@@ -68,12 +68,12 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-003 - Lazy-load SQLAlchemy to cut cold startup
 
-- **Repository Area:** A (server/runtime). `parts/db.py` (imports `sqlalchemy` at module import), reached eagerly via `forge.py -> parts.accounts -> parts.characters -> parts.db`.
+- **Repository Area:** A (server/runtime). `kernel/world/db.py` (imports `sqlalchemy` at module import), reached eagerly via `forge.py -> kernel.world.accounts -> kernel.world.characters -> kernel.world.db`.
 - **Observed Problem:** `import forge` eagerly imports the whole persistence stack even for DB-free paths (help, look, a benchmark).
 - **Evidence / Profiling:** `python -X importtime -c "import forge"` -> forge 647 ms cumulative, of which **SQLAlchemy ~412 ms** (`reports/performance/profiles/startup_importtime.txt`). Import peak memory 25.6 MB (tracemalloc).
 - **Current Baseline:** cold `import forge` median **574 ms** (fresh interpreter).
-- **Hypothesis:** deferring the `sqlalchemy`/`parts.db` import until persistence is first touched cuts cold start for the common DB-free path, without changing behavior.
-- **Proposed Change:** move the `sqlalchemy` import inside the functions that open a session (lazy import), or defer `parts.db` from the eager `forge` import chain. Preserve `parts/db.py`'s public API.
+- **Hypothesis:** deferring the `sqlalchemy`/`kernel.world.db` import until persistence is first touched cuts cold start for the common DB-free path, without changing behavior.
+- **Proposed Change:** move the `sqlalchemy` import inside the functions that open a session (lazy import), or defer `kernel/world/db` from the eager `forge` import chain. Preserve `kernel/world/db.py`'s public API.
 - **Alternative Options:** measure whether the container/server path always needs the DB (then the win only helps CLI/bench); consider a `--no-db` fast path.
 - **Correctness Tests:** full suite green; persistence round-trip tests unchanged; the DB opens correctly on first real use.
 - **Benchmark Workload:** cold `import forge`; cold `import forge` + one DB-touching command; startup of the server.
@@ -82,7 +82,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Compatibility / Security Risk:** none (same schema/behavior). **Maintenance Cost:** low. **Approval:** touches the persistence import boundary - a change-rule stop-point; confirm before running.
 - **Rollback:** restore the eager import.
 - **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11, approved).** Deferring the
-  `parts.db` import (SQLAlchemy's ORM home) out of the three modules on the `import forge` chain
+  `kernel.world.db` import (SQLAlchemy's ORM home) out of the three modules on the `import forge` chain
   (`accounts`, `characters`, `session -> job_progress`) via function-local imports cut cold
   `import forge` **680 ms -> 202 ms (~3.4x)**; `sqlalchemy` is verified absent from `sys.modules`
   after `import forge`. The deferred cost is measured, not hidden: `import forge` + first DB import
@@ -96,7 +96,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-004 - Parse seeds with libyaml's CSafeLoader
 
-- **Repository Area:** B (world/seed). `parts/seed.py:_UniqueKeyLoader`, used by `load_rooms`/`load_items`/`load_npcs`/`load_jobs`.
+- **Repository Area:** B (world/seed). `kernel/world/seed.py:_UniqueKeyLoader`, used by `load_rooms`/`load_items`/`load_npcs`/`load_jobs`.
 - **Observed Problem:** the seed parser subclassed the pure-Python `yaml.SafeLoader`; the full seed pack parsed at ~51 ms, 100% pure-Python YAML scanner, on the cold-start path (world + npcs load at import).
 - **Evidence of Problem / Profiling:** A/B on rooms.yaml - pure-Python SafeLoader 6521 us vs `yaml.CSafeLoader` 486 us = 13.4x on the raw parse; libyaml is available in the venv (`yaml.__with_libyaml__`).
 - **Current Baseline:** `load_rooms(first-forge)` end-to-end ~6500 us (parse + validation + room build).
@@ -117,7 +117,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   that process (a benchmark, a CLI invocation, a short session).
 - **Evidence / Profiling:** `python -X importtime -c "import forge"` (Windows PC, warm cache):
   our chain 72.5 ms of a 100.5 ms cold start; heaviest command-only subtrees
-  `kernel.evolution.command` 9.0 ms, `kernel.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
+  `kernel.evolution.command` 9.0 ms, `kernel.frameup` 6.4 ms, `kernel.shelf.console` 4.3 ms, plus a long
   tail of ~1-2 ms modules.
 - **Hypothesis:** command lambdas resolve module globals at CALL time, so replacing each eager
   import with a module-level wrapper that imports inside its body removes the modules from the

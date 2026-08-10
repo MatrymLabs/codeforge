@@ -1,0 +1,246 @@
+# SEED: aethryn -- fields.yaml  (AUTHORED: the World Topology Doctrine's trail-to-field zones)
+# A zone listed here grows an OPEN, WORLD-SHAPED FIELD for its wilderness instead of a linear
+# trail-chain (kernel/world/fieldzone.py + kernel/world/worldgen.py): terrain reads the zone's
+# BIOME (sand in the desert, cliff-broken ice on the glacier, dense forest over marsh in the
+# jungle, boggy moor, broken ash on the volcanic flats, shore + sea-inlets on the coast), rivers
+# and elevation shape movement, roads thread the open ground between landmarks (trail + field),
+# and the trail's living content (foes, gather nodes, guardians) is scattered across it.
+#
+# Each row is DESIGN data: a human picks a seed + landmarks that generate a reachable, world-
+# shaped field (the loader REFUSES one that is not). biome/attach/level band come from the map
+# (they mirror the zone), so every field ALIGNS with its zone. tools/emit_map_world.py skips a
+# field-backed zone's trail (FIELD_BACKED), so this file and wildlands.yaml never collide.
+
+# Veridia -- the cradle (the pilot). Open meadowland, a river with a ford + bridge, roads.
+veridia:
+  name: The Veridia Wilds
+  region: Veridia
+  biome: temperate-meadow
+  attach: veridia
+  attach_dir: west
+  level_min: 1
+  level_max: 30
+  width: 28
+  height: 22
+  seed: 9
+  river_source: [14, 20]
+  landmarks:
+    - {at: [4, 4], name: "The Cradle Cairn", kind: site}
+    - {at: [13, 10], name: "Meadowmoot", kind: site}
+    - {at: [23, 17], name: "The Old Watchtower", kind: dungeon}
+
+duskwood_vale:
+  name: The Duskwood Vale Wilds
+  region: Duskwood Vale
+  biome: wild-forest
+  attach: duskwood_vale
+  attach_dir: west
+  level_min: 20
+  level_max: 50
+  width: 28
+  height: 22
+  seed: 0
+  river_source: [14, 20]
+  landmarks:
+    - {at: [6, 6], name: "The Mistwood Cairn", kind: site}
+    - {at: [15, 11], name: "Thornhollow", kind: site}
+    - {at: [23, 17], name: "The Sunless Warren", kind: dungeon}
+
+caeloria:
+  name: The Caeloria Wilds
+  region: Caeloria
+  biome: temperate-meadow
+  attach: caeloria
+  attach_dir: north
+  level_min: 30
+  level_max: 60
+  width: 30
+  height: 22
+  seed: 0
+  river_source: [15, 20]
+  landmarks:
+    - {at: [6, 4], name: "Larkspur Stone", kind: site}
+    - {at: [15, 12], name: "The Gilded Mere", kind: site}
+    - {at: [24, 18], name: "Old Caeloria Keep", kind: dungeon}
+
+eldryn_forest:
+  name: The Eldryn Forest Wilds
+  region: Eldryn Forest
+  biome: wild-forest
+  attach: eldryn_forest
+  attach_dir: up
+  level_min: 50
+  level_max: 80
+  width: 30
+  height: 24
+  seed: 0
+  river_source: [15, 22]
+  landmarks:
+    - {at: [7, 6], name: "The Elderroot", kind: site}
+    - {at: [15, 12], name: "Greenreach Glade", kind: site}
+    - {at: [24, 19], name: "The Hollow Bole", kind: dungeon}
+
+frostspire_peaks:
+  name: The Frostspire Peaks Wilds
+  region: Frostspire Peaks
+  biome: glacier-waste
+  attach: frostspire_peaks
+  attach_dir: north
+  level_min: 60
+  level_max: 90
+  width: 30
+  height: 24
+  seed: 0
+  landmarks:
+    - {at: [6, 5], name: "The Frozen Cairn", kind: site}
+    - {at: [15, 12], name: "Icewatch Ruin", kind: peak}
+    - {at: [25, 19], name: "The Rimeward Vault", kind: dungeon}
+
+zhaar_desert:
+  name: The Zhaar Desert Wilds
+  region: Zhaar Desert
+  biome: salt-desert
+  attach: zhaar_desert
+  attach_dir: south
+  level_min: 80
+  level_max: 130
+  width: 32
+  height: 24
+  seed: 0
+  landmarks:
+    - {at: [6, 5], name: "The Sunbaked Waystone", kind: site}
+    - {at: [16, 12], name: "Zhaar Oasis", kind: site}
+    - {at: [26, 19], name: "The Buried Temple", kind: dungeon}
+
+xilnath_jungle:
+  name: The Xilnath Jungle Wilds
+  region: Xilnath Jungle
+  biome: living-jungle
+  attach: xilnath_jungle
+  attach_dir: south
+  level_min: 90
+  level_max: 150
+  width: 32
+  height: 26
+  seed: 0
+  river_source: [16, 24]
+  landmarks:
+    - {at: [6, 6], name: "The Vine Idol", kind: site}
+    - {at: [17, 13], name: "Serpent's Rest", kind: site}
+    - {at: [26, 21], name: "The Overgrown Ziggurat", kind: dungeon}
+
+thalorin:
+  name: The Thalorin Wilds
+  region: Thalorin
+  biome: highland-moor
+  attach: thalorin
+  attach_dir: north
+  level_min: 100
+  level_max: 140
+  width: 30
+  height: 24
+  seed: 0
+  river_source: [15, 22]
+  landmarks:
+    - {at: [6, 5], name: "The Moorstone", kind: site}
+    - {at: [15, 13], name: "Fenwatch", kind: site}
+    - {at: [24, 19], name: "The Barrow Downs", kind: dungeon}
+
+ashen_wastes:
+  name: The Ashen Wastes Wilds
+  region: Ashen Wastes
+  biome: volcanic-flats
+  attach: ashen_wastes
+  attach_dir: up
+  level_min: 120
+  level_max: 170
+  width: 30
+  height: 24
+  seed: 1
+  landmarks:
+    - {at: [6, 6], name: "The Cinder Marker", kind: site}
+    - {at: [15, 12], name: "Emberscar Ridge", kind: peak}
+    - {at: [25, 19], name: "The Molten Vault", kind: dungeon}
+
+korvash_highlands:
+  name: The Korvash Highlands Wilds
+  region: Korvash Highlands
+  biome: highland-moor
+  attach: korvash_highlands
+  attach_dir: south
+  level_min: 150
+  level_max: 200
+  width: 32
+  height: 26
+  seed: 0
+  river_source: [16, 24]
+  landmarks:
+    - {at: [6, 6], name: "The Clanstone", kind: site}
+    - {at: [16, 14], name: "Highfen Watch", kind: site}
+    - {at: [26, 21], name: "The Sundered Hall", kind: dungeon}
+
+shattered_isles:
+  name: The Shattered Isles Wilds
+  region: Shattered Isles
+  biome: coastal-strand
+  attach: shattered_isles
+  attach_dir: north
+  level_min: 180
+  level_max: 230
+  width: 32
+  height: 26
+  seed: 0
+  river_source: [16, 24]
+  landmarks:
+    - {at: [6, 6], name: "The Tidecairn", kind: site}
+    - {at: [16, 13], name: "Gull's Rest", kind: site}
+    - {at: [26, 21], name: "The Drowned Keep", kind: dungeon}
+
+skyward_spires:
+  name: The Skyward Spires Wilds
+  region: Skyward Spires
+  biome: highland-moor
+  attach: skyward_spires
+  attach_dir: north
+  level_min: 200
+  level_max: 250
+  width: 30
+  height: 26
+  seed: 0
+  river_source: [15, 24]
+  landmarks:
+    - {at: [6, 6], name: "The Windstone", kind: site}
+    - {at: [15, 14], name: "Aerie Watch", kind: peak}
+    - {at: [24, 21], name: "The Cloudpierce Hold", kind: dungeon}
+
+the_deepreach:
+  name: The Deepreach Wilds
+  region: The Deepreach
+  biome: volcanic-flats
+  attach: the_deepreach
+  attach_dir: north
+  level_min: 100
+  level_max: 250
+  width: 32
+  height: 26
+  seed: 1
+  landmarks:
+    - {at: [6, 6], name: "The Deep Marker", kind: site}
+    - {at: [16, 13], name: "Gloomridge", kind: site}
+    - {at: [26, 21], name: "The Abyssal Vault", kind: dungeon}
+
+the_voidscar:
+  name: The Voidscar Wilds
+  region: The Voidscar
+  biome: volcanic-flats
+  attach: the_voidscar
+  attach_dir: south
+  level_min: 250
+  level_max: 300
+  width: 34
+  height: 26
+  seed: 1
+  landmarks:
+    - {at: [7, 6], name: "The Null Cairn", kind: site}
+    - {at: [17, 14], name: "Riftscar Ridge", kind: peak}
+    - {at: [27, 21], name: "The Void Sanctum", kind: dungeon}

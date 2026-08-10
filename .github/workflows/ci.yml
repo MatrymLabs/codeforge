@@ -5,6 +5,19 @@ on:
   push:
     branches: [main]
 
+# Cancel superseded runs on the SAME ref: pushing three commits to a PR otherwise runs three
+# full workflows to completion and only the last answer is ever read.
+#
+# PULL REQUESTS ONLY, deliberately. An earlier draft used `github.ref != 'refs/heads/main'`,
+# which is TRUE for a release event (its ref is the tag) and could cancel a release
+# mid-publish. It is also true for schedules and tags. Cancelling main's run is its own
+# hazard: "we cancelled the proof" is indistinguishable from "the proof never ran", and this
+# fleet has already lost a day to exactly that ambiguity. So: cancel PR iterations, nothing
+# else, ever.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
@@ -393,8 +406,30 @@ jobs:
       - name: Install codeforge (so kernel.shelf_pour imports)
         run: pip install -e ".[dev]"
 
-      - name: Clone the published Hardware Store
-        run: git clone --depth 1 https://github.com/MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
+      - name: Clone the published Hardware Store (private mirror)
+        env:
+          DEPLOY_KEY: ${{ secrets.SHELF_DEPLOY_KEY }}
+        run: |
+          # codeforge-shelf is a private mirror. Reuse the same least-privilege ed25519 deploy key
+          # that shelf-sync.yml already provisions (SHELF_DEPLOY_KEY) to SSH-clone it read-only.
+          # When the secret is absent (e.g. a fork PR), skip rather than hard-fail: this gate is
+          # advisory by design (see the comment above) and a genuine drift still fails the assert
+          # step below.
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::warning::SHELF_DEPLOY_KEY not set; skipping the shelf-drift check (advisory gate)."
+            exit 0
+          fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/shelf_key
+          chmod 600 ~/.ssh/shelf_key
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/shelf_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          git clone --depth 1 git@github.com:MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
 
       - name: Assert the pour is in sync (no drift)
-        run: python -m kernel.shelf_pour --drift /tmp/codeforge-shelf
+        run: |
+          if [ ! -d /tmp/codeforge-shelf/.git ]; then
+            echo "::warning::mirror not cloned (no deploy key); skipping drift assertion (advisory gate)."
+            exit 0
+          fi
+          python -m kernel.shelf_pour --drift /tmp/codeforge-shelf

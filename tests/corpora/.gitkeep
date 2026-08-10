@@ -1,0 +1,2 @@
+# Committed Hypothesis example database (AP-08 / RD-2026-0002 #22).
+# Failing examples Hypothesis finds are written here; commit them so they replay everywhere.

@@ -670,3 +670,332 @@ def test_the_gateway_emits_structured_lifecycle_events():
 def test_configure_logging_is_idempotent():
     gateway._configure_logging()
     gateway._configure_logging()  # a second call must not raise
+
+
+# --- the additive engineering-workspace wire (owner creates a Seed over GMCP) ---------------------
+
+_PW_PROMPT = b"Password: " + bytes([255, 251, 1])
+
+
+def _saved_owner(char="wren", account="forge", pw="swordfish"):
+    """A saved OWNER-ranked account: the in-MUD `workspace` verb and the gateway wire are both
+    owner-gated (authorization before capability)."""
+    hero = Session(player_id=char, location="courtyard", named=True, account=account)
+    hero.rank = "owner"
+    SESSIONS[char] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account(f"{account}_seed", account, pw)
+    adopt(char, account)
+
+
+def _login_gmcp(srv, char, account, pw="swordfish"):
+    """Connect with GMCP enabled and clear the front desk; returns (sock, bytes seen up to the
+    first prompt) so a test can assert what was pushed on entry."""
+    sock = _connect(srv)
+    sock.sendall(_DO_GMCP)
+    _read_until(sock, b"NEW: ")
+    _line(sock, f"{char}@{account}")
+    _read_until_raw(sock, _PW_PROMPT)
+    _line(sock, pw)
+    return sock, _read_until_raw(sock, b"> ")
+
+
+def test_an_owner_login_pushes_the_creation_form_over_gmcp(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, out = _login_gmcp(server, "wren", "forge")
+    assert _SB_GMCP in out and b"Form.Schema" in out  # the Wizard's creation Form, as data
+    assert b"product_types" in out  # the Form projects its product types
+    sock.close()
+
+
+def test_an_owner_login_serves_the_reference_read_workspace(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, out = _login_gmcp(server, "wren", "forge")
+    # the reference Seed's REAL read panels light up from the running server, not just a fixture
+    assert b"Architecture.Map" in out and b"module_count" in out  # the engine's own module registry
+    assert b"Blueprint.List" in out and b"blueprint_count" in out  # its filed Blueprints
+    sock.close()
+
+
+def test_a_non_owner_login_gets_no_workspace_packages(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a default player-rank account
+    sock, out = _login_gmcp(server, "matrym", "matlabs")
+    # the workspace surface is owner-gated: a player sees neither the Form nor the read panels
+    assert b"Form.Schema" not in out
+    assert b"Architecture.Map" not in out and b"Blueprint.List" not in out
+    sock.close()
+
+
+def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "Onboarding",
+            "purpose": "train new hires",  # owner is injected server-side (authenticated account)
+            "scenarios": "server outage drill",
+            "competencies": "incident response",
+            "certification": True,
+        },
+    }
+    sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")  # a newline gives readline its boundary
+    out = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted the Seed
+    assert b"Project.Status" in out and b"Onboarding" in out  # its workspace was pushed back
+    assert list((tmp_path / "seeds").glob("*.json"))  # and it persisted to the file store
+    sock.close()
+
+
+def test_seed_create_over_gmcp_mints_a_seed(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Seed.Create", {"name": "toolkit", "kind": "engineering"}) + b"\n")
+    out = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in out and b'"ok":true' in out and b"Project.Status" in out
+    sock.close()
+
+
+def test_a_non_owner_is_refused_seed_creation_over_gmcp(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a default player-rank account (matrym@matlabs)
+    sock, out = _login_gmcp(server, "matrym", "matlabs")
+    assert b"Form.Schema" not in out  # the creation Form is owner-gated: a player never sees it
+    sock.sendall(gmcp_frame("Seed.Create", {"name": "sneaky", "kind": "engineering"}) + b"\n")
+    reply = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in reply and b'"ok":false' in reply  # refused, honestly
+    assert b"requires owner rank" in reply
+    assert b"Project.Status" not in reply  # nothing was created or served
+    assert not list((tmp_path / "seeds").glob("*.json"))  # no Seed on disk
+    sock.close()
+
+
+# --- _read_message: the out-of-band subnegotiation reader (bare GMCP frames, no newline) ----------
+
+
+def _read_until_in(sock: socket.socket, marker: bytes, limit: int = 25) -> bytes:
+    """Read until `marker` appears anywhere in the stream (a GMCP frame ends in IAC SE, not the
+    marker, so `endswith` will not do)."""
+    data = b""
+    for _ in range(limit):
+        chunk = sock.recv(4096)
+        if not chunk:
+            break
+        data += chunk
+        if marker in data:
+            break
+    return data
+
+
+def test_read_message_returns_a_line_at_the_newline():
+    import io
+
+    from adapters.gateway import _read_message
+
+    assert _read_message(io.BytesIO(b"look\nmore"), 1024) == (b"look\n", False)
+
+
+def test_read_message_returns_a_bare_gmcp_frame_before_any_newline():
+    import io
+
+    from adapters.gateway import _read_message
+    from kernel.gmcp import gmcp_frame
+
+    frame = gmcp_frame("Form.Submit", {"product_type": "training", "answers": {}})
+    reader = io.BytesIO(frame + b"look\n")  # a bare out-of-band frame, THEN a command line
+    assert _read_message(reader, 1024) == (
+        frame,
+        True,
+    )  # the frame returns first (no newline waited)
+    assert _read_message(reader, 1024) == (b"look\n", False)  # then the command line
+
+
+def test_read_message_keeps_glued_negotiation_inside_the_line():
+    import io
+
+    from adapters.gateway import _read_message
+
+    line = bytes([255, 253, 201]) + b"mira@mlabs\n"  # IAC DO GMCP glued before the login line
+    assert _read_message(io.BytesIO(line), 1024) == (line, False)  # whole line, negotiation intact
+
+
+def test_read_message_does_not_early_return_on_a_non_gmcp_subnegotiation():
+    import io
+
+    from adapters.gateway import _read_message
+
+    naws = bytes([255, 250, 31, 0, 80, 0, 24, 255, 240])  # IAC SB NAWS ... IAC SE (option 31)
+    reader = io.BytesIO(naws + b"look\n")
+    # NAWS is not GMCP, so it is read through to the newline as a line (as before), never a frame
+    assert _read_message(reader, 1024) == (naws + b"look\n", False)
+
+
+def test_read_message_at_eof_returns_what_it_has_as_a_line():
+    import io
+
+    from adapters.gateway import _read_message
+
+    assert _read_message(io.BytesIO(b"partial"), 1024) == (b"partial", False)  # no newline, EOF
+
+
+def test_read_message_respects_the_size_cap():
+    import io
+
+    from adapters.gateway import _read_message
+
+    msg, is_frame = _read_message(io.BytesIO(b"x" * 100), 10)
+    assert (
+        len(msg) == 10 and is_frame is False
+    )  # a flood with no newline is capped, treated as line
+
+
+def test_a_bare_out_of_band_form_submit_is_served_without_a_newline(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "OOB",
+            "purpose": "prove out-of-band",
+            "scenarios": "drill",
+            "competencies": "response",
+            "certification": True,
+        },
+    }
+    sock.sendall(gmcp_frame("Form.Submit", submit))  # NO trailing newline: a true out-of-band frame
+    out = _read_until_in(sock, b"Project.Status")
+    assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted it, no newline needed
+    assert b"Project.Status" in out and b"OOB" in out  # its workspace pushed back
+    sock.close()
+
+
+# --- Workspace.Request: pull the reference Seed's Deploy.Manifest on demand (a chosen tier) -------
+
+
+def test_an_owner_workspace_request_serves_the_deploy_manifest(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(
+        gmcp_frame("Workspace.Request", {"tier": "prototype"})
+    )  # a bare out-of-band request
+    out = _read_until_in(sock, b"Deploy.Manifest")
+    assert b"Deploy.Manifest" in out and b"prototype" in out  # the deploy panel's data, on demand
+    assert b"target_players" in out  # the real derived sizing
+    sock.close()
+
+
+def test_a_workspace_request_defaults_the_tier_when_none_is_given(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))  # no tier -> the default (prototype)
+    out = _read_until_in(sock, b"Deploy.Manifest")
+    assert b"Deploy.Manifest" in out and b"prototype" in out
+    sock.close()
+
+
+def test_an_unknown_tier_is_an_honest_no_op(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    # a valid ping so the read has something to stop on, then the bad request should add nothing
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "galactic"}))  # not a modelled tier
+    sock.sendall(b"look\n")
+    out = _read_until_raw(sock, b"> ")
+    assert (
+        b"Deploy.Manifest" not in out
+    )  # a tier the engine does not model serves nothing, honestly
+    sock.close()
+
+
+def test_a_non_owner_workspace_request_is_silently_ignored(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a player-rank account
+    sock, _ = _login_gmcp(server, "matrym", "matlabs")
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "prototype"}))
+    sock.sendall(b"look\n")
+    out = _read_until_raw(sock, b"> ")
+    assert (
+        b"Deploy.Manifest" not in out
+    )  # owner-gated: a player gets no workspace, no verdict noise
+    sock.close()
+
+
+# --- Research.Findings served from a MOUNTED manifest on a Workspace.Request (the FGL pattern) ----
+
+
+def test_a_mounted_research_manifest_is_served_on_a_workspace_request(
+    server, tmp_path, monkeypatch
+):
+    import json as _json
+
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    (tmp_path / "research.json").write_text(
+        _json.dumps([{"id": "EXP-05", "title": "FTS5", "verdict": "verified improvement"}]),
+        encoding="utf-8",
+    )
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))
+    out = _read_until_in(sock, b"Research.Findings")
+    assert (
+        b"Research.Findings" in out and b"EXP-05" in out
+    )  # the mounted research, served on request
+    sock.close()
+
+
+def test_an_unmounted_research_source_serves_no_findings(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))  # no research.json mounted here
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "prototype"}))
+    sock.sendall(b"look\n")  # a boundary so we capture the whole response
+    out = _read_until_raw(sock, b"> ")
+    assert b"Deploy.Manifest" in out  # deploy is still served
+    assert b"Research.Findings" not in out  # honest: no mount, no findings, an empty panel
+    sock.close()
+
+
+# --- Deploy.Status: the running instance's own live status on a Workspace.Request (7b) ------------
+
+
+def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))
+    out = _read_until_in(sock, b"Deploy.Status")
+    assert b"Deploy.Status" in out  # the running instance reports itself
+    assert b'"version":' in out and b'"connections":' in out  # real self-facts, not a cloud URL
+    assert b'"seed":"' in out and b'"uptime_seconds":' in out
+    sock.close()

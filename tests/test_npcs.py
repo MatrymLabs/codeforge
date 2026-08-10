@@ -163,3 +163,52 @@ def test_room_index_rebuilds_when_an_npc_is_added_then_removed():
     assert npcs_in(room) == ["probe_foe"]  # index rebuilt on the membership change
     del npcs.NPCS["probe_foe"]
     assert npcs_in(room) == []  # rebuilt again once it is gone
+
+
+# --- numbered-target disambiguation (target_disambig shelf-part consumer) ------------------------
+def _two_goblins(room: str = "goblin_den") -> None:
+    """Two identical foes (both answer to 'goblin') in one room, so 'goblin' alone is ambiguous."""
+    from kernel.world.seed import Npc
+
+    for i in (1, 2):
+        npcs.NPCS[f"goblin_{i}"] = Npc(
+            name=f"goblin {i}",
+            keywords=["goblin"],
+            location=room,
+            dialogue=['"..."'],
+            next_line=0,
+            hp=10,
+            hp_now=10,
+            xp=0,
+            atk=0,
+        )
+
+
+def test_trace_all_npcs_returns_every_match_in_order():
+    _two_goblins()
+    assert npcs.trace_all_npcs("goblin", "goblin_den") == ["goblin_1", "goblin_2"]
+    assert npcs.trace_npc("goblin", "goblin_den") == "goblin_1"  # first, unchanged
+
+
+def test_bare_npc_name_resolves_to_the_first():
+    _two_goblins()
+    assert npcs.resolve_npc_target("goblin", "goblin_den") == "goblin_1"
+
+
+def test_npc_ordinal_picks_the_nth():
+    _two_goblins()
+    assert npcs.resolve_npc_target("2-goblin", "goblin_den") == "goblin_2"
+    assert npcs.resolve_npc_target("goblin-2", "goblin_den") == "goblin_2"
+
+
+def test_npc_overshoot_raises_with_a_count():
+    from kernel.shelf.target_disambig import TargetError
+
+    _two_goblins()
+    with pytest.raises(TargetError, match="only 2 here"):
+        npcs.resolve_npc_target("3-goblin", "goblin_den")
+
+
+def test_resolve_unknown_npc_is_none():
+    _two_goblins()
+    assert npcs.resolve_npc_target("2-troll", "goblin_den") is None

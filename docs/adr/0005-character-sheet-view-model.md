@@ -1,5 +1,7 @@
 # ADR-0005: Render character sheets through a view model
 
+_Path note (2026-08-09): This ADR records the pre-2026-08-02 layout. Current modules live under `kernel/` rather than `parts/`._
+
 **Status:** accepted (scopes the first character-system batch; the wider character model is still open)
 
 ## Context

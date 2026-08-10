@@ -411,3 +411,112 @@ def _tick_seed_id(tmp_path: Path) -> str:
     k = SeedKernel(FileSeedStore(tmp_path / "lab" / "seeds"))
     seeds = [r for r in k.list_seeds() if r.identity.name == "TickProj"]
     return seeds[0].identity.seed_id if seeds else "unknown"
+
+
+# --- backup / restore: surface the Seed backup lifecycle in-world (Slice C in the MUD) -----------
+def _backups(tmp_path: Path):
+    from kernel.seedlab.backup import SeedBackups
+
+    return SeedBackups(tmp_path / "bk", clock=lambda: "2026-08-02T00:00:00+00:00")
+
+
+def test_backup_then_list_then_restore_rolls_back(tmp_path: Path) -> None:
+    k = _kernel()
+    store = _backups(tmp_path)
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    workspace_command(_owner(), f"start {sid}", kernel=k)  # RUNNING is the state we back up
+
+    out = workspace_command(_owner(), f"backup {sid}", kernel=k, backups=store)
+    assert "Backed up" in out
+    bid = store.list_backups(sid)[-1].backup_id
+    assert bid in out
+
+    listing = workspace_command(_owner(), f"backups {sid}", kernel=k, backups=store)
+    assert bid in listing and "INTACT" in listing
+
+    workspace_command(_owner(), f"stop {sid}", kernel=k)  # a change to undo
+    restored = workspace_command(_owner(), f"restore {sid} {bid}", kernel=k, backups=store)
+    assert "RUNNING" in restored  # rolled back to the backed-up state
+    assert k.get(sid).status == "running"
+
+
+def test_backup_of_an_unknown_workspace_is_clean(tmp_path: Path) -> None:
+    out = workspace_command(_owner(), "backup nope", kernel=_kernel(), backups=_backups(tmp_path))
+    assert "workspace: no Seed" in out
+
+
+def test_backups_of_a_workspace_with_none_is_honest(tmp_path: Path) -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    out = workspace_command(_owner(), f"backups {sid}", kernel=k, backups=_backups(tmp_path))
+    assert "No backups" in out
+
+
+def test_restore_needs_a_backup_id(tmp_path: Path) -> None:
+    out = workspace_command(
+        _owner(), "restore only-one-arg", kernel=_kernel(), backups=_backups(tmp_path)
+    )
+    assert "usage: workspace restore" in out
+
+
+def test_restore_of_a_missing_backup_is_refused(tmp_path: Path) -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    out = workspace_command(
+        _owner(), f"restore {sid} bk-nope", kernel=k, backups=_backups(tmp_path)
+    )
+    assert "workspace:" in out and "missing" in out
+
+
+def test_a_non_owner_cannot_restore_a_workspace(tmp_path: Path) -> None:
+    k = _kernel()
+    store = _backups(tmp_path)
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    workspace_command(_owner(), f"backup {sid}", kernel=k, backups=store)
+    bid = store.list_backups(sid)[-1].backup_id
+    intruder = Session(player_id="mallory")
+    intruder.rank = (
+        "owner"  # even a rank-owner who is not the SEED's owner is refused by the Kernel
+    )
+    out = workspace_command(intruder, f"restore {sid} {bid}", kernel=k, backups=store)
+    assert "workspace:" in out and "owner" in out
+
+
+def test_backup_and_restore_through_the_tick(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    from forge import handle_command
+
+    handle_command(_owner(), "workspace create ProjX a demo")
+    # find the created seed id from the list output's second line
+    handle_command(_owner(), "workspace list")
+    from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+
+    sid = next(
+        r.identity.seed_id
+        for r in SeedKernel(FileSeedStore(tmp_path / "seeds")).list_seeds()
+        if r.identity.name == "ProjX"
+    )
+    handle_command(_owner(), f"workspace start {sid}")
+    out = handle_command(_owner(), f"workspace backup {sid}")
+    assert "Backed up" in out
+    bid = out.split("-> ")[1].split(" ")[0]
+    handle_command(_owner(), f"workspace stop {sid}")
+    restored = handle_command(_owner(), f"workspace restore {sid} {bid}")
+    assert "RUNNING" in restored  # the file-backed backup + restore survived the real tick
+
+
+def test_backup_needs_a_seed_id() -> None:
+    assert "usage: workspace backup" in workspace_command(_owner(), "backup", kernel=_kernel())
+
+
+def test_backups_needs_a_seed_id() -> None:
+    assert "usage: workspace backups" in workspace_command(_owner(), "backups", kernel=_kernel())
+
+
+def test_backups_of_an_unknown_workspace_is_clean(tmp_path: Path) -> None:
+    out = workspace_command(_owner(), "backups nope", kernel=_kernel(), backups=_backups(tmp_path))
+    assert "workspace: no Seed" in out
