@@ -123,7 +123,10 @@ def test_poolable_twins_splits_engine_free_from_coupled() -> None:
 def test_pyproject_declares_test_extras_and_markers(tmp_path: Path) -> None:
     pour_shelf(tmp_path)
     pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
-    assert "[project.optional-dependencies]" in pyproject and '"pytest"' in pyproject
+    # PINNED, per fleet gate standard rule 1. The poured pyproject is generated, so pinning
+    # the mirror by hand was a fix at the output that the next pour silently reverted.
+    assert "[project.optional-dependencies]" in pyproject
+    assert '"pytest==' in pyproject, "the poured test extra must pin pytest, not float it"
     assert "[tool.pytest.ini_options]" in pyproject  # the property mark is registered
 
 
@@ -174,7 +177,11 @@ def test_pour_ships_a_ruff_config_and_the_correct_python_floor(tmp_path: Path) -
     pour_shelf(tmp_path)
     pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
     assert "[tool.ruff]" in pyproject and "[tool.ruff.lint]" in pyproject
-    assert 'dev = ["ruff", "mypy"]' in pyproject and "[tool.mypy]" in pyproject
+    assert "[tool.mypy]" in pyproject
+    assert 'dev = ["ruff==' in pyproject and '"mypy==' in pyproject, (
+        "the poured dev extra must pin ruff and mypy: a gate's verdict must not depend on "
+        "the day it ran, and this file is generated so the pin has to come from the generator"
+    )
     # heavy deps are opt-in extras so the base install is stdlib-only; version tracks the pour
     assert "dependencies = []" in pyproject and "extras = [" in pyproject
     assert 'version = "0.3.0"' in pyproject
@@ -347,3 +354,61 @@ def test_pour_never_declares_an_in_tree_native_accelerator_as_a_dep() -> None:
 
     # textmatch imports the optional codeforge_textkernel behind a fallback; it is not a PyPI dep
     assert not any(dep.startswith("codeforge_") for dep in shelf_third_party_deps())
+
+
+def test_poured_action_pins_track_this_repo_s_own_workflows() -> None:
+    """The poured workflows must not fall behind the pins this repo keeps for itself.
+
+    Why this exists. codeforge-shelf is a GENERATED mirror: `pour_shelf` writes its
+    `.github/workflows/{test,release}.yml` from string constants in `kernel/shelf_pour.py`.
+    Dependabot watches the MIRROR, so it kept opening PRs to bump those generated files, and
+    merging one broke the `shelf-drift` invariant (mirror == fresh pour) and reddened CI on
+    three unrelated codeforge PRs (#801, #888, #889).
+
+    The fix moved the pins to the generator. That closed the drift loop and opened a quieter
+    hole: Dependabot only reads `.github/workflows/*.yml`, so pins living in a Python string
+    literal are invisible to it. Nothing would report the next major version.
+
+    This test is the replacement signal. Dependabot still updates THIS repo's workflows; when
+    it does, the majors diverge and this goes red until the pour is brought along. The
+    generator is watched by proxy, through the files that are watched.
+
+    Offline by construction. This repo pins by SHA with a `# v7` comment beside it, so the
+    major is read from the comment and no network call is made. A test that resolved a SHA
+    against the GitHub API would be a test that fails when the network does.
+    """
+    import re
+    from pathlib import Path
+
+    repo = Path(__file__).resolve().parents[1]
+    pinned = re.compile(r"uses:\s*(actions/[\w-]+)@[0-9a-f]{7,40}\s*#\s*v(\d+)")
+    tagged = re.compile(r"uses:\s*(actions/[\w-]+)@v(\d+)")
+
+    # What this repo runs for itself, as Dependabot maintains it.
+    repo_major: dict[str, int] = {}
+    for workflow in sorted((repo / ".github" / "workflows").glob("*.yml")):
+        for action, major in pinned.findall(workflow.read_text(encoding="utf-8")):
+            repo_major[action] = max(repo_major.get(action, 0), int(major))
+
+    assert repo_major, "no SHA-pinned actions with a version comment found; the parser is stale"
+
+    # What the pour hands to the mirror.
+    poured_major: dict[str, int] = {}
+    for action, major in tagged.findall(
+        (repo / "kernel" / "shelf_pour.py").read_text(encoding="utf-8")
+    ):
+        poured_major[action] = min(poured_major.get(action, 99), int(major))
+
+    assert poured_major, "no tag-pinned actions found in the pour; the parser is stale"
+
+    behind = {
+        action: (poured, repo_major[action])
+        for action, poured in poured_major.items()
+        if action in repo_major and poured < repo_major[action]
+    }
+    assert not behind, (
+        "the poured workflows are behind this repo's own pins: "
+        + ", ".join(f"{a} pours v{p} but the repo runs v{r}" for a, (p, r) in behind.items())
+        + ". Update the constants in kernel/shelf_pour.py, then let shelf-sync re-pour. "
+        "Never bump the mirror directly: it is generated, and a direct edit is drift."
+    )

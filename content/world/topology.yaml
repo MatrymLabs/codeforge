@@ -31,6 +31,8 @@ terrain:
   slope:  {passable: true,  cost: 2, gives: [up, down]}
   marsh:  {passable: true,  cost: 3}
   desert: {passable: true,  cost: 2}
+  snow:   {passable: true,  cost: 2}
+  ash:    {passable: true,  cost: 2}
   shore:  {passable: true,  cost: 1}
   river:  {passable: false, cross_via: [ford, cross bridge, swim]}
   ford:   {passable: true,  cost: 1}

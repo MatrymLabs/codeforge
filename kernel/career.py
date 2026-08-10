@@ -118,15 +118,27 @@ def ownership_name(level: int) -> str:
 
 
 def unproven_claims(board: dict, root: Path | None = None) -> list[str]:
-    """EvidenceGate: proven/partial skills whose cited proof paths do NOT exist on disk.
-    An empty list means every claim of evidence points to a real artifact."""
+    """EvidenceGate: proven/partial skills citing a proof path that does NOT exist on disk.
+    An empty list means EVERY claim of evidence points to a real artifact.
+
+    Every cited path must exist, not merely one of them. The gate once used `any`, which let a
+    live citation shelter dead ones beside it: after the 2026-08-02 `parts/` restructure, five
+    citations pointed at files that no longer existed and the gate stayed green because each
+    skill also cited something real. A board that names a missing artifact is making a claim it
+    cannot support, however many supported claims sit next to it."""
     base = root or _ROOT
     bad: list[str] = []
     for s in _skills(board):
-        if s["status"] in _CLAIMS_EVIDENCE and not any(
-            (base / p).exists() for p in s["repo_proof"]
-        ):
-            bad.append(f"{s['skill_id']} ({s['status']}) -- no cited proof path exists")
+        if s["status"] not in _CLAIMS_EVIDENCE:
+            continue
+        if not s["repo_proof"]:
+            bad.append(f"{s['skill_id']} ({s['status']}) -- claims evidence, cites nothing")
+            continue
+        missing = [p for p in s["repo_proof"] if not (base / p).exists()]
+        if missing:
+            bad.append(
+                f"{s['skill_id']} ({s['status']}) -- cited proof missing: {', '.join(missing)}"
+            )
     return bad
 
 

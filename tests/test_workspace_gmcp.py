@@ -68,14 +68,14 @@ def _kernel() -> SeedKernel:
 
 
 def _seed(kernel: SeedKernel, name: str = "Job Tracker", sid: str = "seed-jt"):
-    return kernel.create_seed(name, "josh", "a tiny tracker", seed_id=sid)
+    return kernel.create_seed(name, "seed-owner", "a tiny tracker", seed_id=sid)
 
 
 def _source() -> SourceRecord:
     return SourceRecord(
         source_id="demo-src",
-        provenance=Provenance("demo-src", owner="josh", visibility="private"),
-        root="/home/josh/projects/job-tracker",
+        provenance=Provenance("demo-src", owner="seed-owner", visibility="private"),
+        root="/srv/seeds/job-tracker",
         file_count=2,
         branch="main",
         commit="a1b2c3d",
@@ -85,7 +85,7 @@ def _source() -> SourceRecord:
 def _model():
     spec = SpecSource(
         {"identity": "job-tracker", "entities": ["Application", "Tag"]},
-        Provenance("job-tracker", owner="josh"),
+        Provenance("job-tracker", owner="seed-owner"),
     )
     return extract_model(spec)
 
@@ -193,7 +193,7 @@ def test_create_from_request_mints_a_real_seed_and_returns_the_verdict() -> None
     verdict = create_from_request(
         kernel,
         {"name": "job-tracker", "kind": "engineering", "description": "a tracker"},
-        owner="josh",
+        owner="seed-owner",
     )
     assert verdict["name"] == "job-tracker" and verdict["ok"] is True
     seed_id = str(verdict["id"])
@@ -204,14 +204,14 @@ def test_create_from_request_mints_a_real_seed_and_returns_the_verdict() -> None
 
 def test_create_folds_kind_into_purpose_when_no_description() -> None:
     kernel = _kernel()
-    verdict = create_from_request(kernel, {"name": "world-x", "kind": "game"}, owner="josh")
+    verdict = create_from_request(kernel, {"name": "world-x", "kind": "game"}, owner="seed-owner")
     record = kernel.get(str(verdict["id"]))
     assert record.identity.purpose == "game Seed"  # intent not lost though the Kernel has no kind
 
 
 def test_a_malformed_create_frame_never_reaches_the_kernel() -> None:
     kernel = _kernel()
-    verdict = create_from_request(kernel, {"kind": "engineering"}, owner="josh")  # no name
+    verdict = create_from_request(kernel, {"kind": "engineering"}, owner="seed-owner")  # no name
     assert verdict["ok"] is False and "name" in str(verdict["reason"])
     assert kernel.list_seeds() == []  # nothing was minted
 
@@ -222,9 +222,9 @@ def test_a_kernel_refusal_becomes_an_honest_ok_false_verdict() -> None:
     kernel = SeedKernel(
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-fixed"
     )
-    first = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
+    first = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="seed-owner")
     assert first["ok"] is True
-    second = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
+    second = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="seed-owner")
     assert second["ok"] is False and second["reason"]  # a reason, never a crash
     assert len(kernel.list_seeds()) == 1  # only the first was minted
 
@@ -672,7 +672,10 @@ def _game_answers() -> dict[str, object]:
 def test_create_from_form_submit_mints_a_seed_with_the_forms_verdict() -> None:
     kernel = _kernel()
     verdict = create_from_form_submit(
-        kernel, _form_def(), {"product_type": "game", "answers": _game_answers()}, owner="josh"
+        kernel,
+        _form_def(),
+        {"product_type": "game", "answers": _game_answers()},
+        owner="seed-owner",
     )
     assert verdict["ok"] is True and verdict["name"] == "Arena"
     record = kernel.get(str(verdict["id"]))
@@ -685,17 +688,17 @@ def test_create_from_form_submit_overrides_owner_with_the_authenticated_account(
     # a client cannot mint under another account by typing a name in the owner box
     answers = {**_game_answers(), "owner": "someone_else"}
     verdict = create_from_form_submit(
-        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="josh"
+        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="seed-owner"
     )
     assert verdict["ok"] is True
-    assert kernel.get(str(verdict["id"])).identity.owner == "josh"  # authenticated owner wins
+    assert kernel.get(str(verdict["id"])).identity.owner == "seed-owner"  # authenticated owner wins
 
 
 def test_create_from_form_submit_refuses_a_missing_required_answer() -> None:
     kernel = _kernel()
     partial = {"name": "Arena", "purpose": "p"}  # no world_scale/combat -> Form fails loud
     verdict = create_from_form_submit(
-        kernel, _form_def(), {"product_type": "game", "answers": partial}, owner="josh"
+        kernel, _form_def(), {"product_type": "game", "answers": partial}, owner="seed-owner"
     )
     assert verdict["ok"] is False and "required" in str(verdict["reason"])
     assert verdict["name"] == "Arena"  # the honest verdict still names what was attempted
@@ -703,7 +706,7 @@ def test_create_from_form_submit_refuses_a_missing_required_answer() -> None:
 
 def test_create_from_form_submit_refuses_a_malformed_frame() -> None:
     kernel = _kernel()
-    verdict = create_from_form_submit(kernel, _form_def(), "not-an-object", owner="josh")
+    verdict = create_from_form_submit(kernel, _form_def(), "not-an-object", owner="seed-owner")
     assert verdict["ok"] is False and "object" in str(verdict["reason"])
 
 
@@ -711,7 +714,7 @@ def test_create_from_form_submit_refuses_an_out_of_range_choice() -> None:
     kernel = _kernel()
     answers = {**_game_answers(), "world_scale": "galactic"}  # not a choice
     verdict = create_from_form_submit(
-        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="josh"
+        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="seed-owner"
     )
     assert verdict["ok"] is False and "world_scale" in str(verdict["reason"])
 
@@ -722,9 +725,9 @@ def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-dupe"
     )
     frame = {"product_type": "game", "answers": _game_answers()}
-    first = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
+    first = create_from_form_submit(kernel, _form_def(), frame, owner="seed-owner")
     assert first["ok"] is True
-    second = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
+    second = create_from_form_submit(kernel, _form_def(), frame, owner="seed-owner")
     assert second["ok"] is False and "already exists" in str(second["reason"])
 
 

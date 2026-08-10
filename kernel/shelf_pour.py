@@ -152,13 +152,25 @@ _HOMEPAGE = "https://github.com/MatrymLabs/codeforge"
 # gate the maintainer configures as the PyPI pending-publisher's environment.
 _TEST_WORKFLOW = """\
 name: test
-on: [push, pull_request]
+# push limited to main: `on: [push, pull_request]` fires BOTH events for a push to a PR
+# branch, running every job twice for one commit.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded PR runs. Pull requests ONLY: `github.ref != 'refs/heads/main'` is true
+# for a release event (its ref is the tag) and could cancel a release mid-publish.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: python -m pip install --upgrade pip
@@ -174,6 +186,11 @@ name: release
 on:
   release:
     types: [published]
+
+# Serialise releases without ever cancelling one: a cancelled publish is worse than a
+# queued publish. cancel-in-progress stays false here by omission.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: read
 jobs:
@@ -183,8 +200,8 @@ jobs:
     permissions:
       id-token: write  # Trusted Publishing (OIDC): no API token stored anywhere
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: python -m pip install build
@@ -211,11 +228,29 @@ _MAKEFILE = (
 )
 
 
+#: Fleet gate standard rule 1: pin the tools that decide a verdict. The poured shelf's
+#: pyproject is GENERATED, so pinning it by hand was a fix at the output and the next pour
+#: silently reverted it (caught by shelf-drift, 2026-08-08). The pin belongs here, at the
+#: generator. Runtime deps are deliberately absent: only gate tooling is pinned.
+GATE_TOOL_PINS = {
+    "hypothesis": "6.165.2",
+    "mypy": "2.3.0",
+    "pytest": "9.1.1",
+    "ruff": "0.16.1",
+}
+
+
+def _pinned(name: str) -> str:
+    """Attach the fleet-wide pin to a gate tool; leave every other dependency untouched."""
+    version = GATE_TOOL_PINS.get(name)
+    return f"{name}=={version}" if version else name
+
+
 def _pyproject(deps: list[str], test_deps: list[str]) -> str:
     # Heavy runtime deps (from the config + observability parts) are opt-in extras, so the base
     # install is pure stdlib. Tests import every part, so the test group carries the extras too.
     extras_lines = "".join(f'    "{d}",\n' for d in deps)
-    test_lines = "".join(f'    "{d}",\n' for d in sorted(set(test_deps) | set(deps)))
+    test_lines = "".join(f'    "{_pinned(d)}",\n' for d in sorted(set(test_deps) | set(deps)))
     # No "License ::" classifier: PEP 639 supersedes it with the SPDX `license` expression below,
     # and modern setuptools errors if both are present.
     classifiers = (
@@ -252,7 +287,7 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "test = [\n"
         f"{test_lines}"
         "]\n"
-        'dev = ["ruff", "mypy"]\n\n'
+        f'dev = ["{_pinned("ruff")}", "{_pinned("mypy")}"]\n\n'
         "[project.urls]\n"
         f'Homepage = "{_HOMEPAGE}"\n'
         f'Source = "{_HOMEPAGE}"\n\n'
@@ -371,6 +406,45 @@ version tracks the pour, not hand edits.
 """
 
 
+_AGENTS = """\
+# AGENTS.md - codeforge-shelf
+
+The published Hardware Store mirror.
+
+## THIS REPOSITORY IS GENERATED. DO NOT EDIT IT.
+
+Every file here, including this one, is poured from `codeforge` by `kernel/shelf_pour.py`. A
+`shelf-drift` gate asserts `mirror == fresh pour of the engine`.
+
+Editing here, **including merging a dependency bump**, breaks that invariant and reddens CI on
+every later codeforge PR. That has happened three times: Dependabot PRs merged into this mirror
+left it out of sync, and two unrelated README-only changes went red as a result.
+
+**Fix the generator, never the file.** Changes belong in `codeforge/kernel/shelf_pour.py`, after
+which `shelf-sync` re-pours this repo automatically.
+
+## Required Reading
+
+The fleet's rulebook and live board are canonical in the `ship` repository:
+
+- `MATRYM_NORTH_STAR.md`
+- `.ai/HANDOFF_PROTOCOL.md`
+- `.ai/handoff.md`
+
+If you are working on the Store's CONTENTS, you are working in `codeforge`, and its `AGENTS.md`
+applies. Nothing in this repository is edited by hand.
+
+## The gate
+
+```bash
+make check
+```
+
+Runs the poured cores' own tests. It proves the pour is sound; it does not certify anything.
+Certification is R&D's Verdict Gate, in `hardware-store`.
+"""
+
+
 def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     """Vendor the shelf into `dest` as the standalone `codeforge_shelf` package.
 
@@ -410,6 +484,9 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     (dest / "pyproject.toml").write_text(_pyproject(deps, test_deps), encoding="utf-8")
     (dest / "README.md").write_text(_readme(names, deps, len(poured_tests), held), encoding="utf-8")
     (dest / "CHANGELOG.md").write_text(_CHANGELOG, encoding="utf-8")
+    # A generated repo still needs to tell an agent it is generated. Poured, not hand-written,
+    # so it cannot drift from the rule it states.
+    (dest / "AGENTS.md").write_text(_AGENTS, encoding="utf-8")
     (dest / "Makefile").write_text(_MAKEFILE, encoding="utf-8")
     license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
     if license_src.is_file():

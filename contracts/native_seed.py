@@ -120,9 +120,9 @@ def _seed_profile() -> dict[str, object]:
 
 def _source() -> SourceRecord:
     return SourceRecord(
-        source_id="src-job-tracker",
-        provenance=Provenance("src-job-tracker", owner="josh", visibility="private"),
-        root="/home/josh/projects/job-tracker",
+        source_id="job-tracker-src",
+        provenance=Provenance("job-tracker-src", owner="seed-owner", visibility="private"),
+        root="/srv/seeds/job-tracker",
         file_count=2,
         branch="main",
         commit="a1b2c3d",
@@ -133,7 +133,7 @@ def _model():
     return extract_model(
         SpecSource(
             {"identity": "job-tracker", "entities": ["Application", "Task"]},
-            Provenance("job-tracker", owner="josh"),
+            Provenance("job-tracker", owner="seed-owner"),
         )
     )
 
@@ -226,7 +226,7 @@ def build_examples() -> dict[str, Any]:
     kernel = SeedKernel(InMemorySeedStore(), clock=lambda: next(clock))
     record = kernel.create_seed(
         "job-tracker",
-        "josh",
+        "seed-owner",
         "a tiny tracker",
         seed_id="seed-job-tracker",
         product_type="tool",
@@ -278,11 +278,6 @@ def build_examples() -> dict[str, Any]:
                 gmcp.SOURCE_TREE_PACKAGE,
                 "server_to_client",
                 gmcp.source_tree(source, ["src/app.py", "tests/test_app.py"], seed="job-tracker"),
-            ),
-            _example(
-                gmcp.SOURCE_CONNECTION_PACKAGE,
-                "server_to_client",
-                gmcp.source_connection_package(source, seed="job-tracker"),
             ),
             _example(gmcp.MODEL_SCHEMA_PACKAGE, "server_to_client", gmcp.model_schema(_model())),
             _example(

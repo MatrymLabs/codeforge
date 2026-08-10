@@ -40,6 +40,56 @@ def test_no_proven_or_partial_skill_cites_a_missing_artifact() -> None:
     )
 
 
+def _board_with(status: str, proof: list[str]) -> dict:
+    return {
+        "levels": [
+            {
+                "level": "entry",
+                "skills": [
+                    {
+                        "skill_id": "x.y",
+                        "skill": "x",
+                        "status": status,
+                        "repo_proof": proof,
+                        "next_proof_task": "z",
+                    }
+                ],
+            }
+        ]
+    }
+
+
+def test_a_live_citation_does_not_shelter_a_dead_one(tmp_path: Path) -> None:
+    # The regression that motivated the `any` -> per-path fix. After the 2026-08-02 parts/
+    # restructure five citations pointed at deleted files, and the gate stayed green because
+    # each skill also cited something real. Every cited path must exist, not merely one.
+    (tmp_path / "real.md").write_text("x")
+    violations = unproven_claims(_board_with("proven", ["real.md", "gone.py"]), root=tmp_path)
+    assert len(violations) == 1
+    assert "gone.py" in violations[0], violations
+    assert "real.md" not in violations[0], "the report must name the dead path, not the live one"
+
+
+def test_every_path_live_reports_clean(tmp_path: Path) -> None:
+    # The other direction: a gate that always complains is no gate.
+    (tmp_path / "a.md").write_text("x")
+    (tmp_path / "b.md").write_text("x")
+    assert unproven_claims(_board_with("proven", ["a.md", "b.md"]), root=tmp_path) == []
+
+
+def test_claiming_evidence_while_citing_nothing_is_a_violation(tmp_path: Path) -> None:
+    # A proven skill with an empty proof list claims evidence it never names. Pinned because
+    # the per-path rewrite could plausibly have let the empty case fall through as clean.
+    violations = unproven_claims(_board_with("proven", []), root=tmp_path)
+    assert len(violations) == 1
+    assert "cites nothing" in violations[0], violations
+
+
+def test_a_planned_skill_may_cite_nothing(tmp_path: Path) -> None:
+    # Only proven/partial claim evidence. planned/missing citing nothing is honest, not a gap.
+    assert unproven_claims(_board_with("planned", []), root=tmp_path) == []
+
+
 def test_missing_skills_have_no_fabricated_proof() -> None:
     # A 'missing' skill must NOT carry proof paths -- that would be dishonest.
     board = load_board()

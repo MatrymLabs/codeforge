@@ -1,5 +1,7 @@
 # ADR-0006: Derived stats are formula-driven, and the current formulas are prototype
 
+_Path note (2026-08-09): This ADR records the pre-2026-08-02 layout. Current modules live under `kernel/` rather than `parts/`._
+
 **Status:** accepted (the *mechanism* is accepted; the *numbers* are explicitly provisional)
 
 ## Context

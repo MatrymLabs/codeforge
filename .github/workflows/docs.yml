@@ -1,7 +1,15 @@
 name: docs
 
-# Build the docs/ tree with mkdocs-material and publish it to GitHub Pages.
-# Runs on docs changes to main (and on demand). Pages source must be "GitHub Actions".
+# Validate the docs/ tree with a STRICT mkdocs build. This does NOT publish.
+#
+# codeforge deliberately does not publish a GitHub Pages site (founder decision,
+# 2026-08-08): the portfolio page lives in the separate matrymlabs.github.io repo.
+# The publish half of this workflow used to call actions/configure-pages, which
+# failed on every run from 2026-08-03 because Pages is not enabled here and the
+# token cannot create it. The build half is worth keeping on its own: `--strict`
+# fails on broken links, missing nav entries, and doc rot.
+#
+# Local equivalent: `make docs-build`.
 on:
   push:
     branches: [main]
@@ -9,17 +17,28 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
   workflow_dispatch:
+
+# Cancel superseded runs on the SAME ref: pushing three commits to a PR otherwise runs three
+# full workflows to completion and only the last answer is ever read.
+#
+# PULL REQUESTS ONLY, deliberately. An earlier draft used `github.ref != 'refs/heads/main'`,
+# which is TRUE for a release event (its ref is the tag) and could cancel a release
+# mid-publish. It is also true for schedules and tags. Cancelling main's run is its own
+# hazard: "we cancelled the proof" is indistinguishable from "the proof never ran", and this
+# fleet has already lost a day to exactly that ambiguity. So: cancel PR iterations, nothing
+# else, ever.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# One deploy at a time; don't cancel an in-flight publish.
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -34,19 +53,3 @@ jobs:
         run: uv pip install --system mkdocs-material
       - name: Build the site (strict)
         run: mkdocs build --strict
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
-        with:
-          enablement: true
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
-        with:
-          path: site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0

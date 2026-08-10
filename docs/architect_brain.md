@@ -6,7 +6,7 @@ interface, so callers (`consult`, the `ai` verb) never change:
 
 - **`LocalArchitect`** - a rule-based guide. No network, no key, no dependency. **The
   default**, and the only brain CI and offline play ever use.
-- **`ClaudeAdvisor`** - backed by the Anthropic Messages API (model `claude-opus-4-8`). The
+- **`ClaudeAdvisor`** - backed by the Anthropic Messages API (model `claude-opus-5`). The
   architecture is **complete and tested**; it is dormant until a key is present.
 
 ## Waking the Claude brain (the small change, later)

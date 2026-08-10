@@ -216,6 +216,90 @@ def test_validate_flags_a_label_filed_twice_under_one_type() -> None:
     assert any("filed 2x" in p for p in problems)
 
 
+def test_the_registry_files_every_module_at_most_once() -> None:
+    records = [record for record in load_collective() if record.type == "MOD"]
+    problems = validate(records)
+    assert not any("duplicate file" in problem for problem in problems), problems
+
+
+def test_a_file_filed_under_two_active_designations_is_refused() -> None:
+    twins = [
+        _rec(
+            "MOD-10.105",
+            status="active",
+            label="permission-policy-a",
+            file="kernel/permission_policy.py",
+        ),
+        _rec(
+            "MOD-10.127",
+            status="active",
+            label="permission-policy-b",
+            file="./kernel/permission_policy.py",
+        ),
+    ]
+
+    problems = validate(twins, check_files=False)
+
+    assert any(
+        "duplicate file" in problem
+        and "kernel/permission_policy.py" in problem
+        and "MOD-10.105" in problem
+        and "MOD-10.127" in problem
+        for problem in problems
+    ), problems
+
+
+def test_a_superseded_record_may_share_a_file_with_its_replacement() -> None:
+    history = [
+        _rec(
+            "MOD-10.105",
+            status="superseded",
+            label="old-permission-policy",
+            file="kernel/permission_policy.py",
+        ),
+        _rec(
+            "MOD-10.127",
+            status="active",
+            label="permission-policy",
+            file="./KERNEL/permission_policy.py",
+        ),
+    ]
+
+    problems = validate(history, check_files=False)
+
+    assert not any("duplicate file" in problem for problem in problems), problems
+
+
+def test_the_error_names_every_designation_claiming_the_file() -> None:
+    records = [
+        _rec(
+            "MOD-10.105",
+            status="active",
+            label="permission-policy-a",
+            file="kernel/permission_policy.py",
+        ),
+        _rec(
+            "MOD-10.127",
+            status="active",
+            label="permission-policy-b",
+            file="./kernel/permission_policy.py",
+        ),
+        _rec(
+            "MOD-10.147",
+            status="active",
+            label="permission-policy-c",
+            file="KERNEL/Permission_Policy.py",
+        ),
+    ]
+
+    problems = validate(records, check_files=False)
+
+    duplicate = next(problem for problem in problems if "duplicate file" in problem)
+    assert all(
+        designation in duplicate for designation in ("MOD-10.105", "MOD-10.127", "MOD-10.147")
+    ), duplicate
+
+
 def test_validate_flags_an_orphaned_file(tmp_path: Path) -> None:
     # a built room (active) with a missing source file is an orphan
     problems = validate([_rec(status="active", file="seeds/ghost.yaml")], root=tmp_path)
