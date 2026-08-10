@@ -36,9 +36,21 @@ def test_several_segments_nest_in_order(tmp_path: Path) -> None:
 
 
 def test_ids_that_merely_look_alarming_are_allowed(tmp_path: Path) -> None:
-    # A dot or a dash inside a name is not traversal; only the exact `.`/`..` names are.
-    for ok in ("seed.jt", "..seed", "seed..", "a..b", "-seed-", "_seed_"):
+    # A dot or a dash INSIDE a name is not traversal; only the exact `.`/`..` names are.
+    for ok in ("seed.jt", "seed..", "a..b", "seed-01", "seed_01", "S3ED.x-y_z"):
         assert contained_path(tmp_path, ok).parent == tmp_path.resolve()
+
+
+def test_a_name_must_begin_with_an_alphanumeric(tmp_path: Path) -> None:
+    """A deliberate tightening, not an accident of the pattern.
+
+    A leading dot is a hidden file on POSIX and a leading dash is an argument to most command
+    line tools, so an id that starts with either is refused even though it is not traversal.
+    No store in this codebase mints such an id.
+    """
+    for hostile in ("..seed", ".seed", "-seed", "_seed"):
+        with pytest.raises(PathEscape, match="not a plain name"):
+            contained_path(tmp_path, hostile)
 
 
 def test_safe_segment_returns_the_value_unchanged(tmp_path: Path) -> None:

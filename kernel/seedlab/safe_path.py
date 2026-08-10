@@ -19,9 +19,16 @@ Outputs: a Path guaranteed to sit inside the resolved root, or PathEscape.
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 
 __all__ = ["PathEscape", "contained_path", "safe_segment"]
+
+# An ALLOWLIST, not a denylist. A denylist answers "which characters do I fear today", which is
+# how `..` survived the previous sanitiser: every character in it was permitted, so the whole
+# name was too. This says what a store id may be and refuses everything else, including every
+# separator, every encoding trick, and every character no filesystem should have to interpret.
+_SEGMENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,254}")
 
 
 class PathEscape(ValueError):
@@ -31,9 +38,9 @@ class PathEscape(ValueError):
 def safe_segment(value: str, *, what: str = "segment") -> str:
     """Return `value` when it is a plain filename component, else refuse.
 
-    Refuses, in this order: an empty or whitespace-only name; `.` and `..`, which are traversal
-    even though every character in them is otherwise legal; anything carrying a path separator
-    (either platform's); an absolute path; and a NUL byte, which truncates a path inside libc.
+    The allowlist does the work. The named checks below run first only so the error says WHY,
+    since "must not contain a path separator" tells a caller what to fix and "does not match
+    [A-Za-z0-9][A-Za-z0-9._-]{0,254}" does not.
     """
     if not value or not value.strip():
         raise PathEscape(f"{what} must not be empty")
@@ -45,7 +52,11 @@ def safe_segment(value: str, *, what: str = "segment") -> str:
         raise PathEscape(f"{what} must not contain a path separator: {value!r}")
     if Path(value).is_absolute() or os.path.splitdrive(value)[0]:
         raise PathEscape(f"{what} must be relative: {value!r}")
-    return value
+    if not _SEGMENT.fullmatch(value):
+        raise PathEscape(f"{what} is not a plain name: {value!r}")
+    # Return the MATCHED text rather than the argument, so what leaves this function is a value
+    # the allowlist produced, not the caller's string that merely passed a test beside it.
+    return _SEGMENT.fullmatch(value).group(0)  # type: ignore[union-attr]
 
 
 def contained_path(root: Path | str, *segments: str, what: str = "segment") -> Path:
