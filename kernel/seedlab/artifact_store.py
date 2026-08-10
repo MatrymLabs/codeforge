@@ -18,6 +18,7 @@ from typing import Protocol, runtime_checkable
 
 from kernel.seedlab.cli_generator import GeneratedArtifact
 from kernel.seedlab.project_model import Provenance, SeedLabError
+from kernel.seedlab.safe_path import contained_path, safe_segment
 from kernel.seedlab.tool_runner import ToolRunResult
 from kernel.shelf.atomic_write import atomic_write_text
 
@@ -162,16 +163,24 @@ class FileArtifactStore:
         self.root.mkdir(parents=True, exist_ok=True)
 
     def _dir(self, seed_id: str) -> Path:
-        path = self.root / _safe_segment(seed_id)
+        path = contained_path(self.root, seed_id, what="seed id")
         path.mkdir(parents=True, exist_ok=True)
         return path
 
     def save(self, record: ArtifactRecord) -> None:
-        target = self._dir(record.seed_id) / f"{_safe_segment(record.artifact_id)}.json"
+        target = (
+            self._dir(record.seed_id)
+            / f"{safe_segment(record.artifact_id, what='artifact id')}.json"
+        )
         atomic_write_text(target, json.dumps(record.to_dict(), indent=2))
 
     def load(self, seed_id: str, artifact_id: str) -> ArtifactRecord | None:
-        path = self.root / _safe_segment(seed_id) / f"{_safe_segment(artifact_id)}.json"
+        path = contained_path(
+            self.root,
+            seed_id,
+            f"{safe_segment(artifact_id, what='artifact id')}.json",
+            what="seed id",
+        )
         if not path.is_file():
             return None
         try:
@@ -180,7 +189,7 @@ class FileArtifactStore:
             raise ArtifactStoreError(f"corrupt artifact record {path}: {exc}") from exc
 
     def all_for_seed(self, seed_id: str) -> list[ArtifactRecord]:
-        seed_dir = self.root / _safe_segment(seed_id)
+        seed_dir = contained_path(self.root, seed_id, what="seed id")
         if not seed_dir.is_dir():
             return []
         records: list[ArtifactRecord] = []

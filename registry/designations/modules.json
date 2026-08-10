@@ -9513,6 +9513,27 @@
   "updated": "2026-08-04"
  },
  {
+  "designation": "MOD-10.096",
+  "name": "safe_path",
+  "status": "active",
+  "function": "refuse a caller-supplied id that would leave the store root it was promised to",
+  "label": "safe_path",
+  "file": "kernel/seedlab/safe_path.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_safe_path.py",
+  "depends_on": [],
+  "related": ["MOD-10.092", "MOD-10.093"],
+  "reuse": "The single path-containment gate for the Seed stores; one answer replacing four hand-rolled ones.",
+  "notes": "Closes 12 high-severity py/path-injection alerts CodeQL raised on the seedlab platform loop. The sanitiser it replaces mapped '..' to '..' unchanged, because every character in it was on the allowlist.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-10",
+  "updated": "2026-08-10"
+ },
+ {
   "designation": "MOD-10.093",
   "name": "platform_proof",
   "status": "active",

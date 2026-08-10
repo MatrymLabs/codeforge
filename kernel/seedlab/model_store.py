@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from kernel.seedlab.project_model import ProjectModel
+from kernel.seedlab.safe_path import contained_path, safe_segment
 from kernel.shelf.atomic_write import atomic_write_text
 
 _SLUG = re.compile(r"[^a-z0-9]+")
@@ -86,16 +87,18 @@ class FileModelStore:
         self.root.mkdir(parents=True, exist_ok=True)
 
     def _dir(self, seed_id: str) -> Path:
-        d = self.root / seed_id
+        d = contained_path(self.root, seed_id, what="seed id")
         d.mkdir(parents=True, exist_ok=True)
         return d
 
     def save(self, seed_id: str, model_id: str, model: ProjectModel) -> None:
-        target = self._dir(seed_id) / f"{model_id}.json"
+        target = self._dir(seed_id) / f"{safe_segment(model_id, what='model id')}.json"
         atomic_write_text(target, json.dumps(model.to_dict(), indent=2))
 
     def load(self, seed_id: str, model_id: str) -> ProjectModel | None:
-        path = self.root / seed_id / f"{model_id}.json"
+        path = contained_path(
+            self.root, seed_id, f"{safe_segment(model_id, what='model id')}.json", what="seed id"
+        )
         if not path.is_file():
             return None
         try:
@@ -104,7 +107,7 @@ class FileModelStore:
             raise ModelStoreError(f"corrupt model record {path}: {exc}") from exc
 
     def all_for_seed(self, seed_id: str) -> list[ProjectModel]:
-        seed_dir = self.root / seed_id
+        seed_dir = contained_path(self.root, seed_id, what="seed id")
         if not seed_dir.is_dir():
             return []
         out: list[ProjectModel] = []

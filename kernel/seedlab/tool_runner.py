@@ -31,6 +31,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
+from kernel.seedlab.safe_path import contained_path, safe_segment
 from kernel.seedlab.source_connector import LocalSource
 
 DEFAULT_TIMEOUT = 120.0
@@ -208,7 +209,7 @@ class FileRunLog:
         self.root.mkdir(parents=True, exist_ok=True)
 
     def _path(self, seed_id: str) -> Path:
-        return self.root / f"{seed_id}.jsonl"
+        return contained_path(self.root, f"{safe_segment(seed_id, what='seed id')}.jsonl")
 
     def append(self, result: ToolRunResult) -> None:
         with self._path(result.seed_id).open("a", encoding="utf-8") as fh:
