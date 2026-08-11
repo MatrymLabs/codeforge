@@ -9967,5 +9967,30 @@
     "aliases": [],
     "created": "2026-08-11",
     "updated": "2026-08-11"
+  },
+  {
+    "designation": "MOD-10.151",
+    "name": "applied_once",
+    "status": "active",
+    "function": "the durable exactly-once contract, vendored from Hardware Store PRT-0007",
+    "label": "applied_once",
+    "file": "kernel/shelf/applied_once.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_reward_ledger_conforms.py",
+    "depends_on": [],
+    "related": [
+      "reward_ledger"
+    ],
+    "reuse": "",
+    "notes": "",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "",
+    "updated": ""
   }
 ]
