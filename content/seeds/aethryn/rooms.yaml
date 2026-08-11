@@ -57,7 +57,7 @@ duskwood_vale:
     The Duskwood Vale zone (levels 20-50): a shadowed forest-vale of old growth and older secrets. Within its bounds lie Ravenwatch, Moonshade, Twilight Grove, The Black Hollow. Roads and routes run on to the neighbouring lands.
   exits:
     north: veridia
-    east: eldryn_forest
+    southeast: eldryn_forest
     south: zhaar_desert
     ravenwatch: ravenwatch
     moonshade: moonshade
@@ -101,7 +101,7 @@ caeloria:
     west: veridia
     south: eldryn_forest
     northeast: frostspire_peaks
-    east: ashen_wastes
+    southeast: ashen_wastes
     caeloria: caeloria_city
     brightwater: brightwater
     silverwatch: silverwatch
@@ -150,9 +150,10 @@ eldryn_forest:
     The Eldryn Forest zone (levels 50-80): an ancient forest kingdom grown around a tree older than any crown. Within its bounds lie Eldryn City, Wildgrowth, Greenmist, The Great Tree, Rotwood Deep. Roads and routes run on to the neighbouring lands.
   exits:
     north: caeloria
+    northwest: duskwood_vale
     west: zhaar_desert
     east: ashen_wastes
-    south: korvash_highlands
+    southwest: korvash_highlands
     eldryn: eldryn_city
     wildgrowth: wildgrowth
     greenmist: greenmist
@@ -292,7 +293,7 @@ xilnath_jungle:
   exits:
     west: ashen_wastes
     north: shattered_isles
-    east: skyward_spires
+    northeast: skyward_spires
     zulkarak: zulkarak
     mistvale: mistvale
     shifting: shifting_canopy
@@ -381,6 +382,7 @@ ashen_wastes:
   desc: |-
     The Ashen Wastes zone (levels 120-170): a scorched volcanic waste of lava-fields and standing fire. Within its bounds lie Moltenhold, Cinderfire, Ashen Monoliths, The Flamewrought Forge, The Scorched Gate. Roads and routes run on to the neighbouring lands.
   exits:
+    northwest: caeloria
     west: eldryn_forest
     north: thalorin
     east: xilnath_jungle
@@ -431,8 +433,9 @@ korvash_highlands:
   desc: |-
     The Korvash Highlands zone (levels 150-200): storm-wracked highlands of crag-forts and a crater that should not be. Within its bounds lie Stonehelm, Highreach, Thunderhold, Shunderhold, Ancient Overlook, Korvash Crater. Roads and routes run on to the neighbouring lands.
   exits:
-    north: ashen_wastes
+    northeast: eldryn_forest
     northwest: zhaar_desert
+    north: ashen_wastes
     down: the_deepreach
     southeast: the_voidscar
     stonehelm: stonehelm
@@ -530,6 +533,7 @@ skyward_spires:
   desc: |-
     The Skyward Spires zone (levels 200-250): floating spires of arcane stone drifting the high eastern air. Within its bounds lie Aurelian City, Celestial Observatory, The Spire Nexus. Roads and routes run on to the neighbouring lands.
   exits:
+    southwest: xilnath_jungle
     west: shattered_isles
     south: the_voidscar
     aurelian: aurelian_city

@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from tools.emit_map_world import emit
+from tools.emit_map_world import _REV, LINKS, MapCollision, _wire_hubs, emit
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 _GENERATED = ("rooms", "npcs", "zones", "wildlands", "settlements", "dungeons", "waystones")
@@ -32,6 +32,39 @@ def test_the_emitter_reproduces_every_committed_seed_file(tmp_path: Path):
             f"teaching tools/emit_map_world.py, or the emitter changed without a regen. Update the "
             f"emitter (its hand-tuning tables) so a regen is non-destructive, then rerun it."
         )
+
+
+def test_wire_hubs_binds_a_route_in_both_directions():
+    # ACCEPTANCE: a route is only wired if the player can walk it and walk back.
+    bound = _wire_hubs(
+        [("alpha", "beta", "east", "road")], {"alpha": "alpha", "beta": "beta"}, ["alpha", "beta"]
+    )
+    assert bound["alpha"]["east"] == "beta"
+    assert bound["beta"]["west"] == "alpha"
+
+
+def test_wire_hubs_refuses_two_routes_claiming_one_heading():
+    # REFUSAL: the defect that stranded four Aethryn zones. A plain assignment let the second
+    # writer win, so the loser kept its forward exit and silently lost its return path.
+    with pytest.raises(MapCollision) as caught:
+        _wire_hubs(
+            [("alpha", "beta", "east", "road"), ("gamma", "beta", "east", "sea")],
+            {"alpha": "alpha", "beta": "beta", "gamma": "gamma"},
+            ["alpha", "beta", "gamma"],
+        )
+    # It must name BOTH claimants, or it tells you a slot is contested without saying by what.
+    assert "beta 'west'" in str(caught.value)
+    assert "alpha <-> beta (east)" in str(caught.value)
+    assert "gamma <-> beta (east)" in str(caught.value)
+
+
+def test_the_shipped_map_has_no_colliding_headings():
+    # The real map, not a fixture: every inter-zone route keeps its return path.
+    hubs = {zid: zid for a, b, _d, _r in LINKS for zid in (a, b)}
+    bound = _wire_hubs(LINKS, hubs, list(hubs))
+    for a, b, direction, _route in LINKS:
+        assert bound[a][direction] == b
+        assert bound[b][_REV[direction]] == a
 
 
 @pytest.mark.parametrize("name", _GENERATED)
