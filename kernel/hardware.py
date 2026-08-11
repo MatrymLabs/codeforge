@@ -173,7 +173,7 @@ def source_gaps(root: Path | None = None, path: Path | None = None) -> list[str]
 # catalog would claim authorship of a Part the Store owns. A third state is the honest one, and the
 # first real consumption is what surfaced the need for it: the shelf discipline had exactly two
 # categories, and a consumed Part is neither.
-_VENDORED_CORES = frozenset(
+VENDORED_CORES = frozenset(
     {
         "applied_once",  # PRT-0007, contract only; kernel/world/reward_ledger.py satisfies it
     }
@@ -207,7 +207,7 @@ def uncataloged_cores(root: Path | None = None, path: Path | None = None) -> lis
         if core.name != "__init__.py"
         and f"kernel/shelf/{core.name}" not in cataloged
         and core.stem not in _LOCAL_ONLY_CORES
-        and core.stem not in _VENDORED_CORES
+        and core.stem not in VENDORED_CORES
     ]
 
 

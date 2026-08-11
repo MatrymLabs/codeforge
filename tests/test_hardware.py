@@ -244,3 +244,27 @@ def test_uncataloged_cores_flags_a_core_no_card_covers_and_excuses_local_only(tm
     )
     gaps = uncataloged_cores(root=tmp_path, path=cat)
     assert gaps == ["widget"]  # widget flagged; affixes excused by the local-only allowlist
+
+
+def test_a_vendored_part_is_never_poured_into_the_public_shelf() -> None:
+    """codeforge-shelf is published from this engine. A consumed Part is not ours to redistribute.
+
+    `shelf_pour` selects by directory glob, so adding PRT-0007's contract to kernel/shelf/ would
+    have put it into a public package that carries no card for it and claims a provenance it does
+    not have. The engine consumes the Part; it does not resell it.
+
+    Introducing the vendored state means every shelf-aware instrument has to learn it, and the
+    pour did not. This is the assertion that makes the next one fail loudly instead of silently
+    republishing someone else's work.
+    """
+    from pathlib import Path
+
+    from kernel.hardware import VENDORED_CORES
+    from kernel.shelf_pour import _core_files
+
+    poured = {
+        p.stem for p in _core_files(Path(__file__).resolve().parent.parent / "kernel" / "shelf")
+    }
+    leaked = sorted(poured & VENDORED_CORES)
+    assert not leaked, f"vendored Part(s) would be published in codeforge-shelf: {leaked}"
+    assert VENDORED_CORES, "the guard is vacuous if nothing is declared vendored"

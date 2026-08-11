@@ -47,7 +47,17 @@ class PouredShelf:
 
 
 def _core_files(shelf_dir: Path) -> list[Path]:
-    return [p for p in sorted(shelf_dir.glob("*.py")) if p.name != "__init__.py"]
+    # Vendored Parts are EXCLUDED. codeforge-shelf is published from this engine, and a Part
+    # consumed from the Hardware Store is not this engine's to redistribute: pouring it would put
+    # PRT-0007's contract into a public package that carries no card for it and claims a provenance
+    # it does not have. The engine consumes the Part; it does not resell it.
+    from kernel.hardware import VENDORED_CORES
+
+    return [
+        p
+        for p in sorted(shelf_dir.glob("*.py"))
+        if p.name != "__init__.py" and p.stem not in VENDORED_CORES
+    ]
 
 
 def _reaches_engine(source: str, where: str) -> bool:
