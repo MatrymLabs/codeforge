@@ -172,6 +172,25 @@ class BanRow(ArchiveBase):
     created_utc: Mapped[str] = mapped_column(default="")
 
 
+class RewardGrantRow(ArchiveBase):
+    """One payout that has already been made, so it can never be made twice.
+
+    Keyed by the whole grant identity: the same character, the same source, the same occurrence
+    is one grant. A respawning foe killed again is a NEW occurrence and gets its own row, because
+    a farmable foe is meant to pay every time. See `kernel/world/reward_ledger.py`.
+
+    This is a RECORD, not a wallet. The purse stays authoritative about what a player owns; this
+    table only answers "was this grant already applied".
+    """
+
+    __tablename__ = "reward_grants"
+
+    character: Mapped[str] = mapped_column(primary_key=True)  # the recipient
+    source: Mapped[str] = mapped_column(primary_key=True)  # what paid, e.g. npc:training_dummy
+    occurrence: Mapped[int] = mapped_column(primary_key=True)  # which payout from that source
+    granted_utc: Mapped[str] = mapped_column(default="")  # when, for audit only
+
+
 class AuctionRow(ArchiveBase):
     """One item listed for sale on the auction house. The item is ESCROWED here (an item snapshot,
     like a vaulted item) from the moment it is listed until it is bought or expires, so it is out of

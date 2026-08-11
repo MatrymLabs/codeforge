@@ -521,6 +521,17 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
         exclude=session.player_id,
     )
     witness("defeat", npc["name"], "fell in combat")
+    # Exactly-once, durably. The claim IS the insert, so if this defeat has already paid (a retry,
+    # a reconnect, a replayed slice, or a second process racing us) the primary key refuses the
+    # claim and we award nothing. The occurrence is minted from the ledger rather than the world
+    # beat, which rewinds to 0 on a fresh boot and would make a legitimate re-kill look like a
+    # repeat. A felled foe that pays nothing must still FALL, so only the awards sit behind this.
+    from kernel.world.reward_ledger import claim_grant, next_occurrence
+
+    grant_source = f"npc:{nid}"
+    occurrence = next_occurrence(session.player_id, grant_source)
+    if not claim_grant(session.player_id, grant_source, occurrence):
+        return (True, "")  # already paid for this defeat; the foe still fell
     xp_award, jp_award, tp_award = _reward_amounts(session, npc)
     rewards = award_xp(session, xp_award)
     for extra in (award_jp(session, jp_award), award_tp(session, tp_award)):
