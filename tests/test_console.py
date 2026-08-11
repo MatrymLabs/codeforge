@@ -10,6 +10,7 @@ import sys
 import pytest
 
 from forge import handle_command
+from kernel.shelf import console
 from kernel.shelf.console import CommandRefused, console_menu, run, run_view
 from kernel.world.session import SESSIONS, Session
 
@@ -77,3 +78,44 @@ def test_console_commands_reachable_through_the_tick():
 
 def test_run_view_refuses_unknown_without_running():
     assert "not an allowlisted" in run_view("bogus")
+
+
+# --- the console's own honesty: an allowlist that outlives its targets -------------------------
+# `run compile` reported a GREEN CHECKMARK for nine days while printing "Can't list 'parts'".
+# compileall exits 0 when it cannot find its targets, so a command that compiled nothing announced
+# success. These pin that a stale allowlist can never do that again.
+
+
+def test_repo_root_is_the_repository_not_a_package_directory():
+    """It was parent.parent, correct as parts/console.py and wrong the moment it moved."""
+    assert (console.REPO_ROOT / "pyproject.toml").is_file()
+    assert (console.REPO_ROOT / "forge.py").is_file()
+    assert console.REPO_ROOT.name != "kernel"
+
+
+def test_every_declared_target_actually_exists_today():
+    """The regression guard. A restructure that moves a directory reddens here, loudly."""
+    assert console.stale_commands() == {}, (
+        f"the allowlist points at paths that no longer exist: {console.stale_commands()}"
+    )
+
+
+def test_a_command_whose_target_vanished_is_refused_and_never_runs(monkeypatch):
+    monkeypatch.setitem(console.TARGETS, "compile", ("parts", "forge.py"))  # the retired directory
+    with pytest.raises(console.CommandRefused) as caught:
+        console.run("compile")
+    assert "parts" in str(caught.value)
+    assert "never ran" in str(caught.value)
+
+
+def test_a_stale_command_is_reported_rather_than_reported_green(monkeypatch):
+    monkeypatch.setitem(console.TARGETS, "types", ("parts",))
+    assert console.stale_commands() == {"types": ("parts",)}
+    view = console.run_view("types")
+    assert "✓" not in view  # the whole defect: a checkmark over a measurement never taken
+    assert "stale" in view
+
+
+def test_missing_targets_is_empty_for_a_command_that_declares_none():
+    assert console.missing_targets("version") == ()
+    assert console.missing_targets("status") == ()
