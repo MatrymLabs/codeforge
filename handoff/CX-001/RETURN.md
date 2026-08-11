@@ -2,7 +2,7 @@
 
 ```yaml
 packet_id: CX-001
-pr_url: UNOPENED
+pr_url: https://github.com/MatrymLabs/codeforge/pull/908
 status: COMPLETE
 commands_run:
   - command: git fetch origin
