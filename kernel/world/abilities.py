@@ -324,6 +324,23 @@ def _arm_cooldown(session: Session, label: str, ability: Ability) -> None:
         session.cooldowns[label] = cooldown
 
 
+def combat_tail(session: Session, npc: Npc) -> str:
+    """What a combat line ends with: the foe's remaining health AND the wielder's spent pool.
+
+    The room-output standard asks combat to be readable on action, target, result, damage,
+    RESOURCES, status, criticals, defeat and rewards. Everything but resources was already there:
+    an ability spent MP silently, so the only way to learn what a fight had cost you was to stop
+    and type SCORE. In a fight, that is exactly when you cannot.
+
+    Both sides are LABELLED. `(10/20)` alone cannot be read, because it never says whose health
+    it is. This is not a new format: the `drain` branch of this card already ends with
+    `(foe 12/20; you 28/32)`, and this makes the rest of the card agree with it.
+    """
+    mp = session.resources.get("mp")
+    foe = f"foe {npc['hp_now']}/{npc['hp']}"
+    return f"({foe})" if mp is None else f"({foe}; MP {mp.current}/{mp.maximum})"
+
+
 def _channel_offense(
     session: Session, ability: Ability, npc: Npc, nid: str, who: str, move: str
 ) -> str:
@@ -352,8 +369,10 @@ def _channel_offense(
         if per_tick <= 0:  # the foe nullifies the element: no burn takes hold
             return f"You brand {npc['name']} with {move}, but{note.lower()}"
         combat.apply_burn(npc, per_tick)
-        bar = f"{npc['hp_now']}/{npc['hp']}"
-        return f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat.{note} ({bar})"
+        return (
+            f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat.{note} "
+            f"{combat_tail(session, npc)}"
+        )
     if ability["kind"] == "drain":  # lifesteal: strike the foe AND mend the wielder for a share
         dmg, note = combat.typed_hit(npc, element, _magnitude(session, ability))
         if dmg <= 0:  # the foe nullifies the element: nothing lands, so nothing is siphoned
@@ -395,6 +414,5 @@ def _channel_offense(
     )
     defeated, tail = combat.land_hit(session, npc, nid, dmg)
     if not defeated:
-        bar = f"{npc['hp_now']}/{npc['hp']}"
-        return f"You unleash {move} on {npc['name']} for {dmg}.{note} ({bar})"
+        return f"You unleash {move} on {npc['name']} for {dmg}.{note} {combat_tail(session, npc)}"
     return f"You unleash {move} on {npc['name']}; it {mortality.defeat_clause(npc)}.\n{tail}"
