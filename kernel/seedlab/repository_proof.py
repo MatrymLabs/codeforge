@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
+import subprocess  # nosec B404 -- fixed argv, no shell, read-only `git ls-files`
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -51,7 +53,7 @@ def model_repository(root: Path) -> RepositoryProof:
     return RepositoryProof(
         source_id=record.source_id,
         root=record.root,
-        files=tuple(connector.list_files()),
+        files=_repository_files(resolved, connector),
         branch=branch,
         commit=commit or "",
         vcs="git" if branch is not None or commit is not None else "no-vcs",
@@ -124,3 +126,48 @@ def recover(store: Path, source_id: str) -> RepositoryProof:
         )
     except (KeyError, TypeError) as exc:
         raise RepositoryProofError(f"invalid repository proof {source_id!r}") from exc
+
+
+def _repository_files(root: Path, connector: LocalSource) -> tuple[str, ...]:
+    """The files git TRACKS, falling back to the connector's listing when git cannot answer.
+
+    A repository proof that lists the filesystem is not modelling a repository. Pointed at this
+    engine, the connector's rglob listing returned 1809 files of which 532 were gitignored: the
+    coverage cache, the hypothesis corpus, and codeforge.db, the live database. None of them are
+    part of the codebase, and on a source whose secrets are not in the connector's denylist,
+    "every file on disk" is the wrong default for an artifact that gets written out and kept.
+
+    Protected paths are filtered AFTER git, not instead of it, so the denylist still applies to
+    anything tracked. A tree with no git, or a git that will not answer, degrades to the previous
+    behaviour rather than to an empty model.
+    """
+    tracked = _git_tracked(root)
+    if tracked is None:
+        return tuple(connector.list_files())
+    return tuple(sorted(f for f in tracked if not connector._is_protected(f)))
+
+
+def _git_tracked(root: Path) -> list[str] | None:
+    """Repo-relative posix paths git tracks, or None when git cannot answer.
+
+    Subprocess is deliberate and confined here. `source_connector` stays subprocess-free because
+    it is a runtime seam; this module is proof tooling, and `scripts/packet_gate.py` already shells
+    to `git rev-parse` for the same reason. Reading `.git/index` by hand to avoid one read-only
+    command would be the more fragile choice, not the safer one.
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    try:
+        done = subprocess.run(  # nosec B603 -- fixed argv, shell=False, read-only
+            [git, "-C", str(root), "ls-files", "-z"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if done.returncode != 0:
+        return None
+    return [entry for entry in done.stdout.split("\0") if entry]

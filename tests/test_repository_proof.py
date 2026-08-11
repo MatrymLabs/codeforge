@@ -126,3 +126,64 @@ def test_a_real_linked_worktree_records_its_git_facts(tmp_path: Path) -> None:
     modeled = model_repository(linked)
     assert modeled.branch == branch
     assert modeled.commit.startswith(commit[:7])
+
+
+# --- ADDED beyond the packet. No locked assertion was weakened, deleted or rewritten. ----------
+# The packet pinned that branch and commit match git. It never said the FILE model should be what
+# git tracks, and it should have: pointed at this engine the first implementation listed 1809
+# files of which 532 were gitignored, including .coverage, the hypothesis corpus, and
+# codeforge.db, the live database. That gap was the packet's, not the implementation's.
+
+
+def test_a_gitignored_file_is_not_part_of_the_repository_model(tmp_path: Path) -> None:
+    _real_repo(tmp_path / "repo")
+    repo = tmp_path / "repo"
+    (repo / ".gitignore").write_text("secrets.db\nbuild/\n", encoding="utf-8")
+    (repo / "secrets.db").write_text("runtime state", encoding="utf-8")
+    (repo / "build").mkdir()
+    (repo / "build" / "artifact.bin").write_text("generated", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", ".gitignore"], check=True, capture_output=True)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repo),
+            "-c",
+            "user.email=t@t",
+            "-c",
+            "user.name=t",
+            "commit",
+            "-qm",
+            "ignore",
+        ],
+        check=True,
+        capture_output=True,
+    )
+
+    listed = model_repository(repo).files
+    assert "secrets.db" not in listed, "runtime state git ignores is not part of the repository"
+    assert not any(f.startswith("build/") for f in listed)
+    assert "app.py" in listed, "tracked source must still be modelled"
+
+
+def test_a_tree_without_git_still_models_its_files(tmp_path: Path) -> None:
+    """The fallback must degrade to the previous behaviour, not to an empty model."""
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    (plain / "notes.txt").write_text("hello\n", encoding="utf-8")
+    modeled = model_repository(plain)
+    assert modeled.vcs == "no-vcs"
+    assert "notes.txt" in modeled.files
+
+
+def test_a_protected_path_stays_filtered_even_when_git_tracks_it(tmp_path: Path) -> None:
+    """Git decides membership; the denylist still decides exposure. Both, not either."""
+    repo = tmp_path / "repo"
+    _real_repo(repo)  # the fixture commits .env deliberately, so git DOES track it
+    tracked = subprocess.run(
+        ["git", "-C", str(repo), "ls-files"], check=True, capture_output=True, text=True
+    ).stdout.split()
+    assert ".env" in tracked, "fixture precondition: git tracks the secret"
+
+    listed = model_repository(repo).files
+    assert ".env" not in listed, "a tracked secret is still a protected path"
