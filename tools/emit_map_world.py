@@ -548,12 +548,12 @@ LINKS = [
     ("veridia", "frostspire_peaks", "north", "road"),
     ("caeloria", "eldryn_forest", "south", "road"),
     ("caeloria", "frostspire_peaks", "northeast", "path"),
-    ("caeloria", "ashen_wastes", "east", "sea"),
-    ("duskwood_vale", "eldryn_forest", "east", "path"),
+    ("caeloria", "ashen_wastes", "southeast", "sea"),
+    ("duskwood_vale", "eldryn_forest", "southeast", "path"),
     ("duskwood_vale", "zhaar_desert", "south", "path"),
     ("eldryn_forest", "zhaar_desert", "west", "path"),
     ("eldryn_forest", "ashen_wastes", "east", "road"),
-    ("eldryn_forest", "korvash_highlands", "south", "path"),
+    ("eldryn_forest", "korvash_highlands", "southwest", "path"),
     ("zhaar_desert", "korvash_highlands", "southeast", "sea"),
     ("frostspire_peaks", "thalorin", "east", "sea"),
     ("thalorin", "ashen_wastes", "south", "road"),
@@ -561,7 +561,7 @@ LINKS = [
     ("ashen_wastes", "xilnath_jungle", "east", "road"),
     ("ashen_wastes", "korvash_highlands", "south", "path"),
     ("xilnath_jungle", "shattered_isles", "north", "sea"),
-    ("xilnath_jungle", "skyward_spires", "east", "sea"),
+    ("xilnath_jungle", "skyward_spires", "northeast", "sea"),
     ("korvash_highlands", "the_deepreach", "down", "tunnel"),
     ("korvash_highlands", "the_voidscar", "southeast", "sea"),
     ("shattered_isles", "skyward_spires", "east", "sea"),
@@ -613,6 +613,43 @@ def q(s: str) -> str:
     return s.replace('"', "'")
 
 
+class MapCollision(RuntimeError):
+    """Two routes claim one hub's direction, so one route would lose its return path."""
+
+
+def _wire_hubs(
+    links: list[tuple[str, str, str, str]],
+    hub: dict[str, str],
+    zone_ids: list[str],
+) -> dict[str, dict[str, str]]:
+    """Bind every inter-zone route to BOTH hubs, refusing any direction claimed twice.
+
+    A plain assignment lets the second writer win. The loser keeps its forward exit and
+    silently loses its return, which strands the player who walks through it. Refuse the
+    map instead of emitting a world with a trap in it.
+    """
+    bound: dict[str, dict[str, str]] = {zid: {} for zid in zone_ids}
+    claimed_by: dict[tuple[str, str], str] = {}
+    collisions: list[str] = []
+
+    for a, b, direction, _route in links:
+        route = f"{a} <-> {b} ({direction})"
+        for room, heading, target in ((a, direction, b), (b, _REV[direction], a)):
+            held = claimed_by.get((room, heading))
+            if held is not None and held != route:
+                collisions.append(f"  {room} '{heading}' claimed by [{held}] and by [{route}]")
+                continue
+            claimed_by[(room, heading)] = route
+            bound[room][heading] = hub[target]
+
+    if collisions:
+        raise MapCollision(
+            "inter-zone routes collide; each line is a return path that would vanish:\n"
+            + "\n".join(collisions)
+        )
+    return bound
+
+
 def emit(out_root: Path | None = None) -> None:
     rooms: list[str] = [
         "# SEED: aethryn -- rooms.yaml  (GENERATED from the world map by tools/emit_map_world.py)",
@@ -658,10 +695,7 @@ def emit(out_root: Path | None = None) -> None:
     # index the hub id per zone (the hub room = "<zoneid>" itself, the zone entrance)
     hub = {z[0]: z[0] for z in ZONES}
     # collect inter-zone exits per hub
-    hub_exits: dict[str, dict[str, str]] = {z[0]: {} for z in ZONES}
-    for a, b, d, _route in LINKS:
-        hub_exits[a][d] = hub[b]
-        hub_exits[b][_REV[d]] = hub[a]
+    hub_exits: dict[str, dict[str, str]] = _wire_hubs(LINKS, hub, [z[0] for z in ZONES])
 
     for zid, zname, lo, hi, biome, blurb, places in ZONES:
         # --- the zone HUB room (its entrance / crossroads, a Waystone of the travel network) ---
