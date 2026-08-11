@@ -23,7 +23,7 @@ class RepositoryProof:
     root: str
     files: tuple[str, ...]
     branch: str | None
-    commit: str | None
+    commit: str
     vcs: str
 
     def to_dict(self) -> dict[str, object]:
@@ -53,7 +53,7 @@ def model_repository(root: Path) -> RepositoryProof:
         root=record.root,
         files=tuple(connector.list_files()),
         branch=branch,
-        commit=commit,
+        commit=commit or "",
         vcs="git" if branch is not None or commit is not None else "no-vcs",
     )
 
@@ -119,7 +119,7 @@ def recover(store: Path, source_id: str) -> RepositoryProof:
             root=payload["root"],
             files=tuple(payload["files"]),
             branch=payload["branch"],
-            commit=payload["commit"],
+            commit=str(payload["commit"]),
             vcs=payload["vcs"],
         )
     except (KeyError, TypeError) as exc:

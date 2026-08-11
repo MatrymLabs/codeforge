@@ -1,9 +1,9 @@
 # RETURN CX-003
 
 packet_id: CX-003
-status: BLOCKED
+status: PARTIAL
 branch: agent/codex/cx-003
-pr_url: not opened, assertion-locked contract blocks the required full gate
+pr_url: https://github.com/MatrymLabs/codeforge/pull/914
 
 ## Commands run
 
@@ -26,7 +26,8 @@ recorded commit: d4dd75299a01
 recorded vcs: git
 ```
 
-CMD `export PATH="$PWD/.venv/bin:$PATH" && make check` exited 2:
+CMD initial `export PATH="$PWD/.venv/bin:$PATH" && make check` exited 2 before packet-author
+amendment:
 
 ```text
 ruff format --check .
@@ -55,12 +56,16 @@ make: *** [Makefile:29: lint] Error 1
 
 All are in the packet allowlist.
 
-## Blocker
+## Packet-author amendment
 
-The assertion-locked packet requires `with pytest.raises(Exception):`. The repository lint rule
-rejects that exact assertion as B017. Editing the assertion or adding an inline suppression would
-change the required contract test, so no workaround was attempted. Founder or packet-author ruling
-is required.
+The packet author authorised exactly one assertion change: the missing-target assertion now catches
+`SourceConnectorError`, the error emitted by the consumed `LocalSource` boundary. This is more
+truthful than wrapping that error in a new proof exception. Ruff B017 then passed.
+
+CMD amended `make check` was attempted repeatedly. It completed lint, import contracts, mypy, and
+entered the 5,210-item coverage suite, but this execution host terminated foreground commands at
+approximately 30 seconds before an exit marker. A detached retry wrote only `ruff format --check .`
+then exited without an exit marker. No green full-gate claim is made.
 
 ## Consume-first log
 
@@ -88,5 +93,6 @@ the proof adds that metadata interpretation without changing the connector bound
 pattern_shapes: source identity + source location + branch/version + approved file metadata +
 durable recovery. The nearest prior shape is external source provenance, not source content capture.
 
-dissent: The packet's exact broad exception assertion conflicts with the repository's enforced B017
-lint rule. I do not have authority to change either measuring instrument.
+dissent: The original assertion was unmergeable under B017 and was amended only with explicit
+packet-author authority. Full-gate completion remains unverified because the execution host stopped
+the coverage run before its exit status.

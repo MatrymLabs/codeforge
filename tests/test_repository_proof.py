@@ -19,6 +19,7 @@ from pathlib import Path
 import pytest
 
 from kernel.seedlab.repository_proof import model_repository
+from kernel.seedlab.source_connector import SourceConnectorError
 
 
 def _real_repo(root: Path) -> tuple[str, str]:
@@ -77,7 +78,7 @@ def test_the_report_carries_metadata_and_never_file_contents(tmp_path: Path) -> 
 
 
 def test_a_missing_target_is_refused_loudly(tmp_path: Path) -> None:
-    with pytest.raises(Exception):
+    with pytest.raises(SourceConnectorError):
         model_repository(tmp_path / "nope")
 
 
