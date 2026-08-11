@@ -29,6 +29,7 @@ import yaml
 from kernel.shelf.conditions import ConditionError, validate
 from kernel.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
 from kernel.world.callings import prerequisite_cycles
+from kernel.world.exit_integrity import CANONICAL_DIRECTIONS
 from kernel.world.score_sheet_model import RESIST_ORDER  # the canonical element/status codes
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
@@ -95,6 +96,9 @@ class Room(TypedDict):
     # Optional: a live capability this room surfaces on `look` (e.g. "arc" -> the ARC verdict).
     # The world stays data; the engine renders a declared capability, never a hard-coded room.
     dynamic: NotRequired[str]
+    # Deliberate one-way canonical exits. The loader defaults and validates this data, while the
+    # exit-integrity gate distinguishes the declared decisions from accidental traps.
+    one_way: NotRequired[list[str]]
     # Optional: a GATHER node -- the item prototype a Forger harvests here with `gather`
     # (a crafting material). The node renews after a cooldown (kernel.world.gather). Absent = a
     # room with nothing to gather.
@@ -533,11 +537,25 @@ def load_rooms(path: Path) -> dict[str, Room]:
             "name": _phrase(label).title(),
             "desc": DEFAULT_ROOM_DESC,
             "exits": {},
+            "one_way": [],
             **file_template,
             **raw,
         }
-        _inspect_required_types(label, merged, (("name", str), ("desc", str), ("exits", dict)))
+        _inspect_required_types(
+            label, merged, (("name", str), ("desc", str), ("exits", dict), ("one_way", list))
+        )
+        for direction in merged["one_way"]:
+            if not isinstance(direction, str) or direction not in CANONICAL_DIRECTIONS:
+                raise SeedError(
+                    f"Room '{label}': 'one_way' direction {direction!r} must be canonical."
+                )
+            if direction not in merged["exits"]:
+                raise SeedError(
+                    f"Room '{label}': 'one_way' direction '{direction}' is not an exit."
+                )
         room = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
+        if merged["one_way"]:
+            room["one_way"] = list(merged["one_way"])
         if merged.get("dynamic"):
             room["dynamic"] = str(merged["dynamic"])
         rooms[label] = room
