@@ -2,6 +2,9 @@
 
 ```yaml
 packet_id:            CX-001
+status:               LANDED   # codeforge #908, merged 2026-08-11. ARCHIVED, not backfilled:
+                      # this records what the bench was actually handed, and the seven
+                      # schema fields it lacks are the defect it is evidence of
 title:                Leg 1C, exits resolve both ways
 stream:               engine
 owner:                Codex
