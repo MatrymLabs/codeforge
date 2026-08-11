@@ -168,6 +168,18 @@ def source_gaps(root: Path | None = None, path: Path | None = None) -> list[str]
 # Naming them here is the honest counterpart to source_gaps -- it makes "intentionally local"
 # explicit, so uncataloged_cores flags only a core that is neither cataloged NOR declared local.
 # A genuinely reusable core that nobody filed then shows up as a gap instead of hiding.
+# Shelf cores VENDORED from the Hardware Store: consumed Parts, not repo-original code. They are
+# reusable by definition, so `local-only` would be a lie, and cataloguing them in this engine's
+# catalog would claim authorship of a Part the Store owns. A third state is the honest one, and the
+# first real consumption is what surfaced the need for it: the shelf discipline had exactly two
+# categories, and a consumed Part is neither.
+_VENDORED_CORES = frozenset(
+    {
+        "applied_once",  # PRT-0007, contract only; kernel/world/reward_ledger.py satisfies it
+    }
+)
+
+
 _LOCAL_ONLY_CORES = frozenset(
     {
         "affixes",  # loot rarity + affix rolls: a game mechanic, not a cross-domain part
@@ -195,6 +207,7 @@ def uncataloged_cores(root: Path | None = None, path: Path | None = None) -> lis
         if core.name != "__init__.py"
         and f"kernel/shelf/{core.name}" not in cataloged
         and core.stem not in _LOCAL_ONLY_CORES
+        and core.stem not in _VENDORED_CORES
     ]
 
 

@@ -145,3 +145,50 @@ def grants_for(character: str) -> list[tuple[str, int]]:
             .order_by(RewardGrantRow.granted_utc, RewardGrantRow.occurrence)
         ).all()
         return [(source, occurrence) for source, occurrence in rows]
+
+
+# --- the Hardware Store contract this ledger satisfies ------------------------------------------
+# PRT-0007 `applied-once`. The Part was extracted FROM this module and saas-starter's WebhookEvent,
+# which built the same mechanism independently. The engine consumes its CONTRACT, not its sqlite
+# reference implementation: the invariant is already met here with SQLAlchemy and the engine's own
+# archive, and vendoring a second persistence mechanism would buy nothing. Proof that the claim is
+# not decorative lives in tests/test_reward_ledger_conforms.py, which runs the Part's own contract
+# suite against this ledger on every `make check`.
+
+_KEY_SEPARATOR = "|"
+
+
+def grant_key(character: str, source: str, occurrence: int) -> str:
+    """This ledger's grant identity, flattened to the Part's single opaque key."""
+    character, source, occurrence = _checked(character, source, occurrence)
+    return f"{character}{_KEY_SEPARATOR}{source}{_KEY_SEPARATOR}{occurrence}"
+
+
+class GrantLedger:
+    """`kernel/world/reward_ledger` presented as an `AppliedOnce` (PRT-0007).
+
+    A thin projection, deliberately holding no state of its own: the durable record stays in
+    RewardGrantRow, where the combat seam already writes it. This exists so the engine's conformance
+    to the Part is TESTED rather than asserted.
+
+    The Part's keys are opaque, and a conforming implementation must accept any non-empty string.
+    This ledger's own identities flatten to `character|source|occurrence`; any other shape is a
+    single identity taken whole, stored under a reserved source so it can never collide with a
+    real grant.
+    """
+
+    OPAQUE_SOURCE = "opaque"
+
+    def _split(self, key: str) -> tuple[str, str, int]:
+        if not isinstance(key, str) or not key.strip():
+            raise GrantIdentityError(f"key must be a non-empty string, got {key!r}")
+        parts = key.split(_KEY_SEPARATOR)
+        if len(parts) == 3 and parts[2].isdigit():
+            return parts[0], parts[1], int(parts[2])
+        return key, self.OPAQUE_SOURCE, 0
+
+    def seen(self, key: str) -> bool:
+        return already_granted(*self._split(key))
+
+    def claim(self, key: str) -> bool:
+        return claim_grant(*self._split(key))
