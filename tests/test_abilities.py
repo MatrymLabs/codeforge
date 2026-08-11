@@ -16,7 +16,12 @@ import pytest
 
 import forge
 from kernel.world import npcs
-from kernel.world.abilities import abilities_for, render_abilities, use_ability
+from kernel.world.abilities import (
+    abilities_for,
+    combat_tail,
+    render_abilities,
+    use_ability,
+)
 from kernel.world.seed import Npc, SeedError, load_abilities
 from kernel.world.session import SESSIONS, Session
 
@@ -634,3 +639,47 @@ def test_a_buff_needs_a_present_ally() -> None:
 def test_render_abilities_shows_a_buff_targets_self_or_ally() -> None:
     tank = _seated("vanguard", "bram")
     assert "self or ally" in render_abilities(tank)
+
+
+# --- the wielder's pool is on the line that spent it ---------------------------------------------
+
+
+def test_an_ability_reports_the_mp_it_just_spent() -> None:
+    """The room-output standard lists RESOURCES among what combat output must make readable.
+
+    Before this, an ability spent MP silently, so the only way to learn what a fight had cost you
+    was to stop and type SCORE, which in a fight is exactly when you cannot.
+    """
+    s = _at_dummy("engineer")
+    before = s.resources["mp"].current
+    line = use_ability(s, "power strike on dummy")
+    after = s.resources["mp"].current
+    assert after < before, "the ability must really spend MP for this test to mean anything"
+    assert f"MP {after}/{s.resources['mp'].maximum}" in line
+
+
+def test_the_foe_bar_says_whose_health_it_is() -> None:
+    """`(10/20)` alone cannot be read: it never says whose health it is."""
+    assert "(foe " in use_ability(_at_dummy("engineer"), "power strike on dummy")
+
+
+def test_the_tail_follows_the_convention_the_drain_branch_already_used() -> None:
+    """Not a new format: `drain` already ended with `(foe 12/20; you 28/32)`."""
+    line = use_ability(_at_dummy("engineer"), "power strike on dummy")
+    assert line.rstrip().endswith(")") and "(foe " in line
+
+
+def test_a_wielder_with_no_mp_pool_still_gets_a_readable_tail() -> None:
+    """A session with no MP resource must not crash the renderer, and must still name the foe.
+
+    Uses the world's REAL dummy rather than a hand-built dict, so the test exercises the actual
+    Npc shape instead of a convenient fiction that could drift from it.
+    """
+    from kernel.world.world import NPCS
+
+    s = _at_dummy("engineer")
+    s.resources.pop("mp", None)
+    npc = NPCS["training_dummy"]
+    tail = combat_tail(s, npc)
+    assert tail == f"(foe {npc['hp_now']}/{npc['hp']})"
+    assert "MP" not in tail  # nothing to report when there is no pool
