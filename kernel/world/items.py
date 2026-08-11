@@ -12,6 +12,7 @@ Functions RETURN text; the game loop decides what to print.
 import copy
 
 from kernel.shelf import target_disambig
+from kernel.world import coinage
 from kernel.world.seed import SEED_DIR, Item, load_items
 
 ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
@@ -212,12 +213,24 @@ def read_item(word: str, room_id: str, owner: str) -> str:
     return f"You read {item['name']}:\n{lore}"
 
 
-def inventory_text(owner: str) -> str:
+def inventory_text(owner: str, coins: int = 0) -> str:
+    """Everything the player is carrying, INCLUDING the purse.
+
+    Coin was invisible: a kill announced "(purse: 3 cinders)" as it scrolled past, and after that
+    no verb in the game would tell you your balance. Not `inventory`, not `score`, and `purse`
+    itself is not a command. The one place `coins` appeared was `trade coins`, which offers money
+    rather than counting it.
+
+    Money is carried, so it belongs in the carried view. `coins` defaults to 0 so a caller that
+    does not know about the purse renders exactly as before, and an empty purse stays silent
+    rather than announcing "0 cinders" at someone who has never earned any.
+    """
     carried = items_in(owner)
+    money = f"  {coinage.purse(coins)}" if coins > 0 else ""
     if not carried:
-        return "You are carrying nothing."
+        return f"You are carrying:\n{money}" if money else "You are carrying nothing."
     lines = "\n".join(f"  {ITEMS[iid]['name']}" for iid in carried)
-    return f"You are carrying:\n{lines}"
+    return f"You are carrying:\n{lines}" + (f"\n{money}" if money else "")
 
 
 def room_items_text(room_id: str) -> str:

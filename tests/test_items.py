@@ -214,3 +214,54 @@ def test_take_ordinal_reaches_through_the_engine_tick():
     assert "take" in out.lower()
     assert items.ITEMS[second]["location"] == carrier("ticker")  # the second one moved
     assert items.ITEMS[first]["location"] == f"room:{room}"  # the first stayed put
+
+
+# --- the purse is carried, so it shows in the carried view ---------------------------------------
+
+
+def test_an_empty_purse_stays_silent() -> None:
+    """Nobody who has never earned a coin should be told they have 0 of them."""
+    assert inventory_text(_ME) == "You are carrying nothing."
+    assert inventory_text(_ME, 0) == "You are carrying nothing."
+
+
+def test_coin_shows_even_when_nothing_else_is_carried() -> None:
+    """Money IS something you are carrying; an empty pack with coin is not 'carrying nothing'."""
+    out = inventory_text(_ME, 3)
+    assert "carrying nothing" not in out
+    assert "cinder" in out
+
+
+def test_coin_shows_alongside_items() -> None:
+    take("key", "library", _ME)
+    out = inventory_text(_ME, 3)
+    assert "copper key" in out and "cinder" in out
+
+
+def test_coin_is_rendered_in_its_denominations_not_as_a_raw_count() -> None:
+    """1234 is '12 sparks, 34 cinders' to a player. A raw integer is an implementation detail."""
+    out = inventory_text(_ME, 1234)
+    assert "1234" not in out
+    assert "spark" in out and "cinder" in out
+
+
+def test_the_default_keeps_every_older_caller_rendering_as_before() -> None:
+    """`coins` defaults to 0, so a caller that knows nothing about the purse is unchanged."""
+    take("key", "library", _ME)
+    assert inventory_text(_ME) == inventory_text(_ME, 0)
+
+
+def test_the_tick_shows_the_purse_a_kill_announced() -> None:
+    """The reward line says '(purse: 3 cinders)'. Something must then be able to show it.
+
+    Before this, no verb in the game could: not inventory, not score, and `purse` is not a
+    command. The only `coins` in the parser is `trade coins`, which offers money rather than
+    counting it.
+    """
+    import forge
+    from kernel.world.session import Session
+
+    s = Session(player_id="rich")
+    forge.handle_command(s, "job vanguard")
+    s.coins = 3
+    assert "cinder" in forge.handle_command(s, "inventory")
