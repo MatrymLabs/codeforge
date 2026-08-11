@@ -1238,7 +1238,7 @@ def _build_commands() -> CommandSet:
             "inventory",
             "CMD-04.021",
             "what you carry",
-            lambda s, _a: inventory_text(carrier(s.player_id)),
+            lambda s, _a: inventory_text(carrier(s.player_id), s.coins),
             namespace=CORE,
         )
     )
@@ -1247,7 +1247,7 @@ def _build_commands() -> CommandSet:
             "i",
             "CMD-04.021",
             "what you carry",
-            lambda s, _a: inventory_text(carrier(s.player_id)),
+            lambda s, _a: inventory_text(carrier(s.player_id), s.coins),
             namespace=CORE,
         )
     )
@@ -1256,7 +1256,7 @@ def _build_commands() -> CommandSet:
             "inv",
             "CMD-04.021",
             "what you carry",
-            lambda s, _a: inventory_text(carrier(s.player_id)),
+            lambda s, _a: inventory_text(carrier(s.player_id), s.coins),
             namespace=CORE,
         )
     )
