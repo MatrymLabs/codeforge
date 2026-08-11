@@ -88,6 +88,18 @@ wins: flag the conflict, do not resolve it yourself.
 other's. `make claims` at the fleet root refuses a board where two active claims from different
 agents own overlapping ground.
 
-**At session open, state it:** *"Current flight: X. My element: Y. This session serves it by: one
+**Step one, before anything else: prove you are in your own tree.**
+
+```bash
+cd ..  &&  MATRYM_AGENT=<your-agent-id> make worktree     # the guard lives at the fleet root
+```
+
+`../worktrees.yaml` maps each agent to its trees. The guard refuses a tree that is not yours, refuses
+a destructive command that would touch uncommitted work outside your active claims, and refuses an
+agent it does not recognise rather than guessing. The claims board guards PATHS; this guards the
+TREE, and the two are not the same control. On 2026-08-10 a `git stash` in a shared checkout moved
+another agent's uncommitted claim, and it survived on timing alone.
+
+**Then state it:** *"Current flight: X. My element: Y. This session serves it by: one
 sentence. Station: claimed paths. Drift check: clear, or condition N."* If that sentence cannot be
 said honestly, report the drift instead of starting work.
