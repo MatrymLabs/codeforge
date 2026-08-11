@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -74,7 +74,7 @@ sast:
 # suite run instead of two. `sast` mirrors CI's offline security steps so a green local
 # check cannot fail CI's bandit/secret scan. `test`/`property` remain as fast, focused,
 # no-coverage targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
-check: lint imports typecheck coverage sast
+check: lint imports typecheck exit-integrity coverage sast
 
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
@@ -394,6 +394,9 @@ world:
 # references, canon drift). Exit non-zero on any problem, so it can gate a script.
 world-check:
 	@python3 -m tools.world validate
+
+exit-integrity:
+	@python -m kernel.world.exit_integrity
 
 # The Cartographer's tally: read-only per-zone content-density audit of the Aethryn world.
 # Ranks zones by content score and flags any below the launch floor (settlements/dungeons/quests).

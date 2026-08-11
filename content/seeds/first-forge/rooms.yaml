@@ -81,6 +81,7 @@ cellar:
   exits:
     up: forge
     west: workshop
+  one_way: [west]
 
 workshop:
   name: The Forge Workshop
@@ -98,6 +99,7 @@ workshop:
     west: component_vault
     south: diagnostic_console
     down: cellar
+  one_way: [down]
 
 observatory:
   name: The Observatory

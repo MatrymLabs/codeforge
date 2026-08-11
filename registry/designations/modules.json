@@ -9750,5 +9750,26 @@
   "aliases": [],
   "created": "2026-08-08",
   "updated": "2026-08-08"
+ },
+ {
+  "designation": "MOD-04.159",
+  "name": "exit_integrity",
+  "status": "active",
+  "function": "report canonical room exits that lack an inverse path, separating deliberate data-declared one-way passages from accidental player traps",
+  "label": "exit_integrity",
+  "file": "kernel/world/exit_integrity.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "docs/architecture.md",
+  "tests": "tests/test_exit_integrity.py",
+  "depends_on": [],
+  "related": ["MOD-04.145", "MOD-04.157"],
+  "reuse": "A directed-graph reverse-edge validator that keeps deliberate asymmetry visible in seed data instead of letting accidental one-way movement strand a player.",
+  "notes": "CX-001: accepts named region entrances as the return path for settlement out exits, but otherwise requires the canonical inverse or an explicit one_way declaration.",
+  "tags": ["module", "gate"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-11",
+  "updated": "2026-08-11"
  }
 ]

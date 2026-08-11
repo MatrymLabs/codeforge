@@ -63,6 +63,7 @@ duskwood_vale:
     moonshade: moonshade
     twilight: twilight_grove
     black: the_black_hollow
+  one_way: [east]
 
 ravenwatch:
   name: Ravenwatch
@@ -106,6 +107,7 @@ caeloria:
     silverwatch: silverwatch
     westgate: westgate
     starfall: starfall_temple
+  one_way: [east]
 
 caeloria_city:
   name: Caeloria City
@@ -156,6 +158,7 @@ eldryn_forest:
     greenmist: greenmist
     great: the_great_tree
     rotwood: rotwood_deep
+  one_way: [south]
 
 eldryn_city:
   name: Eldryn City
@@ -294,6 +297,7 @@ xilnath_jungle:
     mistvale: mistvale
     shifting: shifting_canopy
     heart: heart_of_xilnath
+  one_way: [east]
 
 zulkarak:
   name: Zul'karak
@@ -633,4 +637,3 @@ the_rifted_abyss:
     A rift into the abyss below the world, where reality comes apart. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
     out: the_voidscar
-
