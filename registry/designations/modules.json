@@ -9939,5 +9939,33 @@
     "aliases": [],
     "created": "",
     "updated": ""
+  },
+  {
+    "designation": "MOD-10.150",
+    "name": "repository_proof",
+    "status": "active",
+    "function": "model a local repository read-only, record its git provenance as connector metadata, and recover that report from disk without recomputing the source",
+    "label": "repository_proof",
+    "file": "kernel/seedlab/repository_proof.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_repository_proof.py",
+    "depends_on": [
+      "source_connector"
+    ],
+    "related": [
+      "platform_proof"
+    ],
+    "reuse": "Consumes the existing path-bounded source connector and provenance record to produce a durable metadata-only repository report.",
+    "notes": "CX-003 verifies a genuine git working tree against git itself while production code remains subprocess-free.",
+    "tags": [
+      "module",
+      "provenance"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-11",
+    "updated": "2026-08-11"
   }
 ]

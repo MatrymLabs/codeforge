@@ -282,6 +282,23 @@ def _cmd_seedlab(args: list[str]) -> int:
         help="where to write the JSON audit artifact (default: reports/seedlab-module-audit.json)",
     )
 
+    repository = sub.add_parser(
+        "repo-proof", help="model a repository read-only and write its durable report"
+    )
+    repository.add_argument(
+        "--source", required=True, help="repository or plain directory to model"
+    )
+    repository.add_argument(
+        "--store",
+        default=".seedlab/repository-proof",
+        help="directory used for durable repository-proof records",
+    )
+    repository.add_argument(
+        "--report",
+        default="reports/seedlab-repository-proof.json",
+        help="where to write the JSON report artifact",
+    )
+
     try:
         ns = parser.parse_args(args[1:])
     except SystemExit as exc:
@@ -289,6 +306,7 @@ def _cmd_seedlab(args: list[str]) -> int:
 
     from kernel.seedlab.audit import audit_seedlab_modules, render_seedlab_audit
     from kernel.seedlab.platform_proof import run_first_platform_proof
+    from kernel.seedlab.repository_proof import model_repository, persist
 
     if ns.subcommand == "proof":
         result = run_first_platform_proof(Path(ns.root), owner=ns.owner)
@@ -300,6 +318,22 @@ def _cmd_seedlab(args: list[str]) -> int:
         print(f"proof complete: {result.seed_id}")
         print(f"report written: {report_path}")
         print(result.hub_text)
+        return 0
+
+    if ns.subcommand == "repo-proof":
+        proof_record = model_repository(Path(ns.source))
+        stored = persist(proof_record, Path(ns.store))
+        report_path = Path(ns.report)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            json.dumps({"repository": proof_record.to_dict(), "stored": str(stored)}, indent=2),
+            encoding="utf-8",
+        )
+        print(f"repository proof complete: {proof_record.source_id}")
+        print(f"report written: {report_path}")
+        print(
+            f"vcs: {proof_record.vcs}, branch: {proof_record.branch}, commit: {proof_record.commit}"
+        )
         return 0
 
     audit_report = audit_seedlab_modules()
