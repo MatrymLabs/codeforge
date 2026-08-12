@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import json
 from pathlib import Path
 
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
@@ -32,6 +33,17 @@ from adapters.gateway import (
     _sanitize,
 )
 from forge import handle_command, render_scene
+from kernel.seam.wire import (
+    WireRefused,
+    hello,
+    refused,
+)
+from kernel.seam.wire import (
+    decode as decode_wire,
+)
+from kernel.seam.wire import (
+    encode as encode_wire,
+)
 from kernel.world import guild, party, trade
 from kernel.world.accounts import password_fixable
 from kernel.world.characters import save_character
@@ -235,3 +247,27 @@ async def play(ws: WebSocket) -> None:
         _web_seats -= 1
         with contextlib.suppress(RuntimeError):
             await ws.close()  # already closed if the visitor hung up
+
+
+@app.websocket("/ws/engine-2d")
+async def engine_2d(ws: WebSocket) -> None:
+    """The structured sibling of the browser terminal route.
+
+    This route deliberately performs only the versioned handshake. It neither
+    inherits the public-demo gate nor routes movement around ``handle_command``;
+    later Engine-2D work owns those policies and commands.
+    """
+    await ws.accept()
+    try:
+        try:
+            payload = json.loads(await ws.receive_text())
+        except json.JSONDecodeError as exc:
+            raise WireRefused("REFUSED: invalid JSON") from exc
+        message = decode_wire(payload)
+        if message["type"] != "hello":
+            raise WireRefused("REFUSED: hello is required before other messages")
+        await ws.send_json(encode_wire(hello(session=message["session"])))
+    except WireRefused as exc:
+        await ws.send_json(encode_wire(refused(reason=str(exc))))
+    finally:
+        await ws.close()
