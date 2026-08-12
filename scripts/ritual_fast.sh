@@ -11,7 +11,7 @@ set -uo pipefail   # deliberately NOT -e: run every check, then summarize the ga
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
-cd "$ROOT"
+cd "$ROOT" || exit 1
 # shellcheck source=scripts/lib.sh
 source "$HERE/lib.sh"
 [ -f ".venv/bin/activate" ] && source .venv/bin/activate
@@ -61,10 +61,12 @@ if [ "$BLOCKERS" -gt 0 ]; then
     "$RED" "$BLOCKERS" "$OFF"
   exit 1
 elif [ "$WARNINGS" -gt 0 ]; then
+  # shellcheck disable=SC2016  # backticks here are MARKDOWN in user-facing output, not command substitution
   printf '%b🟡 YELLOW -- safe to code, with %s warning(s). Run `make ritual` before a push.%b\n\n' \
     "$YELLOW" "$WARNINGS" "$OFF"
   exit 0
 else
+  # shellcheck disable=SC2016  # backticks here are MARKDOWN in user-facing output, not command substitution
   printf '%b🟢 GREEN -- safe to enter and code. Run `make ritual` / `-deep` before a push or demo.%b\n\n' \
     "$GREEN" "$OFF"
   exit 0

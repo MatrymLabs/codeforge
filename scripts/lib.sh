@@ -8,6 +8,9 @@
 # Provides: BOLD DIM GREEN RED YELLOW CYAN OFF · spark_line/step · ok · warn · die.
 
 # --- A little light (colour only when writing to a real terminal) ----------
+# BOLD and DIM are consumed by the scripts that SOURCE this file, not by lib.sh itself,
+# which is exactly the case shellcheck's own SC2034 message names as legitimate.
+# shellcheck disable=SC2034
 if [ -t 1 ]; then
   BOLD=$'\033[1m'; DIM=$'\033[2m'; GREEN=$'\033[32m'; RED=$'\033[31m'
   YELLOW=$'\033[33m'; CYAN=$'\033[36m'; OFF=$'\033[0m'

@@ -197,7 +197,7 @@ ok "After-action record banked: $REPORT_FILE"
 # connecting in a loop -- each connect spawns a real gateway session.
 forge_is_up() {
   if command -v ss >/dev/null 2>&1; then
-    ss -ltnH 2>/dev/null | grep -q ":$PORT[[:space:]]" && return 0 || return 1
+    ss -ltnH 2>/dev/null | grep -q ":${PORT}[[:space:]]" && return 0 || return 1
   fi
   (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null && { exec 3>&- 2>/dev/null; return 0; }
   return 1

@@ -55,6 +55,10 @@ native/*/target/
 
 # Go service organs (the compiled edge binary; keep go.mod for reproducibility)
 native/edge/codeforge-edge
+# `go build ./...` names the binary after the MODULE, not the cmd. The pattern above only covered
+# the named build, so a 3.4MB compiled binary was one `git add -A` from landing in history.
+# gitignore has no trailing comments: a `#` on a pattern line becomes part of the pattern.
+native/edge/edge
 
 # Protocol spine: generated bindings (rebuilt via `make proto`; keep the .proto source + go.sum)
 proto/telemetry_pb2.py

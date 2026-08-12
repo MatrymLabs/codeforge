@@ -49,13 +49,13 @@ func acceptLoop(ln net.Listener, backendAddr string) {
 // handleConn dials the backend for one client and pumps bytes both ways until either side closes.
 // If the backend is unreachable, the client is dropped cleanly rather than left hanging.
 func handleConn(client net.Conn, backendAddr string) {
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	backend, err := net.Dial("tcp", backendAddr)
 	if err != nil {
 		return // backend down: close the client and move on
 	}
-	defer backend.Close()
+	defer func() { _ = backend.Close() }()
 
 	var wg sync.WaitGroup
 	wg.Add(2)

@@ -24,15 +24,70 @@ fix:
 	ruff check . --fix
 
 # --- Gates: pure checks, cheapest first, nothing is modified ---
-lint:
+lint: lint-python lint-rust lint-go lint-shell  ## Every language present in the tree, not only Python.
+
+# One target per language, so a language with no code says so instead of passing silently.
+# Rust and Go code has existed here since the nav kernel and the edge/spine organs landed, and
+# neither was ever linted: `lint` ran ruff and nothing else. The first run found formatting drift
+# in lib.rs and 12 unchecked errors in edge/. A gate that inspects one of three languages is not
+# green, it is uninformed.
+lint-python:
 	ruff format --check .
 	ruff check .
+
+lint-rust:
+	@if [ -z "$$(git ls-files '*.rs')" ]; then \
+		echo "lint-rust: no .rs files in this tree, nothing to inspect"; \
+	else \
+		for m in $$(git ls-files '*/Cargo.toml' | xargs -r -n1 dirname); do \
+			echo "lint-rust: $$m"; \
+			( cd $$m && cargo fmt --check && cargo clippy --all-targets -- -D warnings ) || exit 1; \
+		done; \
+	fi
+
+# -x follows sourced files so real cross-file issues are caught. SC1091 is then excluded, and
+# the distinction matters: SC1091 reports that the LINTER could not open a sourced file, never
+# that the script is wrong. `.venv/bin/activate` exists on a developer box and not in CI, where
+# uv installs --system, so leaving it enabled makes the gate depend on which machine ran it. That
+# is the fourth time in one day a green local run rested on an artifact CI does not have.
+lint-shell:
+	@if [ -z "$$(git ls-files '*.sh')" ]; then \
+		echo "lint-shell: no .sh files in this tree, nothing to inspect"; \
+	else \
+		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
+	fi
+
+lint-go:
+	@if [ -z "$$(git ls-files '*.go')" ]; then \
+		echo "lint-go: no .go files in this tree, nothing to inspect"; \
+	else \
+		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
+			if ! ( cd $$m && go build ./... >/dev/null 2>&1 ); then \
+				echo "lint-go: $$m UNVERIFIED - it does not build. Generated code absent?"; \
+				echo "          run \`make proto\` (ADR-0012: the bindings are git-ignored)."; \
+				exit 1; \
+			fi; \
+			echo "lint-go: $$m"; \
+			( cd $$m && test -z "$$(gofmt -l .)" && go vet ./... && golangci-lint run ./... ) || exit 1; \
+		done; \
+	fi
 
 imports:  ## Enforce the style-guide section-2 dependency direction (import-linter).
 	lint-imports
 
-typecheck:
+typecheck: typecheck-python typecheck-native  ## Python via mypy; Rust and Go via their compilers.
+
+typecheck-python:
 	mypy kernel adapters content tests forge.py
+
+# Per the practices reference section 15: for Rust and Go the COMPILER is the type gate.
+typecheck-native:
+	@for m in $$(git ls-files '*/Cargo.toml' | xargs -r -n1 dirname); do \
+		echo "typecheck-rust: $$m"; ( cd $$m && cargo build ) || exit 1; \
+	done
+	@for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
+		echo "typecheck-go: $$m"; ( cd $$m && go build ./... ) || exit 1; \
+	done
 
 test:
 	pytest -m "not property and not fuzz"
