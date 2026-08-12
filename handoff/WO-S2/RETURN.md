@@ -2,8 +2,8 @@
 
 packet_id: WO-S2
 pr_url: https://github.com/MatrymLabs/codeforge/pull/929
-status: BLOCKED
-tests_passing: no
+status: COMPLETE
+tests_passing: yes
 
 ## Commands run
 
@@ -215,3 +215,31 @@ recurrence_check: none observed. This is the first named consumer of this wire-s
 
 verdict_note: Contract Jig consumption is recorded. The Python-on-behalf-of-GDScript limitation is
 flagged as coordination friction, not extracted before a second consumer exists.
+
+## Merge verification correction
+
+The authoritative verification for merged commit `09decacb65791823e703d3b0cdaf3e9050c284a5` was
+CI run [31638154665](https://github.com/MatrymLabs/codeforge/actions/runs/31638154665):
+
+```text
+check: SUCCESS
+postgres: SUCCESS
+e2e: SUCCESS
+docker: SUCCESS
+terraform: SUCCESS
+native: SUCCESS
+go-edge: SUCCESS
+spine: SUCCESS
+c-kernel: SUCCESS
+lua: SUCCESS
+shelf-drift: SUCCESS
+```
+
+`make proto` also passed this session after exposing `protoc-gen-go`. The local full-gate rerun
+reached pytest but was not reproducible on this host because of read-only Go caches and test-worker
+failures; those failures are retained as evidence rather than hidden. The merged CI run is the
+passing verification for the merged commit. `git rev-list --count HEAD..origin/main` returned `0`.
+
+Contract coverage is **1 of 4 message kinds (25%)**. The merged change added four tests protecting
+the dropped-field criterion, which had previously been unprotected. Contracts for `entity_state`,
+`move_intent`, and `tick` remain a follow-on order.
