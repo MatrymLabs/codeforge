@@ -62,7 +62,8 @@ def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path)
     # so the twentieth migration made it fail for a reason that had nothing to do with the
     # migration: one revision was left applied and the tables survived. A test that counts the
     # things it walks over must count them, or every future migration reddens it on arrival.
-    revisions = len(list((Path(__file__).resolve().parents[1] / "migrations" / "versions").glob("*.py")))
+    versions = Path(__file__).resolve().parents[1] / "migrations" / "versions"
+    revisions = len(list(versions.glob("*.py")))
     assert revisions > 0, "no Alembic revisions found; this test would prove nothing"
     for _ in range(revisions):
         command.downgrade(_config(), "-1")
