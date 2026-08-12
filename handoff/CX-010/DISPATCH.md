@@ -38,6 +38,10 @@ named_consumers:
   - the M1 spine walk       which found it, and which no leg-level test could have found
 
 preconditions: >
+  CHECK: file kernel/world/errands.py contains XP
+  CHECK: file kernel/world/progression.py exists
+  CHECK: file content/seeds/aethryn/canon.yaml contains Frostspire
+
   codeforge #918 (WO-S1) merged, so the seam work is not in flight underneath this.
   kernel/world/quest.py line 442 currently reads `award_xp(session, quest.xp)`; that call site is
   the ONLY place a quest's reward is paid, and it already holds the session, so the character's
