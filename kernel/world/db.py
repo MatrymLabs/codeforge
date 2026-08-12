@@ -87,6 +87,9 @@ class CharacterRow(ArchiveBase):
     reputation: Mapped[str] = mapped_column(default="")
     # This hero's friends list: lowercase labels, comma-joined, or "" (kernel.world.friends).
     friends: Mapped[str] = mapped_column(default="")
+    # Integrity metadata belongs to the persistence row, not CharacterRecord. An empty default marks
+    # a row written before CX-009's additive migration; the next save replaces it with a digest.
+    checksum: Mapped[str] = mapped_column(default="", server_default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

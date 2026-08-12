@@ -13,12 +13,40 @@ so characters.py, which lazily reaches it) never triggers the ~400ms SQLAlchemy 
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from kernel.world.character_store import CharacterRecord
+from kernel.world.save_integrity import (
+    IntegrityVerdict,
+    SaveIntegrityError,
+    checksum_of,
+    verify_record,
+)
 
 if TYPE_CHECKING:
     from kernel.world.db import CharacterRow
+
+
+_GAMEPLAY_FIELDS = (
+    "allocated",
+    "coins",
+    "equipped_gear",
+    "friends",
+    "guild",
+    "guild_rank",
+    "job",
+    "level",
+    "location",
+    "lockouts",
+    "order",
+    "professions",
+    "quest_state",
+    "rank",
+    "reputation",
+    "secondary_job",
+    "xp",
+)
 
 
 class SqlCharacterStore:
@@ -31,29 +59,11 @@ class SqlCharacterStore:
             row = db.get(CharacterRow, name)
             if row is None:
                 return None
-            return CharacterRecord(
-                name=row.name,
-                job=row.job,
-                secondary_job=row.secondary_job,
-                level=row.level,
-                xp=row.xp,
-                location=row.location,
-                rank=row.rank,
-                account=row.account,
-                order=row.order,
-                guild=row.guild,
-                guild_rank=row.guild_rank,
-                equipped_gear=row.equipped_gear,
-                coins=row.coins,
-                quest_state=row.quest_state,
-                lockouts=row.lockouts,
-                allocated=row.allocated,
-                professions=row.professions,
-                reputation=row.reputation,
-                friends=row.friends,
-                auth_salt=row.auth_salt,
-                auth_hash=row.auth_hash,
-            )
+            record = _record_from_row(row)
+            verdict = verify_record(_gameplay_state(record), row.checksum)
+            if verdict is not IntegrityVerdict.INTACT:
+                raise SaveIntegrityError(verdict)
+            return record
 
     def upsert_full(self, record: CharacterRecord) -> None:
         from kernel.world.db import CharacterRow, open_archive_session
@@ -63,6 +73,7 @@ class SqlCharacterStore:
             _apply_gameplay(row, record)
             row.auth_salt = record.auth_salt
             row.auth_hash = record.auth_hash
+            row.checksum = _checksum_for(row)
             db.add(row)
             db.commit()
 
@@ -72,6 +83,7 @@ class SqlCharacterStore:
         with open_archive_session() as db:
             row = db.get(CharacterRow, record.name) or CharacterRow(name=record.name)
             _apply_gameplay(row, record)
+            row.checksum = _checksum_for(row)
             # auth columns deliberately untouched -- the merge-save law (architecture law #6)
             db.add(row)
             db.commit()
@@ -84,6 +96,7 @@ class SqlCharacterStore:
             if row is None:
                 return False
             row.rank = rank
+            row.checksum = _checksum_for(row)
             db.commit()
             return True
 
@@ -107,6 +120,7 @@ class SqlCharacterStore:
                 return False
             row.guild = guild
             row.guild_rank = guild_rank
+            row.checksum = _checksum_for(row)
             db.commit()  # gameplay columns only; auth untouched (the merge-save law)
             return True
 
@@ -118,6 +132,7 @@ class SqlCharacterStore:
             if row is None:
                 return False
             row.coins = max(0, row.coins + delta)  # gameplay column only; auth untouched
+            row.checksum = _checksum_for(row)
             db.commit()
             return True
 
@@ -142,3 +157,41 @@ def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     row.professions = record.professions
     row.reputation = record.reputation
     row.friends = record.friends
+
+
+def _record_from_row(row: CharacterRow) -> CharacterRecord:
+    """Project the row's durable facts into the checksum-free domain record."""
+    return CharacterRecord(
+        name=row.name,
+        job=row.job,
+        secondary_job=row.secondary_job,
+        level=row.level,
+        xp=row.xp,
+        location=row.location,
+        rank=row.rank,
+        account=row.account,
+        order=row.order,
+        guild=row.guild,
+        guild_rank=row.guild_rank,
+        equipped_gear=row.equipped_gear,
+        coins=row.coins,
+        quest_state=row.quest_state,
+        lockouts=row.lockouts,
+        allocated=row.allocated,
+        professions=row.professions,
+        reputation=row.reputation,
+        friends=row.friends,
+        auth_salt=row.auth_salt,
+        auth_hash=row.auth_hash,
+    )
+
+
+def _checksum_for(row: CharacterRow) -> str:
+    """Derive row metadata from the domain record without ever embedding it in that record."""
+    return checksum_of(_gameplay_state(_record_from_row(row)))
+
+
+def _gameplay_state(record: CharacterRecord) -> dict[str, object]:
+    """The 17 gameplay facts written by this adapter, excluding membership-owned fields."""
+    fields = asdict(record)
+    return {name: fields[name] for name in _GAMEPLAY_FIELDS}

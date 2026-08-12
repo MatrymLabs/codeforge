@@ -10015,5 +10015,33 @@
     "aliases": [],
     "created": "",
     "updated": ""
+  },
+  {
+    "designation": "MOD-04.161",
+    "name": "save_integrity",
+    "status": "active",
+    "function": "canonical checksum and integrity verdicts for durable records",
+    "label": "save_integrity",
+    "file": "kernel/world/save_integrity.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_save_integrity.py",
+    "depends_on": [],
+    "related": [
+      "characters",
+      "character_store_sql"
+    ],
+    "reuse": "checksum metadata remains at the persistence boundary while domain records stay checksum-free",
+    "notes": "CX-009 classifies a durable row as intact, corrupt, or unverified without treating a legacy default as corruption.",
+    "tags": [
+      "module",
+      "persistence",
+      "integrity"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-12",
+    "updated": "2026-08-12"
   }
 ]
