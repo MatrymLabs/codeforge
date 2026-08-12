@@ -85,9 +85,45 @@ boundary: >
   statemachine, workflow, cull, jobs, reputation, seed, session, spine are collaborators that
   neither grant nor apply progression.
 
+amendment_1: >
+    AMENDED 2026-08-12 by the Coordinator, after Codex correctly BLOCKED on it. The original
+    allowlist was UNSATISFIABLE and the fault is the order's, not the implementation's.
+
+    The clamp works: a fresh character walking the Forgeward Road now gains 75 XP and one level
+    where it previously gained 12000 XP and six. But two end-to-end journey tests assert the
+    UNCAPPED reward by value, and neither was in the allowlist, so the packet could not be
+    completed without leaving it. Measured on work/cx010 with the full suite, not the first
+    failure: exactly two fail, 5208 pass.
+
+      tests/test_journey_aethryn.py::test_the_real_forgeward_road_walks_to_the_voidscar
+      tests/test_journey_spine.py::test_the_forgeward_road_walks_from_the_valley_to_the_endgame
+
+    Both are now WRONG, not broken. They pin the instrument, `assert f"You gain {spec['reward_xp']}
+    XP" in out`, when what the journey actually cares about is the invariant: the character reached
+    the endgame and gained a level. Rewrite them to assert ONE LEVEL WAS GAINED rather than a
+    hardcoded XP figure. Do not delete either test, and do not weaken the walk itself.
+
+    Why the order got this wrong, recorded so the next one does not: the allowlist was scoped from
+    the MODULE being changed rather than from the set of artifacts that assert on its behaviour.
+    `make packets` cannot catch that; it has no way to know which tests read the value. The check
+    that would have caught it is a grep for the value before the allowlist is fixed.
+
+founder_question: >
+    Raised, not decided, because it is a product ruling. The clamp awards exactly enough to reach
+    the next level and DISCARDS the remainder: a 12000 XP campaign reward paid to a level-1
+    character yields 75 XP and 11,925 evaporate. That is the honest reading of "no single quest may
+    advance more than one level", and it only bites in these speedrun tests, since a character
+    reaching the endgame in real play arrives around level 50 and one level there is a large award.
+
+    Flagging it because the alternative, banking the excess toward the following level, is a
+    different game. Do not implement either alternative in this packet; the clamp as written closes
+    #910. If Josh rules for banking, that is its own order.
+
 file_allowlist:
   - kernel/world/quest.py                  # the clamp, at the single award site
   - tests/test_quest.py                    # its twin
+  - tests/test_journey_aethryn.py          # AMENDED: assert one level gained, not an XP literal
+  - tests/test_journey_spine.py            # AMENDED: same
   - handoff/CX-010/RETURN.md               # NEW, explicitly authorised
 
 contract_tests:       tests/test_quest.py
