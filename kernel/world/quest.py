@@ -440,9 +440,12 @@ def _apply_one(quest: _Quest, effect: str, session: Session) -> str:
     """Apply ONE named effect. `award_xp` grants the quest's reward; `open_door:<id>` reforges a
     barrier; `grant_rep:<order>:<amount>` earns standing with an Order. Returns any extra line."""
     if effect == "award_xp" and session.stats is not None:
+        from kernel.world.progression import get_next_level_threshold
         from kernel.world.progression_awards import award_xp
 
-        return "\n" + award_xp(session, quest.xp)
+        threshold = get_next_level_threshold(session.level)
+        reward = quest.xp if threshold is None else min(quest.xp, max(0, threshold - session.xp))
+        return "\n" + award_xp(session, reward)
     if effect.startswith("open_door:"):
         from kernel.world import doors
 
