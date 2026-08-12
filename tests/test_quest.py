@@ -84,6 +84,32 @@ def test_finishing_a_completed_quest_again_refuses_and_never_reawards():
     assert s.xp == xp_once  # XP unchanged: the reward is idempotent
 
 
+def test_one_quest_cannot_advance_a_character_more_than_one_level() -> None:
+    s = _player()
+    before = s.level
+    from kernel.world.quest import _QUESTS
+
+    quest = next(iter(_QUESTS.values()))
+    quest.xp = 100_000
+    quest_view(s, "accept")
+    quest_view(s, "begin")
+    quest_view(s, "finish")
+    assert s.level <= before + 1
+
+
+def test_a_level_appropriate_reward_is_paid_in_full() -> None:
+    s = _player()
+    from kernel.world.quest import _QUESTS
+
+    quest = next(iter(_QUESTS.values()))
+    quest.xp = 5
+    before_xp = s.xp
+    quest_view(s, "accept")
+    quest_view(s, "begin")
+    quest_view(s, "finish")
+    assert s.xp == before_xp + 5
+
+
 def test_open_door_effect_reforges_a_barrier():
     """A quest step's open_door effect opens a world barrier (the workflow names it, the game
     applies it). Proven against the default seed's oak_door standing in for aethryn's bridge."""
