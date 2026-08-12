@@ -34,7 +34,7 @@ forge_pids() {
   if command -v lsof >/dev/null 2>&1; then
     lsof -ti "tcp:$PORT" 2>/dev/null || true
   elif command -v ss >/dev/null 2>&1; then
-    ss -ltnpH 2>/dev/null | grep ":$PORT[[:space:]]" | grep -oE 'pid=[0-9]+' | cut -d= -f2 | sort -u || true
+    ss -ltnpH 2>/dev/null | grep ":${PORT}[[:space:]]" | grep -oE 'pid=[0-9]+' | cut -d= -f2 | sort -u || true
   fi
 }
 
@@ -43,9 +43,11 @@ step "Banking the forge -- looking for a gateway on :$PORT..."
 pids="$(forge_pids)"
 if [ -n "$pids" ]; then
   for pid in $pids; do
+    # shellcheck disable=SC2015  # both branches only report; C running on true is harmless
     kill "$pid" 2>/dev/null && ok "Extinguished gateway pid $pid." || warn "Could not stop pid $pid (already gone?)."
   done
   sleep 1
+  # shellcheck disable=SC2015  # both branches only report; C running on true is harmless
   [ -z "$(forge_pids)" ] && ok "Port :$PORT is clear." || warn "Something still holds :$PORT -- check by hand (lsof -i :$PORT)."
 else
   ok "No forge burning on :$PORT."
@@ -56,6 +58,8 @@ if command -v docker >/dev/null 2>&1; then
   step "Banking containers -- stopping any codeforge image..."
   ids="$(docker ps -q --filter ancestor=codeforge 2>/dev/null || true)"
   if [ -n "$ids" ]; then
+    # shellcheck disable=SC2015  # both branches only report; C running on true is harmless
+    # shellcheck disable=SC2086  # $ids is a LIST of container ids and must word-split
     docker stop $ids >/dev/null 2>&1 && ok "Stopped $(echo "$ids" | wc -l | tr -d ' ') container(s)." || warn "Could not stop some containers."
   else
     ok "No codeforge containers running."
