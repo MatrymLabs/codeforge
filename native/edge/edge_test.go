@@ -26,15 +26,15 @@ func echoBackend(t *testing.T) (addr string, stop func()) {
 				return
 			}
 			go func(c net.Conn) {
-				defer c.Close()
+				defer func() { _ = c.Close() }()
 				s := bufio.NewScanner(c)
 				for s.Scan() {
-					fmt.Fprintf(c, "echo:%s\n", s.Text())
+					_, _ = fmt.Fprintf(c, "echo:%s\n", s.Text())
 				}
 			}(c)
 		}
 	}()
-	return ln.Addr().String(), func() { ln.Close() }
+	return ln.Addr().String(), func() { _ = ln.Close() }
 }
 
 func TestProxyRoundTripsBothDirections(t *testing.T) {
@@ -44,15 +44,15 @@ func TestProxyRoundTripsBothDirections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("serveEdge: %v", err)
 	}
-	defer ln.Close()
+	defer func() { _ = ln.Close() }()
 
 	c, err := net.Dial("tcp", ln.Addr().String())
 	if err != nil {
 		t.Fatalf("dial edge: %v", err)
 	}
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
-	fmt.Fprint(c, "hello\n")
+	_, _ = fmt.Fprint(c, "hello\n")
 	got, err := bufio.NewReader(c).ReadString('\n')
 	if err != nil {
 		t.Fatalf("read reply: %v", err)
@@ -69,7 +69,7 @@ func TestProxyHandlesManyConcurrentConnections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("serveEdge: %v", err)
 	}
-	defer ln.Close()
+	defer func() { _ = ln.Close() }()
 
 	const n = 200 // well past the Python gateway's 128-thread ceiling; goroutines shrug
 	var wg sync.WaitGroup
@@ -83,9 +83,9 @@ func TestProxyHandlesManyConcurrentConnections(t *testing.T) {
 				errs <- fmt.Errorf("conn %d dial: %w", i, err)
 				return
 			}
-			defer c.Close()
+			defer func() { _ = c.Close() }()
 			msg := fmt.Sprintf("c%d\n", i)
-			fmt.Fprint(c, msg)
+			_, _ = fmt.Fprint(c, msg)
 			got, err := bufio.NewReader(c).ReadString('\n')
 			if err != nil {
 				errs <- fmt.Errorf("conn %d read: %w", i, err)
@@ -109,15 +109,15 @@ func TestProxyDropsClientWhenBackendUnreachable(t *testing.T) {
 	if err != nil {
 		t.Fatalf("serveEdge: %v", err)
 	}
-	defer ln.Close()
+	defer func() { _ = ln.Close() }()
 
 	c, err := net.Dial("tcp", ln.Addr().String())
 	if err != nil {
 		t.Fatalf("dial edge: %v", err)
 	}
-	defer c.Close()
+	defer func() { _ = c.Close() }()
 
-	c.SetReadDeadline(time.Now().Add(2 * time.Second))
+	_ = c.SetReadDeadline(time.Now().Add(2 * time.Second))
 	if _, err := c.Read(make([]byte, 1)); err == nil {
 		t.Fatal("expected the client to be closed when the backend is unreachable, got data")
 	}

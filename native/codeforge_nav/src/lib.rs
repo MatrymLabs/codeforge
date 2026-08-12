@@ -121,7 +121,11 @@ impl NavGraph {
         let source = *self.ids.get(src)?;
         let dest = *self.ids.get(dst)?;
         let hops = self.bfs_path(source, dest)?;
-        Some(hops.into_iter().map(|i| self.labels[i as usize].clone()).collect())
+        Some(
+            hops.into_iter()
+                .map(|i| self.labels[i as usize].clone())
+                .collect(),
+        )
     }
 
     /// Number of exits on the shortest path from `src` to `dst`; `None` if unreachable/unknown.
