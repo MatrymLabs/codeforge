@@ -70,6 +70,17 @@ approval_gates: >
 rollback: >
   git revert. One clamp and its tests.
 
+boundary: >
+  Computed by packet_gate: 14 first-party modules imported and not changeable here.
+
+  The reward cap is enforced at ONE place on purpose. errands.py, bounties.py, forage.py,
+  dungeon_crawl.py, storylines.py and progression_awards.py each grant XP, and widening this order
+  to all of them would make six edits where one belongs. The cap belongs where a grant becomes
+  progression, and everything upstream keeps paying what its own design says.
+
+  statemachine, workflow, cull, jobs, reputation, seed, session, spine are collaborators that
+  neither grant nor apply progression.
+
 file_allowlist:
   - kernel/world/quest.py                  # the clamp, at the single award site
   - tests/test_quest.py                    # its twin
