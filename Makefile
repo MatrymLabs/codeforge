@@ -45,11 +45,16 @@ lint-rust:
 		done; \
 	fi
 
+# -x follows sourced files so real cross-file issues are caught. SC1091 is then excluded, and
+# the distinction matters: SC1091 reports that the LINTER could not open a sourced file, never
+# that the script is wrong. `.venv/bin/activate` exists on a developer box and not in CI, where
+# uv installs --system, so leaving it enabled makes the gate depend on which machine ran it. That
+# is the fourth time in one day a green local run rested on an artifact CI does not have.
 lint-shell:
 	@if [ -z "$$(git ls-files '*.sh')" ]; then \
 		echo "lint-shell: no .sh files in this tree, nothing to inspect"; \
 	else \
-		shellcheck -x $$(git ls-files '*.sh'); \
+		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
 	fi
 
 lint-go:
