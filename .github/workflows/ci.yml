@@ -47,6 +47,18 @@ jobs:
 
       # `make check` folds coverage into a single suite run (lint · types · pytest --cov
       # · threshold) and writes coverage.xml -- no separate coverage step needed.
+      # The lint gate covers every language present, so the runner needs every language's
+      # linter. Rust and Go toolchains ship with the runner image; their LINTERS do not, and
+      # `make check` went green locally while CI failed on `golangci-lint: not found`. That is
+      # non-negotiable 4 in one line: a green local run is not a green CI matrix.
+      - name: Install the non-Python linters the omnicode gate invokes
+        run: |
+          rustup component add clippy rustfmt
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck --version | head -2
+
       - name: Run the gates (check = lint · types · tests+coverage)
         run: make check
 
