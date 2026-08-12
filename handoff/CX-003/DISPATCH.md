@@ -2,6 +2,7 @@
 
 ```yaml
 packet_id:            CX-003
+status:               LANDED
 title:                Flight 2, the platform models a REAL repository
 stream:               platform
 owner:                Codex
