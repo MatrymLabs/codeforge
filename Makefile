@@ -57,6 +57,11 @@ lint-go:
 		echo "lint-go: no .go files in this tree, nothing to inspect"; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
+			if ! ( cd $$m && go build ./... >/dev/null 2>&1 ); then \
+				echo "lint-go: $$m UNVERIFIED - it does not build. Generated code absent?"; \
+				echo "          run \`make proto\` (ADR-0012: the bindings are git-ignored)."; \
+				exit 1; \
+			fi; \
 			echo "lint-go: $$m"; \
 			( cd $$m && test -z "$$(gofmt -l .)" && go vet ./... && golangci-lint run ./... ) || exit 1; \
 		done; \
