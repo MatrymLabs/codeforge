@@ -10043,5 +10043,34 @@
     "aliases": [],
     "created": "2026-08-12",
     "updated": "2026-08-12"
+  },
+  {
+    "designation": "MOD-10.153",
+    "name": "wire_protocol",
+    "status": "active",
+    "function": "the versioned Engine-2D JSON wire schema and consumer contract",
+    "label": "wire_protocol",
+    "file": "kernel/seam/wire.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_wire_protocol.py",
+    "depends_on": [
+      "MOD-10.152"
+    ],
+    "related": [
+      "MOD-04.021"
+    ],
+    "reuse": "consumes Contract Jig at the server side of the Engine-2D client boundary",
+    "notes": "WO-S2 keeps the JSON schema distinct from the existing browser-terminal WebSocket protocol.",
+    "tags": [
+      "module",
+      "protocol",
+      "integration"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-12",
+    "updated": "2026-08-12"
   }
 ]
