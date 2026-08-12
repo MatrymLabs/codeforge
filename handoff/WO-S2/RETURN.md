@@ -99,11 +99,44 @@ tests/test_wire_protocol.py
 
 Every changed path is allowlisted. `.venv/` is a pre-existing untracked local environment.
 
-## Blocker
+## Verification update
 
-The required whole gate cannot run in this environment because `protoc-gen-go` is unavailable.
-No source workaround was attempted. The resolving sequence is: install or expose `protoc-gen-go`,
-run `make proto`, then rerun `make check` in this registered worktree.
+The original Go-toolchain blocker is resolved. With the requested environment:
+
+```text
+$ export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PWD/.venv/bin:$PATH"
+$ make proto
+regenerated proto/telemetry_pb2.py + native/spine/telemetrypb/telemetry.pb.go
+```
+
+The language, import, typecheck, and exit-integrity stages passed. The complete gate is NOT green:
+coverage reached 57% with test errors and failures, then the bounded run timed out at 300 seconds:
+
+```text
+lint-go: native/edge
+0 issues.
+lint-go: native/spine
+0 issues.
+Contracts: 4 kept, 0 broken.
+Success: no issues found in 810 source files
+typecheck-go: native/edge
+typecheck-go: native/spine
+Declared one-way exits:
+- cellar --west--> workshop
+- workshop --down--> cellar
+pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+4 workers [5264 items]
+......................................E.....................EEEEEEEEE... [ 34%]
+...............................F......
+................................make: *** [Makefile:250: coverage] Terminated
+```
+
+The command was run as `timeout 300s make check` after `make proto`; its exit status was `124`.
+The packet remains `BLOCKED` until the full gate completes with zero failures and the required
+coverage threshold.
+
+The gate also generated `native/edge/edge`; it was moved to `/tmp/codeforge-edge-gate-artifact` and
+is not part of the branch.
 
 ## Resume verification
 
@@ -130,6 +163,24 @@ $ (cd native/edge && go build ./...)
 ```
 
 `gh pr view 929` reports the PR OPEN and merge state BLOCKED. No source workaround was attempted.
+
+## Contract coverage finding
+
+The wire schema defines four message kinds: `hello`, `move_intent`, `entity_state`, and `tick`.
+Only `hello` is currently registered in `CLIENT_CONTRACTS`, so provider-side Contract Jig coverage
+is **1 of 4 message kinds (25%)**. This order's contract test proves the hello field-drop refusal;
+contracts for the other three kinds belong in a follow-on packet.
+
+## Outside-order rulings requested
+
+1. Open a follow-on packet for `/ws/engine-2d` connection policy, including authentication,
+   lifecycle, refusal, and close semantics. This order intentionally implements only the versioned
+   hello handshake.
+2. Open a follow-on packet for provider-side contracts covering `entity_state`, `move_intent`, and
+   `tick`, closing the 1-of-4 coverage gap.
+3. File a separate repository-hygiene packet for the gate's generated `native/edge/edge` artifact:
+   `Makefile:65` and `Makefile:89` build that filename, while `.gitignore:57` ignores the different
+   `native/edge/codeforge-edge` name. This is outside WO-S2's allowlist and is not changed here.
 
 ## Extraction signals
 
