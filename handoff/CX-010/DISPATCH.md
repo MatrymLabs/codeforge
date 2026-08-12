@@ -1,5 +1,7 @@
 # DISPATCH CX-010
 
+**Status:** LANDED, codeforge #933, 2026-08-12. Amended after a correct Codex block, then re-verified independently by the Coordinator before merge.
+
 ```yaml
 packet_id:            CX-010
 title:                One quest completion may not advance a character more than one level
