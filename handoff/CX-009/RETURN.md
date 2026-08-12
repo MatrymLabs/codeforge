@@ -2,7 +2,7 @@
 
 ```yaml
 packet_id: CX-009
-status: COMPLETE
+status: BLOCKED
 pr_url: https://github.com/MatrymLabs/codeforge/pull/924
 
 commands_run:
@@ -23,10 +23,11 @@ commands_run:
     exit_code: 0
     output: "5251 tests collected in 16.45s"
   - command: make check
-    exit_code: 0
+    exit_code: 2
     output: >
-      ruff format check passed (1067 files), ruff check passed, import contracts 4 kept 0 broken,
-      mypy succeeded on 807 source files, and the complete 5251-test pytest gate passed.
+      ruff format check refused tests/test_migrations.py in codeforge #926: its derived migration
+      count needs formatting. The failure occurred before the pytest gate: make: ***
+      [Makefile:28: lint] Error 1; MAKE_CHECK_EXIT=2.
   - command: >
       search Certified Tier at hardware-store origin/main and Working Shelf catalog/parts.yaml for
       checksum, integrity, corruption, verify
@@ -37,7 +38,7 @@ commands_run:
       hash-chained-ledger, and optimistic-concurrency entries. No consumable character-record
       integrity Part found.
 
-tests_passing: yes
+tests_passing: no
 files_touched:
   - kernel/world/save_integrity.py
   - kernel/world/character_store_sql.py
@@ -47,7 +48,10 @@ files_touched:
   - tests/test_save_integrity.py
   - registry/designations/modules.json
   - handoff/CX-009/RETURN.md
-blockers: none
+blockers: >
+  Current-session make check is red in codeforge #926's non-allowlisted
+  tests/test_migrations.py formatting. CX-009 must not merge until that upstream lint failure is
+  corrected and the complete gate is rerun with a passing result recorded here.
 
 policy_question: >
   Detection and refusal are implemented. On CORRUPT gameplay state, the current behavior refuses
