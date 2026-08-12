@@ -9992,5 +9992,28 @@
     "aliases": [],
     "created": "",
     "updated": ""
+  },
+  {
+    "designation": "MOD-10.152",
+    "name": "engine_seam",
+    "status": "active",
+    "function": "the Engine-0D/Engine-2D seam and the differential that guards it (WO-S1)",
+    "label": "engine_seam",
+    "file": "kernel/engine_seam.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_engine_seam_differential.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "notes": "Implements the Engine-0D/Engine-2D seam ruled in the Workshop doctrine ENGINE_SEAM.md (D1, D3, D4) and the differential test required by C1. That doctrine lives in the ship repo, so it cannot be a docs path here; cited in notes instead of pointed at a file this repo does not contain.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "",
+    "updated": ""
   }
 ]
