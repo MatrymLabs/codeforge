@@ -18,6 +18,7 @@ from kernel.world.character_store import (
     InMemoryCharacterStore,
 )
 from kernel.world.character_store_sql import SqlCharacterStore
+from kernel.world.save_integrity import IntegrityVerdict, SaveIntegrityError
 
 
 @pytest.fixture(params=["memory", "sql"])
@@ -86,6 +87,65 @@ def test_set_rank_on_a_missing_character_is_refused(store):
 def test_both_adapters_satisfy_the_port():
     assert isinstance(InMemoryCharacterStore(), CharacterStore)
     assert isinstance(SqlCharacterStore(), CharacterStore)
+
+
+def test_sql_store_refuses_a_corrupt_record_with_a_verdict():
+    """A row changed after save must never come back as an apparently valid hero."""
+    from kernel.world.db import CharacterRow, open_archive_session
+
+    store = SqlCharacterStore()
+    store.upsert_full(CharacterRecord(name="corrupt-save", level=7, xp=824))
+    with open_archive_session() as db:
+        row = db.get(CharacterRow, "corrupt-save")
+        assert row is not None
+        row.level = 70
+        db.commit()
+
+    with pytest.raises(SaveIntegrityError) as error:
+        store.find("corrupt-save")
+    assert error.value.verdict is IntegrityVerdict.CORRUPT
+
+
+def test_sql_store_marks_a_legacy_default_unverified_until_next_write():
+    """A pre-migration row is unknown, not corrupt, and a new save brings it into integrity."""
+    from kernel.world.db import CharacterRow, open_archive_session
+
+    store = SqlCharacterStore()
+    with open_archive_session() as db:
+        db.add(CharacterRow(name="legacy-save"))
+        db.commit()
+
+    with pytest.raises(SaveIntegrityError) as error:
+        store.find("legacy-save")
+    assert error.value.verdict is IntegrityVerdict.UNVERIFIED
+
+    store.upsert_gameplay(CharacterRecord(name="legacy-save", level=2, xp=10))
+    restored = store.find("legacy-save")
+    assert restored is not None
+    assert restored.level == 2 and restored.xp == 10
+
+
+def test_membership_write_does_not_invalidate_the_gameplay_integrity_scope():
+    """Account and legacy credentials belong to membership_sql, not this checksum's stated scope."""
+    from kernel.world.membership_sql import SqlMembershipStore
+
+    store = SqlCharacterStore()
+    store.upsert_full(
+        CharacterRecord(
+            name="membership-scope",
+            account="before",
+            auth_salt="salt",
+            auth_hash="hash",
+        )
+    )
+    membership = SqlMembershipStore()
+    assert membership.set_account("membership-scope", "after") is True
+    membership.retire_v1_and_set_account("membership-scope", "afterward")
+
+    restored = store.find("membership-scope")
+    assert restored is not None
+    assert restored.account == "afterward"
+    assert restored.auth_salt is None and restored.auth_hash is None
 
 
 # --- the domain doors run over an injected store, no database touched ------------------
