@@ -105,6 +105,32 @@ The required whole gate cannot run in this environment because `protoc-gen-go` i
 No source workaround was attempted. The resolving sequence is: install or expose `protoc-gen-go`,
 run `make proto`, then rerun `make check` in this registered worktree.
 
+## Resume verification
+
+`make proto` succeeded after exposing the existing `/home/josh/go/bin/protoc-gen-go`, but the whole
+gate remained blocked:
+
+```text
+ruff format --check .
+1073 files already formatted
+ruff check .
+All checks passed!
+lint-rust: native/codeforge_nav
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 13.75s
+lint-go: native/edge UNVERIFIED - it does not build. Generated code absent?
+          run `make proto` (ADR-0012: the bindings are git-ignored).
+make: *** [Makefile:61: lint-go] Error 1
+```
+
+The direct diagnostic confirms the environmental blocker:
+
+```text
+$ (cd native/edge && go build ./...)
+/bin/bash: line 1: go: command not found
+```
+
+`gh pr view 929` reports the PR OPEN and merge state BLOCKED. No source workaround was attempted.
+
 ## Extraction signals
 
 reimplemented: none observed. Contract Jig was consumed in place rather than copied.
