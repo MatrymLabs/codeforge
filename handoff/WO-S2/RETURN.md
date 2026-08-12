@@ -1,7 +1,7 @@
 # RETURN WO-S2
 
 packet_id: WO-S2
-pr_url: UNOPENED, blocked before a green Proof Run
+pr_url: https://github.com/MatrymLabs/codeforge/pull/929
 status: BLOCKED
 tests_passing: no
 
