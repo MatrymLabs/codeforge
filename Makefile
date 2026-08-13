@@ -1,5 +1,16 @@
 .PHONY: hooks env env-parity fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
+
+# --- Gate caches: explicit, writable anywhere, identical for both benches.
+# ruff and mypy default to .ruff_cache/.mypy_cache in the working directory. On CX-021 that
+# location was not writable for one bench, which had to run the gate with environment prefixes and
+# record them in its return. An order naming `make check` while one bench decorates it has two
+# commands wearing one name, so the location is declared here instead. `?=`, never `=`: a caller
+# that still needs to redirect must be able to, and must be able to tell if it failed to.
+RUFF_CACHE_DIR ?= /tmp/matrymlabs-codeforge-ruff-cache
+MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
+export RUFF_CACHE_DIR MYPY_CACHE_DIR
+
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
 # 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
@@ -473,7 +484,7 @@ loop:
 	@python3 -m kernel.loop trace $(or $(PART),workflow-engine)
 
 clean:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ kernel/__pycache__ adapters/__pycache__ tests/__pycache__
+	rm -rf $(RUFF_CACHE_DIR) $(MYPY_CACHE_DIR) .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ kernel/__pycache__ adapters/__pycache__ tests/__pycache__
 
 serve:
 	codeforge serve
