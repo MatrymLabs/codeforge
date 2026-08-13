@@ -1,0 +1,86 @@
+{
+  "arc_chamber": {
+    "chunk_x": 0,
+    "chunk_y": 0,
+    "room": "arc_chamber",
+    "x": 0,
+    "y": 0
+  },
+  "archive": {
+    "chunk_x": 3,
+    "chunk_y": 4,
+    "room": "archive",
+    "x": 0,
+    "y": 0
+  },
+  "blueprint_table": {
+    "chunk_x": 2,
+    "chunk_y": 1,
+    "room": "blueprint_table",
+    "x": 0,
+    "y": 0
+  },
+  "cellar": {
+    "chunk_x": 1,
+    "chunk_y": 0,
+    "room": "cellar",
+    "x": 0,
+    "y": 0
+  },
+  "classroom": {
+    "chunk_x": 4,
+    "chunk_y": 3,
+    "room": "classroom",
+    "x": 0,
+    "y": 0
+  },
+  "component_vault": {
+    "chunk_x": 0,
+    "chunk_y": 1,
+    "room": "component_vault",
+    "x": 0,
+    "y": 0
+  },
+  "courtyard": {
+    "chunk_x": 2,
+    "chunk_y": 3,
+    "room": "courtyard",
+    "x": 0,
+    "y": 0
+  },
+  "diagnostic_console": {
+    "chunk_x": 0,
+    "chunk_y": -1,
+    "room": "diagnostic_console",
+    "x": 0,
+    "y": 0
+  },
+  "forge": {
+    "chunk_x": 2,
+    "chunk_y": 2,
+    "room": "forge",
+    "x": 0,
+    "y": 0
+  },
+  "library": {
+    "chunk_x": 3,
+    "chunk_y": 3,
+    "room": "library",
+    "x": 0,
+    "y": 0
+  },
+  "observatory": {
+    "chunk_x": 1,
+    "chunk_y": 2,
+    "room": "observatory",
+    "x": 0,
+    "y": 0
+  },
+  "workshop": {
+    "chunk_x": 1,
+    "chunk_y": 1,
+    "room": "workshop",
+    "x": 0,
+    "y": 0
+  }
+}

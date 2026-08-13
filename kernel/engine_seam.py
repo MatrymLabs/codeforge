@@ -124,6 +124,37 @@ class Engine2DStub:
         return 10
 
 
+class Engine2D:
+    """The tile engine, reading positions from a generated world overlay."""
+
+    name = "2D"
+
+    def __init__(self, overlay: object | None = None) -> None:
+        if overlay is None:
+            from kernel.world.overlay import load_overlay
+            from kernel.world.seed import SEED_DIR
+
+            overlay = load_overlay(SEED_DIR / "world_overlay.json")
+        self._overlay = overlay
+
+    def place(self, room: str) -> ChunkPosition:
+        entry = self._overlay[room]  # type: ignore[index]
+        return ChunkPosition(
+            chunk_x=entry["chunk_x"],
+            chunk_y=entry["chunk_y"],
+            x=entry["x"],
+            y=entry["y"],
+            room=entry["room"],
+        )
+
+    def room_of(self, position: object) -> str:
+        assert isinstance(position, ChunkPosition)
+        return position.room
+
+    def carry_limit(self) -> int:
+        return 10
+
+
 @dataclass(frozen=True)
 class Divergence:
     """One place the two engines disagreed about something that is not position."""
