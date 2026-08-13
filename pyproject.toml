@@ -32,7 +32,7 @@ dev = [
     # change its mind with no commit behind it.
     # Bump deliberately: Dependabot proposes (uv ecosystem, so pyproject and uv.lock move together),
     # CI verifies, the founder merges. Never by drift.
-    "ruff==0.16.1",
+    "ruff==0.16.2",
     "mypy==2.3.0",
     "types-PyYAML==6.0.12.20260724",
     "import-linter==2.13",  # style-guide section 2: enforce the kernel/adapters/content direction
