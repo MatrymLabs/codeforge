@@ -1,5 +1,7 @@
 # DISPATCH WO-S3
 
+**Status:** LANDED, codeforge #945, 2026-08-13. Re-verified independently: forge and classroom collide under the stub at (3,2) and separate under the real engine; corrupting one overlay entry fails the round-trip and restoring recovers it.
+
 ```yaml
 packet_id:            WO-S3
 title:                Make Engine-2D real enough to disagree
