@@ -2,7 +2,7 @@
 
 ```yaml
 packet_id: WO-S3
-pr_url: UNVERIFIED - push/PR creation was not possible to verify in this sandbox
+pr_url: UNVERIFIED - push/PR creation failed because github.com DNS is unavailable in this sandbox
 status: PARTIAL
 tests_passing: "yes - 17 passed in 0.57s (tests/test_engine_seam_differential.py)"
 files_touched:
@@ -18,7 +18,8 @@ blockers: >
             run `make proto` (ADR-0012: the bindings are git-ignored).
   make: *** [Makefile:72: lint-go] Error 1
   The prescribed make proto then failed because protoc-gen-go is unavailable, and direct `go build
-  ./...` failed because go is not installed. No source workaround was attempted.
+  ./...` failed because go is not installed. Push also failed verbatim with `ssh: Could not resolve
+  hostname github.com: Temporary failure in name resolution`. No source workaround was attempted.
 
 commands_run:
   - command: "./.venv/bin/pytest -q tests/test_engine_seam_differential.py"
@@ -39,6 +40,9 @@ commands_run:
   - command: "cd native/edge && go build ./..."
     exit_code: 127
     output: "/bin/bash: line 1: go: command not found"
+  - command: "GIT_SSH_COMMAND='ssh -F /dev/null' git push -u origin codex/wo-s3-real-engine"
+    exit_code: 128
+    output: "ssh: Could not resolve hostname github.com: Temporary failure in name resolution"
   - command: "python overlay corruption calibration"
     exit_code: 0
     output: "corrupt: classroom expected != forge; restored: forge expected forge"
