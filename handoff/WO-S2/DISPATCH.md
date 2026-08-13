@@ -1,5 +1,7 @@
 # DISPATCH WO-S2
 
+**Status:** LANDED, codeforge #929, 2026-08-12. Merged after four tests were added on top: its dropped-field criterion was unprotected, and the schema can now no longer silently lose a field.
+
 ```yaml
 packet_id:            WO-S2
 title:                The wire protocol is a schema over a transport that already exists
