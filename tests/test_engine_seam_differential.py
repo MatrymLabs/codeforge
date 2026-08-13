@@ -31,7 +31,9 @@ imported; the discipline is what transferred.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -126,9 +128,54 @@ def test_a_non_spatial_battery_diverges_nowhere() -> None:
 
 def test_real_engine_2d_passes_the_non_spatial_battery() -> None:
     verdict = run_differential(seed=TRIVIAL_SEED, two_d=Engine2D())
-    assert verdict.commands_compared == 8
+    assert verdict.commands_compared > 8
     assert verdict.divergences == ()
     assert verdict.verdict == "AGREED"
+
+
+def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> None:
+    verdict = run_differential(seed=TRIVIAL_SEED, two_d=Engine2D())
+    probes = {aspect: 0 for aspect in verdict.aspects_covered}
+    for aspect, _, _ in __import__("kernel.engine_seam", fromlist=["_battery"])._battery():
+        probes[aspect] = probes.get(aspect, 0) + 1
+    assert all(
+        probes[aspect] > 1 for aspect in ("inventory", "progression", "permission", "persistence")
+    )
+    from kernel.overlay import load_overlay
+
+    overlay = load_overlay(Path("content/seeds/first-forge/world_overlay.json"))
+    assert len(overlay) == 12
+    import kernel.engine_seam as seam
+
+    coverage = cast(
+        Callable[[Engine2D], object],
+        next(
+            probe
+            for aspect, name, probe in seam._battery()
+            if aspect == "coverage" and name == "all_overlay_rooms"
+        ),
+    )
+    assert coverage(Engine2D()) == tuple((room, room) for room in sorted(overlay))
+
+
+def test_new_permission_probe_calibration_detects_wrong_room() -> None:
+    class WrongRoom(Engine2D):
+        def room_of(self, position: object) -> str:
+            return "grand_library"
+
+    verdict = run_differential(two_d=WrongRoom())
+    assert any(d.aspect == "permission" for d in verdict.divergences)
+    assert run_differential(two_d=Engine2D()).divergences == ()
+
+
+def test_new_persistence_probe_calibration_detects_wrong_room() -> None:
+    class WrongRoom(Engine2D):
+        def room_of(self, position: object) -> str:
+            return "courtyard"
+
+    verdict = run_differential(two_d=WrongRoom())
+    assert any(d.aspect == "persistence" for d in verdict.divergences)
+    assert run_differential(two_d=Engine2D()).divergences == ()
 
 
 def test_the_differential_reports_a_planted_divergence() -> None:
