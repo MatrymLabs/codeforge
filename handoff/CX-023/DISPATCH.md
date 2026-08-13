@@ -1,5 +1,7 @@
 # DISPATCH CX-023
 
+**Status:** LANDED, codeforge #948, 2026-08-13. Re-verified independently: schema validated (no unknown keys), malformed config proven rejected, `make check` green with the Go and protobuf steps Codex's sandbox could not reach.
+
 ```yaml
 packet_id:            CX-023
 title:                Group the dependency ecosystem that produces four PRs a week
