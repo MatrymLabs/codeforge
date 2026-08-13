@@ -10079,7 +10079,7 @@
     "status": "active",
     "function": "deterministic offline projection of Seed room topology into Engine-2D coordinates",
     "label": "world_overlay",
-    "file": "kernel/world/overlay.py",
+    "file": "kernel/overlay.py",
     "type": "MOD",
     "domain": "10",
     "docs": "docs/architecture.md",

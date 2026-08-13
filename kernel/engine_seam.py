@@ -131,7 +131,7 @@ class Engine2D:
 
     def __init__(self, overlay: object | None = None) -> None:
         if overlay is None:
-            from kernel.world.overlay import load_overlay
+            from kernel.overlay import load_overlay
             from kernel.world.seed import SEED_DIR
 
             overlay = load_overlay(SEED_DIR / "world_overlay.json")

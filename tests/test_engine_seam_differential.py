@@ -43,7 +43,7 @@ from kernel.engine_seam import (
     SeamVerdict,
     run_differential,
 )
-from kernel.world.overlay import generate_overlay, load_overlay
+from kernel.overlay import generate_overlay, load_overlay
 
 # The trivial Seed C1 asks for: a handful of rooms, one item, one command set. Deliberately small,
 # because if the seam fails on something this size it is learned for the price of an afternoon.
