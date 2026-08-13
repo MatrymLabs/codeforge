@@ -212,7 +212,21 @@ def _battery() -> list[tuple[str, str, object]]:
         ("progression", "jp_for_level", lambda e: progression.cumulative_jp_for_level(3)),
         ("progression", "calling_gate", lambda e: callings.gate_calling("cleric", {}, {}).open),
         ("permission", "rank_denies_admin", lambda e: _denies_admin()),
+        (
+            "permission",
+            "player_denies_teleport",
+            lambda e: _permission_denial(e, "player", "@teleport forge"),
+        ),
+        (
+            "permission",
+            "wizard_denies_grant",
+            lambda e: _permission_denial(e, "wizard", "@grant probe owner"),
+        ),
+        ("permission", "workshop_barrier_denies_wizard", lambda e: _workshop_denial(e)),
         ("persistence", "grant_key_shape", lambda e: _grant_key()),
+        ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),
+        ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),
+        ("coverage", "all_overlay_rooms", _room_coverage),
     ]
 
 
@@ -231,6 +245,65 @@ def _grant_key() -> str:
     return grant_key("hero", "npc:dummy", 1)
 
 
+def _permission_denial(engine: Engine, rank: str, command: str) -> str:
+    from kernel.world.ranks import wizard_command
+    from kernel.world.session import Session
+
+    room = "forge"
+    session = Session(player_id="probe", location=engine.room_of(engine.place(room)), rank=rank)
+    return wizard_command(session, command)
+
+
+def _workshop_denial(engine: Engine) -> str:
+    from kernel.world import creator_workshop
+    from kernel.world.session import Session
+
+    room = engine.room_of(engine.place("forge"))
+    session = Session(player_id="probe", location=room, rank="wizard")
+    destination = creator_workshop.door_destination(session.location, "door")
+    return (
+        creator_workshop.barrier_refusal()
+        if destination and not creator_workshop.is_seed_owner(session)
+        else "The concealed door is not here."
+    )
+
+
+def _save_restore(engine: Engine) -> tuple[object, object]:
+    from kernel.world.character_store import InMemoryCharacterStore
+    from kernel.world.characters import load_character, put_record
+
+    store = InMemoryCharacterStore()
+    casefile = {
+        "location": engine.room_of(engine.place("forge")),
+        "level": 4,
+        "xp": 27,
+        "rank": "player",
+    }
+    put_record("probe", casefile, store)
+    restored = load_character("probe", store)
+    return casefile, restored
+
+
+def _gameplay_save() -> tuple[str | None, str | None]:
+    from kernel.world.character_store import CharacterRecord, InMemoryCharacterStore
+
+    store = InMemoryCharacterStore()
+    original = CharacterRecord(name="probe", location="forge", auth_salt="salt", auth_hash="hash")
+    changed = CharacterRecord(name="probe", location="courtyard", level=2)
+    store.upsert_full(original)
+    store.upsert_gameplay(changed)
+    restored = store.find("probe")
+    return (original.auth_hash, restored.auth_hash if restored else None)
+
+
+def _room_coverage(engine: Engine) -> tuple[tuple[str, str], ...]:
+    from kernel.overlay import load_overlay
+    from kernel.world.seed import SEED_DIR
+
+    overlay = load_overlay(SEED_DIR / "world_overlay.json")
+    return tuple((room, engine.room_of(engine.place(room))) for room in sorted(overlay))
+
+
 def run_differential(
     seed: str = "first-forge",
     zero_d: Engine | None = None,
@@ -243,7 +316,7 @@ def run_differential(
     world is testing the world rather than the seam.
     """
     left = zero_d or Engine0D()
-    right = two_d or Engine2DStub()
+    right = two_d or Engine2D()
 
     divergences: list[Divergence] = []
     unmeasured: list[str] = []
