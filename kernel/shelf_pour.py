@@ -435,11 +435,15 @@ which `shelf-sync` re-pours this repo automatically.
 
 ## Required Reading
 
-The fleet's rulebook and live board are canonical in the `ship` repository:
+The Workshop's doctrine and live board are canonical in the `ship` repository:
 
-- `MATRYM_NORTH_STAR.md`
-- `.ai/HANDOFF_PROTOCOL.md`
-- `.ai/handoff.md`
+- `MATRYM_WORKSHOP_CANON.md` - the single active Workshop doctrine. Nothing else governs
+- `.ai/HANDOFF_PROTOCOL.md` - how the two Benches exchange work under it
+- `.ai/WORKBENCH.md` - the live operating surface. The Active Build is at the top
+
+This repository carries no synced doctrine block, and that is deliberate rather than an oversight:
+a block rendered here would be poured output, so the drift gate would fight the doctrine gate over
+the same bytes. Doctrine belongs where the work is dispatched, and no Bench is dispatched here.
 
 If you are working on the Store's CONTENTS, you are working in `codeforge`, and its `AGENTS.md`
 applies. Nothing in this repository is edited by hand.
