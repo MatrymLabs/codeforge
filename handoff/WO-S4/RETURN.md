@@ -2,7 +2,7 @@
 
 ```yaml
 packet_id: WO-S4
-pr_url: UNVERIFIED - GitHub network is unavailable in this sandbox
+pr_url: UNVERIFIED - GitHub network is unavailable in this sandbox; push failed
 status: PARTIAL
 tests_passing: "yes - 20 passed in 0.62s (tests/test_engine_seam_differential.py)"
 commands_compared: "old 8 -> new 14"
@@ -18,7 +18,8 @@ blockers: >
             run `make proto` (ADR-0012: the bindings are git-ignored).
   make: *** [Makefile:72: lint-go] Error 1
   The command that resolves this is `make proto` with protoc-gen-go installed, followed by
-  `PATH=.venv/bin:$PATH make check` on a host with the Go toolchain.
+  `PATH=.venv/bin:$PATH make check` on a host with the Go toolchain. Push also remains unverified;
+  `git push -u origin codex/wo-s4` failed with `ssh: Could not resolve hostname github.com`.
 
 commands_run:
   - command: "pytest -q tests/test_engine_seam_differential.py"
@@ -40,6 +41,9 @@ commands_run:
       lint-go: native/edge UNVERIFIED - it does not build. Generated code absent?
                 run `make proto` (ADR-0012: the bindings are git-ignored).
       make: *** [Makefile:72: lint-go] Error 1
+  - command: "GIT_SSH_COMMAND='ssh -F /dev/null' git push -u origin codex/wo-s4"
+    exit_code: 128
+    output: "ssh: Could not resolve hostname github.com: Temporary failure in name resolution"
   - command: "git diff --stat"
     exit_code: 0
     output: |
