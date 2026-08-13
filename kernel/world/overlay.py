@@ -26,7 +26,7 @@ class OverlayEntry(TypedDict):
     room: str
 
 
-Overlay = Mapping[str, OverlayEntry]
+Overlay = Mapping[str, Mapping[str, int | str]]
 
 _DIRECTIONS: dict[str, tuple[int, int]] = {
     "north": (0, 1),
@@ -118,4 +118,9 @@ def load_overlay(path: Path) -> Overlay:
             "y": int(value["y"]),
             "room": str(value["room"]),
         }
-    return MappingProxyType(entries)
+    return MappingProxyType(
+        {
+            room: MappingProxyType(cast(dict[str, int | str], entry))
+            for room, entry in entries.items()
+        }
+    )

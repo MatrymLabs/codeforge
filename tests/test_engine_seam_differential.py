@@ -96,6 +96,8 @@ def test_runtime_overlay_mapping_is_read_only() -> None:
     overlay = load_overlay(Path("content/seeds/first-forge/world_overlay.json"))
     with pytest.raises(TypeError):
         overlay["forge"] = overlay["forge"]  # type: ignore[index]
+    with pytest.raises(TypeError):
+        overlay["forge"]["x"] = 99  # type: ignore[index]
 
 
 def test_the_engines_genuinely_differ_below_the_seam() -> None:

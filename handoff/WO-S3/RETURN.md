@@ -4,7 +4,7 @@
 packet_id: WO-S3
 pr_url: UNVERIFIED - push/PR creation was not possible to verify in this sandbox
 status: PARTIAL
-tests_passing: "yes - 17 passed in 0.58s (tests/test_engine_seam_differential.py)"
+tests_passing: "yes - 17 passed in 0.57s (tests/test_engine_seam_differential.py)"
 files_touched:
   - kernel/engine_seam.py
   - kernel/world/overlay.py
@@ -23,7 +23,7 @@ blockers: >
 commands_run:
   - command: "./.venv/bin/pytest -q tests/test_engine_seam_differential.py"
     exit_code: 0
-    output: "17 passed in 0.58s"
+    output: "17 passed in 0.57s"
   - command: "./.venv/bin/ruff check kernel/engine_seam.py kernel/world/overlay.py tests/test_engine_seam_differential.py"
     exit_code: 0
     output: "All checks passed!"
