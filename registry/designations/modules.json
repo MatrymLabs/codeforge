@@ -10072,5 +10072,26 @@
     "aliases": [],
     "created": "2026-08-12",
     "updated": "2026-08-12"
+  },
+  {
+    "designation": "MOD-10.154",
+    "name": "world_overlay",
+    "status": "active",
+    "function": "deterministic offline projection of Seed room topology into Engine-2D coordinates",
+    "label": "world_overlay",
+    "file": "kernel/overlay.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_engine_seam_differential.py",
+    "depends_on": ["MOD-10.152"],
+    "related": ["engine_seam"],
+    "reuse": "generated geometry is immutable at runtime and remains separate from canonical room meaning",
+    "notes": "WO-S3 generated overlay build step for the real Engine-2D.",
+    "tags": ["module", "engine", "overlay"],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-13",
+    "updated": "2026-08-13"
   }
 ]
