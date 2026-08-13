@@ -30,15 +30,20 @@ imported; the discipline is what transferred.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import pytest
 
 from kernel.engine_seam import (
     Divergence,
     Engine0D,
+    Engine2D,
     Engine2DStub,
     SeamVerdict,
     run_differential,
 )
+from kernel.overlay import generate_overlay, load_overlay
 
 # The trivial Seed C1 asks for: a handful of rooms, one item, one command set. Deliberately small,
 # because if the seam fails on something this size it is learned for the price of an afternoon.
@@ -51,6 +56,48 @@ def test_both_engines_answer_the_same_room_for_the_same_placement() -> None:
     for room in ("forge", "courtyard", "library"):
         assert zero_d.room_of(zero_d.place(room)) == room
         assert two_d.room_of(two_d.place(room)) == room
+
+
+def test_engine_2d_reads_generated_geometry_not_the_stub_hash() -> None:
+    """The stub collides on forge/classroom's chunk bucket; the overlay must not."""
+    engine = Engine2D()
+    forge, classroom = engine.place("forge"), engine.place("classroom")
+    assert (forge.chunk_x, forge.chunk_y) != (classroom.chunk_x, classroom.chunk_y)
+
+
+def test_overlay_generation_is_byte_deterministic(tmp_path) -> None:
+    seed_rooms = Path("content/seeds/first-forge/rooms.yaml")
+    first, second = tmp_path / "first.json", tmp_path / "second.json"
+    assert generate_overlay(seed_rooms, first) == generate_overlay(seed_rooms, second)
+    assert first.read_bytes() == second.read_bytes()
+
+
+def test_room_of_place_round_trips_every_generated_room() -> None:
+    engine = Engine2D()
+    for room in load_overlay(Path("content/seeds/first-forge/world_overlay.json")):
+        assert engine.room_of(engine.place(room)) == room
+
+
+def test_corrupt_overlay_fails_round_trip_then_restores(tmp_path) -> None:
+    source = Path("content/seeds/first-forge/world_overlay.json")
+    target = tmp_path / source.name
+    target.write_bytes(source.read_bytes())
+    payload = json.loads(target.read_bytes())
+    payload["forge"]["room"] = "classroom"
+    target.write_text(json.dumps(payload), encoding="utf-8")
+    corrupted = Engine2D(load_overlay(target))
+    assert corrupted.room_of(corrupted.place("forge")) != "forge"
+    target.write_bytes(source.read_bytes())
+    restored = Engine2D(load_overlay(target))
+    assert restored.room_of(restored.place("forge")) == "forge"
+
+
+def test_runtime_overlay_mapping_is_read_only() -> None:
+    overlay = load_overlay(Path("content/seeds/first-forge/world_overlay.json"))
+    with pytest.raises(TypeError):
+        overlay["forge"] = overlay["forge"]  # type: ignore[index]
+    with pytest.raises(TypeError):
+        overlay["forge"]["x"] = 99  # type: ignore[index]
 
 
 def test_the_engines_genuinely_differ_below_the_seam() -> None:
@@ -74,6 +121,13 @@ def test_a_non_spatial_battery_diverges_nowhere() -> None:
     assert verdict.divergences == (), (
         f"the core is not engine-agnostic: {[d.render() for d in verdict.divergences]}"
     )
+    assert verdict.verdict == "AGREED"
+
+
+def test_real_engine_2d_passes_the_non_spatial_battery() -> None:
+    verdict = run_differential(seed=TRIVIAL_SEED, two_d=Engine2D())
+    assert verdict.commands_compared == 8
+    assert verdict.divergences == ()
     assert verdict.verdict == "AGREED"
 
 
