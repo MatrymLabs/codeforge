@@ -21,7 +21,8 @@ stream:               engine
 repository:           codeforge
 goal: >
   KF-RF-1 and KF-RF-2, both carried open since 2026-08-13. The Kotlin toolchain is live (JBR
-  25.0.3 javac, Gradle 8.14, Kotlin 2.0.21, all userspace, no sudo) and NOTHING inspects Kotlin:
+  25.0.3 javac, Gradle 9.1.0, Kotlin 2.2.0 as measured on the bench 2026-08-14, all userspace,
+  no sudo; the Workbench's 8.14/2.0.21 was stale) and NOTHING inspects Kotlin:
   no linter locally, no JVM job in CI. `make check` is green over Kotlin it has never read, and
   the language census reports the lane PRESENT. When done, Kotlin is linted by a pinned tool, a
   CI job builds the projection on a runner, and the lane's governance is a fact a machine checks
@@ -56,8 +57,12 @@ preconditions: >
 
     Behavioural:
       cd native/rider-retroforge && ./gradlew --version                the toolchain resolves
-      cd codeforge && make check                                       green
-      make language-lanes                                              kotlin holds a lane
+      make proto                                                  FIRST, and every order below
+        native/spine imports protobuf bindings that ADR-0012 git-ignores, so `make check` cannot
+        pass on a bench that has never generated them. codeforge's own CI runs this as an explicit
+        step before the gate; a bench is no different. protoc 27.3 and protoc-gen-go are on this
+        host, verified 2026-08-14.
+      cd codeforge && make check                                    green
 
 
 contract_tests: >
@@ -83,7 +88,7 @@ definition_of_done:
   - "make check green."
 
 verification_command: |
-  cd codeforge && make check && make kotlin-lint && cd native/rider-retroforge && ./gradlew build
+  cd codeforge && make proto && make check && make kotlin-lint && cd native/rider-retroforge && ./gradlew build
 
 rollback: >
   git revert. The linter config and CI job are additive; reverting returns the lane to ungoverned,

@@ -64,6 +64,11 @@ preconditions: >
     Behavioural:
       WO-M2-05 has LANDED: the rendered verdict names a reason per aspect. If it does not, this
       order is not ready and the correct action is to say so, not to start.
+      make proto                                                  FIRST, and every order below
+        native/spine imports protobuf bindings that ADR-0012 git-ignores, so `make check` cannot
+        pass on a bench that has never generated them. codeforge's own CI runs this as an explicit
+        step before the gate; a bench is no different. protoc 27.3 and protoc-gen-go are on this
+        host, verified 2026-08-14.
       cd codeforge && make check                                    green
       The differential is AGREED on first-forge BEFORE a second Blueprint is added. A red
       baseline makes the new Blueprint's result unreadable.
@@ -89,7 +94,7 @@ definition_of_done:
   - "make check green."
 
 verification_command: |
-  cd codeforge && make check && .venv/bin/python -m pytest tests/test_engine_seam_differential.py -q
+  cd codeforge && make proto && make check && .venv/bin/python -m pytest tests/test_engine_seam_differential.py -q
 
 rollback: >
   git revert the commit; delete content/seeds/seam-probe/. The Blueprint is additive and no
