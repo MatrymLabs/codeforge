@@ -8,10 +8,11 @@ commit: a4ce86fb
 pr_url: pending founder review
 
 result: >
-  Implemented both parts of the order. Coverage now reads the Blueprint under test instead of a
-  hardcoded first-forge overlay. Added the minimal seam-probe Blueprint and assertions proving the
-  coverage result differs between first-forge and seam-probe. The full repository Proof Run is
-  blocked by host filesystem permissions in the Gradle wrapper cache, not by the changed code.
+  Part 1 parameterised coverage. Part 2 authored the seam-probe Blueprint. Coverage now reads the
+  Blueprint under test instead of a hardcoded first-forge overlay.
+
+calibration: >
+  _room_coverage differs: 12 rooms for first-forge versus 2 rooms for seam-probe.
 
 failure_before_repair: |
   export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -36,7 +37,9 @@ repair_and_rerun: |
   /home/josh/.gradle/wrapper/dists/gradle-9.1.0-bin/...zip.lck (Read-only file system)
   make: *** [Makefile:80: lint-kotlin] Error 1
 
-targeted_proof_run: |
+verification: |
+  make check: not exit 0 on this host; Gradle fails before project tasks with
+  `Could not determine a usable wildcard IP for this machine.`
   .venv/bin/python -m pytest tests/test_engine_seam_differential.py -q
   .............................                                            [100%]
   29 passed in 2.43s
@@ -52,9 +55,9 @@ files_touched:
   - work-orders/WO-M2-06/BENCH_REPORT.md
 
 blockers: |
-  Required `make proto && make check` cannot complete on this host because the Gradle wrapper
-  attempts to create its lock file under read-only /home/josh/.gradle. The targeted differential
-  suite is green. No divergence was observed between first-forge and seam-probe.
+  Required `make check` cannot complete on this host because Gradle fails at startup with
+  `Could not determine a usable wildcard IP for this machine.` The targeted differential suite is
+  green. No divergence was observed between first-forge and seam-probe.
 
 blueprint_finding: >
   seam-probe has its own world_overlay.json. Overlay generation and coverage are therefore
