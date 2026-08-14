@@ -3,12 +3,13 @@
 ```yaml
 packet_id: WO-M2-06
 status: BLOCKED
-branch: codex/m2-blocked-reports
-pr_url: https://github.com/MatrymLabs/codeforge/pull/964
+branch: codex/wo-m2-06-final
+pr_url: pending founder re-scope
 
 result: >
-  No second Blueprint was created. WO-M2-06 remains gated on WO-M2-05 landing, and this report
-  consolidates the same two baseline rounds that prevented the prerequisite order from landing.
+  No second Blueprint was created. WO-M2-05 has landed, but this order is blocked by an allowlist
+  contradiction: definition_of_done requires run_differential to boot a selected Blueprint, while
+  kernel/engine_seam.py is explicitly outside this order's allowlist and owned by WO-M2-05.
 
 rounds:
   - round: 1
@@ -29,7 +30,7 @@ finding: >
 current_verification: >
   lint-imports was not on PATH; it is installed at .venv/bin/lint-imports. The documented export
   omitted $PWD/.venv/bin (and later $HOME/.cargo/bin). Corrected by codeforge #965. Under the
-  measured env -i export, make proto && make check exits 0. WO-M2-06 remains gated behind WO-M2-05.
+  measured export, make proto && make check exits 0. The first-Blueprint differential remains AGREED.
 current_verification_output: |
   export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
   make proto && make check: exit 0
@@ -40,11 +41,15 @@ current_verification_output: |
   lint-go: native/spine
   0 issues.
 
-blockers: WO-M2-06 remains sequenced behind WO-M2-05; the corrected measured baseline is green, but no prerequisite implementation landed.
+blockers: |
+  The live signature is (seed: str = 'first-forge', zero_d: Engine | None = None, two_d: Engine | None = None).
+  run_differential(seed='seam-probe') returns the same first-forge battery because seed is only
+  recorded in the docstring and is not used to select data. Repairing that requires editing
+  kernel/engine_seam.py, forbidden by file_allowlist. No workaround or allowlist widening attempted.
 
 sequencing_gate: >
-  WO-M2-05 has not landed, so the second Blueprint was correctly not started. No divergence was
-  observed because the order never reached the differential run.
+  WO-M2-05 has landed. No divergence was observed because the second-Blueprint boot path is not
+  reachable under the current allowlist.
 
 files_touched:
   - work-orders/WO-M2-06/BENCH_REPORT.md
