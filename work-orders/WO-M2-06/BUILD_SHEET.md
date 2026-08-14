@@ -62,13 +62,20 @@ blast_radius: |
   is the first thing this order finds out, and it is a finding either way.
 
 boundary: >
-  The allowlisted files import kernel/engine_seam.py and kernel/overlay.py, and this order changes
-  neither. WO-M2-05 owns engine_seam.py and lands first; this order CALLS run_differential and
-  passes it a Blueprint, which is why the definition of done says "accepts which Blueprint to
-  boot, defaulting to today's behaviour": a defaulted parameter is reachable without editing any
-  existing caller. kernel/overlay.py is read to answer whether the second Blueprint needs its own
-  overlay. If the answer is that overlay.py must CHANGE to support a second Blueprint, that is the
-  finding, not the fix: STOP and file it BLOCKED.
+  This order OWNS kernel/engine_seam.py, for the coverage probe and its call path ONLY:
+  `_overlay_rooms` stops hardcoding first-forge's overlay, and the `seed` parameter
+  `run_differential` already accepts must actually reach it. Everything else in that file belongs
+  to no order right now and stays exactly as it is: the battery, the saboteurs,
+  falsifiable_probes(), and the thirteen world-independent probes.
+
+  kernel/overlay.py is NOT in the allowlist. Read it to answer whether the second Blueprint needs
+  its own overlay. If the answer is that kernel/overlay.py must be modified to support a second
+  Blueprint, that is the finding and not the fix: STOP and file it BLOCKED.
+
+  Corrected 2026-08-14. An earlier version of this field carried a denial of the file the
+  allowlist grants, left over from a restatement that updated four fields and missed this one. A
+  Bench refused the order rather than guess which to obey, and was right to. `packet_gate` now
+  reads this field against the allowlist so the next one fails at authoring time instead.
 
 preconditions: >
     CHECK: file kernel/engine_seam.py contains falsifiable_probes
