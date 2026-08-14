@@ -68,6 +68,11 @@ preconditions: >
     CHECK: file tests/test_engine_seam_differential.py exists
 
     Behavioural, and run before you touch anything:
+      make proto                                                  FIRST, and every order below
+        native/spine imports protobuf bindings that ADR-0012 git-ignores, so `make check` cannot
+        pass on a bench that has never generated them. codeforge's own CI runs this as an explicit
+        step before the gate; a bench is no different. protoc 27.3 and protoc-gen-go are on this
+        host, verified 2026-08-14.
       cd codeforge && make check                                    green
       .venv/bin/python -c 'from kernel.engine_seam import run_differential;
       print(run_differential().render())'
@@ -98,7 +103,7 @@ definition_of_done:
   - "make check green."
 
 verification_command: |
-  cd codeforge && make check && .venv/bin/python -c "from kernel.engine_seam import run_differential; print(run_differential().render())"
+  cd codeforge && make proto && make check && .venv/bin/python -c "from kernel.engine_seam import run_differential; print(run_differential().render())"
 
 rollback: >
   git revert the single commit. The instrument is read-only with respect to world state and has
