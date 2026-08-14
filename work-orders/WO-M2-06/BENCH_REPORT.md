@@ -4,7 +4,7 @@
 packet_id: WO-M2-06
 status: BLOCKED
 branch: codex/m2-blocked-reports
-pr_url: pending
+pr_url: https://github.com/MatrymLabs/codeforge/pull/964
 
 result: >
   No second Blueprint was created. WO-M2-06 remains gated on WO-M2-05 landing, and this report

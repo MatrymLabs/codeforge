@@ -4,7 +4,7 @@
 packet_id: WO-KT-01
 status: BLOCKED
 branch: codex/m2-blocked-reports
-pr_url: pending
+pr_url: https://github.com/MatrymLabs/codeforge/pull/964
 
 result: >
   No Kotlin governance implementation was attempted. The order remains blocked, and this report
