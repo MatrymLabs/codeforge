@@ -306,6 +306,31 @@ def test_every_saboteur_names_a_room_the_world_actually_has() -> None:
         assert reported in rooms, f"saboteur emitted {reported!r}, which the Seed does not have"
 
 
+def test_overlay_room_calibration_distinguishes_blueprints() -> None:
+    """The overlay-room source must change when the Blueprint under test changes."""
+    import kernel.engine_seam as seam
+
+    first_forge = seam._overlay_rooms("first-forge")
+    seam_probe = seam._overlay_rooms("seam-probe")
+    assert first_forge != seam_probe, "the two Blueprint overlays are byte-identical"
+    assert len(first_forge) == 12
+    assert len(seam_probe) == 2
+
+
+def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
+    """Only the existing coverage probe changes its Blueprint input."""
+    first = run_differential("first-forge")
+    probe = run_differential("seam-probe")
+    assert first.verdict == "AGREED"
+    assert probe.verdict == "AGREED"
+    assert first.commands_compared == probe.commands_compared == 14
+    import kernel.engine_seam as seam
+
+    assert seam._room_coverage(Engine0D(), "first-forge") != seam._room_coverage(
+        Engine0D(), "seam-probe"
+    )
+
+
 def test_an_unfalsifiable_probe_is_still_run_and_still_counted_as_a_comparison() -> None:
     """Unfalsifiable is not worthless: those probes are regression guards, and they must not be
     quietly dropped to make the ratio look better."""
