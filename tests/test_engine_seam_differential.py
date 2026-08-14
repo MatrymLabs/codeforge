@@ -312,3 +312,25 @@ def test_an_unfalsifiable_probe_is_still_run_and_still_counted_as_a_comparison()
     verdict = run_differential(two_d=Engine2D())
     assert verdict.commands_compared > len(verdict.falsifiable)
     assert verdict.verdict == "AGREED"
+
+
+def test_the_verdict_classifies_every_aspect_falsifiability() -> None:
+    verdict = run_differential(two_d=Engine2D())
+    seam = __import__("kernel.engine_seam", fromlist=["_battery"])
+    expected = {aspect for aspect, _, _ in seam._battery()}
+    assert {record.aspect for record in verdict.aspect_falsifiability} == expected
+
+
+def test_structurally_unfalsifiable_aspects_name_their_reason() -> None:
+    verdict = run_differential(two_d=Engine2D())
+    records = {record.aspect: record for record in verdict.aspect_falsifiability}
+    assert records["progression"].probes == ()
+    assert "above the engine seam" in records["progression"].reason
+    assert records["permission"].probes == ()
+    assert "above the engine seam" in records["permission"].reason
+
+
+def test_render_shows_each_aspect_falsifiability_record() -> None:
+    rendered = run_differential(two_d=Engine2D()).render()
+    assert "[falsifiability] progression: structurally unfalsifiable" in rendered
+    assert "[falsifiability] inventory: falsifiable by" in rendered

@@ -168,6 +168,20 @@ class Divergence:
         return f"{self.aspect}/{self.command}: 0D said {self.zero_d!r}, 2D said {self.two_d!r}"
 
 
+@dataclass(frozen=True)
+class AspectFalsifiability:
+    """The measured strength of one battery aspect."""
+
+    aspect: str
+    probes: tuple[str, ...] = ()
+    reason: str = ""
+
+    def render(self) -> str:
+        if self.probes:
+            return f"{self.aspect}: falsifiable by {', '.join(self.probes)}"
+        return f"{self.aspect}: structurally unfalsifiable - {self.reason}"
+
+
 @dataclass
 class SeamVerdict:
     """What the differential found. A word, never a bool."""
@@ -179,6 +193,7 @@ class SeamVerdict:
     #: Probes whose answer CHANGES when the engine misbehaves, so they can actually report a
     #: divergence. The rest are regression guards: real, but not evidence of agreement today.
     falsifiable: tuple[str, ...] = field(default_factory=tuple)
+    aspect_falsifiability: tuple[AspectFalsifiability, ...] = field(default_factory=tuple)
 
     @property
     def verdict(self) -> str:
@@ -196,6 +211,7 @@ class SeamVerdict:
         ]
         lines += [f"  DIVERGED {d.render()}" for d in self.divergences]
         lines += [f"  [unmeasured] {u}" for u in self.unmeasured]
+        lines += [f"  [falsifiability] {record.render()}" for record in self.aspect_falsifiability]
         if not self.divergences:
             lines.append("  no divergence - the core did not ask where exactly you are")
         lines.append(f"VERDICT: {self.verdict}")
@@ -397,6 +413,39 @@ def falsifiable_probes() -> tuple[str, ...]:
     return tuple(found)
 
 
+_STRUCTURAL_UNFALSIFIABLE_REASONS = {
+    "progression": (
+        "Progression is above the engine seam under D1; a divergence would itself prove a leak."
+    ),
+    "permission": (
+        "Permission is above the engine seam under D1; a divergence would itself prove a leak."
+    ),
+}
+
+_NO_MEASURED_PROBE_REASON = (
+    "No measured probe survived this battery run; falsifiability is unverified."
+)
+
+
+def _aspect_falsifiability(probes: tuple[str, ...]) -> tuple[AspectFalsifiability, ...]:
+    """Classify every battery aspect from the measured probe names and D1 boundaries."""
+    aspects = tuple(dict.fromkeys(aspect for aspect, _, _ in _battery()))
+    by_aspect = {
+        aspect: tuple(entry.split("/", 1)[1] for entry in probes if entry.startswith(f"{aspect}/"))
+        for aspect in aspects
+    }
+    records: list[AspectFalsifiability] = []
+    for aspect in aspects:
+        aspect_probes = by_aspect[aspect]
+        reason = (
+            ""
+            if aspect_probes
+            else _STRUCTURAL_UNFALSIFIABLE_REASONS.get(aspect, _NO_MEASURED_PROBE_REASON)
+        )
+        records.append(AspectFalsifiability(aspect, aspect_probes, reason))
+    return tuple(records)
+
+
 def run_differential(
     seed: str = "first-forge",
     zero_d: Engine | None = None,
@@ -431,8 +480,10 @@ def run_differential(
         if a != b:
             divergences.append(Divergence(aspect=aspect, command=name, zero_d=a, two_d=b))
 
+    falsifiable = falsifiable_probes()
     return SeamVerdict(
-        falsifiable=falsifiable_probes(),
+        falsifiable=falsifiable,
+        aspect_falsifiability=_aspect_falsifiability(falsifiable),
         commands_compared=compared,
         aspects_covered=tuple(aspects),
         divergences=tuple(divergences),
