@@ -10084,11 +10084,115 @@
     "domain": "10",
     "docs": "docs/architecture.md",
     "tests": "tests/test_engine_seam_differential.py",
-    "depends_on": ["MOD-10.152"],
-    "related": ["engine_seam"],
+    "depends_on": [
+      "MOD-10.152"
+    ],
+    "related": [
+      "engine_seam"
+    ],
     "reuse": "generated geometry is immutable at runtime and remains separate from canonical room meaning",
     "notes": "WO-S3 generated overlay build step for the real Engine-2D.",
-    "tags": ["module", "engine", "overlay"],
+    "tags": [
+      "module",
+      "engine",
+      "overlay"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-13",
+    "updated": "2026-08-13"
+  },
+  {
+    "designation": "MOD-10.155",
+    "name": "retroforge_binary",
+    "status": "active",
+    "function": "a read-only window on ROM bytes that refuses to read past its end",
+    "label": "retroforge_binary",
+    "file": "kernel/retroforge/binary.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/retroforge/RETROFORGE_DESIGN.md",
+    "tests": "tests/test_retroforge_binary.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "retroforge"
+    ],
+    "notes": "RF-001A scaffold. Implements the ROM Hacking Research Lane Charter's STUDIED cards.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-13",
+    "updated": "2026-08-13"
+  },
+  {
+    "designation": "MOD-10.156",
+    "name": "retroforge_artifact",
+    "status": "active",
+    "function": "a loaded ROM as immutable bytes plus derived, traceable metadata",
+    "label": "retroforge_artifact",
+    "file": "kernel/retroforge/artifact.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/retroforge/RETROFORGE_DESIGN.md",
+    "tests": "tests/test_retroforge_artifact.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "retroforge"
+    ],
+    "notes": "RF-001A scaffold. Implements the ROM Hacking Research Lane Charter's STUDIED cards.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-13",
+    "updated": "2026-08-13"
+  },
+  {
+    "designation": "MOD-10.157",
+    "name": "retroforge_codec",
+    "status": "active",
+    "function": "the contracts a platform must satisfy to be understood",
+    "label": "retroforge_codec",
+    "file": "kernel/retroforge/codec.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/retroforge/RETROFORGE_DESIGN.md",
+    "tests": "tests/test_retroforge_codec.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "retroforge"
+    ],
+    "notes": "RF-001A scaffold. Implements the ROM Hacking Research Lane Charter's STUDIED cards.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-13",
+    "updated": "2026-08-13"
+  },
+  {
+    "designation": "MOD-10.158",
+    "name": "retroforge_manifest",
+    "status": "active",
+    "function": "what was extracted, from which bytes, by which codec",
+    "label": "retroforge_manifest",
+    "file": "kernel/retroforge/manifest.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/retroforge/RETROFORGE_DESIGN.md",
+    "tests": "tests/test_retroforge_manifest.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "retroforge"
+    ],
+    "notes": "RF-001A scaffold. Implements the ROM Hacking Research Lane Charter's STUDIED cards.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-08-13",
