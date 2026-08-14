@@ -176,6 +176,9 @@ class SeamVerdict:
     aspects_covered: tuple[str, ...] = ()
     divergences: tuple[Divergence, ...] = ()
     unmeasured: tuple[str, ...] = field(default_factory=tuple)
+    #: Probes whose answer CHANGES when the engine misbehaves, so they can actually report a
+    #: divergence. The rest are regression guards: real, but not evidence of agreement today.
+    falsifiable: tuple[str, ...] = field(default_factory=tuple)
 
     @property
     def verdict(self) -> str:
@@ -188,7 +191,8 @@ class SeamVerdict:
     def render(self) -> str:
         lines = [
             f"Engine seam :: {self.commands_compared} comparison(s) across "
-            f"{len(self.aspects_covered)} aspect(s)"
+            f"{len(self.aspects_covered)} aspect(s), "
+            f"{len(self.falsifiable)} of them falsifiable"
         ]
         lines += [f"  DIVERGED {d.render()}" for d in self.divergences]
         lines += [f"  [unmeasured] {u}" for u in self.unmeasured]
@@ -304,6 +308,95 @@ def _room_coverage(engine: Engine) -> tuple[tuple[str, str], ...]:
     return tuple((room, engine.room_of(engine.place(room))) for room in sorted(overlay))
 
 
+def _overlay_rooms() -> tuple[str, ...]:
+    """Every room the Seed actually has, derived from the overlay and never a literal."""
+    from pathlib import Path as _Path
+
+    from kernel.overlay import load_overlay
+
+    return tuple(sorted(load_overlay(_Path("content/seeds/first-forge/world_overlay.json"))))
+
+
+def _saboteurs() -> list[Engine]:
+    """Deliberately wrong engines, one per lever the Protocol lets an engine control.
+
+    The Protocol is the complete list of levers: `place`, `room_of`, `carry_limit`. If it ever
+    gains a member, add a saboteur here, or the falsifiability count starts overstating itself.
+
+    TWO THINGS WERE LEARNED BUILDING THIS, both by getting the number wrong first.
+
+    Every saboteur produces a LEGAL state. A wrong room is a room that EXISTS. A first version
+    returned a nonexistent room and scored 5 probes falsifiable; two of those were detecting an
+    impossible state rather than a plausible one, and no engine can emit a room the world lacks.
+    Valid rooms scored 3. The count an instrument reports is only as honest as the sabotage
+    behind it.
+
+    And the sweep covers EVERY room, not one. A second version picked a single valid room and
+    scored 3, missing the workshop barrier, which only reacts when the room is the workshop. A
+    probe sensitive to one specific room is invisible to a saboteur that never names it.
+    """
+
+    class WrongCarry(Engine2D):
+        def carry_limit(self) -> int:
+            return 999_999
+
+    def _wrong_room(room: str) -> Engine:
+        class WrongRoom(Engine2D):
+            def room_of(self, position: object) -> str:
+                return room
+
+            def place(self, target: str) -> ChunkPosition:
+                return super().place(room)
+
+        return WrongRoom()
+
+    return [WrongCarry(), *(_wrong_room(room) for room in _overlay_rooms())]
+
+
+def falsifiable_probes() -> tuple[str, ...]:
+    """The probes that can actually report a divergence, measured rather than asserted.
+
+    A probe earns its place by CHANGING ITS ANSWER when the engine misbehaves. One that returns the
+    same value under every legal sabotage cannot produce a divergence, so it raises the comparison
+    count without raising the evidence. WO-S4 grew the battery from 8 comparisons to 14 and ten of
+    the fourteen were of that kind; the contract allowed it because its calibration bar was written
+    per aspect rather than per probe.
+
+    UNFALSIFIABLE IS NOT WORTHLESS AND MUST NOT BE READ THAT WAY. Those probes are regression
+    guards: if the core were later changed to consult position when computing XP, they would catch
+    it. They are simply not evidence of agreement TODAY, and the two are different claims.
+
+    Some aspects are structurally unfalsifiable by engine sabotage, and progression is one. D1 puts
+    progression above the seam, so a progression probe that COULD diverge would itself be the leak.
+    Manufacturing falsifiability there, by folding an engine-derived value into the answer, would
+    buy a number and prove nothing. The honest instrument reports the count; it does not demand one
+    per aspect.
+    """
+    good = Engine2D()
+    wrong = _saboteurs()
+    found: list[str] = []
+
+    def _answer(probe: object, engine: Engine) -> tuple[bool, object]:
+        """(ran, value). A raise is an ANSWER here, not something to swallow silently."""
+        try:
+            return True, probe(engine)  # type: ignore[operator]
+        except Exception as exc:  # noqa: BLE001 - the exception IS the observation
+            return False, f"raised:{type(exc).__name__}"
+
+    for aspect, name, probe in _battery():
+        ran, baseline = _answer(probe, good)
+        if not ran:
+            # A probe that cannot run against a healthy engine is UNMEASURED, and
+            # run_differential already reports it as such. It is not falsifiable evidence.
+            continue
+        for saboteur in wrong:
+            _, sabotaged = _answer(probe, saboteur)
+            if sabotaged != baseline:
+                found.append(f"{aspect}/{name}")
+                break
+    return tuple(found)
+
+
 def run_differential(
     seed: str = "first-forge",
     zero_d: Engine | None = None,
@@ -339,6 +432,7 @@ def run_differential(
             divergences.append(Divergence(aspect=aspect, command=name, zero_d=a, two_d=b))
 
     return SeamVerdict(
+        falsifiable=falsifiable_probes(),
         commands_compared=compared,
         aspects_covered=tuple(aspects),
         divergences=tuple(divergences),
