@@ -27,15 +27,20 @@ finding: >
   correct instruction from a misleading instrument. That is the finding that produced #963.
 
 current_verification: >
-  With the userspace Go and protoc-gen-go paths restored, make proto passes. The full make check
-  reaches both Go modules successfully, then stops at lint-imports because that executable is not
-  installed. This is a new baseline blocker; no seam work was started.
+  lint-imports was not on PATH; it is installed at .venv/bin/lint-imports. The documented export
+  omitted $PWD/.venv/bin (and later $HOME/.cargo/bin). Corrected by codeforge #965. Under the
+  measured env -i export, make proto && make check exits 0. No seam work was started.
 current_verification_output: |
-  make proto: regenerated proto/telemetry_pb2.py + native/spine/telemetrypb/telemetry.pb.go
-  make check: lint-go: native/edge; 0 issues.; lint-go: native/spine; 0 issues.;
-  make: lint-imports: No such file or directory; make: *** [Makefile:99: imports] Error 127
+  export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+  make proto && make check: exit 0
+  1104 files already formatted
+  All checks passed!
+  lint-go: native/edge
+  0 issues.
+  lint-go: native/spine
+  0 issues.
 
-blockers: make check remains blocked by the missing lint-imports executable after the proto/toolchain fault was corrected.
+blockers: the historical rounds remain BLOCKED reports; the corrected measured baseline is green and no seam implementation was dispatched.
 
 files_touched:
   - work-orders/WO-M2-05/BENCH_REPORT.md

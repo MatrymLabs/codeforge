@@ -27,15 +27,20 @@ finding: >
   correct instruction from a misleading instrument. That is the finding that produced #963.
 
 current_verification: >
-  With the userspace Go and protoc-gen-go paths restored, make proto passes. The full make check
-  reaches both Go modules successfully, then stops at lint-imports because that executable is not
-  installed. WO-M2-06 remains gated behind WO-M2-05 and was not started.
+  lint-imports was not on PATH; it is installed at .venv/bin/lint-imports. The documented export
+  omitted $PWD/.venv/bin (and later $HOME/.cargo/bin). Corrected by codeforge #965. Under the
+  measured env -i export, make proto && make check exits 0. WO-M2-06 remains gated behind WO-M2-05.
 current_verification_output: |
-  make proto: regenerated proto/telemetry_pb2.py + native/spine/telemetrypb/telemetry.pb.go
-  make check: lint-go: native/edge; 0 issues.; lint-go: native/spine; 0 issues.;
-  make: lint-imports: No such file or directory; make: *** [Makefile:99: imports] Error 127
+  export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+  make proto && make check: exit 0
+  1104 files already formatted
+  All checks passed!
+  lint-go: native/edge
+  0 issues.
+  lint-go: native/spine
+  0 issues.
 
-blockers: WO-M2-06 remains sequenced behind WO-M2-05, whose current baseline is blocked by the missing lint-imports executable.
+blockers: WO-M2-06 remains sequenced behind WO-M2-05; the corrected measured baseline is green, but no prerequisite implementation landed.
 
 sequencing_gate: >
   WO-M2-05 has not landed, so the second Blueprint was correctly not started. No divergence was
