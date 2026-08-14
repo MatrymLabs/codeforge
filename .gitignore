@@ -1,3 +1,8 @@
+# Both spellings, deliberately. `.venv/` matches a directory and does NOT match a
+# SYMLINK named `.venv`, which is how a worktree's link to the primary checkout's
+# environment got committed here: an absolute path to one machine's home directory,
+# tracked in a public repository, and a trap on every checkout of an older commit.
+.venv
 .venv/
 __pycache__/
 .pytest_cache/
