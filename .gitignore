@@ -80,3 +80,8 @@ audit.jsonl
 # Gradle daemon/cache state for the Rider projection. `build/` above already covers its
 # output at any depth; this is the bit it does not.
 .gradle/
+
+# Gradle build output for the Rider projection. The WRAPPER is tracked (gradlew,
+# gradle/wrapper/) so CI needs only a JDK; the caches and build dirs are not.
+native/rider-retroforge/.gradle/
+native/rider-retroforge/build/
