@@ -20,20 +20,34 @@ title:                A second Blueprint, so the battery is run against a popula
 stream:               engine
 repository:           codeforge
 goal: >
-  The differential has only ever booted first-forge. AGREED across 14 probes on one Blueprint
-  cannot distinguish "the core is engine-agnostic" from "the overlay fits first-forge". When done,
-  a second minimal Blueprint exists that is NOT first-forge and NOT Aethryn, the same battery runs
-  against it under both engines, and the verdict is reported per Blueprint. Divergence on the
-  second and not the first is the most valuable result this order can produce.
+  RESTATED 2026-08-14 after the original was measured and found unable to vary. The first version
+  asked for AGREED on two Blueprints. That test could not fail: `seed` is recorded and never
+  booted, thirteen of fourteen probes never read a Blueprint, and the fourteenth hardcoded
+  first-forge's overlay. `run_differential("first-forge")` and `run_differential("spiral-ascent")`
+  return byte-identical verdicts today, on a second Blueprint that already exists.
+
+  So this order does the thing that makes the question answerable, then asks it. TWO parts, in
+  order: parameterise the coverage probe so it reads the Blueprint UNDER TEST instead of a
+  hardcoded path, then author a second minimal Blueprint and run the differential against both,
+  reporting the verdict PER BLUEPRINT.
+
+  What the second Blueprint proves is the LOADER AND OVERLAY PATH generalising beyond the one
+  world they were built against. It does not prove the non-spatial battery agrees across worlds,
+  because that battery is world-independent by design and correctly so.
 
 out_of_scope: >
-  Do NOT modify the battery, the probes, the saboteurs, or falsifiable_probes(). WO-M2-05 owns
-  kernel/engine_seam.py and lands first; this order consumes that file and does not edit it. Do
+  Do NOT make the non-spatial probes world-dependent. Thirteen of them never read a Blueprint and
+  that is the design: a probe that needs a booted world tests the world rather than the seam.
+  `run_differential`'s own docstring says so. The ONLY probe that becomes Blueprint-sensitive is
+  coverage/all_overlay_rooms, because it already reads an overlay and reads the wrong one.
+  Do NOT modify the saboteurs or falsifiable_probes(). WO-M2-05 has LANDED (#966), so this order
+  now owns kernel/engine_seam.py for the coverage change only. Do
   NOT touch content/seeds/aethryn/ or content/seeds/first-forge/. Do NOT build a playable world:
   this Blueprint exists to be booted by a test, not entered by a human. No renderer, no client,
   no wire protocol.
 
 file_allowlist:
+  - kernel/engine_seam.py                (the coverage probe and its call path ONLY)
   - content/seeds/seam-probe/            (new; the whole directory is yours)
   - tests/test_engine_seam_differential.py
   - registry/designations/modules.json   (only if the loader requires a designation)
@@ -78,20 +92,32 @@ contract_tests:
   ASSERTION-LOCKED for every existing assertion. Add; do not edit.
 
 definition_of_done:
-  - "A second Blueprint exists under content/seeds/seam-probe/, deliberately minimal: the fewest
-     rooms, items and Callings that let all five aspects run. Trivial is the point. C1 says if the
-     seam fails on something trivial that is learned for the price of an afternoon."
+  - "PART 1, and it lands first. `_overlay_rooms` at kernel/engine_seam.py:333 stops hardcoding
+     content/seeds/first-forge/world_overlay.json and reads the Blueprint under test. The `seed`
+     parameter run_differential already accepts must actually reach it. Defaulting to first-forge
+     so no existing caller changes."
+  - "A test proves the parameterisation BITES: run the differential against two DIFFERENT
+     Blueprints and assert the coverage probe answers differently. Today
+     run_differential('first-forge') and run_differential('spiral-ascent') are byte-identical;
+     after this they must not be, or the change did nothing. This is the calibration and it is
+     mandatory."
+  - "PART 2. A second Blueprint under content/seeds/seam-probe/, deliberately minimal: the fewest
+     rooms, items and Callings that let the loader and the overlay pipeline run. Trivial is the
+     point. C1: if the seam fails on something trivial that is learned for the price of an
+     afternoon."
   - "It is genuinely NOT first-forge: different room labels, different item labels, different
      counts. A copy with renamed keys proves nothing and will be rejected on review."
-  - "run_differential accepts which Blueprint to boot, defaulting to today's behaviour so no
-     existing caller changes."
-  - "A new test runs the battery against seam-probe under both engines and asserts a verdict."
-  - "The verdict is reported PER BLUEPRINT. Two AGREED results are two findings, not one."
+  - "It LOADS through the existing loader gates in kernel/world/seed.py and GENERATES a valid
+     overlay through the same pipeline first-forge uses. That is the claim this Blueprint is here
+     to support."
+  - "The verdict is reported PER BLUEPRINT. Two results are two findings, never one merged number."
   - "If the second Blueprint DIVERGES: stop, file a BLOCKED Bench Report with the divergence
-     rendered verbatim, and do not repair it. C1 and the Active Build record are explicit that a
-     divergence is a Principal Engineer decision and never a Bench rewrite. A BLOCKED return here
-     is the best available outcome, not a setback."
-  - "make check green."
+     rendered verbatim, and do not repair it. A divergence is a Principal Engineer decision and
+     never a Bench rewrite. A BLOCKED return here is the best available outcome, not a setback."
+  - "If the second Blueprint needs its own world_overlay.json, SAY SO. If it needs none, say that
+     instead. Either answer is a real seam fact nobody has written down, and it is worth more than
+     the AGREED."
+  - "make proto && make check green."
 
 verification_command: |
   cd codeforge && make proto && make check && .venv/bin/python -m pytest tests/test_engine_seam_differential.py -q
