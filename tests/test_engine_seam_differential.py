@@ -259,3 +259,56 @@ def test_a_battery_that_measures_nothing_is_INCONCLUSIVE_not_AGREED() -> None:
         assert seam.run_differential().verdict == "INCONCLUSIVE"
     finally:
         seam._battery = original
+
+
+# --- the battery measures its own falsifiability -------------------------------------------------
+
+
+def test_the_verdict_reports_how_many_probes_could_actually_fail() -> None:
+    """WO-S4's finding, converted from a one-off audit into a permanent reading.
+
+    The battery grew from 8 comparisons to 14 and satisfied a calibration bar written PER ASPECT.
+    Most of the fourteen could not produce a divergence under any legal input, so the count rose
+    and the evidence did not. A number that cannot be checked against its own strength invites
+    exactly that, so the strength is now reported beside it.
+    """
+    verdict = run_differential(two_d=Engine2D())
+    assert verdict.falsifiable, "a battery where nothing can fail is not evidence"
+    assert len(verdict.falsifiable) <= verdict.commands_compared
+    assert f"{len(verdict.falsifiable)} of them falsifiable" in verdict.render()
+
+
+def test_a_probe_that_ignores_its_engine_is_not_counted_falsifiable() -> None:
+    """The property, stated directly. `lambda e: pure_function(5)` can never diverge."""
+    import kernel.engine_seam as seam
+
+    falsifiable = set(seam.falsifiable_probes())
+    # Progression is the clearest case and is structurally unfalsifiable by engine sabotage:
+    # D1 puts it above the seam, so a progression probe that COULD diverge would be the leak.
+    assert not any(entry.startswith("progression/") for entry in falsifiable), (
+        "a progression probe that reacts to engine sabotage means position reached progression"
+    )
+
+
+def test_every_saboteur_names_a_room_the_world_actually_has() -> None:
+    """Realism is load-bearing: an impossible state measures error handling, not sensitivity.
+
+    Calibrated by getting it wrong. A saboteur returning a nonexistent room reported 5 probes
+    falsifiable; two were reacting to a room the world does not contain, which no engine can
+    produce. With legal rooms the honest answer is 3.
+    """
+    import kernel.engine_seam as seam
+
+    rooms = set(seam._overlay_rooms())
+    assert rooms, "the overlay must supply the sabotage rooms, never a literal"
+    for saboteur in seam._saboteurs():
+        reported = saboteur.room_of(saboteur.place("forge"))
+        assert reported in rooms, f"saboteur emitted {reported!r}, which the Seed does not have"
+
+
+def test_an_unfalsifiable_probe_is_still_run_and_still_counted_as_a_comparison() -> None:
+    """Unfalsifiable is not worthless: those probes are regression guards, and they must not be
+    quietly dropped to make the ratio look better."""
+    verdict = run_differential(two_d=Engine2D())
+    assert verdict.commands_compared > len(verdict.falsifiable)
+    assert verdict.verdict == "AGREED"
