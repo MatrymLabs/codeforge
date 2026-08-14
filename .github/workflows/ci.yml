@@ -280,6 +280,36 @@ jobs:
   # the pure-Python reference proxy (the parity test). NOT a required check -- the main `check` gate
   # runs on the fallback, so a Go-toolchain hiccup never blocks a merge (ADR-0011: Python-first,
   # native-optional, the swap chosen at launch).
+  # KF-RF-2: the Rider projection was verified on ONE host, the maker's, where Rider's bundled JBR
+  # happens to live. A lane proven on one machine is a claim about that machine. This job builds and
+  # lints it on a runner that has never seen Rider, which is the only way the kotlin lane earns the
+  # word `governed` in the Store's LANGUAGE_LANES.yaml.
+  #
+  # Deliberately NOT the IntelliJ Platform plugin build: that SDK is multi-gigabyte and this proves
+  # the property RF-001A owes, which is that Kotlin compiles, tests run, and the projection is
+  # gated. The platform dependency arrives with the order that needs an editor.
+  jvm:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native/rider-retroforge
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      # Temurin 24, matching the bytecode target the build pins. The maker's host compiles on
+      # Rider's JBR 25 and targets 24; a runner on 21 would fail the same mismatch Gradle already
+      # refused once, correctly.
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00  # v4.7.1
+        with:
+          distribution: temurin
+          java-version: "24"
+
+      - name: ktlint, the kotlin lane's instrument
+        run: ./gradlew ktlintCheck --no-daemon
+
+      - name: Build and test the projection
+        run: ./gradlew build --no-daemon
+
   go-edge:
     runs-on: ubuntu-latest
     steps:

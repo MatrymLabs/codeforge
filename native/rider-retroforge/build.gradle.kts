@@ -11,6 +11,10 @@
 
 plugins {
     kotlin("jvm") version "2.2.0"
+    // KF-RF-1: the kotlin lane opened UNGOVERNED on 2026-08-13, a live toolchain with nothing
+    // inspecting it. ktlint is the instrument. It runs from the wrapper, so CI needs a JDK and
+    // nothing else, and `check` depends on it so a lint failure cannot be skipped by running tests.
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 }
 
 group = "labs.matrym.retroforge"
@@ -42,3 +46,12 @@ kotlin {
 // downloading a second JDK to satisfy a number, or a build that breaks whenever Rider updates.
 
 tasks.test { useJUnitPlatform() }
+
+ktlint {
+    version.set("1.3.1")
+    // A warning nobody has to act on is decoration. A lint finding fails this build.
+    ignoreFailures.set(false)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+    }
+}
