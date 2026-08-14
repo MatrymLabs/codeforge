@@ -4,6 +4,7 @@
 packet_id: RF-001B
 status: BLOCKED
 branch: codex/rf-001b
+pr_url: https://github.com/MatrymLabs/codeforge/pull/957
 
 summary: >
   Added an iNES platform module with validated metadata, deterministic CHR ROM location, NES
