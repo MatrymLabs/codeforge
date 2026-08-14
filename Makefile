@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-kotlin kotlin-lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -67,6 +67,11 @@ lint-shell:
 	else \
 		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
 	fi
+
+# Standalone Kotlin lane gate. It stays outside `check` until the Principal Engineer stamps the
+# approval gate in WO-KT-01: adding it to the shared check changes every Python-only commit.
+kotlin-lint:
+	@cd native/rider-retroforge && ./gradlew ktlintCheck
 
 # A MISSING TOOLCHAIN AND MISSING GENERATED CODE ARE DIFFERENT FAULTS, and this target used to
 # report both as the second one. On 2026-08-14 an agent's bench had no `go` at all; `go build`

@@ -2,13 +2,14 @@
 
 ```yaml
 packet_id: WO-KT-01
-status: BLOCKED
-branch: codex/m2-blocked-reports
-pr_url: https://github.com/MatrymLabs/codeforge/pull/964
+status: COMPLETE
+branch: codex/wo-kt-01-final
+pr_url: pending founder review
 
 result: >
-  No Kotlin governance implementation was attempted. The order remains blocked, and this report
-  consolidates both baseline rounds into the single required record.
+  Kotlin governance is implemented with the existing pinned ktlint 1.3.1 plugin, a standalone
+  Makefile kotlin-lint target, and a SHA-pinned GitHub Actions JVM build for the Rider projection.
+  The target is intentionally not wired into make check pending the approval gate.
 
 rounds:
   - round: 1
@@ -29,7 +30,8 @@ finding: >
 current_verification: >
   lint-imports was not on PATH; it is installed at .venv/bin/lint-imports. The documented export
   omitted $PWD/.venv/bin (and later $HOME/.cargo/bin). Corrected by codeforge #965. Under the
-  measured env -i export, make proto && make check exits 0. Kotlin governance was not started.
+  measured export, make proto && make check exits 0. Kotlin lint calibration and the Rider build
+  both pass after the deliberate violation was removed.
 current_verification_output: |
   export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
   make proto && make check: exit 0
@@ -39,13 +41,30 @@ current_verification_output: |
   0 issues.
   lint-go: native/spine
   0 issues.
+  calibration_red: |
+    /home/josh/Projects/MatrymLabs/codeforge-codex/native/rider-retroforge/src/main/kotlin/Calibration.kt:1:11 Missing spacing around "{"
+    FAILURE: Build failed with an exception.
+    Execution failed for task ':ktlintMainSourceSetCheck'.
+    KTLINT_RED_EXIT:1
+  calibration_green: |
+    ./gradlew clean ktlintCheck
+    BUILD SUCCESSFUL in 10s
+    8 actionable tasks: 8 executed
+  rider_build: |
+    ./gradlew build
+    BUILD SUCCESSFUL in 28s
+    11 actionable tasks: 4 executed, 7 up-to-date
+  make_check: MAKE_CHECK_EXIT:0
 
-blockers: the historical rounds remain BLOCKED reports; the corrected measured baseline is green and Kotlin governance was not implemented.
+blockers: none; approval remains required before wiring kotlin-lint into make check.
 
 files_touched:
+  - Makefile
+  - .github/workflows/kotlin.yml
   - work-orders/WO-KT-01/BENCH_REPORT.md
 
-implementation: none; Makefile, CI workflow, Kotlin build files, and linter configuration untouched.
+implementation: existing native/rider-retroforge/build.gradle.kts already pins ktlint 1.3.1; added
+  standalone Makefile target and CI workflow. No Kotlin source was changed.
 reimplemented: none observed
 recurrence: none observed
 generalizable: language governance cannot be certified while the repository-wide generation precondition is opaque
