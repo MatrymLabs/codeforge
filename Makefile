@@ -35,7 +35,7 @@ fix:
 	ruff check . --fix
 
 # --- Gates: pure checks, cheapest first, nothing is modified ---
-lint: lint-python lint-rust lint-go lint-shell  ## Every language present in the tree, not only Python.
+lint: lint-python lint-rust lint-go lint-shell lint-kotlin  ## Every language present in the tree, not only Python.
 
 # One target per language, so a language with no code says so instead of passing silently.
 # Rust and Go code has existed here since the nav kernel and the edge/spine organs landed, and
@@ -68,10 +68,18 @@ lint-shell:
 		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
 	fi
 
-# Standalone Kotlin lane gate. It stays outside `check` until the Principal Engineer stamps the
-# approval gate in WO-KT-01: adding it to the shared check changes every Python-only commit.
-kotlin-lint:
+# The Kotlin lane, inside `lint` and therefore inside `check`, stamped 2026-08-14 on WO-KT-01's
+# approval gate. Named `lint-kotlin` to match its four siblings; `kotlin-lint` stays as an alias
+# because the Bench Report and the bench file both name it.
+#
+# It runs `ktlintCheck`, NOT `build`, and the difference is load-bearing. `./gradlew build` FAILS
+# from clean on skynet: the system JVM is 21 and the test classes are compiled for newer, so
+# `:test` dies with UnsupportedClassVersionError. `ktlintCheck` from clean is green. Widening this
+# target to `build` would put a known-broken command in every commit's path.
+lint-kotlin:
 	@cd native/rider-retroforge && ./gradlew ktlintCheck
+
+kotlin-lint: lint-kotlin
 
 # A MISSING TOOLCHAIN AND MISSING GENERATED CODE ARE DIFFERENT FAULTS, and this target used to
 # report both as the second one. On 2026-08-14 an agent's bench had no `go` at all; `go build`
