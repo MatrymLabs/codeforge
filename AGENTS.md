@@ -114,14 +114,31 @@ them**, and `make check` inspects every language present, so a bench without the
 gate at all. Export this before anything else:
 
 ```bash
-export PATH="$HOME/.local/go/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
+export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 ```
+
+**One export, and it must include `$PWD/.venv/bin`.** This section briefly carried a shorter one
+without it, and a bench followed that line into exactly the failure this section exists to prevent:
+`make check` reached the Go lanes, then died on `lint-imports: No such file or directory`, which
+reads as a missing package and is a missing PATH entry. `lint-imports`, `ruff` and `mypy` are all
+invoked by bare name from the Makefile, so the venv must be on PATH and not merely referenced by
+`PY=`. Run this from the repository root, where `$PWD/.venv` resolves.
 
 | tool | lives at | needed by |
 |---|---|---|
+| `ruff`, `mypy`, `pytest`, `bandit`, `lint-imports`, `detect-secrets-hook` | `$PWD/.venv/bin` | `lint-python`, `typecheck`, `test`, `imports`, `sast` |
 | `go`, `gofmt` | `$HOME/.local/go/bin` | `lint-go`, `typecheck-native` |
-| `protoc-gen-go`, `golangci-lint` | `$HOME/go/bin` | `make proto`, `lint-go` |
-| `protoc` | `$HOME/.local/bin` | `make proto` |
+| `golangci-lint`, `protoc-gen-go` | `$HOME/go/bin` | `lint-go`, `make proto` |
+| `cargo`, `rustc` | `$HOME/.cargo/bin` | `lint-rust`, `typecheck-native` |
+| `protoc`, `shellcheck`, `uv` | `$HOME/.local/bin` | `make proto`, `lint-shell`, `make env` |
+
+**This table was MEASURED, not remembered.** Three earlier versions of this export were each
+written from partial knowledge and each sent a bench into a different wall: the first omitted
+`.venv/bin` and died at `lint-imports`, the second omitted `.cargo/bin` and died at `cargo: not
+found`. The list above was produced by asking `command -v` for every bare-name tool the gate
+invokes, and then running the whole gate under `env -i` with exactly this PATH and nothing else.
+It exits 0. If you add a target that shells out to a new tool, add its row here and re-run that
+test, because a doc that describes the author's shell is worth less than no doc at all.
 
 **`make proto` before `make check`, on any bench that has not built here before.** `native/spine`
 imports protobuf bindings that ADR-0012 git-ignores, so the Go build fails until they exist. CI
@@ -136,7 +153,7 @@ layer down on a tool that was also not there.
 
 ```bash
 cd /home/josh/Projects/MatrymLabs/codeforge
-export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
+export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 make proto      # first run on a fresh bench; see "Bench toolchain" above
 make check
 ```
