@@ -76,3 +76,7 @@ audit.jsonl
 
 # Hypothesis local example cache (the COMMITTED corpus lives in tests/corpora/, tracked)
 .hypothesis/
+
+# Gradle daemon/cache state for the Rider projection. `build/` above already covers its
+# output at any depth; this is the bit it does not.
+.gradle/
