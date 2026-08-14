@@ -68,9 +68,21 @@ lint-shell:
 		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
 	fi
 
+# A MISSING TOOLCHAIN AND MISSING GENERATED CODE ARE DIFFERENT FAULTS, and this target used to
+# report both as the second one. On 2026-08-14 an agent's bench had no `go` at all; `go build`
+# failed, this printed "Generated code absent? run `make proto`", the agent ran `make proto`, and
+# hit `protoc-gen-go: program not found` one layer down. Two dispatches died walking that path.
+# The tools are userspace and are NOT on a bare PATH; see AGENTS.md, "Bench toolchain".
 lint-go:
 	@if [ -z "$$(git ls-files '*.go')" ]; then \
 		echo "lint-go: no .go files in this tree, nothing to inspect"; \
+	elif ! command -v go >/dev/null 2>&1; then \
+		echo "lint-go: UNVERIFIED - no \`go\` on PATH. This is a toolchain fault, NOT missing"; \
+		echo "          generated code, and \`make proto\` will not fix it."; \
+		echo "          The Go toolchain here is userspace and absent from a bare PATH:"; \
+		echo "            export PATH=\$$HOME/.local/go/bin:\$$HOME/go/bin:\$$HOME/.local/bin:\$$PATH"; \
+		echo "          See AGENTS.md, \"Bench toolchain\"."; \
+		exit 1; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
 			if ! ( cd $$m && go build ./... >/dev/null 2>&1 ); then \
@@ -340,6 +352,15 @@ bench:
 # + protoc-gen-go on PATH; the generated code is git-ignored and rebuilt here (ADR-0012). The game
 # runs on the JSON fallback with none of this. ---
 proto:
+	@command -v protoc >/dev/null 2>&1 || { \
+		echo "proto: UNVERIFIED - no \`protoc\` on PATH."; \
+		echo "       export PATH=\$$HOME/.local/go/bin:\$$HOME/go/bin:\$$HOME/.local/bin:\$$PATH"; \
+		echo "       See AGENTS.md, \"Bench toolchain\"."; exit 1; }
+	@command -v protoc-gen-go >/dev/null 2>&1 || { \
+		echo "proto: UNVERIFIED - \`protoc-gen-go\` is not on PATH, so protoc cannot emit Go."; \
+		echo "       It lives in \$$HOME/go/bin, which a bare PATH does not include."; \
+		echo "       export PATH=\$$HOME/.local/go/bin:\$$HOME/go/bin:\$$HOME/.local/bin:\$$PATH"; \
+		echo "       See AGENTS.md, \"Bench toolchain\"."; exit 1; }
 	protoc --proto_path=proto --python_out=proto proto/telemetry.proto
 	protoc --proto_path=proto --go_out=native/spine --go_opt=module=codeforge/spine proto/telemetry.proto
 	@echo "regenerated proto/telemetry_pb2.py + native/spine/telemetrypb/telemetry.pb.go"

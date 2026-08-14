@@ -107,11 +107,37 @@ honestly, report the drift instead of starting work.
 
 <!-- MATRYM:DOCTRINE:END -->
 
+## Bench toolchain
+
+**This repository is polyglot and the non-Python toolchains are USERSPACE. A bare PATH has none of
+them**, and `make check` inspects every language present, so a bench without them cannot run the
+gate at all. Export this before anything else:
+
+```bash
+export PATH="$HOME/.local/go/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
+```
+
+| tool | lives at | needed by |
+|---|---|---|
+| `go`, `gofmt` | `$HOME/.local/go/bin` | `lint-go`, `typecheck-native` |
+| `protoc-gen-go`, `golangci-lint` | `$HOME/go/bin` | `make proto`, `lint-go` |
+| `protoc` | `$HOME/.local/bin` | `make proto` |
+
+**`make proto` before `make check`, on any bench that has not built here before.** `native/spine`
+imports protobuf bindings that ADR-0012 git-ignores, so the Go build fails until they exist. CI
+runs `make proto` as an explicit step for exactly this reason; a bench is no different.
+
+Written down on 2026-08-14 after four dispatches died on it. `lint-go` and `proto` now name the
+missing tool and print this export themselves, because the previous message reported a missing
+toolchain as missing generated code and sent two agents to run `make proto`, which failed one
+layer down on a tool that was also not there.
+
 ## The gate
 
 ```bash
 cd /home/josh/Projects/MatrymLabs/codeforge
-export PATH="$PWD/.venv/bin:$PATH"
+export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.local/bin:$PATH"
+make proto      # first run on a fresh bench; see "Bench toolchain" above
 make check
 ```
 
