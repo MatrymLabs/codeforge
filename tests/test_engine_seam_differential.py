@@ -330,7 +330,7 @@ def test_overlay_room_calibration_distinguishes_blueprints() -> None:
 
 
 def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
-    """Only the existing coverage probe changes its Blueprint input."""
+    """The same battery runs for each Blueprint, while loaded-world probes may change answers."""
     import kernel.engine_seam as seam
 
     first = run_differential("first-forge")
@@ -342,6 +342,31 @@ def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
     assert seam._room_coverage(Engine0D(), "first-forge") != seam._room_coverage(
         Engine0D(), "seam-probe"
     )
+
+
+def test_a_movement_probe_reads_the_blueprint_under_test() -> None:
+    """A named movement probe must change when the loaded Blueprint changes."""
+    import kernel.engine_seam as seam
+
+    first_probe = cast(
+        Callable[[Engine0D], object],
+        next(
+            probe
+            for aspect, name, probe in seam._battery_for_seed("first-forge")
+            if aspect == "movement" and name == "go_north"
+        ),
+    )
+    seam_probe = cast(
+        Callable[[Engine0D], object],
+        next(
+            probe
+            for aspect, name, probe in seam._battery_for_seed("seam-probe")
+            if aspect == "movement" and name == "go_north"
+        ),
+    )
+    first = first_probe(Engine0D())
+    probe = seam_probe(Engine0D())
+    assert first != probe
 
 
 def test_an_unfalsifiable_probe_is_still_run_and_still_counted_as_a_comparison() -> None:

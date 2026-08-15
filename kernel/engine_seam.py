@@ -26,8 +26,12 @@ rounds the first up to the second has been caught doing exactly that four times 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from kernel.world.engine import Engine, Engine0D, NodePosition  # noqa: F401
+
+if TYPE_CHECKING:
+    from kernel.world.seed import Room
 
 
 @dataclass(frozen=True)
@@ -193,10 +197,10 @@ def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
             lambda e: _permission_denial(e, "wizard", "@grant probe owner"),
         ),
         ("permission", "workshop_barrier_denies_wizard", lambda e: _workshop_denial(e)),
-        ("movement", "go_north", lambda e: _movement(e, "forge", "go north")),
-        ("movement", "go_south", lambda e: _movement(e, "courtyard", "go south")),
-        ("movement", "go_east", lambda e: _movement(e, "courtyard", "go east")),
-        ("movement", "go_down", lambda e: _movement(e, "forge", "go down")),
+        ("movement", "go_north", lambda e: _movement(e, seed, "north")),
+        ("movement", "go_south", lambda e: _movement(e, seed, "south")),
+        ("movement", "go_east", lambda e: _movement(e, seed, "east")),
+        ("movement", "go_down", lambda e: _movement(e, seed, "down")),
         ("persistence", "grant_key_shape", lambda e: _grant_key()),
         ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),
         ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),
@@ -251,15 +255,35 @@ def _workshop_denial(engine: Engine) -> str:
     )
 
 
-def _movement(engine: Engine, room: str, command: str) -> tuple[str, str, str]:
-    """Drive one real movement command through a Session owned by ``engine``."""
+def _blueprint_rooms(seed: str) -> dict[str, Room]:
+    from kernel.world.seed import SEEDS_ROOT, load_rooms
+
+    return load_rooms(SEEDS_ROOT / seed / "rooms.yaml")
+
+
+def _movement_route(rooms: dict[str, Room], preferred: str) -> tuple[str, str]:
+    routes = [
+        (room, direction) for room in sorted(rooms) for direction in sorted(rooms[room]["exits"])
+    ]
+    preferred_routes = [route for route in routes if route[1] == preferred]
+    return (preferred_routes or routes)[0]
+
+
+def _movement(engine: Engine, seed: str, preferred: str) -> tuple[str, str, str]:
+    """Drive one real movement command through the loaded Blueprint's Session."""
+    from unittest.mock import patch
+
     from forge import handle_command
+    from kernel.world import world
     from kernel.world.session import Session
 
-    session = Session(player_id=f"movement-{room}-{command}", location=room, engine=engine)
-    before = session.location
-    handle_command(session, command)
-    after = session.location
+    rooms = _blueprint_rooms(seed)
+    room, direction = _movement_route(rooms, preferred)
+    session = Session(player_id=f"movement-{seed}-{preferred}", location=room, engine=engine)
+    with patch("forge.WORLD", rooms), patch.object(world, "WORLD", rooms):
+        before = session.location
+        handle_command(session, f"go {direction}")
+        after = session.location
     return before, after, "accepted" if after != before else "refused"
 
 
