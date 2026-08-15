@@ -93,7 +93,7 @@ def test_a_manifestless_seed_is_derived_not_missing() -> None:
 
 
 def _seed_with_world(tmp_path, start_room: str) -> None:
-    seed = tmp_path / "content" / "seeds" / "demo-world"
+    seed = tmp_path / "content" / "blueprints" / "demo-world"
     seed.mkdir(parents=True)
     (seed / "world.yaml").write_text(
         f"world_id: demo-world\ntitle: Demo\nstart_room: {start_room}\n"
@@ -114,7 +114,7 @@ def test_check_world_is_clean_when_the_spawn_matches(tmp_path, monkeypatch) -> N
 
 
 def test_check_world_skips_a_derived_manifest(tmp_path) -> None:
-    (tmp_path / "content" / "seeds" / "bare").mkdir(
+    (tmp_path / "content" / "blueprints" / "bare").mkdir(
         parents=True
     )  # no world.yaml -> derived, nothing to reconcile
     assert check_world("bare", root=tmp_path) == []
@@ -125,7 +125,7 @@ def test_check_world_skips_a_derived_manifest(tmp_path) -> None:
 
 
 def _installed_seed(tmp_path, name: str, rooms: str, world: str = "") -> None:
-    seed = tmp_path / "content" / "seeds" / name
+    seed = tmp_path / "content" / "blueprints" / name
     seed.mkdir(parents=True)
     (seed / "rooms.yaml").write_text(rooms)
     if world:
@@ -175,7 +175,7 @@ def test_audit_worlds_passes_a_clean_declared_and_a_derived_seed(tmp_path) -> No
 
 
 def test_audit_worlds_ignores_a_directory_without_rooms(tmp_path) -> None:
-    (tmp_path / "content" / "seeds" / "not_a_seed").mkdir(parents=True)  # no rooms.yaml
+    (tmp_path / "content" / "blueprints" / "not_a_seed").mkdir(parents=True)  # no rooms.yaml
     _installed_seed(tmp_path, "real", "gate:\n")
     report = audit_worlds(root=tmp_path)
     assert "not_a_seed" not in report and "real" in report

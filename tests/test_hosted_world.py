@@ -44,7 +44,7 @@ def test_the_seed_spawns_at_the_declared_start(tmp_path: Path) -> None:
     # A start that is NOT alphabetically first must still be the seed's spawn (start-first emit).
     spec = journey_region("zephyr", ["alpha_camp", "beacon"])  # start "trailhead" sorts last
     install_world(spec, tmp_path)
-    rooms = load_rooms(Path(tmp_path) / "content" / "seeds" / "zephyr" / "rooms.yaml")
+    rooms = load_rooms(Path(tmp_path) / "content" / "blueprints" / "zephyr" / "rooms.yaml")
     assert next(iter(rooms)) == "trailhead"  # the engine spawns here (world.START_ROOM)
 
 

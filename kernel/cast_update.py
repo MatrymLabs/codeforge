@@ -463,7 +463,7 @@ def _apply_update(
             _vendor_selective(source_root / "parts", cast_dir / "parts", modules, ignore)
         # the migrated layers ride along whole in both strategies (cf. generate_cast); the
         # content layer's seeds/ is EXCLUDED - a cast carries only its own game's pack
-        ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "seeds")
+        ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "blueprints")
         for layer in ("kernel", "adapters", "content"):
             if (source_root / layer).is_dir():
                 layer_ignore = ignore_content if layer == "content" else ignore

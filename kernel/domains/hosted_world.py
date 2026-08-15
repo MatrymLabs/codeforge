@@ -5,10 +5,10 @@ can serve, its identity and spawn validated by the engine's OWN manifest gates.
 game_linker (MOD-10.085) writes a region's rooms + quest; a runnable World Package needs one more
 thing: a `world.yaml` MANIFEST (world_id, title, start_room, version) -- the typed identity the
 server boots and `codeforge seeds` lists. This installs that: it links the region as a seed under
-`<root>/content/seeds/<name>/`, writes the manifest, and validates the identity through the engine's
-own `world_manifest.describe_world` gate (fails loud on a bad id/title/start_room). The declared
-spawn IS the seed's first room by construction -- the Linker now emits the start FIRST -- which the
-test proves independently with the engine's `check_world`.
+`<root>/content/blueprints/<name>/`, writes the manifest, and validates the identity through the
+engine's own `world_manifest.describe_world` gate (fails loud on a bad id/title/start_room). The
+declared spawn IS the seed's first room by construction -- the Linker now emits the start FIRST --
+which the test proves independently with the engine's `check_world`.
 
   * `install_world(spec, seed_root, *, seed_name=, title=)` -- link + manifest + validate, returning
     a HostedWorld verdict: HOSTABLE (links + a valid manifest), UNHOSTABLE (a manifest problem,
@@ -82,7 +82,8 @@ def install_world(
     seed_name: str = "",
     title: str = "",
 ) -> HostedWorld:
-    """Install a generated region as a bootable World Package under `<seed_root>/content/seeds/`
+    """Install a generated region as a bootable World Package under
+    `<seed_root>/content/blueprints/`
     and validate its identity through the engine's own gate. Links the region (rooms + quest,
     start-first so the seed spawns at the declared start), writes a `world.yaml` manifest, then
     validates it with `describe_world`. HOSTABLE when it holds; REFUSED if it never linked."""

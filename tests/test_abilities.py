@@ -275,7 +275,7 @@ def _abilities_file(tmp_path: Path, body: str) -> Path:
 
 def test_every_shipped_seed_abilities_file_loads() -> None:
     # every seeds/<world>/abilities.yaml is valid data (fails loud here, not at a player's boot)
-    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "blueprints"
     files = sorted(seeds.glob("*/abilities.yaml"))
     assert files  # at least first-forge ships one
     for f in files:
@@ -285,7 +285,7 @@ def test_every_shipped_seed_abilities_file_loads() -> None:
 def test_aethryn_ships_a_moveset_for_each_calling() -> None:
     from kernel.world.seed import load_jobs
 
-    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "blueprints"
     ab = load_abilities(seeds / "aethryn" / "abilities.yaml")
     wielders = {job for a in ab.values() for job in a["jobs"]}
     callings = set(load_jobs(seeds / "aethryn" / "jobs.yaml"))  # loader drops 'template'
@@ -546,7 +546,11 @@ def test_skills_shows_a_cooldown_and_its_live_recovery(monkeypatch) -> None:
 def test_the_aethryn_seed_arms_a_rotation() -> None:
     # aethryn (the flagship) gives powerful moves real cooldowns while light strikes stay filler.
     ab = load_abilities(
-        Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn" / "abilities.yaml"
+        Path(__file__).resolve().parent.parent
+        / "content"
+        / "blueprints"
+        / "aethryn"
+        / "abilities.yaml"
     )
     assert any(a.get("cooldown", 0) > 0 for a in ab.values())  # a rotation exists
     assert any(a.get("cooldown", 0) == 0 for a in ab.values())  # spammable filler remains

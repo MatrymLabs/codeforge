@@ -235,7 +235,7 @@ def test_a_dangling_reference_is_not_mistaken_for_a_cycle() -> None:
 
 def test_the_aethryn_seed_actually_gates_its_advanced_callings() -> None:
     """The mechanism is worth nothing if no shipped calling uses it."""
-    jobs = load_jobs(Path("content/seeds/aethryn/jobs.yaml"))
+    jobs = load_jobs(Path("content/blueprints/aethryn/jobs.yaml"))
     gated = {label: job["requires"] for label, job in jobs.items() if job["requires"]}
     assert gated, "no Aethryn calling declares a prerequisite"
     for label, requires in gated.items():
@@ -244,7 +244,7 @@ def test_the_aethryn_seed_actually_gates_its_advanced_callings() -> None:
 
 
 def test_the_three_first_paths_stay_open_to_a_new_character() -> None:
-    jobs = load_jobs(Path("content/seeds/aethryn/jobs.yaml"))
+    jobs = load_jobs(Path("content/blueprints/aethryn/jobs.yaml"))
     for first in ("vanguard", "pathfinder", "emberwright"):
         assert gate_calling(first, jobs[first], {}).open, (
             f"{first} must be open at character creation"

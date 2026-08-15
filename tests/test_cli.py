@@ -344,7 +344,7 @@ def test_host_installs_a_bootable_world_package(capsys, tmp_path):
     out = capsys.readouterr().out
     assert code == 0 and "HOSTABLE" in out and "veridia" in out
     # It installed a REAL seed the server can boot -- rooms + quest + a world.yaml manifest.
-    seed_dir = tmp_path / "content" / "seeds" / "veridia"
+    seed_dir = tmp_path / "content" / "blueprints" / "veridia"
     for f in ("rooms.yaml", "quest.yaml", "world.yaml"):
         assert (seed_dir / f).exists()
 
@@ -362,7 +362,7 @@ def test_host_accepts_blueprint_root_alias(capsys, tmp_path):
         ]
     )
     assert code == 0 and "HOSTABLE" in capsys.readouterr().out
-    assert (tmp_path / "content" / "seeds" / "veridia" / "rooms.yaml").exists()
+    assert (tmp_path / "content" / "blueprints" / "veridia" / "rooms.yaml").exists()
 
 
 def test_host_surfaces_an_unhostable_world(capsys, tmp_path):

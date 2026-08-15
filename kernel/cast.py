@@ -344,7 +344,7 @@ def generate_cast(
     # parts/ modules import kernel/adapters freely, so a cut without them cannot boot. Selective
     # detachment (D2) still sheds only un-migrated parts/ modules. Copy-if-exists, so a minimal
     # fixture engine (parts-only) still pours.
-    ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "seeds")
+    ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "blueprints")
     for layer in ("kernel", "adapters", "content"):
         layer_src = base / layer
         if layer_src.is_dir():
