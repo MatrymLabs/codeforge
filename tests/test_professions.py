@@ -20,7 +20,7 @@ from kernel.world.seed import BlueprintError, load_items, load_professions, load
 from kernel.world.session import SESSIONS, Session
 from kernel.world.world import WORLD
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "blueprints" / "aethryn"
 
 
 # --- CONFORMANCE: the aethryn trade data is real and complete -------------------------------------

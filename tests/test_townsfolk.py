@@ -23,7 +23,7 @@ from kernel.world.townsfolk import (
 
 _CFG = [{"room": "greenhold", "name": "Greenhold", "zone": "Veridia", "level": 1}]
 # The default test seed is first-forge; these tests exercise the flagship map, so reach it directly.
-_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "blueprints" / "aethryn"
 
 
 def test_a_settlement_grows_folk_and_exactly_one_merchant():

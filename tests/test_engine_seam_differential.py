@@ -68,7 +68,7 @@ def test_engine_2d_reads_generated_geometry_not_the_stub_hash() -> None:
 
 
 def test_overlay_generation_is_byte_deterministic(tmp_path) -> None:
-    seed_rooms = Path("content/seeds/first-forge/rooms.yaml")
+    seed_rooms = Path("content/blueprints/first-forge/rooms.yaml")
     first, second = tmp_path / "first.json", tmp_path / "second.json"
     assert generate_overlay(seed_rooms, first) == generate_overlay(seed_rooms, second)
     assert first.read_bytes() == second.read_bytes()
@@ -76,12 +76,12 @@ def test_overlay_generation_is_byte_deterministic(tmp_path) -> None:
 
 def test_room_of_place_round_trips_every_generated_room() -> None:
     engine = Engine2D()
-    for room in load_overlay(Path("content/seeds/first-forge/world_overlay.json")):
+    for room in load_overlay(Path("content/blueprints/first-forge/world_overlay.json")):
         assert engine.room_of(engine.place(room)) == room
 
 
 def test_corrupt_overlay_fails_round_trip_then_restores(tmp_path) -> None:
-    source = Path("content/seeds/first-forge/world_overlay.json")
+    source = Path("content/blueprints/first-forge/world_overlay.json")
     target = tmp_path / source.name
     target.write_bytes(source.read_bytes())
     payload = json.loads(target.read_bytes())
@@ -95,7 +95,7 @@ def test_corrupt_overlay_fails_round_trip_then_restores(tmp_path) -> None:
 
 
 def test_runtime_overlay_mapping_is_read_only() -> None:
-    overlay = load_overlay(Path("content/seeds/first-forge/world_overlay.json"))
+    overlay = load_overlay(Path("content/blueprints/first-forge/world_overlay.json"))
     with pytest.raises(TypeError):
         overlay["forge"] = overlay["forge"]  # type: ignore[index]
     with pytest.raises(TypeError):
@@ -143,7 +143,7 @@ def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> 
     )
     from kernel.overlay import load_overlay
 
-    overlay = load_overlay(Path("content/seeds/first-forge/world_overlay.json"))
+    overlay = load_overlay(Path("content/blueprints/first-forge/world_overlay.json"))
     assert len(overlay) == 12
     import kernel.engine_seam as seam
 

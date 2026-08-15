@@ -18,7 +18,7 @@ import pytest
 
 from tools.emit_map_world import _REV, LINKS, MapCollision, _wire_hubs, emit
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "blueprints" / "aethryn"
 _GENERATED = ("rooms", "npcs", "zones", "wildlands", "settlements", "dungeons", "waystones")
 
 

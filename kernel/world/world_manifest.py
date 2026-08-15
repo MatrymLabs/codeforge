@@ -198,7 +198,8 @@ def check_world(seed_name: str, root: Path | None = None) -> list[str]:
 
 def audit_worlds(root: Path | None = None) -> dict[str, list[str]]:
     """Reconcile EVERY installed World Package against the engine's identity gates: for each seed
-    under content/seeds/, its manifest must build (a valid declared world.yaml, or a derived one)
+    under content/blueprints/, its manifest must build (a valid declared world.yaml, or a derived
+    one)
     AND its declared spawn must match the seed's real first room. Returns seed_name -> problems, an
     empty list meaning hostable. A standing guarantee that every SHIPPED world boots with a
     consistent identity -- surfaced in CI, not at a player's spawn. Reads only; never mutates a

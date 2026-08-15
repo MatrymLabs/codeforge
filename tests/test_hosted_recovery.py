@@ -72,7 +72,7 @@ def test_a_changed_byte_after_restore_is_corrupted(tmp_path: Path) -> None:
 
 
 def test_an_invalid_manifest_is_corrupted_even_if_unchanged(tmp_path: Path) -> None:
-    seed_dir = tmp_path / "content" / "seeds" / "veridia"
+    seed_dir = tmp_path / "content" / "blueprints" / "veridia"
     seed_dir.mkdir(parents=True)
     (seed_dir / "rooms.yaml").write_text("trailhead:\n", encoding="utf-8")
     # A world.yaml with an invalid world_id (uppercase) -- describe_world fails loud.
@@ -85,7 +85,7 @@ def test_an_invalid_manifest_is_corrupted_even_if_unchanged(tmp_path: Path) -> N
 
 
 def test_a_stale_declared_spawn_is_corrupted(tmp_path: Path) -> None:
-    seed_dir = tmp_path / "content" / "seeds" / "veridia"
+    seed_dir = tmp_path / "content" / "blueprints" / "veridia"
     seed_dir.mkdir(parents=True)
     (seed_dir / "rooms.yaml").write_text("trailhead:\nsummit:\n", encoding="utf-8")
     # A valid manifest, but its declared spawn is NOT the seed's first room -> check_world flags it.

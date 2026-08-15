@@ -9442,7 +9442,7 @@
     "designation": "MOD-10.090",
     "name": "hosted_world",
     "status": "active",
-    "function": "the engine side of North Star #5 (one small hosted world): install_world(spec, seed_root) turns a generated region into a bootable World Package -- links it as a seed under content/seeds/<name>/ (rooms+quest, start-first so the seed spawns at the declared start) and writes a world.yaml MANIFEST (world_id/title/start_room/version), validated through the engine's own world_manifest.describe_world gate; verdict hostable / unhostable / refused, never a false hostable",
+    "function": "the engine side of North Star #5 (one small hosted world): install_world(spec, seed_root) turns a generated region into a bootable World Package -- links it as a seed under content/blueprints/<name>/ (rooms+quest, start-first so the seed spawns at the declared start) and writes a world.yaml MANIFEST (world_id/title/start_room/version), validated through the engine's own world_manifest.describe_world gate; verdict hostable / unhostable / refused, never a false hostable",
     "label": "hosted_world",
     "file": "kernel/domains/hosted_world.py",
     "type": "MOD",

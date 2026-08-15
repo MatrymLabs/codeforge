@@ -81,7 +81,11 @@ def test_the_wildlands_seed_nodes_that_feed_real_recipes():
     seeded.discard(None)
     assert seeded  # some rooms carry a node
     recipes = load_recipes(
-        Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn" / "recipes.yaml"
+        Path(__file__).resolve().parent.parent
+        / "content"
+        / "blueprints"
+        / "aethryn"
+        / "recipes.yaml"
     )
     inputs = {proto for r in recipes.values() for proto in r["inputs"]}
     assert seeded <= inputs, f"a gathered material feeds no recipe: {seeded - inputs}"

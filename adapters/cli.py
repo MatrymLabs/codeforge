@@ -406,7 +406,8 @@ def _cmd_journey(args: list[str]) -> int:
 def _cmd_host(args: list[str]) -> int:
     """Install a generated journey region as a bootable World Package the server can serve:
     generate -> link -> install (rooms + quest + a `world.yaml` MANIFEST) under
-    `<seed-root>/content/seeds/<name>/`, validated through the engine's OWN manifest gate. Prints
+    `<seed-root>/content/blueprints/<name>/`, validated through the engine's OWN manifest gate.
+    Prints
     HOSTABLE and how to boot it. No decorative rooms: the command performs the real install, so a
     default `--seed-root .` writes into the live seed directory the server reads."""
     import argparse
@@ -424,7 +425,7 @@ def _cmd_host(args: list[str]) -> int:
         "--seed-root",
         dest="seed_root",
         default=".",
-        help="repo root holding content/blueprints/ or content/seeds/ (default: cwd)",
+        help="repo root holding content/blueprints/ (default: cwd)",
     )
     parser.add_argument("--name", default="", help="override the seed name (default: region slug)")
     parser.add_argument("--title", default="", help="override the world title (default: from name)")

@@ -58,7 +58,7 @@ def test_off_a_waystone_and_bad_or_same_hub_fail_cleanly():
 
 
 def test_load_waystones_reads_the_shipped_manifest():
-    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "blueprints" / "aethryn"
     stones = tv.load_waystones(aethryn / "waystones.yaml")
     assert stones and len(stones) == 14  # the 14 zone hubs
     assert all("name" in s and 1 <= s["level"] <= 300 for s in stones.values())

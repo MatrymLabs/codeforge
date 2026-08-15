@@ -587,7 +587,7 @@ _REV = {
 # The biome each zone's wildlands fill uses (mostly the zone biome; the underground/void go volcanic).
 KINDS_WITH_FOE = {"dungeon"}  # dungeons get a guardian foe; other places get a resident NPC
 
-# Zones whose wilderness is an OPEN FIELD (content/seeds/aethryn/fields.yaml, the World Topology
+# Zones whose wilderness is an OPEN FIELD (content/blueprints/aethryn/fields.yaml, the World Topology
 # Doctrine's trail-to-field zones), NOT a linear trail-chain. Their wildlands trail is skipped here so
 # the generator never re-emits a trail that collides with the authored field -- the generator is the
 # source of truth (Completion Law: fix the generator, not the output), so the skip lives here.

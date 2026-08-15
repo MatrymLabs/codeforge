@@ -80,7 +80,7 @@ def test_compiled_region_installs_as_a_hostable_seed(tmp_path) -> None:
         "world.yaml",
         "zones.yaml",
     }
-    seed = tmp_path / "content" / "seeds" / "aethryn-veridia"
+    seed = tmp_path / "content" / "blueprints" / "aethryn-veridia"
     payload = json.loads((seed / "build_manifest.json").read_text(encoding="utf-8"))
     assert payload["project"] == "Aethryn"
     assert describe_world("aethryn-veridia", tmp_path).start_room == compiled.region.start
