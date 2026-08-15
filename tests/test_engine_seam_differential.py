@@ -178,6 +178,18 @@ def test_new_persistence_probe_calibration_detects_wrong_room() -> None:
     assert run_differential(two_d=Engine2D()).divergences == ()
 
 
+def test_movement_probe_drives_a_real_command_and_detects_wrong_room() -> None:
+    """Movement must enter the Session and pass through the real command tick."""
+
+    class WrongRoom(Engine2D):
+        def room_of(self, position: object) -> str:
+            return "courtyard"
+
+    verdict = run_differential(two_d=WrongRoom())
+    assert any(d.aspect == "movement" for d in verdict.divergences)
+    assert run_differential(two_d=Engine2D()).divergences == ()
+
+
 def test_the_differential_reports_a_planted_divergence() -> None:
     """Calibration. An instrument that cannot fail proves nothing, and this one guards a claim.
 
@@ -319,12 +331,13 @@ def test_overlay_room_calibration_distinguishes_blueprints() -> None:
 
 def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
     """Only the existing coverage probe changes its Blueprint input."""
+    import kernel.engine_seam as seam
+
     first = run_differential("first-forge")
     probe = run_differential("seam-probe")
     assert first.verdict == "AGREED"
     assert probe.verdict == "AGREED"
-    assert first.commands_compared == probe.commands_compared == 14
-    import kernel.engine_seam as seam
+    assert first.commands_compared == probe.commands_compared == len(seam._battery())
 
     assert seam._room_coverage(Engine0D(), "first-forge") != seam._room_coverage(
         Engine0D(), "seam-probe"

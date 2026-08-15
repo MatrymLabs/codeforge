@@ -181,7 +181,7 @@ def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
         ("progression", "xp_for_level", lambda e: progression.cumulative_xp_for_level(5)),
         ("progression", "jp_for_level", lambda e: progression.cumulative_jp_for_level(3)),
         ("progression", "calling_gate", lambda e: callings.gate_calling("cleric", {}, {}).open),
-        ("permission", "rank_denies_admin", lambda e: _denies_admin()),
+        ("permission", "rank_denies_admin", lambda e: _denies_admin(e)),
         (
             "permission",
             "player_denies_teleport",
@@ -193,6 +193,10 @@ def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
             lambda e: _permission_denial(e, "wizard", "@grant probe owner"),
         ),
         ("permission", "workshop_barrier_denies_wizard", lambda e: _workshop_denial(e)),
+        ("movement", "go_north", lambda e: _movement(e, "forge", "go north")),
+        ("movement", "go_south", lambda e: _movement(e, "courtyard", "go south")),
+        ("movement", "go_east", lambda e: _movement(e, "courtyard", "go east")),
+        ("movement", "go_down", lambda e: _movement(e, "forge", "go down")),
         ("persistence", "grant_key_shape", lambda e: _grant_key()),
         ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),
         ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),
@@ -210,13 +214,13 @@ def _selected_battery(seed: str) -> list[tuple[str, str, object]]:
     return _battery() if seed == "first-forge" else _battery_for_seed(seed)
 
 
-def _denies_admin() -> bool:
+def _denies_admin(engine: Engine) -> bool:
     """A permission decision must not consult position. D1 puts permissions above the seam."""
     from kernel.world import ranks
     from kernel.world.session import Session
 
     # A rank decision consults the SESSION's rank, never its position. That is the whole point.
-    return not ranks.has_rank(Session(player_id="probe", location="nowhere"), "wizard")
+    return not ranks.has_rank(Session(player_id="probe", location="forge", engine=engine), "wizard")
 
 
 def _grant_key() -> str:
@@ -230,7 +234,7 @@ def _permission_denial(engine: Engine, rank: str, command: str) -> str:
     from kernel.world.session import Session
 
     room = "forge"
-    session = Session(player_id="probe", location=engine.room_of(engine.place(room)), rank=rank)
+    session = Session(player_id="probe", location=room, engine=engine, rank=rank)
     return wizard_command(session, command)
 
 
@@ -238,14 +242,25 @@ def _workshop_denial(engine: Engine) -> str:
     from kernel.world import creator_workshop
     from kernel.world.session import Session
 
-    room = engine.room_of(engine.place("forge"))
-    session = Session(player_id="probe", location=room, rank="wizard")
+    session = Session(player_id="probe", location="forge", engine=engine, rank="wizard")
     destination = creator_workshop.door_destination(session.location, "door")
     return (
         creator_workshop.barrier_refusal()
         if destination and not creator_workshop.is_seed_owner(session)
         else "The concealed door is not here."
     )
+
+
+def _movement(engine: Engine, room: str, command: str) -> tuple[str, str, str]:
+    """Drive one real movement command through a Session owned by ``engine``."""
+    from forge import handle_command
+    from kernel.world.session import Session
+
+    session = Session(player_id=f"movement-{room}-{command}", location=room, engine=engine)
+    before = session.location
+    handle_command(session, command)
+    after = session.location
+    return before, after, "accepted" if after != before else "refused"
 
 
 def _save_restore(engine: Engine) -> tuple[object, object]:
