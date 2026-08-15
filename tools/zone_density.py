@@ -21,11 +21,12 @@ from __future__ import annotations
 import re
 import sys
 from collections import defaultdict
-from pathlib import Path
 
 import yaml
 
-_SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+from kernel.world.seed import SEEDS_ROOT
+
+_SEED = SEEDS_ROOT / "aethryn"
 
 # Launch-density floor per zone: below any of these, a zone reads as under-built.
 FLOOR = {"settlements": 2, "dungeons": 1, "quests": 1}

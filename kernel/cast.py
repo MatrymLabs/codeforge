@@ -30,9 +30,10 @@ import sys
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
+from kernel.world.seed import SEEDS_ROOT
+
 _ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_ROOT = _ROOT / "seed_templates"
-SEEDS_ROOT = _ROOT / "content" / "seeds"
 
 PLANNED = "planned"
 READY = "ready"
@@ -42,6 +43,15 @@ VALIDATED = "validated"  # poured AND smoke-booted (boots + ticks in the current
 NOT_VALIDATED = "not_validated"  # poured but failed its smoke boot
 VENDORED_WHOLE = "vendored-whole"  # the cast carries every parts/ module (default, honest interim)
 VENDORED_SELECTIVE = "vendored-selective"  # the cast carries only its surfaces' module closure (D2)
+
+
+def _seed_root(root: Path | None = None) -> Path:
+    """Return the configured seed root, projected onto an optional repository root."""
+    if root is None:
+        return SEEDS_ROOT
+    resolver_root = SEEDS_ROOT.parents[1]
+    return Path(root) / SEEDS_ROOT.relative_to(resolver_root)
+
 
 # What a generated cast ignores at runtime - the same categories a cast must never carry.
 _CAST_GITIGNORE = (
@@ -153,7 +163,7 @@ def plan_cast(
     starter = tpl["starter_seed_pack"]
 
     warnings: list[str] = []
-    seeds_root = (base / "content" / "seeds") if root else SEEDS_ROOT
+    seeds_root = _seed_root(root)
     pack_present = (seeds_root / starter).is_dir()
     if not pack_present:
         warnings.append(
@@ -343,7 +353,9 @@ def generate_cast(
     shutil.copy2(base / "forge.py", dest / "forge.py")
     # 2. only this cast's OWN seed pack (never the other games)
     shutil.copytree(
-        base / "content" / "seeds" / starter, dest / "content" / "seeds" / starter, ignore=ignore
+        _seed_root(root) / starter,
+        dest / SEEDS_ROOT.relative_to(SEEDS_ROOT.parents[1]) / starter,
+        ignore=ignore,
     )
     # 3. the fresh scaffold + manifest, marked generated (record the surfaces of a selective cut,
     #    so `cast update` can recompute the closure later without re-guessing what the cast was for)

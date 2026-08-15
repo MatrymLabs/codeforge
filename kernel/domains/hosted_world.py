@@ -30,6 +30,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from kernel.domains.game_linker import LINKED, GameSpec, link_and_validate
+from kernel.world.seed import SEEDS_ROOT
 
 # --- host-readiness verdict words (a distinct vocabulary: "can the server boot this world?") ----
 HOSTABLE = "hostable"  # links, the manifest is valid, and the declared spawn is the seed's spawn
@@ -69,6 +70,11 @@ def _slug(region: str) -> str:
     return slug
 
 
+def _seed_root(root: Path) -> Path:
+    resolver_root = SEEDS_ROOT.parents[1]
+    return SEEDS_ROOT if root == resolver_root else root / SEEDS_ROOT.relative_to(resolver_root)
+
+
 def install_world(
     spec: GameSpec,
     seed_root: Path,
@@ -81,7 +87,8 @@ def install_world(
     start-first so the seed spawns at the declared start), writes a `world.yaml` manifest, then
     validates it with `describe_world`. HOSTABLE when it holds; REFUSED if it never linked."""
     name = seed_name or _slug(spec.region)
-    seed_dir = Path(seed_root) / "content" / "seeds" / name
+    seed_root = Path(seed_root)
+    seed_dir = _seed_root(seed_root) / name
 
     linked, verdict = link_and_validate(spec, seed_dir)
     if verdict.verdict != LINKED:

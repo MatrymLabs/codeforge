@@ -38,6 +38,7 @@ from pathlib import Path
 from kernel.domains.game_lifecycle import CORRUPTED, RECOVERED, REFUSED
 from kernel.domains.game_linker import GameSpec, _sha256
 from kernel.domains.hosted_world import HOSTABLE, install_world
+from kernel.world.seed import SEEDS_ROOT
 
 # CORRUPTED / RECOVERED / REFUSED reuse game_lifecycle's recovery vocabulary: "did it come back
 # whole?" is the same question, one layer up (the installed package, not just the region content).
@@ -55,6 +56,11 @@ class HostedRecoveryReport:
     @property
     def ok(self) -> bool:
         return self.verdict == RECOVERED
+
+
+def _seed_root(root: Path) -> Path:
+    resolver_root = SEEDS_ROOT.parents[1]
+    return SEEDS_ROOT if root == resolver_root else root / SEEDS_ROOT.relative_to(resolver_root)
 
 
 def snapshot_seed(seed_dir: Path) -> dict[str, str]:
@@ -80,7 +86,7 @@ def verify_seed_recovery(
     a spawn that no longer matches. A general restore-verifier: it trusts nothing it cannot re-check
     against the live engine."""
     seed_root = Path(seed_root)
-    seed_dir = seed_root / "content" / "seeds" / seed_name
+    seed_dir = _seed_root(seed_root) / seed_name
     for rel, digest in snap.items():
         path = seed_dir / rel
         if not path.exists():
