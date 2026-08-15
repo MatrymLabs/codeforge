@@ -8,7 +8,7 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 [project.optional-dependencies]
 # Optional feature extras still earn their place: the dependency gate (`make deps`) folds
 # every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
-ai = ["anthropic>=0.120.2"]
+ai = ["anthropic>=0.121.0"]
 postgres = ["psycopg[binary]>=3.3.4"]
 # Embedded Lua scripting (the sandboxed @script console; kernel.scripting). Optional: absent -> the
 # feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
@@ -32,7 +32,7 @@ dev = [
     # change its mind with no commit behind it.
     # Bump deliberately: Dependabot proposes (uv ecosystem, so pyproject and uv.lock move together),
     # CI verifies, the founder merges. Never by drift.
-    "ruff==0.16.1",
+    "ruff==0.16.2",
     "mypy==2.3.0",
     "types-PyYAML==6.0.12.20260724",
     "import-linter==2.13",  # style-guide section 2: enforce the kernel/adapters/content direction
@@ -45,7 +45,7 @@ dev = [
     "detect-secrets==1.5.0",
     "cyclonedx-bom==7.3.1",
     "hypothesis==6.165.2",
-    "httpx2==2.9.1",
+    "httpx2==2.10.0",
     "alembic==1.19.1",
     "mkdocs-material==9.7.7",
     "playwright==1.62.0",
