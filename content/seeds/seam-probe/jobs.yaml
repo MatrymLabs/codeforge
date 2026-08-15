@@ -1,0 +1,5 @@
+template:
+  description: A test calling.
+
+wayfinder:
+  stats: {strength: 8, speed: 12, magic: 8, stamina: 8, wisdom: 10, luck: 10}

@@ -1,0 +1,13 @@
+# A deliberately tiny Blueprint used to test that the seam is not fitted to first-forge.
+template:
+  desc: A quiet test room.
+
+signal_bay:
+  name: Signal Bay
+  exits:
+    east: relay_garden
+
+relay_garden:
+  name: Relay Garden
+  exits:
+    west: signal_bay
