@@ -5,7 +5,7 @@ packet_id: WO-BP-2B
 status: COMPLETE
 branch: codex/wo-bp-2b
 base: c67e10950e4a19f4069530f3ef698928ec73a76c
-commits: f08391da (move/cast); registry pointer commit pending
+commits: f08391da (move/cast); f53302a0 (registry pointers/report)
 
 result: >
   Re-measured the radius on origin/main before moving anything, then performed the
