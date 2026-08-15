@@ -35,7 +35,7 @@ fix:
 	ruff check . --fix
 
 # --- Gates: pure checks, cheapest first, nothing is modified ---
-lint: lint-python lint-rust lint-go lint-shell lint-kotlin  ## Every language present in the tree, not only Python.
+lint: lint-python lint-rust lint-go lint-shell  ## Every language present in the tree, not only Python.
 
 # One target per language, so a language with no code says so instead of passing silently.
 # Rust and Go code has existed here since the nav kernel and the edge/spine organs landed, and
@@ -68,9 +68,26 @@ lint-shell:
 		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
 	fi
 
-# The Kotlin lane, inside `lint` and therefore inside `check`, stamped 2026-08-14 on WO-KT-01's
-# approval gate. Named `lint-kotlin` to match its four siblings; `kotlin-lint` stays as an alias
-# because the Bench Report and the bench file both name it.
+# The Kotlin lane, STANDALONE. It was wired into `lint` on 2026-08-14 and taken back out the same
+# day, because a shared gate that one of two benches cannot run is broken no matter whose
+# environment is the unusual one.
+#
+# `make check` on this host passes with Kotlin inside it, and CI passes 19 of 19. Codex's bench
+# cannot START Gradle at all: it fails at daemon startup on a host wildcard-IP binding its sandbox
+# denies. So Codex could not produce a green `make check` on ANY order while this was wired in,
+# which makes the Completion Law unsatisfiable for an entire bench. That is a worse defect than a
+# lane linted only in CI.
+#
+# THE LANE IS STILL GOVERNED BY A MACHINE. `.github/workflows/kotlin.yml` runs `./gradlew build`
+# on ubuntu-latest for every pull request, and a planted ktlint violation fails it. KF-RF-1 and
+# KF-RF-2 stay closed; what is lost is the local pre-commit run, not the governance.
+#
+# Re-wiring this needs Gradle to start on BOTH benches first. `--no-daemon` is green on this host
+# but was NOT shipped as the fix, because it is unverified against the environment that actually
+# fails and Gradle still binds a socket in single-use mode.
+#
+# Named `lint-kotlin` to match its four siblings; `kotlin-lint` stays as an alias because the
+# Bench Report and the bench file both name it.
 #
 # It runs `ktlintCheck`, NOT `build`, and the difference is load-bearing. `./gradlew build` FAILS
 # from clean on skynet: the system JVM is 21 and the test classes are compiled for newer, so
