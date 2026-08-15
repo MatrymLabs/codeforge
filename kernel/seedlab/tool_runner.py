@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess  # nosec B404
+import sys
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -40,10 +41,10 @@ OUTPUT_CAP = 20_000
 # The default approved command profile: build/test tools as fixed, shell-free argv. Only a NAMED
 # entry here can run; a caller may pass its own allowlist. NEVER built from user input.
 DEFAULT_PROFILE: dict[str, list[str]] = {
-    "pytest": ["python", "-m", "pytest", "-q"],
-    "python-build": ["python", "-m", "build"],
+    "pytest": [sys.executable, "-m", "pytest", "-q"],
+    "python-build": [sys.executable, "-m", "build"],
     "ruff": ["ruff", "check", "."],
-    "python-version": ["python", "--version"],
+    "python-version": [sys.executable, "--version"],
 }
 
 # Patterns scrubbed from captured output before it is stored or shown.

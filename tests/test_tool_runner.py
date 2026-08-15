@@ -20,6 +20,7 @@ import pytest
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import LocalSource
 from kernel.seedlab.tool_runner import (
+    DEFAULT_PROFILE,
     CommandRefused,
     FileRunLog,
     InMemoryRunLog,
@@ -33,6 +34,13 @@ from kernel.seedlab.tool_runner import (
 )
 
 _CLOCK = "2026-08-01T00:00:00+00:00"
+
+
+def test_default_python_profiles_use_this_interpreter() -> None:
+    assert DEFAULT_PROFILE["pytest"][0] == sys.executable
+    assert DEFAULT_PROFILE["python-build"][0] == sys.executable
+    assert DEFAULT_PROFILE["python-version"][0] == sys.executable
+    assert all(argv[0] != "python" for argv in DEFAULT_PROFILE.values())
 
 
 def _source(tmp_path: Path) -> LocalSource:
