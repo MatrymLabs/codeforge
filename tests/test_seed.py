@@ -1,5 +1,10 @@
 """Test twin for kernel/world/seed.py -- loading, the room template, and the gates."""
 
+import os
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
 
 from kernel.world.seed import (
@@ -15,6 +20,48 @@ from kernel.world.seed import (
     load_splash,
 )
 from kernel.world.world import SEED_PATH
+
+
+def _seed_dir_from_env(**updates: str) -> Path:
+    env = os.environ.copy()
+    for name in (
+        "FORGE_BLUEPRINT",
+        "FORGE_SEED",
+        "CODEFORGE_BLUEPRINTS_ROOT",
+        "CODEFORGE_SEEDS_ROOT",
+    ):
+        env.pop(name, None)
+    env.update(updates)
+    result = subprocess.run(
+        [sys.executable, "-c", "from kernel.world.seed import SEED_DIR; print(SEED_DIR)"],
+        cwd=Path(__file__).parents[1],
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return Path(result.stdout.strip())
+
+
+def test_blueprint_and_seed_names_resolve_to_the_same_blueprint():
+    old_name = _seed_dir_from_env(FORGE_SEED="aethryn")
+    new_name = _seed_dir_from_env(FORGE_BLUEPRINT="aethryn")
+    assert old_name == new_name
+
+
+def test_new_blueprint_name_wins_when_both_names_are_set():
+    resolved = _seed_dir_from_env(FORGE_BLUEPRINT="spiral-ascent", FORGE_SEED="aethryn")
+    assert resolved.name == "spiral-ascent"
+
+
+def test_blueprint_and_seed_root_names_resolve_to_the_same_root(tmp_path):
+    (tmp_path / "solo-game").mkdir()
+    (tmp_path / "solo-game" / "rooms.yaml").write_text("start:\n")
+    old_root = _seed_dir_from_env(CODEFORGE_SEEDS_ROOT=str(tmp_path), FORGE_SEED="solo-game")
+    new_root = _seed_dir_from_env(
+        CODEFORGE_BLUEPRINTS_ROOT=str(tmp_path), FORGE_BLUEPRINT="solo-game"
+    )
+    assert old_root == new_root
 
 
 def test_an_unplaced_prototype_loads_with_a_nowhere_location(tmp_path):
