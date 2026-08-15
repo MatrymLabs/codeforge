@@ -22,7 +22,9 @@ from pathlib import Path
 
 import yaml
 
-SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+from kernel.world.seed import SEEDS_ROOT
+
+SEED = SEEDS_ROOT / "aethryn"
 
 
 def _load(name: str) -> dict:

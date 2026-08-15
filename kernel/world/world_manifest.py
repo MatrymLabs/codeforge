@@ -25,7 +25,6 @@ import yaml
 from kernel.world.stat_rules import DEFAULT_RULESET, Ruleset
 from kernel.world.stat_rules import from_dict as ruleset_from_dict
 
-_ROOT = Path(__file__).resolve().parent.parent.parent  # kernel/world/ -> repo root
 _ID_RE = re.compile(r"^[a-z][a-z0-9-]*$")  # seed ids are lowercase, hyphenated (first-forge)
 
 
@@ -115,7 +114,11 @@ def to_markdown(manifest: WorldManifest) -> str:
 
 
 def _seeds_root(root: Path | None) -> Path:
-    return (root if root is not None else _ROOT) / "content" / "seeds"
+    from kernel.world.seed import SEEDS_ROOT
+
+    if root is None or root == SEEDS_ROOT.parents[1]:
+        return SEEDS_ROOT
+    return root / SEEDS_ROOT.relative_to(SEEDS_ROOT.parents[1])
 
 
 def _first_room(seed_dir: Path) -> str:
