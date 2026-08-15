@@ -163,12 +163,12 @@ saying what is now gone and where the copy lives is not reported.
 **A blast-radius search that finds one spelling of a thing has measured one spelling, not the
 thing.** Write this into every Build Sheet, and re-run it before trusting an allowlist.
 
-On 2026-08-15 an order to move `content/seeds/` shipped with a blast radius of nine sites, found by
-`git grep "content/seeds"`. A Bench started the move and immediately hit `tools/census.py`, which
+On 2026-08-15 an order to move `content/seeds/` shipped with a blast radius of nine sites, found by  <!-- lexicon: allow -->
+`git grep "content/seeds"`. A Bench started the move and immediately hit `tools/census.py`, which  <!-- lexicon: allow -->
 was not in the allowlist because the path is never spelled that way there:
 
 ```python
-SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"  # lexicon: allow
 ```
 
 Re-searched properly, **nine source files and twenty test files** build that path from segments, and
@@ -186,7 +186,7 @@ magnitude, and the Bench refusing was the only reason it was caught before thirt
 
 **The test of a blast radius is a command that returns nothing when the work is done.** If the
 order cannot state such a command, the allowlist is a guess. WO-BP-2 states its own:
-`git grep -lnE '"content"\s*/\s*"seeds"' -- '*.py' | grep -v ^tests/` must return nothing.
+`git grep -lnE '"content"\s*/\s*"seeds"' -- '*.py' | grep -v ^tests/` must return nothing.  <!-- lexicon: allow -->
 
 **And when a search finds thirty sites where you expected nine, that is usually not a bigger
 chore. It is a finding.** Thirty places knowing one filesystem layout is duplication, and the right
