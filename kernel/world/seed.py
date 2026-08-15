@@ -38,12 +38,20 @@ from kernel.world.score_sheet_model import RESIST_ORDER  # the canonical element
 # program the proving ground runs when it powers on, not while it's running.
 # Default: the repo's seeds/ dir. CODEFORGE_SEEDS_ROOT overrides it for installed /
 # containerized deploys where the package lives apart from the seed files.
-_default_seeds_root = (
-    Path(__file__).resolve().parent.parent.parent / "content" / "seeds"
-)  # kernel/world/ -> repo root
-SEEDS_ROOT = Path(os.environ.get("CODEFORGE_SEEDS_ROOT", str(_default_seeds_root)))
+_default_content_root = Path(__file__).resolve().parent.parent.parent / "content"
+_default_blueprints_root = _default_content_root / "blueprints"
+_default_seeds_root = _default_content_root / "seeds"
+_default_world_root = (
+    _default_blueprints_root if _default_blueprints_root.is_dir() else _default_seeds_root
+)
+_configured_world_root = os.environ.get("CODEFORGE_BLUEPRINTS_ROOT")
+if _configured_world_root is None:
+    _configured_world_root = os.environ.get("CODEFORGE_SEEDS_ROOT")
+SEEDS_ROOT = Path(
+    _configured_world_root if _configured_world_root is not None else _default_world_root
+)
 DEFAULT_SEED = "first-forge"
-SEED_NAME = os.environ.get("FORGE_SEED", DEFAULT_SEED)
+SEED_NAME: str = os.environ.get("FORGE_BLUEPRINT") or os.environ.get("FORGE_SEED") or DEFAULT_SEED
 SEED_DIR = SEEDS_ROOT / SEED_NAME
 
 

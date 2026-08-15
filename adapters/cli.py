@@ -42,20 +42,34 @@ selects which world the engine boots.
 
 def _seeds_available() -> list[str]:
     """List installed games without importing the world (keeps env-before-import clean)."""
-    root = Path(__file__).resolve().parent.parent / "content" / "seeds"
+    content_root = Path(__file__).resolve().parent.parent / "content"
+    default_blueprints_root = content_root / "blueprints"
+    default_seeds_root = content_root / "seeds"
+    configured_root = os.environ.get("CODEFORGE_BLUEPRINTS_ROOT")
+    if configured_root is None:
+        configured_root = os.environ.get("CODEFORGE_SEEDS_ROOT")
+    root = Path(
+        configured_root
+        if configured_root is not None
+        else (default_blueprints_root if default_blueprints_root.is_dir() else default_seeds_root)
+    )
     if not root.is_dir():
         return []
     return sorted(p.name for p in root.iterdir() if (p / "rooms.yaml").is_file())
 
 
 def _pop_seed(args: list[str]) -> str | None:
-    """Extract `--seed <name>` from args (mutates in place). Returns the name or None."""
-    if "--seed" not in args:
-        return None
-    i = args.index("--seed")
-    name = args[i + 1] if i + 1 < len(args) else ""
-    del args[i : i + 2]
-    return name
+    """Extract Blueprint selection from args, accepting both spellings."""
+    selected = None
+    for flag in ("--blueprint", "--seed"):
+        if flag not in args:
+            continue
+        i = args.index(flag)
+        name = args[i + 1] if i + 1 < len(args) else ""
+        del args[i : i + 2]
+        if selected is None or flag == "--blueprint":
+            selected = name
+    return selected
 
 
 # --- one handler per verb (each lazy-imports its own deps, so `codeforge grant` never loads
@@ -406,7 +420,11 @@ def _cmd_host(args: list[str]) -> int:
         "--waypoints", required=True, help="comma-separated snake_case room labels, in order"
     )
     parser.add_argument(
-        "--seed-root", default=".", help="repo root holding content/seeds/ (default: cwd)"
+        "--blueprint-root",
+        "--seed-root",
+        dest="seed_root",
+        default=".",
+        help="repo root holding content/blueprints/ or content/seeds/ (default: cwd)",
     )
     parser.add_argument("--name", default="", help="override the seed name (default: region slug)")
     parser.add_argument("--title", default="", help="override the world title (default: from name)")
@@ -483,6 +501,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # Seed selection must set the env BEFORE any world module is imported, since
     # SEED_DIR binds at import time (the proving ground picks its program at power-on).
+    blueprint_flag = "--blueprint" in args
     seed = _pop_seed(args)
     if seed is not None:
         if seed not in _seeds_available():
@@ -491,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        os.environ["FORGE_SEED"] = seed
+        os.environ["FORGE_BLUEPRINT" if blueprint_flag else "FORGE_SEED"] = seed
 
     cmd = args[0] if args else "serve"
     handler = _DISPATCH.get(cmd)

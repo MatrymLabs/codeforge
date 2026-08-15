@@ -62,6 +62,26 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
     assert os.environ["FORGE_SEED"] == "beta"
 
 
+def test_a_valid_blueprint_sets_the_new_env_before_dispatch(monkeypatch):
+    import os
+
+    monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
+    monkeypatch.setattr("adapters.gateway.serve", lambda: None)
+    monkeypatch.setenv("FORGE_BLUEPRINT", "unset")
+    assert main(["--blueprint", "beta", "serve"]) == 0
+    assert os.environ["FORGE_BLUEPRINT"] == "beta"
+
+
+def test_blueprint_flag_wins_over_seed_flag(monkeypatch):
+    import os
+
+    monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
+    monkeypatch.setattr("adapters.gateway.serve", lambda: None)
+    monkeypatch.setenv("FORGE_BLUEPRINT", "unset")
+    assert main(["--seed", "alpha", "--blueprint", "beta", "serve"]) == 0
+    assert os.environ["FORGE_BLUEPRINT"] == "beta"
+
+
 def test_no_args_defaults_to_serve(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
@@ -327,6 +347,22 @@ def test_host_installs_a_bootable_world_package(capsys, tmp_path):
     seed_dir = tmp_path / "content" / "seeds" / "veridia"
     for f in ("rooms.yaml", "quest.yaml", "world.yaml"):
         assert (seed_dir / f).exists()
+
+
+def test_host_accepts_blueprint_root_alias(capsys, tmp_path):
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--blueprint-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 0 and "HOSTABLE" in capsys.readouterr().out
+    assert (tmp_path / "content" / "seeds" / "veridia" / "rooms.yaml").exists()
 
 
 def test_host_surfaces_an_unhostable_world(capsys, tmp_path):
