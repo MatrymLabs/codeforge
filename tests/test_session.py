@@ -33,6 +33,26 @@ def test_session_starts_at_the_forge_and_alive():
     assert session.alive is True
 
 
+def test_session_location_is_derived_from_injected_engine():
+    class RelabelingEngine:
+        def room_of(self, position: object) -> str:
+            assert isinstance(position, str)
+            return f"derived:{position}"
+
+        def place(self, room: str) -> object:
+            return room
+
+        def carry_limit(self) -> int:
+            return 10
+
+    session = Session(player_id="josh", location="forge", engine=RelabelingEngine())
+    assert session.location == "derived:forge"
+
+    session.location = "courtyard"
+    assert session.position == "courtyard"
+    assert session.location == "derived:courtyard"
+
+
 def test_tick_moves_the_session():
     session = Session(player_id="josh")
     response = handle_command(session, "n")

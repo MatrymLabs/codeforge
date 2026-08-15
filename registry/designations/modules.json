@@ -10197,5 +10197,29 @@
     "aliases": [],
     "created": "2026-08-13",
     "updated": "2026-08-13"
+  },
+  {
+    "designation": "MOD-04.162",
+    "name": "engine",
+    "status": "active",
+    "function": "the game-facing position contract shared by interchangeable engines",
+    "label": "engine",
+    "file": "kernel/world/engine.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_engine.py",
+    "depends_on": [],
+    "related": ["MOD-10.152"],
+    "reuse": "",
+    "tags": [
+      "module",
+      "world"
+    ],
+    "notes": "WO-2D-2B moves the Engine contract out of the platform seam instrument and into the World Package.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-15",
+    "updated": "2026-08-15"
   }
 ]
