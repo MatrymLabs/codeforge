@@ -3,7 +3,8 @@
 Acceptance: the real canon loads and exposes exactly 7 Seven Crown sites and 14 regions, each with
 its required fields and CANON_LOCKED status; check_canon confirms the shipped world still matches
 canon (zero drift). Refusal: a malformed canon (wrong crown count, an unlocked crown, a missing
-field, inverted threat band, a bad canon_status, a non-aethryn world) fails loud with SeedError, so
+field, inverted threat band, a bad canon_status, a non-aethryn world) fails loud with
+BlueprintError, so
 a file that could mislead a generator can never load silently. The pure correspondence check also
 FLAGS a planted drift, proving the guardrail bites rather than always passing.
 """
@@ -16,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from kernel.world import canon
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 # --- Acceptance: the real canon is well-formed and complete --------------------------------------
 
@@ -87,7 +88,7 @@ def test_a_faction_missing_its_stance_is_refused(tmp_path: Path):
         """
         )
     )
-    with pytest.raises(SeedError, match="needs an id, name, and stance"):
+    with pytest.raises(BlueprintError, match="needs an id, name, and stance"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -103,7 +104,7 @@ def test_a_collective_name_missing_its_usage_is_refused(tmp_path: Path):
         """
         )
     )
-    with pytest.raises(SeedError, match="needs a name and usage"):
+    with pytest.raises(BlueprintError, match="needs a name and usage"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -147,17 +148,17 @@ _GOOD_WORLD = "world: {id: aethryn, canon_status: CANON_LOCKED}\n"
 
 
 def test_missing_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         canon.load_canon(tmp_path / "nope.yaml")
 
 
 def test_a_non_aethryn_world_is_refused(tmp_path: Path):
-    with pytest.raises(SeedError, match="aethryn"):
+    with pytest.raises(BlueprintError, match="aethryn"):
         canon.load_canon(_write(tmp_path, "world: {id: elsewhere, canon_status: CANON_LOCKED}\n"))
 
 
 def test_a_bad_canon_status_is_refused(tmp_path: Path):
-    with pytest.raises(SeedError, match="canon_status"):
+    with pytest.raises(BlueprintError, match="canon_status"):
         canon.load_canon(_write(tmp_path, "world: {id: aethryn, canon_status: MADE_UP}\n"))
 
 
@@ -169,7 +170,7 @@ def test_the_wrong_number_of_crowns_is_refused(tmp_path: Path):
              ancient_function: f, modern_condition: c}
         """
     )
-    with pytest.raises(SeedError, match="exactly 7"):
+    with pytest.raises(BlueprintError, match="exactly 7"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -185,7 +186,7 @@ def test_a_crown_missing_a_field_is_refused(tmp_path: Path):
         "ancient_function: f, modern_condition: c}"
     )
     body = _GOOD_WORLD + "seven_crowns:\n" + crowns + "\n"
-    with pytest.raises(SeedError, match="missing required field 'map_name'"):
+    with pytest.raises(BlueprintError, match="missing required field 'map_name'"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -200,7 +201,7 @@ def test_an_unlocked_crown_is_refused(tmp_path: Path):
         "canon_status: CANON_WORKING, ancient_function: f, modern_condition: c}"
     )
     body = _GOOD_WORLD + "seven_crowns:\n" + crowns + "\n"
-    with pytest.raises(SeedError, match="must be CANON_LOCKED"):
+    with pytest.raises(BlueprintError, match="must be CANON_LOCKED"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -232,7 +233,7 @@ def test_the_wrong_number_of_regions_is_refused(tmp_path: Path):
         """
         )
     )
-    with pytest.raises(SeedError, match="exactly 14"):
+    with pytest.raises(BlueprintError, match="exactly 14"):
         canon.load_canon(_write(tmp_path, body))
 
 
@@ -246,5 +247,5 @@ def test_an_inverted_threat_band_is_refused(tmp_path: Path):
         "\n  - {id: r13, name: R13, threat_min: 90, threat_max: 10, canon_status: CANON_LOCKED}"
     )
     body = _GOOD_WORLD + _seven_good_crowns() + "regions:\n" + region_rows + "\n"
-    with pytest.raises(SeedError, match="threat_min exceeds threat_max"):
+    with pytest.raises(BlueprintError, match="threat_min exceeds threat_max"):
         canon.load_canon(_write(tmp_path, body))

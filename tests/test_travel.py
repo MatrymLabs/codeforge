@@ -14,7 +14,7 @@ import pytest
 import yaml
 
 from kernel.world import travel as tv
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 from kernel.world.session import Session
 
 _STONES = {
@@ -75,5 +75,5 @@ def test_a_malformed_waystone_fails_loud(bad, match):
     with tempfile.TemporaryDirectory() as d:
         p = Path(d) / "waystones.yaml"
         p.write_text(yaml.safe_dump({"hub": bad}))
-        with pytest.raises(SeedError, match=match):
+        with pytest.raises(BlueprintError, match=match):
             tv.load_waystones(p)

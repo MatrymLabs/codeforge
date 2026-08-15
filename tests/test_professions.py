@@ -16,7 +16,7 @@ import pytest
 
 import forge
 from kernel.world import crafting, items, professions
-from kernel.world.seed import SeedError, load_items, load_professions, load_recipes
+from kernel.world.seed import BlueprintError, load_items, load_professions, load_recipes
 from kernel.world.session import SESSIONS, Session
 from kernel.world.world import WORLD
 
@@ -209,12 +209,12 @@ def test_load_professions_reads_a_valid_trade(tmp_path):
 def test_load_professions_rejects_an_unknown_kind(tmp_path):
     p = tmp_path / "professions.yaml"
     p.write_text("smith:\n  kind: forging\n  makes: [x]\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="'gather' or 'craft'"):
+    with pytest.raises(BlueprintError, match="'gather' or 'craft'"):
         load_professions(p)
 
 
 def test_load_professions_rejects_an_empty_governed_list(tmp_path):
     p = tmp_path / "professions.yaml"
     p.write_text("smith:\n  kind: craft\n  makes: []\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="non-empty"):
+    with pytest.raises(BlueprintError, match="non-empty"):
         load_professions(p)

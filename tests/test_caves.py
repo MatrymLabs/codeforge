@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from kernel.world import canon, caves
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 # --- Acceptance: every region forges a valid, self-consistent cave --------------------------------
 
@@ -137,12 +137,12 @@ def test_a_rumor_only_raises_an_open_question_never_asserts_canon():
 
 
 def test_unknown_region_is_refused():
-    with pytest.raises(SeedError, match="unknown region"):
+    with pytest.raises(BlueprintError, match="unknown region"):
         caves.generate_cave("mordor", 1)
 
 
 def test_out_of_band_size_is_refused():
-    with pytest.raises(SeedError, match="outside"):
+    with pytest.raises(BlueprintError, match="outside"):
         caves.generate_cave("veridia", 1, size=400)
 
 
@@ -159,26 +159,26 @@ def test_a_family_missing_a_required_field_fails_loud(tmp_path: Path):
         ),
         encoding="utf-8",
     )
-    with pytest.raises(SeedError, match="missing required field"):
+    with pytest.raises(BlueprintError, match="missing required field"):
         caves.load_families(bad)
 
 
 def test_a_family_for_a_non_canon_region_fails_loud(tmp_path: Path):
     bad = tmp_path / "cave_families.yaml"
     bad.write_text("atlantis: {biome: sea}\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="not a canon region"):
+    with pytest.raises(BlueprintError, match="not a canon region"):
         caves.load_families(bad)
 
 
 def test_a_missing_families_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         caves.load_families(tmp_path / "nope.yaml")
 
 
 def test_a_non_mapping_families_file_fails_loud(tmp_path: Path):
     bad = tmp_path / "cave_families.yaml"
     bad.write_text("- just\n- a\n- list\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="not a mapping"):
+    with pytest.raises(BlueprintError, match="not a mapping"):
         caves.load_families(bad)
 
 
@@ -202,7 +202,7 @@ def test_a_complete_but_incomplete_coverage_family_set_fails_loud(tmp_path: Path
         ),
         encoding="utf-8",
     )
-    with pytest.raises(SeedError, match="no family for canon region"):
+    with pytest.raises(BlueprintError, match="no family for canon region"):
         caves.load_families(bad)
 
 

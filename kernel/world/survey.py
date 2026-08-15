@@ -20,7 +20,7 @@ import yaml
 
 from kernel.shelf import table
 from kernel.world import canon, worldgraph
-from kernel.world.seed import SeedError, _UniqueKeyLoader
+from kernel.world.seed import BlueprintError, _UniqueKeyLoader
 
 # The seed files the Surveyor reads. Regions come from canon; these carry the placed locations.
 _LOCATION_FILES = ("settlements.yaml", "dungeons.yaml")
@@ -187,7 +187,7 @@ def run(argv: list[str]) -> tuple[int, str]:
             return 2, "usage: world inspect <region-id>"
         try:
             return 0, worldgraph.region_detail(argv[1])
-        except SeedError as exc:  # unknown region id
+        except BlueprintError as exc:  # unknown region id
             return 1, f"refused: {exc}"
     return 2, f"unknown or not-yet-built subcommand: {command!r}\n\n{_usage()}"
 

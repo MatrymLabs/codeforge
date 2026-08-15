@@ -8,7 +8,7 @@ import pytest
 from kernel.world import npcs
 from kernel.world.combat import attack, strike_power
 from kernel.world.jobs import bind_calling
-from kernel.world.seed import Npc, SeedError, load_npcs
+from kernel.world.seed import BlueprintError, Npc, load_npcs
 from kernel.world.session import SESSIONS, Session
 
 
@@ -418,7 +418,7 @@ def test_load_npcs_refuses_a_lethal_peaceful_foe(tmp_path):
     # a lethal foe must be combatable: hp 0 + lethal is a contradiction, refused at load
     p = tmp_path / "npcs.yaml"
     p.write_text("ghost:\n  location: courtyard\n  hp: 0\n  lethal: true\n")
-    with pytest.raises(SeedError, match="lethal but has hp 0"):
+    with pytest.raises(BlueprintError, match="lethal but has hp 0"):
         load_npcs(p)
 
 

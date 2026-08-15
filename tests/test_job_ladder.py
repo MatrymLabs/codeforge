@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from kernel.world import job_ladder as jl
-from kernel.world.seed import SeedError, load_abilities, load_jobs
+from kernel.world.seed import BlueprintError, load_abilities, load_jobs
 
 
 def test_the_roster_is_the_active_seeds_callings_and_every_one_is_armed():
@@ -44,7 +44,7 @@ def test_an_unarmed_calling_fails_loud(monkeypatch):
     roster = dict(jl.CALLINGS)
     roster["ghostwright"] = {"name": "Ghostwright", "description": "d", "stats": {}}
     monkeypatch.setattr(jl, "CALLINGS", roster)
-    with pytest.raises(SeedError, match="no ability kit.*ghostwright"):
+    with pytest.raises(BlueprintError, match="no ability kit.*ghostwright"):
         jl.validate()
 
 

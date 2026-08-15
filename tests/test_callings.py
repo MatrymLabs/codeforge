@@ -28,7 +28,7 @@ from kernel.world.callings import (
     requirements_of,
 )
 from kernel.world.job_progress import JobProgress
-from kernel.world.seed import SeedError, load_jobs
+from kernel.world.seed import BlueprintError, load_jobs
 
 
 def _job(**requires: int) -> dict:
@@ -143,7 +143,7 @@ warden:
   requires: {nosuchcalling: 3}
 """,
     )
-    with pytest.raises(SeedError, match="unknown calling"):
+    with pytest.raises(BlueprintError, match="unknown calling"):
         load_jobs(path)
 
 
@@ -159,7 +159,7 @@ warden:
   requires: {warden: 2}
 """,
     )
-    with pytest.raises(SeedError, match="cannot require itself"):
+    with pytest.raises(BlueprintError, match="cannot require itself"):
         load_jobs(path)
 
 
@@ -185,7 +185,7 @@ reaver:
   requires: {warden: 2}
 """,
     )
-    with pytest.raises(SeedError, match="cycle"):
+    with pytest.raises(BlueprintError, match="cycle"):
         load_jobs(path)
 
 
@@ -202,7 +202,7 @@ warden:
   requires: {{vanguard: {bad}}}
 """,
     )
-    with pytest.raises(SeedError):
+    with pytest.raises(BlueprintError):
         load_jobs(path)
 
 

@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from kernel.world import caves
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 # Generated areas are reproducible dev state, not canon: a git-ignored directory beside the repo,
 # overridable per-call so tests never touch the real one.
@@ -45,10 +45,10 @@ def save_area(area: dict[str, Any], area_dir: Path | None = None) -> Path:
 
 
 def load_area(area_id: str, area_dir: Path | None = None) -> dict[str, Any]:
-    """Read a stored area. Fails loud (SeedError) if it was never generated or saved."""
+    """Read a stored area. Fails loud (BlueprintError) if it was never generated or saved."""
     path = _path(area_id, area_dir)
     if not path.exists():
-        raise SeedError(f"no stored area {area_id!r} (generate it first)")
+        raise BlueprintError(f"no stored area {area_id!r} (generate it first)")
     data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
     return data
 
@@ -75,7 +75,7 @@ def promote(area_id: str, area_dir: Path | None = None) -> dict[str, Any]:
     area = load_area(area_id, area_dir)
     status = area.get("canon_status")
     if status != "GENERATED_LOCAL":
-        raise SeedError(
+        raise BlueprintError(
             f"cannot promote {area_id!r}: only GENERATED_LOCAL is promotable (got {status!r})"
         )
     area["canon_status"] = "AUTHORED_LOCAL"
@@ -146,7 +146,7 @@ def run(argv: list[str], area_dir: Path | None = None) -> tuple[int, str]:
         if command == "list-areas":
             ids = list_areas(area_dir)
             return 0, "\n".join(ids) if ids else "(no generated areas on the bench)"
-    except SeedError as exc:
+    except BlueprintError as exc:
         return 1, f"refused: {exc}"
     return 2, f"unknown mutating subcommand: {command!r}\n\n{_usage()}"
 

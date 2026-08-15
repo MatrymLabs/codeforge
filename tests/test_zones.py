@@ -6,7 +6,7 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 
 import pytest
 
-import kernel.world.seed as seed  # reference SeedError via module: other suites importlib.reload
+import kernel.world.seed as seed  # reference BlueprintError via module: other suites reload it
 import kernel.world.zones as zones  # a class imported at collection must not match world.seed
 from forge import handle_command
 from kernel.world import items
@@ -64,7 +64,7 @@ def test_a_zone_naming_a_missing_room_is_refused(tmp_path):
     path = _write(
         tmp_path, "coast:\n  rooms: [a, nowhere]\n  reset_mode: never\n  beats_between: 1\n"
     )
-    with pytest.raises(seed.SeedError, match="does not exist"):
+    with pytest.raises(seed.BlueprintError, match="does not exist"):
         load_zones(path, KNOWN)
 
 
@@ -74,26 +74,26 @@ def test_a_room_claimed_by_two_zones_is_refused(tmp_path):
         "coast:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n"
         "reef:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n",
     )
-    with pytest.raises(seed.SeedError, match="at most one zone"):
+    with pytest.raises(seed.BlueprintError, match="at most one zone"):
         load_zones(path, KNOWN)
 
 
 def test_an_unknown_reset_mode_is_refused(tmp_path):
     path = _write(tmp_path, "coast:\n  rooms: [a]\n  reset_mode: sometimes\n  beats_between: 1\n")
-    with pytest.raises(seed.SeedError, match="reset_mode"):
+    with pytest.raises(seed.BlueprintError, match="reset_mode"):
         load_zones(path, KNOWN)
 
 
 @pytest.mark.parametrize("bad", ["0", "-3", "true"])
 def test_a_non_positive_cadence_is_refused(tmp_path, bad):
     path = _write(tmp_path, f"coast:\n  rooms: [a]\n  reset_mode: always\n  beats_between: {bad}\n")
-    with pytest.raises(seed.SeedError, match="beats_between"):
+    with pytest.raises(seed.BlueprintError, match="beats_between"):
         load_zones(path, KNOWN)
 
 
 def test_a_zone_with_no_rooms_is_refused(tmp_path):
     path = _write(tmp_path, "empty:\n  rooms: []\n  reset_mode: never\n  beats_between: 1\n")
-    with pytest.raises(seed.SeedError, match="at least one member room"):
+    with pytest.raises(seed.BlueprintError, match="at least one member room"):
         load_zones(path, KNOWN)
 
 
@@ -129,7 +129,7 @@ def test_zone_metadata_is_absent_when_omitted(tmp_path):
 )
 def test_malformed_zone_metadata_is_refused(tmp_path, meta, match):
     body = "z:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n" + meta
-    with pytest.raises(seed.SeedError, match=match):
+    with pytest.raises(seed.BlueprintError, match=match):
         load_zones(_write(tmp_path, body), KNOWN)
 
 
@@ -420,25 +420,25 @@ def _items_yaml(tmp_path, body: str):
 
 def test_spawn_pool_requires_location_nowhere(tmp_path):
     body = "t:\n  location: a\n  spawn_pool: [a, b]\n"
-    with pytest.raises(seed.SeedError, match="nowhere"):
+    with pytest.raises(seed.BlueprintError, match="nowhere"):
         seed.load_items(_items_yaml(tmp_path, body))
 
 
 def test_spawn_pool_must_be_a_non_empty_room_list(tmp_path):
     body = "t:\n  location: nowhere\n  spawn_pool: []\n"
-    with pytest.raises(seed.SeedError, match="spawn_pool"):
+    with pytest.raises(seed.BlueprintError, match="spawn_pool"):
         seed.load_items(_items_yaml(tmp_path, body))
 
 
 def test_spawn_chance_must_be_positive(tmp_path):
     body = "t:\n  location: nowhere\n  spawn_pool: [a]\n  spawn_chance: 0\n"
-    with pytest.raises(seed.SeedError, match="spawn_chance"):
+    with pytest.raises(seed.BlueprintError, match="spawn_chance"):
         seed.load_items(_items_yaml(tmp_path, body))
 
 
 def test_spawn_chance_needs_a_spawn_pool(tmp_path):
     body = "t:\n  location: nowhere\n  spawn_chance: 2\n"
-    with pytest.raises(seed.SeedError, match="spawn_chance"):
+    with pytest.raises(seed.BlueprintError, match="spawn_chance"):
         seed.load_items(_items_yaml(tmp_path, body))
 
 
@@ -452,7 +452,7 @@ def test_inspect_world_links_rejects_a_spawn_pool_room_that_does_not_exist():
     rooms = {"a": seed.Room(name="A", desc="", exits={})}
     item = Item(name="t", keywords=["t"], location="nowhere", slot="", mods={}, prototype="t")
     item["spawn_pool"] = ["a", "ghost_room"]
-    with pytest.raises(seed.SeedError, match="ghost_room"):
+    with pytest.raises(seed.BlueprintError, match="ghost_room"):
         seed.inspect_world_links(rooms, {"t": item}, {})
 
 
@@ -504,10 +504,10 @@ def test_seasons_must_be_valid_and_need_a_pool(tmp_path):
 
     assert "winter" in SEASONS
     bad_value = "t:\n  location: nowhere\n  spawn_pool: [a]\n  seasons: [monsoon]\n"
-    with pytest.raises(seed.SeedError, match="seasons"):
+    with pytest.raises(seed.BlueprintError, match="seasons"):
         seed.load_items(_items_yaml(tmp_path, bad_value))
     no_pool = "t:\n  location: nowhere\n  seasons: [winter]\n"
-    with pytest.raises(seed.SeedError, match="seasons"):
+    with pytest.raises(seed.BlueprintError, match="seasons"):
         seed.load_items(_items_yaml(tmp_path, no_pool))
 
 

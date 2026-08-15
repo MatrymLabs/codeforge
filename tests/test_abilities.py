@@ -22,7 +22,7 @@ from kernel.world.abilities import (
     render_abilities,
     use_ability,
 )
-from kernel.world.seed import Npc, SeedError, load_abilities
+from kernel.world.seed import BlueprintError, Npc, load_abilities
 from kernel.world.session import SESSIONS, Session
 
 
@@ -340,7 +340,7 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
     ],
 )
 def test_load_abilities_refuses_a_malformed_ability(tmp_path: Path, body: str, match: str) -> None:
-    with pytest.raises(SeedError, match=match):
+    with pytest.raises(BlueprintError, match=match):
         load_abilities(_abilities_file(tmp_path, body))
 
 
@@ -490,7 +490,7 @@ def test_a_typed_brand_is_refused_by_an_immune_foe(monkeypatch) -> None:
 
 def test_load_abilities_rejects_an_unknown_element(tmp_path: Path) -> None:
     body = "bad:\n  kind: strike\n  element: PLASMA\n  jobs: [vanguard]\n"
-    with pytest.raises(SeedError, match="element"):
+    with pytest.raises(BlueprintError, match="element"):
         load_abilities(_abilities_file(tmp_path, body))
 
 

@@ -173,43 +173,43 @@ def test_load_recipes_accepts_a_valid_gate(tmp_path):
 
 
 def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {level_up: 3}\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="requires"):
+    with pytest.raises(BlueprintError, match="requires"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
         "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {profession: smithing}\n", encoding="utf-8"
     )
-    with pytest.raises(SeedError, match="level"):
+    with pytest.raises(BlueprintError, match="level"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_a_non_string_profession(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
         "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {profession: 7, level: 2}\n",
         encoding="utf-8",
     )
-    with pytest.raises(SeedError, match="profession"):
+    with pytest.raises(BlueprintError, match="profession"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_a_non_string_order(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: 3}\n", encoding="utf-8")
-    with pytest.raises(SeedError, match="Order"):
+    with pytest.raises(BlueprintError, match="Order"):
         load_recipes(p)
 
 
@@ -262,23 +262,23 @@ def test_load_recipes_accepts_a_standing_gate(tmp_path):
 
 
 def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
         "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {standing: 300}\n", encoding="utf-8"
     )
-    with pytest.raises(SeedError, match="standing"):
+    with pytest.raises(BlueprintError, match="standing"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_a_non_positive_standing(tmp_path):
-    from kernel.world.seed import SeedError, load_recipes
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
         "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: making, standing: 0}\n",
         encoding="utf-8",
     )
-    with pytest.raises(SeedError, match="standing"):
+    with pytest.raises(BlueprintError, match="standing"):
         load_recipes(p)

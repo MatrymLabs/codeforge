@@ -185,18 +185,18 @@ def _load(tmp_path, body: str):
 
 
 def test_special_rejects_an_unknown_key(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _load(tmp_path, "b:\n  location: a\n  hp: 10\n  special: {telegraph: x, power: 9}\n")
-    with pytest.raises(SeedError, match="special"):
+    with pytest.raises(BlueprintError, match="special"):
         load()
 
 
 def test_special_rejects_a_non_positive_mult(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _load(tmp_path, "b:\n  location: a\n  hp: 10\n  special: {mult: 0}\n")
-    with pytest.raises(SeedError, match="special.mult"):
+    with pytest.raises(BlueprintError, match="special.mult"):
         load()
 
 

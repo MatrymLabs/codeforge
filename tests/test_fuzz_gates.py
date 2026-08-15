@@ -1,7 +1,7 @@
 """Fuzz harness for the hostile-input gates: seed YAML, catalog YAML, part manifests.
 
 The law under test: a validating gate either returns a valid object or raises ITS OWN
-error type (SeedError, CatalogError, ManifestError, yaml.YAMLError). It must never
+error type (BlueprintError, CatalogError, ManifestError, yaml.YAMLError). It must never
 escape with an unexpected TypeError/KeyError/AttributeError -- that is a crash, not a
 refusal, and crashes at a trust boundary are security findings.
 
@@ -22,7 +22,7 @@ from hypothesis import strategies as st
 
 from kernel.hardware import CatalogError, _parse_catalog
 from kernel.manifest import ManifestError, from_dict
-from kernel.world.seed import SeedError, load_rooms
+from kernel.world.seed import BlueprintError, load_rooms
 
 # YAML-representable junk: scalars, lists, and dicts, recursively (depth-capped).
 _scalars = (
@@ -90,11 +90,11 @@ def test_manifest_gate_never_crashes_when_one_field_is_corrupted(field, junk):
 @_GATE_SETTINGS
 @given(st.text(max_size=300))
 def test_seed_gate_never_crashes_on_raw_text(text):
-    """load_rooms on arbitrary YAML text refuses with SeedError/YAMLError, never crashes."""
+    """load_rooms on arbitrary YAML text refuses with BlueprintError/YAMLError, never crashes."""
     path = _write_yaml_text(text)
     try:
         load_rooms(path)
-    except (SeedError, yaml.YAMLError):
+    except (BlueprintError, yaml.YAMLError):
         pass  # the contract: a loud, typed refusal
     finally:
         path.unlink(missing_ok=True)
@@ -108,7 +108,7 @@ def test_seed_gate_never_crashes_on_structured_junk(raw):
     path = _write_yaml_text(yaml.safe_dump(raw, allow_unicode=True))
     try:
         load_rooms(path)
-    except (SeedError, yaml.YAMLError):
+    except (BlueprintError, yaml.YAMLError):
         pass
     finally:
         path.unlink(missing_ok=True)

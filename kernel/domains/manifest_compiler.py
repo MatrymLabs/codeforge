@@ -20,7 +20,7 @@ import yaml
 from kernel.domains.game_linker import GameSpec, RoomSpec
 from kernel.domains.hosted_world import HOSTABLE, UNHOSTABLE, HostedWorld, install_world
 from kernel.seed_package import BuildManifest
-from kernel.world.seed import Npc, SeedError, load_npcs, load_rooms, load_zones
+from kernel.world.seed import BlueprintError, Npc, load_npcs, load_rooms, load_zones
 from kernel.world.worldgen import (
     Landmark,
     LifeSpec,
@@ -314,7 +314,7 @@ def install_compiled_region(
     )
     try:
         _validate_artifact(seed_dir, zone_id)
-    except (ManifestCompilerError, SeedError, TypeError, ValueError) as exc:
+    except (ManifestCompilerError, BlueprintError, TypeError, ValueError) as exc:
         return replace(
             hosted,
             verdict=UNHOSTABLE,

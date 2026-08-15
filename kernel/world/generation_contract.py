@@ -20,7 +20,7 @@ from typing import Any
 import yaml
 
 from kernel.world import canon
-from kernel.world.seed import SeedError, _UniqueKeyLoader
+from kernel.world.seed import BlueprintError, _UniqueKeyLoader
 
 _CONTRACT_PATH = canon.AETHRYN_DIR / "generation_contract.yaml"
 
@@ -30,14 +30,15 @@ _DEFAULT_TOLERANCE = 0.15
 
 
 def load_contract(path: Path | None = None) -> dict[str, Any]:
-    """Read and VALIDATE the generation contract. Fails loud (SeedError) if a section is missing or
+    """Read and VALIDATE the generation contract. Fails loud (BlueprintError) if a section is
+    missing or
     the archetype shares do not sum to 1, so a broken contract never silently under-checks."""
     where = path if path is not None else _CONTRACT_PATH
     if not where.exists():
-        raise SeedError(f"Generation contract file not found: {where}")
+        raise BlueprintError(f"Generation contract file not found: {where}")
     data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
     if not isinstance(data, dict):
-        raise SeedError(f"Generation contract file is not a mapping: {where}")
+        raise BlueprintError(f"Generation contract file is not a mapping: {where}")
 
     for section in (
         "required_area_fields",
@@ -47,17 +48,17 @@ def load_contract(path: Path | None = None) -> dict[str, Any]:
         "minor_area_archetypes",
     ):
         if not data.get(section):
-            raise SeedError(f"generation contract: missing or empty section {section!r}")
+            raise BlueprintError(f"generation contract: missing or empty section {section!r}")
 
     archetypes = data["minor_area_archetypes"]
     for arch in archetypes:
         if not arch.get("id") or arch.get("share") is None:
-            raise SeedError(
+            raise BlueprintError(
                 f"generation contract archetype {arch.get('id')!r}: needs an id and share"
             )
     total = sum(a["share"] for a in archetypes)
     if abs(total - 1.0) > 1e-6:
-        raise SeedError(f"generation contract: archetype shares must sum to 1.0, got {total}")
+        raise BlueprintError(f"generation contract: archetype shares must sum to 1.0, got {total}")
     return data
 
 

@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 from kernel.world.townsfolk import (
     _FOLK_PER_TOWN,
     load_settlements,
@@ -75,5 +75,5 @@ def test_a_malformed_settlement_fails_loud(bad, match):
     with tempfile.TemporaryDirectory() as d:
         p = Path(d) / "settlements.yaml"
         p.write_text(yaml.safe_dump({"town": bad}))
-        with pytest.raises(SeedError, match=match):
+        with pytest.raises(BlueprintError, match=match):
             load_settlements(p)

@@ -16,7 +16,7 @@ import pytest
 import yaml
 
 from kernel.world import generation_contract as gc
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 # --- Acceptance: the shipped contract is complete and well-formed --------------------------------
 
@@ -119,31 +119,31 @@ def _good() -> dict:
 
 
 def test_missing_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         gc.load_contract(tmp_path / "nope.yaml")
 
 
 def test_a_non_mapping_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not a mapping"):
+    with pytest.raises(BlueprintError, match="not a mapping"):
         gc.load_contract(_write(tmp_path, ["not", "a", "contract"]))
 
 
 def test_a_missing_section_fails_loud(tmp_path: Path):
     data = _good()
     del data["forbidden_changes"]
-    with pytest.raises(SeedError, match="forbidden_changes"):
+    with pytest.raises(BlueprintError, match="forbidden_changes"):
         gc.load_contract(_write(tmp_path, data))
 
 
 def test_shares_that_do_not_sum_to_one_fail_loud(tmp_path: Path):
     data = _good()
     data["minor_area_archetypes"] = [{"id": "natural", "share": 0.5}, {"id": "scar", "share": 0.2}]
-    with pytest.raises(SeedError, match="sum to 1.0"):
+    with pytest.raises(BlueprintError, match="sum to 1.0"):
         gc.load_contract(_write(tmp_path, data))
 
 
 def test_an_archetype_missing_its_share_fails_loud(tmp_path: Path):
     data = _good()
     data["minor_area_archetypes"] = [{"id": "natural"}, {"id": "scar", "share": 1.0}]
-    with pytest.raises(SeedError, match="needs an id and share"):
+    with pytest.raises(BlueprintError, match="needs an id and share"):
         gc.load_contract(_write(tmp_path, data))

@@ -28,7 +28,7 @@ from typing import Any
 import yaml
 
 from kernel.world.bestiary import make_beast, make_notable
-from kernel.world.seed import Npc, Room, SeedError, Zone
+from kernel.world.seed import BlueprintError, Npc, Room, Zone
 
 # CODEFORGE_WILD_SCALE multiplies every region's trail_length at load, so ONE seed scales from a
 # laptop/demo world to an MMO world without re-authoring the config. Default 1 (the seed's shipped
@@ -360,7 +360,9 @@ _BIOMES: dict[str, dict[str, Any]] = {
 
 def _biome(name: str) -> dict[str, Any]:
     if name not in _BIOMES:
-        raise SeedError(f"wildlands biome {name!r} is unknown. Known biomes: {sorted(_BIOMES)}.")
+        raise BlueprintError(
+            f"wildlands biome {name!r} is unknown. Known biomes: {sorted(_BIOMES)}."
+        )
     return _BIOMES[name]
 
 
@@ -371,9 +373,9 @@ def _wild_scale() -> float:
     try:
         scale = float(raw)
     except ValueError:
-        raise SeedError(f"{_WILD_SCALE_ENV} must be a number, got {raw!r}.") from None
+        raise BlueprintError(f"{_WILD_SCALE_ENV} must be a number, got {raw!r}.") from None
     if scale < 1:
-        raise SeedError(
+        raise BlueprintError(
             f"{_WILD_SCALE_ENV} must be >= 1 (scaling only grows the world), got {raw!r}."
         )
     return scale
@@ -391,11 +393,11 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
     scale = _wild_scale()
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("wildlands.yaml must be a mapping of region-id to config.")
+        raise BlueprintError("wildlands.yaml must be a mapping of region-id to config.")
     configs: list[dict[str, Any]] = []
     for rid, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise SeedError(f"wildlands region {rid!r} must be a mapping of config keys.")
+            raise BlueprintError(f"wildlands region {rid!r} must be a mapping of config keys.")
         # notable_every: a NAMED guardian foe every N generated rooms (a hunt target that mints a
         # bounty), 0 = none. Default on, so every wildlands zone carries MMO-density hunt content.
         merged = {"branch_every": 3, "branch_length": 3, "notable_every": 220, **cfg, "id": rid}
@@ -411,26 +413,26 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
         )
         missing = [k for k in required if k not in merged]
         if missing:
-            raise SeedError(f"wildlands region {rid!r} missing key(s): {', '.join(missing)}.")
+            raise BlueprintError(f"wildlands region {rid!r} missing key(s): {', '.join(missing)}.")
         _biome(merged["biome"])  # validate the biome exists
         if merged["attach_dir"] not in _OPPOSITE:
-            raise SeedError(
+            raise BlueprintError(
                 f"wildlands region {rid!r}: attach_dir {merged['attach_dir']!r} is not a direction."
             )
         for key in ("level_min", "level_max", "trail_length", "branch_every", "branch_length"):
             value = merged[key]
             if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-                raise SeedError(
+                raise BlueprintError(
                     f"wildlands region {rid!r}: {key!r} must be a positive integer, got {value!r}."
                 )
         if not merged["level_min"] <= merged["level_max"] <= 300:
-            raise SeedError(
+            raise BlueprintError(
                 f"wildlands region {rid!r}: need level_min <= level_max <= 300 "
                 f"(got {merged['level_min']}-{merged['level_max']})."
             )
         ne = merged["notable_every"]
         if not isinstance(ne, int) or isinstance(ne, bool) or ne < 0:
-            raise SeedError(
+            raise BlueprintError(
                 f"wildlands region {rid!r}: 'notable_every' must be a non-negative int (0 = off), "
                 f"got {ne!r}."
             )
@@ -510,7 +512,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     def add(label: str, name: str, desc: str, exits: dict[str, str]) -> None:
         nonlocal idx, seq
         if label in claimed or label in rooms:
-            raise SeedError(f"wildlands region {rid!r} would collide on room label {label!r}.")
+            raise BlueprintError(f"wildlands region {rid!r} would collide on room label {label!r}.")
         room = Room(name=name, desc=desc, exits=exits)
         material = _gather_node(cfg["biome"], idx)  # some rooms carry a harvestable node
         if material:
@@ -644,7 +646,7 @@ def generate_wildlands(
     for cfg in configs:
         attach = cfg["attach"]
         if attach not in claimed:
-            raise SeedError(
+            raise BlueprintError(
                 f"wildlands region {cfg['id']!r} attaches to {attach!r}, not a real room "
                 "(a seed room, or one an earlier region generated)."
             )
@@ -655,7 +657,7 @@ def generate_wildlands(
             wanted = [cfg["attach_dir"]] + [d for d in _DIR_PREFERENCE if d != cfg["attach_dir"]]
             free = next((d for d in wanted if d not in taken), None)
             if free is None:
-                raise SeedError(
+                raise BlueprintError(
                     f"wildlands region {cfg['id']!r} cannot attach to {attach!r}: no free dir."
                 )
             cfg["attach_dir"] = free

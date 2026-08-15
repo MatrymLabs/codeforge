@@ -250,7 +250,7 @@ def validate_region(linked: LinkedRegion) -> RegionVerdict:
     the content (dangling exit, bad label, malformed quest) or a quest `on_enter` names no room;
     UNREACHABLE if a room is orphaned or no quest terminal is reachable; else LINKED."""
     from kernel.world.seed import (
-        SeedError,
+        BlueprintError,
         load_quest,
         load_rooms,
     )  # lazy: world out of import time
@@ -258,7 +258,7 @@ def validate_region(linked: LinkedRegion) -> RegionVerdict:
     dest = Path(linked.dest)
     try:
         rooms = load_rooms(dest / "rooms.yaml")
-    except SeedError as exc:
+    except BlueprintError as exc:
         return RegionVerdict(REFUSED, error=str(exc))
     room_graph = {label: set(room["exits"].values()) for label, room in rooms.items()}
     orphans = tuple(sorted(set(rooms) - _reachable(room_graph, linked.start)))
@@ -268,7 +268,7 @@ def validate_region(linked: LinkedRegion) -> RegionVerdict:
         )
     try:
         quest = load_quest(dest / "quest.yaml")
-    except SeedError as exc:
+    except BlueprintError as exc:
         return RegionVerdict(REFUSED, rooms=len(rooms), error=f"quest: {exc}", quest=True)
     if quest is None:
         return RegionVerdict(LINKED, rooms=len(rooms))

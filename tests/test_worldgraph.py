@@ -15,7 +15,7 @@ import pytest
 import yaml
 
 from kernel.world import canon, worldgraph
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 _SEAS = [
     "western_ocean",
@@ -83,18 +83,18 @@ def test_an_isolated_region_is_flagged_unreachable():
 
 
 def test_neighbors_of_an_unknown_region_is_refused():
-    with pytest.raises(SeedError, match="unknown region"):
+    with pytest.raises(BlueprintError, match="unknown region"):
         worldgraph.neighbors("mordor", worldgraph.load_graph())
 
 
 def test_reachable_from_an_unknown_start_is_refused():
-    with pytest.raises(SeedError, match="unknown start"):
+    with pytest.raises(BlueprintError, match="unknown start"):
         worldgraph.reachable_from("mordor")
 
 
 def test_region_detail_for_a_graph_region_absent_from_canon_is_refused():
     synthetic = {"seas": _SEAS, "regions": {"ghostland": {"land": [], "seas": []}}}
-    with pytest.raises(SeedError, match="not in canon"):
+    with pytest.raises(BlueprintError, match="not in canon"):
         worldgraph.region_detail("ghostland", synthetic)
 
 
@@ -112,55 +112,55 @@ def _write(tmp_path: Path, data: object) -> Path:
 
 
 def test_missing_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         worldgraph.load_graph(tmp_path / "nope.yaml")
 
 
 def test_a_non_mapping_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not a mapping"):
+    with pytest.raises(BlueprintError, match="not a mapping"):
         worldgraph.load_graph(_write(tmp_path, ["a", "b"]))
 
 
 def test_no_seas_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="bodies of water"):
+    with pytest.raises(BlueprintError, match="bodies of water"):
         worldgraph.load_graph(_write(tmp_path, {"seas": [], "regions": _full_regions()}))
 
 
 def test_non_mapping_regions_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="'regions' must be a mapping"):
+    with pytest.raises(BlueprintError, match="'regions' must be a mapping"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": ["veridia"]}))
 
 
 def test_a_missing_region_fails_loud(tmp_path: Path):
     regions = _full_regions()
     del regions["veridia"]
-    with pytest.raises(SeedError, match="no topology row"):
+    with pytest.raises(BlueprintError, match="no topology row"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": regions}))
 
 
 def test_a_non_canon_region_fails_loud(tmp_path: Path):
     regions = _full_regions()
     regions["atlantis"] = {"land": [], "seas": []}
-    with pytest.raises(SeedError, match="not a canon region"):
+    with pytest.raises(BlueprintError, match="not a canon region"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": regions}))
 
 
 def test_a_self_link_fails_loud(tmp_path: Path):
     regions = _full_regions()
     regions["veridia"]["land"] = ["veridia"]
-    with pytest.raises(SeedError, match="cannot border itself"):
+    with pytest.raises(BlueprintError, match="cannot border itself"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": regions}))
 
 
 def test_an_unknown_land_neighbour_fails_loud(tmp_path: Path):
     regions = _full_regions()
     regions["veridia"]["land"] = ["narnia"]
-    with pytest.raises(SeedError, match="unknown land neighbour"):
+    with pytest.raises(BlueprintError, match="unknown land neighbour"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": regions}))
 
 
 def test_an_unknown_sea_fails_loud(tmp_path: Path):
     regions = _full_regions()
     regions["veridia"]["seas"] = ["sea_of_monsters"]
-    with pytest.raises(SeedError, match="unknown sea"):
+    with pytest.raises(BlueprintError, match="unknown sea"):
         worldgraph.load_graph(_write(tmp_path, {"seas": _SEAS, "regions": regions}))

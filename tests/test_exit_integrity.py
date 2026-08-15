@@ -148,20 +148,20 @@ def test_a_reverse_pointing_at_a_DIFFERENT_room_is_still_accidental() -> None:
 def test_loader_refuses_a_stale_one_way_declaration(tmp_path) -> None:
     import pytest
 
-    from kernel.world.seed import SeedError, load_rooms
+    from kernel.world.seed import BlueprintError, load_rooms
 
     path = tmp_path / "rooms.yaml"
     path.write_text("cellar:\n  exits: {west: workshop}\n  one_way: [east]\nworkshop:\n")
-    with pytest.raises(SeedError, match="cellar.*east"):
+    with pytest.raises(BlueprintError, match="cellar.*east"):
         load_rooms(path)
 
 
 def test_loader_refuses_a_named_one_way_declaration(tmp_path) -> None:
     import pytest
 
-    from kernel.world.seed import SeedError, load_rooms
+    from kernel.world.seed import BlueprintError, load_rooms
 
     path = tmp_path / "rooms.yaml"
     path.write_text("hub:\n  exits: {gate: other}\n  one_way: [gate]\nother:\n")
-    with pytest.raises(SeedError, match="canonical"):
+    with pytest.raises(BlueprintError, match="canonical"):
         load_rooms(path)
