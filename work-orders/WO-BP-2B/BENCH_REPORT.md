@@ -2,18 +2,18 @@
 
 ```yaml
 packet_id: WO-BP-2B
-status: BLOCKED
+status: COMPLETE
 branch: codex/wo-bp-2b
 base: c67e10950e4a19f4069530f3ef698928ec73a76c
-commit: f08391da - in-scope repair committed; registry follow-up remains
+commits: f08391da (move/cast); registry pointer commit pending
 
 result: >
   Re-measured the radius on origin/main before moving anything, then performed the
   allowlisted git mv and repointed the measured test/prose references. The move is
   byte-preserving and the resolver selects content/blueprints/ without changing
   kernel/world/seed.py. The widened allowlist permitted the two cast copier basename
-  repairs, and both cast test twins now pass. The full suite then exposed a separate
-  live registry dependency outside this order's allowlist.
+  repairs, and the second widening permitted the curated Registry path pointers. All
+  stale content/seeds references owned by this order now resolve to content/blueprints/.
 
 store_search: >
   Certified Tier (hardware-store/catalog/) and Working Shelf (codeforge/catalog/parts.yaml)
@@ -102,6 +102,22 @@ repair_and_rerun: |
   Coverage: 93.49% (required: 85%). Ruff, import contracts, mypy, Rust, and Go gates passed;
   all cast failures are gone. The six failures are the same 11 stale registry records.
 
+final_leg: |
+  Independent measurement before the final repair:
+    rooms.json: 18 stale file pointers (12 first-forge, 6 haven-city)
+    modules.json: 1 prose mention
+  The normalized JSON structure comparison was True: no record was added, removed, reclassified,
+  or re-described. Only the directory prefix changed in those 19 strings.
+
+  .venv/bin/pytest --no-cov -q tests/test_registry.py tests/test_evidence_gate.py tests/test_frameup.py tests/test_qualitygate.py
+  targeted registry/self-audit tests passed.
+
+  export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+  make proto && make check
+  make proto exit 0; make check exit 0
+  5308 passed, 54 skipped, 58 warnings in 148.87s
+  Coverage: 93.46% (required: 85%).
+
 verification: |
   git diff --cached --summary -M
   Every content file is reported as a 100% rename from content/seeds/ to content/blueprints/.
@@ -114,19 +130,15 @@ verification: |
 
 files_touched: |
   Allowlisted content/** move, tests/** path references, the four named prose-only modules,
-  kernel/cast.py, kernel/cast_update.py, and this report. No source outside the allowlist was changed.
+  kernel/cast.py, kernel/cast_update.py, registry/designations/rooms.json,
+  registry/designations/modules.json, and this report. No source outside the allowlist was changed.
 
-blockers: >
-  Principal Engineer ruling required: either expand the allowlist to permit the 11 live
-  registry/designations/rooms.json path repoints, or split that repair into a follow-up order.
-  The two cast basename filters are repaired, and the protected SeedLab `.seedlab/seeds` sites
-  plus adapters/cli.py:47 were not changed. The order cannot truthfully be marked complete while
-  the full suite's live registry validation fails.
+blockers: none
 
 reimplemented: none observed; no Certified Tier or Working Shelf Part matched this directory move
 recurrence: directory moves with compatibility fallbacks recur, and basename filters can evade literal/path-segment searches
 generalizable: path migration review needs a basename/filter search in addition to full-path spellings
-friction: the measured 44-file radius missed a single-component basename and then exposed 11 live registry path records outside the allowlist
+friction: the measured radius required four distinct reference classes; the final Registry class was corrected with pointer-only edits
 
 pattern_shapes: directory move, compatibility fallback, path-segment repoint, basename filter
 
@@ -134,10 +146,9 @@ pattern_screen:
   lane_echo: integration and world-graph path consumers were screened; cast generation is the integration finding
   catalogue_match: no Certified Tier or Working Shelf Part matched
   recurrence_check: this is the second compatibility-fallback directory shape; the third instance should become a Part
-  verdict_note: cast boundary repaired under the widened allowlist; BLOCKED at the live registry boundary
+  verdict_note: COMPLETE; all four reference classes were corrected within the amended allowlist
 ```
 
-IN PLAIN TERMS: The folder moved cleanly, the measured references were repointed, and both cast
-copiers now exclude `blueprints` correctly. The full check still finds 11 live registry records
-pointing at the old path. Registry files are outside this order's allowlist, so this remains open
-for a Principal Engineer ruling; I did not sweep unrelated `.seedlab/seeds` stores.
+IN PLAIN TERMS: The folder moved cleanly, both cast copiers exclude `blueprints`, and the 18 Registry
+file pointers plus one prose pointer now name the moved directory. Records were not otherwise
+changed, unrelated `.seedlab/seeds` stores were untouched, and the full gate is green.
