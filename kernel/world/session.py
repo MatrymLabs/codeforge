@@ -11,6 +11,7 @@ its own Session pointed at the same world.
 
 from dataclasses import dataclass, field
 
+from kernel.engine_seam import Engine, Engine0D
 from kernel.shelf.stats import StatBlock
 from kernel.world.job_progress import JobProgress
 from kernel.world.resources import Resource
@@ -30,6 +31,8 @@ class Session:
 
     player_id: str
     location: str = field(default_factory=_spawn)
+    engine: Engine = field(default_factory=Engine0D, repr=False, compare=False, kw_only=True)
+    position: object = field(init=False, repr=False, compare=False)
     alive: bool = True
     named: bool = False
     rank: str = "player"
@@ -87,6 +90,26 @@ class Session:
     # This hero's personal friends list: lowercase labels of heroes worth tracking. One-directional
     # (yours alone); `friends` shows who is online. Persisted per hero (kernel.world.friends).
     friends: list[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        room = self.__dict__.pop("_initial_location", None)
+        if room is None:
+            room = _spawn()
+        self.position = self.engine.place(room)
+
+
+def _get_location(session: Session) -> str:
+    return session.engine.room_of(session.position)
+
+
+def _set_location(session: Session, room: str) -> None:
+    if "engine" not in session.__dict__:
+        session.__dict__["_initial_location"] = room
+    else:
+        session.position = session.engine.place(room)
+
+
+Session.location = property(_get_location, _set_location)  # type: ignore[assignment]
 
 
 # The registry of connected sessions. Gateways and game_loop register
