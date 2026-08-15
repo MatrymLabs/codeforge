@@ -4,126 +4,130 @@
 
 ## Scope
 
-`codeforge` only. The content directory moves from `content/seeds/` to `content/blueprints/`, and
-the handful of code and config sites that name that path in a way git will not follow are updated.
+`codeforge` only. The nine SOURCE files that reconstruct the Blueprint root path independently, so
+that afterwards exactly one place resolves it. **No directory moves in this order.**
 
 ## Invariant
 
-**The move is a rename, never an edit.** Every file under the directory arrives byte-identical, and
-`git log --follow` still reaches its history. A Blueprint whose contents changed during a move is
-two changes wearing one commit, and nobody reviewing it can tell which broke something.
+**Behaviour is identical and the suite proves it by passing unchanged.** This order removes
+duplicate knowledge of where Blueprints live; it does not change where they live. If a test has to
+change, the consolidation altered behaviour and the order has failed.
 
 ```yaml
 packet_id:            WO-BP-2
-title:                Move the content: content/seeds becomes content/blueprints
+title:                One resolver for the Blueprint root, before anything moves
 stream:               engine
 repository:           codeforge
 goal: >
-  BP-2 of five. BP-1 landed as #977 and already resolves `content/blueprints/` when that directory
-  exists and `content/seeds/` when it does not, so this order is a `git mv` that flips which branch
-  of that resolution is taken. Nothing else in the seam has to change.
+  REWRITTEN 2026-08-15, after the first version was blocked by Codex for a defect in the order
+  rather than in the work. That version said "git mv plus nine text sites" and was wrong by an
+  order of magnitude, because its blast radius searched for the literal string `content/seeds` and
+  the path is assembled from pathlib SEGMENTS in most places:
 
-  Then fix the sites that name the path as text, which git cannot follow: docstrings, a hardcoded
-  Path in the exit-integrity check, and a line of authored world topology.
+      SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+
+  A literal grep cannot see that. Nine source files and twenty test files build the root that way,
+  and `kernel/cast.py:35` defines its own second `SEEDS_ROOT` constant.
+
+  So the move is not the problem. THE PROBLEM IS THAT THIRTY PLACES KNOW WHERE BLUEPRINTS LIVE.
+  This order collapses the nine source ones onto the single resolver that already exists in
+  kernel/world/seed.py, which BP-1 already taught to accept both the old and the new location.
+  After this, moving the directory is a one-line change instead of a thirty-file sweep.
 
 out_of_scope: >
-  Do NOT edit the CONTENT of any moved file. Not a room label, not a description, not a whitespace
-  fix, however tempting while the file is open. A rename commit whose files also changed is
-  unreviewable.
-  Do NOT rename SeedError, SeedRecord, SeedSpec, SEED_DIR, seed_root or seedlab; those are BP-3.
-  Do NOT remove the `content/seeds/` fallback from kernel/world/seed.py; that is BP-5 and it needs
-  its own ruling. A consumer with an old checkout still resolves through it.
-  Do NOT emit deprecation warnings; that is BP-4.
+  Do NOT move content/seeds/. That is BP-2b and it becomes trivial once this lands.
+  Do NOT change kernel/world/seed.py. It already resolves both locations; this order makes other
+  files USE it.
+  Do NOT rename SeedError, SeedRecord, SEED_DIR, seed_root or seedlab; that is BP-3.
+  Do NOT rewrite the twenty TEST files that build their own paths. They are fixtures pointing at
+  known content, and changing them in the same commit as source would make the diff unreviewable.
+  Log them for BP-2c and leave them.
 
 file_allowlist:
-  - content/seeds/                        (moved, not edited)
-  - content/blueprints/                   (its destination)
-  - adapters/cli.py                       (docstring path text only)
-  - kernel/domains/hosted_world.py        (docstring path text only)
-  - kernel/world/exit_integrity.py        (a hardcoded Path)
-  - kernel/world/world_manifest.py        (docstring path text only)
-  - tools/emit_map_world.py               (comment path text only)
-  - content/world/topology.yaml           (a documentation line)
-  - tests/                                (the 5 files naming the path)
+  - kernel/cast.py
+  - kernel/domains/hosted_recovery.py
+  - kernel/domains/hosted_world.py
+  - kernel/domains/world_compiler.py
+  - kernel/world/exit_integrity.py
+  - kernel/world/world_manifest.py
+  - scripts/e2e_smoke.py
+  - tools/census.py
+  - tools/emit_map_world.py
+  - tools/zone_density.py
 
 blast_radius: |
-  $ git ls-files 'content/seeds/*' | wc -l
-  103        files moved, byte-identical
+  SEARCHED IN THREE FORMS, because the first version searched one and missed most of them.
 
-  $ git grep -n "content/seeds" -- '*.py' '*.yaml' '*.yml' '*.toml' Makefile | grep -v '^tests/'
-  adapters/cli.py:409                 docstring
-  adapters/cli.py:427                 help text, ALREADY says "content/blueprints/ or content/seeds/"
-  content/world/topology.yaml:51      documentation line
-  kernel/domains/hosted_world.py:8    docstring
-  kernel/domains/hosted_world.py:79   docstring
-  kernel/world/exit_integrity.py:118  HARDCODED Path, the one that actually breaks
-  kernel/world/exit_integrity.py:119  HARDCODED Path, the one that actually breaks
-  kernel/world/world_manifest.py:198  docstring
-  tools/emit_map_world.py:588         comment
+  $ git grep -ln "content/seeds" -- '*.py'                      # literal
+  10 files, of which 5 are source
 
-  $ git grep -ln 'content/seeds' -- 'tests/*' | wc -l
-  5
+  $ git grep -lnE '"content"\s*/\s*"seeds"' -- '*.py'          # pathlib segments
+  29 files, of which 9 are source and 20 are tests
 
-  Measured 2026-08-14 on origin/main. Only exit_integrity.py:118-119 are executable path
-  references; everything else in that list is prose that names the path. The distinction matters:
-  the executable two break the moment the directory moves, and the rest are merely wrong.
+  $ git grep -lnE '/\s*"seeds"|"seeds"\s*/' -- '*.py'          # any joined segment
+  45 files
+
+  The nine SOURCE files in the allowlist are the union of forms 1 and 2 excluding tests. The
+  twenty test files are deliberately deferred to BP-2c.
+
+  Known duplicate to remove: kernel/cast.py:35 defines its own `SEEDS_ROOT`, a second copy of the
+  constant at kernel/world/seed.py:50.
 
 boundary: >
-  This order OWNS the content directory and the nine text sites above. It does NOT own
-  kernel/world/seed.py: BP-1 already made that file resolve both locations, and this order is
-  correct precisely because it does not have to touch it. If you find yourself needing to edit
-  kernel/world/seed.py to make the move work, STOP and file BLOCKED, because that means BP-1's
-  seam is not doing what #977 verified it does.
+  This order OWNS the nine source files listed. It does NOT own kernel/world/seed.py, whose
+  resolver is the thing being consumed rather than changed, and it does NOT own the twenty test
+  files, which are BP-2c.
+
+  If consuming the resolver creates an import cycle, that is a finding and the order is BLOCKED.
+  `tools/` and `scripts/` importing from `kernel.world.seed` may be a layering question the
+  import-linter contract answers; run `make imports` and believe it rather than working around it.
 
 preconditions: >
     CHECK: file kernel/world/seed.py contains CODEFORGE_BLUEPRINTS_ROOT
-    CHECK: file content/seeds/first-forge/world.yaml exists
-    CHECK: file content/blueprints/first-forge/world.yaml absent
+    CHECK: file tools/census.py contains content
+    CHECK: file kernel/cast.py contains SEEDS_ROOT
 
     Behavioural:
       export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
       make proto && make check                                    exit 0 before you start
 
 contract_tests: >
-  ASSERTION-LOCKED across the whole suite. Five test files name the path and may have that STRING
-  updated; no assertion may change meaning. If a test has to assert something different after a
-  directory rename, the rename changed behaviour and this order has failed its invariant.
+  ASSERTION-LOCKED across the whole suite. The proof of this order is that every existing test
+  passes UNCHANGED, including the twenty that build their own paths. Those tests are the evidence:
+  they resolve the same directory a different way, so if consolidation changed anything they break.
 
 definition_of_done:
-  - "`git mv content/seeds content/blueprints`, so history follows. A delete-and-add loses
-     `git log --follow` for 103 files and is not acceptable."
-  - "Every moved file byte-identical. Prove it: `git diff -M --stat origin/main...HEAD` shows
-     renames with no content change."
-  - "kernel/world/exit_integrity.py:118-119 point at the new path. These are the only two
-     EXECUTABLE references; everything else in the list is prose."
-  - "The seven prose sites name the new path."
-  - "kernel/world/seed.py is NOT modified. BP-1 already resolves both."
-  - "The old path still resolves for a consumer who sets CODEFORGE_SEEDS_ROOT explicitly, because
-     BP-1's fallback is untouched."
-  - "make proto && make check green, and the whole suite passes."
+  - "Each of the nine source files resolves the Blueprint root from kernel/world/seed.py rather
+     than rebuilding it from `Path(...) / \"content\" / \"seeds\"`."
+  - "kernel/cast.py no longer defines a second SEEDS_ROOT."
+  - "`git grep -lnE '\"content\"\\s*/\\s*\"seeds\"' -- '*.py' | grep -v ^tests/` returns NOTHING.
+     That command is the deciding test: it is the same search that was missed the first time, and
+     if it still finds a source file the order is not done."
+  - "The twenty test files are UNCHANGED and listed in the Bench Report for BP-2c."
+  - "make imports passes; if the layering forbids tools/ importing kernel/, report it BLOCKED."
+  - "make proto && make check green, whole suite, no test edited."
 
 verification_command: |
-  cd codeforge && make proto && make check && git diff -M --stat origin/main...HEAD | tail -5
+  cd codeforge && make proto && make check && git grep -lnE '"content"\s*/\s*"seeds"' -- '*.py' | grep -v '^tests/' | wc -l
 
 rollback: >
-  git revert. The directory moves back, and BP-1's resolution follows it without further change,
-  which is the property that makes this stage safe.
+  git revert. Every file returns to building its own path, which is where it is today.
 
 approval_gates: >
-  none. BP-1 made this reversible.
+  none. Nothing moves and nothing is renamed.
 
-size:                 small
+size:                 medium
 
 taint_class:          SAFE
 
 # EXTRACTION CONTEXT
 store_search_result: >
-  Certified Tier and Working Shelf both searched for a content-migration or path-rename Part.
-  Nothing catalogued in either. This is a one-off directory move.
+  Certified Tier and Working Shelf both searched for a path-resolution or single-source-of-truth
+  Part. Nothing catalogued. The resolver being consolidated onto already exists in this repository.
 
-parts_to_consume:     none
+parts_to_consume:     kernel/world/seed.py's SEEDS_ROOT and SEED_DIR. That is the point of the order.
 
 watch_for: >
-  If `git mv` on 103 files produces anything other than pure renames in `git diff -M`, say what
-  changed and why before committing. A rename that git records as delete-plus-add loses the
-  history of every Blueprint in the tree.
+  Nine files independently knowing a filesystem layout is a duplication the pull rule cares about.
+  If the consolidation reveals a tenth that the three searches missed, say which form hid it: that
+  is the finding, and it is more valuable than the consolidation itself.

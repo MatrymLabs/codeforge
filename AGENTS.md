@@ -120,6 +120,40 @@ First occurrence of a mechanism is logged only. **Second** occurrence opens a re
 candidate, and certification becomes meaningful at the second real consumer, because duplication is
 cheaper than the wrong abstraction. Promotion travels the Verdict Gate; there is no second path.
 
+## Blast radius: search the THING, not the spelling
+
+**A blast-radius search that finds one spelling of a thing has measured one spelling, not the
+thing.** Write this into every Build Sheet, and re-run it before trusting an allowlist.
+
+On 2026-08-15 an order to move `content/seeds/` shipped with a blast radius of nine sites, found by
+`git grep "content/seeds"`. A Bench started the move and immediately hit `tools/census.py`, which
+was not in the allowlist because the path is never spelled that way there:
+
+```python
+SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
+```
+
+Re-searched properly, **nine source files and twenty test files** build that path from segments, and
+`kernel/cast.py` defines a second copy of the constant. The order was wrong by an order of
+magnitude, and the Bench refusing was the only reason it was caught before thirty files broke.
+
+**The forms a search must cover, at minimum:**
+
+| the thing | spellings to search |
+|---|---|
+| a path | the literal `a/b/c`, the segmented `"a" / "b"`, and any constant that resolves it |
+| an identifier | the name, plus any string form in config, schema keys and CLI text |
+| an environment variable | the read sites, which are few, not the set sites, which are many |
+| a filename | the name, the stem, and any glob that would match it |
+
+**The test of a blast radius is a command that returns nothing when the work is done.** If the
+order cannot state such a command, the allowlist is a guess. WO-BP-2 states its own:
+`git grep -lnE '"content"\s*/\s*"seeds"' -- '*.py' | grep -v ^tests/` must return nothing.
+
+**And when a search finds thirty sites where you expected nine, that is usually not a bigger
+chore. It is a finding.** Thirty places knowing one filesystem layout is duplication, and the right
+order consolidates them onto one resolver rather than editing thirty.
+
 ## Before you touch a file
 
 Read `../bench-claims/CODEX.yaml` and `../bench-claims/CLAUDE_CODE.yaml`, and record your own Bench
