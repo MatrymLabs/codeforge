@@ -67,6 +67,43 @@ is out of reach, but they are a summary and never a substitute.
 - **The Principal Engineer decides what lands.** Josh holds the standing merge grant and its terms;
   an agent unsure whether something breaks has already answered.
 
+## IN PLAIN TERMS, on every Bench Report
+
+**Every Bench Report ends with this section. Both Benches. It is not optional and not filler.**
+
+```
+IN PLAIN TERMS
+- What I actually did, in one or two sentences a non-specialist understands.
+- Why it mattered for the Build, in one sentence.
+- One thing worth knowing: the concept, pattern or tool this touched, named simply.
+```
+
+Rules that make it worth the three lines:
+
+- **No jargon without a plain-word gloss.** "I added a mutation test (a test that deliberately
+  breaks the code to prove the other tests would catch the break)."
+- **Explain the WHY.** The diff already says what. The why is the part that teaches.
+- **One concept per report, never a lecture.** Steady exposure beats a firehose.
+- **Be honest in plain terms too.** "This works but I am not certain it is the best approach
+  because X" is a valid and valuable plain-terms answer.
+- **Do not explain the Principal Engineer's own doctrine, architecture or methodology back to
+  him.** He is expert there. Teach the specific language, tool, algorithm or technique the task
+  touched.
+
+**This section is oversight as much as teaching.** If a Bench cannot say plainly what it did, the
+work is confused or the Bench is unsure, and the vagueness is the signal. If the "why" does not
+connect to the Build, the work may be drift that is correct only in isolation. The Principal
+Engineer catches both from the explanation alone, without reading every line.
+
+**"Teach me this"** is a standing command from the Principal Engineer about any report, decision,
+file, diff, term or instrument. Stop and give a full plain-language walkthrough: what it is from
+the ground up, why it exists and what breaks without it, how it works with a concrete example, how
+it connects to what is being built, the one durable takeaway, and one direction to go deeper.
+Assume intelligence, not prior knowledge. Reach for analogies from games, workshops, retro consoles
+and engineering, which is the world he already knows. Teaching a decision means defending it.
+
+Full doctrine: `.ai/TEACHING_LAYER.md` in the Workshop root.
+
 ## Reusable Part signals
 
 Every Bench Report carries four signals and none may be left blank. "None observed" is valid;
