@@ -5,7 +5,7 @@ packet_id: WO-BP-2B
 status: BLOCKED
 branch: codex/wo-bp-2b
 base: c67e10950e4a19f4069530f3ef698928ec73a76c
-commit: 0ff33522 - in-scope repair committed; registry follow-up remains
+commit: f08391da - in-scope repair committed; registry follow-up remains
 
 result: >
   Re-measured the radius on origin/main before moving anything, then performed the
