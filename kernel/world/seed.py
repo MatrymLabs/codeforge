@@ -466,7 +466,14 @@ def _construct_unique_mapping(loader: _UniqueKeyLoader, node: yaml.MappingNode) 
     mapping: dict[Any, Any] = {}
     for key_node, value_node in node.value:
         key = loader.construct_object(key_node, deep=True)
-        if key in mapping:
+        try:
+            is_duplicate = key in mapping
+        except TypeError as exc:
+            raise SeedError(
+                f"Unusable key in Blueprint file: {key!r} is not hashable. "
+                "Keys must be scalar labels."
+            ) from exc
+        if is_duplicate:
             raise SeedError(
                 f"Duplicate label '{key}' in seed file. "
                 "Every label must be unique -- rename one of them."

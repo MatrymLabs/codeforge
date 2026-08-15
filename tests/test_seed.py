@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 from kernel.world.seed import (
     DEFAULT_ROOM_DESC,
@@ -364,6 +365,14 @@ def test_duplicate_label_is_rejected(tmp_path):
     bad.write_text("vault:\n  name: Vault A\nvault:\n  name: Vault B\n")
     with pytest.raises(SeedError, match="Duplicate label 'vault'"):
         load_rooms(bad)
+
+
+@pytest.mark.parametrize("yaml_text", ["? ?", "? [a]"])
+def test_unusable_mapping_keys_are_rejected_as_seed_errors(yaml_text):
+    from kernel.world.seed import _UniqueKeyLoader
+
+    with pytest.raises(SeedError, match="Unusable key in Blueprint file"):
+        yaml.load(yaml_text, Loader=_UniqueKeyLoader)
 
 
 def test_seed_loader_prefers_libyaml(tmp_path):
