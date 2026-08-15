@@ -26,14 +26,8 @@ rounds the first up to the second has been caught doing exactly that four times 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol, runtime_checkable
 
-
-@dataclass(frozen=True)
-class NodePosition:
-    """Engine-0D: position IS the node. D3."""
-
-    room: str
+from kernel.world.engine import Engine, Engine0D, NodePosition  # noqa: F401
 
 
 @dataclass(frozen=True)
@@ -49,50 +43,6 @@ class ChunkPosition:
     x: int
     y: int
     room: str
-
-
-@runtime_checkable
-class Engine(Protocol):
-    """The seam. Everything an engine must answer, and deliberately nothing more.
-
-    If this Protocol ever needs a method that is not about position, the seam has moved and
-    something core has slid below it.
-    """
-
-    name: str
-
-    def place(self, room: str) -> object:
-        """Put a session in a room, in this engine's own position representation."""
-        ...
-
-    def room_of(self, position: object) -> str:
-        """The semantic room label. The one question both engines must answer identically."""
-        ...
-
-    def carry_limit(self) -> int:
-        """A deliberately NON-spatial answer, included to prove the seam holds.
-
-        How much a character can carry has nothing to do with position granularity. It sits here
-        only so the differential has a core answer to compare that an engine could plausibly, and
-        wrongly, decide to override.
-        """
-        ...
-
-
-class Engine0D:
-    """The text engine: position is a node on a graph. The engine CodeForge runs today."""
-
-    name = "0D"
-
-    def place(self, room: str) -> NodePosition:
-        return NodePosition(room=room)
-
-    def room_of(self, position: object) -> str:
-        assert isinstance(position, NodePosition)
-        return position.room
-
-    def carry_limit(self) -> int:
-        return 10
 
 
 class Engine2DStub:

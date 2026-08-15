@@ -11,8 +11,8 @@ its own Session pointed at the same world.
 
 from dataclasses import dataclass, field
 
-from kernel.engine_seam import Engine, Engine0D
 from kernel.shelf.stats import StatBlock
+from kernel.world.engine import Engine, Engine0D
 from kernel.world.job_progress import JobProgress
 from kernel.world.resources import Resource
 
