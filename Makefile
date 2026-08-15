@@ -9,7 +9,11 @@
 # that still needs to redirect must be able to, and must be able to tell if it failed to.
 RUFF_CACHE_DIR ?= /tmp/matrymlabs-codeforge-ruff-cache
 MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
-export RUFF_CACHE_DIR MYPY_CACHE_DIR
+# GOCACHE joined them 2026-08-15, for the same reason and one lane over. Go defaults to
+# ~/.cache/go-build, which a Bench sandbox denied, and `go build` then failed in a way lint-go
+# reported as missing generated code. Every gate cache is now explicit and writable anywhere.
+GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
+export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -106,6 +110,13 @@ kotlin-lint: lint-kotlin
 lint-go:
 	@if [ -z "$$(git ls-files '*.go')" ]; then \
 		echo "lint-go: no .go files in this tree, nothing to inspect"; \
+	elif command -v go >/dev/null 2>&1 && ! ( mkdir -p "$$(go env GOCACHE)" 2>/dev/null && touch "$$(go env GOCACHE)/.probe" 2>/dev/null && rm -f "$$(go env GOCACHE)/.probe" ); then \
+		echo "lint-go: UNVERIFIED - the Go build cache is not writable: $$(go env GOCACHE)"; \
+		echo "          This is a CACHE fault, not missing generated code and not a missing"; \
+		echo "          toolchain. \`make proto\` will not fix it."; \
+		echo "          The Makefile sets GOCACHE=/tmp/matrymlabs-codeforge-go-cache; a sandbox"; \
+		echo "          that denies it needs GOCACHE pointed somewhere writable."; \
+		exit 1; \
 	elif ! command -v go >/dev/null 2>&1; then \
 		echo "lint-go: UNVERIFIED - no \`go\` on PATH. This is a toolchain fault, NOT missing"; \
 		echo "          generated code, and \`make proto\` will not fix it."; \
