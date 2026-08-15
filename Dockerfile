@@ -23,7 +23,7 @@ USER 10001
 # a volume carries it across containers:
 #   docker run -p 4000:4000 -v codeforge_data:/data codeforge
 # Boot a different game with:  -e FORGE_SEED=sword-art-online
-ENV CODEFORGE_SEEDS_ROOT=/app/content/seeds \
+ENV CODEFORGE_SEEDS_ROOT=/app/content/blueprints \
     CODEFORGE_DB=/data/codeforge.db
 
 EXPOSE 4000
