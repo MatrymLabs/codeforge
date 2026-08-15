@@ -221,7 +221,7 @@ class SeamVerdict:
 # The battery. Each entry is (aspect, name, probe) where probe takes an engine and returns an
 # answer that MUST NOT depend on which engine is running. C1 names the four aspects; a battery
 # missing one silently proves less than it claims, so the test asserts all four are present.
-def _battery() -> list[tuple[str, str, object]]:
+def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
     from kernel.world import callings, coinage, items, progression
 
     return [
@@ -246,8 +246,18 @@ def _battery() -> list[tuple[str, str, object]]:
         ("persistence", "grant_key_shape", lambda e: _grant_key()),
         ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),
         ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),
-        ("coverage", "all_overlay_rooms", _room_coverage),
+        ("coverage", "all_overlay_rooms", lambda e: _room_coverage(e, seed)),
     ]
+
+
+def _battery() -> list[tuple[str, str, object]]:
+    """The default first-forge battery, kept stable for calibration monkeypatches."""
+    return _battery_for_seed("first-forge")
+
+
+def _selected_battery(seed: str) -> list[tuple[str, str, object]]:
+    """Select a Blueprint battery without changing the default monkeypatch contract."""
+    return _battery() if seed == "first-forge" else _battery_for_seed(seed)
 
 
 def _denies_admin() -> bool:
@@ -316,24 +326,37 @@ def _gameplay_save() -> tuple[str | None, str | None]:
     return (original.auth_hash, restored.auth_hash if restored else None)
 
 
-def _room_coverage(engine: Engine) -> tuple[tuple[str, str], ...]:
+def _room_coverage(engine: Engine, seed: str = "first-forge") -> tuple[tuple[str, str], ...]:
     from kernel.overlay import load_overlay
-    from kernel.world.seed import SEED_DIR
+    from kernel.world.seed import SEEDS_ROOT
 
-    overlay = load_overlay(SEED_DIR / "world_overlay.json")
+    overlay = load_overlay(SEEDS_ROOT / seed / "world_overlay.json")
     return tuple((room, engine.room_of(engine.place(room))) for room in sorted(overlay))
 
 
-def _overlay_rooms() -> tuple[str, ...]:
-    """Every room the Seed actually has, derived from the overlay and never a literal."""
-    from pathlib import Path as _Path
-
+def _overlay_rooms(seed: str = "first-forge") -> tuple[str, ...]:
+    """Every room the Blueprint under test has, derived from its overlay."""
     from kernel.overlay import load_overlay
+    from kernel.world.seed import SEEDS_ROOT
 
-    return tuple(sorted(load_overlay(_Path("content/seeds/first-forge/world_overlay.json"))))
+    return tuple(sorted(load_overlay(SEEDS_ROOT / seed / "world_overlay.json")))
 
 
-def _saboteurs() -> list[Engine]:
+def _overlay_for_seed(seed: str) -> object:
+    """Make the tested overlay available without making non-coverage probes world-dependent."""
+    from kernel.overlay import load_overlay
+    from kernel.world.seed import SEEDS_ROOT
+
+    tested = load_overlay(SEEDS_ROOT / seed / "world_overlay.json")
+    if seed == "first-forge":
+        return tested
+    baseline = load_overlay(SEEDS_ROOT / "first-forge" / "world_overlay.json")
+    combined = dict(baseline)
+    combined.update(tested)
+    return combined
+
+
+def _saboteurs(seed: str = "first-forge") -> list[Engine]:
     """Deliberately wrong engines, one per lever the Protocol lets an engine control.
 
     The Protocol is the complete list of levers: `place`, `room_of`, `carry_limit`. If it ever
@@ -352,12 +375,20 @@ def _saboteurs() -> list[Engine]:
     probe sensitive to one specific room is invisible to a saboteur that never names it.
     """
 
+    saboteur_overlay = _overlay_for_seed(seed)
+
     class WrongCarry(Engine2D):
+        def __init__(self) -> None:
+            super().__init__(saboteur_overlay)
+
         def carry_limit(self) -> int:
             return 999_999
 
     def _wrong_room(room: str) -> Engine:
         class WrongRoom(Engine2D):
+            def __init__(self) -> None:
+                super().__init__(saboteur_overlay)
+
             def room_of(self, position: object) -> str:
                 return room
 
@@ -366,10 +397,10 @@ def _saboteurs() -> list[Engine]:
 
         return WrongRoom()
 
-    return [WrongCarry(), *(_wrong_room(room) for room in _overlay_rooms())]
+    return [WrongCarry(), *(_wrong_room(room) for room in _overlay_rooms(seed))]
 
 
-def falsifiable_probes() -> tuple[str, ...]:
+def falsifiable_probes(seed: str = "first-forge") -> tuple[str, ...]:
     """The probes that can actually report a divergence, measured rather than asserted.
 
     A probe earns its place by CHANGING ITS ANSWER when the engine misbehaves. One that returns the
@@ -388,8 +419,7 @@ def falsifiable_probes() -> tuple[str, ...]:
     buy a number and prove nothing. The honest instrument reports the count; it does not demand one
     per aspect.
     """
-    good = Engine2D()
-    wrong = _saboteurs()
+    good = Engine2D(_overlay_for_seed(seed))
     found: list[str] = []
 
     def _answer(probe: object, engine: Engine) -> tuple[bool, object]:
@@ -399,12 +429,15 @@ def falsifiable_probes() -> tuple[str, ...]:
         except Exception as exc:  # noqa: BLE001 - the exception IS the observation
             return False, f"raised:{type(exc).__name__}"
 
-    for aspect, name, probe in _battery():
+    for aspect, name, probe in _selected_battery(seed):
         ran, baseline = _answer(probe, good)
         if not ran:
             # A probe that cannot run against a healthy engine is UNMEASURED, and
             # run_differential already reports it as such. It is not falsifiable evidence.
             continue
+        # Blueprint sensitivity is intentionally limited to the coverage probe; the other
+        # thirteen probes remain on the fixed synthetic fixture and are not world tests.
+        wrong = _saboteurs(seed) if aspect == "coverage" else _saboteurs()
         for saboteur in wrong:
             _, sabotaged = _answer(probe, saboteur)
             if sabotaged != baseline:
@@ -427,9 +460,11 @@ _NO_MEASURED_PROBE_REASON = (
 )
 
 
-def _aspect_falsifiability(probes: tuple[str, ...]) -> tuple[AspectFalsifiability, ...]:
+def _aspect_falsifiability(
+    probes: tuple[str, ...], seed: str = "first-forge"
+) -> tuple[AspectFalsifiability, ...]:
     """Classify every battery aspect from the measured probe names and D1 boundaries."""
-    aspects = tuple(dict.fromkeys(aspect for aspect, _, _ in _battery()))
+    aspects = tuple(dict.fromkeys(aspect for aspect, _, _ in _selected_battery(seed)))
     by_aspect = {
         aspect: tuple(entry.split("/", 1)[1] for entry in probes if entry.startswith(f"{aspect}/"))
         for aspect in aspects
@@ -458,14 +493,17 @@ def run_differential(
     world is testing the world rather than the seam.
     """
     left = zero_d or Engine0D()
-    right = two_d or Engine2D()
+    # The thirteen non-coverage probes use the fixed synthetic ``forge`` room. Keep that probe
+    # fixture available without making their answers depend on the Blueprint under test; only the
+    # existing coverage probe reads ``seed``'s overlay.
+    right = Engine2D(_overlay_for_seed(seed)) if two_d is None else two_d
 
     divergences: list[Divergence] = []
     unmeasured: list[str] = []
     aspects: list[str] = []
     compared = 0
 
-    for aspect, name, probe in _battery():
+    for aspect, name, probe in _selected_battery(seed):
         # An aspect counts as COVERED only once a probe of it actually ran. Listing it on sight
         # let three broken probes sit unmeasured while the coverage test passed, which is the
         # dominant defect of this Workshop reproduced inside the instrument built to catch it.
@@ -480,10 +518,10 @@ def run_differential(
         if a != b:
             divergences.append(Divergence(aspect=aspect, command=name, zero_d=a, two_d=b))
 
-    falsifiable = falsifiable_probes()
+    falsifiable = falsifiable_probes(seed)
     return SeamVerdict(
         falsifiable=falsifiable,
-        aspect_falsifiability=_aspect_falsifiability(falsifiable),
+        aspect_falsifiability=_aspect_falsifiability(falsifiable, seed),
         commands_compared=compared,
         aspects_covered=tuple(aspects),
         divergences=tuple(divergences),

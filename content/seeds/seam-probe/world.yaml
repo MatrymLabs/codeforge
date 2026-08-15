@@ -1,0 +1,9 @@
+world_id: seam-probe
+title: Seam Probe
+start_room: signal_bay
+version: "1"
+description: A minimal Blueprint for the engine seam differential.
+authors:
+  - MatrymLabs
+tags:
+  - test

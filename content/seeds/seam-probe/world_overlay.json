@@ -1,0 +1,16 @@
+{
+  "relay_garden": {
+    "chunk_x": 0,
+    "chunk_y": 0,
+    "room": "relay_garden",
+    "x": 0,
+    "y": 0
+  },
+  "signal_bay": {
+    "chunk_x": -1,
+    "chunk_y": 0,
+    "room": "signal_bay",
+    "x": 0,
+    "y": 0
+  }
+}
