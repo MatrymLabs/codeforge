@@ -26,7 +26,7 @@ from typing import Any
 import yaml
 
 from kernel.world import canon, generation_contract
-from kernel.world.seed import SeedError, _UniqueKeyLoader
+from kernel.world.seed import BlueprintError, _UniqueKeyLoader
 
 _FAMILIES_PATH = canon.AETHRYN_DIR / "cave_families.yaml"
 
@@ -60,14 +60,15 @@ _REQUIRED_FIELDS = (
 
 def load_families(path: Path | None = None) -> dict[str, Any]:
     """Read and VALIDATE the regional cave-family table, merging the shared defaults into each row.
-    Fails loud (SeedError) if a canon region has no family or a family is missing a required list,
+    Fails loud (BlueprintError) if a canon region has no family or a family is missing a required
+    list,
     so a cave can never be forged without its region's identity."""
     where = path if path is not None else _FAMILIES_PATH
     if not where.exists():
-        raise SeedError(f"Cave families file not found: {where}")
+        raise BlueprintError(f"Cave families file not found: {where}")
     data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
     if not isinstance(data, dict):
-        raise SeedError(f"Cave families file is not a mapping: {where}")
+        raise BlueprintError(f"Cave families file is not a mapping: {where}")
     defaults = data.get("defaults", {})
     families: dict[str, Any] = {}
     known_regions = {r["id"] for r in canon.regions()}
@@ -75,16 +76,16 @@ def load_families(path: Path | None = None) -> dict[str, Any]:
         if region_id == "defaults":
             continue
         if region_id not in known_regions:
-            raise SeedError(f"cave family {region_id!r}: not a canon region")
+            raise BlueprintError(f"cave family {region_id!r}: not a canon region")
         merged = {**defaults, **row}
         for field in _REQUIRED_FIELDS:
             if not merged.get(field):
-                raise SeedError(f"cave family {region_id!r}: missing required field {field!r}")
+                raise BlueprintError(f"cave family {region_id!r}: missing required field {field!r}")
         families[region_id] = merged
     # Every canon region deserves a cave family, so the generator never strands a region.
     missing = known_regions - set(families)
     if missing:
-        raise SeedError(f"cave families: no family for canon region(s) {sorted(missing)}")
+        raise BlueprintError(f"cave families: no family for canon region(s) {sorted(missing)}")
     return families
 
 
@@ -108,10 +109,10 @@ def _connect(a: dict[str, Any], b: dict[str, Any], direction: str) -> None:
 def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict[str, Any]:
     """Forge one deterministic cave for a canon region. Returns a GeneratedContentRecord-shaped area
     (provenance + room graph + validation report). The same (region_id, seed, size) always returns
-    an identical cave. Raises SeedError for an unknown region or an out-of-band size."""
+    an identical cave. Raises BlueprintError for an unknown region or an out-of-band size."""
     families = load_families()
     if region_id not in families:
-        raise SeedError(f"cannot generate a cave for unknown region {region_id!r}")
+        raise BlueprintError(f"cannot generate a cave for unknown region {region_id!r}")
     family = families[region_id]
     region = next(r for r in canon.regions() if r["id"] == region_id)
     rng = _rng(region_id, seed)
@@ -119,7 +120,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     lo, hi = family["min_rooms"], family["max_rooms"]
     total = size if size is not None else rng.randint(lo, hi)
     if not lo <= total <= hi:
-        raise SeedError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")
+        raise BlueprintError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")
 
     naming = family["naming"]
     subtype = rng.choice(family["subtypes"])

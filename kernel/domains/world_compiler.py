@@ -34,8 +34,8 @@ from kernel.seed_package import BuildManifest
 from kernel.world import worldgraph
 from kernel.world.seed import (
     SEEDS_ROOT,
+    BlueprintError,
     Npc,
-    SeedError,
     inspect_world_links,
     load_items,
     load_npcs,
@@ -360,7 +360,7 @@ def install_compiled_world(
     )
     try:
         _validate_assembled_artifact(seed_dir, world)
-    except (ManifestCompilerError, SeedError, TypeError, ValueError) as exc:
+    except (ManifestCompilerError, BlueprintError, TypeError, ValueError) as exc:
         return replace(
             hosted,
             verdict=UNHOSTABLE,

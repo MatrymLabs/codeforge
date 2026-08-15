@@ -174,7 +174,7 @@ def test_a_gated_door_with_no_actor_context_stays_barred():
 
 
 def test_load_doors_rejects_an_unsafe_requires_condition(tmp_path):
-    from kernel.world.seed import SeedError, load_doors
+    from kernel.world.seed import BlueprintError, load_doors
 
     (tmp_path / "doors.yaml").write_text(
         "trap_door:\n"
@@ -185,5 +185,5 @@ def test_load_doors_rejects_an_unsafe_requires_condition(tmp_path):
         "  key_id: copper_key\n"
         "  requires: \"__import__('os')\"\n"  # a forbidden construct
     )
-    with pytest.raises(SeedError, match="invalid 'requires' condition"):
+    with pytest.raises(BlueprintError, match="invalid 'requires' condition"):
         load_doors(tmp_path / "doors.yaml")

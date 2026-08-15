@@ -24,7 +24,7 @@ from typing import Any
 import yaml
 
 from kernel.shelf.reward_curve import LEVEL_MAX
-from kernel.world.seed import Npc, Room, SeedError, Zone
+from kernel.world.seed import BlueprintError, Npc, Room, Zone
 
 # Stable labels for the far end of the road + its Sovereign, so a capstone quest can name them no
 # matter how many marches a config generates. Legacy `spiral_` prefixes are frozen identifiers only.
@@ -89,31 +89,32 @@ def _ordinal(n: int) -> str:
 
 def load_spiral_config(path: Path) -> dict[str, Any] | None:
     """Read a seed's optional spiral.yaml. Returns None when the seed ships none (no extension);
-    fails loud (SeedError) on a malformed one -- required int fields, a sane band, a real cap."""
+    fails loud (BlueprintError) on a malformed one -- required int fields, a sane band, a real
+    cap."""
     if not path.exists():
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("spiral.yaml must be a mapping of config keys.")
+        raise BlueprintError("spiral.yaml must be a mapping of config keys.")
     required = ("attach", "first_coil", "base_level", "levels_per_coil", "top_level")
     missing = [k for k in required if k not in raw]
     if missing:
-        raise SeedError(f"spiral.yaml is missing required key(s): {', '.join(missing)}.")
+        raise BlueprintError(f"spiral.yaml is missing required key(s): {', '.join(missing)}.")
     if not isinstance(raw["attach"], str):
-        raise SeedError("spiral.yaml 'attach' must be a room label (string).")
+        raise BlueprintError("spiral.yaml 'attach' must be a room label (string).")
     for key in ("first_coil", "base_level", "levels_per_coil", "top_level"):
         value = raw[key]
         if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-            raise SeedError(f"spiral.yaml '{key}' must be a positive integer, got {value!r}.")
+            raise BlueprintError(f"spiral.yaml '{key}' must be a positive integer, got {value!r}.")
     if raw["levels_per_coil"] < 1:
-        raise SeedError("spiral.yaml 'levels_per_coil' must be >= 1 (the road must deepen).")
+        raise BlueprintError("spiral.yaml 'levels_per_coil' must be >= 1 (the road must deepen).")
     if not raw["base_level"] <= raw["top_level"] <= LEVEL_MAX:
-        raise SeedError(
+        raise BlueprintError(
             f"spiral.yaml needs base_level <= top_level <= {LEVEL_MAX} "
             f"(got base {raw['base_level']}, top {raw['top_level']})."
         )
     if "summit_drop" in raw and not isinstance(raw["summit_drop"], str):
-        raise SeedError("spiral.yaml 'summit_drop' must be an item label (string).")
+        raise BlueprintError("spiral.yaml 'summit_drop' must be an item label (string).")
     return raw
 
 
@@ -191,7 +192,9 @@ def generate_spiral(
     seed bug, not a silent no-op."""
     attach = config["attach"]
     if attach not in existing_rooms:
-        raise SeedError(f"spiral.yaml 'attach' names room '{attach}', which is not in this seed.")
+        raise BlueprintError(
+            f"spiral.yaml 'attach' names room '{attach}', which is not in this seed."
+        )
     rooms: dict[str, Room] = {}
     npcs: dict[str, Npc] = {}
     numbers = _coil_numbers(config)

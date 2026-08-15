@@ -19,7 +19,7 @@ from typing import Any
 
 import yaml
 
-from kernel.world.seed import Npc, SeedError
+from kernel.world.seed import BlueprintError, Npc
 
 _MINIMUM_KEYS = ("zones", "dungeons", "settlements", "combatants", "npcs", "quests")
 
@@ -34,40 +34,40 @@ def load_campaign(path: Path) -> dict[str, Any] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("campaign.yaml must be a mapping.")
+        raise BlueprintError("campaign.yaml must be a mapping.")
     for key in ("id", "name", "level_cap", "checkpoints", "minimums"):
         if key not in raw:
-            raise SeedError(f"campaign.yaml is missing required key {key!r}.")
+            raise BlueprintError(f"campaign.yaml is missing required key {key!r}.")
     if not isinstance(raw["id"], str) or not raw["id"].strip():
-        raise SeedError("campaign.yaml: 'id' must be a non-empty string.")
+        raise BlueprintError("campaign.yaml: 'id' must be a non-empty string.")
     if not isinstance(raw["name"], str) or not raw["name"].strip():
-        raise SeedError("campaign.yaml: 'name' must be a non-empty string.")
+        raise BlueprintError("campaign.yaml: 'name' must be a non-empty string.")
     cap = raw["level_cap"]
     if isinstance(cap, bool) or not isinstance(cap, int) or not 1 <= cap <= 300:
-        raise SeedError(f"campaign.yaml: 'level_cap' must be an int 1..300, got {cap!r}.")
+        raise BlueprintError(f"campaign.yaml: 'level_cap' must be an int 1..300, got {cap!r}.")
 
     checkpoints = raw["checkpoints"]
     if not isinstance(checkpoints, list) or not checkpoints:
-        raise SeedError("campaign.yaml: 'checkpoints' must be a non-empty list.")
+        raise BlueprintError("campaign.yaml: 'checkpoints' must be a non-empty list.")
     if any(isinstance(level, bool) or not isinstance(level, int) for level in checkpoints):
-        raise SeedError("campaign.yaml: checkpoints must contain only integers.")
+        raise BlueprintError("campaign.yaml: checkpoints must contain only integers.")
     if checkpoints != sorted(set(checkpoints)) or checkpoints[0] != 1 or checkpoints[-1] != cap:
-        raise SeedError(
+        raise BlueprintError(
             "campaign.yaml: checkpoints must be sorted, unique, and span from 1 to level_cap."
         )
     if any(level < 1 or level > cap for level in checkpoints):
-        raise SeedError("campaign.yaml: every checkpoint must fall within 1..level_cap.")
+        raise BlueprintError("campaign.yaml: every checkpoint must fall within 1..level_cap.")
 
     minimums = raw["minimums"]
     if not isinstance(minimums, dict):
-        raise SeedError("campaign.yaml: 'minimums' must be a mapping.")
+        raise BlueprintError("campaign.yaml: 'minimums' must be a mapping.")
     missing = [key for key in _MINIMUM_KEYS if key not in minimums]
     if missing:
-        raise SeedError(f"campaign.yaml: minimums missing {', '.join(missing)}.")
+        raise BlueprintError(f"campaign.yaml: minimums missing {', '.join(missing)}.")
     for key in _MINIMUM_KEYS:
         value = minimums[key]
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-            raise SeedError(f"campaign.yaml: minimums.{key} must be a positive integer.")
+            raise BlueprintError(f"campaign.yaml: minimums.{key} must be a positive integer.")
     return raw
 
 
@@ -172,5 +172,5 @@ def validate(
             if row[key] < minimums[key]:
                 failures.append(f"{row['name']}: {key} {row[key]} < {minimums[key]}")
     if failures:
-        raise SeedError("campaign content contract failed: " + "; ".join(failures))
+        raise BlueprintError("campaign content contract failed: " + "; ".join(failures))
     return result

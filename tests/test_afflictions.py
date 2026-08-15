@@ -195,30 +195,30 @@ def _npc_yaml(tmp_path, body: str):
 
 
 def test_inflicts_must_name_a_status(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {chance: 2}\n")
-    with pytest.raises(SeedError, match="inflicts.status"):
+    with pytest.raises(BlueprintError, match="inflicts.status"):
         load()
 
 
 def test_inflicts_rejects_an_unknown_key(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(
         tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {status: venom, dot: 5}\n"
     )
-    with pytest.raises(SeedError, match="inflicts"):
+    with pytest.raises(BlueprintError, match="inflicts"):
         load()
 
 
 def test_inflicts_rejects_a_non_positive_number(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(
         tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {status: venom, damage: 0}\n"
     )
-    with pytest.raises(SeedError, match="inflicts.damage"):
+    with pytest.raises(BlueprintError, match="inflicts.damage"):
         load()
 
 
@@ -243,26 +243,26 @@ def test_a_mend_special_loads(tmp_path):
 
 
 def test_special_rejects_an_unknown_kind(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: explode}\n")
-    with pytest.raises(SeedError, match="special.kind"):
+    with pytest.raises(BlueprintError, match="special.kind"):
         load()
 
 
 def test_special_rejects_an_unknown_key(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {summon: 3}\n")
-    with pytest.raises(SeedError, match="special"):
+    with pytest.raises(BlueprintError, match="special"):
         load()
 
 
 def test_special_rejects_a_non_positive_heal(tmp_path):
-    from kernel.world.seed import SeedError
+    from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 0}\n")
-    with pytest.raises(SeedError, match="special.heal"):
+    with pytest.raises(BlueprintError, match="special.heal"):
         load()
 
 

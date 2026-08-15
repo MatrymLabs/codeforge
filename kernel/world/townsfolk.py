@@ -21,7 +21,7 @@ from typing import Any
 
 import yaml
 
-from kernel.world.seed import Npc, SeedError
+from kernel.world.seed import BlueprintError, Npc
 
 # The trades a town's residents keep, and the one thing each will talk about (a topic keyword -> a
 # line). Composed by index, so a town's crowd is varied but reproducible.
@@ -58,18 +58,20 @@ def load_settlements(path: Path) -> list[dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("settlements.yaml must be a mapping of room-id to settlement config.")
+        raise BlueprintError("settlements.yaml must be a mapping of room-id to settlement config.")
     configs: list[dict[str, Any]] = []
     for room, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise SeedError(f"settlement {room!r} must be a mapping of config keys.")
+            raise BlueprintError(f"settlement {room!r} must be a mapping of config keys.")
         merged = {**cfg, "room": room}
         for key in ("name", "zone", "level"):
             if key not in merged:
-                raise SeedError(f"settlement {room!r} is missing required key {key!r}.")
+                raise BlueprintError(f"settlement {room!r} is missing required key {key!r}.")
         level = merged["level"]
         if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
-            raise SeedError(f"settlement {room!r}: 'level' must be an int 1..300, got {level!r}.")
+            raise BlueprintError(
+                f"settlement {room!r}: 'level' must be an int 1..300, got {level!r}."
+            )
         configs.append(merged)
     return configs
 

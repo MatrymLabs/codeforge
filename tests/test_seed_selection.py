@@ -8,7 +8,7 @@ import kernel.world.seed
 from adapters.cli import _pop_seed, main
 from kernel.world.seed import (
     SEEDS_ROOT,
-    SeedError,
+    BlueprintError,
     available_seeds,
     load_abilities,
     load_doors,
@@ -183,7 +183,7 @@ def test_load_doors_refuses_a_door_without_a_valid_blocks_pair(tmp_path):
     """A barrier that doesn't say which exit it guards must fail loud, not gate nothing silently."""
     bad = tmp_path / "doors.yaml"
     bad.write_text("gate:\n  name: a gate\n  locked: true\n", encoding="utf-8")  # no blocks
-    with pytest.raises(SeedError, match="'blocks' must be"):
+    with pytest.raises(BlueprintError, match="'blocks' must be"):
         load_doors(bad)
 
 
@@ -211,7 +211,7 @@ def test_load_quest_refuses_a_malformed_arc(tmp_path, body, match):
     """A broken arc must not boot silently: every malformed shape fails loud with a named reason."""
     bad = tmp_path / "quest.yaml"
     bad.write_text(body, encoding="utf-8")
-    with pytest.raises(SeedError, match=match):
+    with pytest.raises(BlueprintError, match=match):
         load_quest(bad)
 
 

@@ -7,7 +7,7 @@ world). The generator emits seed-shaped Room/Npc data, so the assertions check t
 
 import pytest
 
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 from kernel.world.spiral import generate_spiral, load_spiral_config
 
 _CONFIG = {
@@ -138,12 +138,12 @@ def test_load_spiral_config_rejects_a_non_string_summit_drop(tmp_path):
         "attach: a\nfirst_coil: 4\nbase_level: 47\nlevels_per_coil: 9\ntop_level: 255\n"
         "summit_drop: 7\n"  # a number, not an item label
     )
-    with pytest.raises(SeedError, match="summit_drop"):
+    with pytest.raises(BlueprintError, match="summit_drop"):
         load_spiral_config(path)
 
 
 def test_an_attach_room_that_does_not_exist_is_refused():
-    with pytest.raises(SeedError, match="attach"):
+    with pytest.raises(BlueprintError, match="attach"):
         generate_spiral({**_CONFIG, "attach": "nowhere_real"}, _ROOMS)
 
 
@@ -154,7 +154,7 @@ def test_load_spiral_config_returns_none_when_absent(tmp_path):
 def test_load_spiral_config_rejects_a_missing_key(tmp_path):
     path = tmp_path / "spiral.yaml"
     path.write_text("attach: coil_third_landing\nfirst_coil: 4\n")  # missing level fields
-    with pytest.raises(SeedError, match="missing required key"):
+    with pytest.raises(BlueprintError, match="missing required key"):
         load_spiral_config(path)
 
 
@@ -163,7 +163,7 @@ def test_load_spiral_config_rejects_a_top_above_the_curve_cap(tmp_path):
     path.write_text(
         "attach: a\nfirst_coil: 4\nbase_level: 47\nlevels_per_coil: 9\ntop_level: 9999\n"
     )
-    with pytest.raises(SeedError, match="top_level"):
+    with pytest.raises(BlueprintError, match="top_level"):
         load_spiral_config(path)
 
 

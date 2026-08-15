@@ -51,7 +51,7 @@ def _demo_assessment() -> tuple[str, str]:
 
 
 def _demo_validated_loader() -> tuple[str, str]:
-    from kernel.world.seed import SeedError, load_rooms
+    from kernel.world.seed import BlueprintError, load_rooms
 
     with tempfile.TemporaryDirectory() as d:
         bad = Path(d) / "rooms.yaml"
@@ -61,7 +61,7 @@ def _demo_validated_loader() -> tuple[str, str]:
         try:
             load_rooms(bad)
             return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")
-        except (SeedError, Exception) as exc:  # noqa: BLE001 - the point is it refuses, loudly
+        except (BlueprintError, Exception) as exc:  # noqa: BLE001 - the point is it refuses, loudly
             kind = type(exc).__name__
             return ("load_rooms(<duplicate-key yaml>)", f"{kind} -- refuses a bad row (fails loud)")
 

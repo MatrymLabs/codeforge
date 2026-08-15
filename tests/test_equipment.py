@@ -17,7 +17,7 @@ from kernel.world import items
 from kernel.world.character_view import sheet_from_session
 from kernel.world.equipment import apply_equipment, equip, equipped_loadout, unequip
 from kernel.world.jobs import bind_calling
-from kernel.world.seed import SeedError, load_items
+from kernel.world.seed import BlueprintError, load_items
 from kernel.world.session import Session
 
 
@@ -110,7 +110,7 @@ def test_a_plain_item_defaults_to_no_equipment_fields(tmp_path) -> None:
 def test_a_non_integer_mod_is_rejected_at_load(tmp_path) -> None:
     path = tmp_path / "items.yaml"
     path.write_text("blade:\n  location: yard\n  slot: weapon\n  mods: {ATK: sharp}\n")
-    with pytest.raises(SeedError, match="must be an integer"):
+    with pytest.raises(BlueprintError, match="must be an integer"):
         load_items(path)
 
 

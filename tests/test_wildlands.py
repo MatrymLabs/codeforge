@@ -9,7 +9,7 @@ from collections import deque
 
 import pytest
 
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 from kernel.world.wildlands import (
     _BIOME_HERB,
     gatherable_materials,
@@ -155,12 +155,12 @@ def test_a_malformed_region_fails_loud(bad, match):
 
         p = Path(d) / "wildlands.yaml"
         p.write_text(yaml.safe_dump(tmp))
-        with pytest.raises(SeedError, match=match):
+        with pytest.raises(BlueprintError, match=match):
             load_wildlands_config(p)
 
 
 def test_a_config_attaching_to_a_missing_room_is_refused():
-    with pytest.raises(SeedError, match="not a real room"):
+    with pytest.raises(BlueprintError, match="not a real room"):
         generate_wildlands([_CFG], set())  # 'anchor' does not exist
 
 
@@ -233,7 +233,7 @@ def test_notable_every_defaults_on_and_refuses_a_negative():
         cfg = load_wildlands_config(p)[0]
         assert cfg["notable_every"] > 0  # the loader turns hunt content on by default
         p.write_text(yaml.safe_dump({"probe_wild": {**good, "notable_every": -1}}))
-        with pytest.raises(SeedError, match="notable_every"):
+        with pytest.raises(BlueprintError, match="notable_every"):
             load_wildlands_config(p)
 
 
@@ -265,7 +265,7 @@ def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad)
 
     p = _write_cfg(tmp_path)
     monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)
-    with pytest.raises(SeedError, match="CODEFORGE_WILD_SCALE"):
+    with pytest.raises(BlueprintError, match="CODEFORGE_WILD_SCALE"):
         load_wildlands_config(p)
 
 

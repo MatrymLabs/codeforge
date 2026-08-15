@@ -11,7 +11,7 @@ import yaml
 from kernel.world.seed import (
     DEFAULT_ROOM_DESC,
     SEEDS_ROOT,
-    SeedError,
+    BlueprintError,
     inspect_world_links,
     load_doors,
     load_items,
@@ -65,6 +65,31 @@ def test_blueprint_and_seed_root_names_resolve_to_the_same_root(tmp_path):
     assert old_root == new_root
 
 
+def test_blueprint_error_is_the_only_legacy_error_spelling():
+    legacy_name = "Seed" + "Error"
+    root = Path(__file__).parents[1]
+    source_files = sorted(
+        path
+        for path in root.rglob("*.py")
+        if not {".git", ".venv", "__pycache__"}.intersection(path.parts)
+    )
+    occurrences = [
+        (path.relative_to(root), line_number, line.strip())
+        for path in source_files
+        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1)
+        if legacy_name in line
+    ]
+    assert len(occurrences) == 1, occurrences
+    assert occurrences[0][0] == Path("kernel/world/seed.py")
+    assert occurrences[0][2] == f"{legacy_name} = BlueprintError"
+
+
+def test_legacy_error_alias_preserves_the_module_boundary():
+    import kernel.world.seed as seed_module
+
+    assert getattr(seed_module, "Seed" + "Error") is BlueprintError
+
+
 def test_an_unplaced_prototype_loads_with_a_nowhere_location(tmp_path):
     itemsf = tmp_path / "items.yaml"
     itemsf.write_text("trophy:\n  location: nowhere\n")
@@ -81,7 +106,7 @@ def test_world_links_accept_a_nowhere_prototype_and_reject_a_bad_drop(tmp_path):
     npcs = load_npcs(tmp_path / "npcs.yaml")
     inspect_world_links(rooms, items, npcs)  # no raise: unplaced item ok, drop names a real item
     npcs["wight"]["drops"] = ["ghost_item"]  # now a drop that names nothing real
-    with pytest.raises(SeedError, match="drops"):
+    with pytest.raises(BlueprintError, match="drops"):
         inspect_world_links(rooms, items, npcs)
 
 
@@ -114,7 +139,7 @@ def test_a_plain_npc_carries_no_drops_key(tmp_path):
 def test_a_non_list_drops_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  drops: cold_shard\n")
-    with pytest.raises(SeedError, match="drops"):
+    with pytest.raises(BlueprintError, match="drops"):
         load_npcs(npcsf)
 
 
@@ -142,14 +167,14 @@ def test_a_levelless_foe_carries_no_level_or_tier_key(tmp_path):
 def test_an_out_of_range_level_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  level: 999\n")
-    with pytest.raises(SeedError, match="level"):
+    with pytest.raises(BlueprintError, match="level"):
         load_npcs(npcsf)
 
 
 def test_an_unknown_tier_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  level: 3\n  tier: legendary\n")
-    with pytest.raises(SeedError, match="tier"):
+    with pytest.raises(BlueprintError, match="tier"):
         load_npcs(npcsf)
 
 
@@ -168,7 +193,7 @@ def test_a_plain_foe_carries_no_attack_element_key(tmp_path):
 def test_an_unknown_attack_element_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  atk: 5\n  attack_element: PLASMA\n")
-    with pytest.raises(SeedError, match="attack_element"):
+    with pytest.raises(BlueprintError, match="attack_element"):
         load_npcs(npcsf)
 
 
@@ -187,28 +212,28 @@ def test_a_plain_foe_carries_no_resistances_key(tmp_path):
 def test_a_foe_resistance_with_a_bad_code_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: {XYZ: Weak}\n")
-    with pytest.raises(SeedError, match="resistance code"):
+    with pytest.raises(BlueprintError, match="resistance code"):
         load_npcs(npcsf)
 
 
 def test_a_foe_resistance_with_a_bad_level_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: {FIR: Squishy}\n")
-    with pytest.raises(SeedError, match="resistance"):
+    with pytest.raises(BlueprintError, match="resistance"):
         load_npcs(npcsf)
 
 
 def test_a_non_mapping_resistances_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: fireproof\n")
-    with pytest.raises(SeedError, match="resistances"):
+    with pytest.raises(BlueprintError, match="resistances"):
         load_npcs(npcsf)
 
 
 def test_a_tier_without_a_level_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  tier: boss\n")  # nothing to scale
-    with pytest.raises(SeedError, match="tier"):
+    with pytest.raises(BlueprintError, match="tier"):
         load_npcs(npcsf)
 
 
@@ -227,7 +252,7 @@ def test_a_plain_door_carries_no_recloses_after_key(tmp_path):
 def test_a_negative_recloses_after_is_rejected(tmp_path):
     doors = tmp_path / "doors.yaml"
     doors.write_text("gate:\n  blocks: [hall, north]\n  recloses_after: -2\n")
-    with pytest.raises(SeedError, match="recloses_after"):
+    with pytest.raises(BlueprintError, match="recloses_after"):
         load_doors(doors)
 
 
@@ -245,7 +270,7 @@ def test_shipped_seed_loads_with_core_rooms_linked():
 
 
 def test_missing_file_raises_seed_error(tmp_path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         load_rooms(tmp_path / "nope.yaml")
 
 
@@ -254,7 +279,7 @@ def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("brawler:\n  location: courtyard\n  atk: -1\n")
-    with pytest.raises(SeedError, match="atk"):
+    with pytest.raises(BlueprintError, match="atk"):
         load_npcs(bad)
 
 
@@ -264,7 +289,7 @@ def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("leech:\n  location: courtyard\n  hp: 1\n  xp: -500\n")
-    with pytest.raises(SeedError, match="negative xp"):
+    with pytest.raises(BlueprintError, match="negative xp"):
         load_npcs(bad)
 
 
@@ -273,7 +298,7 @@ def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("ghost:\n  location: courtyard\n  hp: -5\n")
-    with pytest.raises(SeedError, match="negative hp"):
+    with pytest.raises(BlueprintError, match="negative hp"):
         load_npcs(bad)
 
 
@@ -283,7 +308,7 @@ def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("poser:\n  location: courtyard\n  hp: 10\n  aggressive: true\n")
-    with pytest.raises(SeedError, match="aggressive but has atk"):
+    with pytest.raises(BlueprintError, match="aggressive but has atk"):
         load_npcs(bad)
 
 
@@ -293,7 +318,7 @@ def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("wraith:\n  location: courtyard\n  atk: 4\n  aggressive: true\n")
-    with pytest.raises(SeedError, match="aggressive but has hp"):
+    with pytest.raises(BlueprintError, match="aggressive but has hp"):
         load_npcs(bad)
 
 
@@ -317,7 +342,7 @@ def test_a_raid_without_tier_boss_is_rejected_at_load(tmp_path):
         "impostor:\n  location: courtyard\n  hp: 30\n  atk: 5\n  level: 10\n"
         "  tier: elite\n  raid: true\n"
     )
-    with pytest.raises(SeedError, match="raid.*must be tier 'boss'"):
+    with pytest.raises(BlueprintError, match="raid.*must be tier 'boss'"):
         load_npcs(bad)
 
 
@@ -347,23 +372,23 @@ def test_npcs_are_reactive_by_default(tmp_path):
 def test_dangling_exit_is_rejected_at_load(tmp_path):
     bad = tmp_path / "rooms.yaml"
     bad.write_text("start:\n  exits:\n    north: mystery_cave\n")
-    with pytest.raises(SeedError, match="mystery_cave"):
+    with pytest.raises(BlueprintError, match="mystery_cave"):
         load_rooms(bad)
 
 
 def test_invalid_label_is_rejected_with_suggestion(tmp_path):
     bad = tmp_path / "rooms.yaml"
     bad.write_text("North Tower:\n  name: North Tower\n")
-    with pytest.raises(SeedError, match="north_tower"):
+    with pytest.raises(BlueprintError, match="north_tower"):
         load_rooms(bad)
 
 
 def test_duplicate_label_is_rejected(tmp_path):
     # The unique-key gate must fire under whatever loader is active (see the C-loader test
-    # below): a duplicate key is a loud SeedError, never a silent overwrite.
+    # below): a duplicate key is a loud BlueprintError, never a silent overwrite.
     bad = tmp_path / "rooms.yaml"
     bad.write_text("vault:\n  name: Vault A\nvault:\n  name: Vault B\n")
-    with pytest.raises(SeedError, match="Duplicate label 'vault'"):
+    with pytest.raises(BlueprintError, match="Duplicate label 'vault'"):
         load_rooms(bad)
 
 
@@ -371,7 +396,7 @@ def test_duplicate_label_is_rejected(tmp_path):
 def test_unusable_mapping_keys_are_rejected_as_seed_errors(yaml_text):
     from kernel.world.seed import _UniqueKeyLoader
 
-    with pytest.raises(SeedError, match="Unusable key in Blueprint file"):
+    with pytest.raises(BlueprintError, match="Unusable key in Blueprint file"):
         yaml.load(yaml_text, Loader=_UniqueKeyLoader)
 
 
@@ -440,7 +465,7 @@ def test_item_defaults_generate_name_and_keywords(tmp_path):
 def test_item_without_location_is_rejected(tmp_path):
     path = tmp_path / "items.yaml"
     path.write_text("ghost_gem:\n")
-    with pytest.raises(SeedError, match="missing required field 'location'"):
+    with pytest.raises(BlueprintError, match="missing required field 'location'"):
         load_items(path)
 
 
@@ -464,7 +489,7 @@ def test_cross_gate_catches_item_in_missing_room(tmp_path):
     path = tmp_path / "items.yaml"
     path.write_text("lost_coin:\n  location: mystery_cave\n")
     bad_items = load_items(path)
-    with pytest.raises(SeedError, match="mystery_cave"):
+    with pytest.raises(BlueprintError, match="mystery_cave"):
         inspect_world_links(rooms, bad_items, {})
 
 
@@ -473,7 +498,7 @@ def test_cross_gate_catches_npc_in_missing_room(tmp_path):
     path = tmp_path / "npcs.yaml"
     path.write_text("ghost:\n  location: the_void\n")
     bad_npcs = load_npcs(path)
-    with pytest.raises(SeedError, match="the_void"):
+    with pytest.raises(BlueprintError, match="the_void"):
         inspect_world_links(rooms, {}, bad_npcs)
 
 
@@ -492,7 +517,7 @@ def test_a_plain_item_carries_no_resettable_key(tmp_path):
 def test_a_non_bool_resettable_is_rejected(tmp_path):
     itemsf = tmp_path / "items.yaml"
     itemsf.write_text("shard:\n  location: cave\n  resettable: maybe\n")
-    with pytest.raises(SeedError, match="resettable"):
+    with pytest.raises(BlueprintError, match="resettable"):
         load_items(itemsf)
 
 
@@ -511,7 +536,7 @@ def test_a_plain_npc_carries_no_loot_key(tmp_path):
 def test_a_non_positive_loot_weight_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wight:\n  location: cell\n  loot: {shard: 0}\n")
-    with pytest.raises(SeedError, match="loot"):
+    with pytest.raises(BlueprintError, match="loot"):
         load_npcs(npcsf)
 
 
@@ -526,7 +551,7 @@ def test_world_links_reject_a_loot_naming_a_missing_item(tmp_path):
     npcs = load_npcs(tmp_path / "npcs.yaml")
     inspect_world_links(rooms, items, npcs)  # ok: shard is real, `nothing` is the reserved no-drop
     npcs["wight"]["loot"] = {"ghost": 1}
-    with pytest.raises(SeedError, match="loot"):
+    with pytest.raises(BlueprintError, match="loot"):
         inspect_world_links(rooms, items, npcs)
 
 
@@ -548,7 +573,7 @@ def test_a_plain_npc_carries_no_shop_key(tmp_path):
 def test_a_shop_with_a_nonpositive_price_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("trader:\n  location: cell\n  shop:\n    sells: {gem: 0}\n")
-    with pytest.raises(SeedError, match="shop"):
+    with pytest.raises(BlueprintError, match="shop"):
         load_npcs(npcsf)
 
 
@@ -561,7 +586,7 @@ def test_a_shop_naming_an_unknown_prototype_is_rejected_at_boot(tmp_path):
     rooms = load_rooms(tmp_path / "rooms.yaml")
     its = load_items(tmp_path / "items.yaml")
     ns = load_npcs(tmp_path / "npcs.yaml")
-    with pytest.raises(SeedError, match="shop sells names"):
+    with pytest.raises(BlueprintError, match="shop sells names"):
         inspect_world_links(rooms, its, ns)
 
 
@@ -574,7 +599,7 @@ def test_a_consumable_item_loads_its_effect(tmp_path):
 def test_a_consumable_with_a_bad_effect_is_rejected(tmp_path):
     itemsf = tmp_path / "items.yaml"
     itemsf.write_text("potion:\n  location: cell\n  consume: {stamina: 5}\n")  # only hp/mp allowed
-    with pytest.raises(SeedError, match="consume"):
+    with pytest.raises(BlueprintError, match="consume"):
         load_items(itemsf)
 
 
@@ -587,7 +612,7 @@ def test_npc_topics_load(tmp_path):
 def test_npc_topics_with_an_empty_reply_list_are_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("sage:\n  location: cell\n  topics:\n    lore: []\n")
-    with pytest.raises(SeedError, match="topics"):
+    with pytest.raises(BlueprintError, match="topics"):
         load_npcs(npcsf)
 
 
@@ -605,21 +630,21 @@ def test_load_recipes_accepts_a_wellformed_recipe(tmp_path):
 def test_load_recipes_rejects_a_recipe_with_no_output(tmp_path):
     p = tmp_path / "recipes.yaml"
     p.write_text("bad:\n  inputs: {ember_shard: 2}\n")  # no 'makes'
-    with pytest.raises(SeedError, match="makes"):
+    with pytest.raises(BlueprintError, match="makes"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_a_nonpositive_input_count(tmp_path):
     p = tmp_path / "recipes.yaml"
     p.write_text("bad:\n  makes: healing_draught\n  inputs: {ember_shard: 0}\n")
-    with pytest.raises(SeedError, match="inputs"):
+    with pytest.raises(BlueprintError, match="inputs"):
         load_recipes(p)
 
 
 def test_load_recipes_rejects_empty_inputs(tmp_path):
     p = tmp_path / "recipes.yaml"
     p.write_text("bad:\n  makes: healing_draught\n  inputs: {}\n")
-    with pytest.raises(SeedError, match="inputs"):
+    with pytest.raises(BlueprintError, match="inputs"):
         load_recipes(p)
 
 
@@ -631,7 +656,7 @@ def test_an_aggressive_wanderer_is_rejected_at_load(tmp_path):
     bad.write_text(
         "beast:\n  location: cell\n  hp: 10\n  atk: 5\n  aggressive: true\n  wander: true\n"
     )
-    with pytest.raises(SeedError, match="wander.*peaceful|peaceful"):
+    with pytest.raises(BlueprintError, match="wander.*peaceful|peaceful"):
         load_npcs(bad)
 
 
@@ -663,7 +688,7 @@ def test_reassembles_on_an_uncombatable_foe_is_rejected_at_load(tmp_path):
     """A reassembling foe that cannot be fought (hp 0) is meaningless: refuse loud."""
     seed = tmp_path / "npcs.yaml"
     seed.write_text("poser:\n  location: courtyard\n  hp: 0\n  reassembles: true\n")
-    with pytest.raises(SeedError, match="reassembles"):
+    with pytest.raises(BlueprintError, match="reassembles"):
         load_npcs(seed)
 
 
@@ -671,5 +696,5 @@ def test_a_non_bool_reassembles_is_rejected_at_load(tmp_path):
     """`reassembles` must be a real bool, not a truthy string -- refuse a bad type loud."""
     seed = tmp_path / "npcs.yaml"
     seed.write_text("poser:\n  location: courtyard\n  hp: 5\n  reassembles: yes-please\n")
-    with pytest.raises(SeedError, match="reassembles"):
+    with pytest.raises(BlueprintError, match="reassembles"):
         load_npcs(seed)

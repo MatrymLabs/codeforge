@@ -22,7 +22,7 @@ from typing import Any
 import yaml
 
 from kernel.world.coinage import purse
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 from kernel.world.session import Session
 
 _BASE_FARE = 20  # cinders, before the destination's level premium
@@ -36,14 +36,16 @@ def load_waystones(path: Path) -> dict[str, dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("waystones.yaml must be a mapping of hub room-id to config.")
+        raise BlueprintError("waystones.yaml must be a mapping of hub room-id to config.")
     stones: dict[str, dict[str, Any]] = {}
     for room, cfg in raw.items():
         if not isinstance(cfg, dict) or "name" not in cfg or "level" not in cfg:
-            raise SeedError(f"waystone {room!r} needs a 'name' and a 'level'.")
+            raise BlueprintError(f"waystone {room!r} needs a 'name' and a 'level'.")
         level = cfg["level"]
         if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
-            raise SeedError(f"waystone {room!r}: 'level' must be an int 1..300, got {level!r}.")
+            raise BlueprintError(
+                f"waystone {room!r}: 'level' must be an int 1..300, got {level!r}."
+            )
         stones[room] = {"name": str(cfg["name"]), "level": level}
     return stones
 

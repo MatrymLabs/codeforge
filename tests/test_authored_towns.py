@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from kernel.world import authored_towns as towns
-from kernel.world.seed import Room, SeedError, load_rooms
+from kernel.world.seed import BlueprintError, Room, load_rooms
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 _AUTHORED = _AETHRYN / "authored"
@@ -549,17 +549,17 @@ def _write(tmp_path: Path, body: str) -> Path:
 
 
 def test_a_missing_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not found"):
+    with pytest.raises(BlueprintError, match="not found"):
         towns.raise_town(tmp_path / "nope.yaml")
 
 
 def test_a_non_mapping_file_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="not a mapping"):
+    with pytest.raises(BlueprintError, match="not a mapping"):
         towns.raise_town(_write(tmp_path, "- just\n- a\n- list\n"))
 
 
 def test_a_missing_section_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="missing or empty section"):
+    with pytest.raises(BlueprintError, match="missing or empty section"):
         towns.raise_town(_write(tmp_path, "rooms: {a: {name: A, desc: d, exits: {}}}\n"))
 
 
@@ -579,13 +579,13 @@ def test_a_well_formed_town_builds_and_an_item_without_lore_is_fine(tmp_path: Pa
 
 def test_an_exit_to_a_foreign_room_fails_loud(tmp_path: Path):
     body = _BASE.replace("exits: {out: harborville}", "exits: {north: mordor}")
-    with pytest.raises(SeedError, match="not a room of this town"):
+    with pytest.raises(BlueprintError, match="not a room of this town"):
         towns.raise_town(_write(tmp_path, body))
 
 
 def test_a_resident_outside_the_town_fails_loud(tmp_path: Path):
     body = _BASE.replace("location: harbor_market}}\nitems", "location: elsewhere}}\nitems")
-    with pytest.raises(SeedError, match="npc .*not a town room"):
+    with pytest.raises(BlueprintError, match="npc .*not a town room"):
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -594,7 +594,7 @@ def test_an_item_outside_the_town_fails_loud(tmp_path: Path):
         "{name: k, keywords: [k], location: harbor_market}",
         "{name: k, keywords: [k], location: elsewhere}",
     )
-    with pytest.raises(SeedError, match="item .*not a town room"):
+    with pytest.raises(BlueprintError, match="item .*not a town room"):
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -603,13 +603,13 @@ def test_an_aggressive_foe_with_no_attack_fails_loud(tmp_path: Path):
         "{name: W, keywords: [w], location: harbor_market}",
         "{name: F, keywords: [f], location: harbor_market, aggressive: true, hp: 10}",
     )
-    with pytest.raises(SeedError, match="needs hp > 0 and atk > 0"):
+    with pytest.raises(BlueprintError, match="needs hp > 0 and atk > 0"):
         towns.raise_town(_write(tmp_path, body))
 
 
 def test_a_room_missing_a_field_fails_loud(tmp_path: Path):
     body = _BASE.replace("{name: M, desc: d, exits: {out: harborville}}", "{name: M, exits: {}}")
-    with pytest.raises(SeedError, match="needs a name, desc, and exits"):
+    with pytest.raises(BlueprintError, match="needs a name, desc, and exits"):
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -617,7 +617,7 @@ def test_an_npc_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: W, keywords: [w], location: harbor_market}", "{name: W, location: harbor_market}"
     )
-    with pytest.raises(SeedError, match="npc .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="npc .*needs a name and keywords"):
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -625,7 +625,7 @@ def test_an_item_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: k, keywords: [k], location: harbor_market}", "{name: k, location: harbor_market}"
     )
-    with pytest.raises(SeedError, match="item .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="item .*needs a name and keywords"):
         towns.raise_town(_write(tmp_path, body))
 
 

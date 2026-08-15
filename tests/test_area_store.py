@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from kernel.world import area_store
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 # --- Acceptance: the generate -> preview -> promote -> export lifecycle ---------------------------
 
@@ -125,12 +125,12 @@ def test_run_list_areas_empty_and_full(tmp_path: Path):
 def test_promote_refuses_non_generated_content(tmp_path: Path):
     area = area_store.generate_and_save("veridia", 7, area_dir=tmp_path)
     area_store.promote(area["id"], tmp_path)  # now AUTHORED_LOCAL
-    with pytest.raises(SeedError, match="only GENERATED_LOCAL"):
+    with pytest.raises(BlueprintError, match="only GENERATED_LOCAL"):
         area_store.promote(area["id"], tmp_path)  # cannot re-promote
 
 
 def test_loading_an_unknown_area_fails_loud(tmp_path: Path):
-    with pytest.raises(SeedError, match="no stored area"):
+    with pytest.raises(BlueprintError, match="no stored area"):
         area_store.load_area("gen_cave_nowhere_1", tmp_path)
 
 

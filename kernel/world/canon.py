@@ -24,7 +24,7 @@ from typing import Any
 
 import yaml
 
-from kernel.world.seed import SEEDS_ROOT, SeedError, _UniqueKeyLoader
+from kernel.world.seed import SEEDS_ROOT, BlueprintError, _UniqueKeyLoader
 
 # Aethryn's canon lives with the aethryn seed, whichever game the engine is currently booted into
 # (the canon describes THAT world, not the active seed). Anchor to it explicitly.
@@ -45,67 +45,75 @@ _REGION_FIELDS = ("id", "name", "threat_min", "threat_max")
 
 
 def load_canon(path: Path | None = None) -> dict[str, Any]:
-    """Read and VALIDATE the locked canon. Fails loud (SeedError) on any malformed record, so a
+    """Read and VALIDATE the locked canon. Fails loud (BlueprintError) on any malformed record, so a
     canon file that could mislead a generator never loads silently. Returns the parsed mapping."""
     where = path if path is not None else _CANON_PATH
     if not where.exists():
-        raise SeedError(f"Canon file not found: {where}")
+        raise BlueprintError(f"Canon file not found: {where}")
     data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
     if not isinstance(data, dict):
-        raise SeedError(f"Canon file is not a mapping: {where}")
+        raise BlueprintError(f"Canon file is not a mapping: {where}")
 
     def _status(record: dict[str, Any], label: str) -> None:
         status = record.get("canon_status")
         if status not in CANON_STATUSES:
-            raise SeedError(
+            raise BlueprintError(
                 f"canon {label}: canon_status must be one of {CANON_STATUSES}, got {status!r}"
             )
 
     world = data.get("world")
     if not isinstance(world, dict) or world.get("id") != "aethryn":
-        raise SeedError("canon: 'world' must name id 'aethryn'")
+        raise BlueprintError("canon: 'world' must name id 'aethryn'")
     _status(world, "world")
 
     crowns = data.get("seven_crowns")
     if not isinstance(crowns, list) or len(crowns) != 7:
-        raise SeedError(f"canon: 'seven_crowns' must list exactly 7 sites, got {len(crowns or [])}")
+        raise BlueprintError(
+            f"canon: 'seven_crowns' must list exactly 7 sites, got {len(crowns or [])}"
+        )
     for crown in crowns:
         for field in _CROWN_FIELDS:
             if not crown.get(field):
-                raise SeedError(
+                raise BlueprintError(
                     f"canon crown {crown.get('id')!r}: missing required field {field!r}"
                 )
         if crown.get("canon_status") != "CANON_LOCKED":
-            raise SeedError(f"canon crown {crown['id']!r}: a Seven Crown site must be CANON_LOCKED")
+            raise BlueprintError(
+                f"canon crown {crown['id']!r}: a Seven Crown site must be CANON_LOCKED"
+            )
 
     world_regions = data.get("regions")
     if not isinstance(world_regions, list) or len(world_regions) != 14:
-        raise SeedError(
+        raise BlueprintError(
             f"canon: 'regions' must list exactly 14 regions, got {len(world_regions or [])}"
         )
     for region in world_regions:
         for field in _REGION_FIELDS:
             if region.get(field) is None:
-                raise SeedError(
+                raise BlueprintError(
                     f"canon region {region.get('id')!r}: missing required field {field!r}"
                 )
         if region["threat_min"] > region["threat_max"]:
-            raise SeedError(f"canon region {region['id']!r}: threat_min exceeds threat_max")
+            raise BlueprintError(f"canon region {region['id']!r}: threat_min exceeds threat_max")
         _status(region, f"region {region['id']!r}")
 
     for fact in data.get("facts", []):
         if not fact.get("id") or not fact.get("text"):
-            raise SeedError(f"canon fact {fact.get('id')!r}: needs an id and text")
+            raise BlueprintError(f"canon fact {fact.get('id')!r}: needs an id and text")
         _status(fact, f"fact {fact.get('id')!r}")
 
     for term in data.get("collective_names", []):
         if not term.get("name") or not term.get("usage"):
-            raise SeedError(f"canon collective name {term.get('id')!r}: needs a name and usage")
+            raise BlueprintError(
+                f"canon collective name {term.get('id')!r}: needs a name and usage"
+            )
         _status(term, f"collective name {term.get('id')!r}")
 
     for faction in data.get("world_factions", []):
         if not faction.get("id") or not faction.get("name") or not faction.get("stance"):
-            raise SeedError(f"canon faction {faction.get('id')!r}: needs an id, name, and stance")
+            raise BlueprintError(
+                f"canon faction {faction.get('id')!r}: needs an id, name, and stance"
+            )
         _status(faction, f"faction {faction.get('id')!r}")
     return data
 

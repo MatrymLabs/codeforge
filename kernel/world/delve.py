@@ -23,7 +23,7 @@ from typing import Any
 import yaml
 
 from kernel.world.bestiary import make_beast, make_notable
-from kernel.world.seed import Npc, Room, SeedError
+from kernel.world.seed import BlueprintError, Npc, Room
 
 _DEPTH = 4  # chambers in a delve's descent below the mouth
 _BOSS_BUMP = 5  # the deep boss out-levels the dungeon's mouth guardian by this many levels
@@ -83,18 +83,18 @@ def load_dungeons(path: Path) -> list[dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise SeedError("dungeons.yaml must be a mapping of room-id to dungeon config.")
+        raise BlueprintError("dungeons.yaml must be a mapping of room-id to dungeon config.")
     configs: list[dict[str, Any]] = []
     for room, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise SeedError(f"dungeon {room!r} must be a mapping of config keys.")
+            raise BlueprintError(f"dungeon {room!r} must be a mapping of config keys.")
         merged = {**cfg, "room": room}
         for key in ("name", "zone", "level", "biome"):
             if key not in merged:
-                raise SeedError(f"dungeon {room!r} is missing required key {key!r}.")
+                raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")
         level = merged["level"]
         if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
-            raise SeedError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")
+            raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")
         configs.append(merged)
     return configs
 

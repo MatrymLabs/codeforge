@@ -15,7 +15,7 @@ import pytest
 import yaml
 
 from kernel.world.delve import _DEPTH, _VAULT_OFF, generate_delves, load_dungeons, wire_delve_mouths
-from kernel.world.seed import SeedError
+from kernel.world.seed import BlueprintError
 
 _CFG = [
     {
@@ -142,5 +142,5 @@ def test_a_malformed_dungeon_fails_loud(bad, match):
     with tempfile.TemporaryDirectory() as d:
         p = Path(d) / "dungeons.yaml"
         p.write_text(yaml.safe_dump({"pit": bad}))
-        with pytest.raises(SeedError, match=match):
+        with pytest.raises(BlueprintError, match=match):
             load_dungeons(p)

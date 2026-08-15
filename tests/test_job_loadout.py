@@ -10,7 +10,7 @@ from __future__ import annotations
 import pytest
 
 from kernel.world.jobs import JOBS
-from kernel.world.seed import SeedError, load_jobs
+from kernel.world.seed import BlueprintError, load_jobs
 
 
 def test_the_shipped_engineer_carries_its_full_loadout() -> None:
@@ -39,14 +39,14 @@ def test_a_simple_calling_defaults_to_an_empty_loadout(tmp_path) -> None:
 def test_a_non_string_ability_is_rejected_at_load(tmp_path) -> None:
     path = tmp_path / "jobs.yaml"
     path.write_text("golem:\n  name: Golem\n  abilities: [Smash, 42]\n")
-    with pytest.raises(SeedError, match="abilities entry must be a string"):
+    with pytest.raises(BlueprintError, match="abilities entry must be a string"):
         load_jobs(path)
 
 
 def test_a_wrong_typed_ability_slot_is_rejected_at_load(tmp_path) -> None:
     path = tmp_path / "jobs.yaml"
     path.write_text("golem:\n  name: Golem\n  counter: [not, a, string]\n")
-    with pytest.raises(SeedError):
+    with pytest.raises(BlueprintError):
         load_jobs(path)
 
 
@@ -63,7 +63,7 @@ def test_a_simple_calling_has_no_resistances(tmp_path) -> None:
 def test_an_invalid_resistance_level_is_rejected_at_load(tmp_path) -> None:
     path = tmp_path / "jobs.yaml"
     path.write_text("golem:\n  name: Golem\n  resistances: {FIR: Nope}\n")
-    with pytest.raises(SeedError, match="must be one of"):
+    with pytest.raises(BlueprintError, match="must be one of"):
         load_jobs(path)
 
 
@@ -74,5 +74,5 @@ def test_a_job_may_declare_milestone_perks() -> None:
 def test_a_malformed_perk_is_rejected_at_load(tmp_path) -> None:
     path = tmp_path / "jobs.yaml"
     path.write_text("golem:\n  name: Golem\n  milestone_perks: [{name: X, target: DEF}]\n")
-    with pytest.raises(SeedError, match="milestone perk"):
+    with pytest.raises(BlueprintError, match="milestone perk"):
         load_jobs(path)
