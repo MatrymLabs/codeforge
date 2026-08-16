@@ -9,10 +9,10 @@ with no sets.yaml simply earns no set bonuses (graceful, never a crash).
 
 from __future__ import annotations
 
-from kernel.world.seed import SEED_DIR, GearSet, load_sets
+from kernel.world.seed import BLUEPRINT_DIR, GearSet, load_sets
 
 # The seed's gear sets, loaded once at import (like ITEMS/NPCS). Empty when the seed ships no sets.
-SETS: dict[str, GearSet] = load_sets(SEED_DIR / "sets.yaml")
+SETS: dict[str, GearSet] = load_sets(BLUEPRINT_DIR / "sets.yaml")
 
 
 def register_sets(new: dict[str, GearSet]) -> None:

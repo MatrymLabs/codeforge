@@ -15,7 +15,7 @@ real today; its `validate()` guards the one invariant that must hold: no calling
 
 from __future__ import annotations
 
-from kernel.world.seed import SEED_DIR, BlueprintError, load_abilities, load_jobs
+from kernel.world.seed import BLUEPRINT_DIR, BlueprintError, load_abilities, load_jobs
 
 # The per-job level cap. Progression's JP curve tops out here (Job Lvl 30 = 51,200 JP, pinned by the
 # checkpoint test); job_ladder is the single source of the cap so the two never drift.
@@ -23,8 +23,8 @@ MAX_JOB_LEVEL = 30
 
 # The playable roster: the active seed's callings (name/description/stats), each a job you can bind
 # and level, and the moveset each may wield. Read once at import from the booted seed.
-CALLINGS = load_jobs(SEED_DIR / "jobs.yaml")
-_ABILITIES = load_abilities(SEED_DIR / "abilities.yaml")
+CALLINGS = load_jobs(BLUEPRINT_DIR / "jobs.yaml")
+_ABILITIES = load_abilities(BLUEPRINT_DIR / "abilities.yaml")
 
 
 def roster() -> list[str]:

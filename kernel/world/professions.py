@@ -16,12 +16,12 @@ behind the character store; gather.py and crafting.py call `advance` when a make
 
 from __future__ import annotations
 
-from kernel.world.seed import SEED_DIR, load_professions
+from kernel.world.seed import BLUEPRINT_DIR, load_professions
 from kernel.world.session import Session
 
 #: The active seed's trades, loaded once at import (like crafting's RECIPES). {} when the seed ships
 #: no professions.yaml -- the maker simply has no trades to practise, and `advance` is a no-op.
-PROFESSIONS = load_professions(SEED_DIR / "professions.yaml")
+PROFESSIONS = load_professions(BLUEPRINT_DIR / "professions.yaml")
 
 #: The skill curve: PER_LEVEL units of practice per level, capped at LEVEL_CAP. Deliberately simple
 #: and legible -- every ten harvests or crafts is a rank, so a maker feels the climb without a

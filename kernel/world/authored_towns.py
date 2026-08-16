@@ -20,10 +20,10 @@ from typing import Any
 
 import yaml
 
-from kernel.world.seed import SEED_DIR, BlueprintError, Item, Npc, Room, _UniqueKeyLoader
+from kernel.world.seed import BLUEPRINT_DIR, BlueprintError, Item, Npc, Room, _UniqueKeyLoader
 
 # Each *.yaml here is one authored town, keyed off a hub room the map already places.
-AUTHORED_DIR = SEED_DIR / "authored"
+AUTHORED_DIR = BLUEPRINT_DIR / "authored"
 
 
 def town_files(directory: Path | None = None) -> list[Path]:

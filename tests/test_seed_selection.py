@@ -281,7 +281,7 @@ def test_seeds_root_honors_env_override(tmp_path, monkeypatch):
         # to hold. FORGE_SEED is cleared here as well as CODEFORGE_SEEDS_ROOT, because
         # tests/test_campaign.py sets FORGE_SEED=aethryn at MODULE SCOPE and never restores it.
         # That leak is invisible until something reloads this module: the reload re-reads the env
-        # and SEED_DIR silently becomes aethryn for every later test in the same worker.
+        # and BLUEPRINT_DIR silently becomes aethryn for every later test in the same worker.
         #
         # It cost a genuinely confusing failure: test_web_gateway asserted on the first-forge
         # splash and received the Aethryn one, only inside a full parallel run, because whether
@@ -454,4 +454,4 @@ def test_reloading_the_seed_module_returns_it_to_the_default(monkeypatch):
     monkeypatch.delenv("FORGE_SEED", raising=False)
     importlib.reload(kernel.world.seed)
     assert kernel.world.seed.SEED_NAME == kernel.world.seed.DEFAULT_SEED
-    assert kernel.world.seed.SEED_DIR.name == kernel.world.seed.DEFAULT_SEED
+    assert kernel.world.seed.BLUEPRINT_DIR.name == kernel.world.seed.DEFAULT_SEED

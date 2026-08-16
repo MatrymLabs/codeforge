@@ -12,12 +12,12 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 from kernel.world import items
-from kernel.world.seed import SEED_DIR, load_recipes
+from kernel.world.seed import BLUEPRINT_DIR, load_recipes
 from kernel.world.session import Session
 
 #: The active seed's recipes, loaded once at import (like a Job's abilities). {} when the seed ships
 #: no recipes.yaml -- crafting then reports "nothing to craft here" rather than failing.
-RECIPES = load_recipes(SEED_DIR / "recipes.yaml")
+RECIPES = load_recipes(BLUEPRINT_DIR / "recipes.yaml")
 
 
 def _held(prototype: str, owner: str) -> list[str]:

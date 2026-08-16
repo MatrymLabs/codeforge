@@ -501,7 +501,7 @@ def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:]) if argv is None else list(argv)
 
     # Seed selection must set the env BEFORE any world module is imported, since
-    # SEED_DIR binds at import time (the proving ground picks its program at power-on).
+    # BLUEPRINT_DIR binds at import time (the proving ground picks its program at power-on).
     blueprint_flag = "--blueprint" in args
     seed = _pop_seed(args)
     if seed is not None:

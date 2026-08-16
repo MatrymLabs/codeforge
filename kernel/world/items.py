@@ -13,9 +13,9 @@ import copy
 
 from kernel.shelf import target_disambig
 from kernel.world import coinage
-from kernel.world.seed import SEED_DIR, Item, load_items
+from kernel.world.seed import BLUEPRINT_DIR, Item, load_items
 
-ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
+ITEMS: dict[str, Item] = load_items(BLUEPRINT_DIR / "items.yaml")
 
 # Prototypes: the seed templates, captured pristine at load. A seed label is a PROTOTYPE (a
 # template); runtime items are INSTANCES cloned from it. Keeping the templates apart from the

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from kernel.world.seed import SEED_DIR
+from kernel.world.seed import BLUEPRINT_DIR
 from kernel.world.stat_rules import DERIVED_STATS, Ruleset, apply_ruleset
 from kernel.world.world_manifest import load_ruleset
 
@@ -26,7 +26,7 @@ __all__ = ["DERIVED_STATS", "derived_stats"]
 # default prototype balance when it declares none) -- the same seed-defined-at-import pattern as
 # world.START_ROOM. This is where #292 (WorldManifest) and #293 (stat rulesets) meet: a world's
 # declared balance actually reaches the sheet and combat, no call site threading a ruleset.
-_ACTIVE_RULESET: Ruleset = load_ruleset(SEED_DIR)
+_ACTIVE_RULESET: Ruleset = load_ruleset(BLUEPRINT_DIR)
 
 
 def derived_stats(

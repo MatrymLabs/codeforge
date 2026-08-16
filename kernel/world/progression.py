@@ -15,7 +15,7 @@ those checkpoints forever: if the numbers drift, the build goes red.
 from dataclasses import dataclass
 
 from kernel.world.job_ladder import MAX_JOB_LEVEL
-from kernel.world.seed import SEED_DIR
+from kernel.world.seed import BLUEPRINT_DIR
 from kernel.world.world_manifest import world_block
 
 # ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ DEFAULT_TRACKS = (XP_TRACK, JP_TRACK)
 
 def _load_active_tracks():
     """The (xp, jp) tracks the world declares in world.yaml `progression:`, else the default."""
-    block = world_block(SEED_DIR, "progression")
+    block = world_block(BLUEPRINT_DIR, "progression")
     return tracks_from_dict(block) if block is not None else DEFAULT_TRACKS
 
 
@@ -233,7 +233,7 @@ def gains_from_dict(raw):
 
 def _load_active_gains():
     """The per-level gains the booted world declares in world.yaml `gains:`, else the default."""
-    block = world_block(SEED_DIR, "gains")
+    block = world_block(BLUEPRINT_DIR, "gains")
     return gains_from_dict(block) if block is not None else DEFAULT_GAINS
 
 
