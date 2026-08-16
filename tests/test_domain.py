@@ -14,7 +14,7 @@ import pytest
 
 from kernel.domains.education import EducationModule
 from kernel.seedlab.domain import DomainModule, register_module
-from kernel.seedlab.form import SeedSpec
+from kernel.seedlab.form import BlueprintSpec
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
 from kernel.seedlab.provision import DomainModuleError, DomainModuleRegistry, provision
 
@@ -29,8 +29,8 @@ def _education_registry() -> DomainModuleRegistry:
     return registry
 
 
-def _spec(product_type: str, modules: tuple[str, ...]) -> SeedSpec:
-    return SeedSpec(
+def _spec(product_type: str, modules: tuple[str, ...]) -> BlueprintSpec:
+    return BlueprintSpec(
         schema=1,
         product_type=product_type,
         name="Grade 3 Science",

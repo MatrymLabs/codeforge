@@ -1,6 +1,7 @@
 """Test twin for kernel/seedlab/form.py -- the Engineering Form.
 
-Acceptance: one domain-neutral engine turns intent into a validated, machine-readable SeedSpec for
+Acceptance: one domain-neutral engine turns intent into a validated, machine-readable BlueprintSpec
+for
 different product types from DATA alone -- an MMORPG spec selects the game module, an education spec
 selects the education module. The Form is adaptive (a conditional question appears only when its
 trigger is answered). New product types are data (proven by loading the shipped catalog).

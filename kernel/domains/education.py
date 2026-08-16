@@ -64,7 +64,8 @@ class LessonBook:
 @dataclass
 class EducationModule:
     """The Education domain module. Satisfies DomainModule (name / title / capabilities) and exposes
-    a lesson book. `name` is the key an education SeedSpec selects; it is FROZEN as "education"."""
+        a lesson book. `name` is the key an education BlueprintSpec selects; it is FROZEN as
+    "education"."""
 
     name: str = "education"
     title: str = "Education"

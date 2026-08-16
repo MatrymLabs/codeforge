@@ -8873,7 +8873,7 @@
     "designation": "MOD-10.075",
     "name": "form",
     "status": "active",
-    "function": "the Engineering Form: turn intent into a validated, machine-readable SeedSpec. One domain-neutral engine walks a DATA catalog (data/seedlab/engineering_form.json) of common + per-product-type questions (adaptive via applies_when) and emits a SeedSpec carrying the product type, identity, selected domain_modules, and validated answers -- an MMORPG spec selects the game module, a classroom spec selects education and never game",
+    "function": "the Engineering Form: turn intent into a validated, machine-readable BlueprintSpec. One domain-neutral engine walks a DATA catalog (data/seedlab/engineering_form.json) of common + per-product-type questions (adaptive via applies_when) and emits a BlueprintSpec carrying the product type, identity, selected domain_modules, and validated answers -- an MMORPG spec selects the game module, a classroom spec selects education and never game",
     "label": "form",
     "file": "kernel/seedlab/form.py",
     "type": "MOD",
@@ -8884,7 +8884,7 @@
     "related": [
       "MOD-10.052"
     ],
-    "reuse": "Slice B of the Stream-1 engine directive, schema-first: new product types are DATA (a catalog entry), never a code fork. Fails loud on an unknown product type, a missing required answer, an out-of-range choice, an answer outside the chosen product type, or a dangling catalog reference. The SeedSpec is the seam that drives kernel configuration + domain-module selection + (later) Hardware Store matching. Grammar before worlds enforced by construction: the education product type simply never lists the game module.",
+    "reuse": "Slice B of the Stream-1 engine directive, schema-first: new product types are DATA (a catalog entry), never a code fork. Fails loud on an unknown product type, a missing required answer, an out-of-range choice, an answer outside the chosen product type, or a dangling catalog reference. The BlueprintSpec is the seam that drives kernel configuration + domain-module selection + (later) Hardware Store matching. Grammar before worlds enforced by construction: the education product type simply never lists the game module.",
     "notes": "Domain-neutral: no kernel/world/ import; the engine knows nothing about combat, lessons, or certificates -- only the catalog does. Catalog path is injectable (tests pass a definition directly). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
     "tags": [
       "module"
@@ -8910,8 +8910,8 @@
       "MOD-10.075"
     ],
     "related": [],
-    "reuse": "Closes the intent -> Seed pipeline: Engineering Form (MOD-10.075) emits a SeedSpec, this turns it into a live Seed via the Kernel (MOD-10.052) and resolves its domain modules. Grammar before worlds by construction and honesty: an education Seed resolves only modules registered under its own names and can never resolve to the game module; a selected module that does not exist is refused, never fake-loaded. Additive persistence change: SeedIdentity gains product_type + domain_modules with back-compat defaults (an old record loads; a JSON list coerces to a tuple).",
-    "notes": "Slice: SeedSpec -> create_seed + domain-module loading (the Stream-1 engine capstone). Domain-neutral: knows module NAMES, not their content; no kernel/world/ import. The DomainModuleRegistry is the seam a future real module loader plugs into; no domain modules ship yet, so provision fails loud until they are registered (honest). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+    "reuse": "Closes the intent -> Seed pipeline: Engineering Form (MOD-10.075) emits a BlueprintSpec, this turns it into a live Seed via the Kernel (MOD-10.052) and resolves its domain modules. Grammar before worlds by construction and honesty: an education Seed resolves only modules registered under its own names and can never resolve to the game module; a selected module that does not exist is refused, never fake-loaded. Additive persistence change: SeedIdentity gains product_type + domain_modules with back-compat defaults (an old record loads; a JSON list coerces to a tuple).",
+    "notes": "Slice: BlueprintSpec -> create_seed + domain-module loading (the Stream-1 engine capstone). Domain-neutral: knows module NAMES, not their content; no kernel/world/ import. The DomainModuleRegistry is the seam a future real module loader plugs into; no domain modules ship yet, so provision fails loud until they are registered (honest). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
     "tags": [
       "module"
     ],
@@ -8961,7 +8961,7 @@
       "MOD-10.078",
       "MOD-10.077"
     ],
-    "reuse": "The first concrete domain module and the proof of the whole domain-module mechanism end to end: an education SeedSpec provisions and resolves to this LIVE module (its lesson book is reachable + mutable). Grammar before worlds from the module side: stdlib-only, imports NO game world; an education Seed loads exactly this and never combat, and an education-only registry can never resolve a game Seed's module (fails loud). Lives in the new kernel/domains/ domain layer, which the platform is forbidden to import.",
+    "reuse": "The first concrete domain module and the proof of the whole domain-module mechanism end to end: an education BlueprintSpec provisions and resolves to this LIVE module (its lesson book is reachable + mutable). Grammar before worlds from the module side: stdlib-only, imports NO game world; an education Seed loads exactly this and never combat, and an education-only registry can never resolve a game Seed's module (fails loud). Lives in the new kernel/domains/ domain layer, which the platform is forbidden to import.",
     "notes": "Deliberately minimal (lessons are the seed of education; assessments/roles/paths are later honest slices). First module under kernel/domains/. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
     "tags": [
       "module"
@@ -9378,7 +9378,7 @@
       "MOD-10.086"
     ],
     "reuse": "The authoring layer above the Linker: derives a GameSpec from a one-line journey intent, so a whole playable, durable, recoverable region comes from a short description (the Oregon-Trail archetype, generated). Proven end to end: a generated journey LINKS (game_linker MOD-10.085) and OPERATES-AND-RESUMES (game_session MOD-10.087). Pure + deterministic (same waypoints -> byte-identical linked content); knows only game_linker's spec dataclasses, no world/engine. The natural consumer of a future Form->journey-answers bridge (the Ludii-trick step). Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
-    "notes": "First game content generator. Generated specs are built to pass the Linker's gates (reachable rooms, reachable quest terminal, on_enter names real rooms) and be travel-operable. Next: a Form(SeedSpec journey answers) -> journey_region bridge to close Form->Spec->Seed. PROTOTYPED.",
+    "notes": "First game content generator. Generated specs are built to pass the Linker's gates (reachable rooms, reachable quest terminal, on_enter names real rooms) and be travel-operable. Next: a Form(BlueprintSpec journey answers) -> journey_region bridge to close Form->Spec->Seed. PROTOTYPED.",
     "tags": [
       "module"
     ],
@@ -9414,7 +9414,7 @@
     "designation": "MOD-10.089",
     "name": "journey_form",
     "status": "active",
-    "function": "the last link that closes Form->Spec->Seed: journey_from_form(seed_spec) turns a validated `journey` Engineering-Form SeedSpec into a GameSpec (via journey_region MOD-10.088), so a filled Form becomes a playable, durable, recoverable game; refuses a non-journey spec, and CARRIES the persistence_tier answer (single_session = a personal instance / persistent = a shared region) rather than gating it -- honouring the revised founder ruling J3 (instancing is a valid mode WITHIN the one integrated MMORPG)",
+    "function": "the last link that closes Form->Spec->Seed: journey_from_form(seed_spec) turns a validated `journey` Engineering-Form BlueprintSpec into a GameSpec (via journey_region MOD-10.088), so a filled Form becomes a playable, durable, recoverable game; refuses a non-journey spec, and CARRIES the persistence_tier answer (single_session = a personal instance / persistent = a shared region) rather than gating it -- honouring the revised founder ruling J3 (instancing is a valid mode WITHIN the one integrated MMORPG)",
     "label": "journey_form",
     "file": "kernel/domains/journey_form.py",
     "type": "MOD",
@@ -9428,7 +9428,7 @@
       "MOD-10.085",
       "MOD-10.087"
     ],
-    "reuse": "The Form->journey adapter: the Ludii-trick binding between the Engineering Form (kernel/seedlab/form.py, which walks the DATA catalog data/seedlab/engineering_form.json and emits a validated SeedSpec) and the journey generator. Proven END TO END: EngineeringForm.build_spec('journey', answers) -> journey_from_form -> journey_region -> game_linker link -> game_session operate_and_recover -> RESUMED. Honours the revised J3: the persistence_tier is carried, not gated -- single_session (a personal instance) and persistent (a shared region) are both valid modes within the one MMORPG. Grammar before worlds: kernel/domains may read the neutral platform's SeedSpec (domains->seedlab allowed); the platform imports no domain (import-linter 4 contracts kept). Adds a `journey` product type + persistence_tier/region/waypoints questions to the Form catalog (data, not code).",
+    "reuse": "The Form->journey adapter: the Ludii-trick binding between the Engineering Form (kernel/seedlab/form.py, which walks the DATA catalog data/seedlab/engineering_form.json and emits a validated BlueprintSpec) and the journey generator. Proven END TO END: EngineeringForm.build_spec('journey', answers) -> journey_from_form -> journey_region -> game_linker link -> game_session operate_and_recover -> RESUMED. Honours the revised J3: the persistence_tier is carried, not gated -- single_session (a personal instance) and persistent (a shared region) are both valid modes within the one MMORPG. Grammar before worlds: kernel/domains may read the neutral platform's BlueprintSpec (domains->seedlab allowed); the platform imports no domain (import-linter 4 contracts kept). Adds a `journey` product type + persistence_tier/region/waypoints questions to the Form catalog (data, not code).",
     "notes": "Closes the game pipeline front-door: Form -> Spec -> Seed. The Form's required-answer gate catches empty answers before the bridge; a non-empty-but-label-less waypoints string surfaces as JourneyError. PROTOTYPED.",
     "tags": [
       "module"

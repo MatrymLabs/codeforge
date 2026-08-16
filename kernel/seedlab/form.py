@@ -9,8 +9,9 @@ is how a purpose becomes a structured Seed definition without forking the engine
     certificates; it only walks the catalog.
   * `EngineeringForm` reads the catalog and, for a chosen product type, yields the ACTIVE questions
     (common + branch, honoring `applies_when` so the form adapts to prior answers), then validates a
-    set of answers into a `SeedSpec`.
-  * `SeedSpec` is the machine-readable output that drives the rest of the engine: the product type,
+    set of answers into a `BlueprintSpec`.
+  * `BlueprintSpec` is the machine-readable output that drives the rest of the engine: the product
+
     the identity fields (name/owner/purpose), the selected `domain_modules`, and the validated
     answers. A classroom spec selects the `education` module and NEVER the game module -- grammar
     before worlds, enforced by construction rather than hoped for.
@@ -36,7 +37,7 @@ CHOICE = "choice"
 MULTI = "multi"
 _KINDS = (TEXT, BOOL, NUMBER, CHOICE, MULTI)
 
-_SPEC_SCHEMA = 1  # the SeedSpec wire version, so a consumer can read (or refuse) it knowingly
+_SPEC_SCHEMA = 1  # the BlueprintSpec wire version, so a consumer can read (or refuse) it knowingly
 
 _TRUE = {"true", "yes", "1", "on"}
 _FALSE = {"false", "no", "0", "off"}
@@ -136,7 +137,7 @@ class FormDefinition:
 
 
 @dataclass(frozen=True)
-class SeedSpec:
+class BlueprintSpec:
     """The Form's machine-readable output: everything the engine needs to configure a Seed and pick
     its domain modules. `answers` holds the validated, coerced field values."""
 
@@ -176,7 +177,8 @@ def load_definition(path: Path | None = None) -> FormDefinition:
 
 
 class EngineeringForm:
-    """Walks the catalog for one product type and validates answers into a SeedSpec. Domain-neutral:
+    """Walks the catalog for one product type and validates answers into a BlueprintSpec.
+
     the same instance builds a game spec and a classroom spec, selecting different modules from data
     alone."""
 
@@ -214,8 +216,9 @@ class EngineeringForm:
         pt = self._product_type(product_type)
         return [q for q in self._ordered_questions(pt) if q.is_active(answers)]
 
-    def build_spec(self, product_type: str, answers: dict[str, Any]) -> SeedSpec:
-        """Validate `answers` into a SeedSpec for `product_type`. Fails loud on an unknown product
+    def build_spec(self, product_type: str, answers: dict[str, Any]) -> BlueprintSpec:
+        """Validate `answers` into a BlueprintSpec for `product_type`. Fails loud on an unknown
+
         type, an answer to a question outside this product type, a missing required answer, or an
         out-of-range value. Inactive conditional questions are neither required nor collected."""
         pt = self._product_type(product_type)
@@ -234,7 +237,7 @@ class EngineeringForm:
                     raise FormError(f"missing required answer: {question.id!r} ({question.prompt})")
                 continue
             collected[question.id] = _coerce(question, answers[question.id])
-        return SeedSpec(
+        return BlueprintSpec(
             schema=_SPEC_SCHEMA,
             product_type=pt.id,
             name=str(collected["name"]),

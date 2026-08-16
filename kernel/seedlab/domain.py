@@ -7,7 +7,8 @@ the neutral SEAM: it declares the shape every real module must satisfy, without 
 one. Grammar before worlds: the platform depends on this contract, never on a concrete domain module
 (the modules live in kernel/domains/ and register themselves at composition time).
 
-  * `DomainModule` -- the structural contract: a stable `name` (lowercase key a SeedSpec selects,
+  * `DomainModule` -- the structural contract: a stable `name` (lowercase key a BlueprintSpec
+selects,
     matching `SeedIdentity.domain_modules`), a display `title`, and the `capabilities` it honestly
     provides.
   * `register_module(registry, module)` -- register a module under its own `name`, so a Seed that
@@ -29,12 +30,13 @@ class DomainModule(Protocol):
     these attributes satisfies it); the platform never imports a concrete module, it only resolves
     one out of a registry the composition root filled."""
 
-    name: str  # the lowercase key a SeedSpec selects (matches SeedIdentity.domain_modules)
+    name: str  # the lowercase key a BlueprintSpec selects (matches SeedIdentity.domain_modules)
     title: str  # human-facing display name
     capabilities: tuple[str, ...]  # what this module honestly provides
 
 
 def register_module(registry: DomainModuleRegistry, module: DomainModule) -> None:
-    """Register a domain module under its own `name` (the key a SeedSpec selects). A duplicate name
-    fails loud in the registry, so two modules can never both claim one name."""
+    """Register a domain module under its own `name` (the key a BlueprintSpec selects). A duplicate
+    name
+        fails loud in the registry, so two modules can never both claim one name."""
     registry.register(module.name, module)
