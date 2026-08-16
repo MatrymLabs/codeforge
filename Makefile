@@ -341,25 +341,32 @@ audit:
 # unresolved high/critical vulns" law. Build-tooling CVEs stay in the informational
 # whole-env `audit`, so an unfixable pip/setuptools advisory never reds the build.
 # A documented exception uses `pip-audit --ignore-vuln <ID>` with a reason. Needs uv. ---
+#
+# Runs through scripts/cve_gate.sh, which separates "a dependency is vulnerable" (FAIL, blocking)
+# from "the advisory service was unreachable" (UNVERIFIED, not blocking). pip-audit exits non-zero
+# for both, and reading them as one put PyPI's uptime on the critical path of every pull request:
+# on 2026-08-16 a `Connection reset by peer` reddened #996, a one-line Makefile change touching no
+# dependency at all. A gate that reports on the weather is not reporting on the code.
 audit-runtime:
 	@command -v uv >/dev/null 2>&1 || { echo "audit-runtime needs uv (see make env)"; exit 1; }
 	@uv export --no-dev --no-emit-project --format requirements-txt > runtime-requirements.txt
-	pip-audit -r runtime-requirements.txt
+	@bash scripts/cve_gate.sh audit runtime-requirements.txt
 
 # --- Gate canary (RD-2026-0002 #1): prove the CVE gate BLOCKS on a real defect. A gate never
 # tested against a known-vulnerable input is faith, not evidence. Feeds pip-audit a fixture that
 # pins a package with real advisories and asserts a NON-ZERO exit; if the gate ever goes toothless
 # (or pip-audit silently no-ops), this fails LOUD. Needs the online advisory DB, so it is a CI
 # step, not a pytest (the secret-gate canary lives offline in tests/test_gate_canaries.py). ---
+#
+# THE CANARY USED TO PASS ON A CRASH. It discarded pip-audit's output and read ANY non-zero exit
+# as proof of teeth. A network error is also non-zero, so during the 2026-08-16 PyPI outage this
+# would have printed "ok: has teeth" while measuring nothing: an instrument that cannot fail, in
+# the one place whose entire job is proving another instrument can. It now requires the block to
+# come from a FINDING, and says UNVERIFIED when it cannot tell.
 .PHONY: gate-canary
 gate-canary:
 	@echo "→ CVE gate canary: pip-audit must BLOCK on a known-vulnerable pin..."
-	@if pip-audit -r tests/fixtures/known_vulnerable_requirements.txt >/dev/null 2>&1; then \
-		echo "GATE CANARY FAILED: pip-audit did NOT flag a known-vulnerable package - the CVE gate is toothless"; \
-		exit 1; \
-	else \
-		echo "  ok: the CVE gate flags the known-vulnerable fixture (has teeth)"; \
-	fi
+	@bash scripts/cve_gate.sh canary tests/fixtures/known_vulnerable_requirements.txt
 
 # --- SBOM: a CycloneDX software bill of materials (SSDF supply-chain evidence).
 # Generated from the installed environment; the output is git-ignored (reproducible
