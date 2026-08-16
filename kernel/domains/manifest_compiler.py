@@ -283,7 +283,7 @@ def _validate_artifact(seed_dir: Path, zone_id: str) -> None:
 
 def install_compiled_region(
     compiled: CompiledAethrynRegion,
-    seed_root: Path,
+    blueprint_root: Path,
     *,
     seed_name: str = "aethryn-veridia",
 ) -> HostedWorld:
@@ -294,7 +294,7 @@ def install_compiled_region(
     """
     hosted = install_world(
         compiled.game_spec(),
-        seed_root,
+        blueprint_root,
         seed_name=seed_name,
         title=f"Aethryn - {compiled.profile.display_name}",
     )

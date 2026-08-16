@@ -10,7 +10,8 @@ engine's own `world_manifest.describe_world` gate (fails loud on a bad id/title/
 declared spawn IS the seed's first room by construction -- the Linker now emits the start FIRST --
 which the test proves independently with the engine's `check_world`.
 
-  * `install_world(spec, seed_root, *, seed_name=, title=)` -- link + manifest + validate, returning
+  * `install_world(spec, blueprint_root, *, seed_name=, title=)` -- link + manifest + validate,
+    returning
     a HostedWorld verdict: HOSTABLE (links + a valid manifest), UNHOSTABLE (a manifest problem,
     surfaced, never hidden), or REFUSED (the region did not link at all).
 
@@ -70,26 +71,26 @@ def _slug(region: str) -> str:
     return slug
 
 
-def _seed_root(root: Path) -> Path:
+def _blueprint_root(root: Path) -> Path:
     resolver_root = SEEDS_ROOT.parents[1]
     return SEEDS_ROOT if root == resolver_root else root / SEEDS_ROOT.relative_to(resolver_root)
 
 
 def install_world(
     spec: GameSpec,
-    seed_root: Path,
+    blueprint_root: Path,
     *,
     seed_name: str = "",
     title: str = "",
 ) -> HostedWorld:
     """Install a generated region as a bootable World Package under
-    `<seed_root>/content/blueprints/`
+    `<blueprint_root>/content/blueprints/`
     and validate its identity through the engine's own gate. Links the region (rooms + quest,
     start-first so the seed spawns at the declared start), writes a `world.yaml` manifest, then
     validates it with `describe_world`. HOSTABLE when it holds; REFUSED if it never linked."""
     name = seed_name or _slug(spec.region)
-    seed_root = Path(seed_root)
-    seed_dir = _seed_root(seed_root) / name
+    blueprint_root = Path(blueprint_root)
+    seed_dir = _blueprint_root(blueprint_root) / name
 
     linked, verdict = link_and_validate(spec, seed_dir)
     if verdict.verdict != LINKED:
@@ -114,7 +115,7 @@ def install_world(
 
     files = tuple(sorted([*linked.files, "world.yaml"]))
     try:
-        describe_world(name, root=seed_root)
+        describe_world(name, root=blueprint_root)
     except WorldManifestError as exc:
         return HostedWorld(UNHOSTABLE, name, str(seed_dir), spec.start, files, (str(exc),))
     return HostedWorld(HOSTABLE, name, str(seed_dir), spec.start, files)

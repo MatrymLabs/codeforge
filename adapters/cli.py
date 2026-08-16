@@ -23,6 +23,7 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge onboard                    run the onboarding workflow (same engine as the game quest)
   codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
   codeforge host --region R --waypoints a,b,c      install a journey as a bootable World Package
+  codeforge host --help        show host options (--blueprint-root, --seed-root)
   codeforge seeds                      list installed games (seeds)
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
@@ -423,7 +424,7 @@ def _cmd_host(args: list[str]) -> int:
     parser.add_argument(
         "--blueprint-root",
         "--seed-root",
-        dest="seed_root",
+        dest="blueprint_root",
         default=".",
         help="repo root holding content/blueprints/ (default: cwd)",
     )
@@ -442,11 +443,11 @@ def _cmd_host(args: list[str]) -> int:
     from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world
     from kernel.domains.journey import JourneyError, journey_region
 
-    seed_root = Path(ns.seed_root)
+    blueprint_root = Path(ns.blueprint_root)
     waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
     try:
         spec = journey_region(ns.region, waypoints)
-        world = install_world(spec, seed_root, seed_name=ns.name, title=ns.title)
+        world = install_world(spec, blueprint_root, seed_name=ns.name, title=ns.title)
     except (JourneyError, HostedWorldError) as exc:
         print(f"refused: {exc}", file=sys.stderr)
         return 2
@@ -467,7 +468,7 @@ def _cmd_host(args: list[str]) -> int:
         from kernel.domains.hosted_recovery import snapshot_seed, verify_seed_recovery
 
         report = verify_seed_recovery(
-            world.seed_name, seed_root, snapshot_seed(Path(world.seed_dir))
+            world.seed_name, blueprint_root, snapshot_seed(Path(world.seed_dir))
         )
         if report.verdict != RECOVERED:
             print(f"  {report.verdict.upper()}: {report.detail}", file=sys.stderr)
