@@ -15,7 +15,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
 # --- The map, as data --------------------------------------------------------------------------
 # Each zone: id, display name, level band, biome (a wildlands biome key), a hub blurb, the wildlands
@@ -811,7 +811,7 @@ def emit(out_root: Path | None = None) -> None:
             wild.append(f"{SP}trail_length: {_fill_trail(zid)}")
             wild.append("")
 
-    root = out_root if out_root is not None else SEEDS_ROOT / "aethryn"
+    root = out_root if out_root is not None else BLUEPRINTS_ROOT / "aethryn"
     root.mkdir(parents=True, exist_ok=True)
     (root / "rooms.yaml").write_text("\n".join(rooms) + "\n")
     (root / "npcs.yaml").write_text("\n".join(npcs) + "\n")

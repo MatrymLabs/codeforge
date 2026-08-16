@@ -21,7 +21,7 @@ import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-from kernel.world.seed import SEEDS_ROOT, load_npcs, load_rooms
+from kernel.world.seed import BLUEPRINTS_ROOT, load_npcs, load_rooms
 
 _SANDBOX = "workspace"  # the only directory generation may write into (git-ignored)
 _RISK = ("low", "medium", "high")
@@ -272,7 +272,7 @@ def preview_seed(seed_name: str, seeds_root: Path | None = None) -> str:
     """Look through the arch at a built game WITHOUT entering it: the room you would wake in, its
     exits, and its inhabitants, loaded read-only. Empty name lists installed games; an unknown
     game is refused. The running world is never swapped."""
-    base = seeds_root if seeds_root is not None else SEEDS_ROOT
+    base = seeds_root if seeds_root is not None else BLUEPRINTS_ROOT
     installed = (
         sorted(p.name for p in base.iterdir() if (p / "rooms.yaml").is_file())
         if base.is_dir()

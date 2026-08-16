@@ -114,11 +114,11 @@ def to_markdown(manifest: WorldManifest) -> str:
 
 
 def _seeds_root(root: Path | None) -> Path:
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
-    if root is None or root == SEEDS_ROOT.parents[1]:
-        return SEEDS_ROOT
-    return root / SEEDS_ROOT.relative_to(SEEDS_ROOT.parents[1])
+    if root is None or root == BLUEPRINTS_ROOT.parents[1]:
+        return BLUEPRINTS_ROOT
+    return root / BLUEPRINTS_ROOT.relative_to(BLUEPRINTS_ROOT.parents[1])
 
 
 def _first_room(seed_dir: Path) -> str:

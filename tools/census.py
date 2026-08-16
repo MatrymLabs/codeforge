@@ -22,9 +22,9 @@ from pathlib import Path
 
 import yaml
 
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
-SEED = SEEDS_ROOT / "aethryn"
+SEED = BLUEPRINTS_ROOT / "aethryn"
 
 
 def _load(name: str) -> dict:

@@ -30,7 +30,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from kernel.domains.game_linker import LINKED, GameSpec, link_and_validate
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
 # --- host-readiness verdict words (a distinct vocabulary: "can the server boot this world?") ----
 HOSTABLE = "hostable"  # links, the manifest is valid, and the declared spawn is the seed's spawn
@@ -71,8 +71,12 @@ def _slug(region: str) -> str:
 
 
 def _seed_root(root: Path) -> Path:
-    resolver_root = SEEDS_ROOT.parents[1]
-    return SEEDS_ROOT if root == resolver_root else root / SEEDS_ROOT.relative_to(resolver_root)
+    resolver_root = BLUEPRINTS_ROOT.parents[1]
+    return (
+        BLUEPRINTS_ROOT
+        if root == resolver_root
+        else root / BLUEPRINTS_ROOT.relative_to(resolver_root)
+    )
 
 
 def install_world(

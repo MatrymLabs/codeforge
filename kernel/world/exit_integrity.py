@@ -109,7 +109,7 @@ def check_paths(paths: Sequence[Path]) -> ExitVerdict:
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the real-seed gate, exiting nonzero only for accidental one-way exits."""
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -117,8 +117,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         nargs="*",
         type=Path,
         default=[
-            SEEDS_ROOT / "first-forge" / "rooms.yaml",
-            SEEDS_ROOT / "aethryn" / "rooms.yaml",
+            BLUEPRINTS_ROOT / "first-forge" / "rooms.yaml",
+            BLUEPRINTS_ROOT / "aethryn" / "rooms.yaml",
         ],
     )
     args = parser.parse_args(argv)

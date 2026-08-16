@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from kernel.world.seed import (
-    SEEDS_ROOT,
+    BLUEPRINTS_ROOT,
     Door,
     Item,
     Job,
@@ -113,7 +113,7 @@ def _load_pack(pack_dir: Path) -> PackContent:
     )
 
 
-def shipped_packs(root: Path = SEEDS_ROOT) -> list[PackContent]:
+def shipped_packs(root: Path = BLUEPRINTS_ROOT) -> list[PackContent]:
     """Every seed pack under root (a directory holding a splash.txt), loaded. Injectable root so the
     gate is tested against a fixture world, never only the live seeds."""
     packs = sorted(d for d in root.iterdir() if d.is_dir() and (d / "splash.txt").exists())
@@ -125,7 +125,7 @@ def _coverage(packs: list[PackContent]) -> dict[str, list[str]]:
     return {cap.name: [c.pack for c in packs if cap.witnessed_by(c)] for cap in CAPABILITIES}
 
 
-def coverage(root: Path = SEEDS_ROOT) -> dict[str, list[str]]:
+def coverage(root: Path = BLUEPRINTS_ROOT) -> dict[str, list[str]]:
     """For each capability, the packs that witness it (evidence). Empty list = unexercised."""
     return _coverage(shipped_packs(root))
 
@@ -148,14 +148,14 @@ def _violations(seen: dict[str, list[str]]) -> list[str]:
     return problems
 
 
-def unexercised_capabilities(root: Path = SEEDS_ROOT) -> list[str]:
+def unexercised_capabilities(root: Path = BLUEPRINTS_ROOT) -> list[str]:
     """Capabilities no shipped pack witnesses and that are not RESERVED: the gate's violations.
     A RESERVED capability that a pack DOES exercise is also flagged, so the reserve list cannot go
     stale and quietly hide a now-covered capability."""
     return _violations(coverage(root))
 
 
-def coverage_report(root: Path = SEEDS_ROOT) -> str:
+def coverage_report(root: Path = BLUEPRINTS_ROOT) -> str:
     """Human render: each capability, its witnessing packs or a DARK/RESERVED flag."""
     seen = coverage(root)
     lines = ["Content coverage (every engine capability witnessed by shipped content):"]

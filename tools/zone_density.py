@@ -24,9 +24,9 @@ from collections import defaultdict
 
 import yaml
 
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
-_SEED = SEEDS_ROOT / "aethryn"
+_SEED = BLUEPRINTS_ROOT / "aethryn"
 
 # Launch-density floor per zone: below any of these, a zone reads as under-built.
 FLOOR = {"settlements": 2, "dungeons": 1, "quests": 1}

@@ -233,9 +233,9 @@ def test_counterattack_flows_through_the_engine_tick():
 
 def test_the_seeded_gate_boss_is_a_real_fight():
     """The spiral-ascent Coilwarden is wired for combat: reachable in play, and it hits back."""
-    from kernel.world.seed import SEEDS_ROOT, load_npcs
+    from kernel.world.seed import BLUEPRINTS_ROOT, load_npcs
 
-    boss = load_npcs(SEEDS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
+    boss = load_npcs(BLUEPRINTS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
     npcs.NPCS["coilwarden"] = boss  # its seed location is gate_chamber
     npcs.reindex_npcs()
     s = _fighter(location="gate_chamber")

@@ -33,7 +33,7 @@ from kernel.domains.manifest_compiler import (
 from kernel.seed_package import BuildManifest
 from kernel.world import worldgraph
 from kernel.world.seed import (
-    SEEDS_ROOT,
+    BLUEPRINTS_ROOT,
     BlueprintError,
     Npc,
     inspect_world_links,
@@ -116,7 +116,7 @@ def load_aethryn_profiles(path: Path | None = None) -> tuple[AethrynRegionProfil
     a second list of 14 names, level bands, and biomes in Python. Geometry and anchor fractions are
     compiler defaults until each region receives deeper authored profile data.
     """
-    where = path or (SEEDS_ROOT / "aethryn" / "zones.yaml")
+    where = path or (BLUEPRINTS_ROOT / "aethryn" / "zones.yaml")
     raw = yaml.safe_load(where.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
         raise WorldCompilerError(f"Aethryn zones file is not a mapping: {where}")
@@ -240,7 +240,7 @@ def _generated_item_records(npcs: dict[str, Npc]) -> dict[str, dict[str, Any]]:
             *(name for name in npc.get("loot", {}) if name != "nothing"),
         )
     }
-    source = SEEDS_ROOT / "aethryn" / "items.yaml"
+    source = BLUEPRINTS_ROOT / "aethryn" / "items.yaml"
     raw = yaml.safe_load(source.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or not required.issubset(raw):
         missing = sorted(required - set(raw or {})) if isinstance(raw, dict) else sorted(required)
