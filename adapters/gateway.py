@@ -408,7 +408,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         empty panel, not a fabricated one."""
         from pathlib import Path
 
-        from kernel.seed_package import SeedPackageError, compile_manifest
+        from kernel.seed_package import BlueprintPackageError, compile_manifest
         from kernel.seedlab.kernel import SeedKernelError
         from kernel.seedlab.workspace_gmcp import (
             DEPLOY_MANIFEST_PACKAGE,
@@ -439,7 +439,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 tier_id = requested.strip()
         try:
             manifest = compile_manifest(SEED_NAME, tier_id)
-        except SeedPackageError as exc:
+        except BlueprintPackageError as exc:
             _LOG.warning("workspace_deploy_unavailable", tier=tier_id, error=str(exc))
         else:
             self._send_gmcp(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=SEED_NAME))
