@@ -424,8 +424,16 @@ def falsifiable_probes(seed: str = "first-forge") -> tuple[str, ...]:
             # A probe that cannot run against a healthy engine is UNMEASURED, and
             # run_differential already reports it as such. It is not falsifiable evidence.
             continue
-        # Blueprint sensitivity is intentionally limited to the coverage probe; the other
-        # thirteen probes remain on the fixed synthetic fixture and are not world tests.
+        # Only the coverage probe needs Blueprint-derived SABOTEURS, because only it enumerates
+        # the overlay's rooms; the rest are sabotaged against the fixed synthetic fixture.
+        #
+        # This is about which saboteurs to build, NOT about which probes read the Blueprint. The
+        # comment here used to say sensitivity was "intentionally limited to the coverage probe,
+        # the other thirteen remain on the fixed synthetic fixture", and #992 made that false when
+        # it drove the movement probes from the Blueprint under test. Measured at a620f36d, FIVE
+        # probes are Blueprint-sensitive (coverage/all_overlay_rooms plus the four movement
+        # probes), and 13 are not. Its arithmetic was also stale: 1 + 13 = 14, from before the
+        # battery grew to 18. Evidence: reports/2026-08-16-wo-2d-6-blueprint-sensitivity.md.
         wrong = _saboteurs(seed) if aspect == "coverage" else _saboteurs()
         for saboteur in wrong:
             _, sabotaged = _answer(probe, saboteur)
