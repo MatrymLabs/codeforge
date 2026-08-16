@@ -2,103 +2,106 @@
 
 ```yaml
 packet_id: WO-BP-3B
-status: BLOCKED
+status: COMPLETE
 branch: codex/wo-bp-3b
-base: 3cb6b78a1faa03e1679f4138a8564568511bd643
+base: 2ff5dd5ec384dcbe9f6f2bd29f94f4731a0c826a
+implementation_head: e3b920c2
 
 result: >
-  The required precondition holds and BP-3A is an ancestor of origin/main. The measured
-  SEED_DIR radius is 71 occurrences, but one caller is scripts/aethryn_campaign.py, outside
-  this Build Sheet's file allowlist. I stopped before applying the rename and restored the
-  working tree. No source or test file was changed, and no alias was added.
+  Resumed after the Principal Engineer amended the allowlist to include scripts/**. Renamed the
+  content-side SEED_DIR identifier to BLUEPRINT_DIR across all authorized callers, defined the
+  compatibility alias SEED_DIR = BLUEPRINT_DIR, and added an identity regression test. kernel/seedlab/**
+  was not changed and contains no SEED_DIR reference.
 
-precondition: |
+sync: |
+  ship synced to 9e6cc59ddc93b1f984fe90fafe41b2181d8a74e8 by a non-destructive merge.
+  codeforge synced to 2ff5dd5ec384dcbe9f6f2bd29f94f4731a0c826a by a non-destructive merge.
+  git rev-list --count HEAD..origin/main
+  0
+
+preconditions: |
   git grep -l "SEED_DIR" -- kernel/seedlab/
   [no output]
 
-  git merge-base --is-ancestor 9af2ae7b origin/main; echo BP3A_IN_MAIN:$?
-  BP3A_IN_MAIN:0
-
-  BP-3A alias shape verified at 9af2ae7b:
-  class BlueprintError(Exception):
-  SeedError = BlueprintError
-
-blast_radius: |
   git grep -c "SEED_DIR" | awk -F: '{s+=$NF} END{print s+0}'
-  71
+  77 before repair; 12 after repair, including historical Work Order text and the required alias/test references.
 
-  git grep -l "SEED_DIR" -- kernel/seedlab/
-  [no output]
+  git grep -n "SEED_DIR" -- registry/ Dockerfile Dockerfile.api deploy/ .github/
+  [no output before and after repair]
 
-  Files containing the identifier:
+changes: |
+  BLUEPRINT_DIR is now the canonical content directory name in kernel/world/seed.py and all
+  allowlisted callers, including scripts/aethryn_campaign.py. The module retains:
+
+  BLUEPRINT_DIR = ...
+  SEED_DIR = BLUEPRINT_DIR
+
+  tests/test_seed.py asserts `SEED_DIR is BLUEPRINT_DIR`.
+
+files_touched: |
   adapters/cli.py
   kernel/engine_seam.py
-  kernel/world/abilities.py
-  kernel/world/authored_towns.py
-  kernel/world/crafting.py
-  kernel/world/derived.py
-  kernel/world/doors.py
-  kernel/world/gearsets.py
-  kernel/world/items.py
-  kernel/world/job_ladder.py
-  kernel/world/jobs.py
-  kernel/world/npcs.py
-  kernel/world/professions.py
-  kernel/world/progression.py
-  kernel/world/quest.py
-  kernel/world/seed.py
-  kernel/world/world.py
-  kernel/world/zones.py
+  kernel/world/{abilities,authored_towns,crafting,derived,doors,gearsets,items,job_ladder,jobs,npcs,professions,progression,quest,seed,world,zones}.py
   scripts/aethryn_campaign.py
-  tests/test_campaign.py
-  tests/test_seed.py
-  tests/test_seed_selection.py
-
-allowlist_finding: |
-  scripts/aethryn_campaign.py contains SEED_DIR, but scripts/** is absent from the allowlist.
-  The authorized paths include kernel/world/**, kernel/engine_seam.py, adapters/**, tools/**,
-  tests/**, and this report. The script is a content-side caller, not a SeedLab occurrence, but
-  it cannot be renamed under this order. I did not widen the allowlist or leave a partial rename.
-
-registry_docker_workflows: |
-  git grep -n "SEED_DIR" -- registry/ Dockerfile Dockerfile.api deploy/ .github/
-  [no output]
-
-store_search: >
-  Certified Tier (hardware-store/catalog/) was searched first for staged-rename and
-  deprecation-alias Parts; no matching card was found. Working Shelf (codeforge/catalog/parts.yaml)
-  was searched second for the same terms; no matching entry was found. No Part was consumed.
+  tests/{test_campaign,test_seed,test_seed_selection}.py
+  work-orders/WO-BP-3B/BENCH_REPORT.md
 
 verification: |
+  Focused contract tests:
+  pytest tests/test_seed.py tests/test_campaign.py tests/test_seed_selection.py -q
+  121 passed, 3 skipped in 2.78s
+
+  Full Proof Run:
   export PATH="$PWD/.venv/bin:$HOME/.local/go/bin:$HOME/go/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
   make proto && make check
-  make proto exit 0; make check exit 0
-  5308 passed, 54 skipped, 58 warnings in 146.12s
+  PROOF_EXIT:0
+  5310 passed, 54 skipped, 58 warnings in 155.31s
   Coverage: 93.46% (required: 85%)
+  Contracts: 4 kept, 0 broken.
+  Success: no issues found in 826 source files
 
-  After stopping and restoring the mechanical trial:
-  git diff --stat
+  Additional gate:
+  make lint typecheck
+  LINT_TYPECHECK_EXIT:0
+
+  Boundary checks:
+  git diff --name-only -- kernel/seedlab/
+  [no output]
+  git grep -l "SEED_DIR" -- kernel/seedlab/
   [no output]
   git diff --check
   [no output]
 
-blockers: >
-  Principal Engineer decision required: widen the allowlist to include scripts/aethryn_campaign.py,
-  or leave this caller for a follow-up order. The rename cannot satisfy its measured 71-occurrence
-  boundary while that authorized path is excluded.
+  Failure before repair, preserved from the prior blocked attempt:
+  The first mechanical trial found scripts/aethryn_campaign.py outside the then-current allowlist,
+  so the trial was restored and reported BLOCKED. After the allowlist amendment, the same complete
+  radius was migrated and the full Proof Run passed.
 
-reimplemented: none; the rename was not applied
-recurrence: the alias-then-migrate shape recurs from BP-3A, but this order stopped at an allowlist boundary
-generalizable: measure the complete identifier radius before a mechanical rename and compare every path to the allowlist
-friction: the scoped search found one content caller in scripts/** after the sheet's broad-looking boundary was read literally
+registry_docker_workflows: >
+  No SEED_DIR reference in registry/, Dockerfile, Dockerfile.api, deploy/, or .github/ before or
+  after the migration.
+
+store_search: >
+  Certified Tier (hardware-store/catalog/) was searched first for staged-rename and deprecation-
+  alias Parts; no matching card was found. Working Shelf (codeforge/catalog/parts.yaml) was searched
+  second for the same terms; no matching entry was found. No Part was consumed.
+
+blockers: none
+
+reimplemented: none; the existing BP-3A compatibility-alias shape was consumed as the approved pattern
+recurrence: alias-then-migrate is the second occurrence after BP-3A; no Part was self-certified
+generalizable: measure the complete identifier radius, verify exclusions, then migrate every allowlisted caller with an identity test
+friction: the initial Build Sheet omitted scripts/**; the amended scope resolved the only content-side caller boundary
 
 pattern_shapes: staged identifier rename, compatibility alias, allowlist boundary
 
 pattern_screen:
-  lane_echo: persistence, commands, events, world graph, and integration were screened; no source change was made
+  lane_echo: persistence, commands, events, world graph, and integration screened; no new runtime shape introduced
   catalogue_match: no Certified Tier or Working Shelf Part matched
-  recurrence_check: alias-then-migrate is the second occurrence; no Part was self-certified
-  verdict_note: BLOCKED at the authorized file boundary; no partial rename was left behind
+  recurrence_check: alias-then-migrate is the second occurrence; the approved BP-3A pattern was reused
+  verdict_note: first attempt correctly blocked at the stale allowlist; after amendment, migration completed with no SeedLab spill
 ```
 
-IN PLAIN TERMS: I measured the rename and found one legitimate content caller in a folder this order does not allow me to edit. I stopped before changing code, so the next decision is simply whether that script belongs in this rename or in its own order. The key concept is blast-radius discipline: the measured thing must fit the approved file boundary before a bulk rename begins.
+IN PLAIN TERMS: The content loader and its callers now use the clearer Blueprint name, while old
+imports still work through a direct alias. This keeps the rename reversible and leaves the separate
+SeedLab subsystem untouched.
