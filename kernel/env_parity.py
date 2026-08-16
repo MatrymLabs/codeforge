@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import importlib.metadata
 import os
+import platform
 import re
 import sys
 import tomllib
@@ -228,7 +229,8 @@ def locked_ci_packages(lock_path: Path) -> dict[str, PackageValue]:
     root: dict[str, Any] = root_records[0]
     environment = {
         "sys_platform": sys.platform,
-        "platform_machine": os.uname().machine,
+        # platform.machine(), not os.uname(): os.uname is POSIX-only and absent on Windows.
+        "platform_machine": platform.machine(),
         "platform_python_implementation": sys.implementation.name,
         "python_full_version": "3.13.0",
     }

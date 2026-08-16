@@ -148,8 +148,13 @@ def test_a_backup_restores_and_the_store_boots_against_it(tmp_path):
     snapshot = backup_db(dest_dir=tmp_path / "backups")
 
     # DISASTER: the live database is gone, and a fresh process holds no connection to it.
-    Path(db.DB_PATH).unlink()
+    # Dispose BEFORE unlinking, not merely clear: a cleared registry still leaves SQLAlchemy's
+    # pooled connections open on the file. POSIX unlinks an open file happily, Windows refuses it.
+    # Disposing first is also the truer reading of "a fresh process holds no connection to it".
+    for engine in db._ENGINES.values():
+        engine.dispose()
     db._ENGINES.clear()
+    Path(db.DB_PATH).unlink()
 
     # RECOVERY: restore the snapshot over DB_PATH, then boot the store against it.
     restored = restore_db(snapshot)

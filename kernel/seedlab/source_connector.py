@@ -117,7 +117,15 @@ class LocalSource:
 
     def _resolve(self, relpath: str) -> Path:
         """Resolve a relative path inside the root, refusing anything that escapes it."""
-        if os.path.isabs(relpath):
+        # Rooted-or-drive-qualified, not just os.path.isabs(): Python 3.13 narrowed ntpath.isabs so
+        # a single-slash path like "/etc/passwd" reads as DRIVE-RELATIVE (False) on Windows. The
+        # bounds check below still refuses it, but a hostile absolute path must be named as one on
+        # every platform rather than caught downstream by accident.
+        if (
+            os.path.isabs(relpath)
+            or relpath.startswith(("/", "\\"))
+            or os.path.splitdrive(relpath)[0]
+        ):
             raise PathBoundaryError(f"absolute paths are refused: {relpath!r}")
         candidate = (self.root / relpath).resolve()
         try:

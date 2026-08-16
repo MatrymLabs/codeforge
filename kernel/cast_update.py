@@ -119,7 +119,10 @@ def _engine_files(root: Path) -> dict[str, str]:
             for path in sorted(layer_dir.rglob("*.py")):
                 if "__pycache__" in path.parts:
                     continue
-                files[str(path.relative_to(root))] = _sha(path)
+                # as_posix(), not str(): these keys are a PERSISTED identity (they travel in cast
+                # manifests and are compared across machines), so the separator must be "/" on every
+                # platform. str() on a Windows PurePath yields backslashes and breaks that contract.
+                files[path.relative_to(root).as_posix()] = _sha(path)
     return files
 
 
