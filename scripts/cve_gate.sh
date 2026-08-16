@@ -77,7 +77,9 @@ run_audit() {
 
 mode="${1:-}"
 target="${2:-}"
-[ -n "$mode" ] && [ -n "$target" ] || usage
+if [ -z "$mode" ] || [ -z "$target" ]; then
+    usage
+fi
 [ -f "$target" ] || { echo "cve_gate: no such file: $target" >&2; exit 2; }
 
 # TOOLCHAIN check FIRST, before any outcome can be inferred from an exit code. A missing binary
