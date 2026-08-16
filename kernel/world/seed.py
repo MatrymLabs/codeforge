@@ -52,7 +52,9 @@ SEEDS_ROOT = Path(
 )
 DEFAULT_SEED = "first-forge"
 SEED_NAME: str = os.environ.get("FORGE_BLUEPRINT") or os.environ.get("FORGE_SEED") or DEFAULT_SEED
-SEED_DIR = SEEDS_ROOT / SEED_NAME
+BLUEPRINT_DIR = SEEDS_ROOT / SEED_NAME
+# Compatibility alias for callers importing the former content directory name.
+SEED_DIR = BLUEPRINT_DIR
 
 
 def available_seeds() -> list[str]:
@@ -67,7 +69,7 @@ def load_splash() -> str:
 
     Read by every driver that opens a world - the TCP gateway, the web gateway, and the solo
     terminal loop - so the world's own face greets the player, not a generic banner."""
-    path = SEED_DIR / "splash.txt"
+    path = BLUEPRINT_DIR / "splash.txt"
     if path.exists():
         return path.read_text(encoding="utf-8").rstrip("\n")
     return "Welcome, traveler."

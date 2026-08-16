@@ -86,9 +86,9 @@ class Engine2D:
     def __init__(self, overlay: object | None = None) -> None:
         if overlay is None:
             from kernel.overlay import load_overlay
-            from kernel.world.seed import SEED_DIR
+            from kernel.world.seed import BLUEPRINT_DIR
 
-            overlay = load_overlay(SEED_DIR / "world_overlay.json")
+            overlay = load_overlay(BLUEPRINT_DIR / "world_overlay.json")
         self._overlay = overlay
 
     def place(self, room: str) -> ChunkPosition:

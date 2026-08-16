@@ -11,10 +11,10 @@ from kernel.shelf.stats import Stat, StatBlock
 from kernel.world.callings import gate_calling
 from kernel.world.job_progress import JobProgress
 from kernel.world.resources import Resource
-from kernel.world.seed import SEED_DIR, load_jobs
+from kernel.world.seed import BLUEPRINT_DIR, load_jobs
 from kernel.world.session import Session
 
-JOBS = load_jobs(SEED_DIR / "jobs.yaml")
+JOBS = load_jobs(BLUEPRINT_DIR / "jobs.yaml")
 
 BASE_HP = 20  # starting HP is BASE_HP + stamina; leveling uses the progression card
 BASE_MP = 5  # starting MP is BASE_MP + magic

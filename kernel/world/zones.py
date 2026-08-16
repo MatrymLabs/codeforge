@@ -21,7 +21,7 @@ with a copy a player carried off, and opt-in `resettable` leaves quest items and
 
 from kernel.world import items
 from kernel.world.respawn import SPAWN_RNG, pick_room
-from kernel.world.seed import SEED_DIR, Zone, load_zones
+from kernel.world.seed import BLUEPRINT_DIR, Zone, load_zones
 from kernel.world.session import Session
 from kernel.world.spiral import load_spiral_config, spiral_zones
 from kernel.world.wildlands import load_wildlands_config, wildlands_zones
@@ -40,12 +40,12 @@ def merged_zones(base: dict[str, Zone], spiral_cfg: dict | None) -> dict[str, Zo
 
 
 ZONES: dict[str, Zone] = merged_zones(
-    load_zones(SEED_DIR / "zones.yaml", set(WORLD)),
-    load_spiral_config(SEED_DIR / "spiral.yaml"),
+    load_zones(BLUEPRINT_DIR / "zones.yaml", set(WORLD)),
+    load_spiral_config(BLUEPRINT_DIR / "spiral.yaml"),
 )
 # The procedural wilderness regions carry their own metadata areas too (one per region), so every
 # generated room belongs to geography exactly like the hand-authored and Spiral rooms.
-_wildlands_cfg = load_wildlands_config(SEED_DIR / "wildlands.yaml")
+_wildlands_cfg = load_wildlands_config(BLUEPRINT_DIR / "wildlands.yaml")
 if _wildlands_cfg is not None:
     ZONES.update(wildlands_zones(_wildlands_cfg))
 

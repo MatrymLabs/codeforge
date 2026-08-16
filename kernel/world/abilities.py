@@ -23,11 +23,11 @@ from __future__ import annotations
 from kernel.world import combat, mortality, threat
 from kernel.world.events import announce, announce_to
 from kernel.world.npcs import NPCS, trace_npc
-from kernel.world.seed import SEED_DIR, Ability, Npc, load_abilities
+from kernel.world.seed import BLUEPRINT_DIR, Ability, Npc, load_abilities
 from kernel.world.session import SESSIONS, Session, display_name, sentence_case
 
 # The world is data: a seed's abilities live in its own abilities.yaml (empty if it ships none).
-ABILITIES: dict[str, Ability] = load_abilities(SEED_DIR / "abilities.yaml")
+ABILITIES: dict[str, Ability] = load_abilities(BLUEPRINT_DIR / "abilities.yaml")
 
 
 def abilities_for(job: str) -> list[tuple[str, Ability]]:

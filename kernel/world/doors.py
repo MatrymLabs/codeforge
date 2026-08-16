@@ -19,11 +19,11 @@ from kernel.shelf.conditions import ConditionError, evaluate
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.shelf.statemachine import Guard, Refusal, Transition, advance, build
 from kernel.world import items
-from kernel.world.seed import SEED_DIR, Door, load_doors
+from kernel.world.seed import BLUEPRINT_DIR, Door, load_doors
 from kernel.world.session import sentence_case
 
 # The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
-DOORS: dict[str, Door] = load_doors(SEED_DIR / "doors.yaml")
+DOORS: dict[str, Door] = load_doors(BLUEPRINT_DIR / "doors.yaml")
 
 
 def open_gate(door_id: str) -> bool:

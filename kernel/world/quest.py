@@ -18,7 +18,7 @@ from collections.abc import Callable
 
 from kernel.shelf.statemachine import Fired
 from kernel.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
-from kernel.world.seed import SEED_DIR, Npc, QuestSpec, load_quest
+from kernel.world.seed import BLUEPRINT_DIR, Npc, QuestSpec, load_quest
 from kernel.world.session import Session
 
 
@@ -61,10 +61,10 @@ def _load_specs() -> list[QuestSpec]:
     order. Generated bounties are added later (register_bounties), once the full foe set (with the
     procedural Spiral) is assembled. The world stays data; a story is a YAML file."""
     specs: list[QuestSpec] = []
-    primary = load_quest(SEED_DIR / "quest.yaml")
+    primary = load_quest(BLUEPRINT_DIR / "quest.yaml")
     if primary:
         specs.append(primary)
-    quests_dir = SEED_DIR / "quests"
+    quests_dir = BLUEPRINT_DIR / "quests"
     if quests_dir.is_dir():
         for path in sorted(quests_dir.glob("*.yaml")):
             spec = load_quest(path)

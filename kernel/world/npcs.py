@@ -8,10 +8,10 @@ MUD-IL shape: verb=talk, direct_object=npc.
 import contextlib
 
 from kernel.shelf import target_disambig
-from kernel.world.seed import SEED_DIR, Npc, load_npcs
+from kernel.world.seed import BLUEPRINT_DIR, Npc, load_npcs
 from kernel.world.session import sentence_case
 
-NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
+NPCS: dict[str, Npc] = load_npcs(BLUEPRINT_DIR / "npcs.yaml")
 
 # Room index: room label -> the npc labels standing in it. Presence is queried on EVERY world beat
 # (aggression.menace and render both call npcs_in), so a full scan of NPCS per call is O(npcs) per

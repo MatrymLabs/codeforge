@@ -34,7 +34,7 @@ def _seed_dir_from_env(**updates: str) -> Path:
         env.pop(name, None)
     env.update(updates)
     result = subprocess.run(
-        [sys.executable, "-c", "from kernel.world.seed import SEED_DIR; print(SEED_DIR)"],
+        [sys.executable, "-c", "from kernel.world.seed import BLUEPRINT_DIR; print(BLUEPRINT_DIR)"],
         cwd=Path(__file__).parents[1],
         env=env,
         check=True,
@@ -42,6 +42,12 @@ def _seed_dir_from_env(**updates: str) -> Path:
         text=True,
     )
     return Path(result.stdout.strip())
+
+
+def test_legacy_seed_dir_is_the_blueprint_dir_alias():
+    from kernel.world.seed import BLUEPRINT_DIR, SEED_DIR
+
+    assert SEED_DIR is BLUEPRINT_DIR
 
 
 def test_blueprint_and_seed_names_resolve_to_the_same_blueprint():
@@ -444,11 +450,11 @@ def test_room_fields_win_over_template(tmp_path):
 
 # --- items and NPCs join the seed ---
 
-from kernel.world.seed import SEED_DIR  # noqa: E402
+from kernel.world.seed import BLUEPRINT_DIR  # noqa: E402
 
 
 def test_shipped_items_seed_loads_the_copper_key():
-    items = load_items(SEED_DIR / "items.yaml")
+    items = load_items(BLUEPRINT_DIR / "items.yaml")
     assert items["copper_key"]["location"] == "room:library"
     assert items["copper_key"]["name"] == "a copper key"
 
@@ -470,7 +476,7 @@ def test_item_without_location_is_rejected(tmp_path):
 
 
 def test_shipped_npcs_seed_loads_the_librarian():
-    npcs = load_npcs(SEED_DIR / "npcs.yaml")
+    npcs = load_npcs(BLUEPRINT_DIR / "npcs.yaml")
     assert npcs["librarian"]["location"] == "library"
     assert npcs["librarian"]["next_line"] == 0
     assert "dust" in npcs["librarian"]["dialogue"][0]
@@ -485,7 +491,7 @@ def test_npc_defaults_generate_name_and_silence(tmp_path):
 
 
 def test_cross_gate_catches_item_in_missing_room(tmp_path):
-    rooms = load_rooms(SEED_DIR / "rooms.yaml")
+    rooms = load_rooms(BLUEPRINT_DIR / "rooms.yaml")
     path = tmp_path / "items.yaml"
     path.write_text("lost_coin:\n  location: mystery_cave\n")
     bad_items = load_items(path)
@@ -494,7 +500,7 @@ def test_cross_gate_catches_item_in_missing_room(tmp_path):
 
 
 def test_cross_gate_catches_npc_in_missing_room(tmp_path):
-    rooms = load_rooms(SEED_DIR / "rooms.yaml")
+    rooms = load_rooms(BLUEPRINT_DIR / "rooms.yaml")
     path = tmp_path / "npcs.yaml"
     path.write_text("ghost:\n  location: the_void\n")
     bad_npcs = load_npcs(path)

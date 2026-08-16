@@ -21,7 +21,7 @@ from kernel.world.landmarks import raise_landmarks
 from kernel.world.npcs import NPCS
 from kernel.world.relics import arm_deep_bosses
 from kernel.world.rumors import seed_rumors
-from kernel.world.seed import SEED_DIR, Npc, Room, Zone, inspect_world_links, load_rooms
+from kernel.world.seed import BLUEPRINT_DIR, Npc, Room, Zone, inspect_world_links, load_rooms
 from kernel.world.spiral import extend_world_with_road, load_spiral_config
 from kernel.world.townsfolk import load_settlements, populate_settlements
 from kernel.world.travel import load_waystones
@@ -32,13 +32,13 @@ from kernel.world.wildlands import (
     wire_attach_exits,
 )
 
-SEED_PATH = SEED_DIR / "rooms.yaml"
+SEED_PATH = BLUEPRINT_DIR / "rooms.yaml"
 
 WORLD: dict[str, Room] = load_rooms(SEED_PATH)
 # Procedurally extend the Forgeward Road outward across the wilds if the seed opts in (spiral.yaml).
 # The generated marches are seed-shaped data, merged BEFORE validation so the same loader gates
 # check them, and the seed's attach room grows an `east` exit onto the first march (flat, no climb).
-_spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
+_spiral_config = load_spiral_config(BLUEPRINT_DIR / "spiral.yaml")
 if _spiral_config is not None:
     extend_world_with_road(WORLD, NPCS, _spiral_config)
 
@@ -47,7 +47,7 @@ if _spiral_config is not None:
 # loader gates. This is how the world reaches world-generation scale without hand-authoring every
 # room (kernel.world.wildlands, a sibling of the Spiral). Merged BEFORE validation, so a bad config
 # fails loud; each region's attach room grows one exit onto its trail-head.
-_wildlands_configs = load_wildlands_config(SEED_DIR / "wildlands.yaml")
+_wildlands_configs = load_wildlands_config(BLUEPRINT_DIR / "wildlands.yaml")
 if _wildlands_configs is not None:
     _wild_rooms, _wild_npcs = generate_wildlands(_wildlands_configs, set(WORLD))
     WORLD.update(_wild_rooms)
@@ -66,7 +66,7 @@ if _wildlands_configs is not None:
 # trail-to-field upgrade of the World Topology Doctrine; each field's AREA metadata is published in
 # FIELD_ZONES so kernel.world.zones registers it for the scheduler + zone_of, exactly like a trail.
 FIELD_ZONES: dict[str, Zone] = {}
-_field_configs = load_field_configs(SEED_DIR / "fields.yaml")
+_field_configs = load_field_configs(BLUEPRINT_DIR / "fields.yaml")
 if _field_configs is not None:
     for _cfg in _field_configs:
         _fz: FieldZone = build_field_zone(_cfg, set(WORLD))
@@ -79,7 +79,7 @@ if _field_configs is not None:
 # Sink a multi-room delve below every dungeon mouth (seeds/<world>/dungeons.yaml): a descent of
 # escalating foes ending in a named deep boss (kernel.world.delve). The bosses are armed with gear
 # like the wildlands guardians. Merged before the link audit so the new rooms/drops pass its gate.
-_dungeons = load_dungeons(SEED_DIR / "dungeons.yaml")
+_dungeons = load_dungeons(BLUEPRINT_DIR / "dungeons.yaml")
 if _dungeons is not None:
     _delve_rooms, _delve_npcs = generate_delves(_dungeons)
     WORLD.update(_delve_rooms)
@@ -104,7 +104,7 @@ if _dungeons is not None:
 # Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
 # each town's level band (kernel.world.townsfolk) -- the economy sink and the towns' life. Merged
 # before the link audit, so each merchant's shop wares are cross-checked like an authored shop.
-_settlements = load_settlements(SEED_DIR / "settlements.yaml")
+_settlements = load_settlements(BLUEPRINT_DIR / "settlements.yaml")
 _town_npcs: dict[str, Npc] = {}
 if _settlements is not None:
     _town_npcs = populate_settlements(_settlements)
@@ -165,7 +165,7 @@ _register_auction_sweep()
 
 # The Waystone travel network: the seed's zone hubs a player may pay to cross between
 # (kernel.world.travel). {} when the seed ships no network (first-forge/spiral-ascent).
-WAYSTONES = load_waystones(SEED_DIR / "waystones.yaml") or {}
+WAYSTONES = load_waystones(BLUEPRINT_DIR / "waystones.yaml") or {}
 
 
 # Travel-errands: one per settlement, each sending a player to a distinct destination on the map --
@@ -206,7 +206,7 @@ if _settlements:
 from kernel.world.room_category import category_of, index_by_room  # noqa: E402
 from kernel.world.seed import load_zones  # noqa: E402 -- WORLD must exist for the room gate
 
-_story_zone_map = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
+_story_zone_map = load_zones(BLUEPRINT_DIR / "zones.yaml", set(WORLD))
 _story_zones = [dict(z, label=label) for label, z in _story_zone_map.items()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
@@ -225,7 +225,7 @@ if _dungeons:
 from kernel.world.spiral import spiral_zones  # noqa: E402 -- same builder zones.py uses
 from kernel.world.wildlands import wildlands_zones  # noqa: E402 -- same builder zones.py uses
 
-_all_zones = dict(load_zones(SEED_DIR / "zones.yaml", set(WORLD)))
+_all_zones = dict(load_zones(BLUEPRINT_DIR / "zones.yaml", set(WORLD)))
 if _spiral_config is not None:
     _all_zones.update(spiral_zones(_spiral_config))
 if _wildlands_configs is not None:
@@ -265,7 +265,7 @@ register_spine(_story_zones)
 from kernel.world.quest import all_ids as all_quest_ids  # noqa: E402
 
 validate_campaign(
-    SEED_DIR / "campaign.yaml",
+    BLUEPRINT_DIR / "campaign.yaml",
     _story_zones,
     _dungeons or [],
     _settlements or [],
