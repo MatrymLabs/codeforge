@@ -67,7 +67,10 @@ def _engine_tree(root: Path, files: dict[str, str]) -> None:
     for rel, body in files.items():
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(body)
+        # newline="" so the bytes on disk are EXACTLY `body`. Without it, Windows text mode expands
+        # "\n" to "\r\n", the sha stops matching what _pin_reader serves, and every file reads as
+        # locally edited - a platform artifact masquerading as drift.
+        path.write_text(body, encoding="utf-8", newline="")
 
 
 def _poured_cast(

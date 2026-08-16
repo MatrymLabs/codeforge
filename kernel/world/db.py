@@ -238,6 +238,7 @@ def backup_db(dest_dir: Path | None = None) -> Path:
     a timestamped file, and return its path. The live public demo had no recovery path; `make
     backup` files a snapshot. Refuses loud on a non-SQLite backend (use pg_dump for PostgreSQL)."""
     import sqlite3
+    from contextlib import closing
     from datetime import UTC, datetime
 
     url = engine_url()
@@ -252,7 +253,11 @@ def backup_db(dest_dir: Path | None = None) -> Path:
     base.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
     dest = base / f"{Path(DB_PATH).stem}-{stamp}.db"
-    with sqlite3.connect(DB_PATH) as src, sqlite3.connect(dest) as dst:
+    # closing(), because a sqlite3.Connection used as a bare context manager COMMITS but never
+    # CLOSES. Without this, every backup leaks two open handles on the database file: invisible on
+    # POSIX (which unlinks open files happily) and fatal on Windows, which refuses to remove or
+    # replace a file that any handle still holds - so the recovery path itself could not restore.
+    with closing(sqlite3.connect(DB_PATH)) as src, closing(sqlite3.connect(dest)) as dst:
         src.backup(dst)  # online snapshot: consistent even under concurrent writes
     return dest
 

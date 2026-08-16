@@ -27,6 +27,7 @@ from __future__ import annotations
 import contextlib
 import os
 import random
+import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -39,6 +40,25 @@ from kernel.bench_protocol import Comparison, describe_environment, run_comparis
 AffinitySetter = Callable[[int, set[int]], None]  # signature of os.sched_setaffinity
 AffinityGetter = Callable[[int], set[int]]  # signature of os.sched_getaffinity
 CpuCounter = Callable[[], int | None]  # signature of os.cpu_count
+
+
+def _every_core(_pid: int, /) -> set[int]:
+    """Stand-in getter where the OS exposes no affinity mask: the process may run anywhere."""
+    return set(range(os.cpu_count() or 1))
+
+
+def _refuse_pin(_pid: int, _cores: set[int], /) -> None:
+    """Stand-in setter where the OS exposes no affinity control. Raises OSError on purpose:
+    `pin_process` already reads that as a refused pin and reports `pinned=False` with the reason,
+    which is the honest answer rather than a silently unpinned bench claiming control."""
+    raise OSError(f"core pinning is unavailable on {sys.platform}")
+
+
+# Affinity control is a Linux capability - `os.sched_getaffinity`/`os.sched_setaffinity` are absent
+# on Windows and macOS. Resolve the defaults ONCE here so importing this module never explodes on a
+# platform that lacks them; the ControlReport's own honesty carries the loss of control from there.
+DEFAULT_AFFINITY_GETTER: AffinityGetter = getattr(os, "sched_getaffinity", _every_core)
+DEFAULT_AFFINITY_SETTER: AffinitySetter = getattr(os, "sched_setaffinity", _refuse_pin)
 
 
 class BenchControlError(ValueError):
@@ -72,7 +92,7 @@ def _cpu_count(ncpu: CpuCounter) -> int:
 
 def quiet_core(
     *,
-    getter: AffinityGetter = os.sched_getaffinity,
+    getter: AffinityGetter = DEFAULT_AFFINITY_GETTER,
     ncpu: CpuCounter = os.cpu_count,
     isolated_path: Path = Path("/sys/devices/system/cpu/isolated"),
 ) -> int:
@@ -116,8 +136,8 @@ def _read_isolated(isolated_path: Path) -> set[int]:
 def pin_process(
     core: int,
     *,
-    setter: AffinitySetter = os.sched_setaffinity,
-    getter: AffinityGetter = os.sched_getaffinity,
+    setter: AffinitySetter = DEFAULT_AFFINITY_SETTER,
+    getter: AffinityGetter = DEFAULT_AFFINITY_GETTER,
     ncpu: CpuCounter = os.cpu_count,
     cpu_for_governor: int | None = None,
 ) -> ControlReport:
@@ -179,8 +199,8 @@ def controlled_compare(
     seed: int = 0,
     core: int | None = None,
     timer: Callable[[], float] = time.perf_counter,
-    setter: AffinitySetter = os.sched_setaffinity,
-    getter: AffinityGetter = os.sched_getaffinity,
+    setter: AffinitySetter = DEFAULT_AFFINITY_SETTER,
+    getter: AffinityGetter = DEFAULT_AFFINITY_GETTER,
     ncpu: CpuCounter = os.cpu_count,
 ) -> tuple[Comparison, ControlReport]:
     """Measure baseline vs candidate on a pinned quiet core with a seeded interleave, then restore
