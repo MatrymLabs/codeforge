@@ -328,14 +328,14 @@ def _validate_assembled_artifact(seed_dir: Path, world: CompiledAethrynWorld) ->
 
 def install_compiled_world(
     world: CompiledAethrynWorld,
-    seed_root: Path,
+    blueprint_root: Path,
     *,
     seed_name: str = "aethryn-compiled",
 ) -> HostedWorld:
     """Install one assembled Aethryn world and prove all current seed gates pass."""
     hosted = install_world(
         world.game_spec(),
-        seed_root,
+        blueprint_root,
         seed_name=seed_name,
         title="Aethryn - Compiled World",
     )

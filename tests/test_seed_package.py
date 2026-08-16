@@ -22,7 +22,7 @@ def test_the_five_named_tiers_exist_and_climb_in_player_target():
 
 def test_tier_lookup_resolves_and_refuses_the_unknown():
     assert sp.tier("prototype").name == "Prototype"
-    with pytest.raises(sp.SeedPackageError, match="unknown deployment tier"):
+    with pytest.raises(sp.BlueprintPackageError, match="unknown deployment tier"):
         sp.tier("galactic")
 
 
@@ -47,13 +47,13 @@ def test_sizing_scales_monotonically_with_player_count():
 
 def test_derivation_refuses_a_non_positive_player_target():
     broken = sp.DeploymentTier("empty", "Empty", 0, "no players")
-    with pytest.raises(sp.SeedPackageError, match="positive player count"):
+    with pytest.raises(sp.BlueprintPackageError, match="positive player count"):
         sp.derive_sizing(broken)
 
 
 def test_a_broken_scaling_ratio_fails_loud_by_field():
     bad = sp.ScalingModel(rooms_per_zone=0.0)
-    with pytest.raises(sp.SeedPackageError, match="rooms_per_zone"):
+    with pytest.raises(sp.BlueprintPackageError, match="rooms_per_zone"):
         bad.validate()
 
 
@@ -83,5 +83,5 @@ def test_compile_manifest_produces_a_serializable_blueprint():
 
 
 def test_compile_manifest_refuses_an_empty_project_name():
-    with pytest.raises(sp.SeedPackageError, match="non-empty project name"):
+    with pytest.raises(sp.BlueprintPackageError, match="non-empty project name"):
         sp.compile_manifest("   ", "prototype")
