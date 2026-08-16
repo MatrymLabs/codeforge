@@ -1,6 +1,8 @@
-"""Test twin for kernel/seedlab/provision.py -- SeedSpec -> live Seed + domain-module resolution.
+"""Test twin for kernel/seedlab/provision.py -- BlueprintSpec -> live Seed + domain-module
+resolution.
 
-Acceptance: a validated SeedSpec becomes a real Seed whose product type + selected domain modules
+Acceptance: a validated BlueprintSpec becomes a real Seed whose product type + selected domain
+modules
 are recorded on its identity and survive restart; registered modules resolve to their loaders; the
 full `provision` pipeline creates the Seed and resolves its modules together.
 
@@ -16,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from kernel.seedlab.form import SeedSpec
+from kernel.seedlab.form import BlueprintSpec
 from kernel.seedlab.kernel import FileSeedStore, InMemorySeedStore, SeedKernel
 from kernel.seedlab.provision import (
     DomainModuleError,
@@ -33,8 +35,10 @@ def _kernel(store=None) -> SeedKernel:
     return SeedKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
 
 
-def _spec(product_type: str, modules: tuple[str, ...], name: str = "Grade 3 Science") -> SeedSpec:
-    return SeedSpec(
+def _spec(
+    product_type: str, modules: tuple[str, ...], name: str = "Grade 3 Science"
+) -> BlueprintSpec:
+    return BlueprintSpec(
         schema=1,
         product_type=product_type,
         name=name,

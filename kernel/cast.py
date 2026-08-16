@@ -30,7 +30,7 @@ import sys
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
 _ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_ROOT = _ROOT / "seed_templates"
@@ -48,9 +48,9 @@ VENDORED_SELECTIVE = "vendored-selective"  # the cast carries only its surfaces'
 def _seed_root(root: Path | None = None) -> Path:
     """Return the configured seed root, projected onto an optional repository root."""
     if root is None:
-        return SEEDS_ROOT
-    resolver_root = SEEDS_ROOT.parents[1]
-    return Path(root) / SEEDS_ROOT.relative_to(resolver_root)
+        return BLUEPRINTS_ROOT
+    resolver_root = BLUEPRINTS_ROOT.parents[1]
+    return Path(root) / BLUEPRINTS_ROOT.relative_to(resolver_root)
 
 
 # What a generated cast ignores at runtime - the same categories a cast must never carry.
@@ -354,7 +354,7 @@ def generate_cast(
     # 2. only this cast's OWN seed pack (never the other games)
     shutil.copytree(
         _seed_root(root) / starter,
-        dest / SEEDS_ROOT.relative_to(SEEDS_ROOT.parents[1]) / starter,
+        dest / BLUEPRINTS_ROOT.relative_to(BLUEPRINTS_ROOT.parents[1]) / starter,
         ignore=ignore,
     )
     # 3. the fresh scaffold + manifest, marked generated (record the surfaces of a selective cut,

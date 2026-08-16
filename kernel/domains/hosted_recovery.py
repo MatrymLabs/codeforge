@@ -38,7 +38,7 @@ from pathlib import Path
 from kernel.domains.game_lifecycle import CORRUPTED, RECOVERED, REFUSED
 from kernel.domains.game_linker import GameSpec, _sha256
 from kernel.domains.hosted_world import HOSTABLE, install_world
-from kernel.world.seed import SEEDS_ROOT
+from kernel.world.seed import BLUEPRINTS_ROOT
 
 # CORRUPTED / RECOVERED / REFUSED reuse game_lifecycle's recovery vocabulary: "did it come back
 # whole?" is the same question, one layer up (the installed package, not just the region content).
@@ -59,8 +59,12 @@ class HostedRecoveryReport:
 
 
 def _blueprint_root(root: Path) -> Path:
-    resolver_root = SEEDS_ROOT.parents[1]
-    return SEEDS_ROOT if root == resolver_root else root / SEEDS_ROOT.relative_to(resolver_root)
+    resolver_root = BLUEPRINTS_ROOT.parents[1]
+    return (
+        BLUEPRINTS_ROOT
+        if root == resolver_root
+        else root / BLUEPRINTS_ROOT.relative_to(resolver_root)
+    )
 
 
 def snapshot_seed(seed_dir: Path) -> dict[str, str]:

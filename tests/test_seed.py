@@ -9,8 +9,8 @@ import pytest
 import yaml
 
 from kernel.world.seed import (
+    BLUEPRINTS_ROOT,
     DEFAULT_ROOM_DESC,
-    SEEDS_ROOT,
     BlueprintError,
     inspect_world_links,
     load_doors,
@@ -117,7 +117,7 @@ def test_world_links_accept_a_nowhere_prototype_and_reject_a_bad_drop(tmp_path):
 
 
 def test_aethryn_boss_drops_a_valid_unplaced_prototype():
-    root = SEEDS_ROOT / "aethryn"
+    root = BLUEPRINTS_ROOT / "aethryn"
     rooms = load_rooms(root / "rooms.yaml")
     items = load_items(root / "items.yaml")
     npcs = load_npcs(root / "npcs.yaml")

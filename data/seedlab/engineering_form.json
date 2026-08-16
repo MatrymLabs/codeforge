@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "note": "The Engineering Form catalog: DATA, not code. A new product type is a new entry here (common questions + a branch + the domain modules it selects), never a code fork. The engine in kernel/seedlab/form.py is domain-neutral and knows nothing about games, classrooms, or training -- it only walks this catalog and emits a validated SeedSpec.",
+  "note": "The Engineering Form catalog: DATA, not code. A new product type is a new entry here (common questions + a branch + the domain modules it selects), never a code fork. The engine in kernel/seedlab/form.py is domain-neutral and knows nothing about games, classrooms, or training -- it only walks this catalog and emits a validated BlueprintSpec.",
   "common_question_ids": ["name", "owner", "purpose"],
   "questions": {
     "name": {"prompt": "What is this Seed called?", "kind": "text", "required": true},

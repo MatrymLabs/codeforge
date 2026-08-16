@@ -47,21 +47,21 @@ _default_world_root = (
 _configured_world_root = os.environ.get("CODEFORGE_BLUEPRINTS_ROOT")
 if _configured_world_root is None:
     _configured_world_root = os.environ.get("CODEFORGE_SEEDS_ROOT")
-SEEDS_ROOT = Path(
+BLUEPRINTS_ROOT = Path(
     _configured_world_root if _configured_world_root is not None else _default_world_root
 )
 DEFAULT_SEED = "first-forge"
 SEED_NAME: str = os.environ.get("FORGE_BLUEPRINT") or os.environ.get("FORGE_SEED") or DEFAULT_SEED
-BLUEPRINT_DIR = SEEDS_ROOT / SEED_NAME
+BLUEPRINT_DIR = BLUEPRINTS_ROOT / SEED_NAME
 # Compatibility alias for callers importing the former content directory name.
 SEED_DIR = BLUEPRINT_DIR
 
 
 def available_seeds() -> list[str]:
     """Every installed game: seed dirs that carry a rooms.yaml, alphabetical."""
-    if not SEEDS_ROOT.is_dir():
+    if not BLUEPRINTS_ROOT.is_dir():
         return []
-    return sorted(p.name for p in SEEDS_ROOT.iterdir() if (p / "rooms.yaml").is_file())
+    return sorted(p.name for p in BLUEPRINTS_ROOT.iterdir() if (p / "rooms.yaml").is_file())
 
 
 def load_splash() -> str:

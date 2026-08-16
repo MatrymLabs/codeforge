@@ -2,7 +2,8 @@
 Form -> Spec -> Seed.
 
 Acceptance (the whole pipeline, front door to playable): a filled Engineering Form for the `journey`
-product type builds a validated SeedSpec, the bridge turns it into a GameSpec, and that GameSpec
+product type builds a validated BlueprintSpec, the bridge turns it into a GameSpec, and that
+GameSpec
 both LINKS and OPERATES-AND-RESUMES on the real engine -- so a filled Form becomes a playable,
 durable, recoverable game. The Form actually offers `journey` (the catalog is wired).
 
@@ -25,7 +26,7 @@ _COMMON = {"name": "Veridia Road", "owner": "josh", "purpose": "a first journey"
 
 
 def _journey_spec(**answers):
-    """Build a validated `journey` SeedSpec through the real Form (the shipped catalog)."""
+    """Build a validated `journey` BlueprintSpec through the real Form (the shipped catalog)."""
     return EngineeringForm.load().build_spec("journey", {**_COMMON, **answers})
 
 

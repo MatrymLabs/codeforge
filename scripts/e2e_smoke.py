@@ -297,9 +297,9 @@ def _forgeward_hubs() -> list[tuple[str, str]]:
     zones the flagship grows."""
     import yaml
 
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
-    ae = SEEDS_ROOT / "aethryn"
+    ae = BLUEPRINTS_ROOT / "aethryn"
     zones = yaml.safe_load((ae / "zones.yaml").read_text(encoding="utf-8"))
     stones = yaml.safe_load((ae / "waystones.yaml").read_text(encoding="utf-8"))
     ordered = sorted(

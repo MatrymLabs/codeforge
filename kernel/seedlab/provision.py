@@ -1,7 +1,9 @@
-"""CARD: provision -- turn a validated SeedSpec into a live Seed and resolve its domain modules.
+"""CARD: provision -- turn a validated BlueprintSpec into a live Seed and resolve its domain
+
 
 The Engineering Form (kernel/seedlab/form.py) answers "what should this Seed be?" and emits a
-SeedSpec. The Seed Kernel (kernel/seedlab/kernel.py) owns a Seed's identity + lifecycle. This module
+BlueprintSpec. The Seed Kernel (kernel/seedlab/kernel.py) owns a Seed's identity + lifecycle. This
+
 is the seam between them: it creates a real Seed FROM a spec (recording the product type + selected
 domain modules on the Seed's identity, so a Seed remembers what it is across restart), and resolves
 those selected modules against a `DomainModuleRegistry`.
@@ -24,7 +26,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Any
 
-from kernel.seedlab.form import SeedSpec
+from kernel.seedlab.form import BlueprintSpec
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
 
 
@@ -35,15 +37,17 @@ class DomainModuleError(SeedKernelError):
 
 @dataclass
 class DomainModuleRegistry:
-    """Maps a domain module NAME (as a SeedSpec selects it) to its loader -- an opaque handle the
+    """Maps a domain module NAME (as a BlueprintSpec selects it) to its loader -- an opaque handle
+
     caller supplies (a module, a factory, a config object). The registry owns names, not behavior:
     it is the seam a future real module loader plugs into. Registration is explicit and unique."""
 
     _loaders: dict[str, Any] = field(default_factory=dict)
 
     def register(self, name: str, loader: Any) -> None:
-        """Register a domain module's loader under `name`. A duplicate name fails loud (two loaders
-        for one module is an ambiguity, never a silent overwrite)."""
+        """Register a domain module's loader under
+        ame`. A duplicate name fails loud (two loaders
+                for one module is an ambiguity, never a silent overwrite)."""
         if not name or not name.strip():
             raise DomainModuleError("a domain module needs a non-empty name")
         if name in self._loaders:
@@ -51,7 +55,8 @@ class DomainModuleRegistry:
         self._loaders[name] = loader
 
     def get(self, name: str) -> Any:
-        """The loader registered under `name`, or fail loud if none is."""
+        """The loader registered under
+        ame`, or fail loud if none is."""
         if name not in self._loaders:
             known = ", ".join(sorted(self._loaders)) or "(none)"
             raise DomainModuleError(f"domain module {name!r} is not registered; known: {known}")
@@ -65,8 +70,9 @@ class DomainModuleRegistry:
         return name in self._loaders
 
 
-def seed_from_spec(kernel: SeedKernel, spec: SeedSpec) -> SeedRecord:
-    """Create a live Seed FROM a validated SeedSpec, recording its product type and selected domain
+def seed_from_spec(kernel: SeedKernel, spec: BlueprintSpec) -> SeedRecord:
+    """Create a live Seed FROM a validated BlueprintSpec, recording its product type and selected
+
     modules on the Seed's identity (they survive restart). Does not require the modules to be
     registered -- recording intent is separate from loading it."""
     return kernel.create_seed(
@@ -92,7 +98,7 @@ def resolve_modules(modules: Iterable[str], registry: DomainModuleRegistry) -> d
 
 
 def provision(
-    kernel: SeedKernel, spec: SeedSpec, registry: DomainModuleRegistry
+    kernel: SeedKernel, spec: BlueprintSpec, registry: DomainModuleRegistry
 ) -> tuple[SeedRecord, dict[str, Any]]:
     """The full pipeline step: resolve the spec's domain modules against the registry FIRST (fail
     loud before creating a half-provisioned Seed), then create the Seed. Returns the new Seed record

@@ -22,6 +22,7 @@ from kernel.seedlab.kernel import (
     RUNNING,
     STOPPED,
     AuditEvent,
+    BlueprintStore,
     FileSeedStore,
     InMemorySeedStore,
     SeedAuthError,
@@ -30,7 +31,6 @@ from kernel.seedlab.kernel import (
     SeedLifecycleError,
     SeedNotFound,
     SeedRecord,
-    SeedStore,
     render_status,
 )
 
@@ -38,7 +38,7 @@ from kernel.seedlab.kernel import (
 _CLOCK = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(60))
 
 
-def _kernel(store: SeedStore | None = None) -> SeedKernel:
+def _kernel(store: BlueprintStore | None = None) -> SeedKernel:
     return SeedKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
 
 
@@ -55,7 +55,7 @@ def test_create_gives_a_stable_identity_and_created_status() -> None:
 
 
 def test_a_store_is_a_seed_store() -> None:
-    assert isinstance(InMemorySeedStore(), SeedStore)
+    assert isinstance(InMemorySeedStore(), BlueprintStore)
 
 
 def test_minted_ids_are_slugged_and_unique() -> None:

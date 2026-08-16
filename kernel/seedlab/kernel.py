@@ -7,7 +7,7 @@ ground floor:
 
   * `SeedIdentity` -- the immutable facts of one Seed (id, name, owner, purpose, version, created).
   * `SeedRecord`   -- identity + mutable lifecycle state (status, runtime session, audit trail).
-  * `SeedStore`    -- the persistence seam (file-backed by default; a fake in tests). This is
+  * `BlueprintStore`    -- the persistence seam (file-backed by default; a fake in tests). This is
     what makes identity survive restart: a fresh kernel over the same store recovers every Seed.
   * `SeedKernel`   -- create / get / list / start / stop / archive / status, with owner authz
     on every lifecycle mutation and an audit event appended for each act.
@@ -151,7 +151,7 @@ class SeedRecord:
 
 
 @runtime_checkable
-class SeedStore(Protocol):
+class BlueprintStore(Protocol):
     """The persistence seam. A file-backed store makes identity survive restart; a test injects a
     fake. The Kernel owns lifecycle; the store owns durability, nothing more."""
 
@@ -222,7 +222,7 @@ class SeedKernel:
 
     def __init__(
         self,
-        store: SeedStore,
+        store: BlueprintStore,
         *,
         clock: Callable[[], str] = _utcnow,
         id_minter: Callable[[str], str] = _default_minter,

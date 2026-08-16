@@ -1,7 +1,8 @@
 """Test twin for kernel/domains/game.py -- the game domain module (the symmetric proof).
 
 Acceptance: the Game module satisfies the DomainModule contract and every capability it advertises
-binds to a REAL kernel/world subsystem (grounded, not decorative); a game SeedSpec provisions and
+binds to a REAL kernel/world subsystem (grounded, not decorative); a game BlueprintSpec provisions
+and
 resolves to the live GameModule. The tick's composition root (forge.domain_registry) offers both the
 game and education modules, yet a Seed loads ONLY what it selected.
 
@@ -18,7 +19,7 @@ import pytest
 
 from kernel.domains.game import GameError, GameModule, register_game_module
 from kernel.seedlab.domain import DomainModule
-from kernel.seedlab.form import SeedSpec
+from kernel.seedlab.form import BlueprintSpec
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
 from kernel.seedlab.provision import DomainModuleError, DomainModuleRegistry, provision
 
@@ -27,8 +28,8 @@ def _kernel() -> SeedKernel:
     return SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-03T00:00:00+00:00")
 
 
-def _spec(product_type: str, modules: tuple[str, ...], name: str = "Aethryn") -> SeedSpec:
-    return SeedSpec(
+def _spec(product_type: str, modules: tuple[str, ...], name: str = "Aethryn") -> BlueprintSpec:
+    return BlueprintSpec(
         schema=1,
         product_type=product_type,
         name=name,

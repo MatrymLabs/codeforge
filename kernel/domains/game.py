@@ -45,7 +45,7 @@ class GameError(Exception):
 @dataclass
 class GameModule:
     """The Game domain module. Satisfies DomainModule (name / title / capabilities); `name` is the
-    key a game SeedSpec selects and is FROZEN as "game". Its capabilities are the real Aethryn
+    key a game BlueprintSpec selects and is FROZEN as "game". Its capabilities are the real Aethryn
     subsystems, each reachable (lazily) via `subsystem`."""
 
     name: str = "game"

@@ -7,7 +7,7 @@ import pytest
 import kernel.world.seed
 from adapters.cli import _pop_seed, main
 from kernel.world.seed import (
-    SEEDS_ROOT,
+    BLUEPRINTS_ROOT,
     BlueprintError,
     available_seeds,
     load_abilities,
@@ -20,10 +20,10 @@ from kernel.world.seed import (
     load_zones,
 )
 
-FIRST_FORGE = SEEDS_ROOT / "first-forge"
+FIRST_FORGE = BLUEPRINTS_ROOT / "first-forge"
 
-SPIRAL = SEEDS_ROOT / "spiral-ascent"
-AETHRYN = SEEDS_ROOT / "aethryn"
+SPIRAL = BLUEPRINTS_ROOT / "spiral-ascent"
+AETHRYN = BLUEPRINTS_ROOT / "aethryn"
 
 
 def test_both_games_are_installed():
@@ -274,7 +274,7 @@ def test_seeds_root_honors_env_override(tmp_path, monkeypatch):
     monkeypatch.setenv("CODEFORGE_SEEDS_ROOT", str(tmp_path))
     try:
         importlib.reload(kernel.world.seed)
-        assert tmp_path == kernel.world.seed.SEEDS_ROOT
+        assert tmp_path == kernel.world.seed.BLUEPRINTS_ROOT
         assert kernel.world.seed.available_seeds() == ["solo-game"]
     finally:
         # Restore the module to its DOCUMENTED DEFAULT, not to whatever the environment happens

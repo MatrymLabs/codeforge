@@ -256,9 +256,9 @@ def _workshop_denial(engine: Engine) -> str:
 
 
 def _blueprint_rooms(seed: str) -> dict[str, Room]:
-    from kernel.world.seed import SEEDS_ROOT, load_rooms
+    from kernel.world.seed import BLUEPRINTS_ROOT, load_rooms
 
-    return load_rooms(SEEDS_ROOT / seed / "rooms.yaml")
+    return load_rooms(BLUEPRINTS_ROOT / seed / "rooms.yaml")
 
 
 def _movement_route(rooms: dict[str, Room], preferred: str) -> tuple[str, str]:
@@ -317,29 +317,29 @@ def _gameplay_save() -> tuple[str | None, str | None]:
 
 def _room_coverage(engine: Engine, seed: str = "first-forge") -> tuple[tuple[str, str], ...]:
     from kernel.overlay import load_overlay
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
-    overlay = load_overlay(SEEDS_ROOT / seed / "world_overlay.json")
+    overlay = load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")
     return tuple((room, engine.room_of(engine.place(room))) for room in sorted(overlay))
 
 
 def _overlay_rooms(seed: str = "first-forge") -> tuple[str, ...]:
     """Every room the Blueprint under test has, derived from its overlay."""
     from kernel.overlay import load_overlay
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
-    return tuple(sorted(load_overlay(SEEDS_ROOT / seed / "world_overlay.json")))
+    return tuple(sorted(load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")))
 
 
 def _overlay_for_seed(seed: str) -> object:
     """Make the tested overlay available without making non-coverage probes world-dependent."""
     from kernel.overlay import load_overlay
-    from kernel.world.seed import SEEDS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
-    tested = load_overlay(SEEDS_ROOT / seed / "world_overlay.json")
+    tested = load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")
     if seed == "first-forge":
         return tested
-    baseline = load_overlay(SEEDS_ROOT / "first-forge" / "world_overlay.json")
+    baseline = load_overlay(BLUEPRINTS_ROOT / "first-forge" / "world_overlay.json")
     combined = dict(baseline)
     combined.update(tested)
     return combined

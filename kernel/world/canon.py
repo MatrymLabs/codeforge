@@ -24,11 +24,11 @@ from typing import Any
 
 import yaml
 
-from kernel.world.seed import SEEDS_ROOT, BlueprintError, _UniqueKeyLoader
+from kernel.world.seed import BLUEPRINTS_ROOT, BlueprintError, _UniqueKeyLoader
 
 # Aethryn's canon lives with the aethryn seed, whichever game the engine is currently booted into
 # (the canon describes THAT world, not the active seed). Anchor to it explicitly.
-AETHRYN_DIR = SEEDS_ROOT / "aethryn"
+AETHRYN_DIR = BLUEPRINTS_ROOT / "aethryn"
 
 # The authority ladder, most-protected first.
 CANON_STATUSES = (

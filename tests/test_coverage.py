@@ -110,7 +110,7 @@ def _world_without_aggression(tmp_path):
     import shutil
 
     world = tmp_path / "seeds"
-    shutil.copytree(cov.SEEDS_ROOT, world)
+    shutil.copytree(cov.BLUEPRINTS_ROOT, world)
     npcs = world / "aethryn" / "npcs.yaml"
     npcs.write_text(
         "\n".join(x for x in npcs.read_text().splitlines() if "aggressive: true" not in x)

@@ -10,7 +10,7 @@ import kernel.world.seed as seed  # reference BlueprintError via module: other s
 import kernel.world.zones as zones  # a class imported at collection must not match world.seed
 from forge import handle_command
 from kernel.world import items
-from kernel.world.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
+from kernel.world.seed import BLUEPRINTS_ROOT, Item, Zone, load_rooms, load_zones
 from kernel.world.session import Session
 from kernel.world.world import START_ROOM
 from kernel.world.zones import area_line, tick_zones, zone_of, zones_due
@@ -50,7 +50,7 @@ def test_zone_fields_default_when_omitted(tmp_path):
 
 
 def test_the_shipped_aethryn_seed_declares_valid_areas():
-    aethryn = SEEDS_ROOT / "aethryn"
+    aethryn = BLUEPRINTS_ROOT / "aethryn"
     rooms = set(load_rooms(aethryn / "rooms.yaml"))
     zmap = load_zones(aethryn / "zones.yaml", rooms)
     assert zmap, "aethryn should ship areas"
@@ -137,7 +137,7 @@ def test_shipped_aethryn_zones_cover_the_full_level_1_to_300_progression():
     """A living gate on the world's geography: the metadata-carrying areas span Levels 1-300 with no
     band left uncovered, so a Forger always has somewhere banded to be. Guards against a progression
     gap creeping in as regions are added (the audit reports the same, in scripts/world_audit.py)."""
-    aethryn = SEEDS_ROOT / "aethryn"
+    aethryn = BLUEPRINTS_ROOT / "aethryn"
     rooms = set(load_rooms(aethryn / "rooms.yaml"))
     zmap = load_zones(aethryn / "zones.yaml", rooms)
     covered = set()
