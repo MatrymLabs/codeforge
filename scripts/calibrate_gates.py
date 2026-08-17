@@ -20,6 +20,20 @@ A case passes only if ALL of:
 Point 3 is the one that matters most and the one hand calibration usually skips. A gate that goes
 red for the wrong reason looks identical to a gate that works.
 
+EVERY CASE MUST INVOKE THE GATE, NOT THE BARE TOOL. This sounds pedantic and is not. Two proven
+examples from this repo:
+
+  - `cargo clippy --all-targets` exits 0 on the nav crate. `make lint-rust` runs the same clippy
+    with `-D warnings` and exits 101 on the same code. A case built on the bare tool reported the
+    lane calibrated while the actual gate was failing.
+  - a mypy probe at the repository ROOT is invisible to `make typecheck-python`, because
+    pyproject pins `files = ["kernel", "adapters", ...]`. The bare `python -m mypy <file>` caught
+    it every time and the gate never saw the file at all.
+
+Where a case still runs a tool directly it is because no make target wraps it yet, and that is
+recorded on the case. Any such case proves the TOOL works; it does not prove the Workshop's gate
+would catch it.
+
 Usage:
     python scripts/calibrate_gates.py              # every case whose gate exists
     python scripts/calibrate_gates.py --only ruff  # substring filter on case name
@@ -56,6 +70,14 @@ class Case:
     """Tools that must be on PATH. A missing tool is SKIP, never PASS."""
     appends_to: str | None = None
     """If set, append `violation` to this existing file instead of creating `probe`."""
+    insert_before: str | None = None
+    """With `appends_to`, insert before the first line containing this marker instead of at the end.
+
+    WHERE a probe lands can trip a different lint than the one under test. Appending to the end of
+    a Rust lib.rs puts it after `#[cfg(test)] mod tests`, which fires
+    `clippy::items_after_test_module` on every run: the gate reddens, but never for the reason the
+    case is measuring, so the case can never pass no matter how the config changes.
+    """
     benign: str | None = None
     """Clean contents for `probe`, used when the gate is pointed AT the probe file.
 
@@ -78,9 +100,22 @@ _UNQUOTED = '#!/usr/bin/env bash\nfoo=$1\nif [ $foo = "x" ]; then echo hi; fi\n'
 _TF_DRIFT = 'variable   "calib_probe"   {\n  type=string\n    default="x"\n}\n'
 _C_UNUSED = "\nstatic int _calib_probe(int unused_arg) { return 0; }\n"
 _GO_IGNORED = '\nfunc calibProbe() {\n\tos.Setenv("CALIB_PROBE", "1")\n}\n'
-_RUST_UNWRAP = (
-    "\npub fn calib_probe() -> i32 {\n    let v: Option<i32> = None;\n    v.unwrap()\n}\n"
-)
+# The Option is a PARAMETER, not a literal `None`, and that detail is the whole case.
+#
+# The first version bound `let v: Option<i32> = None;` and unwrapped it. That reddens the gate,
+# and the signal "unwrap" matched, so the case reported PASS on a branch where `unwrap_used` was
+# not configured at all. The lint that actually fired was `clippy::unnecessary_literal_unwrap`,
+# a DEFAULT lint about unwrapping a known-None literal, and "unwrap" also appears in clippy's echo
+# of the offending source line. Loose signal plus a probe that trips a default lint equals a false
+# PASS: the exact failure this harness exists to prevent, in the harness itself.
+#
+# Unwrapping a parameter is invisible to the default set and visible only to the opt-in
+# restriction lint, so this now measures the setting it claims to measure.
+# The trailing blank line is load-bearing: `make lint-rust` runs `cargo fmt --check` BEFORE
+# clippy, so a probe that is merely unformatted fails the gate on formatting and never reaches
+# the lint under test. The probe has to be clean by every gate it passes through, not just the
+# one it is aimed at.
+_RUST_UNWRAP = "pub fn calib_probe(v: Option<i32>) -> i32 {\n    v.unwrap()\n}\n\n"
 
 # A test that raises a DeprecationWarning. Harmless until pytest's `filterwarnings = ["error"]`
 # lands, at which point it must FAIL. That setting is the single highest-ROI line in the toolkit
@@ -124,8 +159,15 @@ _MYPY_DEAD = (
 _OK_PYTEST = _HEAD + "\n\ndef test_calib_probe_is_quiet() -> None:\n    assert True\n"
 _OK_BANDIT = _HEAD + "\nimport requests\n\nrequests.get('https://x')\n"
 _OK_LEAK = _HEAD + '\nAWS_KEY = ""\n'
-_OK_MYPY = _HEAD + "\n\ndef forge(spark: int) -> int:\n    return spark\n"
-_OK_DEAD = _HEAD + "\n\ndef forge() -> int:\n    return 1\n"
+# These are deliberately a DIFFERENT LENGTH from the violations above, not just different text.
+# mypy's incremental cache keys on mtime plus size, and `-> int` versus `-> str` is a same-size
+# edit: written inside one second, the second run served the first run's verdict. Running the gate
+# through `make` means no place to pass --no-incremental, so the probes defeat the cache by size.
+_OK_MYPY = (
+    _HEAD
+    + "\n\n# calibration control, no defect\ndef forge(spark: int) -> int:\n    return spark\n"
+)
+_OK_DEAD = _HEAD + "\n\n# calibration control, no defect\ndef forge() -> int:\n    return 1\n"
 
 # The battery. Each case names a defect class the Workshop has actually shipped or expects from
 # an AI bench, per the toolkit reference's agent-defect table.
@@ -198,19 +240,18 @@ CASES: list[Case] = [
     ),
     Case(
         name="rust-clippy-unwrap",
-        gate=[
-            "cargo",
-            "clippy",
-            "--manifest-path",
-            "native/codeforge_nav/Cargo.toml",
-            "--all-targets",
-        ],
+        gate=["make", "lint-rust"],
         probe="native/codeforge_nav/src/lib.rs",
         appends_to="native/codeforge_nav/src/lib.rs",
+        insert_before="#[cfg(test)]",
         violation=_RUST_UNWRAP,
-        signal="unwrap",
+        signal="unwrap_used",
         needs=("cargo",),
-        extra_note="Green until ORDER 3 lands unwrap_used. That is the point.",
+        extra_note=(
+            "Was `cargo clippy --all-targets`, which exits 0 where `make lint-rust` exits 101, "
+            "because the gate adds -D warnings. The bare tool called the lane calibrated while "
+            "the real gate was failing."
+        ),
     ),
     Case(
         name="pytest-filterwarnings-error",
@@ -253,8 +294,8 @@ CASES: list[Case] = [
     ),
     Case(
         name="mypy-strict-type-error",
-        gate=["python", "-m", "mypy", "--no-incremental", "_calib_probe_mypy.py"],
-        probe="_calib_probe_mypy.py",
+        gate=["make", "typecheck-python"],
+        probe="kernel/_calib_probe_mypy.py",
         violation=_MYPY_TYPE,
         signal="Incompatible return value",
         benign=_OK_MYPY,
@@ -262,8 +303,8 @@ CASES: list[Case] = [
     ),
     Case(
         name="mypy-warn-unreachable",
-        gate=["python", "-m", "mypy", "--no-incremental", "_calib_probe_dead.py"],
-        probe="_calib_probe_dead.py",
+        gate=["make", "typecheck-python"],
+        probe="kernel/_calib_probe_dead.py",
         violation=_MYPY_DEAD,
         signal="unreachable",
         benign=_OK_DEAD,
@@ -296,7 +337,16 @@ def _plant(case: Case) -> bytes | None:
     target = REPO / (case.appends_to or case.probe)
     if case.appends_to:
         original = target.read_bytes()
-        target.write_bytes(original + case.violation.encode())
+        if case.insert_before:
+            text = original.decode()
+            marker = text.find(case.insert_before)
+            if marker == -1:
+                msg = f"{case.name}: marker {case.insert_before!r} not found in {case.appends_to}"
+                raise RuntimeError(msg)
+            head = text.rfind("\n", 0, marker) + 1
+            target.write_bytes((text[:head] + case.violation + text[head:]).encode())
+        else:
+            target.write_bytes(original + case.violation.encode())
         return original
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(case.violation, encoding="utf-8", newline="\n")
