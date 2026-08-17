@@ -41,8 +41,26 @@ selects which world the engine boots.
 """
 
 
+# The files a Blueprint cannot boot without. DERIVED, not chosen: these are exactly the loaders in
+# kernel/world/seed.py that raise `BlueprintError: Seed file not found` when the file is absent.
+# `doors.yaml` and `abilities.yaml` are deliberately NOT here, because their loaders return empty
+# for a pack that ships none, and a world with no doors is a legitimate world.
+#
+# Checking only `rooms.yaml` advertised `seam-probe`, which is a differential test fixture with no
+# `npcs.yaml`. `codeforge seeds` calls itself "installed games", so it was naming a world that
+# cannot start. The product overclaimed, not just the docs. KF-SEED-1.
+_BLUEPRINT_REQUIRED = ("rooms.yaml", "items.yaml", "npcs.yaml", "jobs.yaml")
+
+
 def _seeds_available() -> list[str]:
-    """List installed games without importing the world (keeps env-before-import clean)."""
+    """List installed games without importing the world (keeps env-before-import clean).
+
+    File presence, never a trial boot: this runs before the world is imported on purpose, so it
+    cannot ask the engine whether a pack loads. That makes the check a NECESSARY condition and not
+    a sufficient one. A pack can carry all four files and still fail a deeper invariant, which is
+    what `tests/test_blueprint_boot.py` is for. This gate removes the packs that were never
+    candidates; that one proves the rest actually start.
+    """
     content_root = Path(__file__).resolve().parent.parent / "content"
     default_blueprints_root = content_root / "blueprints"
     default_seeds_root = content_root / "seeds"
@@ -56,7 +74,11 @@ def _seeds_available() -> list[str]:
     )
     if not root.is_dir():
         return []
-    return sorted(p.name for p in root.iterdir() if (p / "rooms.yaml").is_file())
+    return sorted(
+        p.name
+        for p in root.iterdir()
+        if p.is_dir() and all((p / required).is_file() for required in _BLUEPRINT_REQUIRED)
+    )
 
 
 def _pop_seed(args: list[str]) -> str | None:

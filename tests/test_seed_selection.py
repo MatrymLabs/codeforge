@@ -455,3 +455,57 @@ def test_reloading_the_seed_module_returns_it_to_the_default(monkeypatch):
     importlib.reload(kernel.world.seed)
     assert kernel.world.seed.SEED_NAME == kernel.world.seed.DEFAULT_SEED
     assert kernel.world.seed.BLUEPRINT_DIR.name == kernel.world.seed.DEFAULT_SEED
+
+
+# --- what `codeforge seeds` advertises must be capable of starting (KF-SEED-1) ----------------
+
+
+def test_every_advertised_blueprint_carries_the_files_a_boot_requires():
+    """`codeforge seeds` calls its output "installed games". A pack it names must be able to start.
+
+    The four files below are the ones whose loaders in kernel/world/seed.py RAISE
+    `BlueprintError: Seed file not found` when absent. `doors.yaml` and `abilities.yaml` are
+    excluded on purpose: those loaders return empty for a pack that ships none, and a world with
+    no doors is a legitimate world.
+    """
+    from adapters.cli import _BLUEPRINT_REQUIRED, _seeds_available
+
+    for name in _seeds_available():
+        pack = BLUEPRINTS_ROOT / name
+        missing = [f for f in _BLUEPRINT_REQUIRED if not (pack / f).is_file()]
+        assert not missing, f"{name} is advertised as a game but is missing {missing}"
+
+
+def test_the_differential_fixture_is_not_advertised_as_a_game():
+    """seam-probe is a differential test fixture with no npcs.yaml, so it cannot boot.
+
+    It WAS advertised, because the listing checked only rooms.yaml. That is the product
+    overclaiming, not merely the docs: `codeforge seeds` named a world that fails at import.
+    """
+    from adapters.cli import _seeds_available
+
+    assert (BLUEPRINTS_ROOT / "seam-probe" / "rooms.yaml").is_file(), (
+        "this test is meaningless if seam-probe stopped shipping rooms.yaml: it would then be "
+        "excluded for the wrong reason and would stop guarding anything"
+    )
+    assert "seam-probe" not in _seeds_available()
+
+
+@pytest.mark.parametrize("dropped", ["rooms.yaml", "items.yaml", "npcs.yaml", "jobs.yaml"])
+def test_a_pack_missing_any_required_file_is_not_advertised(tmp_path, monkeypatch, dropped):
+    """Behavioural, not observational: build a pack, remove ONE required file, expect exclusion.
+
+    Asserting against the packs that happen to ship today would pass even if the filter were
+    deleted. This constructs the bad state for each required file in turn.
+    """
+    from adapters.cli import _BLUEPRINT_REQUIRED, _seeds_available
+
+    pack = tmp_path / "probe-world"
+    pack.mkdir()
+    for name in _BLUEPRINT_REQUIRED:
+        (pack / name).write_text("placeholder: {}\n", encoding="utf-8")
+    monkeypatch.setenv("CODEFORGE_BLUEPRINTS_ROOT", str(tmp_path))
+    assert _seeds_available() == ["probe-world"], "the complete pack must be advertised"
+
+    (pack / dropped).unlink()
+    assert _seeds_available() == [], f"a pack missing {dropped} must not be advertised"
