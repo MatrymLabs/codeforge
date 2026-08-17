@@ -74,6 +74,20 @@ jobs:
       - name: Regenerate the protocol-spine bindings so native/spine can be inspected
         run: make proto
 
+      # `lint` now covers Terraform, and ubuntu-latest does NOT ship terraform: the dedicated
+      # `terraform` job below installs it explicitly for exactly this reason. Without this step
+      # `make check` here dies on `lint-terraform: UNVERIFIED - no terraform on PATH`, which is the
+      # target refusing to report a language it cannot inspect. That refusal is correct; supplying
+      # the toolchain is the fix, not silencing it. Version pinned to match the terraform job.
+      - name: Install Terraform so the lint gate can inspect it
+        run: |
+          TF_VER=1.9.8
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
+          unzip -o -q tf.zip -d "$HOME/.local/bin"
+          rm -f tf.zip
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
       - name: Run the gates (check = lint · types · tests+coverage)
         run: make check
 
