@@ -2,7 +2,7 @@
 both a text "look" and a versioned structured contract for the Master Client.
 
 Stage 2 of the Seed Platform directive. A Seed created by the Kernel needs a place you can ENTER and
-inspect. The Project Hub is that location: it composes a `SeedKernel`, reads a Seed's persisted
+inspect. The Project Hub is that location: it composes a `BlueprintKernel`, reads a Seed's persisted
 identity + lifecycle + audit, and pairs it with a `ProjectState` (the engineering facets a Seed
 accumulates: sources, models, builds, tests, targets, risks, decisions). It renders both:
 
@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from kernel.seedlab.kernel import SeedKernel, SeedRecord
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintRecord
 
 CONTRACT_VERSION = "seedlab.project_hub/1"
 
@@ -69,7 +69,7 @@ class ProjectHub:
     """A Seed's functional Project Hub. Reads persisted Seed state via the Kernel; renders it and
     attached project facets. Stateless beyond the Kernel it composes: a pure projection."""
 
-    kernel: SeedKernel
+    kernel: BlueprintKernel
 
     def _state(self, seed_id: str, state: ProjectState | None) -> ProjectState:
         if state is not None and state.seed_id != seed_id:
@@ -82,7 +82,7 @@ class ProjectHub:
     def contract(self, seed_id: str, state: ProjectState | None = None) -> dict:
         """The versioned, structured view the Master Client renders. Single source of truth with
         `render`; a GUI panel and a text terminal both project from this."""
-        record: SeedRecord = self.kernel.get(seed_id)
+        record: BlueprintRecord = self.kernel.get(seed_id)
         st = self._state(seed_id, state)
         i = record.identity
         return {

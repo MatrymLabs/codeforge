@@ -20,7 +20,7 @@ from kernel.seedlab.artifact_store import (
     artifact_labels,
     build_report_artifacts,
 )
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
 from kernel.seedlab.model_store import FileModelStore, ModelStore, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
@@ -68,9 +68,9 @@ def _default_home(root: Path | None = None) -> Path:
     return Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
 
 
-def _seed_kernel(root: Path | None = None) -> SeedKernel:
+def _seed_kernel(root: Path | None = None) -> BlueprintKernel:
     home = _default_home(root)
-    return SeedKernel(FileSeedStore(home / "seeds"))
+    return BlueprintKernel(FileSeedStore(home / "seeds"))
 
 
 def _project_state(

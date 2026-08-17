@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
 from kernel.seedlab.model_store import FileModelStore
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import LocalSource
@@ -27,7 +27,9 @@ def _source(tmp_path: Path) -> LocalSource:
 def test_build_workspace_contract_project_and_packages(tmp_path: Path, monkeypatch) -> None:
     home = tmp_path / ".seedlab"
     monkeypatch.setenv("SEEDLAB_HOME", str(home))
-    kernel = SeedKernel(FileSeedStore(home / "seeds"), clock=lambda: "2026-08-04T00:00:00+00:00")
+    kernel = BlueprintKernel(
+        FileSeedStore(home / "seeds"), clock=lambda: "2026-08-04T00:00:00+00:00"
+    )
     kernel.create_seed("Workspace", "josh", "a workspace", seed_id="seed-workspace")
 
     source = _source(tmp_path)
