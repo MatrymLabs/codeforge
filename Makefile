@@ -27,11 +27,22 @@ env: hooks
 	else \
 		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
 		python3 -m venv .venv; \
-		.venv/bin/pip install -q --upgrade pip; \
-		.venv/bin/pip install -q -e ".[dev]"; \
+		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); \
+		$$bin/pip install -q --upgrade pip; \
+		$$bin/pip install -q -e ".[dev]"; \
 	fi
-	@.venv/bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
-	@echo "✓ .venv ready - activate with: source .venv/bin/activate"
+	@# The venv layout is platform-dependent: POSIX puts executables in `bin`, Windows in
+	@# `Scripts`. This was hardcoded to `bin`, so `make env` could not build an environment on
+	@# Windows at all. That is how an agent worktree ended up with NO venv, which made `make`
+	@# there run every gate against a bare system interpreter and report failures belonging to
+	@# the interpreter rather than the code. Detected after creation, never assumed.
+	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); \
+	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
+	@if [ -d .venv/Scripts ]; then \
+		echo "✓ .venv ready - activate with: source .venv/Scripts/activate"; \
+	else \
+		echo "✓ .venv ready - activate with: source .venv/bin/activate"; \
+	fi
 
 # --- Mutators: run these while working ---
 fix:
@@ -126,7 +137,7 @@ lint-go:
 		exit 1; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
-			if ! ( cd $$m && go build ./... >/dev/null 2>&1 ); then \
+			if ! ( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./... >/dev/null 2>&1; rc=$$?; rm -rf "$$out"; exit $$rc ); then \
 				echo "lint-go: $$m UNVERIFIED - it does not build. Generated code absent?"; \
 				echo "          run \`make proto\` (ADR-0012: the bindings are git-ignored)."; \
 				exit 1; \
@@ -160,7 +171,8 @@ typecheck-native:
 		echo "typecheck-rust: $$m"; ( cd $$m && cargo build ) || exit 1; \
 	done
 	@for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
-		echo "typecheck-go: $$m"; ( cd $$m && go build ./... ) || exit 1; \
+		echo "typecheck-go: $$m"; \
+		( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./...; rc=$$?; rm -rf "$$out"; exit $$rc ) || exit 1; \
 	done
 
 # `-n auto` fans the suite across cores, the same way `coverage` already does. Measured on the
