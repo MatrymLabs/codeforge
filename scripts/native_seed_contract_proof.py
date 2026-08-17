@@ -101,18 +101,28 @@ def main() -> int:
         f"repo={parsed_tree.repository!r} files={len(parsed_tree.files)}",
     )
 
-    # Source.Connection is the connector/provenance surface. Same additive rule: prove it only when
-    # the client checkout already carries the parser.
+    # Source.Connection is ratified: require the parser and compare the complete connector surface.
     connection = eng.source_connection_package(source_record, seed="Job Tracker")
     if not hasattr(cli_source, "parse_source_connection"):
-        checks.append(("Source.Connection", True, "SKIP: client parser absent (additive contract)"))
+        checks.append(
+            ("Source.Connection", False, "FAIL: client parser absent (ratified contract)")
+        )
     else:
         parsed_connection = cli_source.parse_source_connection(connection)
         record_check(
             "Source.Connection",
             eng.SOURCE_CONNECTION_PACKAGE,
             cli_source.SOURCE_CONNECTION_PACKAGE,
-            parsed_connection.source_id == "demo" and parsed_connection.owner == "josh",
+            parsed_connection.source_id == source_record.source_id
+            and parsed_connection.seed == "Job Tracker"
+            and parsed_connection.owner == source_record.provenance.owner
+            and parsed_connection.license == source_record.provenance.license
+            and parsed_connection.visibility == source_record.provenance.visibility
+            and parsed_connection.allowed_use == source_record.provenance.allowed_use
+            and parsed_connection.root == source_record.root
+            and parsed_connection.file_count == source_record.file_count
+            and parsed_connection.branch == source_record.branch
+            and parsed_connection.commit == source_record.commit,
             f"source_id={parsed_connection.source_id!r} owner={parsed_connection.owner!r}",
         )
 
