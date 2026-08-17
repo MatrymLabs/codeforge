@@ -1,0 +1,25 @@
+# cargo-mutants: does the Rust test suite actually NOTICE when the code changes?
+#
+# Coverage says a line ran. Mutation says a line's behaviour is pinned. They are different
+# questions, and only the second one catches a test that executes code and asserts nothing.
+#
+# This is deliberately NOT wired into `make check`. Mutation testing is minutes, not seconds, and
+# a gate nobody can afford to run is a gate that gets bypassed. It runs weekly, and in PR CI only
+# over the diff (`cargo mutants --in-diff pr.diff`), which is the pattern the toolkit reference
+# recommends for keeping it affordable.
+
+# 5x the baseline test time, floor 20s. Both are cargo-mutants' own defaults, restated here so the
+# numbers are visible rather than implicit: a mutant that hangs is indistinguishable from one that
+# is merely slow, and the timeout is what separates them. Raise the floor, never lower it, if the
+# suite grows a slow case.
+timeout_multiplier = 5.0
+minimum_test_timeout = 20
+
+# Test code is not the subject. Mutating a test file produces a "surviving mutant" that means
+# nothing, because no other test asserts on the tests.
+exclude_globs = ["tests/**", "benches/**"]
+
+# NOTE for whoever runs this first: codeforge_nav is a pyo3 extension module, so every build links
+# against CPython. If cargo-mutants reports a wall of UNVIABLE mutants rather than survivors, that
+# is the linkage failing, not the tests being weak. Check `cargo build` succeeds standalone before
+# reading anything into the score.
