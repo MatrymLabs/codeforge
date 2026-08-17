@@ -278,9 +278,15 @@ jobs:
         with:
           fetch-depth: 0  # gitleaks reads HISTORY; a shallow clone would scan almost nothing
 
+      # Go 1.25, and this job is why. The FIRST run of this gate found GO-2026-4971 reachable from
+      # our own code: `edge.handleConn calls net.Dial`, a NUL-byte panic in net on Windows, present
+      # in go1.24.13 and fixed in go1.25.10. The bench is a Windows host, so this was reachable on
+      # the machine that builds it. Every Go job moved together -- scanning one toolchain while
+      # shipping another is how a scan reports green about an artifact nobody built.
+      # If these ever move to 1.26, the floor is 1.26.3: the same bug was reintroduced in 1.26.0.
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.24"
+          go-version: "1.25"
 
       - name: Install the scanners, pinned to the versions the bench verified
         run: |
@@ -289,13 +295,12 @@ jobs:
           mkdir -p "$HOME/.local/bin"
           curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VER}/gitleaks_${GITLEAKS_VER}_linux_x64.tar.gz" | tar -xz -C "$HOME/.local/bin" gitleaks
           curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VER}/trivy_${TRIVY_VER}_Linux-64bit.tar.gz" | tar -xz -C "$HOME/.local/bin" trivy
-          # v1.1.4 is the NEWEST govulncheck that builds under this repo's Go 1.24: every release
-          # from v1.2.0 declares `go 1.25.0`, and setup-go sets GOTOOLCHAIN=local, so `@latest`
-          # cannot resolve and the step dies. Scanning with a NEWER toolchain is also the wrong
-          # repair: source mode reports stdlib vulnerabilities against the toolchain in use, so a
-          # 1.25 scan of a 1.24 artifact can read green over a stdlib hole that 1.25 already fixed
-          # and we still ship. This pin moves when the repo's Go moves, and not before.
-          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          # Pinned, not `@latest`. An unpinned scanner changes its own verdict on a schedule
+          # nobody chose, and then the bench and CI disagree for reasons neither can see. v1.7.0
+          # is the current release and needs `go 1.25.0`, which the bump above now provides --
+          # under the old 1.24 pin this resolved to nothing and the step died outright, since
+          # setup-go sets GOTOOLCHAIN=local and no newer toolchain can be fetched.
+          go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
@@ -404,7 +409,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.24"
+          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
 
       - name: Vet, race-test + build the Go edge
         run: |
@@ -436,7 +441,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.24"
+          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
 
       - name: Install protoc + protoc-gen-go (pinned)
         run: |
