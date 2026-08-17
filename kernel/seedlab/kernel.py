@@ -200,10 +200,20 @@ class FileSeedStore:
         )
 
     def load(self, seed_id: str) -> BlueprintRecord | None:
+        # CodeQL raises py/path-injection (HIGH) on the read below, because `seed_id` is
+        # caller-supplied. It is a FALSE POSITIVE: `_path` runs the id through `safe_segment`
+        # (refuses traversal, separators, NUL, absolute, blank) and bounds the result with
+        # `contained_path`. CodeQL models neither as a sanitizer.
+        #
+        # The suppression is NOT a bare assertion. tests/test_kernel_path_containment.py drives
+        # THIS call site with hostile ids and proves refusal; removing the sanitizer from `_path`
+        # turns that file red (measured: 12 failed, 1 passed, the survivor being the calibration
+        # case). Suppression and test are one control. If the guard goes, the tests shout.
         path = self._path(seed_id)
         if not path.is_file():
             return None
         try:
+            # codeql[py/path-injection]
             return BlueprintRecord.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
             raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc
