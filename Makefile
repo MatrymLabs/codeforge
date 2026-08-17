@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-kotlin kotlin-lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -39,7 +39,7 @@ fix:
 	ruff check . --fix
 
 # --- Gates: pure checks, cheapest first, nothing is modified ---
-lint: lint-python lint-rust lint-go lint-shell  ## Every language present in the tree, not only Python.
+lint: lint-python lint-rust lint-go lint-shell lint-terraform lint-c  ## Every language present in the tree, not only Python.
 
 # One target per language, so a language with no code says so instead of passing silently.
 # Rust and Go code has existed here since the nav kernel and the edge/spine organs landed, and
@@ -70,6 +70,46 @@ lint-shell:
 		echo "lint-shell: no .sh files in this tree, nothing to inspect"; \
 	else \
 		shellcheck -x -e SC1091 $$(git ls-files '*.sh'); \
+	fi
+
+# Terraform and C, wired in by the 2026-08-17 config audit. Both had code in the tree and NEITHER
+# was named anywhere in this Makefile, while `lint` carried the comment "Every language present in
+# the tree, not only Python". Eight .tf files and one .c file made that comment false. CI inspected
+# both (the `terraform` and `c-kernel` jobs), so they were governed; they were simply invisible to
+# the gate a bench runs before it commits, which is the run that decides what reaches CI at all.
+#
+# Same shape as lint-go: no files is a clean pass, no toolchain is UNVERIFIED and exits non-zero.
+# A missing toolchain must never read as a clean language.
+lint-terraform:
+	@if [ -z "$$(git ls-files '*.tf')" ]; then \
+		echo "lint-terraform: no .tf files in this tree, nothing to inspect"; \
+	elif ! command -v terraform >/dev/null 2>&1; then \
+		echo "lint-terraform: UNVERIFIED - no \`terraform\` on PATH. This is a toolchain fault,"; \
+		echo "          not a clean tree. Install: winget install --id Hashicorp.Terraform --scope user"; \
+		exit 1; \
+	else \
+		echo "lint-terraform: deploy/terraform"; \
+		terraform fmt -check -recursive deploy/terraform; \
+	fi
+
+# `cc -fsyntax-only` rather than a full build: this is a lint target, so it must not emit an object
+# file into the tree. That is the same defect the audit found in lint-go, which wrote edge.exe into
+# the working directory on every run. A gate reports; it does not leave artifacts behind.
+lint-c:
+	@if [ -z "$$(git ls-files '*.c' '*.h')" ]; then \
+		echo "lint-c: no C sources in this tree, nothing to inspect"; \
+	elif command -v gcc >/dev/null 2>&1 || command -v clang >/dev/null 2>&1; then \
+		cc=$$(command -v gcc >/dev/null 2>&1 && echo gcc || echo clang); \
+		inc=$$(python3 -c "import sysconfig; print(sysconfig.get_paths()['include'])"); \
+		echo "lint-c: $$(git ls-files '*.c' | tr '\n' ' ') [$$cc]"; \
+		$$cc -fsyntax-only -Wall -Wextra -Werror -I"$$inc" $$(git ls-files '*.c'); \
+	else \
+		echo "lint-c: UNVERIFIED - no C compiler on PATH (looked for gcc, then clang)."; \
+		echo "          $$(git ls-files '*.c' | wc -l) C source(s) are in this tree and are NOT"; \
+		echo "          being inspected locally. CI's \`c-kernel\` job still compiles them, so this"; \
+		echo "          is a bench-blindness fault, not an ungoverned language."; \
+		echo "          Install: winget install --id LLVM.LLVM --scope user"; \
+		exit 1; \
 	fi
 
 # The Kotlin lane, STANDALONE. It was wired into `lint` on 2026-08-14 and taken back out the same
