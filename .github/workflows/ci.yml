@@ -301,6 +301,12 @@ jobs:
           # under the old 1.24 pin this resolved to nothing and the step died outright, since
           # setup-go sets GOTOOLCHAIN=local and no newer toolchain can be fetched.
           go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
+          # cargo-deny 0.20.2, the version the bench ran when deny.toml was proven green in #1018.
+          # The prebuilt musl binary, not `cargo install`: building it from source costs minutes of
+          # runner time on every push to check four config sections.
+          CARGO_DENY_VER=0.20.2
+          curl -fsSL "https://github.com/EmbarkStudios/cargo-deny/releases/download/${CARGO_DENY_VER}/cargo-deny-${CARGO_DENY_VER}-x86_64-unknown-linux-musl.tar.gz" \
+            | tar -xz -C "$HOME/.local/bin" --strip-components=1 "cargo-deny-${CARGO_DENY_VER}-x86_64-unknown-linux-musl/cargo-deny"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
@@ -324,6 +330,17 @@ jobs:
 
       - name: Filesystem scan (vulns, secrets, misconfiguration)
         run: make security-fs
+
+      # The fourth scanner, and the one #1017 deliberately left out. It could not run then: the
+      # gate needs deny.toml, which was stranded on an unmerged branch, and wiring a permanently
+      # red job in front of every merge teaches everyone to ignore the job. deny.toml landed on
+      # main in #1018, proven green there first, so the step joins now rather than on faith.
+      #
+      # Four sections in one gate: advisories (RUSTSEC), licenses, banned/duplicate crates, and
+      # the source allow-list. cargo-deny rather than cargo-audit, per ADR: RustSec's own primary
+      # maintainer has said cargo-deny's reporting "has definitely eclipsed what's in cargo-audit".
+      - name: Rust supply chain (advisories, licenses, bans, sources)
+        run: make security-rust
 
   # Polyglot native extension (Rust / PyO3): build the codeforge_nav navigation kernel and prove it
   # matches the pure-Python fallback byte-for-byte (the parity test). NOT a required check -- the
