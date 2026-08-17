@@ -56,6 +56,14 @@ class Case:
     """Tools that must be on PATH. A missing tool is SKIP, never PASS."""
     appends_to: str | None = None
     """If set, append `violation` to this existing file instead of creating `probe`."""
+    benign: str | None = None
+    """Clean contents for `probe`, used when the gate is pointed AT the probe file.
+
+    Without this, the green-before check runs the gate against a file that does not exist yet:
+    mypy exits 2, pytest exits 4, and the case reports "already red before planting" when nothing
+    is wrong. For those gates the honest control is the SAME file holding clean contents, so the
+    only variable between green and red is the defect itself.
+    """
     extra_note: str = field(default="")
 
 
@@ -73,6 +81,51 @@ _GO_IGNORED = '\nfunc calibProbe() {\n\tos.Setenv("CALIB_PROBE", "1")\n}\n'
 _RUST_UNWRAP = (
     "\npub fn calib_probe() -> i32 {\n    let v: Option<i32> = None;\n    v.unwrap()\n}\n"
 )
+
+# A test that raises a DeprecationWarning. Harmless until pytest's `filterwarnings = ["error"]`
+# lands, at which point it must FAIL. That setting is the single highest-ROI line in the toolkit
+# reference, and it is also the one most likely to be quietly reverted the first time it is
+# inconvenient, so it gets a permanent probe.
+_PY_WARNS = (
+    _HEAD + "\nimport warnings\n\n\ndef test_calib_probe_emits_a_warning() -> None:\n"
+    '    warnings.warn("calibration probe", DeprecationWarning, stacklevel=2)\n'
+)
+
+# B501, requests with TLS verification disabled: HIGH severity, HIGH confidence.
+#
+# The first probe here was subprocess(shell=True). Bandit DOES flag that, but rates a literal
+# command string LOW, so a gate set to `--severity-level medium` filtered it out and this case
+# reported the gate as broken. The gate was correct; the probe sat below its threshold. A
+# calibration probe has to clear the bar the gate is actually set to, or it measures nothing.
+_BANDIT_INSECURE = _HEAD + "\nimport requests\n\nrequests.get('https://x', verify=False)\n"
+
+# A credential gitleaks must catch. ASSEMBLED AT RUN TIME, never written as one literal, because
+# this file is itself scanned: a whole fake key sitting in the harness would make the repo's own
+# secret gate red forever and teach everyone to ignore it. The prefix and body are joined below.
+_LEAK_PREFIX = "AKIA"
+_LEAK_BODY = "".join(["QYLPZ3M7", "RTKW", "9XVB"])  # 16 chars, not the doc example
+_GITLEAKS = _HEAD + f'\nAWS_KEY = "{_LEAK_PREFIX}{_LEAK_BODY}"\n'
+
+# Two defects that strict alone does NOT both catch. The type error is caught by strict; the
+# unreachable line needs `warn_unreachable`, which strict does not include. Keeping them as
+# separate cases is the point, because it proves the extra setting is doing work.
+#
+# Do NOT begin this comment with the word "mypy" followed by a colon. That form is an INLINE
+# CONFIG DIRECTIVE, and mypy parsed the prose as options: "Unrecognized option: two defects
+# strict alone does not both catch... = True". A comment that silently becomes configuration.
+_MYPY_TYPE = _HEAD + "\n\ndef forge(spark: int) -> str:\n    return spark\n"
+_MYPY_DEAD = (
+    _HEAD + "\n\ndef forge() -> int:\n    return 1\n    print('unreachable')  # noqa: T201\n"
+)
+
+
+# Clean counterparts to the probes above. Same file, no defect: the only variable between
+# the green run and the red run is the violation itself.
+_OK_PYTEST = _HEAD + "\n\ndef test_calib_probe_is_quiet() -> None:\n    assert True\n"
+_OK_BANDIT = _HEAD + "\nimport requests\n\nrequests.get('https://x')\n"
+_OK_LEAK = _HEAD + '\nAWS_KEY = ""\n'
+_OK_MYPY = _HEAD + "\n\ndef forge(spark: int) -> int:\n    return spark\n"
+_OK_DEAD = _HEAD + "\n\ndef forge() -> int:\n    return 1\n"
 
 # The battery. Each case names a defect class the Workshop has actually shipped or expects from
 # an AI bench, per the toolkit reference's agent-defect table.
@@ -159,6 +212,63 @@ CASES: list[Case] = [
         needs=("cargo",),
         extra_note="Green until ORDER 3 lands unwrap_used. That is the point.",
     ),
+    Case(
+        name="pytest-filterwarnings-error",
+        gate=["python", "-m", "pytest", "tests/test_calib_probe.py", "-q", "--no-header"],
+        probe="tests/test_calib_probe.py",
+        violation=_PY_WARNS,
+        signal="DeprecationWarning",
+        benign=_OK_PYTEST,
+        extra_note="Runs one file, not the suite: calibration must stay cheap enough to run.",
+    ),
+    Case(
+        name="bandit-insecure-tls",
+        gate=[
+            "bandit",
+            "-c",
+            "pyproject.toml",
+            "-q",
+            "--severity-level",
+            "medium",
+            "--confidence-level",
+            "medium",
+            "_calib_probe_bandit.py",
+        ],
+        probe="_calib_probe_bandit.py",
+        violation=_BANDIT_INSECURE,
+        signal="B501",
+        benign=_OK_BANDIT,
+        needs=("bandit",),
+        extra_note="Separate pass from ruff S; the two can disagree and both are wired.",
+    ),
+    Case(
+        name="gitleaks-hardcoded-credential",
+        gate=["gitleaks", "dir", "--no-banner", "--redact", "_calib_probe_leak.py"],
+        probe="_calib_probe_leak.py",
+        violation=_GITLEAKS,
+        signal="leaks found",  # --redact suppresses the rule id; this is the verdict line
+        benign=_OK_LEAK,
+        needs=("gitleaks",),
+        extra_note="The highest-severity, least-reversible defect class: a secret in history.",
+    ),
+    Case(
+        name="mypy-strict-type-error",
+        gate=["python", "-m", "mypy", "--no-incremental", "_calib_probe_mypy.py"],
+        probe="_calib_probe_mypy.py",
+        violation=_MYPY_TYPE,
+        signal="Incompatible return value",
+        benign=_OK_MYPY,
+        extra_note="Caught by strict alone.",
+    ),
+    Case(
+        name="mypy-warn-unreachable",
+        gate=["python", "-m", "mypy", "--no-incremental", "_calib_probe_dead.py"],
+        probe="_calib_probe_dead.py",
+        violation=_MYPY_DEAD,
+        signal="unreachable",
+        benign=_OK_DEAD,
+        extra_note="NOT in --strict. Proves warn_unreachable is doing work on its own.",
+    ),
 ]
 
 
@@ -208,9 +318,23 @@ def calibrate(case: Case) -> tuple[str, str]:
     if missing:
         return SKIP, f"{missing} is not on PATH, so this gate cannot be calibrated (not a pass)"
 
-    before_rc, _ = _run(case.gate)
-    if before_rc != 0:
-        return FAIL, f"gate was ALREADY red before planting (exit {before_rc}); nothing is proven"
+    def _control() -> int:
+        """Run the gate against the clean state: an empty tree, or the benign probe."""
+        if case.benign is None:
+            return _run(case.gate)[0]
+        target = REPO / case.probe
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(case.benign, encoding="utf-8", newline="\n")
+        _run(["git", "add", "-N", case.probe])
+        try:
+            return _run(case.gate)[0]
+        finally:
+            _run(["git", "rm", "--cached", "--quiet", "--force", case.probe])
+            target.unlink(missing_ok=True)
+
+    if (before_rc := _control()) != 0:
+        why = "the benign probe is already red" if case.benign else "the gate was ALREADY red"
+        return FAIL, f"{why} before planting (exit {before_rc}); nothing is proven"
 
     original = _plant(case)
     try:
@@ -224,9 +348,8 @@ def calibrate(case: Case) -> tuple[str, str]:
         head = " | ".join(line.strip() for line in red_out.splitlines() if line.strip())[:160]
         return FAIL, f"went red but WITHOUT the expected signal {case.signal!r}. Saw: {head}"
 
-    after_rc, _ = _run(case.gate)
-    if after_rc != 0:
-        return FAIL, "gate did not return GREEN after cleanup; the probe left something behind"
+    if (after_rc := _control()) != 0:
+        return FAIL, f"gate did not return GREEN after cleanup (exit {after_rc})"
 
     return PASS, f"green -> RED on {case.signal} -> green"
 
