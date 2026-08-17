@@ -45,6 +45,12 @@ jobs:
       - name: Install dependencies
         run: uv pip install --system -e ".[dev]"
 
+      - name: Regenerate and verify published contracts
+        run: make contracts
+
+      - name: Prove native seed workspace contracts
+        run: python scripts/native_seed_contract_proof.py
+
       # `make check` folds coverage into a single suite run (lint · types · pytest --cov
       # · threshold) and writes coverage.xml -- no separate coverage step needed.
       # The lint gate covers every language present, so the runner needs every language's
