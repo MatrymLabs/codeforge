@@ -205,15 +205,19 @@ class FileSeedStore:
         # (refuses traversal, separators, NUL, absolute, blank) and bounds the result with
         # `contained_path`. CodeQL models neither as a sanitizer.
         #
-        # The suppression is NOT a bare assertion. tests/test_kernel_path_containment.py drives
-        # THIS call site with hostile ids and proves refusal; removing the sanitizer from `_path`
-        # turns that file red (measured: 12 failed, 1 passed, the survivor being the calibration
-        # case). Suppression and test are one control. If the guard goes, the tests shout.
+        # The claim is NOT a bare assertion. tests/test_kernel_path_containment.py drives THIS call
+        # site with hostile ids and proves refusal; removing the sanitizer from `_path` turns that
+        # file red (measured: 12 failed, 1 passed, the survivor being the calibration case). If the
+        # guard goes, the tests shout, which is what makes the dismissal auditable later.
+        #
+        # The alert is dismissed in the Security tab, NOT suppressed here. An inline
+        # `# codeql[py/path-injection]` marker was tried first and does nothing: GitHub code
+        # scanning ignores CodeQL inline suppressions. It was removed rather than left in place,
+        # because a marker that implies a suppression it does not perform is its own small lie.
         path = self._path(seed_id)
         if not path.is_file():
             return None
         try:
-            # codeql[py/path-injection]
             return BlueprintRecord.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
             raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc
