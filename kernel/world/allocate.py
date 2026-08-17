@@ -70,7 +70,7 @@ def allocate(session: Session, arg: str) -> str:  # noqa: PLR0911
     session.allocated[stat] = already + n
     _apply(session, stat, n)
     if session.named:
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)
     remaining = unspent(session)
@@ -80,7 +80,7 @@ def allocate(session: Session, arg: str) -> str:  # noqa: PLR0911
 def _apply(session: Session, stat: str, n: int) -> None:
     """Rebuild the StatBlock with the new allocation, and grow HP/MP when the point went into
     stamina/magic (so a defensive build is felt immediately, not only next level-up)."""
-    from kernel.world.jobs import build_stats  # noqa: PLC0415
+    from kernel.world.jobs import build_stats
 
     session.stats = build_stats(session.job, session.allocated)
     if stat == "stamina":

@@ -108,7 +108,7 @@ class LocalSource:
     def __post_init__(self) -> None:
         resolved = Path(self.root).resolve()
         if not resolved.is_dir():
-            raise SourceConnectorError(f"source root is not a directory: {self.root}")  # noqa: TRY003
+            raise SourceConnectorError(f"source root is not a directory: {self.root}")
         object.__setattr__(self, "root", resolved)  # frozen: set the resolved root once
 
     # --- safety rails --------------------------------------------------------------------------
@@ -126,12 +126,12 @@ class LocalSource:
             or relpath.startswith(("/", "\\"))
             or os.path.splitdrive(relpath)[0]
         ):
-            raise PathBoundaryError(f"absolute paths are refused: {relpath!r}")  # noqa: TRY003
+            raise PathBoundaryError(f"absolute paths are refused: {relpath!r}")
         candidate = (self.root / relpath).resolve()
         try:
             candidate.relative_to(self.root)
         except ValueError as exc:
-            raise PathBoundaryError(f"path escapes the source root: {relpath!r}") from exc  # noqa: TRY003
+            raise PathBoundaryError(f"path escapes the source root: {relpath!r}") from exc
         return candidate
 
     # --- inspect (all read-only) ---------------------------------------------------------------
@@ -149,17 +149,17 @@ class LocalSource:
     def read(self, relpath: str, *, max_bytes: int = 1_000_000) -> str:
         """Read one approved file as text (bounded). Refuses protected or out-of-root paths."""
         if self._is_protected(relpath):
-            raise ProtectedPathError(f"path is protected and cannot be read: {relpath!r}")  # noqa: TRY003
+            raise ProtectedPathError(f"path is protected and cannot be read: {relpath!r}")
         path = self._resolve(relpath)
         if not path.is_file():
-            raise SourceConnectorError(f"not a file under the source: {relpath!r}")  # noqa: TRY003
+            raise SourceConnectorError(f"not a file under the source: {relpath!r}")
         return path.read_bytes()[:max_bytes].decode("utf-8", errors="replace")
 
     def search(self, query: str, *, max_hits: int = 100) -> list[tuple[str, int, str]]:
         """Case-insensitive substring search across approved text files. Returns (relpath, line#,
         line) triples. Protected files are never searched; binary/undecodable files are skipped."""
         if not query:
-            raise SourceConnectorError("search query must be non-empty")  # noqa: TRY003
+            raise SourceConnectorError("search query must be non-empty")
         needle = query.lower()
         hits: list[tuple[str, int, str]] = []
         for rel in self.list_files():

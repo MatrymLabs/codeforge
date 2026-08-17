@@ -104,7 +104,7 @@ def test_resting_anywhere_but_an_inn_is_refused_and_heals_nothing():
 
 
 def test_the_rest_verb_is_reachable_through_the_tick():
-    import forge  # noqa: PLC0415
+    import forge
 
     hero = _weary_hero("greenhold_inn")
     out = forge.handle_command(hero, "rest")
@@ -113,8 +113,8 @@ def test_the_rest_verb_is_reachable_through_the_tick():
 
 
 def test_a_party_rests_together_at_the_hearth():
-    from kernel.world import events, party  # noqa: PLC0415
-    from kernel.world.session import SESSIONS  # noqa: PLC0415
+    from kernel.world import events, party
+    from kernel.world.session import SESSIONS
 
     try:
         alia = _weary_hero("greenhold_inn")

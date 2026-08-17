@@ -72,16 +72,16 @@ def build(states: Iterable[str], start: str, transitions: Iterable[Transition]) 
     state_set = frozenset(states)
     edges = tuple(transitions)
     if start not in state_set:
-        raise ValueError(f"start state {start!r} is not in the state set")  # noqa: TRY003
+        raise ValueError(f"start state {start!r} is not in the state set")
     index: dict[tuple[str, str], Transition] = {}
     for t in edges:
         if t.src not in state_set:
-            raise ValueError(f"transition from unknown state {t.src!r}")  # noqa: TRY003
+            raise ValueError(f"transition from unknown state {t.src!r}")
         if t.dst not in state_set:
-            raise ValueError(f"transition to unknown state {t.dst!r}")  # noqa: TRY003
+            raise ValueError(f"transition to unknown state {t.dst!r}")
         key = (t.src, t.event)
         if key in index:
-            raise ValueError(f"non-deterministic machine: two transitions for {key!r}")  # noqa: TRY003
+            raise ValueError(f"non-deterministic machine: two transitions for {key!r}")
         index[key] = t
     return Machine(states=state_set, start=start, transitions=edges, index=index)
 
@@ -106,7 +106,7 @@ def advance(
     if transition.guard is not None:
         guard_fn = (guards or {}).get(transition.guard)
         if guard_fn is None:
-            raise KeyError(f"guard {transition.guard!r} is not in the guard registry")  # noqa: TRY003
+            raise KeyError(f"guard {transition.guard!r} is not in the guard registry")
         try:
             reason = guard_fn(ctx or {})
         except (

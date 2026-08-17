@@ -68,23 +68,23 @@ class PartManifest:
 def from_dict(raw: Any) -> PartManifest:
     """Validate a raw mapping into a PartManifest. Every gap fails loud, early, by name."""
     if not isinstance(raw, dict):
-        raise ManifestError(f"expected a mapping, got {type(raw).__name__}")  # noqa: TRY003
+        raise ManifestError(f"expected a mapping, got {type(raw).__name__}")
     # strip before the required-check so a whitespace-only field fails loud, not late
     missing = [key for key in _REQUIRED if not str(raw.get(key, "")).strip()]
     if missing:
-        raise ManifestError(f"manifest missing required fields: {', '.join(missing)}")  # noqa: TRY003
+        raise ManifestError(f"manifest missing required fields: {', '.join(missing)}")
     maturity = str(raw["maturity"])
     if maturity not in _MATURITY:
-        raise ManifestError(f"maturity {maturity!r} must be one of {_MATURITY}")  # noqa: TRY003
+        raise ManifestError(f"maturity {maturity!r} must be one of {_MATURITY}")
     source_status = str(raw.get("source_status", "original"))
     if source_status not in _SOURCE_STATUS:
-        raise ManifestError(f"source_status {source_status!r} must be one of {_SOURCE_STATUS}")  # noqa: TRY003
+        raise ManifestError(f"source_status {source_status!r} must be one of {_SOURCE_STATUS}")
 
     def _str_list(field: str) -> tuple[str, ...]:
         """List fields must be lists: a bare `field:` in YAML is None, not []. Fuzz-found."""
         value = raw.get(field) or []
         if not isinstance(value, list):
-            raise ManifestError(f"'{field}' must be a list, got {type(value).__name__}")  # noqa: TRY003
+            raise ManifestError(f"'{field}' must be a list, got {type(value).__name__}")
         return tuple(str(item) for item in value)
 
     return PartManifest(

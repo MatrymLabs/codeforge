@@ -50,7 +50,7 @@ def test_verify_roundtrip_and_rejection():
 def _count_hashes(monkeypatch: pytest.MonkeyPatch) -> list[int]:
     """Spy on the pbkdf2 hash so a test can assert it fired (constant-time defense), without a
     flaky timing assertion. Both a real check and the missing-principal decoy route through it."""
-    import kernel.world.accounts as acc  # noqa: PLC0415
+    import kernel.world.accounts as acc
 
     calls: list[int] = []
     real = acc._hash_secret
@@ -72,7 +72,7 @@ def test_an_unknown_character_still_pays_the_hash_cost(monkeypatch: pytest.Monke
 
 
 def test_an_unknown_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
-    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
+    from kernel.world.accounts import account_password_ok
 
     calls = _count_hashes(monkeypatch)
     assert account_password_ok("no-such-account", "whatever") is False
@@ -80,7 +80,7 @@ def test_an_unknown_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyP
 
 
 def test_an_unknown_login_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
-    from kernel.world.accounts import inspect_login  # noqa: PLC0415
+    from kernel.world.accounts import inspect_login
 
     calls = _count_hashes(monkeypatch)
     assert inspect_login("somechar", "no-such-account", "whatever") is False
@@ -213,7 +213,7 @@ def test_handles_must_be_well_formed():
 
 
 def test_migrate_moves_a_character_password_onto_a_new_account():
-    from kernel.world.accounts import inspect_login, migrate  # noqa: PLC0415
+    from kernel.world.accounts import inspect_login, migrate
 
     hero = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = hero
@@ -243,7 +243,7 @@ def test_mixed_case_passwords_survive_the_tick():
 
 def test_cli_rotation_then_tick_login_roundtrip():
     """The exact saga, pinned forever: passwd via CLI, login via door."""
-    from kernel.world.accounts import rotate_account_secret  # noqa: PLC0415
+    from kernel.world.accounts import rotate_account_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -272,7 +272,7 @@ def test_passwd_changes_the_account_password_end_to_end():
 
 
 def test_passwd_refuses_the_wrong_old_password():
-    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
+    from kernel.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -281,7 +281,7 @@ def test_passwd_refuses_the_wrong_old_password():
 
 
 def test_passwd_refuses_mismatched_new_passwords():
-    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
+    from kernel.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -308,7 +308,7 @@ def test_passwd_requires_an_account():
 
 
 def test_passwd_refuses_a_too_short_new_password():
-    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
+    from kernel.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -323,7 +323,7 @@ def test_passwd_shows_usage_on_wrong_shape():
 
 
 def test_password_floor_is_eight_characters():
-    from kernel.world.accounts import MIN_PASSWORD_LEN  # noqa: PLC0415
+    from kernel.world.accounts import MIN_PASSWORD_LEN
 
     assert MIN_PASSWORD_LEN == 8
     s = _fresh()
@@ -332,7 +332,7 @@ def test_password_floor_is_eight_characters():
 
 
 def test_reforge_secret_directly_verifies_then_rotates():
-    from kernel.world.accounts import account_password_ok, reforge_secret  # noqa: PLC0415
+    from kernel.world.accounts import account_password_ok, reforge_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")

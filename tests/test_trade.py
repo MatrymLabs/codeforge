@@ -190,7 +190,7 @@ def test_a_logout_cancels_an_open_trade_with_nothing_moved():
 
 # --- the verb is reachable through the engine tick ---------------------------------------------
 def test_the_trade_verb_is_reachable():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         _hero("alia")

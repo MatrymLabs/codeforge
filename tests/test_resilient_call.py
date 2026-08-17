@@ -21,7 +21,7 @@ def _fails_then_ok(failures: int):
     def fn() -> str:
         state["calls"] += 1
         if state["calls"] <= failures:
-            raise Flaky(f"fail {state['calls']}")  # noqa: TRY003
+            raise Flaky(f"fail {state['calls']}")
         return "ok"
 
     return fn
@@ -49,9 +49,9 @@ def test_the_history_resets_between_calls():
 
 def test_one_core_powers_both_the_game_calibrate_and_the_practical_caller():
     # The whole point of the slice: both adapters run through the same run_with_retries core.
-    import kernel.calibrate as game  # noqa: PLC0415
-    import kernel.resilient_call as practical  # noqa: PLC0415
-    from kernel.shelf.retry import run_with_retries  # noqa: PLC0415
+    import kernel.calibrate as game
+    import kernel.resilient_call as practical
+    from kernel.shelf.retry import run_with_retries
 
     assert game.run_with_retries is run_with_retries
     assert practical.run_with_retries is run_with_retries

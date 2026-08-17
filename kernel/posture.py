@@ -248,7 +248,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:  # noqa: PLR09
 
     # Mutation kill rate: delegate the honesty logic to the shelf part (lazy import keeps posture
     # loadable even if the shelf part is absent, mirroring the advisory_ledger seam below).
-    from kernel.shelf.mutation_kpi import mutation_score_kpi  # noqa: PLC0415
+    from kernel.shelf.mutation_kpi import mutation_score_kpi
 
     mkpi = mutation_score_kpi(evidence.mutation_result, today)
     if mkpi.measured:
@@ -316,7 +316,7 @@ def load_evidence(
     root = Path(security_evidence_dir)
 
     # Mutation evidence is independent of the pip-audit scan, so load it before the no-scan return.
-    from kernel import mutation_recorder  # noqa: PLC0415
+    from kernel import mutation_recorder
 
     mpath = (
         Path(mutation_evidence_path)
@@ -332,7 +332,7 @@ def load_evidence(
     try:
         data = json.loads(newest.read_text("utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
-        raise PostureError(f"cannot read scan evidence {newest}: {exc}") from exc  # noqa: TRY003
+        raise PostureError(f"cannot read scan evidence {newest}: {exc}") from exc
     deps = data.get("dependencies", []) if isinstance(data, dict) else data
     advisories = sum(len(d.get("vulns", [])) for d in deps if isinstance(d, dict))
     # the file name carries its date: YYYY-MM-DD-pip-audit.json
@@ -345,7 +345,7 @@ def load_evidence(
     remediation: tuple[int, ...] | None = None
     if advisory_ledger_path is not None:
         # lazy import: advisory_ledger is the optional lifecycle store; posture works without it
-        from kernel import advisory_ledger as al  # noqa: PLC0415
+        from kernel import advisory_ledger as al
 
         states = al.load(advisory_ledger_path)
         oldest_first_seen = al.oldest_open_first_seen(states)

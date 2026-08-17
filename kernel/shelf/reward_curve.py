@@ -35,7 +35,7 @@ class RewardError(ValueError):
 
 def _tier_multiplier(tier: str) -> float:
     if tier not in TIER_MULTIPLIERS:
-        raise RewardError(f"unknown tier {tier!r}; known: {tuple(TIER_MULTIPLIERS)}")  # noqa: TRY003
+        raise RewardError(f"unknown tier {tier!r}; known: {tuple(TIER_MULTIPLIERS)}")
     return TIER_MULTIPLIERS[tier]
 
 

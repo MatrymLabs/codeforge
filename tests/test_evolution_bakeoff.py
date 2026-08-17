@@ -133,8 +133,8 @@ def test_a_run_with_only_passing_candidates_reports_no_counterexamples() -> None
 
 
 def test_a_candidate_that_raises_is_a_correctness_failure() -> None:
-    from kernel.evolution.evaluators import evaluate_correctness  # noqa: PLC0415
-    from kernel.evolution.subjects import oracle_fit  # noqa: PLC0415
+    from kernel.evolution.evaluators import evaluate_correctness
+    from kernel.evolution.subjects import oracle_fit
 
     def boom(text: str, width: int) -> str:
         raise RuntimeError("kaboom")

@@ -55,7 +55,7 @@ def test_over_shouting_is_throttled_with_the_wait():
 
 
 def test_shout_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     out = handle_command(_player(), "shout Hello There")
     assert out == 'You shout, "Hello There"'  # original case preserved

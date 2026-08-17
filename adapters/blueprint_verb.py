@@ -42,7 +42,7 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:  # noqa: PLR0911
         found = _find(rest, root)
         if not found:
             return f"No blueprint filed as '{rest}'."
-        from kernel.blueprint_render import write_html  # noqa: PLC0415
+        from kernel.blueprint_render import write_html
 
         path = write_html(found, root=root)
         return f"Rendered '{found.blueprint_id}' to {path}"
@@ -50,8 +50,8 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:  # noqa: PLR0911
     if sub == "draft":
         if not rest:
             return "Describe the idea: blueprint draft <what you want to build>"
-        from adapters.architect import ArchitectError  # noqa: PLC0415
-        from adapters.blueprint_ai import BlueprintDraftError, build_claude_drafter  # noqa: PLC0415
+        from adapters.architect import ArchitectError
+        from adapters.blueprint_ai import BlueprintDraftError, build_claude_drafter
 
         try:
             drafter = build_claude_drafter()

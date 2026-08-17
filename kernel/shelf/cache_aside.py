@@ -54,9 +54,9 @@ class CacheAside[K, V]:
 
     def __post_init__(self) -> None:
         if not isinstance(self.ttl_seconds, (int, float)) or isinstance(self.ttl_seconds, bool):
-            raise CacheError(f"ttl_seconds must be a number, got {self.ttl_seconds!r}")  # noqa: TRY003
+            raise CacheError(f"ttl_seconds must be a number, got {self.ttl_seconds!r}")
         if self.ttl_seconds <= 0:
-            raise CacheError(f"ttl_seconds must be > 0, got {self.ttl_seconds}")  # noqa: TRY003
+            raise CacheError(f"ttl_seconds must be > 0, got {self.ttl_seconds}")
 
     def get(self, key: K, loader: Callable[[], V]) -> V:
         """Return the value for `key`, from the cache if fresh, else via `loader` (then cached).

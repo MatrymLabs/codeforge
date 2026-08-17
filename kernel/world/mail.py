@@ -70,8 +70,8 @@ def gift(session: Session, arg: str) -> str:  # noqa: PLR0911
     """`mail gift <player> <item>`: mail a carried item to a hero (online or not). It waits in their
     inbox as a parcel until they `mail claim` it. Fails loud on a bad target, a full inbox, an item
     you are not carrying, or a worn item."""
-    from kernel.world.characters import snapshot_item  # noqa: PLC0415
-    from kernel.world.items import ITEMS, carrier, trace_item  # noqa: PLC0415
+    from kernel.world.characters import snapshot_item
+    from kernel.world.items import ITEMS, carrier, trace_item
 
     parts = arg.split(maxsplit=1)
     if len(parts) < 2:  # noqa: PLR2004
@@ -101,8 +101,8 @@ def gift(session: Session, arg: str) -> str:  # noqa: PLR0911
 
 def claim(session: Session, n_word: str) -> str:
     """`mail claim <n>`: take the item attached to the nth letter into your bag (once)."""
-    from kernel.world.characters import reclone_item  # noqa: PLC0415
-    from kernel.world.items import carrier  # noqa: PLC0415
+    from kernel.world.characters import reclone_item
+    from kernel.world.items import carrier
 
     letters = mail_store.inbox(session.player_id)
     letter = _pick(letters, n_word)

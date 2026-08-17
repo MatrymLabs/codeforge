@@ -108,7 +108,7 @@ def _default_kernel() -> BlueprintKernel:
 def _default_backups() -> Any:
     """The Seed backup store under $SEEDLAB_HOME/backups (lazy import keeps backup off the load
     path until a caller actually snapshots or restores)."""
-    from kernel.seedlab.backup import BlueprintBackups  # noqa: PLC0415
+    from kernel.seedlab.backup import BlueprintBackups
 
     return BlueprintBackups(_home() / "backups")
 
@@ -144,7 +144,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
     rest = parts[1:]
 
     if sub in ("list", "ls"):
-        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed  # noqa: I001, PLC0415
+        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed # noqa: I001
 
         ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
         lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
@@ -223,9 +223,9 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
-        from kernel.seedlab.project_model import BlueprintLabError, Provenance  # noqa: I001, PLC0415
-        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError  # noqa: PLC0415
-        from kernel.seedlab.source_modeler import model_and_store  # noqa: PLC0415
+        from kernel.seedlab.project_model import BlueprintLabError, Provenance # noqa: I001
+        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
+        from kernel.seedlab.source_modeler import model_and_store
 
         store = model_store or FileModelStore(_home() / "models")
         source_id = resolved.name or "source"
@@ -273,9 +273,9 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
                 resolved.relative_to(allowed)
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
-        from kernel.seedlab.project_model import Provenance  # noqa: I001, PLC0415
-        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError  # noqa: PLC0415
-        from kernel.seedlab.tool_runner import (  # noqa: PLC0415
+        from kernel.seedlab.project_model import Provenance # noqa: I001
+        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
+        from kernel.seedlab.tool_runner import (
             CommandRefused,
             FileRunLog,
             render_run,
@@ -315,7 +315,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
             record = kernel.get(rest[0])
         except BlueprintKernelError as exc:
             return f"workspace: {exc}"
-        from kernel.seedlab.tool_runner import FileRunLog, render_run  # noqa: PLC0415
+        from kernel.seedlab.tool_runner import FileRunLog, render_run
 
         log = run_log if run_log is not None else FileRunLog(_home() / "runs")
         runs = log.for_seed(rest[0])
@@ -375,7 +375,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
     if sub == "restore":
         if len(rest) < 2:  # noqa: PLR2004
             return "usage: workspace restore <seed_id> <backup_id>"
-        from kernel.seedlab.backup import BackupError, restore  # noqa: PLC0415
+        from kernel.seedlab.backup import BackupError, restore
 
         store = backups if backups is not None else _default_backups()
         try:

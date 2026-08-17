@@ -32,10 +32,10 @@ class WeightedTable[T]:
     def __init__(self, entries: Sequence[tuple[T, int]]) -> None:
         entries = tuple(entries)
         if not entries:
-            raise WeightedTableError("a weighted table needs at least one outcome")  # noqa: TRY003
+            raise WeightedTableError("a weighted table needs at least one outcome")
         for outcome, weight in entries:
             if not isinstance(weight, int) or isinstance(weight, bool) or weight <= 0:
-                raise WeightedTableError(  # noqa: TRY003
+                raise WeightedTableError(
                     f"weight for outcome {outcome!r} must be a positive integer, got {weight!r}"
                 )
         self._entries: tuple[tuple[T, int], ...] = entries
@@ -55,6 +55,6 @@ class WeightedTable[T]:
             upto += weight
             if roll <= upto:
                 return outcome
-        raise WeightedTableError(  # noqa: TRY003
+        raise WeightedTableError(
             "unreachable: roll exceeded total weight"
         )  # pragma: no cover

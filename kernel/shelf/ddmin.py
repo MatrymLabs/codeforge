@@ -75,7 +75,7 @@ def ddmin[T](  # noqa: PLR0912, PLR0915
         return still_fails(subset)
 
     if not oracle(seq):
-        raise DeltaError("the full input does not reproduce the failure (nothing to minimize)")  # noqa: TRY003
+        raise DeltaError("the full input does not reproduce the failure (nothing to minimize)")
 
     notes: list[str] = []
     capped = False

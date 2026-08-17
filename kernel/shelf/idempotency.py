@@ -70,15 +70,15 @@ class IdempotencyStore[T]:
         so a real retry runs it again. Empty key or fingerprint raises `IdempotencyError`.
         """
         if not key or not key.strip():
-            raise IdempotencyError("idempotency key must be a non-empty string")  # noqa: TRY003
+            raise IdempotencyError("idempotency key must be a non-empty string")
         if not fingerprint or not fingerprint.strip():
-            raise IdempotencyError("request fingerprint must be a non-empty string")  # noqa: TRY003
+            raise IdempotencyError("request fingerprint must be a non-empty string")
 
         existing = self._entries.get(key)
         if existing is not None:
             stored_fingerprint, stored_result = existing
             if stored_fingerprint != fingerprint:
-                raise IdempotencyConflict(  # noqa: TRY003
+                raise IdempotencyConflict(
                     f"idempotency key {key!r} was already used for a different request "
                     "(fingerprint mismatch); reusing a key for a changed request is refused"
                 )

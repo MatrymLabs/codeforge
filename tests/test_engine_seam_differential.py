@@ -141,11 +141,11 @@ def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> 
     assert all(
         probes[aspect] > 1 for aspect in ("inventory", "progression", "permission", "persistence")
     )
-    from kernel.overlay import load_overlay  # noqa: PLC0415
+    from kernel.overlay import load_overlay
 
     overlay = load_overlay(Path("content/blueprints/first-forge/world_overlay.json"))
     assert len(overlay) == 12
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     coverage = cast(
         Callable[[Engine2D], object],
@@ -239,11 +239,11 @@ def test_an_aspect_with_no_MEASURED_probe_is_not_reported_as_covered() -> None: 
     ATTEMPTED. Coverage over a probe that raised is coverage over nothing, which is exactly the
     defect shape this Workshop keeps finding in its own instruments.
     """
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     def broken_battery() -> list[tuple[str, str, object]]:
         def explode(_engine: object) -> object:
-            raise RuntimeError("this probe cannot run")  # noqa: TRY003
+            raise RuntimeError("this probe cannot run")
 
         return [("inventory", "works", lambda e: 1), ("permission", "broken", explode)]
 
@@ -263,7 +263,7 @@ def test_an_aspect_with_no_MEASURED_probe_is_not_reported_as_covered() -> None: 
 
 def test_a_battery_that_measures_nothing_is_INCONCLUSIVE_not_AGREED() -> None:  # noqa: N802
     """UNVERIFIED is not PASS, applied to this instrument before anyone can round it up."""
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     original = seam._battery
     try:
@@ -292,7 +292,7 @@ def test_the_verdict_reports_how_many_probes_could_actually_fail() -> None:
 
 def test_a_probe_that_ignores_its_engine_is_not_counted_falsifiable() -> None:
     """The property, stated directly. `lambda e: pure_function(5)` can never diverge."""
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     falsifiable = set(seam.falsifiable_probes())
     # Progression is the clearest case and is structurally unfalsifiable by engine sabotage:
@@ -309,7 +309,7 @@ def test_every_saboteur_names_a_room_the_world_actually_has() -> None:
     falsifiable; two were reacting to a room the world does not contain, which no engine can
     produce. With legal rooms the honest answer is 3.
     """
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     rooms = set(seam._overlay_rooms())
     assert rooms, "the overlay must supply the sabotage rooms, never a literal"
@@ -320,7 +320,7 @@ def test_every_saboteur_names_a_room_the_world_actually_has() -> None:
 
 def test_overlay_room_calibration_distinguishes_blueprints() -> None:
     """The overlay-room source must change when the Blueprint under test changes."""
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     first_forge = seam._overlay_rooms("first-forge")
     seam_probe = seam._overlay_rooms("seam-probe")
@@ -331,7 +331,7 @@ def test_overlay_room_calibration_distinguishes_blueprints() -> None:
 
 def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
     """The same battery runs for each Blueprint, while loaded-world probes may change answers."""
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     first = run_differential("first-forge")
     probe = run_differential("seam-probe")
@@ -346,7 +346,7 @@ def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
 
 def test_a_movement_probe_reads_the_blueprint_under_test() -> None:
     """A named movement probe must change when the loaded Blueprint changes."""
-    import kernel.engine_seam as seam  # noqa: PLC0415
+    import kernel.engine_seam as seam
 
     first_probe = cast(
         Callable[[Engine0D], object],

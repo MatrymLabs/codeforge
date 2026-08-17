@@ -64,15 +64,15 @@ class CircuitBreaker:
 
     def __post_init__(self) -> None:
         if not isinstance(self.failure_threshold, int) or isinstance(self.failure_threshold, bool):
-            raise CircuitBreakerError(  # noqa: TRY003
+            raise CircuitBreakerError(
                 f"failure_threshold must be an int, got {self.failure_threshold!r}"
             )
         if self.failure_threshold < 1:
-            raise CircuitBreakerError(  # noqa: TRY003
+            raise CircuitBreakerError(
                 f"failure_threshold must be >= 1, got {self.failure_threshold}"
             )
         if not math.isfinite(self.reset_timeout) or self.reset_timeout < 0:
-            raise CircuitBreakerError("reset_timeout must be a finite, non-negative number")  # noqa: TRY003
+            raise CircuitBreakerError("reset_timeout must be a finite, non-negative number")
         self._clock: Clock = self.clock or time.monotonic
         self._state = _MACHINE.start
 
@@ -113,7 +113,7 @@ class CircuitBreaker:
     def call[T](self, fn: Callable[[], T]) -> T:
         """Run `fn` if the breaker allows; else raise CircuitOpen. Records the outcome."""
         if not self.allow():
-            raise CircuitOpen("circuit is open; call rejected")  # noqa: TRY003
+            raise CircuitOpen("circuit is open; call rejected")
         try:
             result = fn()
         except Exception:

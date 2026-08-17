@@ -280,7 +280,7 @@ def test_script_command_is_owner_gated() -> None:
 
 def test_script_command_without_lua_reports_cleanly(monkeypatch) -> None:
     # Even with lupa installed, the graceful 'not installed' path must read cleanly (base gate).
-    import kernel.scripting as scripting  # noqa: PLC0415, PLR0402
+    import kernel.scripting as scripting # noqa: PLR0402
 
     monkeypatch.setattr(scripting, "scripting_available", lambda: False)
     session = _walker("forge")
@@ -323,7 +323,7 @@ def test_clones_lens_reachable_through_the_spine() -> None:
 
 
 def test_barrier_alias_deploys_through_the_spine() -> None:
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")  # deploy_barrier needs the Engineer's kit
@@ -331,7 +331,7 @@ def test_barrier_alias_deploys_through_the_spine() -> None:
 
 
 def test_secondary_alias_sets_a_subjob_through_the_spine() -> None:
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")  # a primary is required first
@@ -341,7 +341,7 @@ def test_secondary_alias_sets_a_subjob_through_the_spine() -> None:
 def test_two_word_ability_aliases_dispatch_through_the_spine() -> None:
     # "field repair" and "deploy barrier" are multi-word verbs (longest-first match); each shares
     # its one-word form's designation and reaches the same Engineer handler.
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")
@@ -359,7 +359,7 @@ def test_unlock_without_with_prompts() -> None:
 
 
 def test_help_returns_the_help_text_through_the_spine() -> None:
-    from forge import HELP_TEXT  # noqa: PLC0415
+    from forge import HELP_TEXT
 
     # bare `help` still carries the intro banner, now followed by the spine-derived command list
     # (help_index consumer, RD-2026-0007). `help <command>` answers the specific question instead.
@@ -377,7 +377,7 @@ def test_save_and_load_round_trip_through_the_spine() -> None:
 
 def test_score_with_a_bad_mode_surfaces_the_error() -> None:
     # The ValueError branch of _score_cmd: the renderer rejects an unknown mode, surfaced as text.
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")
@@ -391,7 +391,7 @@ def test_lesson_with_an_unknown_subcommand_prompts() -> None:
 
 def test_solo_opening_shows_the_seed_splash_then_the_scene() -> None:
     # Solo play now opens with the world's own splash (like the gateways), not a generic line.
-    from forge import render_opening  # noqa: PLC0415
+    from forge import render_opening
 
     session = Session(player_id="solo", location="forge")
     SESSIONS["solo"] = session
@@ -404,7 +404,7 @@ def test_solo_opening_shows_the_seed_splash_then_the_scene() -> None:
 def test_game_loop_prints_the_opening_then_runs_one_command(monkeypatch, capsys) -> None:
     # Drive the terminal loop with a scripted keyboard: it prints the splash opening, then a
     # single `quit` ends the loop cleanly (the driver's only exit is session.alive going False).
-    import forge  # noqa: PLC0415
+    import forge
 
     keys = iter(["quit"])
     monkeypatch.setattr("builtins.input", lambda _prompt="": next(keys))

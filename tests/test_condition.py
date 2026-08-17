@@ -29,7 +29,7 @@ def test_a_hale_hero_sees_pools_and_no_affliction():
 
 
 def test_a_hero_with_a_power_pool_sees_it():
-    from kernel.world.resources import Resource  # noqa: PLC0415
+    from kernel.world.resources import Resource
 
     s = _hero()
     s.resources["power"] = Resource(name="power", current=5, maximum=10)

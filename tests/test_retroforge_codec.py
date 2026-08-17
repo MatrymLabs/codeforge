@@ -58,9 +58,9 @@ def test_a_decoded_tile_is_indices_not_colours() -> None:
 
 def test_a_tile_decode_past_the_end_propagates_the_refusal() -> None:
     """A codec must not swallow OutOfRange into a short tile."""
-    import pytest  # noqa: PLC0415
+    import pytest
 
-    from kernel.retroforge.binary import OutOfRange  # noqa: PLC0415
+    from kernel.retroforge.binary import OutOfRange
 
     with pytest.raises(OutOfRange):
         _Conforming().decode_tile(ByteSource(b""), 0)

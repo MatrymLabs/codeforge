@@ -19,8 +19,8 @@ from kernel.world.membership_sql import SqlMembershipStore
 
 def _sql_world() -> SqlMembershipStore:
     """A real character world in the tmp DB: rowan (no account, player), regent (kingdom, owner)."""
-    from kernel.world.characters import save_character  # noqa: PLC0415
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    from kernel.world.characters import save_character
+    from kernel.world.session import SESSIONS, Session
 
     SESSIONS.clear()
     rowan = Session(player_id="rowan", named=True, account="")
@@ -88,7 +88,7 @@ def test_the_in_memory_store_defensively_ignores_retire_on_a_missing_character()
 
 
 def test_adopt_runs_on_an_injected_membership_store():
-    from kernel.world.accounts import adopt  # noqa: PLC0415
+    from kernel.world.accounts import adopt
 
     mem = InMemoryMembershipStore({"rowan": ("", "player")})
     assert "rowan now belongs to matlabs" in adopt("rowan", "matlabs", membership=mem)
@@ -97,7 +97,7 @@ def test_adopt_runs_on_an_injected_membership_store():
 
 
 def test_account_has_owner_runs_on_an_injected_membership_store():
-    from kernel.world.accounts import account_has_owner  # noqa: PLC0415
+    from kernel.world.accounts import account_has_owner
 
     mem = InMemoryMembershipStore({"regent": ("kingdom", "owner"), "peon": ("kingdom", "player")})
     assert account_has_owner("kingdom", membership=mem) is True
@@ -107,8 +107,8 @@ def test_account_has_owner_runs_on_an_injected_membership_store():
 def test_inspect_login_runs_on_injected_credential_and_membership_stores():
     """The full login verdict over pure in-memory stores: account exists, password matches (crypto
     still runs), and the character is seated on that account -- no database at all."""
-    import kernel.world.accounts as acc  # noqa: PLC0415
-    from kernel.world.accounts import inspect_login  # noqa: PLC0415
+    import kernel.world.accounts as acc
+    from kernel.world.accounts import inspect_login
 
     salt = b"\x02" * 16
     cred = InMemoryAccountCredentialStore()

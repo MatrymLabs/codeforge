@@ -44,7 +44,7 @@ def test_keys_are_isolated():
 
 def test_one_core_powers_both_the_game_shout_and_the_practical_login_guard():
     # The whole point of the slice: the SAME TokenBucket core drives both adapters.
-    from kernel import chat_throttle  # noqa: PLC0415
+    from kernel import chat_throttle
 
     guard = LoginGuard(clock=FakeClock())
     guard.attempt("eve")
@@ -56,7 +56,7 @@ def test_one_core_powers_both_the_game_shout_and_the_practical_login_guard():
 
 
 def _stub_session():
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, Session
 
     s = Session(player_id="shouter", location="courtyard")
     SESSIONS["shouter"] = s
@@ -65,7 +65,7 @@ def _stub_session():
 
 def test_the_bucket_map_is_bounded_against_a_flood_of_keys(monkeypatch):
     # A flood of distinct keys (IPs/accounts) must not grow the bucket map without bound.
-    from kernel import login_guard  # noqa: PLC0415
+    from kernel import login_guard
 
     monkeypatch.setattr(login_guard, "_MAX_KEYS", 3)
     guard = login_guard.LoginGuard()

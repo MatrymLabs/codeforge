@@ -52,7 +52,7 @@ def test_a_raising_parse_is_never_cached(tmp_path: Path) -> None:
     path = _write(tmp_path, "boom")
 
     def parse(p: Path) -> str:
-        raise ValueError("bad data")  # noqa: TRY003
+        raise ValueError("bad data")
 
     with pytest.raises(ValueError, match="bad data"):
         loader_cache.load_cached(path, parse)

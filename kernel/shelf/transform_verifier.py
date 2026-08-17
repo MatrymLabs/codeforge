@@ -141,10 +141,10 @@ def _load_function(src: str, func_name: str, tag: str) -> Any:
         # (see the module security posture). Not a sandbox against malicious code.
         exec(compile(src, f"<{tag}>", "exec"), namespace)  # noqa: S102  # nosec B102
     except SyntaxError as exc:
-        raise TransformVerifierError(f"{tag} source does not parse: {exc}") from exc  # noqa: TRY003
+        raise TransformVerifierError(f"{tag} source does not parse: {exc}") from exc
     fn = namespace.get(func_name)
     if not callable(fn):
-        raise TransformVerifierError(f"{tag} has no callable named {func_name!r}")  # noqa: TRY003
+        raise TransformVerifierError(f"{tag} has no callable named {func_name!r}")
     return fn
 
 
@@ -194,7 +194,7 @@ def verify_transform(
     (that is precisely the transform failing).
     """
     if samples <= 0:
-        raise TransformVerifierError(f"samples must be >= 1, got {samples}")  # noqa: TRY003
+        raise TransformVerifierError(f"samples must be >= 1, got {samples}")
 
     # Gate PARSE + load BEFORE (BEFORE is the trusted baseline; if it is broken, refuse).
     before_fn = _load_function(before_src, func_name, "before")

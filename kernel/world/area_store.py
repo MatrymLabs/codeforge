@@ -48,7 +48,7 @@ def load_area(area_id: str, area_dir: Path | None = None) -> dict[str, Any]:
     """Read a stored area. Fails loud (BlueprintError) if it was never generated or saved."""
     path = _path(area_id, area_dir)
     if not path.exists():
-        raise BlueprintError(f"no stored area {area_id!r} (generate it first)")  # noqa: TRY003
+        raise BlueprintError(f"no stored area {area_id!r} (generate it first)")
     data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
     return data
 
@@ -75,7 +75,7 @@ def promote(area_id: str, area_dir: Path | None = None) -> dict[str, Any]:
     area = load_area(area_id, area_dir)
     status = area.get("canon_status")
     if status != "GENERATED_LOCAL":
-        raise BlueprintError(  # noqa: TRY003
+        raise BlueprintError(
             f"cannot promote {area_id!r}: only GENERATED_LOCAL is promotable (got {status!r})"
         )
     area["canon_status"] = "AUTHORED_LOCAL"

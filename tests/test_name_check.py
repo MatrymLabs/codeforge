@@ -31,6 +31,6 @@ def test_a_reserved_name_is_refused():
 
 
 def test_namecheck_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     assert "valid character name" in handle_command(_player(), "namecheck scholar_x")

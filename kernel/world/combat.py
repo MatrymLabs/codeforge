@@ -105,7 +105,7 @@ def _death_gear_toll(session: Session) -> int:
     """Batter the hero's WORN gear on a lethal death: each equipped piece takes a
     DEATH_DURABILITY_TOLL of wear (reversible via `mend`). Returns how many pieces were worn.
     A bare hero (nothing equipped) takes no toll; broken-to-zero pieces floor, never go negative."""
-    from kernel.world import durability  # noqa: PLC0415
+    from kernel.world import durability
 
     worn = 0
     for iid in session.equipped.values():
@@ -137,7 +137,7 @@ def _typed_blow(session: Session, npc: Npc, power: int) -> tuple[int, int, str]:
     element = npc.get("attack_element")
     if not element:
         return power, 0, ""
-    from kernel.world.character_view import session_resistance  # noqa: PLC0415
+    from kernel.world.character_view import session_resistance
 
     level = session_resistance(session, element)
     tag = _ELEMENT_NAMES.get(element, element)
@@ -219,7 +219,7 @@ def _wear_gear(session: Session, slot: str) -> None:
     """Wear the piece in `slot` by one point, if the hero has one equipped there. The economy's
     durability drain: a struck blade and a dented breastplate are what make repair (a coin sink)
     necessary. A bare slot is a clean no-op."""
-    from kernel.world import durability  # noqa: PLC0415
+    from kernel.world import durability
 
     iid = session.equipped.get(slot)
     if iid is not None:
@@ -231,7 +231,7 @@ def _stat_bonus(session: Session, stat: str) -> int:
     the active job's perks, and the sworn Order. Combat reads the SAME composition as the score
     sheet (character_view.session_stat_modifiers), so gear and perks are real in a fight, not paper.
     An ungeared, orderless character gets 0 -- the base balance is unchanged."""
-    from kernel.world.character_view import session_stat_modifiers  # noqa: PLC0415
+    from kernel.world.character_view import session_stat_modifiers
 
     return sum(mod.flat for mod in session_stat_modifiers(session).get(stat, []))
 
@@ -265,8 +265,8 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     room at full health, and the foe recovers -- the fight is earned again. A real death carries
     real, reversible stakes: scattered coins, battered gear (K2), and XP progress toward the next
     level (K5) -- but NEVER a level: the hero keeps every level they earned."""
-    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
-    from kernel.world.world import (  # noqa: PLC0415
+    from kernel.world.progression_awards import apply_xp_debt
+    from kernel.world.world import (
         START_ROOM,
     )  # lazy: world binds seed state at import
 
@@ -300,7 +300,7 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:  # noqa: PL
     # A telegraphed boss SPECIAL (kernel.world.boss_specials): an enraged boss may spend this beat
     # WINDING UP (it announces and lands no blow, a free beat for the hero), then UNLEASH next --
     # a heavier hit whose affliction is guaranteed. A non-boss or an un-special boss is untouched.
-    from kernel.world.boss_specials import is_charging, maybe_begin_charge, unleash  # noqa: PLC0415
+    from kernel.world.boss_specials import is_charging, maybe_begin_charge, unleash
 
     special_line, guaranteed = "", False
     if is_charging(npc):
@@ -318,7 +318,7 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:  # noqa: PL
     # it, the harder its blows land (a raid should demand the trinity, not fall to a bigger zerg).
     # A solo cohort is x1 (backward-compatible); each extra mate adds RAID_DIFFICULTY_PER_MEMBER.
     if npc.get("raid"):
-        from kernel.world.party import members_in_room  # noqa: PLC0415
+        from kernel.world.party import members_in_room
 
         present = len(members_in_room(session.player_id, session.location))
         cohort = min(RAID_COHORT_CAP, max(1, present))
@@ -367,7 +367,7 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:  # noqa: PL
     # the NPC's `inflicts` spec -- but an UNLEASHED special's affliction is GUARANTEED (it was
     # telegraphed; it connects). Only a blow that landed damage can afflict.
     if power > 0:
-        from kernel.world.afflictions import inflict, maybe_inflict  # noqa: PLC0415
+        from kernel.world.afflictions import inflict, maybe_inflict
 
         spec = npc.get("inflicts")
         if guaranteed and spec:
@@ -457,7 +457,7 @@ def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
     """A lockout-gated bonus on the period's first kill of a raid (weekly) or a boss (daily). It
     returns the bounty line (and credits the coins), or '' for a normal foe, or one already claimed
     this period. A raid outranks the plain boss cadence: it is checked first."""
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     if npc.get("raid"):
         key, period, mult, label = (
@@ -481,7 +481,7 @@ def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
         # A raid rewards a COHORT: the marquee bounty scales with the party present for the kill, so
         # a full band earns more than a solo lap (the stated intent, now paid). members_in_room
         # includes the killer, so a solo raider scales x1 (unchanged); each present mate adds one.
-        from kernel.world.party import members_in_room  # noqa: PLC0415
+        from kernel.world.party import members_in_room
 
         cohort = max(1, len(members_in_room(session.player_id, session.location)))
         bonus *= cohort
@@ -514,7 +514,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     # A mortal world foe DIES and respawns on a tier timer (it drops from the room until then); the
     # training dummy and anything a seed marks `reassembles` stands right back up. Statuses clear
     # either way. This is the keel-approved "a cleared room stays cleared for a while" behaviour.
-    from kernel.world import climate, mortality  # noqa: PLC0415
+    from kernel.world import climate, mortality
 
     mortality.fell(npc, climate.now())
     announce(
@@ -528,7 +528,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     # claim and we award nothing. The occurrence is minted from the ledger rather than the world
     # beat, which rewinds to 0 on a fresh boot and would make a legitimate re-kill look like a
     # repeat. A felled foe that pays nothing must still FALL, so only the awards sit behind this.
-    from kernel.world.reward_ledger import claim_grant, next_occurrence  # noqa: PLC0415
+    from kernel.world.reward_ledger import claim_grant, next_occurrence
 
     grant_source = f"npc:{nid}"
     occurrence = next_occurrence(session.player_id, grant_source)
@@ -541,7 +541,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
             rewards = f"{rewards}\n{extra}"
     # Shared combat: a party-mate present for the kill shares its advancement (the reward half of
     # fighting as one). One call at the reward seam; the sharing logic lives in party_rewards.
-    from kernel.world.party_rewards import share_kill  # noqa: PLC0415
+    from kernel.world.party_rewards import share_kill
 
     shared = share_kill(
         session.player_id, session.location, npc["name"], xp_award, jp_award, tp_award
@@ -562,7 +562,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     )
     if haul:
         rewards = f"{rewards}\n{haul}"
-    from kernel.world import (  # noqa: PLC0415
+    from kernel.world import (
         quest,  # lazy: combat is the low-level loop; the quest hook rides on top
     )
 
@@ -573,8 +573,8 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     # fire a cull event per keyword under this zone's key, so felling a grey-hound in Veridia counts
     # toward 'cull the canids in Veridia', never another region's board. Cheap: an unrouted key is a
     # single dict miss, and the mass wildlife kills flow through here.
-    from kernel.world.cull import scope_key  # noqa: PLC0415
-    from kernel.world.zones import zone_of  # noqa: PLC0415
+    from kernel.world.cull import scope_key
+    from kernel.world.zones import zone_of
 
     zone = zone_of(session.location)
     if zone:
@@ -589,7 +589,7 @@ def attack(session: Session, word: str) -> str:  # noqa: PLR0911
     """One strike of the training loop."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you pick a fight."
-    from kernel.world.afflictions import is_dazed  # noqa: PLC0415
+    from kernel.world.afflictions import is_dazed
 
     if is_dazed(session):
         return "You are dazed and cannot strike -- it will pass."
@@ -635,7 +635,7 @@ def attack(session: Session, word: str) -> str:  # noqa: PLR0911
         # counter, so it strikes exactly once per tick -- never both counter and open-strike.
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
         return f"{struck} ({npc['hp_now']}/{npc['hp']}){counter}"
-    from kernel.world import mortality  # noqa: PLC0415
+    from kernel.world import mortality
 
     return f"{struck} It {mortality.defeat_clause(npc)}.\n{tail}"
 
@@ -706,7 +706,7 @@ def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
         rarity = "" if rolled.rarity == "common" else f" [{rolled.rarity}]"
     # Shared combat, loot half: in a party, a drop is awarded to a co-located mate by round-robin
     # instead of dropping to the floor. Solo/unpartied loot is unchanged (falls to the ground).
-    from kernel.world.party_loot import assign_drop  # noqa: PLC0415
+    from kernel.world.party_loot import assign_drop
 
     awarded = assign_drop(session.player_id, session.location, iid)
     if awarded is not None:

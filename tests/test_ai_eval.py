@@ -72,7 +72,7 @@ def test_the_offline_sample_scores_the_local_architect(tmp_path: Path) -> None:
     # The canned SAMPLE, scored against the offline LocalArchitect (no network), records a real
     # reproducible score. (main() itself writes to the real store, so we drive evaluate directly
     # with a tmp root rather than call it here.)
-    from adapters.architect import LocalArchitect  # noqa: PLC0415
+    from adapters.architect import LocalArchitect
 
     subject, prompt, required = SAMPLE
     rec = evaluate(
@@ -91,7 +91,7 @@ def test_the_offline_sample_scores_the_local_architect(tmp_path: Path) -> None:
 def test_main_is_callable_offline(monkeypatch) -> None:
     # Prove `make ai-eval`'s entrypoint runs offline without touching the real store: stub the
     # recorder so nothing is written, and confirm it drives the LocalArchitect and returns 0.
-    import adapters.ai_eval as mod  # noqa: PLC0415
+    import adapters.ai_eval as mod
 
     monkeypatch.setattr(mod, "record_ai_eval", lambda *a, **k: _Stub())
     assert main(["deadbee"]) == 0

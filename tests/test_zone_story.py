@@ -53,7 +53,7 @@ def test_assemble_returns_none_for_an_unknown_zone():
 
 
 def test_a_dungeon_zone_on_the_live_world_reports_its_full_depths():
-    from kernel.world.zones import ZONES  # noqa: PLC0415
+    from kernel.world.zones import ZONES
 
     for label in ZONES:
         story = assemble(label)

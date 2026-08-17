@@ -125,7 +125,7 @@ def _sha256(text: str) -> str:
 def _dump(data: Any, *, sort_keys: bool = True) -> str:
     """Deterministic YAML block style -- same spec yields byte-identical output. `sort_keys` off
     preserves a caller's chosen order (rooms emit the start FIRST; the rest stay alphabetical)."""
-    import yaml  # a real dep (the loaders use it); imported here to keep the module light  # noqa: E501, PLC0415
+    import yaml  # a real dep (the loaders use it); imported here to keep the module light # noqa: E501
 
     return yaml.safe_dump(data, sort_keys=sort_keys, allow_unicode=True, default_flow_style=False)
 
@@ -177,12 +177,12 @@ def link_region(spec: GameSpec, dest: Path) -> LinkedRegion:
     naming no room. Content validity (exits, labels, reachability, quest integrity) is judged
     separately by `validate_region`, through the engine's own loaders."""
     if not spec.region or not spec.region.strip():
-        raise GameLinkError("a game spec needs a non-empty region name to link")  # noqa: TRY003
+        raise GameLinkError("a game spec needs a non-empty region name to link")
     if not spec.rooms:
-        raise GameLinkError("a game spec needs at least one room to link a region")  # noqa: TRY003
+        raise GameLinkError("a game spec needs at least one room to link a region")
     labels = [r.label for r in spec.rooms]
     if spec.start not in labels:
-        raise GameLinkError(f"start room {spec.start!r} is not one of the region's rooms")  # noqa: TRY003
+        raise GameLinkError(f"start room {spec.start!r} is not one of the region's rooms")
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     files: dict[str, str] = {"rooms.yaml": _rooms_yaml(spec)}
@@ -249,7 +249,7 @@ def validate_region(linked: LinkedRegion) -> RegionVerdict:
     """Judge an emitted region by loading it through the REAL loaders. REFUSED if a loader rejects
     the content (dangling exit, bad label, malformed quest) or a quest `on_enter` names no room;
     UNREACHABLE if a room is orphaned or no quest terminal is reachable; else LINKED."""
-    from kernel.world.seed import (  # noqa: PLC0415
+    from kernel.world.seed import (
         BlueprintError,
         load_quest,
         load_rooms,

@@ -78,7 +78,7 @@ class JobQueue:
         id_factory: IdFactory | None = None,
     ) -> None:
         if not isinstance(max_attempts, int) or isinstance(max_attempts, bool) or max_attempts <= 0:
-            raise JobQueueError("max_attempts must be a positive int")  # noqa: TRY003
+            raise JobQueueError("max_attempts must be a positive int")
         self._max_attempts = max_attempts
         self._clock = clock
         self._id = id_factory or _seq_ids()
@@ -88,7 +88,7 @@ class JobQueue:
 
     def enqueue(self, payload: bytes) -> str:
         if not isinstance(payload, (bytes, bytearray)):
-            raise JobQueueError("payload must be bytes")  # noqa: TRY003
+            raise JobQueueError("payload must be bytes")
         job_id = self._id()
         self._seq += 1
         self._jobs[job_id] = _Record(id=job_id, payload=bytes(payload), seq=self._seq)
@@ -98,7 +98,7 @@ class JobQueue:
         try:
             return self._jobs[job_id]
         except KeyError:
-            raise JobQueueError(f"unknown job: {job_id!r}") from None  # noqa: TRY003
+            raise JobQueueError(f"unknown job: {job_id!r}") from None
 
     def _next_token(self) -> int:
         self._token += 1
@@ -107,7 +107,7 @@ class JobQueue:
     def claim(self, *, lease: float) -> Job | None:
         """Claim the oldest available job under a visibility lease, or None."""
         if not isinstance(lease, (int, float)) or isinstance(lease, bool) or lease <= 0:
-            raise JobQueueError("lease must be a positive number of seconds")  # noqa: TRY003
+            raise JobQueueError("lease must be a positive number of seconds")
         available = [r for r in self._jobs.values() if r.status == AVAILABLE]
         if not available:
             return None
@@ -121,7 +121,7 @@ class JobQueue:
 
     def _require_current(self, record: _Record, lease_token: int) -> None:
         if record.status != CLAIMED or record.token != lease_token:
-            raise StaleLease(f"lease {lease_token} for job {record.id!r} is no longer current")  # noqa: TRY003
+            raise StaleLease(f"lease {lease_token} for job {record.id!r} is no longer current")
 
     def ack(self, job_id: str, lease_token: int) -> None:
         """Mark a claimed job done. A stale token (lease lost) raises StaleLease."""

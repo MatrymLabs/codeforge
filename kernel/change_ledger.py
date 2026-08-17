@@ -166,7 +166,7 @@ class ChangeLedger:
     def record_arc(self, change_id: str, verdict: str) -> None:
         """Attach an ARC verdict to a change (the gate its deploy step reads). Fails loud."""
         if verdict not in ARC_VERDICTS:
-            raise ValueError(f"ARC verdict must be one of {ARC_VERDICTS}, got {verdict!r}")  # noqa: TRY003
+            raise ValueError(f"ARC verdict must be one of {ARC_VERDICTS}, got {verdict!r}")
         self._repo.require(change_id).arc_verdict = verdict
 
     def advance(self, change_id: str, event: str, actor: str = ANY_ROLE):

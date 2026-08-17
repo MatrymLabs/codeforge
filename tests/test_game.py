@@ -71,7 +71,7 @@ def test_provisioning_loads_the_live_game_module() -> None:
 
 
 def test_the_tick_composition_root_offers_both_modules() -> None:
-    from forge import domain_registry  # noqa: PLC0415
+    from forge import domain_registry
 
     registry = domain_registry()
     assert "game" in registry and "education" in registry
@@ -80,7 +80,7 @@ def test_the_tick_composition_root_offers_both_modules() -> None:
 def test_a_classroom_loads_only_education_even_when_game_is_available() -> None:
     """The isolation-by-selection proof: both modules sit in the tick's registry, but an education
     Seed resolves ONLY `education` -- it never loads `game`/combat."""
-    from forge import domain_registry  # noqa: PLC0415
+    from forge import domain_registry
 
     kernel = _kernel()
     _, resolved = provision(
@@ -91,7 +91,7 @@ def test_a_classroom_loads_only_education_even_when_game_is_available() -> None:
 
 
 def test_a_game_seed_loads_only_game() -> None:
-    from forge import domain_registry  # noqa: PLC0415
+    from forge import domain_registry
 
     kernel = _kernel()
     _, resolved = provision(kernel, _spec("mmorpg", ("game",)), domain_registry())

@@ -77,8 +77,8 @@ def npcs_in(room_id: str) -> list[str]:
     members = _by_room.get(room_id)
     if not members:
         return []
-    from kernel.world.climate import now  # noqa: PLC0415
-    from kernel.world.mortality import is_dead  # noqa: PLC0415
+    from kernel.world.climate import now
+    from kernel.world.mortality import is_dead
 
     beat = now()
     return [nid for nid in members if not is_dead(NPCS[nid], beat)]

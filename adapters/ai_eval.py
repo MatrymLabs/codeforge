@@ -27,7 +27,7 @@ class AiEvalError(ValueError):
 def keyword_score(response: str, required: tuple[str, ...]) -> float:
     """The fraction of `required` keywords present in `response` (case-insensitive), 0.0..1.0."""
     if not required:
-        raise AiEvalError("a rubric needs at least one required keyword")  # noqa: TRY003
+        raise AiEvalError("a rubric needs at least one required keyword")
     text = response.lower()
     hits = sum(1 for keyword in required if keyword.lower() in text)
     return round(hits / len(required), 4)
@@ -59,9 +59,9 @@ SAMPLE = ("architect.testing_guidance", "how do I run the tests?", ("diagnostics
 
 def main(argv: list[str] | None = None) -> int:
     """`make ai-eval`: run the sample eval against the offline LocalArchitect and record it."""
-    import sys  # noqa: PLC0415
+    import sys
 
-    from adapters.architect import LocalArchitect  # noqa: PLC0415
+    from adapters.architect import LocalArchitect
 
     args = list(sys.argv[1:] if argv is None else argv)
     commit = args[0] if args else "unknown"

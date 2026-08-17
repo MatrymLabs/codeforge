@@ -30,9 +30,9 @@ def test_grant_with_wrong_arity_is_usage(capsys):
 
 def test_api_command_serves_on_the_configured_port(monkeypatch):
     # The `api` command must honor the configured port, not a hardcoded 8000.
-    import uvicorn  # noqa: PLC0415
+    import uvicorn
 
-    from kernel.shelf import config  # noqa: PLC0415
+    from kernel.shelf import config
 
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))
@@ -53,7 +53,7 @@ def test_seeds_lists_installed_games(capsys, monkeypatch):
 
 
 def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
-    import os  # noqa: PLC0415
+    import os
 
     monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     monkeypatch.setattr("adapters.gateway.serve", lambda: None)
@@ -63,7 +63,7 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
 
 
 def test_a_valid_blueprint_sets_the_new_env_before_dispatch(monkeypatch):
-    import os  # noqa: PLC0415
+    import os
 
     monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     monkeypatch.setattr("adapters.gateway.serve", lambda: None)
@@ -73,7 +73,7 @@ def test_a_valid_blueprint_sets_the_new_env_before_dispatch(monkeypatch):
 
 
 def test_blueprint_flag_wins_over_seed_flag(monkeypatch):
-    import os  # noqa: PLC0415
+    import os
 
     monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     monkeypatch.setattr("adapters.gateway.serve", lambda: None)
@@ -111,9 +111,9 @@ def test_onboard_dispatches_to_the_workflow(monkeypatch):
 
 
 def test_web_serves_on_the_configured_port(monkeypatch):
-    import uvicorn  # noqa: PLC0415
+    import uvicorn
 
-    from kernel.shelf import config  # noqa: PLC0415
+    from kernel.shelf import config
 
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))
@@ -137,7 +137,7 @@ def test_migrate_db_reports_when_no_legacy_files(capsys, tmp_path, monkeypatch):
 
 
 def test_passwd_rotates_when_the_confirmations_match(capsys, monkeypatch):
-    import getpass  # noqa: PLC0415
+    import getpass
 
     monkeypatch.setattr(getpass, "getpass", lambda prompt="": "MatchingPw1")
     monkeypatch.setattr(
@@ -148,7 +148,7 @@ def test_passwd_rotates_when_the_confirmations_match(capsys, monkeypatch):
 
 
 def test_passwd_refuses_a_mismatch_and_wrong_arity(capsys, monkeypatch):
-    import getpass  # noqa: PLC0415
+    import getpass
 
     answers = iter(["FirstEntry1", "SecondEntry2"])
     monkeypatch.setattr(getpass, "getpass", lambda prompt="": next(answers))
@@ -162,7 +162,7 @@ def test_passwd_refuses_a_mismatch_and_wrong_arity(capsys, monkeypatch):
 # --apply, the refusal path, and the missing-dependency guard -- with acceptance AND refusal
 # cases. kernel/refactor.py is proven separately by its own test twin. ---
 def _stub_refactor(monkeypatch, result=None, error=None, available=True):
-    import kernel.refactor as rf  # noqa: PLC0415
+    import kernel.refactor as rf
 
     monkeypatch.setattr(rf, "refactor_available", lambda: available)
     if error is not None:
@@ -176,7 +176,7 @@ def _stub_refactor(monkeypatch, result=None, error=None, available=True):
 
 
 def test_refactor_dry_run_previews_and_writes_nothing(tmp_path, capsys, monkeypatch):
-    from kernel.refactor import RefactorResult  # noqa: PLC0415
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -193,7 +193,7 @@ def test_refactor_dry_run_previews_and_writes_nothing(tmp_path, capsys, monkeypa
 
 
 def test_refactor_apply_writes_a_preserved_rename(tmp_path, capsys, monkeypatch):
-    from kernel.refactor import RefactorResult  # noqa: PLC0415
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -211,7 +211,7 @@ def test_refactor_apply_writes_a_preserved_rename(tmp_path, capsys, monkeypatch)
 def test_refactor_refuses_a_behaviour_changing_rename_even_with_apply(
     tmp_path, capsys, monkeypatch
 ):
-    from kernel.refactor import RefactorResult  # noqa: PLC0415
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -240,7 +240,7 @@ def test_refactor_needs_the_libcst_extra(tmp_path, capsys, monkeypatch):
 
 
 def test_refactor_bad_target_is_refused_loud(tmp_path, capsys, monkeypatch):
-    from kernel.refactor import RefactorError  # noqa: PLC0415
+    from kernel.refactor import RefactorError
 
     mod = tmp_path / "m.py"
     mod.write_text("def f():\n    return 1\n")
@@ -260,7 +260,7 @@ def test_refactor_missing_args_is_a_usage_error(capsys):
 
 
 def test_seedlab_proof_writes_a_report_artifact(tmp_path, capsys, monkeypatch):
-    from dataclasses import dataclass  # noqa: PLC0415
+    from dataclasses import dataclass
 
     @dataclass
     class _FakeResult:
@@ -418,9 +418,9 @@ def test_host_verify_recovery_proves_the_seed_is_restorable(capsys, tmp_path):
 def test_host_verify_recovery_fails_loud_when_the_seed_is_corrupted(capsys, tmp_path, monkeypatch):
     # If the installed seed does not survive backup + restore, the command fails loud (exit 1),
     # never a false success. Force a CORRUPTED verdict at the recovery seam.
-    import kernel.domains.hosted_recovery as hr  # noqa: PLC0415
-    from kernel.domains.game_lifecycle import CORRUPTED  # noqa: PLC0415
-    from kernel.domains.hosted_recovery import HostedRecoveryReport  # noqa: PLC0415
+    import kernel.domains.hosted_recovery as hr
+    from kernel.domains.game_lifecycle import CORRUPTED
+    from kernel.domains.hosted_recovery import HostedRecoveryReport
 
     monkeypatch.setattr(
         hr,

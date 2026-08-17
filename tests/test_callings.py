@@ -261,8 +261,8 @@ def _gated_seed(monkeypatch) -> None:
     is correct for it. Injecting here keeps this test about REACHABILITY THROUGH THE TICK rather
     than about which callings Aethryn happens to gate today.
     """
-    import forge  # noqa: PLC0415
-    from kernel.world import jobs as jobs_card  # noqa: PLC0415
+    import forge
+    from kernel.world import jobs as jobs_card
 
     gated = dict(jobs_card.JOBS)
     gated["warden"] = {
@@ -279,8 +279,8 @@ def _gated_seed(monkeypatch) -> None:
 
 
 def test_the_tick_refuses_a_locked_calling(monkeypatch) -> None:
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.session import Session
 
     _gated_seed(monkeypatch)
     s = Session(player_id="matrym")
@@ -292,9 +292,9 @@ def test_the_tick_refuses_a_locked_calling(monkeypatch) -> None:
 
 
 def test_the_tick_opens_the_calling_once_the_road_is_walked(monkeypatch) -> None:
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.job_progress import JobProgress  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.job_progress import JobProgress
+    from kernel.world.session import Session
 
     _gated_seed(monkeypatch)
     s = Session(player_id="matrym")
@@ -305,8 +305,8 @@ def test_the_tick_opens_the_calling_once_the_road_is_walked(monkeypatch) -> None
 
 
 def test_the_tick_lists_a_locked_calling_with_its_price(monkeypatch) -> None:
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.session import Session
 
     _gated_seed(monkeypatch)
     out = handle_command(Session(player_id="matrym"), "jobs")
@@ -316,8 +316,8 @@ def test_the_tick_lists_a_locked_calling_with_its_price(monkeypatch) -> None:
 
 def test_the_secondary_slot_is_not_an_open_window(monkeypatch) -> None:
     """The lock must hold on every door into a calling, not just the front one."""
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.session import Session
 
     _gated_seed(monkeypatch)
     s = Session(player_id="matrym")

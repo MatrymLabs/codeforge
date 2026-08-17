@@ -37,7 +37,7 @@ class Change:
     def __post_init__(self) -> None:
         for name in ("files_touched", "added_dependencies", "scan_findings"):
             if getattr(self, name) < 0:
-                raise RiskError(f"{name} must be >= 0")  # noqa: TRY003
+                raise RiskError(f"{name} must be >= 0")
 
 
 # signal -> (points, is a floor-to-HIGH signal)
@@ -81,7 +81,7 @@ def route(
 ) -> Routing:
     """Route a change to a review band + required approvals from its risk."""
     if not 0 <= medium_at <= high_at <= critical_at <= 100:  # noqa: PLR2004
-        raise RiskError("need 0 <= medium_at <= high_at <= critical_at <= 100")  # noqa: TRY003
+        raise RiskError("need 0 <= medium_at <= high_at <= critical_at <= 100")
     s = score(change)
     reasons: list[str] = []
 

@@ -58,7 +58,7 @@ def cli_acceptance_tests(model: ProjectModel, cases: Sequence[CliAcceptanceCase]
     """Emit spec-derived tests (NOT self-affirming): one per case, each asserting the CLI's real
     stdout and exit code via capsys. Fails loud on no cases -- an empty suite is a vacuous pass."""
     if not cases:
-        raise GeneratorError("cli synthesis needs at least one acceptance case to verify")  # noqa: TRY003
+        raise GeneratorError("cli synthesis needs at least one acceptance case to verify")
     blocks = [f"from {_CLI_MODULE} import main"]
     for i, case in enumerate(cases):
         argv = json.dumps(list(case.argv))
@@ -109,7 +109,7 @@ def synthesize_cli(
     verdict. Fails loud (GeneratorError) on an empty identity or no cases -- there is nothing to
     verify. `run` defaults to the real pytest runner; inject a fake to test the compose offline."""
     if not model.identity or not model.identity.strip():
-        raise GeneratorError("a project model needs a non-empty identity to synthesize a CLI")  # noqa: TRY003
+        raise GeneratorError("a project model needs a non-empty identity to synthesize a CLI")
     tests = cli_acceptance_tests(model, cases)  # raises loud if no cases
     goal = cli_goal(model, cases)
     test_run = run if run is not None else pytest_runner(seed_id="_cli_synthesis")

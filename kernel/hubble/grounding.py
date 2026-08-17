@@ -41,7 +41,7 @@ class Claim:
 
     def __post_init__(self) -> None:
         if not self.path.strip():
-            raise GroundingError(f"claim {self.text!r} cites no path")  # noqa: TRY003
+            raise GroundingError(f"claim {self.text!r} cites no path")
 
 
 def filesystem_resolver(root: Path | str) -> Resolver:

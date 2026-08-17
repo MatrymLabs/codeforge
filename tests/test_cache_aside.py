@@ -123,7 +123,7 @@ def test_failed_loader_is_not_cached() -> None:
     def flaky() -> int:
         calls["n"] += 1
         if calls["n"] == 1:
-            raise RuntimeError("source down")  # noqa: TRY003
+            raise RuntimeError("source down")
         return 5
 
     with pytest.raises(RuntimeError):

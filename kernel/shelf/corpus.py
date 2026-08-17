@@ -55,7 +55,7 @@ class Detection:
 
     def __post_init__(self) -> None:
         if self.method not in DETECTION_METHODS:
-            raise CorpusError(f"detection method must be one of {sorted(DETECTION_METHODS)}")  # noqa: TRY003
+            raise CorpusError(f"detection method must be one of {sorted(DETECTION_METHODS)}")
 
 
 @dataclass(frozen=True)
@@ -67,7 +67,7 @@ class Transformation:
 
     def __post_init__(self) -> None:
         if self.method not in TRANSFORM_METHODS:
-            raise CorpusError(f"transformation method must be one of {sorted(TRANSFORM_METHODS)}")  # noqa: TRY003
+            raise CorpusError(f"transformation method must be one of {sorted(TRANSFORM_METHODS)}")
 
 
 @dataclass(frozen=True)
@@ -102,13 +102,13 @@ class Record:
 
     def __post_init__(self) -> None:
         if not self.id or self.id != self.id.upper() or "." not in self.id:
-            raise CorpusError(f"id must be a non-empty UPPER.DOTTED key, got {self.id!r}")  # noqa: TRY003
+            raise CorpusError(f"id must be a non-empty UPPER.DOTTED key, got {self.id!r}")
         if self.category not in CATEGORIES:
-            raise CorpusError(  # noqa: TRY003
+            raise CorpusError(
                 f"category must be one of {sorted(CATEGORIES)}, got {self.category!r}"
             )
         if self.automatability not in AUTOMATABILITY:
-            raise CorpusError(f"automatability must be one of {sorted(AUTOMATABILITY)}")  # noqa: TRY003
+            raise CorpusError(f"automatability must be one of {sorted(AUTOMATABILITY)}")
 
 
 class Corpus:
@@ -119,14 +119,14 @@ class Corpus:
 
     def add(self, record: Record) -> None:
         if record.id in self._by_id:
-            raise CorpusError(f"duplicate record id: {record.id!r}")  # noqa: TRY003
+            raise CorpusError(f"duplicate record id: {record.id!r}")
         self._by_id[record.id] = record
 
     def get(self, record_id: str) -> Record:
         try:
             return self._by_id[record_id]
         except KeyError:
-            raise CorpusError(f"unknown record: {record_id!r}") from None  # noqa: TRY003
+            raise CorpusError(f"unknown record: {record_id!r}") from None
 
     def all(self) -> tuple[Record, ...]:
         return tuple(self._by_id.values())
@@ -183,10 +183,10 @@ def _record_from_dict(raw: dict[str, Any]) -> Record:
 def load_yaml(text: str) -> Corpus:
     """Load a seed corpus from a YAML list of record dicts. Requires PyYAML."""
     try:
-        import yaml  # optional; the Record/Corpus core is stdlib  # noqa: PLC0415
+        import yaml  # optional; the Record/Corpus core is stdlib
     except ImportError as exc:  # pragma: no cover
-        raise CorpusError("load_yaml needs PyYAML; build Record objects to stay stdlib") from exc  # noqa: TRY003
+        raise CorpusError("load_yaml needs PyYAML; build Record objects to stay stdlib") from exc
     data = yaml.safe_load(text)
     if not isinstance(data, list):
-        raise CorpusError("a corpus YAML must be a list of records")  # noqa: TRY003
+        raise CorpusError("a corpus YAML must be a list of records")
     return Corpus.from_records(_record_from_dict(r) for r in data)

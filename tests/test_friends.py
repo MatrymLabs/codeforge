@@ -162,7 +162,7 @@ def test_serialize_and_restore_round_trip():
 
 # --- the verb is reachable through the engine tick --------------------------------------------
 def test_the_friend_verb_is_reachable():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         alia = _hero()

@@ -245,7 +245,7 @@ class Declared:
 def read_declared(path: Path = _PYPROJECT) -> Declared:
     """Parse the runtime + dev dependency names from pyproject.toml (fails loud if absent)."""
     if not path.is_file():
-        raise LedgerError(f"pyproject not found: {path}")  # noqa: TRY003
+        raise LedgerError(f"pyproject not found: {path}")
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     project = data.get("project", {})
     optional = project.get("optional-dependencies", {})
@@ -263,16 +263,16 @@ def read_declared(path: Path = _PYPROJECT) -> Declared:
 def read_ledger(path: Path = _LEDGER) -> dict[str, dict[str, str]]:
     """Parse the justification rows; a missing file or an incomplete row fails loud."""
     if not path.is_file():
-        raise LedgerError(f"dependency ledger not found: {path}")  # noqa: TRY003
+        raise LedgerError(f"dependency ledger not found: {path}")
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     entries: dict[str, dict[str, str]] = {}
     for scope in ("runtime", "dev"):
         for name, row in data.get(scope, {}).items():
             if not isinstance(row, dict):
-                raise LedgerError(f"[{scope}.{name}] must be a table of justification fields")  # noqa: TRY003
+                raise LedgerError(f"[{scope}.{name}] must be a table of justification fields")
             missing = [f for f in _REQUIRED_FIELDS if not str(row.get(f, "")).strip()]
             if missing:
-                raise LedgerError(  # noqa: TRY003
+                raise LedgerError(
                     f"[{scope}.{name}] missing required field(s): {', '.join(missing)}"
                 )
             entries[_canonical(name)] = {
@@ -341,7 +341,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
     `python -m adapters.dependencies screen <name>`: run the name admission screen.
     `... screen-source <path>`: run the behavioral install-hook screen on a setup.py."""
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     if len(args) >= 2 and args[0] == "screen-source":  # noqa: PLR2004

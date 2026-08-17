@@ -135,9 +135,9 @@ def maybe_wire_broker(env: dict[str, str] | None = None) -> SocketBus | None:
     this process joins a multi-process deployment. Absent, the in-process bus stays and this is a
     no-op. Called once at gateway boot; returns the SocketBus it wired, or None. A malformed spec
     fails loud (better a clear boot error than a silent single-process fallback)."""
-    import os  # noqa: PLC0415
+    import os
 
-    from kernel.world import bus  # noqa: PLC0415
+    from kernel.world import bus
 
     spec = (env if env is not None else os.environ).get("CODEFORGE_BUS_BROKER", "").strip()
     if not spec:

@@ -63,15 +63,15 @@ def record_verdict(
 ) -> Path:
     """File one dated verdict JSON, return its path. Validates like ARC's Dimension: fails loud."""
     if dimension not in RUNTIME_DIMENSIONS:
-        raise VerdictError(  # noqa: TRY003
+        raise VerdictError(
             f"unknown runtime dimension {dimension!r}; expected {RUNTIME_DIMENSIONS}"
         )
     if status not in _STATUSES:
-        raise VerdictError(  # noqa: TRY003
+        raise VerdictError(
             f"dimension {dimension!r}: status must be one of {_STATUSES}, got {status!r}"
         )
     if not source.strip():
-        raise VerdictError(f"dimension {dimension!r}: a verdict must cite its source")  # noqa: TRY003
+        raise VerdictError(f"dimension {dimension!r}: a verdict must cite its source")
     when = stamp if stamp is not None else datetime.now(UTC)
     verdict = Verdict(
         dimension=dimension,
@@ -104,7 +104,7 @@ def read_latest(dimension: str, root: Path | None = None) -> Verdict | None:
     try:
         raw = json.loads(newest.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
-        raise VerdictError(f"{newest.name}: unreadable verdict artifact ({exc})") from exc  # noqa: TRY003
+        raise VerdictError(f"{newest.name}: unreadable verdict artifact ({exc})") from exc
     try:
         verdict = Verdict(
             dimension=raw["dimension"],
@@ -114,11 +114,11 @@ def read_latest(dimension: str, root: Path | None = None) -> Verdict | None:
             recorded_utc=raw["recorded_utc"],
         )
     except (KeyError, TypeError) as exc:
-        raise VerdictError(f"{newest.name}: malformed verdict artifact (missing {exc})") from exc  # noqa: TRY003
+        raise VerdictError(f"{newest.name}: malformed verdict artifact (missing {exc})") from exc
     if verdict.status not in _STATUSES:
-        raise VerdictError(f"{newest.name}: unknown status {verdict.status!r}")  # noqa: TRY003
+        raise VerdictError(f"{newest.name}: unknown status {verdict.status!r}")
     if not verdict.source.strip():
-        raise VerdictError(f"{newest.name}: a verdict must cite its source")  # noqa: TRY003
+        raise VerdictError(f"{newest.name}: a verdict must cite its source")
     return verdict
 
 
@@ -145,7 +145,7 @@ _CHECK_CMDS: dict[str, list[str]] = {
 
 def _console_runner(check: str) -> bool:
     """Default runner: run one allowlisted check via the safe console runner; True iff it passed."""
-    from kernel.shelf import (  # noqa: PLC0415
+    from kernel.shelf import (
         console,
     )  # lazy: keep this module's import path light for arc.py
 
@@ -160,8 +160,8 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     never touch a subprocess. change/patch have no persistent store yet, so they are NOT filed here
     and stay MISSING by absence (honest, not fabricated).
     """
-    from kernel.release_gate import ReleaseGate  # noqa: PLC0415
-    from kernel.shelf.test_evidence import FAILED, PASSED, EvidenceLedger  # noqa: PLC0415
+    from kernel.release_gate import ReleaseGate
+    from kernel.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
 
     run_check = runner if runner is not None else _console_runner
     lint_ok = run_check("lint")
@@ -183,7 +183,7 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     # Release stays a dated verdict under arc-evidence/ (git-ignored, reproducible). Evidence now
     # lives SOLELY in the Chronicle (git-tracked, hash-chained), which ARC reads back (slice 1b) -
     # a single retained source, not a git-ignored one.
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     filed = [record_verdict("release", rel_status, rel_source, commit=commit, root=root)]
     chronicle.append(
@@ -211,7 +211,7 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
 
 def main(argv: list[str] | None = None) -> int:
     """`python -m kernel.arc_ledger emit <commit>`: file the runtime verdicts (human-run)."""
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     if not args or args[0] != "emit":

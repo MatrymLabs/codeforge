@@ -59,12 +59,12 @@ def main() -> None:
     edges = build_edges(n)
     print(f"navigation benchmark -- {n:,} rooms, {len(edges):,} exits\n")
 
-    from kernel.world.navigation import BACKEND, PyNavGraph  # noqa: PLC0415
+    from kernel.world.navigation import BACKEND, PyNavGraph
 
     py = bench_backend("python", PyNavGraph, edges, n)
 
     try:
-        import codeforge_nav  # noqa: PLC0415
+        import codeforge_nav
     except ImportError:
         print(
             f"\n(native codeforge_nav not built; active backend = {BACKEND!r}. "

@@ -45,7 +45,7 @@ def maybe_begin_charge(npc: Npc) -> str:
     telegraph line. Returns '' (and starts nothing) for a non-boss, a boss without a `special`, a
     boss not yet enraged, one already charging, or when the cadence roll declines. The wind-up beat
     lands no blow (the caller returns this line), so the hero gets a beat to answer."""
-    from kernel.world.boss_phases import is_boss, is_enraged  # noqa: PLC0415
+    from kernel.world.boss_phases import is_boss, is_enraged
 
     special = npc.get("special")
     if not special or not is_boss(npc) or not is_enraged(npc) or is_charging(npc):

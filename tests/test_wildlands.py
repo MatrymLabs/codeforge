@@ -86,9 +86,9 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
     # The variety engine: a room's text pairs a terrain FEATURE (idx % F) with an ATMOSPHERE
     # (idx % A). If F and A share a factor the pair cannot reach F*A combinations and variety
     # silently collapses. This gate pins gcd(F, A) == 1 per biome, so the CRT multiplier holds.
-    from math import gcd  # noqa: PLC0415
+    from math import gcd
 
-    from kernel.world.wildlands import _BIOMES  # noqa: PLC0415
+    from kernel.world.wildlands import _BIOMES
 
     for biome, d in _BIOMES.items():
         f, a = len(d["features"]), len(d.get("atmospheres", []))
@@ -98,7 +98,7 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
 
 def test_a_room_description_carries_both_a_feature_and_an_atmosphere():
     _, rooms, _ = _world_with(_CFG)
-    from kernel.world.wildlands import _BIOMES  # noqa: PLC0415
+    from kernel.world.wildlands import _BIOMES
 
     meadow = _BIOMES["temperate-meadow"]
     a_room = next(iter(rooms.values()))
@@ -142,16 +142,16 @@ def test_attach_room_gains_exactly_one_exit_into_the_region():
     ],
 )
 def test_a_malformed_region_fails_loud(bad, match):
-    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
+    from kernel.world.wildlands import load_wildlands_config
 
     cfg = {k: v for k, v in _CFG.items() if k != "id"}
     cfg.update(bad)
     tmp = {"probe_wild": cfg}
-    import tempfile  # noqa: PLC0415
-    from pathlib import Path  # noqa: PLC0415
+    import tempfile
+    from pathlib import Path
 
     with tempfile.TemporaryDirectory() as d:
-        import yaml  # noqa: PLC0415
+        import yaml
 
         p = Path(d) / "wildlands.yaml"
         p.write_text(yaml.safe_dump(tmp))
@@ -211,7 +211,7 @@ def test_notables_are_off_by_default_in_a_hand_built_config():
 
 
 def test_the_guardian_count_is_capped_for_a_huge_region():
-    from kernel.world.wildlands import _NOTABLE_CAP  # noqa: PLC0415
+    from kernel.world.wildlands import _NOTABLE_CAP
 
     cfg = dict(_CFG, id="huge_wild", trail_length=_NOTABLE_CAP * 40, notable_every=1)
     _, _, npcs = _world_with(cfg)
@@ -219,12 +219,12 @@ def test_the_guardian_count_is_capped_for_a_huge_region():
 
 
 def test_notable_every_defaults_on_and_refuses_a_negative():
-    import tempfile  # noqa: PLC0415
-    from pathlib import Path  # noqa: PLC0415
+    import tempfile
+    from pathlib import Path
 
-    import yaml  # noqa: PLC0415
+    import yaml
 
-    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
+    from kernel.world.wildlands import load_wildlands_config
 
     good = {k: v for k, v in _CFG.items() if k != "id"}
     with tempfile.TemporaryDirectory() as d:
@@ -241,7 +241,7 @@ def test_notable_every_defaults_on_and_refuses_a_negative():
 
 
 def _write_cfg(tmp_path):
-    import yaml  # noqa: PLC0415
+    import yaml
 
     p = tmp_path / "wildlands.yaml"
     p.write_text(yaml.safe_dump({"probe_wild": {k: v for k, v in _CFG.items() if k != "id"}}))
@@ -249,7 +249,7 @@ def _write_cfg(tmp_path):
 
 
 def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
-    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
+    from kernel.world.wildlands import load_wildlands_config
 
     p = _write_cfg(tmp_path)
     monkeypatch.delenv("CODEFORGE_WILD_SCALE", raising=False)
@@ -261,7 +261,7 @@ def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize("bad", ["abc", "0", "0.5", "-3"])
 def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad):
-    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
+    from kernel.world.wildlands import load_wildlands_config
 
     p = _write_cfg(tmp_path)
     monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)

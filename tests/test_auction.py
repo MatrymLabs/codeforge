@@ -145,7 +145,7 @@ def test_buying_your_own_or_unaffordable_or_missing_listing_is_refused():
 
 # --- the verb is reachable through the engine tick --------------------------------------------
 def test_the_auction_verb_is_reachable():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         ada = _hero("ada")

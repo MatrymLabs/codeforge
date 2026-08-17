@@ -59,7 +59,7 @@ class InMemoryRepository[E, K]:
         """Store a new entity. Raises DuplicateKey if its key is already present."""
         key = self._key_of(entity)
         if key in self._items:
-            raise DuplicateKey(f"an entity with key {key!r} already exists")  # noqa: TRY003
+            raise DuplicateKey(f"an entity with key {key!r} already exists")
         self._items[key] = entity
         return entity
 
@@ -72,13 +72,13 @@ class InMemoryRepository[E, K]:
         try:
             return self._items[key]
         except KeyError:
-            raise NotFound(f"no entity with key {key!r}") from None  # noqa: TRY003
+            raise NotFound(f"no entity with key {key!r}") from None
 
     def update(self, entity: E) -> E:
         """Replace an existing entity (matched by its key). Raises NotFound if absent."""
         key = self._key_of(entity)
         if key not in self._items:
-            raise NotFound(f"cannot update: no entity with key {key!r}")  # noqa: TRY003
+            raise NotFound(f"cannot update: no entity with key {key!r}")
         self._items[key] = entity
         return entity
 

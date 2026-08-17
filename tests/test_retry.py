@@ -34,7 +34,7 @@ def _flaky(failures: int, exc=Transient):
     def fn() -> str:
         state["calls"] += 1
         if state["calls"] <= failures:
-            raise exc(f"fail {state['calls']}")  # noqa: TRY003
+            raise exc(f"fail {state['calls']}")
         return "ok"
 
     fn.calls = state  # type: ignore[attr-defined]
@@ -147,7 +147,7 @@ class AdvancingSleep:
 
 
 def test_a_deadline_stops_retrying_once_the_time_budget_is_spent() -> None:
-    from kernel.shelf.deadline import Deadline  # noqa: PLC0415
+    from kernel.shelf.deadline import Deadline
 
     clock = _Clock()
     sleep = AdvancingSleep(clock)
@@ -161,7 +161,7 @@ def test_a_deadline_stops_retrying_once_the_time_budget_is_spent() -> None:
 
 
 def test_a_generous_deadline_does_not_cut_a_normal_retry_short() -> None:
-    from kernel.shelf.deadline import Deadline  # noqa: PLC0415
+    from kernel.shelf.deadline import Deadline
 
     clock = _Clock()
     sleep = AdvancingSleep(clock)

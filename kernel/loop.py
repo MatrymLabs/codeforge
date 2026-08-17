@@ -46,7 +46,7 @@ class TraceReport:
 
 def _stage_manifest(part_id: str, root: Path) -> tuple[StageResult, PartManifest | None]:
     """Stage 1: load and validate the part manifest."""
-    from kernel.manifest import ManifestError, find_manifest  # noqa: PLC0415
+    from kernel.manifest import ManifestError, find_manifest
 
     try:
         manifest = find_manifest(part_id, root=root)
@@ -59,7 +59,7 @@ def _stage_manifest(part_id: str, root: Path) -> tuple[StageResult, PartManifest
 
 def _stage_catalog(part_id: str, root: Path) -> StageResult:
     """Stage 2: verify the part is stocked in the Hardware Store."""
-    from kernel.hardware import find_part  # noqa: PLC0415
+    from kernel.hardware import find_part
 
     catalog_path = root / "catalog" / "parts.yaml"
     part = find_part(part_id, path=catalog_path)
@@ -70,7 +70,7 @@ def _stage_catalog(part_id: str, root: Path) -> StageResult:
 
 def _stage_blueprint(part_id: str, root: Path) -> StageResult:
     """Stage 3: check if a Blueprint exists for this part."""
-    from kernel.blueprint import load_all  # noqa: PLC0415
+    from kernel.blueprint import load_all
 
     blueprints = load_all(root=root)
     # blueprint_id uses underscores, part_id uses dashes
@@ -84,7 +84,7 @@ def _stage_blueprint(part_id: str, root: Path) -> StageResult:
 
 def _stage_registry(part_id: str, root: Path, manifest: PartManifest | None) -> StageResult:
     """Stage 4: check if the part has a filed designation in the registry."""
-    from kernel.registry import load_collective  # noqa: PLC0415
+    from kernel.registry import load_collective
 
     registry_dir = root / "registry" / "designations"
     collective = load_collective(registry_dir)
@@ -102,7 +102,7 @@ def _stage_assembly(
     manifest: PartManifest | None, root: Path
 ) -> tuple[StageResult, Assembly | None]:
     """Stage 5: discover dependencies and compose the assembly."""
-    from kernel.assembly import AssemblyError, assemble  # noqa: PLC0415
+    from kernel.assembly import AssemblyError, assemble
 
     if manifest is None:
         return StageResult("assembly", "skip", "no manifest to assemble from"), None
@@ -150,8 +150,8 @@ def _stage_docs(part_id: str, root: Path) -> StageResult:
 
 def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> TraceReport:
     """Trace one part through every manufacturing stage and file the evidence report."""
-    from kernel.assembly import file_evidence  # noqa: PLC0415
-    from kernel.shelf.reporting import write_report  # noqa: PLC0415
+    from kernel.assembly import file_evidence
+    from kernel.shelf.reporting import write_report
 
     base = root or _ROOT
     tag = stamp or date.today().isoformat()  # noqa: DTZ011
@@ -181,7 +181,7 @@ def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> T
     stages.append(_stage_docs(part_id, base))
 
     # File assembly evidence if we got one
-    from kernel.assembly import Assembly  # noqa: PLC0415
+    from kernel.assembly import Assembly
 
     if isinstance(assembly, Assembly):
         file_evidence(assembly, root=base)

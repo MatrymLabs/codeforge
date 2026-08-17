@@ -50,7 +50,7 @@ def _parts_imports(source: str, where: str) -> set[str]:
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
-        raise WorldBoundaryError(f"cannot parse {where}: {exc}") from exc  # noqa: TRY003
+        raise WorldBoundaryError(f"cannot parse {where}: {exc}") from exc
     found: set[str] = set()
     for node in ast.walk(tree):
         names: list[str] = []

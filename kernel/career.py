@@ -67,15 +67,15 @@ def load_board(path: Path | None = None) -> dict:
     try:
         data = json.loads(src.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise CareerError(f"unreadable career matrix at {src}: {exc}") from exc  # noqa: TRY003
+        raise CareerError(f"unreadable career matrix at {src}: {exc}") from exc
     board = data.get("career_board")
     if not isinstance(board, dict) or "levels" not in board:
-        raise CareerError("career matrix missing 'career_board' / 'levels'")  # noqa: TRY003
+        raise CareerError("career matrix missing 'career_board' / 'levels'")
     for lvl in board["levels"]:
         for skill in lvl.get("skills", []):
             for req in ("skill_id", "skill", "status", "repo_proof", "next_proof_task"):
                 if req not in skill:
-                    raise CareerError(f"skill {skill.get('skill_id', '?')} missing '{req}'")  # noqa: TRY003
+                    raise CareerError(f"skill {skill.get('skill_id', '?')} missing '{req}'")
             _validate_ownership(skill)
     return board
 
@@ -90,10 +90,10 @@ def _validate_ownership(skill: dict) -> None:
     if own is None:
         return
     if not isinstance(own, dict) or "level" not in own:
-        raise CareerError(f"skill {skill['skill_id']}: ownership must be a mapping with a 'level'")  # noqa: TRY003
+        raise CareerError(f"skill {skill['skill_id']}: ownership must be a mapping with a 'level'")
     level = own["level"]
     if not isinstance(level, int) or isinstance(level, bool) or level not in _OWNERSHIP_NAMES:
-        raise CareerError(  # noqa: TRY003
+        raise CareerError(
             f"skill {skill['skill_id']}: ownership level must be an int 0-5, got {level!r}"
         )
 
@@ -369,7 +369,7 @@ def render_claim(
 def _lesson_record_for(skill_id: str) -> str:
     """The real lesson file that proves this skill, as a provenance path for a claim block
     (or a placeholder if none is found). Read-only; imports lazily to avoid an import cycle."""
-    from kernel.assessment import _default_lessons_dir, load_lesson  # noqa: PLC0415
+    from kernel.assessment import _default_lessons_dir, load_lesson
 
     lessons_dir = _default_lessons_dir()
     if lessons_dir.is_dir():

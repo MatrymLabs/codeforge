@@ -92,7 +92,7 @@ def test_an_uncomparable_pair_fails_loud() -> None:
 
 
 def test_validate_returns_the_tree_for_a_good_expression() -> None:
-    import ast  # noqa: PLC0415
+    import ast
 
     tree = validate("level >= 5 and rank == 'wizard'")
     assert isinstance(tree, ast.Expression)

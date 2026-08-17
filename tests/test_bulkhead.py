@@ -38,7 +38,7 @@ def test_a_raising_operation_still_releases_its_slot() -> None:
     bh = Bulkhead(1)
 
     def boom() -> None:
-        raise ValueError("work failed")  # noqa: TRY003
+        raise ValueError("work failed")
 
     with pytest.raises(ValueError, match="work failed"):
         bh.run(boom)

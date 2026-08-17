@@ -49,7 +49,7 @@ def cliffs_delta(baseline: list[float], candidate: list[float]) -> float:
     LOWER is better: a candidate value 'beats' a baseline value when it is smaller. delta > 0 means
     the candidate tends faster; delta < 0 slower. Non-parametric (no normality assumed)."""
     if not baseline or not candidate:
-        raise BenchProtocolError("cliffs_delta needs non-empty sample sets")  # noqa: TRY003
+        raise BenchProtocolError("cliffs_delta needs non-empty sample sets")
     faster = slower = 0
     for b in baseline:
         for c in candidate:
@@ -125,7 +125,7 @@ def measure(
     The timer is injected (a monotonic clock in real use; a scripted clock in tests) so measurement
     is deterministic to test. Warm-up runs are discarded to shed cold-start noise (JIT/cache)."""
     if repeats < 1:
-        raise BenchProtocolError("repeats must be >= 1")  # noqa: TRY003
+        raise BenchProtocolError("repeats must be >= 1")
     samples: list[float] = []
     for i in range(warmup + repeats):
         start = timer()

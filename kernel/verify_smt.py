@@ -75,22 +75,22 @@ def _load_function(src: str, func_name: str, tag: str) -> Any:
         # Bandit B102: authorized code-equivalence verifier, not a sandbox.
         exec(compile(src, f"<{tag}>", "exec"), namespace)  # noqa: S102  # nosec
     except SyntaxError as exc:
-        raise VerifySmtError(f"{tag} source does not parse: {exc}") from exc  # noqa: TRY003
+        raise VerifySmtError(f"{tag} source does not parse: {exc}") from exc
     fn = namespace.get(func_name)
     if not callable(fn):
-        raise VerifySmtError(f"{tag} has no callable named {func_name!r}")  # noqa: TRY003
+        raise VerifySmtError(f"{tag} has no callable named {func_name!r}")
     return fn
 
 
 def _import_crosshair() -> Any:
     """Lazy-import CrossHair (opcode patches + the diff API). Fails loud if it is absent."""
     try:
-        import crosshair.core_and_libs  # type: ignore[import-not-found]  # noqa: F401, I001, PLC0415
-        from crosshair.diff_behavior import diff_behavior  # type: ignore[import-not-found]  # noqa: PLC0415
-        from crosshair.fnutil import FunctionInfo  # type: ignore[import-not-found]  # noqa: PLC0415
-        from crosshair.options import DEFAULT_OPTIONS  # type: ignore[import-not-found]  # noqa: PLC0415
+        import crosshair.core_and_libs  # type: ignore[import-not-found] # noqa: F401, I001
+        from crosshair.diff_behavior import diff_behavior  # type: ignore[import-not-found]
+        from crosshair.fnutil import FunctionInfo  # type: ignore[import-not-found]
+        from crosshair.options import DEFAULT_OPTIONS  # type: ignore[import-not-found]
     except ImportError as exc:
-        raise VerifySmtError(  # noqa: TRY003
+        raise VerifySmtError(
             "the deep verifier needs the optional dependency: pip install 'codeforge[verify]' "
             "(crosshair-tool). The stdlib sampler (transform_verifier) needs nothing."
         ) from exc

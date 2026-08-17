@@ -45,7 +45,7 @@ def _b64url_decode(text: str) -> bytes:
     try:
         return base64.urlsafe_b64decode(text + pad)
     except (binascii.Error, ValueError) as exc:
-        raise CursorError(f"malformed cursor encoding: {text!r}") from exc  # noqa: TRY003
+        raise CursorError(f"malformed cursor encoding: {text!r}") from exc
 
 
 def _sign(payload: bytes, key: bytes) -> bytes:
@@ -57,7 +57,7 @@ def encode_cursor(sort_value: SortValue, tiebreaker: Tiebreak, *, key: bytes | N
     try:
         payload = json.dumps([sort_value, tiebreaker], separators=(",", ":")).encode("utf-8")
     except (TypeError, ValueError) as exc:
-        raise CursorError(f"cursor values must be JSON-serializable: {exc}") from exc  # noqa: TRY003
+        raise CursorError(f"cursor values must be JSON-serializable: {exc}") from exc
     token = _b64url_encode(payload)
     if key is None:
         return token
@@ -71,36 +71,36 @@ def decode_cursor(token: str, *, key: bytes | None = None) -> Boundary:
     When no key is given, the token MUST NOT carry a signature section.
     """
     if not isinstance(token, str) or not token:
-        raise CursorError("cursor must be a non-empty string")  # noqa: TRY003
+        raise CursorError("cursor must be a non-empty string")
     parts = token.split(".")
     if key is None:
         if len(parts) != 1:
-            raise CursorError("unexpected signature on an unsigned cursor")  # noqa: TRY003
+            raise CursorError("unexpected signature on an unsigned cursor")
         payload = _b64url_decode(parts[0])
     else:
         if len(parts) != 2:  # noqa: PLR2004
-            raise CursorError("signed cursor must be '<payload>.<sig>'")  # noqa: TRY003
+            raise CursorError("signed cursor must be '<payload>.<sig>'")
         payload = _b64url_decode(parts[0])
         given = _b64url_decode(parts[1])
         if not hmac.compare_digest(given, _sign(payload, key)):
-            raise CursorError("cursor signature does not verify (tampered or wrong key)")  # noqa: TRY003
+            raise CursorError("cursor signature does not verify (tampered or wrong key)")
     try:
         decoded = json.loads(payload)
     except (json.JSONDecodeError, ValueError) as exc:
-        raise CursorError("malformed cursor payload") from exc  # noqa: TRY003
+        raise CursorError("malformed cursor payload") from exc
     if not isinstance(decoded, list) or len(decoded) != 2:  # noqa: PLR2004
-        raise CursorError("cursor payload must be [sort_value, tiebreaker]")  # noqa: TRY003
+        raise CursorError("cursor payload must be [sort_value, tiebreaker]")
     return decoded[0], decoded[1]
 
 
 def validate_size(size: int) -> int:
     """Return size if valid, else raise. Guards against unbounded page requests."""
     if isinstance(size, bool) or not isinstance(size, int):
-        raise CursorError("page size must be a non-bool int")  # noqa: TRY003
+        raise CursorError("page size must be a non-bool int")
     if size <= 0:
-        raise CursorError("page size must be >= 1")  # noqa: TRY003
+        raise CursorError("page size must be >= 1")
     if size > MAX_PAGE_SIZE:
-        raise CursorError(f"page size {size} exceeds max {MAX_PAGE_SIZE}")  # noqa: TRY003
+        raise CursorError(f"page size {size} exceeds max {MAX_PAGE_SIZE}")
     return size
 
 

@@ -43,11 +43,11 @@ def pytest_runner(*, seed_id: str = "_synthesize") -> TestRun:
     """The REAL test runner: run the target's pytest suite in its own dir through the Stage-5
     tool_runner (bound cwd, timeout, output cap, argv allowlist), as the generators validate.
     Lazy-imports the world-free seams so importing the harness stays light."""
-    import sys  # noqa: PLC0415
+    import sys
 
-    from kernel.seedlab.project_model import Provenance  # noqa: PLC0415
-    from kernel.seedlab.source_connector import LocalSource  # noqa: PLC0415
-    from kernel.seedlab.tool_runner import run_tool  # noqa: PLC0415
+    from kernel.seedlab.project_model import Provenance
+    from kernel.seedlab.source_connector import LocalSource
+    from kernel.seedlab.tool_runner import run_tool
 
     def run(target_dir: Path) -> ToolRunResult:
         source = LocalSource(Path(target_dir), Provenance("synthesis", owner="harness"))

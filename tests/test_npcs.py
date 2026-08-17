@@ -94,7 +94,7 @@ def _with_topics():
 
 
 def test_ask_returns_a_topic_response():
-    from kernel.world.npcs import ask  # noqa: PLC0415
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "archive", "library")
@@ -102,7 +102,7 @@ def test_ask_returns_a_topic_response():
 
 
 def test_a_multi_line_topic_returns_all_its_lines():
-    from kernel.world.npcs import ask  # noqa: PLC0415
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "codex", "library")
@@ -110,7 +110,7 @@ def test_a_multi_line_topic_returns_all_its_lines():
 
 
 def test_a_bare_ask_lists_the_topics():
-    from kernel.world.npcs import ask  # noqa: PLC0415
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "", "library")
@@ -118,7 +118,7 @@ def test_a_bare_ask_lists_the_topics():
 
 
 def test_an_unknown_topic_is_refused_with_the_options():
-    from kernel.world.npcs import ask  # noqa: PLC0415
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "dragons", "library")
@@ -126,14 +126,14 @@ def test_an_unknown_topic_is_refused_with_the_options():
 
 
 def test_asking_an_npc_with_no_topics():
-    from kernel.world.npcs import ask  # noqa: PLC0415
+    from kernel.world.npcs import ask
 
     assert "nothing more to discuss" in ask("librarian", "anything", "library")  # no topics set
 
 
 def test_ask_flows_through_the_engine_tick():
-    import forge  # noqa: PLC0415
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    import forge
+    from kernel.world.session import SESSIONS, Session
 
     _with_topics()
     s = Session(player_id="reader", location="library")
@@ -145,7 +145,7 @@ def test_ask_flows_through_the_engine_tick():
 def test_room_index_rebuilds_when_an_npc_is_added_then_removed():
     """The room index (npcs_in) must reflect NPC membership changes -- a foe added at runtime shows
     up in its room, and once removed it is gone -- so the O(1) index never lies about presence."""
-    from kernel.world.seed import Npc  # noqa: PLC0415
+    from kernel.world.seed import Npc
 
     room = "index_probe_room"
     assert npcs_in(room) == []  # nothing here yet
@@ -168,7 +168,7 @@ def test_room_index_rebuilds_when_an_npc_is_added_then_removed():
 # --- numbered-target disambiguation (target_disambig shelf-part consumer) ------------------------
 def _two_goblins(room: str = "goblin_den") -> None:
     """Two identical foes (both answer to 'goblin') in one room, so 'goblin' alone is ambiguous."""
-    from kernel.world.seed import Npc  # noqa: PLC0415
+    from kernel.world.seed import Npc
 
     for i in (1, 2):
         npcs.NPCS[f"goblin_{i}"] = Npc(
@@ -202,7 +202,7 @@ def test_npc_ordinal_picks_the_nth():
 
 
 def test_npc_overshoot_raises_with_a_count():
-    from kernel.shelf.target_disambig import TargetError  # noqa: PLC0415
+    from kernel.shelf.target_disambig import TargetError
 
     _two_goblins()
     with pytest.raises(TargetError, match="only 2 here"):

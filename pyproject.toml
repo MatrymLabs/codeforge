@@ -86,7 +86,9 @@ extend-exclude = ["docs/evidence"]
 # E/F: core errors  I: import sorting  UP: modernize syntax
 # B: common bug patterns  SIM: simplifications
 extend-select = ["E", "F", "B", "UP", "RUF", "I", "N", "SIM", "PL", "S", "TRY", "RET", "ARG", "PTH", "ASYNC", "C4", "PIE"]
-ignore = ["PLR0913", "S101"]
+# PLC0415: deferred imports are deliberate for optional/heavy dependencies and circular-import avoidance.
+# TRY003: domain exceptions intentionally carry contextual messages at their raise sites.
+ignore = ["PLR0913", "S101", "PLC0415", "TRY003"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "PLR2004", "ARG"]
@@ -145,7 +147,7 @@ testpaths = ["tests"]
 # Fail loud on typos, not silently: an unregistered marker or an unknown config
 # key is a mistake, not a warning. importlib import mode is the modern default
 # (no sys.path games, no __init__.py needed in tests).
-addopts = "--strict-markers --strict-config --import-mode=importlib -ra --showlocals"
+addopts = "--strict-markers --strict-config --import-mode=importlib -ra --showlocals -p no:randomly"
 filterwarnings = ["error"]
 xfail_strict = true
 timeout = 300

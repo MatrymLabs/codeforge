@@ -87,7 +87,7 @@ def build_workflow(
     machine = build(states, start, transitions)  # loud on off-graph / non-deterministic edges
     for t in terminal:
         if t not in machine.states:
-            raise WorkflowError(f"terminal state {t!r} is not one of the workflow's states")  # noqa: TRY003
+            raise WorkflowError(f"terminal state {t!r} is not one of the workflow's states")
     return Workflow(workflow_id, machine, frozenset(terminal), roles, dict(labels or {}))
 
 

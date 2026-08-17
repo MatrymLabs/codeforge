@@ -57,7 +57,7 @@ class GeneratedArtifact:
 def _package_name(identity: str) -> str:
     slug = _SLUG.sub("_", identity.strip().lower()).strip("_")
     if not slug:
-        raise GeneratorError("cannot generate a CLI from a model with an empty identity")  # noqa: TRY003
+        raise GeneratorError("cannot generate a CLI from a model with an empty identity")
     if slug[0].isdigit():
         slug = f"app_{slug}"
     return slug
@@ -148,10 +148,10 @@ def test_no_command_is_ok():
 def generate_cli(model: ProjectModel, dest: Path) -> GeneratedArtifact:
     """Generate a runnable CLI from a model into an empty `dest`. Reproducible + checksummed."""
     if not model.identity or not model.identity.strip():
-        raise GeneratorError("a project model needs a non-empty identity to generate a CLI")  # noqa: TRY003
+        raise GeneratorError("a project model needs a non-empty identity to generate a CLI")
     dest = Path(dest)
     if dest.exists() and any(dest.iterdir()):
-        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")  # noqa: TRY003
+        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")
     package = _package_name(model.identity)
     name = package.replace("_", "-")
     contents = _emit_files(model, package, name)

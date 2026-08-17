@@ -51,7 +51,7 @@ class CohortRegistry:
 
     def __init__(self, max_size: int) -> None:
         if max_size < 1:
-            raise CohortError(f"max_size must be at least 1, got {max_size}")  # noqa: TRY003
+            raise CohortError(f"max_size must be at least 1, got {max_size}")
         self.max_size = max_size
         self._of: dict[str, Cohort] = {}
 
@@ -70,7 +70,7 @@ class CohortRegistry:
         """Start a new group with `leader` as its sole (and leading) member. Raises if that member
         is already in a group (leave it first)."""
         if leader in self._of:
-            raise CohortError(f"{leader!r} is already in a group")  # noqa: TRY003
+            raise CohortError(f"{leader!r} is already in a group")
         cohort = Cohort([leader])
         self._of[leader] = cohort
         return cohort
@@ -78,9 +78,9 @@ class CohortRegistry:
     def add(self, cohort: Cohort, member: str) -> None:
         """Admit `member` to `cohort`. Raises if they are already grouped or the group is full."""
         if member in self._of:
-            raise CohortError(f"{member!r} is already in a group")  # noqa: TRY003
+            raise CohortError(f"{member!r} is already in a group")
         if self.is_full(cohort):
-            raise CohortError(f"the group is full ({self.max_size})")  # noqa: TRY003
+            raise CohortError(f"the group is full ({self.max_size})")
         cohort.members.append(member)
         self._of[member] = cohort
 

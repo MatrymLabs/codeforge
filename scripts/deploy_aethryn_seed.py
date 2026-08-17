@@ -125,12 +125,12 @@ def deploy_aethryn_seed(
     corpus = corpus if corpus is not None else list(AETHRYN_CORPUS)
     the_plan = plan(FLAGSHIP_TEMPLATE, "AethrynDeployProof", root=root)
     if the_plan.verdict != READY:
-        raise CastError(  # noqa: TRY003
+        raise CastError(
             f"cannot pour the Aethryn Seed: plan is {the_plan.verdict.upper()} "
             f"({'; '.join(the_plan.warnings) or 'no detail'})"
         )
     if the_plan.manifest.starter_seed_pack != AETHRYN_SEED:
-        raise CastError(  # noqa: TRY003
+        raise CastError(
             f"flagship template must pour '{AETHRYN_SEED}', got "
             f"{the_plan.manifest.starter_seed_pack!r}"
         )

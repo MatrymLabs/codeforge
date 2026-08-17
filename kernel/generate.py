@@ -36,7 +36,7 @@ def load_patterns(path: Path | None = None) -> dict[str, Any]:
         return {}
     data: Any = yaml.safe_load(target.read_text(encoding="utf-8")) or {}
     if not isinstance(data, dict):
-        raise PatternError("item catalog must be a mapping of pattern -> fields")  # noqa: TRY003
+        raise PatternError("item catalog must be a mapping of pattern -> fields")
     return data
 
 
@@ -69,7 +69,7 @@ def generate_item(
         return None, f"[SYSTEM] No pattern '{pattern}' on file. Known patterns: {known}"
     spec = catalog[key]
     if not isinstance(spec, dict):
-        raise PatternError(f"pattern '{key}' must be a mapping of fields")  # noqa: TRY003
+        raise PatternError(f"pattern '{key}' must be a mapping of fields")
     name = str(spec.get("name") or f"a {key.replace('_', ' ')}")
     keywords = list(spec.get("keywords") or [key])
     label = _unique_label(key, set(ITEMS))

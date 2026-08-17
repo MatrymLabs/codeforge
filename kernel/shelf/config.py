@@ -62,7 +62,7 @@ class Settings(BaseModel):
                 anthropic_key_present=bool(e.get("ANTHROPIC_API_KEY", "").strip()),
             )
         except ValidationError as exc:
-            raise ConfigError(f"invalid environment: {exc}") from exc  # noqa: TRY003
+            raise ConfigError(f"invalid environment: {exc}") from exc
 
     def render(self) -> str:
         """A human view of the effective config, credentials redacted (the `config` program)."""

@@ -299,7 +299,7 @@ def generate_region(spec: RegionSpec) -> Region:
     """Generate a region in two layers and judge it by every gate. Returns a Region whose `.ok` is
     True only when it is WORLD_SHAPED and every landmark is reachable."""
     if spec.width < 1 or spec.height < 1:
-        raise WorldgenError(f"region {spec.name!r}: width and height must be >= 1")  # noqa: TRY003
+        raise WorldgenError(f"region {spec.name!r}: width and height must be >= 1")
 
     river: list[tuple[int, int]] = []
     if spec.corridor:
@@ -339,7 +339,7 @@ def generate_region(spec: RegionSpec) -> Region:
     for lm in spec.landmarks:
         rid = f"{spec.name}_{lm.at[0]}_{lm.at[1]}"
         if rid not in rooms:
-            raise WorldgenError(f"landmark {lm.name!r} at {lm.at}: on impassable terrain, no room")  # noqa: TRY003
+            raise WorldgenError(f"landmark {lm.name!r} at {lm.at}: on impassable terrain, no room")
         rooms[rid]["name"] = lm.name
         rooms[rid]["desc"] = f"{lm.name}. {rooms[rid]['desc']}"
         rooms[rid]["landmark"] = lm.kind
@@ -392,12 +392,12 @@ def populate_region(region: Region, life: LifeSpec, *, origin: str | None = None
     meets level-1 life at the door, exactly as a trail's attach point did -- the on-ramp, preserved.
     Fails loud on an empty region, a non-positive cadence, or an origin that is not a real cell."""
     if not region.rooms:
-        raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")  # noqa: TRY003
+        raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")
     if life.foe_every < 1 or life.gather_every < 1 or life.notable_every < 1:
-        raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")  # noqa: TRY003
+        raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")
     start = origin if origin is not None else region.start
     if start not in region.rooms:
-        raise WorldgenError(f"region {region.name!r}: life origin {start!r} is not a cell")  # noqa: TRY003
+        raise WorldgenError(f"region {region.name!r}: life origin {start!r} is not a cell")
 
     exits = {rid: r["exits"] for rid, r in region.rooms.items()}
     # the wilderness fills the open field, never the anchored sites (a town cell is no beast's den).

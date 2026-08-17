@@ -98,7 +98,7 @@ def ledger_packages(path: Path | None = None) -> set[str]:
     a second time. A missing ledger is an empty allowlist -- so a new dependency then requires a
     ledger row, a safe default for admission control.
     """
-    from adapters.dependencies import read_ledger  # noqa: PLC0415
+    from adapters.dependencies import read_ledger
 
     src = path or (_ROOT / "dependency_ledger.toml")
     if not src.is_file():

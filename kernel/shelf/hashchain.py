@@ -60,9 +60,9 @@ def _parse_row(line: str, lineno: int) -> dict[str, Any]:
     try:
         row = json.loads(line)
     except json.JSONDecodeError as exc:
-        raise HashChainError(f"line {lineno} is unreadable JSON: {exc}") from exc  # noqa: TRY003
+        raise HashChainError(f"line {lineno} is unreadable JSON: {exc}") from exc
     if not isinstance(row, dict) or not all(field in row for field in _FIELDS):
-        raise HashChainError(f"line {lineno} is a malformed record (missing fields)")  # noqa: TRY003
+        raise HashChainError(f"line {lineno} is a malformed record (missing fields)")
     return row
 
 
@@ -98,7 +98,7 @@ def _tail(path: Path) -> Link | None:
         return None
     row = _parse_row(line, -1)
     if _digest(row["seq"], row["payload"], row["prior_hash"]) != row["content_hash"]:
-        raise HashChainError(f"record {row['seq']} was tampered: content hash mismatch")  # noqa: TRY003
+        raise HashChainError(f"record {row['seq']} was tampered: content hash mismatch")
     return Link(row["seq"], row["payload"], row["prior_hash"], row["content_hash"])
 
 
@@ -110,14 +110,14 @@ def append(path: Path, payload: dict[str, Any]) -> Link:
     integrity is `read`/`verify`'s job, on demand -- a tampered PAST record is caught there, never
     hidden. Tamper-evidence is preserved; only eager re-verification on every append is dropped."""
     if not isinstance(payload, dict):
-        raise HashChainError("payload must be a JSON object (dict)")  # noqa: TRY003
+        raise HashChainError("payload must be a JSON object (dict)")
     tail = _tail(path)
     prior = tail.content_hash if tail else GENESIS
     seq = tail.seq + 1 if tail else 0
     try:
         digest = _digest(seq, payload, prior)
     except (TypeError, ValueError) as exc:
-        raise HashChainError(f"payload is not JSON-serializable: {exc}") from exc  # noqa: TRY003
+        raise HashChainError(f"payload is not JSON-serializable: {exc}") from exc
     link = Link(seq=seq, payload=payload, prior_hash=prior, content_hash=digest)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
@@ -139,13 +139,13 @@ def read(path: Path) -> list[Link]:
         row = _parse_row(line, lineno)
         expected_seq = len(links)
         if row["seq"] != expected_seq:
-            raise HashChainError(  # noqa: TRY003
+            raise HashChainError(
                 f"record {row['seq']} is out of order (expected seq {expected_seq})"
             )
         if _digest(row["seq"], row["payload"], row["prior_hash"]) != row["content_hash"]:
-            raise HashChainError(f"record {row['seq']} was tampered: content hash mismatch")  # noqa: TRY003
+            raise HashChainError(f"record {row['seq']} was tampered: content hash mismatch")
         if row["prior_hash"] != prev_hash:
-            raise HashChainError(f"broken chain at record {row['seq']}: prior hash does not link")  # noqa: TRY003
+            raise HashChainError(f"broken chain at record {row['seq']}: prior hash does not link")
         links.append(Link(row["seq"], row["payload"], row["prior_hash"], row["content_hash"]))
         prev_hash = row["content_hash"]
     return links

@@ -365,11 +365,11 @@ def plan_scaffold(name: str, kind: str = "service", *, description: str = "") ->
     Fails loud (`ScaffoldError`) on an unsafe name (must match a lowercase slug) or an unknown kind.
     """
     if not isinstance(name, str) or not _SLUG.match(name):
-        raise ScaffoldError(  # noqa: TRY003
+        raise ScaffoldError(
             f"artifact name must be a lowercase slug (letters, digits, hyphens), got {name!r}"
         )
     if kind not in KINDS:
-        raise ScaffoldError(f"unknown kind {kind!r}; expected one of {KINDS}")  # noqa: TRY003
+        raise ScaffoldError(f"unknown kind {kind!r}; expected one of {KINDS}")
 
     files: dict[str, str] = {
         "README.md": _readme(name, description),
@@ -408,7 +408,7 @@ def _safe_target(dest: Path, rel: str) -> Path:
     target = (dest / rel).resolve()
     root = dest.resolve()
     if root != target and root not in target.parents:
-        raise ScaffoldError(f"unsafe path {rel!r} escapes the destination")  # noqa: TRY003
+        raise ScaffoldError(f"unsafe path {rel!r} escapes the destination")
     return target
 
 
@@ -424,7 +424,7 @@ def materialize(plan: ScaffoldPlan, dest: Path, *, overwrite: bool = False) -> l
     for rel in sorted(plan.files):
         target = _safe_target(dest, rel)
         if target.exists() and not overwrite:
-            raise ScaffoldError(f"refusing to overwrite existing file: {rel} (pass overwrite=True)")  # noqa: TRY003
+            raise ScaffoldError(f"refusing to overwrite existing file: {rel} (pass overwrite=True)")
         targets.append((target, plan.files[rel]))
 
     written: list[Path] = []
@@ -460,7 +460,7 @@ def main(argv: list[str] | None = None) -> int:
     Writes to `workspace/artifacts/<name>/` (git-ignored) by default. Returns 2 on a refused
     request (bad name/kind, or a destination that already holds one of the files).
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     if not args or not args[0].strip():

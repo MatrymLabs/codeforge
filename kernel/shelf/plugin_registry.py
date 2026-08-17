@@ -42,15 +42,15 @@ class PluginRegistry[P]:
     def register(self, info: PluginInfo, plugin: P) -> None:
         """Register a plugin. Refuses a duplicate name or a missing required capability."""
         if info.name in self._plugins:
-            raise PluginError(f"a plugin named {info.name!r} is already registered")  # noqa: TRY003
+            raise PluginError(f"a plugin named {info.name!r} is already registered")
         missing = self._requires - info.capabilities
         if missing:
-            raise PluginError(f"plugin {info.name!r} is missing capabilities: {sorted(missing)}")  # noqa: TRY003
+            raise PluginError(f"plugin {info.name!r} is missing capabilities: {sorted(missing)}")
         self._plugins[info.name] = (info, plugin)
 
     def _require(self, name: str) -> None:
         if name not in self._plugins:
-            raise PluginError(f"unknown plugin {name!r}")  # noqa: TRY003
+            raise PluginError(f"unknown plugin {name!r}")
 
     def disable(self, name: str) -> None:
         self._require(name)

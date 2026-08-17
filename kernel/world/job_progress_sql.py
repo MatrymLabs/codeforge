@@ -23,9 +23,9 @@ class SqlJobProgressStore:
 
     def load(self, character_name: str) -> dict[str, JobProgress]:
         """Every job record for a character, keyed by job id. Empty for an unknown/new character."""
-        from sqlalchemy import select  # noqa: PLC0415
+        from sqlalchemy import select
 
-        from kernel.world.db import JobProgressRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import JobProgressRow, open_archive_session
 
         with open_archive_session() as db:
             rows = db.execute(
@@ -37,7 +37,7 @@ class SqlJobProgressStore:
 
     def save(self, character_name: str, records: Iterable[JobProgress]) -> None:
         """Upsert a character's job records. The character row must already exist (the FK)."""
-        from kernel.world.db import JobProgressRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import JobProgressRow, open_archive_session
 
         with open_archive_session() as db:
             for record in records:

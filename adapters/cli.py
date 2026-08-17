@@ -108,21 +108,21 @@ def _cmd_seeds(args: list[str]) -> int:  # noqa: ARG001
 
 
 def _cmd_serve(args: list[str]) -> int:  # noqa: ARG001
-    from adapters.gateway import serve  # noqa: PLC0415
+    from adapters.gateway import serve
 
     serve()
     return 0
 
 
 def _cmd_play(args: list[str]) -> int:  # noqa: ARG001
-    from forge import game_loop  # noqa: PLC0415
+    from forge import game_loop
 
     game_loop()
     return 0
 
 
 def _cmd_onboard(args: list[str]) -> int:  # noqa: ARG001
-    from kernel.onboarding import drive  # noqa: PLC0415
+    from kernel.onboarding import drive
 
     drive()  # the Workflow Engine's practical adapter: the same core as the game quest
     return 0
@@ -132,7 +132,7 @@ def _cmd_grant(args: list[str]) -> int:
     if len(args) != 3:  # noqa: PLR2004
         print(USAGE)
         return 1
-    from kernel.world.characters import set_rank  # noqa: PLC0415
+    from kernel.world.characters import set_rank
 
     print(set_rank(args[1], args[2]))
     return 0
@@ -142,17 +142,17 @@ def _cmd_migrate(args: list[str]) -> int:
     if len(args) != 3:  # noqa: PLR2004
         print(USAGE)
         return 1
-    from kernel.world.accounts import migrate  # noqa: PLC0415
+    from kernel.world.accounts import migrate
 
     print(migrate(args[1], args[2]))
     return 0
 
 
 def _cmd_api(args: list[str]) -> int:  # noqa: ARG001
-    import uvicorn  # noqa: PLC0415
+    import uvicorn
 
-    from adapters.api import app  # noqa: PLC0415
-    from kernel.shelf.config import Settings  # noqa: PLC0415
+    from adapters.api import app
+    from kernel.shelf.config import Settings
 
     # Honor $PORT like the web command does; Settings types + validates it.
     uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)  # noqa: S104
@@ -160,10 +160,10 @@ def _cmd_api(args: list[str]) -> int:  # noqa: ARG001
 
 
 def _cmd_web(args: list[str]) -> int:  # noqa: ARG001
-    import uvicorn  # noqa: PLC0415
+    import uvicorn
 
-    from adapters.web_gateway import app as web_app  # noqa: PLC0415
-    from kernel.shelf.config import Settings  # noqa: PLC0415
+    from adapters.web_gateway import app as web_app
+    from kernel.shelf.config import Settings
 
     # Hosts (Render/Fly) hand us the port on $PORT; Settings types + validates it.
     uvicorn.run(web_app, host="0.0.0.0", port=Settings.load().port)  # noqa: S104
@@ -171,7 +171,7 @@ def _cmd_web(args: list[str]) -> int:  # noqa: ARG001
 
 
 def _cmd_migrate_db(args: list[str]) -> int:  # noqa: ARG001
-    from kernel.world.accounts import import_legacy_json  # noqa: PLC0415
+    from kernel.world.accounts import import_legacy_json
 
     print(import_legacy_json())
     return 0
@@ -181,9 +181,9 @@ def _cmd_passwd(args: list[str]) -> int:
     if len(args) != 2:  # noqa: PLR2004
         print(USAGE)
         return 1
-    import getpass  # noqa: PLC0415
+    import getpass
 
-    from kernel.world.accounts import rotate_account_secret  # noqa: PLC0415
+    from kernel.world.accounts import rotate_account_secret
 
     pw = getpass.getpass(f"New password for {args[1]}: ")
     again = getpass.getpass("Type it again: ")
@@ -208,10 +208,10 @@ def _cmd_refactor(args: list[str]) -> int:  # noqa: PLR0911
     (broken/inconclusive) transform is never written and exits non-zero. Verification EXECUTES
     the target function, so point it at trusted/authorized source only.
     """
-    import argparse  # noqa: PLC0415
-    import difflib  # noqa: PLC0415
+    import argparse
+    import difflib
 
-    from kernel.refactor import RefactorError, refactor_available, verified_rename  # noqa: PLC0415
+    from kernel.refactor import RefactorError, refactor_available, verified_rename
 
     parser = argparse.ArgumentParser(
         prog="codeforge refactor",
@@ -285,7 +285,7 @@ def _cmd_refactor(args: list[str]) -> int:  # noqa: PLR0911
 
 def _cmd_seedlab(args: list[str]) -> int:
     """SeedLab proof and audit commands: repeatable report artifacts for the platform layer."""
-    import argparse  # noqa: PLC0415
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog="codeforge seedlab",
@@ -341,9 +341,9 @@ def _cmd_seedlab(args: list[str]) -> int:
     except SystemExit as exc:
         return int(exc.code or 0)
 
-    from kernel.seedlab.audit import audit_seedlab_modules, render_seedlab_audit  # noqa: PLC0415
-    from kernel.seedlab.platform_proof import run_first_platform_proof  # noqa: PLC0415
-    from kernel.seedlab.repository_proof import model_repository, persist  # noqa: PLC0415
+    from kernel.seedlab.audit import audit_seedlab_modules, render_seedlab_audit
+    from kernel.seedlab.platform_proof import run_first_platform_proof
+    from kernel.seedlab.repository_proof import model_repository, persist
 
     if ns.subcommand == "proof":
         result = run_first_platform_proof(Path(ns.root), owner=ns.owner)
@@ -387,7 +387,7 @@ def _cmd_journey(args: list[str]) -> int:
     (Form-grade intent -> generate -> link -> operate -> recover) as one real operation. Writes
     playable seed content to `--dest` and reports whether a live player can travel it and it
     survives a restart. No decorative rooms: the command performs the real operation."""
-    import argparse  # noqa: PLC0415
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog="codeforge journey",
@@ -403,8 +403,8 @@ def _cmd_journey(args: list[str]) -> int:
     except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
         return int(exc.code or 0)
 
-    from kernel.domains.game_session import RESUMED, operate_and_recover  # noqa: PLC0415
-    from kernel.domains.journey import JourneyError, journey_region  # noqa: PLC0415
+    from kernel.domains.game_session import RESUMED, operate_and_recover
+    from kernel.domains.journey import JourneyError, journey_region
 
     waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
     try:
@@ -433,7 +433,7 @@ def _cmd_host(args: list[str]) -> int:
     Prints
     HOSTABLE and how to boot it. No decorative rooms: the command performs the real install, so a
     default `--seed-root .` writes into the live seed directory the server reads."""
-    import argparse  # noqa: PLC0415
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog="codeforge host",
@@ -462,8 +462,8 @@ def _cmd_host(args: list[str]) -> int:
     except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
         return int(exc.code or 0)
 
-    from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world  # noqa: I001, PLC0415
-    from kernel.domains.journey import JourneyError, journey_region  # noqa: PLC0415
+    from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world # noqa: I001
+    from kernel.domains.journey import JourneyError, journey_region
 
     blueprint_root = Path(ns.blueprint_root)
     waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
@@ -486,8 +486,8 @@ def _cmd_host(args: list[str]) -> int:
         # + verify it (byte-identical AND identity re-validated through the engine's own gates). The
         # seed is already installed, so compose the two primitives on the live artifact -- no
         # redundant re-install. A failed proof fails the command loud (never a false success).
-        from kernel.domains.game_lifecycle import RECOVERED  # noqa: I001, PLC0415
-        from kernel.domains.hosted_recovery import snapshot_seed, verify_seed_recovery  # noqa: PLC0415
+        from kernel.domains.game_lifecycle import RECOVERED # noqa: I001
+        from kernel.domains.hosted_recovery import snapshot_seed, verify_seed_recovery
 
         report = verify_seed_recovery(
             world.seed_name, blueprint_root, snapshot_seed(Path(world.seed_dir))
@@ -546,6 +546,6 @@ def main(argv: list[str] | None = None) -> int:
 
 def spark() -> None:
     """Every world begins as one."""
-    from adapters.gateway import serve  # noqa: PLC0415
+    from adapters.gateway import serve
 
     serve()

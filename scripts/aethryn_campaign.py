@@ -21,7 +21,7 @@ def main() -> int:
     ]
     contract = load_campaign(BLUEPRINT_DIR / "campaign.yaml")
     if contract is None:  # pragma: no cover - the flagship seed ships the contract
-        raise SystemExit("Aethryn campaign.yaml is missing")  # noqa: TRY003
+        raise SystemExit("Aethryn campaign.yaml is missing")
     print(
         json.dumps(
             report(contract, zones, _dungeons or [], _settlements or [], NPCS, all_ids()), indent=2

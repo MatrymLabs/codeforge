@@ -49,7 +49,7 @@ def test_the_merchant_sells_level_appropriate_real_consumables():
 
 def test_the_merchant_wares_are_all_real_seed_prototypes():
     # every draught a merchant stocks must be a real aethryn item, or the boot cross-check fails.
-    from kernel.world.seed import load_items  # noqa: PLC0415
+    from kernel.world.seed import load_items
 
     items = load_items(_AETHRYN / "items.yaml")
     _, merchant = make_merchant(200, "zulkarak", "Zulkarak")

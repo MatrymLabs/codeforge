@@ -74,7 +74,7 @@ def _flood(edge_addr: tuple[str, int], n: int) -> None:
     for t in threads:
         t.join()
     if errors:
-        raise RuntimeError(f"{len(errors)}/{n} connections failed (e.g. {errors[0]})")  # noqa: TRY003
+        raise RuntimeError(f"{len(errors)}/{n} connections failed (e.g. {errors[0]})")
 
 
 def _median_ms(fn: Callable[[], None], runs: int) -> float:

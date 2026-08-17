@@ -51,47 +51,47 @@ def _sticky_note() -> str:
 def _run(name: str) -> str:  # noqa: PLR0911
     """Dispatch one program to its existing renderer (lazy imports avoid a load-time web)."""
     if name == "functions":
-        from kernel.functions import render_functions  # noqa: PLC0415
+        from kernel.functions import render_functions
 
         return render_functions()
     if name == "inspect":
-        from kernel.frameup import render_frameup  # noqa: PLC0415
+        from kernel.frameup import render_frameup
 
         return render_frameup()
     if name == "career":
-        from kernel.career import render_overview  # noqa: PLC0415
+        from kernel.career import render_overview
 
         return render_overview()
     if name == "pioneer":
-        from kernel.pioneer import render_overview as pioneer_overview  # noqa: PLC0415
+        from kernel.pioneer import render_overview as pioneer_overview
 
         return pioneer_overview()
     if name == "pm":
-        from kernel.pm import pm_status  # noqa: PLC0415
+        from kernel.pm import pm_status
 
         return pm_status()
     if name == "truth":
-        from kernel.evidence_gate import render_truth  # noqa: PLC0415
+        from kernel.evidence_gate import render_truth
 
         return render_truth()
     if name == "qa":
-        from kernel.qualitygate import render_gate_all  # noqa: PLC0415
+        from kernel.qualitygate import render_gate_all
 
         return render_gate_all()
     if name == "docs":
-        from kernel.qualitygate import docs_check  # noqa: PLC0415
+        from kernel.qualitygate import docs_check
 
         return docs_check()
     if name == "deps":
-        from adapters.dependencies import render_dependencies  # noqa: PLC0415
+        from adapters.dependencies import render_dependencies
 
         return render_dependencies()
     if name == "bench":
-        from kernel.bench import bench as run_bench  # noqa: PLC0415
+        from kernel.bench import bench as run_bench
 
         return run_bench()
     if name == "config":
-        from kernel.shelf.config import render_config  # noqa: PLC0415
+        from kernel.shelf.config import render_config
 
         return render_config()
     return f"no such program '{name}'"

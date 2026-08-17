@@ -70,7 +70,7 @@ def tier(tier_id: str) -> DeploymentTier:
     """Look up a tier by id, or fail loud with the valid set (never a silent default)."""
     if tier_id not in TIERS:
         valid = ", ".join(TIERS)
-        raise BlueprintPackageError(f"unknown deployment tier {tier_id!r}; choose one of: {valid}")  # noqa: TRY003
+        raise BlueprintPackageError(f"unknown deployment tier {tier_id!r}; choose one of: {valid}")
     return TIERS[tier_id]
 
 
@@ -105,7 +105,7 @@ class ScalingModel:
         nonsensical world (and rooms_per_* would divide by zero). Fails loud by field."""
         for field, value in asdict(self).items():
             if not isinstance(value, (int, float)) or value <= 0:
-                raise BlueprintPackageError(  # noqa: TRY003
+                raise BlueprintPackageError(
                     f"scaling ratio {field!r} must be positive, got {value!r}"
                 )
 
@@ -149,7 +149,7 @@ def derive_sizing(the_tier: DeploymentTier, model: ScalingModel = DEFAULT_SCALIN
     consistent at any scale. All counts round up to at least 1 where a world needs one."""
     model.validate()
     if the_tier.target_players <= 0:
-        raise BlueprintPackageError(f"tier {the_tier.id!r} must target a positive player count")  # noqa: TRY003
+        raise BlueprintPackageError(f"tier {the_tier.id!r} must target a positive player count")
 
     rooms = _at_least(the_tier.target_players * model.rooms_per_player, 1)
     zones = _at_least(rooms / model.rooms_per_zone, 1)
@@ -171,7 +171,7 @@ def derive_sizing(the_tier: DeploymentTier, model: ScalingModel = DEFAULT_SCALIN
 
 def _at_least(value: float, floor: int) -> int:
     """Round a derived quantity up to a whole count, never below `floor`."""
-    from math import ceil  # noqa: PLC0415
+    from math import ceil
 
     return max(floor, ceil(value))
 
@@ -252,7 +252,7 @@ def compile_manifest(
     This is the Stage-1 compiler (STEP 11, the sizing half): validate -> derive -> summarize. Fails
     loud on an unknown tier or an impossible scaling model; the result is ready for a generator."""
     if not project or not project.strip():
-        raise BlueprintPackageError("a Seed Package needs a non-empty project name")  # noqa: TRY003
+        raise BlueprintPackageError("a Seed Package needs a non-empty project name")
     chosen = tier(tier_id)
     sizing = derive_sizing(chosen, model)
     return BuildManifest(

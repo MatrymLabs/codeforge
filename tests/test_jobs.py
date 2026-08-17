@@ -67,7 +67,7 @@ def test_full_chargen_through_the_engine_tick():
 
 
 def test_set_secondary_equips_a_subjob_and_opens_its_record():
-    from kernel.world.jobs import set_secondary  # noqa: PLC0415
+    from kernel.world.jobs import set_secondary
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")
@@ -78,7 +78,7 @@ def test_set_secondary_equips_a_subjob_and_opens_its_record():
 
 
 def test_secondary_refusals():
-    from kernel.world.jobs import set_secondary  # noqa: PLC0415
+    from kernel.world.jobs import set_secondary
 
     fresh = Session(player_id="matrym")
     assert "primary calling first" in set_secondary(fresh, "scholar")  # no primary yet
@@ -89,8 +89,8 @@ def test_secondary_refusals():
 
 
 def test_the_sheet_shows_the_equipped_secondary():
-    from kernel.world.character_view import sheet_from_session  # noqa: PLC0415
-    from kernel.world.jobs import set_secondary  # noqa: PLC0415
+    from kernel.world.character_view import sheet_from_session
+    from kernel.world.jobs import set_secondary
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")

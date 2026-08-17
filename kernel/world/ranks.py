@@ -60,7 +60,7 @@ def grant(session: Session, words: str) -> str:
         return f"No one called {display_name(target_name)} is connected."
     target.rank = rank
     save_character(target)
-    from kernel.world import audit  # noqa: PLC0415
+    from kernel.world import audit
 
     audit.record(session.player_id, "grant", f"{target_name} -> {rank}")  # an admin act, on record
     announce(

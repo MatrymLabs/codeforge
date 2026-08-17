@@ -219,10 +219,10 @@ def diff_cast(
     cast_dir, source_root = Path(cast_dir), Path(source_root)
     manifest_path = cast_dir / "cast_manifest.json"
     if not manifest_path.is_file():
-        raise CastError(f"no cast_manifest.json in {cast_dir}: not a poured cast")  # noqa: TRY003
+        raise CastError(f"no cast_manifest.json in {cast_dir}: not a poured cast")
     has_layer = any((source_root / d).is_dir() for d in ("parts", "kernel", "adapters", "content"))
     if not (source_root / "forge.py").is_file() or not has_layer:
-        raise CastError(f"source {source_root} is not a codeforge checkout (no forge.py / parts/)")  # noqa: TRY003
+        raise CastError(f"source {source_root} is not a codeforge checkout (no forge.py / parts/)")
     manifest = read_manifest(manifest_path)
     cast_files = _engine_files(cast_dir)
     src_files = _engine_files(source_root)
@@ -503,14 +503,14 @@ def _apply_update(  # noqa: PLR0912
         )
     except Exception as exc:  # any mid-flight failure: restore, then fail loud
         _restore_engine(cast_dir, backup)
-        raise CastError(f"update failed and was rolled back: {exc}") from exc  # noqa: TRY003
+        raise CastError(f"update failed and was rolled back: {exc}") from exc
     finally:
         shutil.rmtree(backup, ignore_errors=True)
 
 
 def _selective_validator(surfaces: list[str]):
     """A validator that boots the cast and drives the surfaces' full corpus (the D2 harness)."""
-    from kernel import coupling  # noqa: PLC0415
+    from kernel import coupling
 
     def _check(cast_dir: Path) -> tuple[bool, str]:
         return validate_cast(
@@ -580,7 +580,7 @@ def update_cast(
             there,
         )
     if selective:
-        from kernel import coupling  # noqa: PLC0415
+        from kernel import coupling
 
         modules = (closure_fn or coupling.closure)(manifest.surfaces)
         check = validator or _selective_validator(manifest.surfaces)

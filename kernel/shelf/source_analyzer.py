@@ -127,7 +127,7 @@ def analyze(source: str, *, module: str = "") -> Model:  # noqa: PLR0912
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise AnalyzerError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise AnalyzerError(f"cannot parse {module or 'source'}: {exc}") from exc
 
     identity = ast.get_docstring(tree) or ""
     identity = identity.splitlines()[0] if identity else ""

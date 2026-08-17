@@ -110,7 +110,7 @@ def test_writes_its_config_into_the_workdir_and_never_touches_the_repo_config(
         self: Path, encoding: str | None = None, errors: str | None = None
     ) -> str:
         if self == repository_config:
-            raise AssertionError("the scorer must not read the repository cosmic-ray.toml")  # noqa: TRY003
+            raise AssertionError("the scorer must not read the repository cosmic-ray.toml")
         return original_read_text(self, encoding=encoding, errors=errors)
 
     monkeypatch.setattr(Path, "read_text", refuse_repository_config)

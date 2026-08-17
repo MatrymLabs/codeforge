@@ -45,7 +45,7 @@ def _seed_dir_from_env(**updates: str) -> Path:
 
 
 def test_legacy_seed_dir_is_the_blueprint_dir_alias():
-    from kernel.world.seed import BLUEPRINT_DIR, SEED_DIR  # noqa: PLC0415
+    from kernel.world.seed import BLUEPRINT_DIR, SEED_DIR
 
     assert SEED_DIR is BLUEPRINT_DIR
 
@@ -91,7 +91,7 @@ def test_blueprint_error_is_the_only_legacy_error_spelling():
 
 
 def test_legacy_error_alias_preserves_the_module_boundary():
-    import kernel.world.seed as seed_module  # noqa: PLC0415
+    import kernel.world.seed as seed_module
 
     assert getattr(seed_module, "Seed" + "Error") is BlueprintError
 
@@ -281,7 +281,7 @@ def test_missing_file_raises_seed_error(tmp_path):
 
 
 def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("brawler:\n  location: courtyard\n  atk: -1\n")
@@ -291,7 +291,7 @@ def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
 
 def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
     """xp is awarded on defeat: a negative would DRAIN the victor's XP/JP/TP. Refuse it loud."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("leech:\n  location: courtyard\n  hp: 1\n  xp: -500\n")
@@ -300,7 +300,7 @@ def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
 
 
 def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("ghost:\n  location: courtyard\n  hp: -5\n")
@@ -310,7 +310,7 @@ def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
 
 def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
     """An aggressive NPC that cannot land a blow (atk 0) is a contradiction: refuse loud."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("poser:\n  location: courtyard\n  hp: 10\n  aggressive: true\n")
@@ -320,7 +320,7 @@ def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
 
 def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
     """An aggressive NPC that cannot be fought back (hp 0) is a contradiction: refuse loud."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("wraith:\n  location: courtyard\n  atk: 4\n  aggressive: true\n")
@@ -330,7 +330,7 @@ def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
 
 def test_a_valid_aggressive_npc_loads(tmp_path):
     """A properly-armed aggressive NPC (atk + hp) loads and carries the flag."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     good = tmp_path / "npcs.yaml"
     good.write_text("reaver:\n  location: courtyard\n  hp: 20\n  atk: 5\n  aggressive: true\n")
@@ -341,7 +341,7 @@ def test_a_valid_aggressive_npc_loads(tmp_path):
 
 def test_a_raid_without_tier_boss_is_rejected_at_load(tmp_path):
     """A raid flag on a non-boss is a contradiction: a raid rides the boss curve + weekly lock."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text(
@@ -354,7 +354,7 @@ def test_a_raid_without_tier_boss_is_rejected_at_load(tmp_path):
 
 def test_a_valid_raid_boss_loads_and_carries_the_flag(tmp_path):
     """A boss-tier foe flagged raid loads with raid=True (the weekly party objective)."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     good = tmp_path / "npcs.yaml"
     good.write_text(
@@ -368,7 +368,7 @@ def test_a_valid_raid_boss_loads_and_carries_the_flag(tmp_path):
 
 def test_npcs_are_reactive_by_default(tmp_path):
     """No `aggressive` key means a reactive/passive NPC -- the flag defaults False."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     plain = tmp_path / "npcs.yaml"
     plain.write_text("statue:\n  location: courtyard\n  hp: 10\n  atk: 3\n")
@@ -400,7 +400,7 @@ def test_duplicate_label_is_rejected(tmp_path):
 
 @pytest.mark.parametrize("yaml_text", ["? ?", "? [a]"])
 def test_unusable_mapping_keys_are_rejected_as_seed_errors(yaml_text):
-    from kernel.world.seed import _UniqueKeyLoader  # noqa: PLC0415
+    from kernel.world.seed import _UniqueKeyLoader
 
     with pytest.raises(BlueprintError, match="Unusable key in Blueprint file"):
         yaml.load(yaml_text, Loader=_UniqueKeyLoader)
@@ -410,9 +410,9 @@ def test_seed_loader_prefers_libyaml(tmp_path):
     # EXP-004: seeds parse through libyaml's CSafeLoader (~13x faster) when available. Pinning
     # this means a regression to the slow pure-Python SafeLoader is visible, and it documents
     # that the duplicate-key gate above runs on the C loader (whose composer keeps duplicates).
-    import yaml  # noqa: PLC0415
+    import yaml
 
-    from kernel.world.seed import _UniqueKeyLoader  # noqa: PLC0415
+    from kernel.world.seed import _UniqueKeyLoader
 
     if yaml.__with_libyaml__:
         assert issubclass(_UniqueKeyLoader, yaml.CSafeLoader), "seed loader should use libyaml"
@@ -656,7 +656,7 @@ def test_load_recipes_rejects_empty_inputs(tmp_path):
 
 def test_an_aggressive_wanderer_is_rejected_at_load(tmp_path):
     """A wanderer must be peaceful: an aggressive NPC that drifts would flee a fight it opened."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text(
@@ -668,7 +668,7 @@ def test_an_aggressive_wanderer_is_rejected_at_load(tmp_path):
 
 def test_a_valid_wanderer_loads_and_carries_the_flag(tmp_path):
     """A peaceful ambient NPC flagged wander loads with wander=True."""
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     good = tmp_path / "npcs.yaml"
     good.write_text("critter:\n  location: cell\n  hp: 3\n  wander: true\n")

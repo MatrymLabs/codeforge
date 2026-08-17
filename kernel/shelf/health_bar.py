@@ -32,15 +32,15 @@ def bar(
     value
     below maximum never rounds up to a fully-full bar (the edges read true)."""
     if maximum <= 0:
-        raise HealthBarError(f"maximum must be > 0 (got {maximum})")  # noqa: TRY003
+        raise HealthBarError(f"maximum must be > 0 (got {maximum})")
     if value < 0:
-        raise HealthBarError(f"value cannot be negative (got {value})")  # noqa: TRY003
+        raise HealthBarError(f"value cannot be negative (got {value})")
     if value > maximum:
-        raise HealthBarError(f"value {value} exceeds maximum {maximum}")  # noqa: TRY003
+        raise HealthBarError(f"value {value} exceeds maximum {maximum}")
     if width < 1:
-        raise HealthBarError(f"width must be >= 1 (got {width})")  # noqa: TRY003
+        raise HealthBarError(f"width must be >= 1 (got {width})")
     if len(filled) != 1 or len(empty) != 1:
-        raise HealthBarError("filled and empty must each be a single character")  # noqa: TRY003
+        raise HealthBarError("filled and empty must each be a single character")
 
     frac = value / maximum
     cells = round(frac * width)

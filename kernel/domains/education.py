@@ -35,9 +35,9 @@ class Lesson:
 
     def __post_init__(self) -> None:
         if not _LABEL.match(self.lesson_id or ""):
-            raise EducationError(f"lesson id {self.lesson_id!r} must be lowercase_snake_case")  # noqa: TRY003
+            raise EducationError(f"lesson id {self.lesson_id!r} must be lowercase_snake_case")
         if not self.title or not self.title.strip():
-            raise EducationError("a lesson needs a non-empty title")  # noqa: TRY003
+            raise EducationError("a lesson needs a non-empty title")
 
 
 @dataclass
@@ -49,7 +49,7 @@ class LessonBook:
 
     def add(self, lesson_id: str, title: str) -> Lesson:
         if lesson_id in self._lessons:
-            raise EducationError(f"lesson {lesson_id!r} already exists")  # noqa: TRY003
+            raise EducationError(f"lesson {lesson_id!r} already exists")
         lesson = Lesson(lesson_id, title)
         self._lessons[lesson_id] = lesson
         return lesson

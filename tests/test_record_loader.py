@@ -11,7 +11,7 @@ class _Err(ValueError):  # noqa: N818
 
 def _parse(raw: object) -> int:
     if not isinstance(raw, dict) or "v" not in raw:
-        raise _Err("needs 'v'")  # noqa: TRY003
+        raise _Err("needs 'v'")
     return int(raw["v"])
 
 

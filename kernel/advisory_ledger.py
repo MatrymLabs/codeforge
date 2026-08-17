@@ -112,7 +112,7 @@ def load(path: Path | str) -> Store:
                 resolved=date.fromisoformat(resolved) if resolved else None,
             )
         except (json.JSONDecodeError, KeyError, ValueError) as exc:
-            raise AdvisoryLedgerError(f"{p}:{lineno}: malformed advisory record: {exc}") from exc  # noqa: TRY003
+            raise AdvisoryLedgerError(f"{p}:{lineno}: malformed advisory record: {exc}") from exc
     return states
 
 

@@ -71,7 +71,7 @@ def test_an_unnamed_seat_persists_no_job_progress() -> None:
 
 
 def test_the_secondary_job_survives_a_character_roundtrip():
-    from kernel.world.jobs import set_secondary  # noqa: PLC0415
+    from kernel.world.jobs import set_secondary
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s

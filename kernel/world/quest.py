@@ -128,7 +128,7 @@ def register_bounties(npcs: dict[str, Npc]) -> None:
     """Generate hunt-contracts from the LIVE foe set and fold them into the quest engine. Called by
     world.py once the world -- including the procedural Spiral -- is fully assembled, so a bounty
     exists for EVERY combatant foe (seed + generated), not only authored ones. Idempotent."""
-    from kernel.world.bounties import generate_bounties  # noqa: PLC0415
+    from kernel.world.bounties import generate_bounties
 
     # Ambient wilderness life (the mass-generated bestiary) gets no hunt-contract: a million meadow-
     # hares must not mint a million bounty quests. Notable foes -- every hand-authored and Spiral
@@ -142,7 +142,7 @@ def register_errands(
 ) -> None:
     """Generate travel-errands from the settlements + the map's destinations and fold them into the
     engine (kernel.world.errands). Called by world.py after the world is assembled. Idempotent."""
-    from kernel.world.errands import generate_errands  # noqa: PLC0415
+    from kernel.world.errands import generate_errands
 
     _fold_in(generate_errands(settlements, destinations))
 
@@ -154,7 +154,7 @@ def register_storylines(
 ) -> None:
     """Generate one narrative chain per zone that pairs a town with a dungeon, and fold them into
     the engine (kernel.world.storylines). Called by world.py once assembled. Idempotent."""
-    from kernel.world.storylines import generate_storylines  # noqa: PLC0415
+    from kernel.world.storylines import generate_storylines
 
     _fold_in(generate_storylines(zones, settlements, dungeons))
 
@@ -162,7 +162,7 @@ def register_storylines(
 def register_culls(zones: list[dict[str, object]]) -> None:
     """Generate zone-scoped 'cull N of a kind' contracts at volume and fold them into the engine
     (kernel.world.cull). Called by world.py after the world is assembled. Idempotent."""
-    from kernel.world.cull import generate_culls  # noqa: PLC0415
+    from kernel.world.cull import generate_culls
 
     _fold_in(generate_culls(zones))
 
@@ -170,7 +170,7 @@ def register_culls(zones: list[dict[str, object]]) -> None:
 def register_forages(zones: list[dict[str, object]]) -> None:
     """Generate zone-scoped 'gather N of a material' contracts and fold them into the engine
     (kernel.world.forage). Called by world.py after the world is assembled. Idempotent."""
-    from kernel.world.forage import generate_forages  # noqa: PLC0415
+    from kernel.world.forage import generate_forages
 
     _fold_in(generate_forages(zones))
 
@@ -178,7 +178,7 @@ def register_forages(zones: list[dict[str, object]]) -> None:
 def register_crawls(dungeons: list[dict[str, object]]) -> None:
     """Generate one 'descend to the heart of a dungeon' contract per dungeon and fold them into the
     engine (kernel.world.dungeon_crawl). Called by world.py once assembled. Idempotent."""
-    from kernel.world.dungeon_crawl import generate_crawls  # noqa: PLC0415
+    from kernel.world.dungeon_crawl import generate_crawls
 
     _fold_in(generate_crawls(dungeons))
 
@@ -186,7 +186,7 @@ def register_crawls(dungeons: list[dict[str, object]]) -> None:
 def register_spine(zones: list[dict[str, object]]) -> None:
     """Lay the world's main-road spine (the Forgeward Road) and fold it into the engine
     (kernel.world.spine). Called by world.py after the world is assembled. Idempotent."""
-    from kernel.world.spine import forge_spine  # noqa: PLC0415
+    from kernel.world.spine import forge_spine
 
     spec = forge_spine(zones)
     _fold_in([spec] if spec is not None else [])
@@ -267,7 +267,7 @@ def active_quest(session: Session) -> dict[str, str] | None:
     None when every authored arc is done. Bounties are excluded -- they live on the contracts board,
     and one tracker line should follow the story, not the churn of generated hunts. Read-only: it
     never opens or advances a run beyond what viewing already does (architecture law 1)."""
-    from kernel.world.bounties import is_bounty  # noqa: PLC0415
+    from kernel.world.bounties import is_bounty
 
     for qid, quest in _QUESTS.items():
         if is_bounty(qid):
@@ -282,9 +282,9 @@ def _list_all(session: Session) -> str:
     """The STORY quests (hand-authored arcs), with the player's state and moves. The generated
     VOLUME (bounties, culls) is counted, not listed -- it lives under `contracts`, never flooding
     this."""
-    from kernel.world.bounties import is_bounty  # noqa: PLC0415
-    from kernel.world.cull import is_cull  # noqa: PLC0415
-    from kernel.world.forage import is_forage  # noqa: PLC0415
+    from kernel.world.bounties import is_bounty
+    from kernel.world.cull import is_cull
+    from kernel.world.forage import is_forage
 
     blocks = []
     board_count = 0
@@ -309,9 +309,9 @@ def _list_all(session: Session) -> str:
 def contracts_view(session: Session) -> str:
     """The `contracts` verb: the notice board -- every generated side-quest (hunt-contract or
     travel-errand) and its status, grouped so the board reads clearly."""
-    from kernel.world.bounties import is_bounty  # noqa: PLC0415
-    from kernel.world.errands import is_errand  # noqa: PLC0415
-    from kernel.world.storylines import is_storyline  # noqa: PLC0415
+    from kernel.world.bounties import is_bounty
+    from kernel.world.errands import is_errand
+    from kernel.world.storylines import is_storyline
 
     def _board(match) -> tuple[list[str], int]:
         openq: list[str] = []
@@ -326,8 +326,8 @@ def contracts_view(session: Session) -> str:
                 openq.append(f"  {quest.workflow.labels.get(run.state, run.state)}")
         return openq, done
 
-    from kernel.world.cull import is_cull  # noqa: PLC0415
-    from kernel.world.forage import is_forage  # noqa: PLC0415
+    from kernel.world.cull import is_cull
+    from kernel.world.forage import is_forage
 
     tales, tales_done = _board(is_storyline)
     hunts, hunts_done = _board(is_bounty)
@@ -440,20 +440,20 @@ def _apply_one(quest: _Quest, effect: str, session: Session) -> str:
     """Apply ONE named effect. `award_xp` grants the quest's reward; `open_door:<id>` reforges a
     barrier; `grant_rep:<order>:<amount>` earns standing with an Order. Returns any extra line."""
     if effect == "award_xp" and session.stats is not None:
-        from kernel.world.progression import get_next_level_threshold  # noqa: PLC0415
-        from kernel.world.progression_awards import award_xp  # noqa: PLC0415
+        from kernel.world.progression import get_next_level_threshold
+        from kernel.world.progression_awards import award_xp
 
         threshold = get_next_level_threshold(session.level)
         reward = quest.xp if threshold is None else min(quest.xp, max(0, threshold - session.xp))
         return "\n" + award_xp(session, reward)
     if effect.startswith("open_door:"):
-        from kernel.world import doors  # noqa: PLC0415
+        from kernel.world import doors
 
         doors.open_gate(effect.split(":", 1)[1])  # the label already narrates the opening
     if effect.startswith("grant_rep:"):
         # `grant_rep:<order>:<amount>` -- a quest's deed earns standing with an Order (and spills
         # over its allies/rivals). The reputation web is how faction-gated content is unlocked.
-        from kernel.world.reputation import grant  # noqa: PLC0415
+        from kernel.world.reputation import grant
 
         _, order, amount = effect.split(":", 2)
         rose = grant(session, order, int(amount))

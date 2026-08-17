@@ -214,7 +214,7 @@ def test_verify_reports_corrupt_when_the_record_shape_is_malformed(tmp_path: Pat
     backups = _backups(tmp_path)
     record = kernel.create_seed("Malformed", "josh", "", seed_id="seed-12")
     ref = backups.backup(record)
-    import json  # noqa: PLC0415
+    import json
 
     Path(ref.path).write_text(
         json.dumps({"sha256": "deadbeef", "record": {"status": "created"}}),  # no identity

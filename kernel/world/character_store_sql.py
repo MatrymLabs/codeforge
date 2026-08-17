@@ -53,7 +53,7 @@ class SqlCharacterStore:
     """A CharacterStore backed by the SQL `characters` table (one row per named hero)."""
 
     def find(self, name: str) -> CharacterRecord | None:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, name)
@@ -66,7 +66,7 @@ class SqlCharacterStore:
             return record
 
     def upsert_full(self, record: CharacterRecord) -> None:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, record.name) or CharacterRow(name=record.name)
@@ -78,7 +78,7 @@ class SqlCharacterStore:
             db.commit()
 
     def upsert_gameplay(self, record: CharacterRecord) -> None:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, record.name) or CharacterRow(name=record.name)
@@ -89,7 +89,7 @@ class SqlCharacterStore:
             db.commit()
 
     def set_rank(self, name: str, rank: str) -> bool:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, name)
@@ -103,16 +103,16 @@ class SqlCharacterStore:
     def members_of_guild(self, guild: str) -> list[str]:
         if not guild:
             return []
-        from sqlalchemy import select  # noqa: PLC0415
+        from sqlalchemy import select
 
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             rows = db.scalars(select(CharacterRow.name).where(CharacterRow.guild == guild))
             return sorted(rows)
 
     def set_guild(self, name: str, guild: str, guild_rank: str) -> bool:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, name)
@@ -125,7 +125,7 @@ class SqlCharacterStore:
             return True
 
     def add_coins(self, name: str, delta: int) -> bool:
-        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import CharacterRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, name)

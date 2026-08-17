@@ -55,7 +55,7 @@ def test_non_str_input_fails_loud():
 @pytest.mark.skipif(not _HAS_KERNEL, reason="C kernel not built (kernel.shelf.textmatch)")
 @given(st.text(max_size=40), st.text(max_size=40))
 def test_c_kernel_equals_the_python_reference_on_random_text(a, b):
-    import codeforge_textkernel  # noqa: PLC0415
+    import codeforge_textkernel
 
     assert codeforge_textkernel.levenshtein(a, b) == levenshtein_py(a, b)
 

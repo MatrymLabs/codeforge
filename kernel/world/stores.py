@@ -30,7 +30,7 @@ _HERB_BUY = 3  # every biome herb fetches the same modest price
 def _material_prices(known_items: set[str]) -> tuple[dict[str, int], dict[str, int]]:
     """The store's (buys, sells) tables, restricted to materials that exist in the loaded seed.
     Herb labels come canonically from the wildlands biome map, never guessed."""
-    from kernel.world.wildlands import _BIOME_HERB  # noqa: PLC0415
+    from kernel.world.wildlands import _BIOME_HERB
 
     wanted = dict(_MATERIAL_BUY)
     for herb in _BIOME_HERB.values():

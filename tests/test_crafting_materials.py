@@ -84,7 +84,7 @@ def test_every_refinement_link_references_a_real_item(aethryn):
 def test_every_recipe_gate_names_a_real_trade_and_order(aethryn):
     """A gated recipe (slice 1d) must require a real CRAFT profession and/or a real Order, else a
     maker could never earn it."""
-    from kernel.world.orders import ORDERS  # noqa: PLC0415
+    from kernel.world.orders import ORDERS
 
     profs = load_professions(_AETHRYN / "professions.yaml")
     craft_trades = {p for p in profs if profs[p]["kind"] == "craft"}

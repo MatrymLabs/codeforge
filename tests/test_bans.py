@@ -48,7 +48,7 @@ def test_all_bans_lists_every_ban():
 
 # --- the verbs (audited + online drop) ---------------------------------------------------------
 def test_the_ban_verb_records_audits_and_drops_an_online_target():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         root = _staff("root", "owner")
@@ -63,7 +63,7 @@ def test_the_ban_verb_records_audits_and_drops_an_online_target():
 
 
 def test_unban_verb_lifts_and_audits():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         root = _staff("root", "owner")
@@ -77,7 +77,7 @@ def test_unban_verb_lifts_and_audits():
 
 
 def test_a_plain_player_cannot_ban():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         pleb = _staff("pleb", "player")

@@ -35,7 +35,7 @@ def ask_architect(session: Session, prompt: str) -> str:
     decision = _bucket(session.player_id).consume()
     if not decision.allowed:
         return f"The Architect is still thinking. Ask again in {decision.retry_after:.0f}s."
-    from adapters.architect import consult  # noqa: PLC0415
+    from adapters.architect import consult
 
     return consult(prompt)
 

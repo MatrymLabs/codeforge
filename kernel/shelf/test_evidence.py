@@ -53,7 +53,7 @@ class EvidenceLedger:
     def record(self, check_id: str, status: str, detail: str = "") -> None:
         """Record a check's outcome. Raises EvidenceError on an unrecordable status."""
         if status not in _RECORDABLE:
-            raise EvidenceError(f"cannot record status {status!r}; use one of {_RECORDABLE}")  # noqa: TRY003
+            raise EvidenceError(f"cannot record status {status!r}; use one of {_RECORDABLE}")
         self._records[check_id] = Evidence(check_id, status, self._env, self._commit, detail)
 
     def results(self) -> list[Evidence]:

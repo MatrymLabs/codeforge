@@ -106,13 +106,13 @@ def run(
     table = ALLOWLIST if allowlist is None else allowlist
     argv = table.get(name)
     if argv is None:
-        raise CommandRefused(f"'{name}' is not an allowlisted command. Try: console")  # noqa: TRY003
+        raise CommandRefused(f"'{name}' is not an allowlisted command. Try: console")
     missing = missing_targets(name)
     if missing:
         # Refuse rather than run. A tool pointed at a path that no longer exists does not fail
         # honestly: compileall exits 0, mypy exits 2 with a message nobody reads in-game, and the
         # console reports on a measurement it never took.
-        raise CommandRefused(  # noqa: TRY003
+        raise CommandRefused(
             f"'{name}' reads {', '.join(missing)}, which "
             f"{'does' if len(missing) == 1 else 'do'} not exist under {REPO_ROOT}. "
             f"The allowlist is stale; it never ran."

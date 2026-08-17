@@ -119,7 +119,7 @@ except ImportError:  # pragma: no cover -- fallback branch (taken only when the 
 
 def world_edges() -> list[tuple[str, str]]:
     """Every exit in the live world as (from_room, to_room) directed edges."""
-    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.world import WORLD
 
     return [
         (label, dest) for label, room in WORLD.items() for dest in room.get("exits", {}).values()
@@ -147,7 +147,7 @@ def world_navgraph() -> NavGraphLike:
     built once and reused. Invalidation is keyed on WORLD's identity and size: swapping it (a test)
     or growing it in place rebuilds on the next call; `reindex_navgraph` forces it."""
     global _cached_graph, _cached_world_key  # noqa: PLW0603
-    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.world import WORLD
 
     key = (id(WORLD), len(WORLD))
     if _cached_graph is None or _cached_world_key != key:

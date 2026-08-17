@@ -87,30 +87,30 @@ class CatalogError(ValueError):
 
 def _coerce(raw: Any, index: int) -> Part:
     if not isinstance(raw, dict):
-        raise CatalogError(f"part #{index}: expected a mapping, got {type(raw).__name__}")  # noqa: TRY003
+        raise CatalogError(f"part #{index}: expected a mapping, got {type(raw).__name__}")
     missing = [key for key in _REQUIRED if key not in raw]
     if missing:
-        raise CatalogError(f"part #{index}: missing {', '.join(missing)}")  # noqa: TRY003
+        raise CatalogError(f"part #{index}: missing {', '.join(missing)}")
     maturity = str(raw["maturity"])
     if maturity not in _MATURITY:
-        raise CatalogError(f"part {raw['id']!r}: maturity must be one of {_MATURITY}")  # noqa: TRY003
+        raise CatalogError(f"part {raw['id']!r}: maturity must be one of {_MATURITY}")
     risk = str(raw["risk"])
     if risk not in _RISK:
-        raise CatalogError(f"part {raw['id']!r}: risk must be one of {_RISK}")  # noqa: TRY003
+        raise CatalogError(f"part {raw['id']!r}: risk must be one of {_RISK}")
     source_status = str(raw.get("source_status", "original"))
     if source_status not in _SOURCE_STATUS:
-        raise CatalogError(  # noqa: TRY003
+        raise CatalogError(
             f"part {raw['id']!r}: source_status must be a free-to-use status {_SOURCE_STATUS}"
         )
     provenance = str(raw.get("provenance", "")).strip()
     if source_status == "clean-room" and not provenance:
-        raise CatalogError(  # noqa: TRY003
+        raise CatalogError(
             f"part {raw['id']!r}: source_status 'clean-room' requires a 'provenance' trail "
             "(behavior spec + license class); a clean-room claim without a record is not honest"
         )
     reuse = raw["reuse"]
     if not isinstance(reuse, dict) or not reuse:
-        raise CatalogError(  # noqa: TRY003
+        raise CatalogError(
             f"part {raw['id']!r}: reuse must be a non-empty mapping of domain -> use"
         )
     return Part(
@@ -135,7 +135,7 @@ def _parse_catalog(source: Path) -> list[Part]:
     """Parse and validate a catalog file into Parts (a bad row raises before caching)."""
     data = yaml.safe_load(source.read_text(encoding="utf-8")) or []
     if not isinstance(data, list):
-        raise CatalogError("catalog root must be a list of parts")  # noqa: TRY003
+        raise CatalogError("catalog root must be a list of parts")
     return [_coerce(entry, number) for number, entry in enumerate(data, start=1)]
 
 

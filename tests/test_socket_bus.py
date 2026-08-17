@@ -113,7 +113,7 @@ def test_close_is_idempotent():
 
 
 def test_set_bus_injects_the_adapter_and_the_real_bus_drives_it():
-    from kernel.world import bus as busmod  # noqa: PLC0415
+    from kernel.world import bus as busmod
 
     broker = Broker()
     sbus = _wire(broker)
@@ -130,8 +130,8 @@ def test_set_bus_injects_the_adapter_and_the_real_bus_drives_it():
 
 
 def test_maybe_wire_broker_is_a_noop_when_unset():
-    from kernel.world import bus as busmod  # noqa: PLC0415
-    from kernel.world.socket_bus import maybe_wire_broker  # noqa: PLC0415
+    from kernel.world import bus as busmod
+    from kernel.world.socket_bus import maybe_wire_broker
 
     before = busmod.get_bus()
     assert maybe_wire_broker({}) is None  # env not set
@@ -140,9 +140,9 @@ def test_maybe_wire_broker_is_a_noop_when_unset():
 
 
 def test_maybe_wire_broker_connects_and_injects_when_set():
-    from kernel.world import bus as busmod  # noqa: PLC0415
-    from kernel.world.broker import serve  # noqa: PLC0415
-    from kernel.world.socket_bus import maybe_wire_broker  # noqa: PLC0415
+    from kernel.world import bus as busmod
+    from kernel.world.broker import serve
+    from kernel.world.socket_bus import maybe_wire_broker
 
     server = serve("127.0.0.1", 0)
     host, port = server.server_address
@@ -161,8 +161,8 @@ def test_maybe_wire_broker_connects_and_injects_when_set():
 
 def test_serve_and_connect_deliver_across_the_daemon():
     # The one loopback test: a real broker daemon on an ephemeral port, two clients over connect().
-    from kernel.world.broker import serve  # noqa: PLC0415
-    from kernel.world.socket_bus import connect  # noqa: PLC0415
+    from kernel.world.broker import serve
+    from kernel.world.socket_bus import connect
 
     server = serve("127.0.0.1", 0)
     host, port = server.server_address

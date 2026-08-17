@@ -119,8 +119,8 @@ def test_source_connection_is_structured(tmp_path: Path) -> None:
 def test_a_registered_source_lights_up_the_hub_sources_facet(tmp_path: Path) -> None:
     # Stage 3 -> Stage 2 wiring: a registered source's label populates the Project Hub's `sources`
     # facet, turning "none yet" into real data over both the text render and the contract.
-    from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore  # noqa: PLC0415
-    from kernel.seedlab.project_hub import ProjectHub, ProjectState  # noqa: PLC0415
+    from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
+    from kernel.seedlab.project_hub import ProjectHub, ProjectState
 
     kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-x")
@@ -200,7 +200,7 @@ def test_search_skips_a_file_it_cannot_read(tmp_path: Path) -> None:
     class _Flaky(LocalSource):
         def read(self, relpath: str, **kw: object) -> str:
             if relpath == "README.md":
-                raise SourceConnectorError("simulated unreadable file")  # noqa: TRY003
+                raise SourceConnectorError("simulated unreadable file")
             return super().read(relpath, **kw)  # type: ignore[arg-type]
 
     src = _Flaky(_project(tmp_path), Provenance("demo-src"))

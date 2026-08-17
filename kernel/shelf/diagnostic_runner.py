@@ -39,11 +39,11 @@ class Check:
 
     def __post_init__(self) -> None:
         if not self.name:
-            raise DiagnosticError("check name must be non-empty")  # noqa: TRY003
+            raise DiagnosticError("check name must be non-empty")
         if self.severity not in _SEVERITIES:
-            raise DiagnosticError(f"severity must be one of {sorted(_SEVERITIES)}")  # noqa: TRY003
+            raise DiagnosticError(f"severity must be one of {sorted(_SEVERITIES)}")
         if self.weight <= 0:
-            raise DiagnosticError("weight must be > 0")  # noqa: TRY003
+            raise DiagnosticError("weight must be > 0")
 
 
 @dataclass(frozen=True)
@@ -63,9 +63,9 @@ def decide(
 ) -> Verdict:
     """Decide an action from the checks. Escalation classes are non-overridable."""
     if not checks:
-        raise DiagnosticError("decide needs at least one check")  # noqa: TRY003
+        raise DiagnosticError("decide needs at least one check")
     if not 0.0 <= revise_threshold <= proceed_threshold <= 1.0:
-        raise DiagnosticError("need 0 <= revise_threshold <= proceed_threshold <= 1")  # noqa: TRY003
+        raise DiagnosticError("need 0 <= revise_threshold <= proceed_threshold <= 1")
 
     failed = [c for c in checks if not c.passed]
     escalations = [c for c in failed if c.kind in escalation_classes]

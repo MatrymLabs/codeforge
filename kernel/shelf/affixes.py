@@ -72,7 +72,7 @@ def roll(rng: Random, base_name: str, base_mods: dict[str, int], level: int) -> 
     Fails loud on an empty base name: a rolled item with no base to name is nonsense, and a silent
     "Cruel  of the Bear" (a hole where the noun goes) would leak past the caller as valid loot."""
     if not base_name.strip():
-        raise ValueError("affixes.roll: base_name must be a non-empty item name")  # noqa: TRY003
+        raise ValueError("affixes.roll: base_name must be a non-empty item name")
     rarity, mult, affix_count = _pick_rarity(rng)
     mods: dict[str, int] = {s: max(1, round(v * mult)) for s, v in base_mods.items()}
 

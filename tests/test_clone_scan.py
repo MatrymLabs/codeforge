@@ -27,7 +27,7 @@ _C = "def gamma(x):\n    return x + 1\n"
 
 
 def test_shape_ignores_names_and_literals():
-    import ast  # noqa: PLC0415
+    import ast
 
     a = ast.parse(_A).body[0]
     b = ast.parse(_B).body[0]
@@ -73,12 +73,12 @@ def test_clones_verb_is_tick_reachable():
 
 
 def test_clones_verb_accepts_a_min_nodes_arg():
-    from kernel.clone_scan import clones  # noqa: PLC0415
+    from kernel.clone_scan import clones
 
     assert "Clone scan" in clones("500")  # a high bar: valid int, likely no clones
 
 
 def test_clones_verb_rejects_a_bad_arg():
-    from kernel.clone_scan import clones  # noqa: PLC0415
+    from kernel.clone_scan import clones
 
     assert "Usage" in clones("notanumber")

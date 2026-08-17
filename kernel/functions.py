@@ -20,8 +20,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 # --- Live demos: (call shown, output shown). Each is pure or uses a temp dir. -----------
 def _demo_rank_gate() -> tuple[str, str]:
-    from kernel.world.ranks import has_rank  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.ranks import has_rank
+    from kernel.world.session import Session
 
     novice = has_rank(Session(player_id="novice", rank="player"), "wizard")
     owner = has_rank(Session(player_id="owner", rank="owner"), "wizard")
@@ -29,7 +29,7 @@ def _demo_rank_gate() -> tuple[str, str]:
 
 
 def _demo_report_writer() -> tuple[str, str]:
-    from kernel.shelf.reporting import write_report  # noqa: PLC0415
+    from kernel.shelf.reporting import write_report
 
     with tempfile.TemporaryDirectory() as d:
         p = write_report("demo", "hello world", root=Path(d), stamp="2026-07-10")
@@ -40,7 +40,7 @@ def _demo_report_writer() -> tuple[str, str]:
 
 
 def _demo_assessment() -> tuple[str, str]:
-    from kernel.assessment import available_lessons  # noqa: PLC0415
+    from kernel.assessment import available_lessons
 
     lessons = available_lessons()
     total_q = sum(len(x.questions) for x in lessons)
@@ -51,7 +51,7 @@ def _demo_assessment() -> tuple[str, str]:
 
 
 def _demo_validated_loader() -> tuple[str, str]:
-    from kernel.world.seed import BlueprintError, load_rooms  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_rooms
 
     with tempfile.TemporaryDirectory() as d:
         bad = Path(d) / "rooms.yaml"
@@ -67,8 +67,8 @@ def _demo_validated_loader() -> tuple[str, str]:
 
 
 def _demo_event_ledger() -> tuple[str, str]:
-    from kernel.world.events import announce, bind_echo, unbind_echo  # noqa: PLC0415
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    from kernel.world.events import announce, bind_echo, unbind_echo
+    from kernel.world.session import SESSIONS, Session
 
     pid = "_fn_evt_demo"
     got: list[str] = []
@@ -88,7 +88,7 @@ def _demo_event_ledger() -> tuple[str, str]:
 
 
 def _demo_safe_runner() -> tuple[str, str]:
-    from kernel.shelf.console import ALLOWLIST, CommandRefused, run  # noqa: PLC0415
+    from kernel.shelf.console import ALLOWLIST, CommandRefused, run
 
     try:
         run("rm -rf /")  # not on the allowlist
@@ -99,7 +99,7 @@ def _demo_safe_runner() -> tuple[str, str]:
 
 
 def _demo_gate_runner() -> tuple[str, str]:
-    import importlib.util  # noqa: PLC0415
+    import importlib.util
 
     spec = importlib.util.spec_from_file_location("_fn_doctor", _ROOT / "scripts" / "doctor.py")
     if spec is None or spec.loader is None:  # pragma: no cover - defensive

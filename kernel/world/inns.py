@@ -49,9 +49,9 @@ def rest(session: Session) -> str:
 def _rest_party_mates(session: Session) -> list[str]:
     """Mend the caller's party-mates resting in the same inn (never the caller), and tell them.
     Returns the mates healed. Empty for a solo hero. Reuses the party's members_in_room seam."""
-    from kernel.world.events import announce_to  # noqa: PLC0415
-    from kernel.world.party import members_in_room  # noqa: PLC0415
-    from kernel.world.session import SESSIONS, display_name  # noqa: PLC0415
+    from kernel.world.events import announce_to
+    from kernel.world.party import members_in_room
+    from kernel.world.session import SESSIONS, display_name
 
     mates: list[str] = []
     for pid in members_in_room(session.player_id, session.location):

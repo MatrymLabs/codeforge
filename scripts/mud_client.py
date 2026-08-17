@@ -72,7 +72,7 @@ class _SecretField:
         self._buf.clear()
         if self._saved is None:
             return
-        import termios  # noqa: PLC0415
+        import termios
 
         with contextlib.suppress(termios.error, OSError):
             attrs = termios.tcgetattr(self._fd)
@@ -89,7 +89,7 @@ class _SecretField:
         self._buf.clear()
         if self._saved is None:
             return
-        import termios  # noqa: PLC0415
+        import termios
 
         with contextlib.suppress(termios.error, OSError):
             termios.tcsetattr(self._fd, termios.TCSANOW, self._saved)
@@ -149,13 +149,13 @@ def main(argv: list[str]) -> int:
     stdin_fd = sys.stdin.fileno()
     saved = None
     if os.isatty(stdin_fd):
-        import termios  # noqa: PLC0415
+        import termios
 
         # Ignore SIGTTOU so tcsetattr works even when we're NOT the terminal's
         # foreground process group -- e.g. the ritual runs us beside a
         # backgrounded server. (Unix-only signal.)
         with contextlib.suppress(ValueError, OSError, AttributeError):
-            import signal  # noqa: PLC0415
+            import signal
 
             signal.signal(signal.SIGTTOU, signal.SIG_IGN)
         with contextlib.suppress(termios.error, OSError):

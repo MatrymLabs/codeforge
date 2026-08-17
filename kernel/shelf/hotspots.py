@@ -83,7 +83,7 @@ def rank(
     Only files present in BOTH maps are ranked (a file needs both a history and code).
     """
     if not isinstance(churn, dict) or not isinstance(complexity, dict):
-        raise HotspotError("churn and complexity must both be dicts of {path: number}")  # noqa: TRY003
+        raise HotspotError("churn and complexity must both be dicts of {path: number}")
 
     shared = sorted(set(churn) & set(complexity))
     notes: list[str] = []

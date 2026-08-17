@@ -111,7 +111,7 @@ def read_manifest(path: Path) -> CastManifest:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise CastError(f"unreadable cast manifest at {path}: {exc}") from exc  # noqa: TRY003
+        raise CastError(f"unreadable cast manifest at {path}: {exc}") from exc
     return CastManifest(**data)
 
 
@@ -128,14 +128,14 @@ def load_template(name: str, root: Path | None = None) -> dict:
     manifest = (root or TEMPLATES_ROOT) / name / "template_manifest.json"
     if not manifest.is_file():
         avail = ", ".join(available_templates(root)) or "(none)"
-        raise CastError(f"unknown template '{name}'. Available: {avail}")  # noqa: TRY003
+        raise CastError(f"unknown template '{name}'. Available: {avail}")
     try:
         data = json.loads(manifest.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
-        raise CastError(f"malformed template_manifest.json for '{name}': {exc}") from exc  # noqa: TRY003
+        raise CastError(f"malformed template_manifest.json for '{name}': {exc}") from exc
     for req in ("template_id", "starter_seed_pack", "engine_strategy"):
         if req not in data:
-            raise CastError(f"template '{name}' is missing required key '{req}'")  # noqa: TRY003
+            raise CastError(f"template '{name}' is missing required key '{req}'")
     return data
 
 
@@ -264,7 +264,7 @@ def _engine_runtime_deps(base: Path) -> tuple[list[str], str]:
     pyproject = base / "pyproject.toml"
     if not pyproject.is_file():
         return fallback
-    import tomllib  # noqa: PLC0415
+    import tomllib
 
     try:
         data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
@@ -321,12 +321,12 @@ def generate_cast(
     touches `seeds/` or the frozen identifiers.
     """
     if plan.verdict != READY:
-        raise CastError(  # noqa: TRY003
+        raise CastError(
             f"cannot generate a {plan.verdict.upper()} cast: resolve the blocker(s) first"
         )
     dest = Path(dest)
     if dest.exists() and any(dest.iterdir()):
-        raise CastError(f"destination {dest} is not empty; refusing to overwrite a cast")  # noqa: TRY003
+        raise CastError(f"destination {dest} is not empty; refusing to overwrite a cast")
     base = root or _ROOT
     starter = plan.manifest.starter_seed_pack
     ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
@@ -461,7 +461,7 @@ def _declared_deps(pyproject_path: Path) -> list[str]:
     """The dependencies a generated cast declares in its pyproject (empty if none/unreadable)."""
     if not pyproject_path.is_file():
         return []
-    import tomllib  # noqa: PLC0415
+    import tomllib
 
     try:
         data = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
@@ -549,11 +549,11 @@ def pour_selective(
     injectable seams: both default to real tracing, and a test supplies fakes so the import surface
     is exercised without importing the real servers.
     """
-    from kernel import coupling  # noqa: PLC0415
+    from kernel import coupling
 
     plan = plan_cast(template, name, commit=commit, root=root)
     if plan.verdict != READY:
-        raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")  # noqa: TRY003
+        raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")
     modules = coupling.closure(surfaces, tracer=tracer, import_tracer=import_tracer)
     out = generate_cast(plan, Path(dest), modules=modules, surfaces=surfaces, root=root)
     ok, detail = validate_cast(
@@ -651,7 +651,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
 
     Plan writes nothing (exit 0 READY, 1 BLOCKED). Generate pours a standalone project to <dest>.
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = argv if argv is not None else sys.argv[1:]
     if args and args[0] == "diff":
@@ -663,7 +663,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
                 file=sys.stderr,
             )
             return 2
-        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift  # noqa: I001, PLC0415
+        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift # noqa: I001
 
         try:
             drift = diff_cast(rest[0], rest[1])
@@ -687,7 +687,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
                 file=sys.stderr,
             )
             return 2
-        from kernel.cast_update import render_update, update_cast  # noqa: PLC0415
+        from kernel.cast_update import render_update, update_cast
 
         try:
             outcome = update_cast(rest[0], rest[1], force=force)
@@ -729,7 +729,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
         template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
         commit = args[5] if len(args) > 5 else "unknown"  # noqa: PLR2004
         surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
-        from kernel.coupling import CouplingError  # noqa: PLC0415
+        from kernel.coupling import CouplingError
 
         try:
             report = forge_game(template, name, Path(dest), surfaces, commit=commit)
@@ -749,7 +749,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
         template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
         commit = args[5] if len(args) > 5 else "unknown"  # noqa: PLR2004
         surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
-        from kernel.coupling import CouplingError  # noqa: PLC0415
+        from kernel.coupling import CouplingError
 
         try:
             out, ok, detail = pour_selective(template, name, Path(dest), surfaces, commit=commit)

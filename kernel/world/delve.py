@@ -83,18 +83,18 @@ def load_dungeons(path: Path) -> list[dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("dungeons.yaml must be a mapping of room-id to dungeon config.")  # noqa: TRY003
+        raise BlueprintError("dungeons.yaml must be a mapping of room-id to dungeon config.")
     configs: list[dict[str, Any]] = []
     for room, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise BlueprintError(f"dungeon {room!r} must be a mapping of config keys.")  # noqa: TRY003
+            raise BlueprintError(f"dungeon {room!r} must be a mapping of config keys.")
         merged = {**cfg, "room": room}
         for key in ("name", "zone", "level", "biome"):
             if key not in merged:
-                raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")  # noqa: TRY003
+                raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")
         level = merged["level"]
         if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:  # noqa: PLR2004
-            raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")  # noqa: TRY003
+            raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")
         configs.append(merged)
     return configs
 

@@ -39,9 +39,9 @@ class Bulkhead:
 
     def __init__(self, limit: int) -> None:
         if not isinstance(limit, int) or isinstance(limit, bool):
-            raise BulkheadError(f"limit must be an int, got {limit!r}")  # noqa: TRY003
+            raise BulkheadError(f"limit must be an int, got {limit!r}")
         if limit < 1:
-            raise BulkheadError(f"limit must be >= 1, got {limit}")  # noqa: TRY003
+            raise BulkheadError(f"limit must be >= 1, got {limit}")
         self._limit = limit
         self._lock = threading.Lock()
         self._active = 0
@@ -68,7 +68,7 @@ class Bulkhead:
         The slot is released on exit even if the block raises (capacity is never leaked)."""
         with self._lock:
             if self._active >= self._limit:
-                raise BulkheadFull(f"bulkhead full ({self._active}/{self._limit})")  # noqa: TRY003
+                raise BulkheadFull(f"bulkhead full ({self._active}/{self._limit})")
             self._active += 1
         try:
             yield

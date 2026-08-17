@@ -34,40 +34,40 @@ def load_campaign(path: Path) -> dict[str, Any] | None:  # noqa: PLR0912
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("campaign.yaml must be a mapping.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml must be a mapping.")
     for key in ("id", "name", "level_cap", "checkpoints", "minimums"):
         if key not in raw:
-            raise BlueprintError(f"campaign.yaml is missing required key {key!r}.")  # noqa: TRY003
+            raise BlueprintError(f"campaign.yaml is missing required key {key!r}.")
     if not isinstance(raw["id"], str) or not raw["id"].strip():
-        raise BlueprintError("campaign.yaml: 'id' must be a non-empty string.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: 'id' must be a non-empty string.")
     if not isinstance(raw["name"], str) or not raw["name"].strip():
-        raise BlueprintError("campaign.yaml: 'name' must be a non-empty string.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: 'name' must be a non-empty string.")
     cap = raw["level_cap"]
     if isinstance(cap, bool) or not isinstance(cap, int) or not 1 <= cap <= 300:  # noqa: PLR2004
-        raise BlueprintError(f"campaign.yaml: 'level_cap' must be an int 1..300, got {cap!r}.")  # noqa: TRY003
+        raise BlueprintError(f"campaign.yaml: 'level_cap' must be an int 1..300, got {cap!r}.")
 
     checkpoints = raw["checkpoints"]
     if not isinstance(checkpoints, list) or not checkpoints:
-        raise BlueprintError("campaign.yaml: 'checkpoints' must be a non-empty list.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: 'checkpoints' must be a non-empty list.")
     if any(isinstance(level, bool) or not isinstance(level, int) for level in checkpoints):
-        raise BlueprintError("campaign.yaml: checkpoints must contain only integers.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: checkpoints must contain only integers.")
     if checkpoints != sorted(set(checkpoints)) or checkpoints[0] != 1 or checkpoints[-1] != cap:
-        raise BlueprintError(  # noqa: TRY003
+        raise BlueprintError(
             "campaign.yaml: checkpoints must be sorted, unique, and span from 1 to level_cap."
         )
     if any(level < 1 or level > cap for level in checkpoints):
-        raise BlueprintError("campaign.yaml: every checkpoint must fall within 1..level_cap.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: every checkpoint must fall within 1..level_cap.")
 
     minimums = raw["minimums"]
     if not isinstance(minimums, dict):
-        raise BlueprintError("campaign.yaml: 'minimums' must be a mapping.")  # noqa: TRY003
+        raise BlueprintError("campaign.yaml: 'minimums' must be a mapping.")
     missing = [key for key in _MINIMUM_KEYS if key not in minimums]
     if missing:
-        raise BlueprintError(f"campaign.yaml: minimums missing {', '.join(missing)}.")  # noqa: TRY003
+        raise BlueprintError(f"campaign.yaml: minimums missing {', '.join(missing)}.")
     for key in _MINIMUM_KEYS:
         value = minimums[key]
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-            raise BlueprintError(f"campaign.yaml: minimums.{key} must be a positive integer.")  # noqa: TRY003
+            raise BlueprintError(f"campaign.yaml: minimums.{key} must be a positive integer.")
     return raw
 
 

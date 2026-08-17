@@ -26,7 +26,7 @@ class _CalibrationFault(Exception):  # noqa: N818
 
 def _calibrate_once(rng: Callable[[], float]) -> str:
     if rng() < 0.6:  # transient failure most of the time  # noqa: PLR2004
-        raise _CalibrationFault("the coil slipped")  # noqa: TRY003
+        raise _CalibrationFault("the coil slipped")
     return "aligned"
 
 

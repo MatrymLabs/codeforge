@@ -29,7 +29,7 @@ class AlwaysOk:
 
 class AlwaysFail:
     def __call__(self, record: OutboxRecord) -> None:
-        raise RuntimeError("broker down")  # noqa: TRY003
+        raise RuntimeError("broker down")
 
 
 class FailThenOk:

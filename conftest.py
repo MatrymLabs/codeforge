@@ -36,9 +36,9 @@ def _isolated_database(tmp_path, monkeypatch):
       process. The tests still prove hash/verify/rotate LOGIC, just not the 600k
       strength (that's a production config, not a behavior).
     """
-    from kernel.shelf import loader_cache  # noqa: PLC0415
-    from kernel.world import accounts, db  # noqa: PLC0415
-    from kernel.world.session import SESSIONS  # noqa: PLC0415
+    from kernel.shelf import loader_cache
+    from kernel.world import accounts, db
+    from kernel.world.session import SESSIONS
 
     # The shared parse-once cache is keyed by resolved path + mtime; clear it so a tmp file
     # reused across tests (same path, coarse mtime granularity) can never serve stale data.
@@ -63,7 +63,7 @@ def _isolated_database(tmp_path, monkeypatch):
     # (no longer an empty vault), a test that reads it with the default root would depend on the
     # committed ledger's contents. Quarantine root=None into tmp, so tests see an empty store unless
     # they populate their own; a test that means to read the real ledger passes an explicit root.
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     _real_ledger_path = chronicle._ledger_path
     _repo_root = Path(chronicle.__file__).resolve().parent.parent
@@ -79,6 +79,6 @@ def _isolated_database(tmp_path, monkeypatch):
 
     # Combat variance rolls a die on every blow (miss/glance/crit). Neutralize it suite-wide so the
     # deterministic damage assertions stay exact; a variance test installs its own forcing RNG.
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _NeutralRng())

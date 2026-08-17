@@ -36,14 +36,14 @@ def load_waystones(path: Path) -> dict[str, dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("waystones.yaml must be a mapping of hub room-id to config.")  # noqa: TRY003
+        raise BlueprintError("waystones.yaml must be a mapping of hub room-id to config.")
     stones: dict[str, dict[str, Any]] = {}
     for room, cfg in raw.items():
         if not isinstance(cfg, dict) or "name" not in cfg or "level" not in cfg:
-            raise BlueprintError(f"waystone {room!r} needs a 'name' and a 'level'.")  # noqa: TRY003
+            raise BlueprintError(f"waystone {room!r} needs a 'name' and a 'level'.")
         level = cfg["level"]
         if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:  # noqa: PLR2004
-            raise BlueprintError(  # noqa: TRY003
+            raise BlueprintError(
                 f"waystone {room!r}: 'level' must be an int 1..300, got {level!r}."
             )
         stones[room] = {"name": str(cfg["name"]), "level": level}
@@ -87,7 +87,7 @@ def travel(session: Session, arg: str, stones: dict[str, dict[str, Any]]) -> str
     session.coins -= cost
     session.location = dest
     if session.named:
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)
     name = stones[dest]["name"]
@@ -99,7 +99,7 @@ def travel(session: Session, arg: str, stones: dict[str, dict[str, Any]]) -> str
     # beat is reaching a hub -- advance when you cross the world the intended way, not only on
     # foot. Without it, waystone travel teleported past every on_enter beat and the main road
     # never ticked. The lazy import breaks the quest <-> travel cycle.
-    from kernel.world.quest import on_event  # noqa: PLC0415
+    from kernel.world.quest import on_event
 
     beat = on_event(session, "enter", dest)
     return f"{arrival}\n{beat}" if beat else arrival
@@ -126,8 +126,8 @@ def route(session: Session, arg: str) -> str:
     The world is a directed graph (rooms, exits); the shortest path is computed by the navigation
     kernel (kernel.world.navigation), which uses the native Rust accelerator `codeforge_nav` when
     built and a pure-Python fallback otherwise. Fails cleanly on an unknown room or no route."""
-    from kernel.world.navigation import world_navgraph  # noqa: PLC0415
-    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.navigation import world_navgraph
+    from kernel.world.world import WORLD
 
     target = arg.strip().lower()
     if not target:

@@ -49,7 +49,7 @@ def discover_imports(source_path: Path) -> list[str]:
     try:
         tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
     except (OSError, SyntaxError) as exc:
-        raise AssemblyError(f"cannot parse {source_path}: {exc}") from exc  # noqa: TRY003
+        raise AssemblyError(f"cannot parse {source_path}: {exc}") from exc
 
     # Keep the FULL dotted module (not just parts.X): a Hardware Store part on a shelf is
     # kernel.shelf.statemachine, and truncating to kernel.shelf would lose which part it is. Flat
@@ -95,7 +95,7 @@ def assemble(manifest: PartManifest, root: Path | None = None) -> Assembly:
     # verify source file exists
     source_path = base / manifest.source
     if not source_path.exists():
-        raise AssemblyError(f"source file missing: {manifest.source}")  # noqa: TRY003
+        raise AssemblyError(f"source file missing: {manifest.source}")
 
     # discover imports from the main source + all adapters
     all_sources = [manifest.source] + list(manifest.adapters)  # noqa: RUF005
@@ -104,7 +104,7 @@ def assemble(manifest: PartManifest, root: Path | None = None) -> Assembly:
     for src in all_sources:
         src_path = base / src
         if not src_path.exists():
-            raise AssemblyError(f"source/adapter file missing: {src}")  # noqa: TRY003
+            raise AssemblyError(f"source/adapter file missing: {src}")
         source_files.append(src)
         all_imports.update(discover_imports(src_path))
 
@@ -113,7 +113,7 @@ def assemble(manifest: PartManifest, root: Path | None = None) -> Assembly:
     for test in manifest.tests:
         test_path = base / test
         if not test_path.exists():
-            raise AssemblyError(f"test file missing: {test}")  # noqa: TRY003
+            raise AssemblyError(f"test file missing: {test}")
         test_files.append(test)
 
     # resolve imports against catalog

@@ -81,7 +81,7 @@ def _pairs(raw: Any, name: str, genome_id: str) -> tuple[tuple[str, str], ...]:
         for key, value in items:
             out.append((str(key), str(value)))
     except (TypeError, ValueError) as exc:
-        raise GenomeError(f"genome {genome_id!r}: '{name}' must be pairs of (key, value)") from exc  # noqa: TRY003
+        raise GenomeError(f"genome {genome_id!r}: '{name}' must be pairs of (key, value)") from exc
     return tuple(out)
 
 
@@ -89,23 +89,23 @@ def _strs(raw: Any, name: str, genome_id: str) -> tuple[str, ...]:
     if raw is None:
         return ()
     if isinstance(raw, str) or not hasattr(raw, "__iter__"):
-        raise GenomeError(f"genome {genome_id!r}: '{name}' must be a list of strings")  # noqa: TRY003
+        raise GenomeError(f"genome {genome_id!r}: '{name}' must be a list of strings")
     return tuple(str(item) for item in raw)
 
 
 def from_dict(raw: Any) -> BlueprintGenome:
     """Parse a genome from a plain dict (the JSON shape). A bad field fails loud."""
     if not isinstance(raw, dict):
-        raise GenomeError("a genome record must be a mapping")  # noqa: TRY003
+        raise GenomeError("a genome record must be a mapping")
     genome_id = str(raw.get("genome_id", "")).strip()
     if not genome_id:
-        raise GenomeError("genome record missing 'genome_id'")  # noqa: TRY003
+        raise GenomeError("genome record missing 'genome_id'")
     if "seed" not in raw:
-        raise GenomeError(f"genome {genome_id!r}: missing 'seed' (the Blueprint)")  # noqa: TRY003
+        raise GenomeError(f"genome {genome_id!r}: missing 'seed' (the Blueprint)")
     try:
         seed = bp.from_dict(raw["seed"])
     except bp.BlueprintError as exc:
-        raise GenomeError(f"genome {genome_id!r}: seed is not a valid Blueprint: {exc}") from exc  # noqa: TRY003
+        raise GenomeError(f"genome {genome_id!r}: seed is not a valid Blueprint: {exc}") from exc
     return BlueprintGenome(
         genome_id=genome_id,
         seed=seed,

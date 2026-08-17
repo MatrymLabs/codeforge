@@ -51,7 +51,7 @@ def _core_files(shelf_dir: Path) -> list[Path]:
     # consumed from the Hardware Store is not this engine's to redistribute: pouring it would put
     # PRT-0007's contract into a public package that carries no card for it and claims a provenance
     # it does not have. The engine consumes the Part; it does not resell it.
-    from kernel.hardware import VENDORED_CORES  # noqa: PLC0415
+    from kernel.hardware import VENDORED_CORES
 
     return [
         p
@@ -69,7 +69,7 @@ def _reaches_engine(source: str, where: str) -> bool:
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
-        raise ShelfPourError(f"cannot parse {where}: {exc}") from exc  # noqa: TRY003
+        raise ShelfPourError(f"cannot parse {where}: {exc}") from exc
     for node in ast.walk(tree):
         mods: list[str] = []
         if isinstance(node, ast.ImportFrom) and node.module:
@@ -98,7 +98,7 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
         try:
             tree = ast.parse(py.read_text(encoding="utf-8"), filename=str(py))
         except SyntaxError as exc:
-            raise ShelfPourError(f"cannot parse {py}: {exc}") from exc  # noqa: TRY003
+            raise ShelfPourError(f"cannot parse {py}: {exc}") from exc
         for node in ast.walk(tree):
             names: list[str] = []
             if isinstance(node, ast.Import):
@@ -469,7 +469,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     tests_src = shelf_dir.parent.parent / "tests" if shelf_dir is not None else _ROOT / "tests"
     cores = _core_files(src)
     if not cores:
-        raise ShelfPourError(f"no shelf cores found under {src}")  # noqa: TRY003
+        raise ShelfPourError(f"no shelf cores found under {src}")
     deps = shelf_third_party_deps(src)
     twins, held = poolable_twins(src, tests_src)
     # test deps = what the poured twins import beyond the runtime deps (e.g. pytest, hypothesis)

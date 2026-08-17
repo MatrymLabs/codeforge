@@ -203,8 +203,8 @@ def test_a_hyphenated_keyword_is_not_mistaken_for_an_ordinal():
 def test_take_ordinal_reaches_through_the_engine_tick():
     """A verb is not wired until handle_command proves it reachable: the `take 2-<kw>` ordinal path
     must survive the tick, not just a direct call to take()."""
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.session import Session
 
     room = "forge"
     first = items.clone("copper_key", room)
@@ -258,8 +258,8 @@ def test_the_tick_shows_the_purse_a_kill_announced() -> None:
     command. The only `coins` in the parser is `trade coins`, which offers money rather than
     counting it.
     """
-    import forge  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    import forge
+    from kernel.world.session import Session
 
     s = Session(player_id="rich")
     forge.handle_command(s, "job vanguard")

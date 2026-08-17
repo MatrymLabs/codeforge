@@ -382,13 +382,13 @@ def test_mint_always_fills_the_lowest_gap(used_sequences):
 def test_every_module_is_tested_by_a_twin_or_an_aggregate():
     # The test-twin convention, enforced: every parts module has a 1:1 twin OR is imported by
     # some test (an aggregate twin). Sibling of the unfiled-modules completeness gate.
-    from kernel.registry import untwinned_modules  # noqa: PLC0415
+    from kernel.registry import untwinned_modules
 
     assert untwinned_modules() == []
 
 
 def test_untwinned_modules_flags_a_module_no_test_touches(tmp_path):
-    from kernel.registry import untwinned_modules  # noqa: PLC0415
+    from kernel.registry import untwinned_modules
 
     (tmp_path / "parts").mkdir()
     (tmp_path / "parts" / "lonely.py").write_text("x = 1\n")

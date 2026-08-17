@@ -71,7 +71,7 @@ def test_a_partial_artifact_fails_loud(tmp_path):
 
 
 def test_emit_files_release_to_arc_evidence_and_evidence_to_the_chronicle(tmp_path):
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     filed = emit("abc123", root=tmp_path, runner=lambda check: True)
     # release stays a dated arc-evidence/ verdict; evidence moved to the Chronicle (slice 1b).
@@ -83,7 +83,7 @@ def test_emit_files_release_to_arc_evidence_and_evidence_to_the_chronicle(tmp_pa
 
 
 def test_emit_records_a_failing_check_as_blocked(tmp_path):
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     # security fails -> release blocked; evidence (tests+coverage) still ready in the Chronicle.
     emit("abc123", root=tmp_path, runner=lambda check: check != "security")
@@ -122,9 +122,9 @@ def test_a_well_formed_artifact_without_a_source_fails_loud(tmp_path):
 
 def test_console_runner_maps_an_allowlisted_result_to_a_bool(monkeypatch):
     # The default runner is the safe console runner; here we prove the mapping without a subprocess.
-    from types import SimpleNamespace  # noqa: PLC0415
+    from types import SimpleNamespace
 
-    import kernel.arc_ledger as mod  # noqa: PLC0415
+    import kernel.arc_ledger as mod
 
     monkeypatch.setattr(
         "kernel.shelf.console.run",
@@ -135,7 +135,7 @@ def test_console_runner_maps_an_allowlisted_result_to_a_bool(monkeypatch):
 
 
 def test_main_usage_is_refused_without_the_emit_verb(capsys):
-    from kernel.arc_ledger import main  # noqa: PLC0415
+    from kernel.arc_ledger import main
 
     assert main([]) == 2
     assert main(["wibble"]) == 2
@@ -143,7 +143,7 @@ def test_main_usage_is_refused_without_the_emit_verb(capsys):
 
 
 def test_main_emit_files_and_reports(monkeypatch, capsys, tmp_path):
-    import kernel.arc_ledger as mod  # noqa: PLC0415
+    import kernel.arc_ledger as mod
 
     monkeypatch.setattr(mod, "emit", lambda commit: [tmp_path / "2026-07-13-release.json"])
     assert mod.main(["emit", "abc123"]) == 0

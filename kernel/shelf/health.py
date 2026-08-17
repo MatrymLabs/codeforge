@@ -53,7 +53,7 @@ class HealthRegistry:
     def register(self, name: str, check: Check) -> None:
         """Add a named check. Raises HealthCheckError on a duplicate name."""
         if name in self._checks:
-            raise HealthCheckError(f"a check named {name!r} is already registered")  # noqa: TRY003
+            raise HealthCheckError(f"a check named {name!r} is already registered")
         self._checks[name] = check
 
     def run(self) -> list[HealthResult]:

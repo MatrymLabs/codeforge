@@ -73,7 +73,7 @@ def test_a_malformed_register_fails_loud() -> None:
 
 
 def test_the_cli_writes_a_json_list_of_findings(tmp_path) -> None:
-    import yaml  # noqa: PLC0415
+    import yaml
 
     rd_home = tmp_path / "rd"
     register_path = rd_home / "04-verdicts" / "CANDIDATE_REGISTER.yaml"
@@ -87,7 +87,7 @@ def test_the_cli_writes_a_json_list_of_findings(tmp_path) -> None:
 
 def test_the_projector_and_client_parser_accept_the_export() -> None:
     # the whole point: the export is exactly what research_findings emits and the client parses
-    from kernel.seedlab.workspace_gmcp import research_findings  # noqa: PLC0415
+    from kernel.seedlab.workspace_gmcp import research_findings
 
     payload = research_findings(export.export_findings(_REGISTER), seed="codeforge")
     assert payload["finding_count"] == 2

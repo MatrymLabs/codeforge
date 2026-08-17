@@ -31,7 +31,7 @@ def test_a_missing_attribute_reads_zero() -> None:
 
 
 def test_derived_still_matches_the_ruleset() -> None:
-    from kernel.world.derived import derived_stats  # noqa: PLC0415
+    from kernel.world.derived import derived_stats
 
     assert derived_stats(_TEN, 5) == apply_ruleset(DEFAULT_RULESET, _TEN, 5)
 

@@ -57,7 +57,7 @@ def test_swearing_the_same_order_twice_is_a_gentle_no_op():
 
 
 def test_join_is_reachable_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _hero()
     reply = handle_command(s, "join knowing")

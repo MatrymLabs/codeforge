@@ -76,9 +76,9 @@ class Outbox:
     def stage(self, topic: str, payload: bytes) -> OutboxRecord:
         """Stage a message. In production this runs inside the state-change transaction."""
         if not isinstance(topic, str) or topic.strip() == "":
-            raise OutboxError("topic must be a non-empty string")  # noqa: TRY003
+            raise OutboxError("topic must be a non-empty string")
         if not isinstance(payload, (bytes, bytearray)):
-            raise OutboxError("payload must be bytes")  # noqa: TRY003
+            raise OutboxError("payload must be bytes")
         record = OutboxRecord(
             id=self._id(),
             topic=topic,
@@ -95,7 +95,7 @@ class Outbox:
         try:
             return self._records[record_id]
         except KeyError:
-            raise OutboxError(f"unknown outbox record: {record_id!r}") from None  # noqa: TRY003
+            raise OutboxError(f"unknown outbox record: {record_id!r}") from None
 
     def unsent(self) -> list[OutboxRecord]:
         """Pending records in stage order (the relay's work list)."""
@@ -105,13 +105,13 @@ class Outbox:
         """Idempotent: marking a sent record again is a no-op."""
         record = self.get(record_id)
         if record.status == DEAD:
-            raise OutboxError(f"cannot mark a dead record sent: {record_id!r}")  # noqa: TRY003
+            raise OutboxError(f"cannot mark a dead record sent: {record_id!r}")
         record.status = SENT
 
     def mark_failed(self, record_id: str, *, max_attempts: int) -> str:
         """Record a failed publish attempt; route to dead at the bound. Returns new status."""
         if not isinstance(max_attempts, int) or max_attempts <= 0:
-            raise OutboxError("max_attempts must be a positive int")  # noqa: TRY003
+            raise OutboxError("max_attempts must be a positive int")
         record = self.get(record_id)
         if record.status != PENDING:
             return record.status
@@ -138,9 +138,9 @@ def relay(
     route to dead at max_attempts. A publish that raises is caught, never propagated.
     """
     if not isinstance(batch, int) or batch <= 0:
-        raise OutboxError("batch must be a positive int")  # noqa: TRY003
+        raise OutboxError("batch must be a positive int")
     if not isinstance(max_attempts, int) or max_attempts <= 0:
-        raise OutboxError("max_attempts must be a positive int")  # noqa: TRY003
+        raise OutboxError("max_attempts must be a positive int")
     summary = RelaySummary()
     for record in outbox.unsent()[:batch]:
         try:

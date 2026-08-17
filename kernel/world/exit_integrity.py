@@ -96,7 +96,7 @@ def inspect_exits(rooms: Mapping[str, Mapping[str, Any]]) -> ExitVerdict:
 
 def check_paths(paths: Sequence[Path]) -> ExitVerdict:
     """Load each requested seed and combine its exit-integrity findings."""
-    from kernel.world.seed import load_rooms  # noqa: PLC0415
+    from kernel.world.seed import load_rooms
 
     accidental: list[Exit] = []
     declared: list[Exit] = []
@@ -109,7 +109,7 @@ def check_paths(paths: Sequence[Path]) -> ExitVerdict:
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the real-seed gate, exiting nonzero only for accidental one-way exits."""
-    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

@@ -101,7 +101,7 @@ class SeedIdentity:
         for field_name in ("seed_id", "name", "owner"):
             value = getattr(self, field_name)
             if not isinstance(value, str) or not value.strip():
-                raise BlueprintKernelError(f"a Seed needs a non-empty {field_name}")  # noqa: TRY003
+                raise BlueprintKernelError(f"a Seed needs a non-empty {field_name}")
         # Persisted JSON restores a list; coerce to a tuple so identity stays frozen + hashable.
         object.__setattr__(self, "domain_modules", tuple(self.domain_modules))
 
@@ -139,7 +139,7 @@ class BlueprintRecord:
             audit = tuple(AuditEvent(**e) for e in data.get("audit", []))
             status = data.get("status", CREATED)
             if status not in _STATUSES:
-                raise BlueprintKernelError(f"unknown persisted status {status!r}")  # noqa: TRY003
+                raise BlueprintKernelError(f"unknown persisted status {status!r}")
             return cls(
                 identity=identity,
                 status=status,
@@ -148,7 +148,7 @@ class BlueprintRecord:
                 audit=audit,
             )
         except (KeyError, TypeError) as exc:
-            raise BlueprintKernelError(f"malformed Seed record: {exc}") from exc  # noqa: TRY003
+            raise BlueprintKernelError(f"malformed Seed record: {exc}") from exc
 
 
 @runtime_checkable
@@ -220,7 +220,7 @@ class FileSeedStore:
         try:
             return BlueprintRecord.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
-            raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc  # noqa: TRY003
+            raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc
 
     def all(self) -> list[BlueprintRecord]:
         out: list[BlueprintRecord] = []
@@ -250,7 +250,7 @@ class BlueprintKernel:
     def get(self, seed_id: str) -> BlueprintRecord:
         record = self._store.load(seed_id)
         if record is None:
-            raise SeedNotFound(f"no Seed with id {seed_id!r}")  # noqa: TRY003
+            raise SeedNotFound(f"no Seed with id {seed_id!r}")
         return record
 
     def list_seeds(self) -> list[BlueprintRecord]:
@@ -276,10 +276,10 @@ class BlueprintKernel:
         `product_type`/`domain_modules` carry the Engineering Form's verdict onto the Seed (empty
         when a Seed is minted directly)."""
         if not name or not name.strip():
-            raise BlueprintKernelError("a Seed needs a non-empty name")  # noqa: TRY003
+            raise BlueprintKernelError("a Seed needs a non-empty name")
         chosen = seed_id or self._mint(name)
         if self._store.load(chosen) is not None:
-            raise BlueprintKernelError(f"a Seed with id {chosen!r} already exists")  # noqa: TRY003
+            raise BlueprintKernelError(f"a Seed with id {chosen!r} already exists")
         now = self._clock()
         identity = SeedIdentity(
             seed_id=chosen,
@@ -327,7 +327,7 @@ class BlueprintKernel:
         if current is not None:
             self._authorize(current, actor)
             if record.identity.owner != current.identity.owner:
-                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")  # noqa: TRY003
+                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")
         else:
             self._authorize(record, actor)
         now = self._clock()
@@ -352,7 +352,7 @@ class BlueprintKernel:
         record = self.get(seed_id)
         self._authorize(record, actor)
         if new_status not in _TRANSITIONS[record.status]:
-            raise SeedLifecycleError(f"cannot {action} a {record.status} Seed (id {seed_id!r})")  # noqa: TRY003
+            raise SeedLifecycleError(f"cannot {action} a {record.status} Seed (id {seed_id!r})")
         now = self._clock()
         evolved = replace(
             record,
@@ -368,7 +368,7 @@ class BlueprintKernel:
     def _authorize(record: BlueprintRecord, actor: str) -> None:
         """Least privilege: only the Seed's owner may operate it. The Kernel is a control plane."""
         if actor != record.identity.owner:
-            raise SeedAuthError(  # noqa: TRY003
+            raise SeedAuthError(
                 f"actor {actor!r} is not the owner of Seed {record.identity.seed_id!r}"
             )
 
@@ -405,7 +405,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
       python3 -m kernel.seedlab.kernel status <seed_id>
       python3 -m kernel.seedlab.kernel start|stop|archive <seed_id> <actor>
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(argv if argv is not None else sys.argv[1:])
     if not args:

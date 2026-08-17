@@ -139,7 +139,7 @@ def scale_budgets(genome: BlueprintGenome, *, factor: float = 0.9) -> BlueprintG
     tighter is actually better - this only offers the variant.
     """
     if not 0 < factor < 1:
-        raise MutationError(f"scale factor must be in (0, 1), got {factor}")  # noqa: TRY003
+        raise MutationError(f"scale factor must be in (0, 1), got {factor}")
     scaled: list[tuple[str, str]] = []
     touched = False
     for metric, value in genome.resource_budgets:
@@ -201,7 +201,7 @@ def propose_variants(genome: BlueprintGenome, *, factor: float = 0.9) -> list[Bl
     try:
         validate_genome(genome)
     except GenomeError as exc:
-        raise MutationError(f"cannot mutate an invalid seed genome: {exc}") from exc  # noqa: TRY003
+        raise MutationError(f"cannot mutate an invalid seed genome: {exc}") from exc
     proposals = [*drop_dependency(genome), *harden_dependency(genome)]
     tighter = scale_budgets(genome, factor=factor)
     if tighter is not None:
@@ -215,7 +215,7 @@ def propose_crossovers(population: list[BlueprintGenome]) -> list[BlueprintGenom
         try:
             validate_genome(g)
         except GenomeError as exc:
-            raise MutationError(f"cannot cross an invalid genome {g.genome_id!r}: {exc}") from exc  # noqa: TRY003
+            raise MutationError(f"cannot cross an invalid genome {g.genome_id!r}: {exc}") from exc
     out: list[BlueprintGenome] = []
     for i, a in enumerate(population):
         for b in population[i + 1 :]:

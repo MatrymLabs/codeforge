@@ -305,7 +305,7 @@ def test_reset_only_touches_its_own_area(monkeypatch):
 def test_merged_zones_adds_the_spiral_areas_only_when_a_spiral_seed_opts_in():
     """The generated Road's marches become named areas alongside the seed's own -- but only when the
     seed ships a spiral.yaml. With no spiral config, the authored areas are returned unchanged."""
-    from kernel.world.zones import merged_zones  # noqa: PLC0415
+    from kernel.world.zones import merged_zones
 
     base = {"coast": {"name": "C", "rooms": ["shore"], "reset_mode": "never", "beats_between": 9}}
     assert merged_zones(base, None) == base  # no spiral: unchanged
@@ -460,7 +460,7 @@ def test_a_wanderer_at_its_instance_ceiling_is_skipped_not_a_crash(monkeypatch):
     _wander_world(monkeypatch, _wanderer())
 
     def _ceiling(*_a, **_k):
-        raise items.ItemError("at the instance ceiling")  # noqa: TRY003
+        raise items.ItemError("at the instance ceiling")
 
     monkeypatch.setattr(items, "clone", _ceiling)
     zones._perform_reset("z")  # the ceiling is swallowed: no crash, nothing spawned
@@ -476,7 +476,7 @@ def _seasonal_wanderer(seasons: list[str]) -> Item:
 
 
 def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
-    import kernel.world.climate as climate  # noqa: PLC0415, PLR0402
+    import kernel.world.climate as climate # noqa: PLR0402
 
     _wander_world(monkeypatch, _seasonal_wanderer(["winter"]))
     monkeypatch.setattr(climate, "_beat", 0)  # beat 0 -> spring (not winter)
@@ -491,7 +491,7 @@ def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
 
 
 def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
-    import kernel.world.climate as climate  # noqa: PLC0415, PLR0402
+    import kernel.world.climate as climate # noqa: PLR0402
 
     _wander_world(monkeypatch, _wanderer())  # no seasons -> unconditional
     monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH)  # summer
@@ -500,7 +500,7 @@ def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
 
 
 def test_seasons_must_be_valid_and_need_a_pool(tmp_path):
-    from kernel.world.climate import SEASONS  # noqa: PLC0415
+    from kernel.world.climate import SEASONS
 
     assert "winter" in SEASONS
     bad_value = "t:\n  location: nowhere\n  spawn_pool: [a]\n  seasons: [monsoon]\n"

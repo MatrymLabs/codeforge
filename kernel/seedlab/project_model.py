@@ -40,9 +40,9 @@ class Provenance:
 
     def __post_init__(self) -> None:
         if not self.source_id or not self.source_id.strip():
-            raise BlueprintLabError("provenance needs a non-empty source_id")  # noqa: TRY003
+            raise BlueprintLabError("provenance needs a non-empty source_id")
         if self.visibility not in ("public", "private", "unknown"):
-            raise BlueprintLabError(  # noqa: TRY003
+            raise BlueprintLabError(
                 f"visibility must be public/private/unknown, got {self.visibility!r}"
             )
 
@@ -100,7 +100,7 @@ class ProjectModel:
                 unknowns=list(data.get("unknowns", [])),
             )
         except (KeyError, TypeError) as exc:
-            raise BlueprintLabError(f"malformed project model: {exc}") from exc  # noqa: TRY003
+            raise BlueprintLabError(f"malformed project model: {exc}") from exc
 
 
 @runtime_checkable
@@ -132,11 +132,11 @@ def _string_list(spec: dict, key: str) -> list[str]:
     """Read `key` as a list of non-empty strings, failing loud on the wrong shape."""
     raw = spec.get(key, [])
     if not isinstance(raw, list):
-        raise BlueprintLabError(f"'{key}' must be a list, got {type(raw).__name__}")  # noqa: TRY003
+        raise BlueprintLabError(f"'{key}' must be a list, got {type(raw).__name__}")
     out: list[str] = []
     for item in raw:
         if not isinstance(item, str) or not item.strip():
-            raise BlueprintLabError(f"'{key}' entries must be non-empty strings, got {item!r}")  # noqa: TRY003
+            raise BlueprintLabError(f"'{key}' entries must be non-empty strings, got {item!r}")
         out.append(item.strip())
     return out
 
@@ -145,16 +145,16 @@ def _relationships(spec: dict) -> list[Relationship]:
     """Read `relationships` as [subject, verb, object] triples, failing loud on a bad triple."""
     raw = spec.get("relationships", [])
     if not isinstance(raw, list):
-        raise BlueprintLabError(f"'relationships' must be a list, got {type(raw).__name__}")  # noqa: TRY003
+        raise BlueprintLabError(f"'relationships' must be a list, got {type(raw).__name__}")
     rels: list[Relationship] = []
     for triple in raw:
         if not isinstance(triple, (list, tuple)) or len(triple) != 3:  # noqa: PLR2004
-            raise BlueprintLabError(  # noqa: TRY003
+            raise BlueprintLabError(
                 f"each relationship must be a [subject, verb, object] triple: {triple!r}"
             )
         subject, verb, obj = triple
         if not all(isinstance(x, str) and x.strip() for x in (subject, verb, obj)):
-            raise BlueprintLabError(f"relationship parts must be non-empty strings: {triple!r}")  # noqa: TRY003
+            raise BlueprintLabError(f"relationship parts must be non-empty strings: {triple!r}")
         rels.append(Relationship(subject.strip(), verb.strip(), obj.strip()))
     return rels
 
@@ -164,10 +164,10 @@ def extract_model(source: ProjectSource) -> ProjectModel:
     Fails loud (BlueprintLabError) on a bad spec -- a model is only as trustworthy as its source."""
     spec = source.spec()
     if not isinstance(spec, dict):
-        raise BlueprintLabError(f"a project spec must be a mapping, got {type(spec).__name__}")  # noqa: TRY003
+        raise BlueprintLabError(f"a project spec must be a mapping, got {type(spec).__name__}")
     identity = spec.get("identity")
     if not isinstance(identity, str) or not identity.strip():
-        raise BlueprintLabError("a project spec needs a non-empty 'identity'")  # noqa: TRY003
+        raise BlueprintLabError("a project spec needs a non-empty 'identity'")
     return ProjectModel(
         identity=identity.strip(),
         provenance=source.provenance(),

@@ -67,7 +67,7 @@ def _slug(region: str) -> str:
     """A lowercase-hyphenated world_id from a region name (the manifest's id rule)."""
     slug = _ID_RE.sub("-", region.strip().lower()).strip("-")
     if not slug:
-        raise HostedWorldError(f"region {region!r} has no hostable world_id")  # noqa: TRY003
+        raise HostedWorldError(f"region {region!r} has no hostable world_id")
     return slug
 
 
@@ -115,7 +115,7 @@ def install_world(
     # Validate the identity through the engine's OWN gate: a bad id/title/start_room fails loud in
     # describe_world. The declared spawn is the seed's first room BY CONSTRUCTION (start-first);
     # the test proves that independently with the engine's check_world.
-    from kernel.world.world_manifest import WorldManifestError, describe_world  # noqa: PLC0415
+    from kernel.world.world_manifest import WorldManifestError, describe_world
 
     files = tuple(sorted([*linked.files, "world.yaml"]))
     try:

@@ -44,7 +44,7 @@ def journey_from_form(spec: BlueprintSpec) -> GameSpec:
 
     honour -- instancing is a valid mode WITHIN the one MMORPG; the region content is the same."""
     if spec.product_type != _PRODUCT_TYPE:
-        raise JourneyFormError(f"not a journey spec: product type is {spec.product_type!r}")  # noqa: TRY003
+        raise JourneyFormError(f"not a journey spec: product type is {spec.product_type!r}")
     region = str(spec.answers.get("region", "")).strip()
     waypoints = [w.strip() for w in str(spec.answers.get("waypoints", "")).split(",") if w.strip()]
     return journey_region(region, waypoints)

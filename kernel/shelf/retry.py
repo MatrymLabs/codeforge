@@ -52,9 +52,9 @@ class Attempt:
 
 def _finite_nonneg(name: str, value: float) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
-        raise RetryError(f"{name} must be a finite number, got {value!r}")  # noqa: TRY003
+        raise RetryError(f"{name} must be a finite number, got {value!r}")
     if value < 0:
-        raise RetryError(f"{name} must be non-negative, got {value}")  # noqa: TRY003
+        raise RetryError(f"{name} must be non-negative, got {value}")
     return float(value)
 
 
@@ -71,15 +71,15 @@ class RetryPolicy:
 
     def __post_init__(self) -> None:
         if not isinstance(self.max_attempts, int) or isinstance(self.max_attempts, bool):
-            raise RetryError(f"max_attempts must be an int, got {self.max_attempts!r}")  # noqa: TRY003
+            raise RetryError(f"max_attempts must be an int, got {self.max_attempts!r}")
         if self.max_attempts < 1:
-            raise RetryError(f"max_attempts must be >= 1, got {self.max_attempts}")  # noqa: TRY003
+            raise RetryError(f"max_attempts must be >= 1, got {self.max_attempts}")
         _finite_nonneg("base_delay", self.base_delay)
         _finite_nonneg("max_delay", self.max_delay)
         if not math.isfinite(self.factor) or self.factor < 1:
-            raise RetryError(f"factor must be >= 1, got {self.factor}")  # noqa: TRY003
+            raise RetryError(f"factor must be >= 1, got {self.factor}")
         if not self.retry_on:
-            raise RetryError("retry_on must name at least one exception type")  # noqa: TRY003
+            raise RetryError("retry_on must name at least one exception type")
 
     def is_transient(self, exc: BaseException) -> bool:
         """True if `exc` is one the policy will retry."""

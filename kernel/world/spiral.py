@@ -95,26 +95,26 @@ def load_spiral_config(path: Path) -> dict[str, Any] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("spiral.yaml must be a mapping of config keys.")  # noqa: TRY003
+        raise BlueprintError("spiral.yaml must be a mapping of config keys.")
     required = ("attach", "first_coil", "base_level", "levels_per_coil", "top_level")
     missing = [k for k in required if k not in raw]
     if missing:
-        raise BlueprintError(f"spiral.yaml is missing required key(s): {', '.join(missing)}.")  # noqa: TRY003
+        raise BlueprintError(f"spiral.yaml is missing required key(s): {', '.join(missing)}.")
     if not isinstance(raw["attach"], str):
-        raise BlueprintError("spiral.yaml 'attach' must be a room label (string).")  # noqa: TRY003
+        raise BlueprintError("spiral.yaml 'attach' must be a room label (string).")
     for key in ("first_coil", "base_level", "levels_per_coil", "top_level"):
         value = raw[key]
         if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-            raise BlueprintError(f"spiral.yaml '{key}' must be a positive integer, got {value!r}.")  # noqa: TRY003
+            raise BlueprintError(f"spiral.yaml '{key}' must be a positive integer, got {value!r}.")
     if raw["levels_per_coil"] < 1:
-        raise BlueprintError("spiral.yaml 'levels_per_coil' must be >= 1 (the road must deepen).")  # noqa: TRY003
+        raise BlueprintError("spiral.yaml 'levels_per_coil' must be >= 1 (the road must deepen).")
     if not raw["base_level"] <= raw["top_level"] <= LEVEL_MAX:
-        raise BlueprintError(  # noqa: TRY003
+        raise BlueprintError(
             f"spiral.yaml needs base_level <= top_level <= {LEVEL_MAX} "
             f"(got base {raw['base_level']}, top {raw['top_level']})."
         )
     if "summit_drop" in raw and not isinstance(raw["summit_drop"], str):
-        raise BlueprintError("spiral.yaml 'summit_drop' must be an item label (string).")  # noqa: TRY003
+        raise BlueprintError("spiral.yaml 'summit_drop' must be an item label (string).")
     return raw
 
 
@@ -192,7 +192,7 @@ def generate_spiral(
     seed bug, not a silent no-op."""
     attach = config["attach"]
     if attach not in existing_rooms:
-        raise BlueprintError(  # noqa: TRY003
+        raise BlueprintError(
             f"spiral.yaml 'attach' names room '{attach}', which is not in this seed."
         )
     rooms: dict[str, Room] = {}

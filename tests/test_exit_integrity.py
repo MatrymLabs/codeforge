@@ -146,9 +146,9 @@ def test_a_reverse_pointing_at_a_DIFFERENT_room_is_still_accidental() -> None:  
 
 
 def test_loader_refuses_a_stale_one_way_declaration(tmp_path) -> None:
-    import pytest  # noqa: PLC0415
+    import pytest
 
-    from kernel.world.seed import BlueprintError, load_rooms  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_rooms
 
     path = tmp_path / "rooms.yaml"
     path.write_text("cellar:\n  exits: {west: workshop}\n  one_way: [east]\nworkshop:\n")
@@ -157,9 +157,9 @@ def test_loader_refuses_a_stale_one_way_declaration(tmp_path) -> None:
 
 
 def test_loader_refuses_a_named_one_way_declaration(tmp_path) -> None:
-    import pytest  # noqa: PLC0415
+    import pytest
 
-    from kernel.world.seed import BlueprintError, load_rooms  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_rooms
 
     path = tmp_path / "rooms.yaml"
     path.write_text("hub:\n  exits: {gate: other}\n  one_way: [gate]\nother:\n")

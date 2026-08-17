@@ -33,13 +33,13 @@ def test_retire_flips_the_status_and_refuses_an_unknown_asset():
 
 
 def test_one_core_powers_both_the_game_logbook_and_the_practical_registry():
-    import kernel.logbook as game  # noqa: PLC0415
+    import kernel.logbook as game
 
     reg = AssetRegistry()
     reg.register(Asset("A-1", "Laptop"))
     assert isinstance(reg._repo, InMemoryRepository)  # the practical registry uses the core
     game.reset_logbooks()
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, Session
 
     s = Session(player_id="scribe", location="courtyard")
     SESSIONS["scribe"] = s

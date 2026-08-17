@@ -223,43 +223,43 @@ HELP_TEXT = (
 
 
 def ask_architect(session: Session, prompt: str) -> str:
-    from adapters.ai_throttle import ask_architect as run  # noqa: PLC0415
+    from adapters.ai_throttle import ask_architect as run
 
     return run(session, prompt)
 
 
 def blueprint(arg: str = "") -> str:
-    from adapters.blueprint_verb import blueprint as run  # noqa: PLC0415
+    from adapters.blueprint_verb import blueprint as run
 
     return run(arg)
 
 
 def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
-    from kernel.career import career as run  # noqa: PLC0415
+    from kernel.career import career as run
 
     return run(arg, demonstrated=demonstrated)
 
 
 def console_menu() -> str:
-    from kernel.shelf.console import console_menu as run  # noqa: PLC0415
+    from kernel.shelf.console import console_menu as run
 
     return run()
 
 
 def diagnostics_view() -> str:
-    from kernel.shelf.console import diagnostics_view as run  # noqa: PLC0415
+    from kernel.shelf.console import diagnostics_view as run
 
     return run()
 
 
 def run_view(name: str) -> str:
-    from kernel.shelf.console import run_view as run  # noqa: PLC0415
+    from kernel.shelf.console import run_view as run
 
     return run(name)
 
 
 def after_action() -> str:
-    from kernel.world.encounter_log import render_recent  # noqa: PLC0415
+    from kernel.world.encounter_log import render_recent
 
     return render_recent()
 
@@ -268,91 +268,91 @@ def flush_encounters(arg: str) -> str:
     """The trusted boundary, run IN the server process by an owner: aggregate the after-action
     tallies into the Chronicle. Owner-gated on the spine, so only a trusted actor reaches it -- the
     tick never does. An optional arg supplies the commit for provenance (default 'runtime')."""
-    from kernel.encounter_flush import flush  # noqa: PLC0415
+    from kernel.encounter_flush import flush
 
     return flush(arg.strip() or "runtime")
 
 
 def evolution(arg: str = "") -> str:
-    from kernel.evolution.command import evolution as run  # noqa: PLC0415
+    from kernel.evolution.command import evolution as run
 
     return run(arg)
 
 
 def chronicle(arg: str = "") -> str:
-    from kernel.chronicle import chronicle as run  # noqa: PLC0415
+    from kernel.chronicle import chronicle as run
 
     return run(arg)
 
 
 def retention(arg: str = "") -> str:
-    from kernel.retention import retention as run  # noqa: PLC0415
+    from kernel.retention import retention as run
 
     return run(arg)
 
 
 def coupling(arg: str = "") -> str:
-    from kernel.coupling import coupling as run  # noqa: PLC0415
+    from kernel.coupling import coupling as run
 
     return run(arg)
 
 
 def forge_command(session: Session, arg: str) -> str:
-    from kernel.foundry import forge_command as run  # noqa: PLC0415
+    from kernel.foundry import forge_command as run
 
     return run(session, arg)
 
 
 def arch_command(session: Session, arg: str) -> str:
-    from kernel.foundry import arch_command as run  # noqa: PLC0415
+    from kernel.foundry import arch_command as run
 
     return run(session, arg)
 
 
 def inspect(arg: str = "") -> str:
-    from kernel.frameup import inspect as run  # noqa: PLC0415
+    from kernel.frameup import inspect as run
 
     return run(arg)
 
 
 def functions(arg: str = "") -> str:
-    from kernel.functions import functions as run  # noqa: PLC0415
+    from kernel.functions import functions as run
 
     return run(arg)
 
 
 def system_generate(session: Session, arg: str) -> str:
-    from kernel.generate import system_generate as run  # noqa: PLC0415
+    from kernel.generate import system_generate as run
 
     return run(session, arg)
 
 
 def law(arg: str = "") -> str:
-    from kernel.law import law as run  # noqa: PLC0415
+    from kernel.law import law as run
 
     return run(arg)
 
 
 def library(arg: str = "") -> str:
-    from kernel.library import library as run  # noqa: PLC0415
+    from kernel.library import library as run
 
     return run(arg)
 
 
 def pioneer(arg: str = "") -> str:
-    from kernel.pioneer import pioneer as run  # noqa: PLC0415
+    from kernel.pioneer import pioneer as run
 
     return run(arg)
 
 
 def pm_metrics() -> str:
-    from kernel.pm import pm_metrics as run  # noqa: PLC0415
+    from kernel.pm import pm_metrics as run
 
     return run()
 
 
 def pm_status() -> str:
-    from kernel.pm import pm_status as run  # noqa: PLC0415
+    from kernel.pm import pm_status as run
 
     return run()
 
@@ -363,8 +363,8 @@ def _workspace(session: Session, arg: str) -> str:
     game world owns the GMCP bus (grammar before worlds keeps it out of the platform verb), so the
     tick injects the real transport here: seedlab pushes (player_id, package, data), we fan it onto
     kernel.world.events.push_gmcp."""
-    from kernel.seedlab.workspace_verb import workspace_command  # noqa: PLC0415
-    from kernel.world.events import push_gmcp  # noqa: PLC0415
+    from kernel.seedlab.workspace_verb import workspace_command
+    from kernel.world.events import push_gmcp
 
     def push(player_id: str, package: str, data: object) -> None:
         push_gmcp([player_id], package, data)
@@ -379,10 +379,10 @@ def domain_registry() -> "DomainModuleRegistry":
     the line). A Seed still loads ONLY the modules it selected -- registering a module here just
     makes it available, so a classroom that selected `education` never loads `game` even though both
     sit in this registry."""
-    from kernel.domains.education import EducationModule  # noqa: PLC0415
-    from kernel.domains.game import register_game_module  # noqa: PLC0415
-    from kernel.seedlab.domain import register_module  # noqa: PLC0415
-    from kernel.seedlab.provision import DomainModuleRegistry  # noqa: PLC0415
+    from kernel.domains.education import EducationModule
+    from kernel.domains.game import register_game_module
+    from kernel.seedlab.domain import register_module
+    from kernel.seedlab.provision import DomainModuleRegistry
 
     registry = DomainModuleRegistry()
     register_game_module(registry)  # the world-dependent module, bound at the tick
@@ -391,61 +391,61 @@ def domain_registry() -> "DomainModuleRegistry":
 
 
 def docs_check() -> str:
-    from kernel.qualitygate import docs_check as run  # noqa: PLC0415
+    from kernel.qualitygate import docs_check as run
 
     return run()
 
 
 def render_gate(arg: str) -> str:
-    from kernel.qualitygate import render_gate as run  # noqa: PLC0415
+    from kernel.qualitygate import render_gate as run
 
     return run(arg)
 
 
 def render_gate_all() -> str:
-    from kernel.qualitygate import render_gate_all as run  # noqa: PLC0415
+    from kernel.qualitygate import render_gate_all as run
 
     return run()
 
 
 def render_safety(arg: str) -> str:
-    from kernel.qualitygate import render_safety as run  # noqa: PLC0415
+    from kernel.qualitygate import render_safety as run
 
     return run(arg)
 
 
 def regs(arg: str = "") -> str:
-    from kernel.regulations import regs as run  # noqa: PLC0415
+    from kernel.regulations import regs as run
 
     return run(arg)
 
 
 def terminal(arg: str = "") -> str:
-    from adapters.terminal import terminal as run  # noqa: PLC0415
+    from adapters.terminal import terminal as run
 
     return run(arg)
 
 
 def render_truth() -> str:
-    from kernel.evidence_gate import render_truth as run  # noqa: PLC0415
+    from kernel.evidence_gate import render_truth as run
 
     return run()
 
 
 def catalog_view() -> str:
-    from kernel.workshop import catalog_view as run  # noqa: PLC0415
+    from kernel.workshop import catalog_view as run
 
     return run()
 
 
 def reuse_search(term: str = "") -> str:
-    from kernel.workshop import reuse_search as run  # noqa: PLC0415
+    from kernel.workshop import reuse_search as run
 
     return run(term)
 
 
 def workshop_menu() -> str:
-    from kernel.workshop import workshop_menu as run  # noqa: PLC0415
+    from kernel.workshop import workshop_menu as run
 
     return run()
 
@@ -612,7 +612,7 @@ def _script_command(session: Session, arg: str) -> str:  # noqa: ARG001
 
     The safety boundary is kernel.scripting.LuaSandbox (no os/io/require; loops bounded), so the
     owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
-    from kernel.scripting import LuaSandbox, ScriptError, scripting_available  # noqa: PLC0415
+    from kernel.scripting import LuaSandbox, ScriptError, scripting_available
 
     code = arg.strip()
     if not code:
@@ -2167,7 +2167,7 @@ def _loop_trace_handler(arg: str) -> str:
     part_id = arg.strip()
     if not part_id:
         return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
-    from kernel.loop import render_trace, trace  # noqa: PLC0415
+    from kernel.loop import render_trace, trace
 
     return render_trace(trace(part_id))
 
@@ -2448,7 +2448,7 @@ def _mail_cmd(session: Session, arg: str) -> str:  # noqa: PLR0911
 def _ban_cmd(session: Session, arg: str) -> str:
     """`@ban <player> <reason>`: bar a character from the world (wizard+), audited. If online they
     drop on their next command. A ban outranks maintenance and even a wizard's rank."""
-    from kernel.world import audit, bans  # noqa: PLC0415
+    from kernel.world import audit, bans
 
     parts_ = arg.split(maxsplit=1)
     name = parts_[0].strip().lower() if parts_ else ""
@@ -2465,7 +2465,7 @@ def _ban_cmd(session: Session, arg: str) -> str:
 
 def _unban_cmd(session: Session, arg: str) -> str:
     """`@unban <player>`: lift a ban (wizard+), audited."""
-    from kernel.world import audit, bans  # noqa: PLC0415
+    from kernel.world import audit, bans
 
     name = arg.strip().lower()
     if not name:
@@ -2478,7 +2478,7 @@ def _unban_cmd(session: Session, arg: str) -> str:
 
 def _bans_cmd(_session: Session, _arg: str) -> str:
     """`@bans`: the moderation roster of banned characters (wizard+)."""
-    from kernel.world import bans  # noqa: PLC0415
+    from kernel.world import bans
 
     rows = bans.all_bans()
     if not rows:
@@ -2491,7 +2491,7 @@ def _bans_cmd(_session: Session, _arg: str) -> str:
 
 def _metrics_cmd(_session: Session, _arg: str) -> str:
     """`@metrics`: a live-ops snapshot from storage (population + economy health) (owner)."""
-    from kernel.world import metrics  # noqa: PLC0415
+    from kernel.world import metrics
 
     return metrics.render()
 
@@ -2499,7 +2499,7 @@ def _metrics_cmd(_session: Session, _arg: str) -> str:
 def _audit_cmd(_session: Session, arg: str) -> str:
     """`@audit [verify]`: the tamper-evident admin/economy log (owner). Bare shows recent entries;
     `@audit verify` checks the hash chain end to end."""
-    from kernel.world import audit  # noqa: PLC0415
+    from kernel.world import audit
 
     if arg.strip().lower() == "verify":
         return "Audit log: chain intact." if audit.verify() else "Audit log: CHAIN BROKEN."
@@ -2700,7 +2700,7 @@ def _did_you_mean(session: Session, routed_signal: str) -> str:
     near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
 
     Uses the textmatch shelf part (kernel.shelf.textmatch), C-accelerated when built (ADR-0010)."""
-    from kernel.shelf.textmatch import closest  # noqa: PLC0415
+    from kernel.shelf.textmatch import closest
 
     typed = routed_signal.split(" ", 1)[0]
     if not typed:

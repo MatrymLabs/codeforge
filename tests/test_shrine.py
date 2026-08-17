@@ -82,7 +82,7 @@ def test_pray_is_reachable_through_the_engine_tick():
 
 
 def test_the_wildlands_seeds_exactly_one_wayshrine_per_region():
-    from kernel.world.wildlands import generate_wildlands  # noqa: PLC0415
+    from kernel.world.wildlands import generate_wildlands
 
     cfg = {
         "id": "probe_wild",

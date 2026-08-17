@@ -19,14 +19,14 @@ class Resource:
 
     def __post_init__(self) -> None:
         if not self.name or not self.name.strip():
-            raise ValueError("Resource name must be a non-empty string")  # noqa: TRY003
+            raise ValueError("Resource name must be a non-empty string")
         for label, value in (("current", self.current), ("maximum", self.maximum)):
             if not isinstance(value, int) or isinstance(value, bool):
-                raise ValueError(f"{label} must be an integer")  # noqa: TRY003, TRY004
+                raise ValueError(f"{label} must be an integer") # noqa: TRY004
         if self.maximum < 0:
-            raise ValueError(f"maximum ({self.maximum}) cannot be negative")  # noqa: TRY003
+            raise ValueError(f"maximum ({self.maximum}) cannot be negative")
         if not (0 <= self.current <= self.maximum):
-            raise ValueError(f"current ({self.current}) must be within [0, {self.maximum}]")  # noqa: TRY003
+            raise ValueError(f"current ({self.current}) must be within [0, {self.maximum}]")
 
     def damage(self, amount: int) -> "Resource":
         """Return a new Resource reduced by amount, floored at zero."""
@@ -49,6 +49,6 @@ class Resource:
     @staticmethod
     def _check_amount(amount: int) -> None:
         if not isinstance(amount, int) or isinstance(amount, bool):
-            raise ValueError("amount must be an integer")  # noqa: TRY003, TRY004
+            raise ValueError("amount must be an integer") # noqa: TRY004
         if amount < 0:
-            raise ValueError(f"amount ({amount}) cannot be negative")  # noqa: TRY003
+            raise ValueError(f"amount ({amount}) cannot be negative")

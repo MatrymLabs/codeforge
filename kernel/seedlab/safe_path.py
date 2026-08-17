@@ -43,17 +43,17 @@ def safe_segment(value: str, *, what: str = "segment") -> str:
     [A-Za-z0-9][A-Za-z0-9._-]{0,254}" does not.
     """
     if not value or not value.strip():
-        raise PathEscape(f"{what} must not be empty")  # noqa: TRY003
+        raise PathEscape(f"{what} must not be empty")
     if value in (os.curdir, os.pardir):
-        raise PathEscape(f"{what} must be a name, not a traversal: {value!r}")  # noqa: TRY003
+        raise PathEscape(f"{what} must be a name, not a traversal: {value!r}")
     if "\x00" in value:
-        raise PathEscape(f"{what} must not contain a NUL byte: {value!r}")  # noqa: TRY003
+        raise PathEscape(f"{what} must not contain a NUL byte: {value!r}")
     if "/" in value or "\\" in value:
-        raise PathEscape(f"{what} must not contain a path separator: {value!r}")  # noqa: TRY003
+        raise PathEscape(f"{what} must not contain a path separator: {value!r}")
     if Path(value).is_absolute() or os.path.splitdrive(value)[0]:
-        raise PathEscape(f"{what} must be relative: {value!r}")  # noqa: TRY003
+        raise PathEscape(f"{what} must be relative: {value!r}")
     if not _SEGMENT.fullmatch(value):
-        raise PathEscape(f"{what} is not a plain name: {value!r}")  # noqa: TRY003
+        raise PathEscape(f"{what} is not a plain name: {value!r}")
     # Return the MATCHED text rather than the argument, so what leaves this function is a value
     # the allowlist produced, not the caller's string that merely passed a test beside it.
     return _SEGMENT.fullmatch(value).group(0)  # type: ignore[union-attr]
@@ -68,7 +68,7 @@ def contained_path(root: Path | str, *segments: str, what: str = "segment") -> P
     to miss a traversal somewhere in this codebase's history.
     """
     if not segments:
-        raise PathEscape("at least one segment is required")  # noqa: TRY003
+        raise PathEscape("at least one segment is required")
     base = Path(root).resolve()
     candidate = base
     for segment in segments:
@@ -77,5 +77,5 @@ def contained_path(root: Path | str, *segments: str, what: str = "segment") -> P
     try:
         resolved.relative_to(base)
     except ValueError as exc:
-        raise PathEscape(f"path escapes its root: {resolved} is not under {base}") from exc  # noqa: TRY003
+        raise PathEscape(f"path escapes its root: {resolved} is not under {base}") from exc
     return resolved

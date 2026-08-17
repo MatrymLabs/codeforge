@@ -41,7 +41,7 @@ class SystemFrame:
 
 def _career_line() -> SystemFrame:
     try:
-        from kernel.career import PARTIAL, PROVEN, load_board  # noqa: PLC0415
+        from kernel.career import PARTIAL, PROVEN, load_board
 
         skills = [s for lvl in load_board()["levels"] for s in lvl["skills"]]
         c = Counter(s["status"] for s in skills)
@@ -58,7 +58,7 @@ def _career_line() -> SystemFrame:
 
 def _pioneer_line() -> SystemFrame:
     try:
-        from kernel.pioneer import _EXPERIMENTS  # noqa: PLC0415
+        from kernel.pioneer import _EXPERIMENTS
 
         n = len(list(_EXPERIMENTS.glob("*.md"))) if _EXPERIMENTS.is_dir() else 0
         return SystemFrame("pioneer mode", GREEN, f"{n} experiment(s) filed", gating=False)
@@ -164,19 +164,19 @@ def inspect(arg: str = "") -> str:
     if a in ("", "forge", "the forge"):
         return render_frameup()
     if a == "qa":
-        from kernel.qualitygate import render_gate_all  # noqa: PLC0415
+        from kernel.qualitygate import render_gate_all
 
         return render_gate_all()
     if a == "truth":
-        from kernel.evidence_gate import render_truth  # noqa: PLC0415
+        from kernel.evidence_gate import render_truth
 
         return render_truth()
     if a == "pm":
-        from kernel.pm import pm_status  # noqa: PLC0415
+        from kernel.pm import pm_status
 
         return pm_status()
     if a == "save":
-        from kernel.shelf.reporting import write_report  # noqa: PLC0415
+        from kernel.shelf.reporting import write_report
 
         report = render_frameup()
         path = write_report("frameup", report, slug="frameup")

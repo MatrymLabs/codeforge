@@ -77,9 +77,9 @@ def evaluate(
     empty series returns a `no-data` verdict, never a crash and never a false pass.
     """
     if threshold_us <= 0:
-        raise SloError(f"threshold_us must be > 0, got {threshold_us}")  # noqa: TRY003
+        raise SloError(f"threshold_us must be > 0, got {threshold_us}")
     if not 0.0 < objective_pct < 100.0:  # noqa: PLR2004
-        raise SloError(f"objective_pct must be in (0, 100), got {objective_pct}")  # noqa: TRY003
+        raise SloError(f"objective_pct must be in (0, 100), got {objective_pct}")
 
     budget_pct = 100.0 - objective_pct
     series = chronicle.trend(sli_name, root=root)
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
     "budget exhausted" signal, so a pipeline can act on it); 0 on pass, watchlist, or no-data.
     Deliberately NOT wired into `make check`: the SLI is host-relative and sparse.
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     try:

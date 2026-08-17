@@ -16,7 +16,7 @@ from kernel.world.session import SESSIONS, Session
 def fresh_world():
     # Restore in place (clear + update, never rebind): combat.py holds
     # `from kernel.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
-    from kernel.world import items  # noqa: PLC0415
+    from kernel.world import items
 
     npcs_snap = copy.deepcopy(npcs.NPCS)
     items_snap = copy.deepcopy(items.ITEMS)  # durability tests clone gear; never leak the clones
@@ -45,7 +45,7 @@ def test_attack_without_a_calling_is_refused():
 def test_defeating_an_npc_surfaces_a_triggered_quest_line(monkeypatch):
     """Combat rides the quest hook on top: if a fallen npc completes a story beat, its line is
     appended to the defeat report (the aethryn Cinder-Wight uses this to end the Relighting)."""
-    import kernel.world.quest as quest_mod  # noqa: PLC0415
+    import kernel.world.quest as quest_mod
 
     monkeypatch.setattr(
         quest_mod, "on_event", lambda session, kind, target: "[The Relighting] the cold breaks"
@@ -100,7 +100,7 @@ def test_a_refused_swing_does_not_advance_the_clock():
 
 
 def test_attack_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _fighter()
     out = handle_command(s, "attack dummy")
@@ -109,7 +109,7 @@ def test_attack_flows_through_the_engine_tick():
 
 def test_kill_is_an_alias_for_attack_through_the_tick():
     # kill shares attack's designation on the command spine (stage 2 slice G).
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _fighter()
     out = handle_command(s, "kill dummy")
@@ -146,7 +146,7 @@ def _spawn_hostile(
 
 
 def test_npc_strike_power_reads_the_atk_stat():
-    from kernel.world.combat import npc_strike_power  # noqa: PLC0415
+    from kernel.world.combat import npc_strike_power
 
     _spawn_hostile(atk=5)
     assert npc_strike_power(npcs.NPCS["brawler"]) == 5
@@ -191,7 +191,7 @@ def test_a_fallen_player_is_restored_safely():
 
 
 def test_a_lethal_foe_kills_and_sends_the_player_home():
-    from kernel.world.world import START_ROOM  # noqa: PLC0415
+    from kernel.world.world import START_ROOM
 
     s = _fighter()  # courtyard, a vanguard
     _spawn_hostile(atk=9999, hp=50, lethal=True)  # a real boss: no training-ground failsafe
@@ -223,7 +223,7 @@ def test_emergency_repair_fires_once_then_cools_down():
 
 
 def test_counterattack_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _fighter()
     _spawn_hostile(atk=4, hp=50)
@@ -233,7 +233,7 @@ def test_counterattack_flows_through_the_engine_tick():
 
 def test_the_seeded_gate_boss_is_a_real_fight():
     """The spiral-ascent Coilwarden is wired for combat: reachable in play, and it hits back."""
-    from kernel.world.seed import BLUEPRINTS_ROOT, load_npcs  # noqa: PLC0415
+    from kernel.world.seed import BLUEPRINTS_ROOT, load_npcs
 
     boss = load_npcs(BLUEPRINTS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
     npcs.NPCS["coilwarden"] = boss  # its seed location is gate_chamber
@@ -269,7 +269,7 @@ def test_defeating_an_enemy_awards_tp():
 
 # --- loot drops on defeat (object instancing consumer) --------------------------------
 def test_defeating_an_npc_spawns_its_loot_drops():
-    from kernel.world import items  # noqa: PLC0415
+    from kernel.world import items
 
     items_snap = copy.deepcopy(items.ITEMS)
     try:
@@ -304,7 +304,7 @@ def test_defeating_an_npc_spawns_its_loot_drops():
 
 
 def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
-    from kernel.world import items  # noqa: PLC0415
+    from kernel.world import items
 
     items_snap = copy.deepcopy(items.ITEMS)
     try:
@@ -362,7 +362,7 @@ def _felled_foe_with(drops: list[str] | None = None, loot: dict[str, int] | None
 
 
 def test_a_loot_roll_can_force_an_item(monkeypatch):
-    from kernel.world import combat, items  # noqa: PLC0415
+    from kernel.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:
@@ -381,7 +381,7 @@ def test_a_loot_roll_can_force_an_item(monkeypatch):
 
 
 def test_a_loot_roll_can_come_up_nothing(monkeypatch):
-    from kernel.world import combat, items  # noqa: PLC0415
+    from kernel.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:
@@ -397,7 +397,7 @@ def test_a_loot_roll_can_come_up_nothing(monkeypatch):
 
 
 def test_guaranteed_drops_and_a_weighted_roll_both_fire(monkeypatch):
-    from kernel.world import combat, items  # noqa: PLC0415
+    from kernel.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:
@@ -431,7 +431,7 @@ def test_the_aethryn_boss_is_lethal():
 
 def test_reward_amounts_are_flat_for_a_levelless_foe():
     """A foe without a level keeps the tutorial economy: XP, JP and TP all equal its flat xp."""
-    from kernel.world.combat import _reward_amounts  # noqa: PLC0415
+    from kernel.world.combat import _reward_amounts
 
     s = _fighter()
     assert _reward_amounts(s, {"xp": 30}) == (30, 30, 30)
@@ -439,7 +439,7 @@ def test_reward_amounts_are_flat_for_a_levelless_foe():
 
 def test_reward_amounts_scale_by_the_challenge_gap_for_a_levelled_foe():
     """Fight up and a levelled foe pays; outclass it by 15+ levels and its xp drops to nothing."""
-    from kernel.world.combat import _reward_amounts  # noqa: PLC0415
+    from kernel.world.combat import _reward_amounts
 
     s = _fighter()  # vanguard, player level 1
     s.level = 1
@@ -449,7 +449,7 @@ def test_reward_amounts_scale_by_the_challenge_gap_for_a_levelled_foe():
 
 
 def test_a_boss_tier_pays_ten_times_a_normal_of_the_same_level():
-    from kernel.world.combat import _reward_amounts  # noqa: PLC0415
+    from kernel.world.combat import _reward_amounts
 
     s = _fighter()
     s.level = 5
@@ -460,7 +460,7 @@ def test_a_boss_tier_pays_ten_times_a_normal_of_the_same_level():
 
 def test_land_hit_awards_the_scaled_xp_not_the_flat_field():
     """The wiring reaches the grant: a levelled foe with xp:0 still pays its curve reward."""
-    from kernel.world.combat import land_hit  # noqa: PLC0415
+    from kernel.world.combat import land_hit
 
     s = _fighter()
     s.level = 5
@@ -474,7 +474,7 @@ def test_land_hit_awards_the_scaled_xp_not_the_flat_field():
 
 def test_a_sworn_order_raises_strike_power():
     """The Warcraft Order's ATK perk is real in a fight, not just on the sheet."""
-    from kernel.world.combat import strike_power  # noqa: PLC0415
+    from kernel.world.combat import strike_power
 
     s = _fighter("vanguard")
     s.named = True
@@ -485,7 +485,7 @@ def test_a_sworn_order_raises_strike_power():
 
 def test_def_from_an_order_mitigates_a_blow_and_a_landed_hit_always_stings():
     """DEF (here from the Making Order) turns a blow, but a hit never drops below 1 damage."""
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
+    from kernel.world.combat import _resolve_npc_blow
 
     s = _fighter("vanguard")
     s.named = True
@@ -508,7 +508,7 @@ def test_def_from_an_order_mitigates_a_blow_and_a_landed_hit_always_stings():
 
 
 def test_coin_reward_scales_with_level_and_tier():
-    from kernel.world.combat import _coin_reward  # noqa: PLC0415
+    from kernel.world.combat import _coin_reward
 
     assert _coin_reward({"level": 10, "tier": "normal", "xp": 0}) == 10
     assert _coin_reward({"level": 10, "tier": "elite", "xp": 0}) == 30  # elite x3
@@ -517,7 +517,7 @@ def test_coin_reward_scales_with_level_and_tier():
 
 
 def test_a_kill_fills_the_purse():
-    from kernel.world.combat import attack  # noqa: PLC0415
+    from kernel.world.combat import attack
 
     s = _fighter()  # the courtyard training dummy
     before = s.coins
@@ -531,7 +531,7 @@ def test_a_kill_fills_the_purse():
 
 
 def test_wallet_reports_the_purse_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _fighter()
     s.coins = 250
@@ -541,7 +541,7 @@ def test_wallet_reports_the_purse_through_the_engine_tick():
 def test_a_levelled_equippable_drop_rolls_and_stores_a_rarity():
     """A levelled foe's gear drop runs the affix factory, which stamps a rarity tier onto the
     instance so a client can colour it (and it survives logout)."""
-    from kernel.world import combat, items  # noqa: PLC0415
+    from kernel.world import combat, items
 
     session = Session(player_id="ada", location="loot_rarity_test_room")
     line = combat._spawn_loot(session, "forge_wrench", level=8)  # equippable + levelled -> rolls
@@ -564,7 +564,7 @@ def test_a_levelled_equippable_drop_rolls_and_stores_a_rarity():
 def test_a_deployed_barrier_turns_half_an_npc_blow():
     """The Engineer's Deploy Barrier now actually defends: while it holds, an NPC blow lands for
     half (floored at 1). It used to cost Power Cells and do nothing."""
-    from kernel.world.combat import open_strike  # noqa: PLC0415
+    from kernel.world.combat import open_strike
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=12)]
@@ -585,7 +585,7 @@ def test_a_deployed_barrier_turns_half_an_npc_blow():
 def test_an_analyzed_foe_takes_bonus_damage():
     """Diagnostic Scan now matters: while 'analyzed' holds, a strike hits the revealed weak point
     for +50%. It used to set a status combat never read."""
-    from kernel.world.combat import attack, strike_power  # noqa: PLC0415
+    from kernel.world.combat import attack, strike_power
 
     s = _fighter()
     base = strike_power(s)
@@ -604,7 +604,7 @@ def test_an_analyzed_foe_takes_bonus_damage():
 def test_a_brand_burns_a_foe_over_the_world_beats_but_never_kills():
     """A burn saps HP each world beat, floored at 1 (it wears a foe down; you land the last blow),
     and burns out after its ticks."""
-    from kernel.world.combat import apply_burn, tick_burns  # noqa: PLC0415
+    from kernel.world.combat import apply_burn, tick_burns
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=10)]
@@ -620,7 +620,7 @@ def test_a_brand_burns_a_foe_over_the_world_beats_but_never_kills():
 
 def test_a_burn_never_revives_a_downed_foe():
     """A foe at 0 HP (mid-defeat) is skipped by the burn tick: no burning a corpse back to 1."""
-    from kernel.world.combat import apply_burn, tick_burns  # noqa: PLC0415
+    from kernel.world.combat import apply_burn, tick_burns
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("husk", atk=0, hp=10)]
@@ -649,8 +649,8 @@ def _fire_wight(atk: int = 10, hp: int = 100):
 def test_a_typed_blow_is_scaled_by_the_players_resistance(monkeypatch, level, expected_loss, note):
     """A foe's attack_element meets the player's job resistance: the displayed grid is real in a
     fight. An ungeared vanguard takes atk 10 -> the resistance level scales it."""
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
-    from kernel.world.jobs import JOBS  # noqa: PLC0415
+    from kernel.world.combat import _resolve_npc_blow
+    from kernel.world.jobs import JOBS
 
     monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", level)
     s = _fighter("vanguard")
@@ -664,8 +664,8 @@ def test_a_typed_blow_is_scaled_by_the_players_resistance(monkeypatch, level, ex
 def test_an_untyped_blow_ignores_resistance(monkeypatch):
     """A foe with no attack_element deals physical damage no resistance touches (backward-compat:
     every existing foe fights exactly as before)."""
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
-    from kernel.world.jobs import JOBS  # noqa: PLC0415
+    from kernel.world.combat import _resolve_npc_blow
+    from kernel.world.jobs import JOBS
 
     monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", "Immune")  # would nullify FIR
     s = _fighter("vanguard")
@@ -677,8 +677,8 @@ def test_an_untyped_blow_ignores_resistance(monkeypatch):
 
 def test_an_absorbed_element_heals_instead_of_harming(monkeypatch):
     """Absorb is the deepest resistance: the element mends the player rather than wounding them."""
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
-    from kernel.world.jobs import JOBS  # noqa: PLC0415
+    from kernel.world.combat import _resolve_npc_blow
+    from kernel.world.jobs import JOBS
 
     monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", "Absorb")
     s = _fighter("vanguard")
@@ -703,7 +703,7 @@ def test_an_absorbed_element_heals_instead_of_harming(monkeypatch):
     ],
 )
 def test_typed_hit_scales_outgoing_damage_by_the_foes_resistance(grid, element, expected):
-    from kernel.world.combat import typed_hit  # noqa: PLC0415
+    from kernel.world.combat import typed_hit
 
     npc = npcs.NPCS[_spawn_hostile("golem", atk=0, hp=500)]
     if grid is not None:
@@ -713,7 +713,7 @@ def test_typed_hit_scales_outgoing_damage_by_the_foes_resistance(grid, element, 
 
 
 def test_foe_resistance_defaults_to_normal_without_a_grid():
-    from kernel.world.combat import foe_resistance  # noqa: PLC0415
+    from kernel.world.combat import foe_resistance
 
     npc = npcs.NPCS[_spawn_hostile("golem", atk=0, hp=10)]
     assert foe_resistance(npc, "FIR") == "Normal"  # no grid at all
@@ -726,7 +726,7 @@ def test_foe_resistance_defaults_to_normal_without_a_grid():
 
 
 def test_elemental_profile_reads_a_typed_foe():
-    from kernel.world.combat import elemental_profile  # noqa: PLC0415
+    from kernel.world.combat import elemental_profile
 
     npc = npcs.NPCS[_spawn_hostile("wight", atk=5, hp=50)]
     npc["attack_element"] = "FIR"
@@ -739,14 +739,14 @@ def test_elemental_profile_reads_a_typed_foe():
 
 
 def test_elemental_profile_is_empty_for_a_plain_foe():
-    from kernel.world.combat import elemental_profile  # noqa: PLC0415
+    from kernel.world.combat import elemental_profile
 
     npc = npcs.NPCS[_spawn_hostile("brute", atk=5, hp=50)]
     assert elemental_profile(npc) == ""  # untyped and resists nothing: nothing to learn
 
 
 def test_examine_reveals_a_foes_nature_and_reaches_the_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("wight", atk=5, hp=50)]
@@ -758,7 +758,7 @@ def test_examine_reveals_a_foes_nature_and_reaches_the_tick():
 
 
 def test_examine_a_plain_foe_notes_no_elemental_nature():
-    from kernel.world.combat import examine_foe  # noqa: PLC0415
+    from kernel.world.combat import examine_foe
 
     s = _fighter()
     npcs.NPCS[_spawn_hostile("brute", atk=5, hp=50)]
@@ -766,7 +766,7 @@ def test_examine_a_plain_foe_notes_no_elemental_nature():
 
 
 def test_examine_refuses_a_missing_target_a_peaceful_npc_and_an_empty_word():
-    from kernel.world.combat import examine_foe  # noqa: PLC0415
+    from kernel.world.combat import examine_foe
 
     s = _fighter(location="library")
     assert "Examine whom" in examine_foe(s, "")
@@ -775,7 +775,7 @@ def test_examine_refuses_a_missing_target_a_peaceful_npc_and_an_empty_word():
 
 
 def test_a_reassembling_foe_quenches_its_burn():
-    from kernel.world.combat import apply_burn, attack, strike_power  # noqa: PLC0415
+    from kernel.world.combat import apply_burn, attack, strike_power
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
@@ -785,7 +785,7 @@ def test_a_reassembling_foe_quenches_its_burn():
 
 
 def test_a_reassembling_foe_shakes_off_its_daze():
-    from kernel.world.combat import apply_daze, attack, strike_power  # noqa: PLC0415
+    from kernel.world.combat import apply_daze, attack, strike_power
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
@@ -797,7 +797,7 @@ def test_a_reassembling_foe_shakes_off_its_daze():
 def test_a_weakened_foe_hits_softer_for_a_set_number_of_blows():
     """A weakened foe's blows land for half (floored 1), one weaken charge spent per blow, until it
     recovers its full strength."""
-    from kernel.world.combat import _resolve_npc_blow, apply_weaken  # noqa: PLC0415
+    from kernel.world.combat import _resolve_npc_blow, apply_weaken
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=10, hp=50)]
@@ -820,7 +820,7 @@ def test_a_weakened_foe_hits_softer_for_a_set_number_of_blows():
 
 
 def test_a_reassembling_foe_recovers_its_full_strength():
-    from kernel.world.combat import apply_weaken, attack, strike_power  # noqa: PLC0415
+    from kernel.world.combat import apply_weaken, attack, strike_power
 
     s = _fighter()
     npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
@@ -869,7 +869,7 @@ def _respawn(label: str) -> None:
 
 
 def test_first_boss_kill_of_the_day_pays_a_daily_bounty(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
     s = _fighter()
@@ -884,7 +884,7 @@ def test_first_boss_kill_of_the_day_pays_a_daily_bounty(monkeypatch):
 
 
 def test_a_new_day_reopens_the_boss_bounty(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     s = _fighter()
     _spawn_boss()
@@ -896,7 +896,7 @@ def test_a_new_day_reopens_the_boss_bounty(monkeypatch):
 
 
 def test_a_normal_foe_pays_no_daily_bounty(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
     s = _fighter()
@@ -927,7 +927,7 @@ def _spawn_raid(label: str = "abyssal", location: str = "courtyard", hp: int = 6
 
 
 def test_first_raid_kill_of_the_week_pays_a_weekly_bounty(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
     s = _fighter()
@@ -941,7 +941,7 @@ def test_first_raid_kill_of_the_week_pays_a_weekly_bounty(monkeypatch):
 
 
 def test_a_new_week_reopens_the_raid_bounty(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     s = _fighter()
     _spawn_raid()
@@ -955,7 +955,7 @@ def test_a_new_week_reopens_the_raid_bounty(monkeypatch):
 def test_a_raid_uses_the_weekly_not_the_daily_cadence(monkeypatch):
     # A raid outranks the plain boss branch: it claims the WEEKLY key, not the daily one, so a raid
     # cleared this week does not also silently consume the day's boss lockout.
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
     s = _fighter()
@@ -968,7 +968,7 @@ def test_a_raid_uses_the_weekly_not_the_daily_cadence(monkeypatch):
 def test_a_raid_bounty_scales_with_the_cohort(monkeypatch):
     # A raid rewards a COHORT: the first-kill-of-week bounty pays MORE when a party stood for the
     # kill (solo x1, a duo x2, ...). The co-located band comes from party.members_in_room.
-    from kernel.world import lockouts, party  # noqa: PLC0415
+    from kernel.world import lockouts, party
 
     try:
         solo = _fighter()  # matrym, courtyard
@@ -999,8 +999,8 @@ def test_a_raid_bounty_scales_with_the_cohort(monkeypatch):
 def test_a_raid_boss_hits_harder_with_a_cohort():
     # RAID DIFFICULTY scales with the co-located cohort: a solo raider takes the base blow; a band
     # takes +RAID_DIFFICULTY_PER_MEMBER per extra mate, so a raid demands the trinity, not a zerg.
-    from kernel.world import party  # noqa: PLC0415
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
+    from kernel.world import party
+    from kernel.world.combat import _resolve_npc_blow
 
     s = _fighter("vanguard")  # matrym, courtyard, no gear -> DEF 0
     s.named = True
@@ -1032,8 +1032,8 @@ def test_a_raid_boss_hits_harder_with_a_cohort():
 
 def test_a_non_raid_boss_ignores_the_cohort():
     # difficulty-scaling is RAID-only: a plain boss lands the same blow regardless of the cohort.
-    from kernel.world import party  # noqa: PLC0415
-    from kernel.world.combat import _resolve_npc_blow  # noqa: PLC0415
+    from kernel.world import party
+    from kernel.world.combat import _resolve_npc_blow
 
     s = _fighter("vanguard")
     s.named = True
@@ -1063,7 +1063,7 @@ def test_an_empowered_strike_hits_fifty_percent_harder() -> None:
 
 
 def test_a_landed_strike_wears_the_equipped_weapon():
-    from kernel.world import durability, items  # noqa: PLC0415
+    from kernel.world import durability, items
 
     s = _fighter()
     s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
@@ -1075,8 +1075,8 @@ def test_a_landed_strike_wears_the_equipped_weapon():
 
 
 def test_a_lethal_death_batters_worn_gear():
-    from kernel.world import durability, items  # noqa: PLC0415
-    from kernel.world.combat import DEATH_DURABILITY_TOLL  # noqa: PLC0415
+    from kernel.world import durability, items
+    from kernel.world.combat import DEATH_DURABILITY_TOLL
 
     s = _fighter()
     s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
@@ -1089,7 +1089,7 @@ def test_a_lethal_death_batters_worn_gear():
 
 
 def test_the_training_ground_failsafe_does_not_batter_gear():
-    from kernel.world import durability, items  # noqa: PLC0415
+    from kernel.world import durability, items
 
     s = _fighter()  # a vanguard: no Engineer reaction, so a huge counter triggers the failsafe
     s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
@@ -1108,7 +1108,7 @@ def test_a_bare_hero_takes_no_gear_toll_on_a_lethal_death():
 
 
 def test_a_lethal_death_sets_xp_progress_back_without_de_leveling():
-    from kernel.world.progression_awards import award_xp  # noqa: PLC0415
+    from kernel.world.progression_awards import award_xp
 
     s = _fighter()
     award_xp(s, 100)  # level 2 (needs 75), 25 XP into the level
@@ -1121,7 +1121,7 @@ def test_a_lethal_death_sets_xp_progress_back_without_de_leveling():
 
 
 def test_the_training_ground_failsafe_costs_no_xp():
-    from kernel.world.progression_awards import award_xp  # noqa: PLC0415
+    from kernel.world.progression_awards import award_xp
 
     s = _fighter()
     award_xp(s, 100)
@@ -1131,7 +1131,7 @@ def test_the_training_ground_failsafe_costs_no_xp():
 
 
 def test_a_recleared_boss_is_acknowledged_not_silently_farmed(monkeypatch):
-    from kernel.world import lockouts  # noqa: PLC0415
+    from kernel.world import lockouts
 
     monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
     s = _fighter()
@@ -1144,8 +1144,8 @@ def test_a_recleared_boss_is_acknowledged_not_silently_farmed(monkeypatch):
 
 
 def test_a_landed_blow_wears_the_equipped_body_armor():
-    from kernel.world import durability, items  # noqa: PLC0415
-    from kernel.world.aggression import menace  # noqa: PLC0415
+    from kernel.world import durability, items
+    from kernel.world.aggression import menace
 
     s = _fighter()
     s.equipped["body"] = items.clone("padded_jerkin", items.carrier("matrym"))
@@ -1183,7 +1183,7 @@ class _ForceRng:
 def test_apply_variance_covers_every_band(monkeypatch):
     """The variance die maps its roll to (damage, note): a miss zeroes the blow, a crit doubles it,
     a glance halves it (floored 1), a normal hit passes through, a zero blow never rolls."""
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     def force(roll: float) -> None:
         monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(roll))
@@ -1201,7 +1201,7 @@ def test_apply_variance_covers_every_band(monkeypatch):
 
 
 def test_a_critical_strike_doubles_the_players_blow(monkeypatch):
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.10))  # crit band
     s = _fighter()  # strike_power 7
@@ -1210,7 +1210,7 @@ def test_a_critical_strike_doubles_the_players_blow(monkeypatch):
 
 
 def test_a_missed_strike_deals_nothing_and_reads_as_a_whiff(monkeypatch):
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # miss band
     s = _fighter()
@@ -1220,7 +1220,7 @@ def test_a_missed_strike_deals_nothing_and_reads_as_a_whiff(monkeypatch):
 
 
 def test_a_glancing_strike_lands_soft(monkeypatch):
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.20))  # glance band
     s = _fighter()  # strike_power 7
@@ -1229,7 +1229,7 @@ def test_a_glancing_strike_lands_soft(monkeypatch):
 
 
 def test_an_npc_blow_can_crit(monkeypatch):
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.10))  # crit band
     s = _fighter()
@@ -1241,7 +1241,7 @@ def test_an_npc_blow_can_crit(monkeypatch):
 
 
 def test_an_npc_blow_can_miss(monkeypatch):
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # miss band
     s = _fighter()
@@ -1254,7 +1254,7 @@ def test_an_npc_blow_can_miss(monkeypatch):
 
 def test_a_telegraphed_unleash_never_whiffs(monkeypatch):
     """A guaranteed special was telegraphed and connects by design: the miss die does not apply."""
-    from kernel.world import combat  # noqa: PLC0415
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # would MISS a normal blow
     s = _fighter()
@@ -1288,7 +1288,7 @@ def test_a_penniless_fall_scatters_nothing():
 
 
 def test_a_lethal_fall_also_scatters_coins():
-    from kernel.world.world import START_ROOM  # noqa: PLC0415
+    from kernel.world.world import START_ROOM
 
     s = _fighter()
     s.coins = 100

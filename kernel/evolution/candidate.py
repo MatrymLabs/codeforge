@@ -36,7 +36,7 @@ class Candidate:
     def with_disposition(self, disposition: str) -> Candidate:
         """Return a copy with a new disposition (frozen -> a new record, never a mutation)."""
         if disposition not in CANDIDATE_STATUSES:
-            raise ValueError(f"unknown disposition {disposition!r}; use {CANDIDATE_STATUSES}")  # noqa: TRY003
+            raise ValueError(f"unknown disposition {disposition!r}; use {CANDIDATE_STATUSES}")
         return Candidate(
             candidate_id=self.candidate_id,
             genome_id=self.genome_id,

@@ -73,7 +73,7 @@ def test_filed_review_of_an_empty_repo_is_all_missing_except_a_clean_control(tmp
 
 
 def test_an_open_serious_incident_holds_readiness_on_watchlist(tmp_path):
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     _seed_evidence(tmp_path)
     _file_all_runtime_ready(tmp_path)  # everything else READY
@@ -85,7 +85,7 @@ def test_an_open_serious_incident_holds_readiness_on_watchlist(tmp_path):
 
 
 def test_a_low_or_closed_incident_does_not_hold_readiness(tmp_path):
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     _seed_evidence(tmp_path)
     _file_all_runtime_ready(tmp_path)
@@ -95,9 +95,9 @@ def test_a_low_or_closed_incident_does_not_hold_readiness(tmp_path):
 
 
 def test_an_ai_eval_regression_holds_readiness_on_watchlist(tmp_path):
-    from datetime import UTC, datetime  # noqa: PLC0415
+    from datetime import UTC, datetime
 
-    from kernel import chronicle  # noqa: PLC0415
+    from kernel import chronicle
 
     _seed_evidence(tmp_path)
     _file_all_runtime_ready(tmp_path)

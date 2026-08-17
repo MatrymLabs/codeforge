@@ -26,7 +26,7 @@ class SqlAccountCredentialStore:
 
     def find(self, account: str) -> AccountSecret | None:
         """The stored salt+hash for an account, or None if no such account exists."""
-        from kernel.world.db import AccountRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import AccountRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(AccountRow, account)
@@ -34,7 +34,7 @@ class SqlAccountCredentialStore:
 
     def create(self, account: str, salt_hex: str, hash_hex: str) -> None:
         """Insert a brand-new account row. The caller has already confirmed it does not exist."""
-        from kernel.world.db import AccountRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import AccountRow, open_archive_session
 
         with open_archive_session() as db:
             db.add(AccountRow(name=account, auth_salt=salt_hex, auth_hash=hash_hex))
@@ -43,7 +43,7 @@ class SqlAccountCredentialStore:
     def set_secret(self, account: str, salt_hex: str, hash_hex: str) -> None:
         """Rotate an existing account's salt+hash. A missing account is a silent no-op (the caller
         has already resolved existence and its own refusal message)."""
-        from kernel.world.db import AccountRow, open_archive_session  # noqa: PLC0415
+        from kernel.world.db import AccountRow, open_archive_session
 
         with open_archive_session() as db:
             row = db.get(AccountRow, account)

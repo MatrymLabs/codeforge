@@ -146,7 +146,7 @@ def connect(port: int = PORT) -> socket.socket:
             return socket.create_connection((HOST, port), timeout=2)
         except OSError:
             time.sleep(0.25)
-    raise SystemExit("server never came up")  # noqa: TRY003
+    raise SystemExit("server never came up")
 
 
 def aethryn_journey() -> None:
@@ -173,7 +173,7 @@ def aethryn_journey() -> None:
             time.monotonic() - boot < 30  # noqa: PLR2004
         ):  # the flagship seed is larger; allow more boot time
             if server.poll() is not None:
-                raise SystemExit("aethryn server exited during boot")  # noqa: TRY003
+                raise SystemExit("aethryn server exited during boot")
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("AETHRYN boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
@@ -243,7 +243,7 @@ def multiplayer_journey() -> None:
         boot = time.monotonic()
         while time.monotonic() - boot < 20:  # noqa: PLR2004
             if server.poll() is not None:
-                raise SystemExit("multiplayer server exited during boot")  # noqa: TRY003
+                raise SystemExit("multiplayer server exited during boot")
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("MULTIPLAYER boot (isolated)", True, (time.monotonic() - t0) * 1000, ""))
@@ -297,9 +297,9 @@ def _forgeward_hubs() -> list[tuple[str, str]]:
     each paired with its waystone display name. Read from the same seed files the live server forges
     spine + network from (zones.yaml / waystones.yaml), so the walk matches the server however many
     zones the flagship grows."""
-    import yaml  # noqa: PLC0415
+    import yaml
 
-    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     ae = BLUEPRINTS_ROOT / "aethryn"
     zones = yaml.safe_load((ae / "zones.yaml").read_text(encoding="utf-8"))
@@ -344,7 +344,7 @@ def spine_journey() -> None:
             time.monotonic() - boot < 30  # noqa: PLR2004
         ):  # the flagship seed is larger; allow more boot time
             if server.poll() is not None:
-                raise SystemExit("spine server exited during boot")  # noqa: TRY003
+                raise SystemExit("spine server exited during boot")
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("SPINE boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
@@ -428,7 +428,7 @@ def main() -> int:  # noqa: PLR0915
         boot = time.monotonic()
         while time.monotonic() - boot < 20:  # noqa: PLR2004
             if server.poll() is not None:
-                raise SystemExit("server exited during boot")  # noqa: TRY003
+                raise SystemExit("server exited during boot")
             line = server.stdout.readline().decode(errors="ignore")
             if "listening on" in line:
                 break

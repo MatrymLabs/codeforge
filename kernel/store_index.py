@@ -46,23 +46,23 @@ def _parse_domains(source: Path) -> list[Domain]:
     raw: Any = yaml.safe_load(source.read_text(encoding="utf-8")) or {}
     entries = raw.get("domains") if isinstance(raw, dict) else None
     if not isinstance(entries, list) or not entries:
-        raise DomainError("domains.yaml must have a non-empty 'domains' list")  # noqa: TRY003
+        raise DomainError("domains.yaml must have a non-empty 'domains' list")
     domains: list[Domain] = []
     seen_codes: set[str] = set()
     claimed: dict[str, str] = {}
     for i, entry in enumerate(entries):
         if not isinstance(entry, dict) or "code" not in entry or "name" not in entry:
-            raise DomainError(f"domain #{i}: needs 'code' and 'name'")  # noqa: TRY003
+            raise DomainError(f"domain #{i}: needs 'code' and 'name'")
         code = str(entry["code"])
         if code in seen_codes:
-            raise DomainError(f"domain code {code!r} is not unique")  # noqa: TRY003
+            raise DomainError(f"domain code {code!r} is not unique")
         seen_codes.add(code)
         cats = entry.get("categories", []) or []
         if not isinstance(cats, list):
-            raise DomainError(f"domain {code!r}: 'categories' must be a list")  # noqa: TRY003
+            raise DomainError(f"domain {code!r}: 'categories' must be a list")
         for cat in cats:
             if cat in claimed:
-                raise DomainError(f"category {cat!r} claimed by both {claimed[cat]!r} and {code!r}")  # noqa: TRY003
+                raise DomainError(f"category {cat!r} claimed by both {claimed[cat]!r} and {code!r}")
             claimed[str(cat)] = code
         domains.append(Domain(code, str(entry["name"]), frozenset(str(c) for c in cats)))
     return domains
@@ -72,7 +72,7 @@ def load_domains(path: Path | None = None) -> list[Domain]:
     """Load and validate the domain taxonomy. Cached until the file changes on disk."""
     source = path or _domains_path()
     if not source.exists():
-        raise DomainError(f"domain taxonomy not found at {source}")  # noqa: TRY003
+        raise DomainError(f"domain taxonomy not found at {source}")
     return loader_cache.load_cached(source, _parse_domains)
 
 

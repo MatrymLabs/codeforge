@@ -166,7 +166,7 @@ def run_first_platform_proof(
     for run in runs:
         run_log.append(run)
     if not all(run.ok for run in runs):
-        raise PlatformProofError("generated target validation did not pass")  # noqa: TRY003
+        raise PlatformProofError("generated target validation did not pass")
 
     artifact_store = FileArtifactStore(root / "artifacts")
     artifact = record_generated_artifact(seed_id, generated, runs=runs, clock=clock_fn)
@@ -198,7 +198,7 @@ def run_first_platform_proof(
     backup = backups.backup(record)
     backup_verdict = backups.verify(seed_id, backup.backup_id)
     if backup_verdict != INTACT:
-        raise PlatformProofError(f"backup was not intact: {backup_verdict}")  # noqa: TRY003
+        raise PlatformProofError(f"backup was not intact: {backup_verdict}")
 
     recovered_kernel = BlueprintKernel(FileSeedStore(root / "seeds"), clock=clock_fn)
     recovered_record = recovered_kernel.get(seed_id)

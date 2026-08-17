@@ -91,7 +91,7 @@ def test_both_adapters_satisfy_the_port():
 
 def test_sql_store_refuses_a_corrupt_record_with_a_verdict():
     """A row changed after save must never come back as an apparently valid hero."""
-    from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import CharacterRow, open_archive_session
 
     store = SqlCharacterStore()
     store.upsert_full(CharacterRecord(name="corrupt-save", level=7, xp=824))
@@ -108,7 +108,7 @@ def test_sql_store_refuses_a_corrupt_record_with_a_verdict():
 
 def test_sql_store_marks_a_legacy_default_unverified_until_next_write():
     """A pre-migration row is unknown, not corrupt, and a new save brings it into integrity."""
-    from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import CharacterRow, open_archive_session
 
     store = SqlCharacterStore()
     with open_archive_session() as db:
@@ -127,7 +127,7 @@ def test_sql_store_marks_a_legacy_default_unverified_until_next_write():
 
 def test_membership_write_does_not_invalidate_the_gameplay_integrity_scope():
     """Account and legacy credentials belong to membership_sql, not this checksum's stated scope."""
-    from kernel.world.membership_sql import SqlMembershipStore  # noqa: PLC0415
+    from kernel.world.membership_sql import SqlMembershipStore
 
     store = SqlCharacterStore()
     store.upsert_full(
@@ -154,8 +154,8 @@ def test_membership_write_does_not_invalidate_the_gameplay_integrity_scope():
 def test_the_character_doors_run_on_an_injected_store():
     """load_character / put_record / save_character / set_rank over a pure in-memory store, and the
     merge-save law holds through the public doors too: a save never wipes a stored password."""
-    from kernel.world.characters import load_character, put_record, save_character, set_rank  # noqa: I001, PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.characters import load_character, put_record, save_character, set_rank # noqa: I001
+    from kernel.world.session import Session
 
     mem = InMemoryCharacterStore()
     put_record("matrym", {"level": 2, "auth": {"salt": "aa11", "hash": "beefcafe"}}, store=mem)

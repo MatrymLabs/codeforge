@@ -228,8 +228,8 @@ def test_the_party_and_psay_verbs_are_reachable():
 
 
 def test_party_changes_push_char_party_frames_to_every_member():
-    from kernel.world import events  # noqa: PLC0415
-    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
+    from kernel.world import events
+    from kernel.world.session import SESSIONS, Session
 
     frames: dict[str, list] = {"alia": [], "bram": []}
     try:

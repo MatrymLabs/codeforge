@@ -156,3 +156,14 @@ removable = "Yes; test-only, isolated in e2e/ and its own CI job. `make check` a
 why = "Enforces the style-guide section-2 dependency direction (kernel imports nothing from adapters/content/parts); the `imports` step in make check gates on it."
 stdlib_alternative = "None; a custom AST import-graph check is possible but import-linter is the standard, tested tool."
 removable = "Yes; dev-time only. The contracts move with it if ever replaced."
+
+
+[dev.pytest-randomly]
+why = "A separate order-dependence gate, invoked by CX-RAND-1's test-order target with a recorded seed; the main make test disables the plugin. Seed 1 exposed 61 failures and seed 2 exposed 24, turning accidental order sensitivity into a reproducible finding."
+stdlib_alternative = "Run tests in file order and hope; the standard library has no pytest collection randomizer or reproducible seed mechanism."
+removable = "Dev-only and never imported by shipped code. Removing it loses the explicit order-dependence probe and its recorded findings, but the main test suite still runs."
+
+[dev.pytest-timeout]
+why = "A 300-second default timeout makes a hung test fail instead of blocking the suite; the ceiling is measured against the roughly 155-second serial run and protects both local Ritual runs and CI."
+stdlib_alternative = "A signal-based per-test timeout is available in the standard library only on some platforms and is not uniform on Windows; pytest-timeout provides the cross-platform pytest fixture/plugin behavior."
+removable = "Dev-only and never imported by shipped code. Removing it costs the hang protection and leaves the rest of the suite and application intact."

@@ -91,7 +91,7 @@ def find_clones(sources: Mapping[str, str], *, min_statements: int = 3) -> Clone
     skipped as trivial. Unparsable files are recorded in `skipped`, never fatal.
     """
     if min_statements < 1:
-        raise CloneAuditError(f"min_statements must be >= 1, got {min_statements}")  # noqa: TRY003
+        raise CloneAuditError(f"min_statements must be >= 1, got {min_statements}")
 
     buckets: dict[str, list[CloneLocation]] = {}
     sizes: dict[str, int] = {}

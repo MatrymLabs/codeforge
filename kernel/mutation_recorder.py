@@ -88,7 +88,7 @@ def load(path: Path | str = DEFAULT_EVIDENCE_PATH) -> MutationResult | None:
             run_date=date.fromisoformat(data["run_date"]),
         )
     except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
-        raise MutationEvidenceError(f"cannot read mutation evidence {p}: {exc}") from exc  # noqa: TRY003
+        raise MutationEvidenceError(f"cannot read mutation evidence {p}: {exc}") from exc
 
 
 def _main(argv: list[str]) -> int:

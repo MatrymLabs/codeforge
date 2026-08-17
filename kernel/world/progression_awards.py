@@ -55,7 +55,7 @@ def award_xp(session: Session, amount: int) -> str:
             f"*** LEVEL UP! You are now level {session.level}. "
             f"(+{STAT_POINTS_PER_LEVEL} points -- type ALLOCATE to spend them.) ***"
         )
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)
         announce(
@@ -105,7 +105,7 @@ def award_jp(session: Session, amount: int) -> str:
         lines.append(f"*** {JOBS[job]['name']} advances to job level {new_level}! ***")
     session.job_progress[job] = replace(prog, jp=new_jp, job_level=new_level)
     if session.named:
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)
     return "\n".join(lines)
@@ -120,7 +120,7 @@ def award_tp(session: Session, amount: int) -> str:
     prog = session.job_progress[job]
     session.job_progress[job] = replace(prog, tp=prog.tp + amount)
     if session.named:
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)
     return f"You gain {amount} TP ({JOBS[job]['name']})."

@@ -75,7 +75,7 @@ def test_bad_source_fails_loud():
 
 def test_render_empty_and_findings():
     assert "lean" in render([], threshold=10)
-    from kernel.complexity import FunctionComplexity  # noqa: PLC0415
+    from kernel.complexity import FunctionComplexity
 
     out = render([("x.py", FunctionComplexity("f", 12, 3))], threshold=10)
     assert "f" in out and "12" in out

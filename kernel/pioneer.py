@@ -28,10 +28,10 @@ def load_ladder(path: Path | None = None) -> dict:
     try:
         data = json.loads(src.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise PioneerError(f"unreadable risk ladder at {src}: {exc}") from exc  # noqa: TRY003
+        raise PioneerError(f"unreadable risk ladder at {src}: {exc}") from exc
     ladder = data.get("risk_ladder")
     if not isinstance(ladder, dict) or "levels" not in ladder:
-        raise PioneerError("risk ladder missing 'risk_ladder' / 'levels'")  # noqa: TRY003
+        raise PioneerError("risk ladder missing 'risk_ladder' / 'levels'")
     return ladder
 
 

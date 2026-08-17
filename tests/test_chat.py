@@ -81,7 +81,7 @@ def test_a_speaker_not_yet_in_the_world_is_refused():
 
 # --- the verb is reachable through the engine tick --------------------------------------------
 def test_the_chat_verb_is_reachable():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         alia = _hero("alia")

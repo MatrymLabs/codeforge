@@ -40,9 +40,9 @@ class ThrottleDecision:
 
 def _require_positive(name: str, value: float) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
-        raise RateLimitError(f"{name} must be a finite number, got {value!r}")  # noqa: TRY003
+        raise RateLimitError(f"{name} must be a finite number, got {value!r}")
     if value <= 0:
-        raise RateLimitError(f"{name} must be positive, got {value}")  # noqa: TRY003
+        raise RateLimitError(f"{name} must be positive, got {value}")
     return float(value)
 
 
@@ -77,9 +77,9 @@ class TokenBucket:
             else math.nan
         )
         if not math.isfinite(cost) or cost < 0:
-            raise RateLimitError(f"cost must be a finite, non-negative number, got {cost!r}")  # noqa: TRY003
+            raise RateLimitError(f"cost must be a finite, non-negative number, got {cost!r}")
         if cost > self.capacity:
-            raise RateLimitError(  # noqa: TRY003
+            raise RateLimitError(
                 f"cost {cost} exceeds capacity {self.capacity}; it could never fit"
             )
         return cost

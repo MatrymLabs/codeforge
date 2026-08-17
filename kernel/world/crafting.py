@@ -33,7 +33,7 @@ def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
     gate = recipe.get("requires")
     if not isinstance(gate, dict):
         return None
-    from kernel.world.professions import PROFESSIONS, level_for  # noqa: PLC0415
+    from kernel.world.professions import PROFESSIONS, level_for
 
     prof = gate.get("profession")
     if isinstance(prof, str):
@@ -44,13 +44,13 @@ def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
             return f"needs {name} level {need}"
     order = gate.get("order")
     if isinstance(order, str):
-        from kernel.world.orders import order_name  # noqa: PLC0415
+        from kernel.world.orders import order_name
 
         if getattr(session, "order", "") != order:
             return f"needs {order_name(order)}"  # order_name already carries 'the'
         standing = gate.get("standing")
         if isinstance(standing, int):
-            from kernel.world.reputation import standing_of, tier_for  # noqa: PLC0415
+            from kernel.world.reputation import standing_of, tier_for
 
             if standing_of(session, order) < standing:
                 return f"needs standing {tier_for(standing)} with {order_name(order)}"
@@ -105,7 +105,7 @@ def craft(session: Session, arg: str) -> str:
     line = f"You forge {items.ITEMS[made]['name']} at the hearth."
     # Forging advances the craft trade that makes this recipe (smithing/alchemy/leatherworking);
     # a rank-up appends its own line, a no-op is silent (kernel.world.professions).
-    from kernel.world.professions import advance, trade_for_craft  # noqa: PLC0415
+    from kernel.world.professions import advance, trade_for_craft
 
     rose = advance(session, trade_for_craft(name))
     if rose:

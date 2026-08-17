@@ -44,7 +44,7 @@ def _to_listing(row: Any) -> Listing:
 
 def create(seller: str, item: dict[str, Any], price: int, expiry_beat: int) -> int:
     """List an escrowed item for sale and return the new listing id."""
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         row = AuctionRow(
@@ -63,9 +63,9 @@ def create(seller: str, item: dict[str, Any], price: int, expiry_beat: int) -> i
 
 def active() -> list[Listing]:
     """Every live listing, oldest first, for the browse view."""
-    from sqlalchemy import select  # noqa: PLC0415
+    from sqlalchemy import select
 
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         rows = db.scalars(select(AuctionRow).order_by(AuctionRow.id))
@@ -74,7 +74,7 @@ def active() -> list[Listing]:
 
 def get(listing_id: int) -> Listing | None:
     """One listing by id, or None if it is gone (sold or expired)."""
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         row = db.get(AuctionRow, listing_id)
@@ -84,7 +84,7 @@ def get(listing_id: int) -> Listing | None:
 def buy(listing_id: int) -> Listing | None:
     """Remove and return a listing in one transaction (a sale). None if it is already gone, so two
     buyers can never both win the same item."""
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         row = db.get(AuctionRow, listing_id)
@@ -98,9 +98,9 @@ def buy(listing_id: int) -> Listing | None:
 
 def expired(now_beat: int) -> list[Listing]:
     """Every listing whose expiry beat has passed, for the sweep to return to its seller."""
-    from sqlalchemy import select  # noqa: PLC0415
+    from sqlalchemy import select
 
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         rows = db.scalars(select(AuctionRow).where(AuctionRow.expiry_beat <= now_beat))
@@ -109,7 +109,7 @@ def expired(now_beat: int) -> list[Listing]:
 
 def remove(listing_id: int) -> None:
     """Delete a listing by id (after its item was returned on expiry). A no-op if already gone."""
-    from kernel.world.db import AuctionRow, open_archive_session  # noqa: PLC0415
+    from kernel.world.db import AuctionRow, open_archive_session
 
     with open_archive_session() as db:
         row = db.get(AuctionRow, listing_id)

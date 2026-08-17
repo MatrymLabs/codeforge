@@ -66,9 +66,9 @@ class Question:
 
     def __post_init__(self) -> None:
         if self.kind not in _KINDS:
-            raise FormError(f"question {self.id!r}: unknown kind {self.kind!r}")  # noqa: TRY003
+            raise FormError(f"question {self.id!r}: unknown kind {self.kind!r}")
         if self.kind in (CHOICE, MULTI) and not self.choices:
-            raise FormError(f"question {self.id!r}: a {self.kind} question needs choices")  # noqa: TRY003
+            raise FormError(f"question {self.id!r}: a {self.kind} question needs choices")
 
     def is_active(self, answers: dict[str, Any]) -> bool:
         """True when this question applies given the answers so far (no condition == always)."""
@@ -100,7 +100,7 @@ class FormDefinition:
     def from_dict(cls, raw: Any) -> FormDefinition:
         """Parse a catalog dict, failing loud on a malformed shape (never a vacuous empty Form)."""
         if not isinstance(raw, dict):
-            raise FormError("catalog must be a mapping")  # noqa: TRY003
+            raise FormError("catalog must be a mapping")
         try:
             questions = {
                 qid: Question(
@@ -125,14 +125,14 @@ class FormDefinition:
             }
             common = tuple(raw["common_question_ids"])
         except (KeyError, TypeError) as exc:
-            raise FormError(f"malformed catalog: {exc}") from exc  # noqa: TRY003
+            raise FormError(f"malformed catalog: {exc}") from exc
         if not product_types:
-            raise FormError("a Form needs at least one product type")  # noqa: TRY003
+            raise FormError("a Form needs at least one product type")
         # Every referenced question id must exist -- a dangling branch is a filing error.
         for pid, pt in product_types.items():
             for qid in (*common, *pt.question_ids):
                 if qid not in questions:
-                    raise FormError(f"product type {pid!r} references unknown question {qid!r}")  # noqa: TRY003
+                    raise FormError(f"product type {pid!r} references unknown question {qid!r}")
         return cls(common, questions, product_types)
 
 
@@ -170,9 +170,9 @@ def load_definition(path: Path | None = None) -> FormDefinition:
     try:
         raw = json.loads(catalog_path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
-        raise FormError(f"no Engineering Form catalog at {catalog_path}") from exc  # noqa: TRY003
+        raise FormError(f"no Engineering Form catalog at {catalog_path}") from exc
     except json.JSONDecodeError as exc:
-        raise FormError(f"unreadable Form catalog {catalog_path}: {exc}") from exc  # noqa: TRY003
+        raise FormError(f"unreadable Form catalog {catalog_path}: {exc}") from exc
     return FormDefinition.from_dict(raw)
 
 
@@ -199,7 +199,7 @@ class EngineeringForm:
         pt = self._def.product_types.get(product_type)
         if pt is None:
             known = ", ".join(sorted(self._def.product_types)) or "(none)"
-            raise FormError(f"unknown product type {product_type!r}; known: {known}")  # noqa: TRY003
+            raise FormError(f"unknown product type {product_type!r}; known: {known}")
         return pt
 
     def _ordered_questions(self, pt: ProductType) -> list[Question]:
@@ -225,7 +225,7 @@ class EngineeringForm:
         valid_ids = {*self._def.common_question_ids, *pt.question_ids}
         unknown = set(answers) - valid_ids
         if unknown:
-            raise FormError(  # noqa: TRY003
+            raise FormError(
                 f"answer(s) not part of product type {product_type!r}: {', '.join(sorted(unknown))}"
             )
         collected: dict[str, Any] = {}
@@ -234,7 +234,7 @@ class EngineeringForm:
                 continue  # a conditional question whose trigger is not met: skip, do not require
             if question.id not in answers:
                 if question.required:
-                    raise FormError(f"missing required answer: {question.id!r} ({question.prompt})")  # noqa: TRY003
+                    raise FormError(f"missing required answer: {question.id!r} ({question.prompt})")
                 continue
             collected[question.id] = _coerce(question, answers[question.id])
         return BlueprintSpec(
@@ -255,7 +255,7 @@ def _coerce(question: Question, value: Any) -> Any:  # noqa: PLR0911, PLR0912
     if kind == TEXT:
         text = str(value).strip()
         if question.required and not text:
-            raise FormError(f"{question.id!r}: a non-empty answer is required")  # noqa: TRY003
+            raise FormError(f"{question.id!r}: a non-empty answer is required")
         return text
     if kind == BOOL:
         if isinstance(value, bool):
@@ -265,29 +265,29 @@ def _coerce(question: Question, value: Any) -> Any:  # noqa: PLR0911, PLR0912
             return True
         if token in _FALSE:
             return False
-        raise FormError(f"{question.id!r}: expected a yes/no answer, got {value!r}")  # noqa: TRY003
+        raise FormError(f"{question.id!r}: expected a yes/no answer, got {value!r}")
     if kind == NUMBER:
         try:
             return int(value) if str(value).strip().lstrip("-").isdigit() else float(value)
         except (TypeError, ValueError) as exc:
-            raise FormError(f"{question.id!r}: expected a number, got {value!r}") from exc  # noqa: TRY003
+            raise FormError(f"{question.id!r}: expected a number, got {value!r}") from exc
     if kind == CHOICE:
         if value not in question.choices:
-            raise FormError(  # noqa: TRY003
+            raise FormError(
                 f"{question.id!r}: {value!r} is not one of {', '.join(question.choices)}"
             )
         return value
     if kind == MULTI:
         if not isinstance(value, (list, tuple)):
-            raise FormError(f"{question.id!r}: expected a list of choices, got {value!r}")  # noqa: TRY003
+            raise FormError(f"{question.id!r}: expected a list of choices, got {value!r}")
         chosen = list(value)
         if question.required and not chosen:
             opts = ", ".join(question.choices)
-            raise FormError(f"{question.id!r}: choose at least one of {opts}")  # noqa: TRY003
+            raise FormError(f"{question.id!r}: choose at least one of {opts}")
         bad = [v for v in chosen if v not in question.choices]
         if bad:
-            raise FormError(f"{question.id!r}: not valid choice(s): {', '.join(map(str, bad))}")  # noqa: TRY003
+            raise FormError(f"{question.id!r}: not valid choice(s): {', '.join(map(str, bad))}")
         return chosen
-    raise FormError(  # noqa: TRY003
+    raise FormError(
         f"{question.id!r}: unhandled kind {kind!r}"
     )  # pragma: no cover (guarded above)

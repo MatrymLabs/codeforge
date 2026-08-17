@@ -30,7 +30,7 @@ def test_an_unknown_flag_is_an_error():
 
 
 def test_one_core_powers_both_the_game_panel_and_the_practical_control():
-    import kernel.features as game  # noqa: PLC0415
+    import kernel.features as game
 
     fc = FeatureControl(env={})
     assert isinstance(fc._registry, FlagRegistry)  # the practical control uses the core

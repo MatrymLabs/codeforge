@@ -44,16 +44,16 @@ def benchmark(
 ) -> BenchResult:
     """Drive the tick `iterations` times over the rotation and report the distribution."""
     if iterations <= 0:
-        raise BenchError(f"iterations must be > 0, got {iterations}")  # noqa: TRY003
+        raise BenchError(f"iterations must be > 0, got {iterations}")
     if warmup < 0:
-        raise BenchError(f"warmup must be >= 0, got {warmup}")  # noqa: TRY003
+        raise BenchError(f"warmup must be >= 0, got {warmup}")
     if not rotation:
-        raise BenchError("rotation must name at least one command")  # noqa: TRY003
+        raise BenchError("rotation must name at least one command")
 
-    from forge import (  # noqa: PLC0415
+    from forge import (
         handle_command,
     )  # lazy: the tick is the top, parts do not import it eagerly
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.session import Session
 
     session = Session(player_id="_bench")
     perf = time.perf_counter
@@ -103,7 +103,7 @@ def write_bench_report(
     result: BenchResult, root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/."""
-    from kernel.shelf.reporting import write_report  # noqa: PLC0415
+    from kernel.shelf.reporting import write_report
 
     return write_report(
         "performance", render_bench(result), root=root, stamp=stamp, slug="engine-tick"
@@ -121,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
     `--record <commit>` additionally appends the median as a Chronicle `metric` point (the retained
     trend series); `make trend` uses it. Plain `make bench` never touches the Chronicle.
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     result = benchmark()
@@ -129,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
     path = write_bench_report(result)
     print(f"\n  evidence -> {path}")
     if args and args[0] == "--record":
-        from kernel import chronicle  # noqa: PLC0415
+        from kernel import chronicle
 
         commit = args[1] if len(args) > 1 else "unknown"
         rec = chronicle.record_metric(

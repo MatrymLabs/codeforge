@@ -56,7 +56,7 @@ def scan_source(source: str, *, stocked: frozenset[str] = frozenset()) -> list[C
     try:
         tree = ast.parse(source)
     except SyntaxError as exc:
-        raise HarvestError(f"could not parse source: {exc}") from exc  # noqa: TRY003
+        raise HarvestError(f"could not parse source: {exc}") from exc
     seen: set[tuple[str, str]] = set()
     candidates: list[Candidate] = []
     for node in ast.walk(tree):
@@ -99,7 +99,7 @@ def render_candidates(candidates: list[Candidate]) -> str:
 
 def harvest(arg: str = "") -> str:  # noqa: ARG001
     """The `harvest` verb: scan the parts library for patterns not yet stocked in the store."""
-    from pathlib import Path  # noqa: PLC0415
+    from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent
     stocked = stocked_signals((root / "catalog" / "parts.yaml").read_text(encoding="utf-8"))

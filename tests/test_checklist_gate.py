@@ -33,14 +33,14 @@ class Verify(unittest.TestCase):
         att = _all_true(c)
         del att["rollback_plan"]
         with self.assertRaises(GateBlocked) as ctx:
-            from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+            from kernel.shelf.checklist_gate import verify
 
             verify(c, att)
         self.assertIn("rollback_plan", ctx.exception.failures)
         self.assertEqual(ctx.exception.phase, "time-out")
 
     def test_false_attestation_blocks(self):
-        from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+        from kernel.shelf.checklist_gate import verify
 
         c = time_out()
         att = _all_true(c)
@@ -49,7 +49,7 @@ class Verify(unittest.TestCase):
             verify(c, att)
 
     def test_optional_item_may_be_absent(self):
-        from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+        from kernel.shelf.checklist_gate import verify
 
         c = time_out()
         att = {i.key: True for i in c.items if i.required}  # omit the optional one
@@ -61,7 +61,7 @@ class Verify(unittest.TestCase):
         self.assertEqual(missing(c, _all_true(c)), ())
 
     def test_unknown_attestation_key_ignored(self):
-        from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+        from kernel.shelf.checklist_gate import verify
 
         c = Checklist("sign-in", (Item("x", "confirm x"),))
         verify(c, {"x": True, "irrelevant": False})  # no raise
@@ -85,14 +85,14 @@ class Refusal(unittest.TestCase):
             Item("", "prompt")
 
     def test_non_mapping_attestations(self):
-        from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+        from kernel.shelf.checklist_gate import verify
 
         with self.assertRaises(ChecklistError):
             verify(time_out(), ["not", "a", "map"])
 
 
 def verify_ok(checklist, attestations) -> bool:
-    from kernel.shelf.checklist_gate import verify  # noqa: PLC0415
+    from kernel.shelf.checklist_gate import verify
 
     try:
         verify(checklist, attestations)

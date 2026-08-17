@@ -158,7 +158,7 @@ def _spawn_wanderers(rooms: set[str]) -> None:
     for a live instance keeps a wanderer single across the map (one loose copy at a time). A
     prototype at its instance ceiling is skipped, never a crash. Only engine logic mutates state;
     the beat fires this, respawn.pick_room chooses where."""
-    from kernel.world.climate import now, season_of  # noqa: PLC0415
+    from kernel.world.climate import now, season_of
 
     for prototype, template in items.PROTOTYPES.items():
         pool = template.get("spawn_pool")

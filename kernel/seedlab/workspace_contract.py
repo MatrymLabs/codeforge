@@ -180,6 +180,6 @@ def build_workspace_contract(
 
 
 def _artifact_store(root: Path) -> ArtifactStore:
-    from kernel.seedlab.artifact_store import FileArtifactStore  # noqa: PLC0415
+    from kernel.seedlab.artifact_store import FileArtifactStore
 
     return FileArtifactStore(root)

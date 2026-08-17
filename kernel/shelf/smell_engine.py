@@ -275,7 +275,7 @@ def analyze(source: str, *, path: str = "", thresholds: Thresholds | None = None
     try:
         tree = ast.parse(source, filename=path or "<source>")
     except SyntaxError as exc:
-        raise SmellError(f"cannot parse {path or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise SmellError(f"cannot parse {path or 'source'}: {exc}") from exc
     out: list[Smell] = []
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):

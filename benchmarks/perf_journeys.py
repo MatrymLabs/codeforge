@@ -68,13 +68,13 @@ def measure_startup(reps: int = 15) -> dict:
 
 def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.bench import benchmark as command_bench  # noqa: PLC0415
-    from kernel.qualitygate import render_gate_all  # noqa: PLC0415
-    from kernel.workshop import reuse_search  # noqa: PLC0415
-    from kernel.world import npcs  # noqa: PLC0415
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.bench import benchmark as command_bench
+    from kernel.qualitygate import render_gate_all
+    from kernel.workshop import reuse_search
+    from kernel.world import npcs
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
 
     results: dict[str, dict] = {}
 
@@ -96,7 +96,7 @@ def run() -> dict[str, dict]:
     # 3. one combat sequence (single strike; reset dummy HP per rep so it is comparable) ---
     fighter = Session(player_id="_bench", location="courtyard")
     bind_calling(fighter, "vanguard")
-    from kernel.world.npcs import trace_npc  # noqa: PLC0415
+    from kernel.world.npcs import trace_npc
 
     dummy_id = trace_npc("dummy", "courtyard")
     assert dummy_id is not None, "expected a training dummy in courtyard"
@@ -151,7 +151,7 @@ def write_journeys_report(
     results: dict[str, dict], root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/ (like the tick)."""
-    from kernel.shelf.reporting import write_report  # noqa: PLC0415
+    from kernel.shelf.reporting import write_report
 
     return write_report(
         "performance", render_journeys(results), root=root, stamp=stamp, slug="five-journeys"

@@ -43,17 +43,17 @@ class Coinage:
 
     def __init__(self, tiers: list[Tier]) -> None:
         if not tiers:
-            raise CoinageError("a coinage needs at least one tier (the base unit).")  # noqa: TRY003
+            raise CoinageError("a coinage needs at least one tier (the base unit).")
         if tiers[0].per != 1:
-            raise CoinageError(f"the base tier {tiers[0].name!r} must have per == 1.")  # noqa: TRY003
+            raise CoinageError(f"the base tier {tiers[0].name!r} must have per == 1.")
         names = [t.name for t in tiers] + [t.symbol for t in tiers]
         if len(names) != len(set(names)):
-            raise CoinageError("coinage tier names and symbols must each be unique.")  # noqa: TRY003
+            raise CoinageError("coinage tier names and symbols must each be unique.")
         value = 1
         worth: list[int] = []
         for tier in tiers:
             if tier.per < 1:
-                raise CoinageError(f"tier {tier.name!r}: 'per' must be >= 1, got {tier.per}.")  # noqa: TRY003
+                raise CoinageError(f"tier {tier.name!r}: 'per' must be >= 1, got {tier.per}.")
             value *= tier.per
             worth.append(value)
         self.tiers = tiers

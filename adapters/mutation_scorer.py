@@ -156,11 +156,11 @@ class CosmicRayMutationScorer:
 
     def __post_init__(self) -> None:
         if self.per_mutant_timeout_seconds <= 0:
-            raise ValueError("per_mutant_timeout_seconds must be positive")  # noqa: TRY003
+            raise ValueError("per_mutant_timeout_seconds must be positive")
         if self.whole_run_budget_seconds <= 0:
-            raise ValueError("whole_run_budget_seconds must be positive")  # noqa: TRY003
+            raise ValueError("whole_run_budget_seconds must be positive")
         if self.max_mutants <= 0:
-            raise ValueError("max_mutants must be positive")  # noqa: TRY003
+            raise ValueError("max_mutants must be positive")
 
     def score(self, target_dir: Path) -> float | None:
         """Return a measured kill rate, or None when cosmic-ray cannot produce one honestly."""

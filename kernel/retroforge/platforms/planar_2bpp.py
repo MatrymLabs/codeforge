@@ -44,10 +44,10 @@ class InvalidCartridgeHeader(ValueError):  # noqa: N818
 def _cartridge_header(source: ByteSource) -> bytes:
     """Return a validated header without guessing at arbitrary binary data."""
     if len(source) < HEADER_SIZE:
-        raise InvalidCartridgeHeader("a cartridge header must contain 16 bytes")  # noqa: TRY003
+        raise InvalidCartridgeHeader("a cartridge header must contain 16 bytes")
     header = source.read(0, HEADER_SIZE)
     if header[:4] != FORMAT_SIGNATURE:
-        raise InvalidCartridgeHeader("source does not begin with the cartridge format signature")  # noqa: TRY003
+        raise InvalidCartridgeHeader("source does not begin with the cartridge format signature")
     return header
 
 

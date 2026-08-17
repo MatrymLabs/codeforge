@@ -176,7 +176,7 @@ class Paginate(unittest.TestCase):
 
 # --- helpers ---
 def _b64_of(raw: bytes) -> str:
-    import base64  # noqa: PLC0415
+    import base64
 
     return base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
 

@@ -64,7 +64,7 @@ def test_every_recipe_belongs_to_exactly_one_craft_trade(aethryn):
 def test_every_gatherable_material_belongs_to_a_gather_trade(aethryn):
     """Every material the wildlands can seed as a node must be claimed by a gather trade, or working
     it earns nothing."""
-    from kernel.world.wildlands import _BIOMES, gatherable_materials  # noqa: PLC0415
+    from kernel.world.wildlands import _BIOMES, gatherable_materials
 
     gatherable = {m for biome in _BIOMES for m in gatherable_materials(biome)}
     worked = {m for p in aethryn["profs"].values() if p["kind"] == "gather" for m in p["works"]}

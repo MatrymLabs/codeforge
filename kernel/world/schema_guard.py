@@ -57,7 +57,7 @@ def require_current_schema(engine: Engine | None = None) -> None:
     schema is current, so the server starts normally on a healthy or brand-new database."""
     gaps = missing_columns(engine)
     if gaps:
-        raise SchemaError(  # noqa: TRY003
+        raise SchemaError(
             "database schema is behind the code -- missing "
             f"{', '.join(gaps)}. Run `make db-migrate` (alembic upgrade head) before serving."
         )

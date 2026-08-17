@@ -54,7 +54,7 @@ _PIP_AUDIT_JSON = json.dumps(
 
 
 def _raise_oserror(*args, **kwargs):
-    raise OSError("git not found")  # noqa: TRY003
+    raise OSError("git not found")
 
 
 def _pin_reader(files: dict[str, str]):
@@ -182,10 +182,10 @@ def test_engine_files_tolerates_a_missing_forge_or_parts(tmp_path: Path) -> None
 
 def test_resolve_commit_degrades_when_git_cannot_run(tmp_path: Path, monkeypatch) -> None:
     # the git call raising (OSError: no git on PATH) must degrade to 'unknown', never propagate
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     def _boom(*args, **kwargs):
-        raise OSError("git not found")  # noqa: TRY003
+        raise OSError("git not found")
 
     monkeypatch.setattr(cu.subprocess, "run", _boom)
     assert cu._resolve_commit(tmp_path) == "unknown"
@@ -330,7 +330,7 @@ def test_render_audit_clean_and_with_findings() -> None:
 
 def test_pip_audit_runner_shells_out_and_cleans_up(monkeypatch) -> None:
     # cover the real runner offline: mock subprocess, prove it writes a reqs file and removes it
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     captured: dict[str, list[str]] = {}
 
@@ -350,7 +350,7 @@ def test_pip_audit_runner_shells_out_and_cleans_up(monkeypatch) -> None:
 
 
 def test_cli_diff_audit_flag_runs_the_scan(tmp_path, capsys, monkeypatch) -> None:
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu, "audit_requirements", lambda reqs, **k: ["pyyaml 5.3: PYSEC-1 (fix: 5.4)"]
@@ -515,7 +515,7 @@ def test_commit_present_and_read_at_commit_on_the_real_repo() -> None:
 
 
 def test_git_history_seams_degrade_when_git_raises(tmp_path: Path, monkeypatch) -> None:
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(cu.subprocess, "run", _raise_oserror)
     assert cu._commit_present(tmp_path, "abc1234") is False
@@ -715,7 +715,7 @@ def test_update_rolls_back_and_raises_on_an_unexpected_error(tmp_path: Path) -> 
 
 def test_update_default_validator_delegates_to_validate_cast(tmp_path: Path, monkeypatch) -> None:
     # validator=None uses _default_validator, which boots the cast via kernel.cast.validate_cast
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(cu, "validate_cast", lambda cd: (True, "delegated"))
     cast, source = _whole_cast_with_upstream_fix(tmp_path)
@@ -759,7 +759,7 @@ def test_render_update_heads_and_rollback_line() -> None:
 
 
 def test_cli_update_applies_and_returns_zero(tmp_path, capsys, monkeypatch) -> None:
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu,
@@ -771,7 +771,7 @@ def test_cli_update_applies_and_returns_zero(tmp_path, capsys, monkeypatch) -> N
 
 
 def test_cli_update_refusal_returns_nonzero(tmp_path, capsys, monkeypatch) -> None:
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu, "update_cast", lambda c, s, **k: UpdateOutcome(False, "3 local edit(s) ...", "a", "b")
@@ -786,7 +786,7 @@ def test_cli_update_usage_error(capsys) -> None:
 
 
 def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
-    import kernel.cast_update as cu  # noqa: PLC0415
+    import kernel.cast_update as cu
 
     def _raise(c, s, **k):
         raise CastError("boom")
@@ -798,8 +798,8 @@ def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
 
 def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
     # the default selective validator boots the cast with the surfaces' commands + server imports
-    import kernel.cast_update as cu  # noqa: PLC0415
-    from kernel import coupling  # noqa: PLC0415
+    import kernel.cast_update as cu
+    from kernel import coupling
 
     calls: dict[str, list[str]] = {}
     monkeypatch.setattr(coupling, "surface_commands", lambda s: ["look"])

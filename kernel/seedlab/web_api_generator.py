@@ -210,10 +210,10 @@ def test_an_unknown_path_is_404():
 def generate_web_api(model: ProjectModel, dest: Path) -> GeneratedArtifact:
     """Generate a runnable web API from a model into an empty `dest`. Reproducible + checksummed."""
     if not model.identity or not model.identity.strip():
-        raise GeneratorError("a project model needs a non-empty identity to generate a web API")  # noqa: TRY003
+        raise GeneratorError("a project model needs a non-empty identity to generate a web API")
     dest = Path(dest)
     if dest.exists() and any(dest.iterdir()):
-        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")  # noqa: TRY003
+        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")
     package = _package_name(model.identity)
     name = package.replace("_", "-")
     contents = _emit_files(model, package, name)

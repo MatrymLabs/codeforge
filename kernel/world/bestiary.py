@@ -312,7 +312,7 @@ def _ambient_loot(cls_name: str, biome: str, tier: str = "normal") -> dict[str, 
 
     The biome spoil is resolved through wildlands.biome_spoil (the single source of truth for a
     biome's herb); the import is local to avoid a cycle (wildlands imports this module)."""
-    from kernel.world.wildlands import biome_spoil  # noqa: PLC0415
+    from kernel.world.wildlands import biome_spoil
 
     loot = {"ember_shard": 3, "nothing": 2}
     material = _CLASS_MATERIAL.get(cls_name)

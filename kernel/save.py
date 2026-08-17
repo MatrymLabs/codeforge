@@ -60,7 +60,7 @@ def awaken_snapshot(path: Path = SAVE_PATH) -> tuple[str, str]:
     Degrades honestly, never with a stack trace: a malformed file or a save written by a
     NEWER schema starts a fresh world with a plain message (the file is left untouched).
     """
-    from kernel.world.world import START_ROOM  # noqa: PLC0415
+    from kernel.world.world import START_ROOM
 
     if not path.exists():
         return (START_ROOM, "No saved world found.")

@@ -66,7 +66,7 @@ def test_the_ledger_is_the_allowlist() -> None:
 
 
 def test_a_missing_ledger_yields_an_empty_allowlist() -> None:
-    from pathlib import Path  # noqa: PLC0415
+    from pathlib import Path
 
     assert ledger_packages(Path("/no/such/dependency_ledger.toml")) == set()
 

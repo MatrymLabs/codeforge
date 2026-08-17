@@ -34,7 +34,7 @@ def _clean_category(category: str) -> str:
     otherwise write, and mkdir, OUTSIDE reports/). Fail loud: a mis-filed report is a silent gap."""
     cat = category.strip()
     if not cat or "/" in cat or "\\" in cat or ".." in cat:
-        raise ValueError(  # noqa: TRY003
+        raise ValueError(
             f"reporting: category must be a single simple name, not {category!r} "
             "(no path separators, no '..' traversal)"
         )

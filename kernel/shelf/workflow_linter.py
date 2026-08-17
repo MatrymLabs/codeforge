@@ -124,7 +124,7 @@ def lint_workflow(
 ) -> list[Finding]:
     """Return the findings for one parsed workflow document (empty = clean)."""
     if not isinstance(doc, Mapping):
-        raise WorkflowLintError("workflow document must be a mapping (parsed YAML)")  # noqa: TRY003
+        raise WorkflowLintError("workflow document must be a mapping (parsed YAML)")
     budget = budget or Budget()
     findings: list[Finding] = []
 
@@ -195,9 +195,9 @@ def worst_severity(findings: list[Finding]) -> str | None:
 def lint_yaml(text: str, *, name: str = "", budget: Budget | None = None) -> list[Finding]:
     """Convenience: parse a workflow YAML string and lint it. Requires PyYAML."""
     try:
-        import yaml  # optional; the core lint_workflow is dependency-free  # noqa: PLC0415
+        import yaml  # optional; the core lint_workflow is dependency-free
     except ImportError as exc:  # pragma: no cover - environment-dependent
-        raise WorkflowLintError(  # noqa: TRY003
+        raise WorkflowLintError(
             "lint_yaml needs PyYAML; use lint_workflow(parsed_dict) to stay stdlib"
         ) from exc
     doc = yaml.safe_load(text)

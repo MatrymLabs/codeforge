@@ -149,7 +149,7 @@ def analyze_repo(  # noqa: PLR0912, PLR0915
 ) -> CrossModuleReport:
     """Reverse-engineer cross-module symbol usage from {module_name: source}. Pure/testable."""
     if not isinstance(modules, dict):
-        raise CrossModuleError("modules must be a dict of {module_name: source}")  # noqa: TRY003
+        raise CrossModuleError("modules must be a dict of {module_name: source}")
     internal = set(modules)
 
     # pass 1: parse + catalog public definitions

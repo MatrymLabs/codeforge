@@ -111,7 +111,7 @@ class ToolRunResult:
                 when=data.get("when", ""),
             )
         except (KeyError, TypeError, ValueError) as exc:
-            raise RunLogError(f"malformed run record: {exc}") from exc  # noqa: TRY003
+            raise RunLogError(f"malformed run record: {exc}") from exc
 
 
 def run_tool(
@@ -130,7 +130,7 @@ def run_tool(
     table = allowlist if allowlist is not None else DEFAULT_PROFILE
     argv = table.get(profile)
     if argv is None:
-        raise CommandRefused(f"{profile!r} is not an approved command profile")  # noqa: TRY003
+        raise CommandRefused(f"{profile!r} is not an approved command profile")
     root = Path(source.root)  # the connector already resolved + bounded this
     started = time.monotonic()
     try:
@@ -225,7 +225,7 @@ class FileRunLog:
                 try:
                     out.append(ToolRunResult.from_dict(json.loads(line)))
                 except json.JSONDecodeError as exc:
-                    raise RunLogError(f"corrupt run log line in {path}: {exc}") from exc  # noqa: TRY003
+                    raise RunLogError(f"corrupt run log line in {path}: {exc}") from exc
         return out
 
 

@@ -42,15 +42,15 @@ def journey_region(
     each waypoint and completes at the last. Fails loud (JourneyError) on no waypoints, a dup, or a
     label that is not lowercase_snake_case (the Linker would reject it too; caught early)."""
     if not region or not region.strip():
-        raise JourneyError("a journey needs a non-empty region name")  # noqa: TRY003
+        raise JourneyError("a journey needs a non-empty region name")
     if not waypoints:
-        raise JourneyError("a journey needs at least one waypoint")  # noqa: TRY003
+        raise JourneyError("a journey needs at least one waypoint")
     labels = [start, *waypoints]
     if len(set(labels)) != len(labels):
-        raise JourneyError(f"journey room labels must be unique: {labels}")  # noqa: TRY003
+        raise JourneyError(f"journey room labels must be unique: {labels}")
     for label in labels:
         if not _LABEL.match(label):
-            raise JourneyError(f"journey label {label!r} must be lowercase_snake_case")  # noqa: TRY003
+            raise JourneyError(f"journey label {label!r} must be lowercase_snake_case")
 
     # Rooms: start -> waypoint[0] -> waypoint[1] -> ... , each linked to its neighbours.
     rooms: list[RoomSpec] = []

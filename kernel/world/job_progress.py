@@ -63,7 +63,7 @@ class InMemoryJobProgressStore:
 def _default_store() -> JobProgressStore:
     """The default backend: the SQL adapter, imported lazily so this module stays engine-free at
     import time (the JobProgress value object rides the hot `import forge` path)."""
-    from kernel.world.job_progress_sql import SqlJobProgressStore  # noqa: PLC0415
+    from kernel.world.job_progress_sql import SqlJobProgressStore
 
     return SqlJobProgressStore()
 

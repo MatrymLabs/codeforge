@@ -35,10 +35,10 @@ def load_contract(path: Path | None = None) -> dict[str, Any]:
     the archetype shares do not sum to 1, so a broken contract never silently under-checks."""
     where = path if path is not None else _CONTRACT_PATH
     if not where.exists():
-        raise BlueprintError(f"Generation contract file not found: {where}")  # noqa: TRY003
+        raise BlueprintError(f"Generation contract file not found: {where}")
     data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Generation contract file is not a mapping: {where}")  # noqa: TRY003
+        raise BlueprintError(f"Generation contract file is not a mapping: {where}")
 
     for section in (
         "required_area_fields",
@@ -48,17 +48,17 @@ def load_contract(path: Path | None = None) -> dict[str, Any]:
         "minor_area_archetypes",
     ):
         if not data.get(section):
-            raise BlueprintError(f"generation contract: missing or empty section {section!r}")  # noqa: TRY003
+            raise BlueprintError(f"generation contract: missing or empty section {section!r}")
 
     archetypes = data["minor_area_archetypes"]
     for arch in archetypes:
         if not arch.get("id") or arch.get("share") is None:
-            raise BlueprintError(  # noqa: TRY003
+            raise BlueprintError(
                 f"generation contract archetype {arch.get('id')!r}: needs an id and share"
             )
     total = sum(a["share"] for a in archetypes)
     if abs(total - 1.0) > 1e-6:  # noqa: PLR2004
-        raise BlueprintError(f"generation contract: archetype shares must sum to 1.0, got {total}")  # noqa: TRY003
+        raise BlueprintError(f"generation contract: archetype shares must sum to 1.0, got {total}")
     return data
 
 

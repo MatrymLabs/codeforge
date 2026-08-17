@@ -21,7 +21,7 @@ class StreamFramer:
 
     def __init__(self, delimiter: bytes = b"\n", *, encoding: str = "utf-8", strip: bytes = b"\r"):
         if not delimiter:
-            raise ValueError("delimiter must be a non-empty byte string")  # noqa: TRY003
+            raise ValueError("delimiter must be a non-empty byte string")
         self._delimiter = delimiter
         self._encoding = encoding
         self._strip = strip

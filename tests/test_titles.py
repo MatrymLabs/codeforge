@@ -36,7 +36,7 @@ def test_an_all_control_title_is_refused():
 
 
 def test_title_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     handle_command(_player(), "title Keeper Of The Forge")
     assert "Keeper Of The Forge" in handle_command(_player(), "title")  # original case kept

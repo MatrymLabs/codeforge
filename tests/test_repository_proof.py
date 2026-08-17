@@ -84,9 +84,9 @@ def test_a_missing_target_is_refused_loudly(tmp_path: Path) -> None:
 
 def test_the_recorded_facts_outlive_the_process(tmp_path: Path) -> None:
     """A fresh process must recover the same correspondence from disk, not recompute it."""
-    import importlib  # noqa: PLC0415
+    import importlib
 
-    from kernel.seedlab import repository_proof  # noqa: PLC0415
+    from kernel.seedlab import repository_proof
 
     branch, commit = _real_repo(tmp_path / "repo")  # noqa: RUF059
     first = model_repository(tmp_path / "repo")

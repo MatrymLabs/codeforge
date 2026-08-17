@@ -83,7 +83,7 @@ def test_the_sheet_lists_every_order_with_tier_and_marks_the_sworn():
 
 
 def test_swearing_an_order_earns_a_starting_standing():
-    from kernel.world.orders import swear_order  # noqa: PLC0415
+    from kernel.world.orders import swear_order
 
     s = Session(player_id="rep", location="void", named=True)
     swear_order(s, "making")

@@ -37,10 +37,10 @@ class ByteSource:
     def read(self, offset: int, count: int) -> bytes:
         """`count` bytes at `offset`, or OutOfRange. Never fewer than asked for."""
         if offset < 0 or count < 0:
-            raise OutOfRange(f"{self.name}: negative read, offset={offset} count={count}")  # noqa: TRY003
+            raise OutOfRange(f"{self.name}: negative read, offset={offset} count={count}")
         end = offset + count
         if end > len(self.data):
-            raise OutOfRange(  # noqa: TRY003
+            raise OutOfRange(
                 f"{self.name}: read of {count} byte(s) at offset {offset} ends at {end}, "
                 f"past the {len(self.data)}-byte source"
             )

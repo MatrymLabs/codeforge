@@ -70,9 +70,9 @@ class HelpIndex:
         table: dict[str, HelpEntry] = {}
         for entry in entries:
             if not _COMMAND_NAME.match(entry.name):
-                raise HelpError(f"help entry name is not a valid command name: {entry.name!r}")  # noqa: TRY003
+                raise HelpError(f"help entry name is not a valid command name: {entry.name!r}")
             if entry.name in table:
-                raise HelpError(f"duplicate help entry name: {entry.name!r}")  # noqa: TRY003
+                raise HelpError(f"duplicate help entry name: {entry.name!r}")
             table[entry.name] = entry
         return HelpIndex(table)
 
@@ -88,8 +88,8 @@ class HelpIndex:
         near = self._near_matches(name)
         if near:
             hint = ", ".join(near)
-            raise HelpError(f"no help topic {name!r}; did you mean: {hint}")  # noqa: TRY003
-        raise HelpError(f"no help topic {name!r}")  # noqa: TRY003
+            raise HelpError(f"no help topic {name!r}; did you mean: {hint}")
+        raise HelpError(f"no help topic {name!r}")
 
     def search(self, query: str) -> list[str]:
         """Return sorted command names whose name or purpose contains query.
@@ -99,7 +99,7 @@ class HelpIndex:
         """
         needle = query.strip().lower()
         if not needle:
-            raise HelpError("search query is empty")  # noqa: TRY003
+            raise HelpError("search query is empty")
         hits = [
             name
             for name, entry in self._entries.items()

@@ -35,6 +35,6 @@ def test_feature_on_reflects_a_runtime_toggle():
 
 
 def test_features_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     assert "feature flags" in handle_command(_player(), "features")

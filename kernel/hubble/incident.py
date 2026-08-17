@@ -53,13 +53,13 @@ class Incident:
 
     def __post_init__(self) -> None:
         if not self.incident_id.strip():
-            raise IncidentError("incident needs an id")  # noqa: TRY003
+            raise IncidentError("incident needs an id")
         if self.severity not in SEVERITIES:
-            raise IncidentError(f"unknown severity {self.severity!r}; choose {SEVERITIES}")  # noqa: TRY003
+            raise IncidentError(f"unknown severity {self.severity!r}; choose {SEVERITIES}")
         if self.type not in INCIDENT_TYPES:
-            raise IncidentError(f"unknown type {self.type!r}; choose {INCIDENT_TYPES}")  # noqa: TRY003
+            raise IncidentError(f"unknown type {self.type!r}; choose {INCIDENT_TYPES}")
         if not self.summary.strip():
-            raise IncidentError(f"incident {self.incident_id!r} needs a summary")  # noqa: TRY003
+            raise IncidentError(f"incident {self.incident_id!r} needs a summary")
 
 
 @dataclass(frozen=True)
@@ -103,17 +103,17 @@ def _strs(raw: Any, name: str, incident_id: str) -> tuple[str, ...]:
     if raw is None:
         return ()
     if isinstance(raw, str) or not hasattr(raw, "__iter__"):
-        raise IncidentError(f"incident {incident_id!r}: {name!r} must be a list of strings")  # noqa: TRY003
+        raise IncidentError(f"incident {incident_id!r}: {name!r} must be a list of strings")
     return tuple(str(item) for item in raw)
 
 
 def from_dict(raw: Any) -> Incident:
     """Parse an incident from a plain dict. A bad field fails loud (a gate, like any loader)."""
     if not isinstance(raw, dict):
-        raise IncidentError("an incident record must be a mapping")  # noqa: TRY003
+        raise IncidentError("an incident record must be a mapping")
     incident_id = str(raw.get("incident_id", "")).strip()
     if not incident_id:
-        raise IncidentError("incident record missing 'incident_id'")  # noqa: TRY003
+        raise IncidentError("incident record missing 'incident_id'")
     return Incident(
         incident_id=incident_id,
         severity=str(raw.get("severity", "")),

@@ -45,7 +45,7 @@ def test_catalog_columns_do_not_collide_on_a_long_label():
 
 
 def test_npc_catalog_files_the_librarian():
-    from kernel.catalog import npc_catalog  # noqa: PLC0415
+    from kernel.catalog import npc_catalog
 
     out = npc_catalog()
     assert "librarian" in out
@@ -54,7 +54,7 @@ def test_npc_catalog_files_the_librarian():
 
 
 def test_item_catalog_files_the_copper_key():
-    from kernel.catalog import item_catalog  # noqa: PLC0415
+    from kernel.catalog import item_catalog
 
     out = item_catalog()
     assert "copper_key" in out
@@ -65,7 +65,7 @@ def test_item_catalog_files_the_copper_key():
 def test_npc_catalog_preserves_a_multi_word_proper_noun():
     """The filing table sentence-cases a name (a capitalized cell) without str.title() mangling an
     authored proper noun: 'Wren the Smith' must not become 'Wren The Smith'."""
-    from kernel.catalog import npc_catalog  # noqa: PLC0415
+    from kernel.catalog import npc_catalog
 
     npcs = {
         "wren": Npc(
@@ -88,7 +88,7 @@ def test_npc_catalog_preserves_a_multi_word_proper_noun():
 def test_item_catalog_capitalizes_a_lowercase_authored_name():
     """A lower-case authored item name renders capitalized in the table (like the room column),
     but a hyphenated proper noun keeps its internal caps."""
-    from kernel.catalog import item_catalog  # noqa: PLC0415
+    from kernel.catalog import item_catalog
 
     items = {
         "copper_key": Item(

@@ -31,9 +31,9 @@ def _free_port() -> int:
 @pytest.fixture(scope="session")
 def base_url():
     """Serve adapters.api.app on a background uvicorn thread; yield its URL."""
-    import uvicorn  # noqa: PLC0415
+    import uvicorn
 
-    from adapters.api import app  # noqa: PLC0415
+    from adapters.api import app
 
     class _ThreadedServer(uvicorn.Server):
         def install_signal_handlers(self) -> None:  # don't hijack signals off the main thread
@@ -47,7 +47,7 @@ def base_url():
     while not server.started and time.time() < deadline:
         time.sleep(0.05)
     if not server.started:
-        raise RuntimeError("uvicorn did not start for the E2E run")  # noqa: TRY003
+        raise RuntimeError("uvicorn did not start for the E2E run")
     yield f"http://127.0.0.1:{port}"
     server.should_exit = True
     thread.join(timeout=5)
@@ -55,7 +55,7 @@ def base_url():
 
 @pytest.fixture(scope="session")
 def _browser():
-    from playwright.sync_api import sync_playwright  # noqa: PLC0415
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
         browser = p.chromium.launch()

@@ -114,7 +114,7 @@ def test_name_refuses_taken_and_invalid_names():
 
 
 def test_broadcasts_follow_the_new_name():
-    from kernel.world.events import announce, bind_echo, unbind_echo  # noqa: PLC0415
+    from kernel.world.events import announce, bind_echo, unbind_echo
 
     s = Session(player_id="player1", location="library")
     SESSIONS["player1"] = s
@@ -128,7 +128,7 @@ def test_broadcasts_follow_the_new_name():
 
 
 def test_display_name_is_projection_only():
-    from kernel.world.session import display_name  # noqa: PLC0415
+    from kernel.world.session import display_name
 
     assert display_name("matrym") == "Matrym"
     assert display_name("iron_fist") == "Iron Fist"
@@ -136,7 +136,7 @@ def test_display_name_is_projection_only():
 
 
 def test_sentence_case_preserves_authored_proper_nouns():
-    from kernel.world.session import sentence_case  # noqa: PLC0415
+    from kernel.world.session import sentence_case
 
     # only the first character is lifted; the rest of an authored name is left alone
     assert (

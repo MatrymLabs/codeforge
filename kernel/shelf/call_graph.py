@@ -101,7 +101,7 @@ def analyze(source: str, *, module: str = "", hotspot_count: int = 5) -> CallGra
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise CallGraphError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise CallGraphError(f"cannot parse {module or 'source'}: {exc}") from exc
 
     defs = _defs(tree)
     # index simple names -> qualnames. A method `run` maps from both "run" and "Class.run".

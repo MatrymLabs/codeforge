@@ -62,7 +62,7 @@ def test_run_gate_honors_the_shared_stat_cache() -> None:
 def test_gate_all_stats_each_path_once(monkeypatch: pytest.MonkeyPatch) -> None:
     # The whole self-audit stats any given proof path at most once, across all records and
     # across QG02/QG03/QG05 (which previously re-checked file+tests).
-    from pathlib import Path as _P  # noqa: N814, PLC0415
+    from pathlib import Path as _P # noqa: N814
 
     seen: list[str] = []
     real_exists = _P.exists
@@ -107,7 +107,7 @@ def test_the_shipped_board_has_no_failures() -> None:
     # The growth gate (hard bar): no filed object may be `active` without a file + tests
     # -- that would be a FAIL. A missing docs link is only a soft `watch`. So a red board
     # means an untested/unfiled active object slipped in; CI must catch it here.
-    from kernel.registry import load_collective  # noqa: PLC0415
+    from kernel.registry import load_collective
 
     fails = [r.designation for r in gate_all(load_collective()) if r.verdict == FAIL]
     assert not fails, f"QA board has failures (untested/unfiled active objects): {fails}"
@@ -137,7 +137,7 @@ def test_safety_review_flags_item_and_prototype_branches() -> None:
 
 
 def test_render_paths_handle_an_unknown_designation() -> None:
-    from kernel.qualitygate import render_gate, render_safety  # noqa: PLC0415
+    from kernel.qualitygate import render_gate, render_safety
 
     assert "No object" in render_gate("RM-09.999")
     assert "No object" in render_safety("RM-09.999")

@@ -40,7 +40,7 @@ def test_logbooks_are_isolated_per_player():
 
 
 def test_journal_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     s = _player()
     assert "#1" in handle_command(s, "journal A Note With Case")

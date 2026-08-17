@@ -230,11 +230,11 @@ def test_rename_gmcp_moves_the_channel_to_the_new_name():
 
 def test_push_gmcp_prunes_a_sink_that_raises_oserror():
     def _dead(_pkg: str, _data: object) -> None:
-        raise OSError("socket closed")  # noqa: TRY003
+        raise OSError("socket closed")
 
     bind_gmcp("ada", _dead)
     push_gmcp(["ada"], "Char.Party", {})  # must not raise; the dead sink is pruned
-    from kernel.world.events import _GMCP_SINKS  # noqa: PLC0415
+    from kernel.world.events import _GMCP_SINKS
 
     assert "ada" not in _GMCP_SINKS  # pruned, so it is never tried again
 
@@ -495,7 +495,7 @@ def test_on_room_skips_an_occupant_with_no_sink():
 def test_render_scene_shows_a_remote_player_from_the_roster():
     # Phase 5.2: a player hosted on ANOTHER process (present only in the shared roster, not local
     # SESSIONS) appears in the room scene, so both gateways show one shared room.
-    from kernel.world import presence  # noqa: PLC0415
+    from kernel.world import presence
 
     bus.reset_bus()
     presence._reset()

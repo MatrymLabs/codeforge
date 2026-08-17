@@ -94,7 +94,7 @@ def test_grant_refuses_the_unauthenticated(client):
 
 def test_get_login_guard_returns_the_shared_throttle():
     """The production seam hands back the one shared guard (tests override it for isolation)."""
-    from adapters.api import _login_guard, get_login_guard  # noqa: PLC0415
+    from adapters.api import _login_guard, get_login_guard
 
     assert get_login_guard() is _login_guard
 

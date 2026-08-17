@@ -148,7 +148,7 @@ def analyze(source: str, *, module: str = "") -> ModelReport:  # noqa: PLR0912, 
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise ModelExtractorError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise ModelExtractorError(f"cannot parse {module or 'source'}: {exc}") from exc
 
     unknowns: list[str] = []
 

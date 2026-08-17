@@ -61,14 +61,14 @@ def default_gates() -> TopologyGates:
 def load_topology_spec(path: Path | None = None) -> dict[str, Any]:
     """The World Topology Doctrine as data: directions, terrain + passability, zone backings, gates,
     and the two-layer generation design. Fails loud if the spec is missing or malformed."""
-    import yaml  # a real dep (loaders use it); imported here to keep the module light  # noqa: E501, PLC0415
+    import yaml  # a real dep (loaders use it); imported here to keep the module light # noqa: E501
 
     spec_path = path or _SPEC_PATH
     if not spec_path.exists():
-        raise TopologyError(f"topology spec not found at {spec_path}")  # noqa: TRY003
+        raise TopologyError(f"topology spec not found at {spec_path}")
     data = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or "gates" not in data or "terrain" not in data:
-        raise TopologyError("topology spec must be a mapping with 'gates' and 'terrain'")  # noqa: TRY003
+        raise TopologyError("topology spec must be a mapping with 'gates' and 'terrain'")
     return data
 
 
@@ -91,13 +91,13 @@ class TopologyReport:
 
 def _validate(exits: Exits, start: str) -> None:
     if not exits:
-        raise TopologyError("an empty graph has no topology to judge")  # noqa: TRY003
+        raise TopologyError("an empty graph has no topology to judge")
     if start not in exits:
-        raise TopologyError(f"start room {start!r} is not in the graph")  # noqa: TRY003
+        raise TopologyError(f"start room {start!r} is not in the graph")
     for room, outs in exits.items():
         for direction, dest in outs.items():
             if dest not in exits:
-                raise TopologyError(  # noqa: TRY003
+                raise TopologyError(
                     f"room {room!r} exit {direction!r} -> {dest!r}: names no room (dangling exit)"
                 )
 

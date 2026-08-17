@@ -54,10 +54,10 @@ class MutationResult:
             ("incomplete", self.incomplete),
         ):
             if value < 0:
-                raise MutationKpiError(f"{name} cannot be negative (got {value})")  # noqa: TRY003
+                raise MutationKpiError(f"{name} cannot be negative (got {value})")
         accounted = self.killed + self.survived + self.incomplete
         if accounted > self.total:
-            raise MutationKpiError(  # noqa: TRY003
+            raise MutationKpiError(
                 f"killed+survived+incomplete ({accounted}) exceeds total ({self.total})"
             )
 
@@ -108,7 +108,7 @@ def mutation_score_kpi(
         )
     age_days = (today - result.run_date).days
     if age_days < 0:
-        raise MutationKpiError(f"run_date {result.run_date} is in the future relative to {today}")  # noqa: TRY003
+        raise MutationKpiError(f"run_date {result.run_date} is in the future relative to {today}")
     if age_days > freshness_days:
         return MutationKpi(
             NOT_COMPUTABLE,
@@ -152,7 +152,7 @@ def parse_cr_report(text: str, run_date: date) -> MutationResult:
         if m is None
     ]
     if missing:
-        raise MutationKpiError(f"cr-report summary missing line(s): {', '.join(missing)}")  # noqa: TRY003
+        raise MutationKpiError(f"cr-report summary missing line(s): {', '.join(missing)}")
 
     total = int(total_m.group(1))  # type: ignore[union-attr]
     complete = int(complete_m.group(1))  # type: ignore[union-attr]
@@ -160,7 +160,7 @@ def parse_cr_report(text: str, run_date: date) -> MutationResult:
     killed = complete - survived
     incomplete = total - complete
     if killed < 0:
-        raise MutationKpiError(  # noqa: TRY003
+        raise MutationKpiError(
             f"cr-report incoherent: surviving ({survived}) exceeds complete ({complete})"
         )
     return MutationResult(
@@ -175,7 +175,7 @@ def parse_cr_rate(text: str) -> float:
     try:
         pct = float(token)
     except ValueError as exc:
-        raise MutationKpiError(f"cr-rate output not a number: {text!r}") from exc  # noqa: TRY003
+        raise MutationKpiError(f"cr-rate output not a number: {text!r}") from exc
     if not 0.0 <= pct <= 100.0:  # noqa: PLR2004
-        raise MutationKpiError(f"cr-rate survival percent out of range: {pct}")  # noqa: TRY003
+        raise MutationKpiError(f"cr-rate survival percent out of range: {pct}")
     return pct / 100.0

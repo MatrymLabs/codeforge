@@ -88,8 +88,8 @@ def stage_isolation(sabotage: bool) -> dict[str, object]:
         # Put the ENGINE that poured this product AHEAD of the product itself (so, after the
         # bootstrap, not before it). If the stage still reports PASS it is not measuring isolation.
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    import kernel  # noqa: PLC0415
-    import kernel.world.characters as chars  # noqa: PLC0415
+    import kernel
+    import kernel.world.characters as chars
 
     target = Path.cwd().resolve()
     engine_of = Path(kernel.__file__).resolve().parent.parent
@@ -103,10 +103,10 @@ def stage_isolation(sabotage: bool) -> dict[str, object]:
 
 def stage_persist(sabotage: bool) -> dict[str, object]:
     _bootstrap()
-    from kernel.world.characters import save_character  # noqa: PLC0415
-    from kernel.world.jobs import JOBS  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
-    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.characters import save_character
+    from kernel.world.jobs import JOBS
+    from kernel.world.session import Session
+    from kernel.world.world import WORLD
 
     session = Session(player_id=PROBE)
     session.named = True
@@ -145,8 +145,8 @@ def stage_persist(sabotage: bool) -> dict[str, object]:
 
 def stage_restart(expected: dict[str, object], sabotage: bool) -> dict[str, object]:
     _bootstrap()
-    from kernel.world.characters import load_character, restore_character  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.characters import load_character, restore_character
+    from kernel.world.session import Session
 
     casefile = load_character(PROBE)
     if casefile is None:
@@ -181,8 +181,8 @@ def stage_restart(expected: dict[str, object], sabotage: bool) -> dict[str, obje
 def stage_survive(expected: dict[str, object], sabotage: bool) -> dict[str, object]:
     """Total loss, not a restart: back the database up, DELETE it, restore, read the hero back."""
     _bootstrap()
-    from kernel.world.characters import load_character  # noqa: PLC0415
-    from kernel.world.db import DB_PATH, backup_db, restore_db  # noqa: PLC0415
+    from kernel.world.characters import load_character
+    from kernel.world.db import DB_PATH, backup_db, restore_db
 
     live = Path(DB_PATH)
     backup = backup_db()

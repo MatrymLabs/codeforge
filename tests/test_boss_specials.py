@@ -146,8 +146,8 @@ def test_the_special_loop_reads_through_an_npc_blow(monkeypatch):
     monkeypatch.setattr(boss_specials, "_SPECIAL_RNG", _Hit())  # always begins the wind-up
     monkeypatch.setattr(afflictions, "_AFFLICT_RNG", _Miss())  # unleash affliction is NOT a roll
     s = SESSIONS["matrym"] = Session(player_id="matrym", location="courtyard")
-    from kernel.world.jobs import bind_calling  # noqa: PLC0415
-    from kernel.world.resources import Resource  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling
+    from kernel.world.resources import Resource
 
     bind_calling(s, "vanguard")
     s.resources["hp"] = Resource(name="hp", current=500, maximum=500)  # enough to survive the spike
@@ -177,7 +177,7 @@ def test_the_special_loop_reads_through_an_npc_blow(monkeypatch):
 
 # --- seed validation ---------------------------------------------------------------------------
 def _load(tmp_path, body: str):
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     path = tmp_path / "npcs.yaml"
     path.write_text(body)
@@ -185,7 +185,7 @@ def _load(tmp_path, body: str):
 
 
 def test_special_rejects_an_unknown_key(tmp_path):
-    from kernel.world.seed import BlueprintError  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError
 
     load = _load(tmp_path, "b:\n  location: a\n  hp: 10\n  special: {telegraph: x, power: 9}\n")
     with pytest.raises(BlueprintError, match="special"):
@@ -193,7 +193,7 @@ def test_special_rejects_an_unknown_key(tmp_path):
 
 
 def test_special_rejects_a_non_positive_mult(tmp_path):
-    from kernel.world.seed import BlueprintError  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError
 
     load = _load(tmp_path, "b:\n  location: a\n  hp: 10\n  special: {mult: 0}\n")
     with pytest.raises(BlueprintError, match="special.mult"):  # noqa: RUF043
@@ -201,7 +201,7 @@ def test_special_rejects_a_non_positive_mult(tmp_path):
 
 
 def test_a_valid_special_loads(tmp_path):
-    from kernel.world.seed import load_npcs  # noqa: PLC0415
+    from kernel.world.seed import load_npcs
 
     path = tmp_path / "npcs.yaml"
     path.write_text(

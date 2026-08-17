@@ -22,7 +22,7 @@ class Down(Exception):  # noqa: N818
 
 
 def _fail():
-    raise Down("upstream down")  # noqa: TRY003
+    raise Down("upstream down")
 
 
 def test_a_broken_service_trips_independently_of_a_healthy_one():
@@ -52,7 +52,7 @@ def test_it_recovers_after_the_reset_timeout():
 
 
 def test_one_core_powers_both_the_game_relay_and_the_practical_service_breaker():
-    import kernel.relay as game  # noqa: PLC0415
+    import kernel.relay as game
 
     sb = ServiceBreakers(clock=FakeClock())
     sb.call("x", lambda: "ok")

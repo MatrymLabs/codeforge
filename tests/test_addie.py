@@ -130,7 +130,7 @@ def test_a_ledger_with_an_unlooped_cycle_reports_fail(tmp_path):
 
 
 def test_main_passes_on_the_seeded_ledger(capsys):
-    from kernel import addie  # noqa: PLC0415
+    from kernel import addie
 
     assert addie.main([]) == 0
     assert "ADDIE loop: PASS" in capsys.readouterr().out
@@ -140,7 +140,7 @@ def test_main_passes_on_the_seeded_ledger(capsys):
 
 
 def test_the_addie_verb_renders_the_loop():
-    from kernel.addie import addie  # noqa: PLC0415
+    from kernel.addie import addie
 
     assert "ADDIE loop:" in addie("")
     assert "ADDIE loop:" in addie("status")
@@ -149,8 +149,8 @@ def test_the_addie_verb_renders_the_loop():
 
 def test_the_addie_verb_is_reachable_through_the_engine_tick():
     # a feature is not wired until handle_command proves it reachable (the CARD convention)
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "addie")
     assert "ADDIE loop:" in out

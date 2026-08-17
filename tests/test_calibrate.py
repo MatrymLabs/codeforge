@@ -48,7 +48,7 @@ def test_calibration_gives_up_after_the_attempt_budget():
 
 
 def test_calibrate_flows_through_the_engine_tick():
-    from forge import handle_command  # noqa: PLC0415
+    from forge import handle_command
 
     set_calibration_rng(_rng_sequence([0.9]))  # succeeds first try
     out = handle_command(_player(), "calibrate")

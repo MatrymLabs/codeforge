@@ -137,11 +137,11 @@ def anthropic_client() -> Any:
     ANTHROPIC_API_KEY in the env and the `anthropic` package (`pip install codeforge[ai]`).
     Never reached in CI or offline play (tests inject a fake client)."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise ArchitectError("set ANTHROPIC_API_KEY to use a Claude-backed feature")  # noqa: TRY003
+        raise ArchitectError("set ANTHROPIC_API_KEY to use a Claude-backed feature")
     try:
-        import anthropic  # noqa: PLC0415
+        import anthropic
     except ImportError as exc:  # an optional extra, not a core dependency
-        raise ArchitectError("Claude features need `pip install codeforge[ai]`") from exc  # noqa: TRY003
+        raise ArchitectError("Claude features need `pip install codeforge[ai]`") from exc
     return anthropic.Anthropic()
 
 

@@ -141,7 +141,7 @@ def analyze(
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise ControlFlowError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise ControlFlowError(f"cannot parse {module or 'source'}: {exc}") from exc
 
     profiles: list[FlowProfile] = []
     for stmt in tree.body:

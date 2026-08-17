@@ -88,16 +88,16 @@ def load_field_configs(path: Path) -> list[dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or not raw:
-        raise FieldZoneError(f"{path}: a fields config must be a non-empty mapping of id -> row")  # noqa: TRY003
+        raise FieldZoneError(f"{path}: a fields config must be a non-empty mapping of id -> row")
     configs: list[dict[str, Any]] = []
     for zone_id, row in raw.items():
         if not isinstance(row, dict):
-            raise FieldZoneError(f"{path}: field {zone_id!r} must be a mapping")  # noqa: TRY003
+            raise FieldZoneError(f"{path}: field {zone_id!r} must be a mapping")
         for key in _REQUIRED:
             if key not in row:
-                raise FieldZoneError(f"{path}: field {zone_id!r} is missing required key {key!r}")  # noqa: TRY003
+                raise FieldZoneError(f"{path}: field {zone_id!r} is missing required key {key!r}")
         if row["attach_dir"] not in _REVERSE:
-            raise FieldZoneError(  # noqa: TRY003
+            raise FieldZoneError(
                 f"{path}: field {zone_id!r} attach_dir {row['attach_dir']!r} is not a compass dir"
             )
         configs.append({**row, "id": str(zone_id)})
@@ -111,7 +111,7 @@ def _gate_cell(rooms: dict[str, Room], back: str) -> str:
     for rid in sorted(rooms):
         if back not in rooms[rid]["exits"]:
             return rid
-    raise FieldZoneError(  # noqa: TRY003
+    raise FieldZoneError(
         f"no edge cell free to graft a {back!r} exit home"
     )  # pragma: no cover
 
@@ -137,15 +137,15 @@ def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:
     try:
         region = generate_region(spec)
     except WorldgenError as exc:
-        raise FieldZoneError(f"field zone {cfg['id']!r}: {exc}") from exc  # noqa: TRY003
+        raise FieldZoneError(f"field zone {cfg['id']!r}: {exc}") from exc
     if not region.ok:
-        raise FieldZoneError(  # noqa: TRY003
+        raise FieldZoneError(
             f"field zone {cfg['id']!r} is not a world-shaped, reachable field: "
             f"{region.topology.verdict}, landmarks_reachable={region.landmarks_reachable}"
         )
     clash = set(region.rooms) & taken
     if clash:
-        raise FieldZoneError(  # noqa: TRY003
+        raise FieldZoneError(
             f"field zone {cfg['id']!r} room ids collide with the world: {sorted(clash)[:3]}"
         )
 

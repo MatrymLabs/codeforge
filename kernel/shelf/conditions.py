@@ -62,14 +62,14 @@ def validate(expression: str) -> ast.Expression:
     A seed-load gate: it never evaluates, so it needs no context -- it just proves the expression is
     a safe condition (no calls/attributes/imports/etc.) before the world trusts it at runtime."""
     if not expression.strip():
-        raise ConditionError("empty condition")  # noqa: TRY003
+        raise ConditionError("empty condition")
     try:
         tree = ast.parse(expression, mode="eval")
     except SyntaxError as exc:
-        raise ConditionError(f"cannot parse condition {expression!r}: {exc}") from exc  # noqa: TRY003
+        raise ConditionError(f"cannot parse condition {expression!r}: {exc}") from exc
     for node in ast.walk(tree):
         if not isinstance(node, _ALLOWED):
-            raise ConditionError(  # noqa: TRY003
+            raise ConditionError(
                 f"forbidden construct in condition {expression!r}: {type(node).__name__}"
             )
     return tree
@@ -88,7 +88,7 @@ def _eval(node: ast.AST, ctx: dict[str, Any]) -> Any:
         return node.value
     if isinstance(node, ast.Name):
         if node.id not in ctx:
-            raise ConditionError(f"unknown name in condition: {node.id!r}")  # noqa: TRY003
+            raise ConditionError(f"unknown name in condition: {node.id!r}")
         return ctx[node.id]
     if isinstance(node, ast.BoolOp):
         values = [_eval(v, ctx) for v in node.values]
@@ -103,7 +103,7 @@ def _eval(node: ast.AST, ctx: dict[str, Any]) -> Any:
                 return False
             left = right
         return True
-    raise ConditionError(  # noqa: TRY003
+    raise ConditionError(
         f"unsupported condition node: {type(node).__name__}"
     )  # pragma: no cover
 
@@ -113,4 +113,4 @@ def _compare(op: ast.cmpop, left: Any, right: Any) -> bool:
     try:
         return bool(apply(left, right))
     except TypeError as exc:
-        raise ConditionError(f"cannot compare {left!r} and {right!r}: {exc}") from exc  # noqa: TRY003
+        raise ConditionError(f"cannot compare {left!r} and {right!r}: {exc}") from exc

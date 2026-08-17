@@ -107,7 +107,7 @@ def pick_room(
     draw = rng or SPAWN_RNG
     if weights is not None:
         if len(weights) != len(candidates):
-            raise ValueError("pick_room: weights and candidates must be the same length")  # noqa: TRY003
+            raise ValueError("pick_room: weights and candidates must be the same length")
         return draw.choices(candidates, weights=weights, k=1)[0]
     return draw.choice(candidates)
 

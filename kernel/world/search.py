@@ -69,7 +69,7 @@ class _WorldIndex:
         self._fts = allow_fts
         try:
             if not allow_fts:
-                raise sqlite3.OperationalError(  # noqa: TRY003, TRY301
+                raise sqlite3.OperationalError( # noqa: TRY301
                     "fts disabled"
                 )  # forced substring path (tests)
             self._con.execute("CREATE VIRTUAL TABLE docs USING fts5(doc_id UNINDEXED, body)")

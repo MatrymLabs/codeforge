@@ -56,7 +56,7 @@ def find_clones(sources: dict[str, str], *, min_nodes: int = DEFAULT_MIN_NODES) 
         try:
             tree = ast.parse(source)
         except SyntaxError as exc:
-            raise CloneError(f"could not parse {label}: {exc}") from exc  # noqa: TRY003
+            raise CloneError(f"could not parse {label}: {exc}") from exc
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                 sig = shape(node)

@@ -39,7 +39,7 @@ class SanitizeRule:
         if self.max_length is not None and (
             not isinstance(self.max_length, int) or self.max_length < 0
         ):
-            raise SanitizeError(f"max_length must be a non-negative int, got {self.max_length!r}")  # noqa: TRY003
+            raise SanitizeError(f"max_length must be a non-negative int, got {self.max_length!r}")
 
 
 DEFAULT = SanitizeRule()
@@ -48,7 +48,7 @@ DEFAULT = SanitizeRule()
 def sanitize(text: str, rule: SanitizeRule = DEFAULT) -> str:
     """Normalize `text` per `rule`. Deterministic and idempotent."""
     if not isinstance(text, str):
-        raise SanitizeError(f"sanitize expects a string, got {type(text).__name__}")  # noqa: TRY003
+        raise SanitizeError(f"sanitize expects a string, got {type(text).__name__}")
     out = text
     if rule.strip_controls:
         out = out.replace("\t", " ").replace("\n", " ").replace("\r", " ")

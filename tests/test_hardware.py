@@ -177,7 +177,7 @@ def test_the_catalog_is_parsed_once_and_cached(tmp_path):
 
 
 def test_cached_result_equals_a_fresh_parse(tmp_path):
-    from kernel.shelf import loader_cache  # noqa: PLC0415
+    from kernel.shelf import loader_cache
 
     path = _write(tmp_path, _one_part("alpha"))
     cached = load_catalog(path)
@@ -187,7 +187,7 @@ def test_cached_result_equals_a_fresh_parse(tmp_path):
 
 
 def test_an_on_disk_edit_invalidates_the_cache(tmp_path):
-    import os  # noqa: PLC0415
+    import os
 
     path = _write(tmp_path, _one_part("alpha"))
     assert load_catalog(path)[0].id == "alpha"
@@ -201,7 +201,7 @@ def test_a_bad_edit_never_poisons_the_cache(tmp_path):
     path = _write(tmp_path, _one_part("alpha"))
     assert load_catalog(path)[0].id == "alpha"
     _write(tmp_path, "- {id: bad}\n")  # missing required fields
-    import os  # noqa: PLC0415
+    import os
 
     st = os.stat(path)  # noqa: PTH116
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
@@ -257,10 +257,10 @@ def test_a_vendored_part_is_never_poured_into_the_public_shelf() -> None:
     pour did not. This is the assertion that makes the next one fail loudly instead of silently
     republishing someone else's work.
     """
-    from pathlib import Path  # noqa: PLC0415
+    from pathlib import Path
 
-    from kernel.hardware import VENDORED_CORES  # noqa: PLC0415
-    from kernel.shelf_pour import _core_files  # noqa: PLC0415
+    from kernel.hardware import VENDORED_CORES
+    from kernel.shelf_pour import _core_files
 
     poured = {
         p.stem for p in _core_files(Path(__file__).resolve().parent.parent / "kernel" / "shelf")

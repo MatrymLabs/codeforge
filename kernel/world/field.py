@@ -84,7 +84,7 @@ class Stack:
 @lru_cache(maxsize=1)
 def _passable_terrain() -> frozenset[str]:
     """The terrain types a player may stand on, read from the doctrine's passability matrix."""
-    import yaml  # noqa: PLC0415
+    import yaml
 
     spec = _ROOT / "content" / "world" / "topology.yaml"
     data = yaml.safe_load(spec.read_text(encoding="utf-8"))
@@ -140,12 +140,12 @@ def build_field(  # noqa: PLR0912
     features. Returns room_id -> {name, desc, exits}. An impassable cell yields NO room (terrain is
     a wall). Fails loud on an empty field or an unknown terrain."""
     if not cells:
-        raise FieldError("a field needs at least one cell")  # noqa: TRY003
+        raise FieldError("a field needs at least one cell")
     passable = _passable_terrain()
     known = passable | {"river", "water", "cliff", "wall"}  # impassable terrain is still valid
     for (x, y), cell in cells.items():
         if cell.terrain not in known:
-            raise FieldError(f"cell ({x},{y}): unknown terrain {cell.terrain!r}")  # noqa: TRY003
+            raise FieldError(f"cell ({x},{y}): unknown terrain {cell.terrain!r}")
 
     def rid(x: int, y: int) -> str:
         return f"{name}_{x}_{y}"
@@ -184,9 +184,9 @@ def build_field(  # noqa: PLR0912
     for stack in stacks:
         base_id = rid(*stack.at)
         if base_id not in rooms:
-            raise FieldError(f"stack at {stack.at}: no passable field cell to stack on")  # noqa: TRY003
+            raise FieldError(f"stack at {stack.at}: no passable field cell to stack on")
         if stack.direction not in ("up", "down"):
-            raise FieldError(f"stack {stack.room_id!r}: direction must be 'up' or 'down'")  # noqa: TRY003
+            raise FieldError(f"stack {stack.room_id!r}: direction must be 'up' or 'down'")
         rooms[base_id]["exits"][stack.direction] = stack.room_id
         rooms[base_id]["exits"][stack.verb] = stack.room_id
         back = _OPPOSITE[stack.direction]

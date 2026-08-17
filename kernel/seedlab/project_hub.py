@@ -73,7 +73,7 @@ class ProjectHub:
 
     def _state(self, seed_id: str, state: ProjectState | None) -> ProjectState:
         if state is not None and state.seed_id != seed_id:
-            raise ProjectHubError(  # noqa: TRY003
+            raise ProjectHubError(
                 f"project state is for {state.seed_id!r}, not the requested {seed_id!r}"
             )
         return state or ProjectState(seed_id)

@@ -108,6 +108,6 @@ def sell(session: Session, word: str) -> str:
 def _save(session: Session) -> None:
     """Persist the purse (and inventory-derived state) after a trade, for a named hero."""
     if session.named:
-        from kernel.world.characters import save_character  # noqa: PLC0415
+        from kernel.world.characters import save_character
 
         save_character(session)

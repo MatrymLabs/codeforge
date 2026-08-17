@@ -58,12 +58,12 @@ def _resolve_in_sandbox(target: str, base: Path) -> Path:
     """Resolve a target strictly inside the sandbox, or refuse. Blocks absolute paths and
     `..` traversal -- generation can only ever land under workspace/."""
     if not target.strip():
-        raise ProposalError("refused: empty target path")  # noqa: TRY003
+        raise ProposalError("refused: empty target path")
     if target.startswith(("/", "~")) or Path(target).is_absolute():
-        raise ProposalError(f"refused: target must be a relative path inside {_SANDBOX}/")  # noqa: TRY003
+        raise ProposalError(f"refused: target must be a relative path inside {_SANDBOX}/")
     dest = (base / target).resolve()
     if not dest.is_relative_to(base.resolve()):
-        raise ProposalError(f"refused: '{target}' escapes the {_SANDBOX}/ sandbox")  # noqa: TRY003
+        raise ProposalError(f"refused: '{target}' escapes the {_SANDBOX}/ sandbox")
     return dest
 
 
@@ -80,13 +80,13 @@ def propose(
 ) -> PatchProposal:
     """Build a PatchProposal (UNAPPROVED). Validates and fails loud; writes NOTHING to disk."""
     if not _LABEL.match(proposal_id):
-        raise ProposalError(f"proposal_id {proposal_id!r} must be lowercase_snake_case")  # noqa: TRY003
+        raise ProposalError(f"proposal_id {proposal_id!r} must be lowercase_snake_case")
     if not content.strip():
-        raise ProposalError(f"proposal {proposal_id!r}: 'content' is empty -- nothing to generate")  # noqa: TRY003
+        raise ProposalError(f"proposal {proposal_id!r}: 'content' is empty -- nothing to generate")
     if not rationale.strip():
-        raise ProposalError(f"proposal {proposal_id!r}: 'rationale' (why) is required")  # noqa: TRY003
+        raise ProposalError(f"proposal {proposal_id!r}: 'rationale' (why) is required")
     if risk not in _RISK:
-        raise ProposalError(f"proposal {proposal_id!r}: risk must be one of {_RISK}")  # noqa: TRY003
+        raise ProposalError(f"proposal {proposal_id!r}: risk must be one of {_RISK}")
     # A basic path check now; the authoritative sandbox check happens again at apply time.
     _resolve_in_sandbox(target, _root() / _SANDBOX)
     return PatchProposal(
@@ -111,13 +111,13 @@ def apply_proposal(proposal: PatchProposal, root: Path | None = None) -> Path:
     """Generate an APPROVED proposal into the sandbox. Refuses unless approved; refuses to
     escape the sandbox; refuses to overwrite. Returns the path written. (Phase 10.)"""
     if not proposal.approved:
-        raise ProposalError(  # noqa: TRY003
+        raise ProposalError(
             "refused: not approved -- a human must approve before any byte is written"
         )
     base = (root if root is not None else _root()) / _SANDBOX
     dest = _resolve_in_sandbox(proposal.target, base)
     if dest.exists():
-        raise ProposalError(  # noqa: TRY003
+        raise ProposalError(
             f"refused: '{proposal.target}' already exists -- generation never overwrites"
         )
     dest.parent.mkdir(parents=True, exist_ok=True)

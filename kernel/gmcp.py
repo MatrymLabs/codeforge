@@ -82,7 +82,7 @@ def gmcp_frame(package: str, data: object) -> bytes:
     body-less package (the space and payload are omitted).
     """
     if not package:
-        raise ValueError("GMCP package name must not be empty")  # noqa: TRY003
+        raise ValueError("GMCP package name must not be empty")
     body = package if data is None else f"{package} {json.dumps(data, separators=(',', ':'))}"
     return bytes([IAC, SB, GMCP_OPT]) + escape_iac(body.encode("utf-8")) + bytes([IAC, SE])
 
@@ -190,7 +190,7 @@ def room_report(session: Session) -> dict[str, object]:
     old client ignores it. An unknown location renders honestly rather than raising: the player is
     somewhere the world does not describe, and the client should see that, not a crash.
     """
-    from kernel.world.zones import zone_of  # noqa: PLC0415
+    from kernel.world.zones import zone_of
 
     room = WORLD.get(session.location)
     if room is None:
@@ -214,8 +214,8 @@ def target_report(session: Session) -> dict[str, object] | None:
     (`aggro_beats`) or one already wounded (`hp_now < hp`). A non-combatant (a shopkeeper, no `hp`)
     is never a target. Read-only projection of live NPC state, like the room and vitals reports.
     """
-    from kernel.world.npcs import NPCS, npcs_in  # noqa: PLC0415
-    from kernel.world.session import sentence_case  # noqa: PLC0415
+    from kernel.world.npcs import NPCS, npcs_in
+    from kernel.world.session import sentence_case
 
     for nid in npcs_in(session.location):
         npc = NPCS[nid]
@@ -245,7 +245,7 @@ def target_report(session: Session) -> dict[str, object] | None:
 def quest_report(session: Session) -> dict[str, str] | None:
     """A Char.Quest payload for the player's foremost unfinished story quest, or None when the
     authored arcs are all done. Delegates to the quest card's own read-only projection."""
-    from kernel.world.quest import active_quest  # noqa: PLC0415
+    from kernel.world.quest import active_quest
 
     return active_quest(session)
 
@@ -254,7 +254,7 @@ def party_report(session: Session) -> dict[str, object] | None:
     """A Char.Party payload: the player's fellowship as {members: [names], leader, size}, or None
     when solo (an empty frame then clears the client's party panel, like Char.Target). Read-only
     projection of the party registry; the leader is always members[0]."""
-    from kernel.world.party import party_of, roster_frame  # noqa: PLC0415
+    from kernel.world.party import party_of, roster_frame
 
     band = party_of(session.player_id)
     if band is None:
@@ -265,7 +265,7 @@ def party_report(session: Session) -> dict[str, object] | None:
 def guild_report(session: Session) -> dict[str, str] | None:
     """A Char.Guild payload: the player's guild as {name, rank}, or None when guildless (an empty
     frame clears the client's guild panel). Read-only projection of the persisted guild columns."""
-    from kernel.world.session import display_name  # noqa: PLC0415
+    from kernel.world.session import display_name
 
     if not session.guild:
         return None
@@ -276,7 +276,7 @@ def mail_report(session: Session) -> dict[str, int] | None:
     """A Char.Mail payload: {unread, total} for the hero's inbox, or None when the inbox is empty
     (an empty frame then clears the client's mail badge). A named hero only; an unnamed connection
     at the login desk has no inbox to read."""
-    from kernel.world.mail_store import count, unread_count  # noqa: PLC0415
+    from kernel.world.mail_store import count, unread_count
 
     if not session.named:
         return None
@@ -290,7 +290,7 @@ def friends_report(session: Session) -> dict[str, object] | None:
     """A Char.Friends payload: {online, total, names} for the hero's friends who are logged in right
     now, or None when the list is empty. Read-only projection of session.friends against who is
     seated (SESSIONS); names are the online friends, so a client can show who is around."""
-    from kernel.world.session import SESSIONS, display_name  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, display_name
 
     if not session.friends:
         return None
@@ -307,7 +307,7 @@ def items_report(session: Session) -> dict[str, dict[str, object]]:
     show what is worn, what it grants (the flat stat modifiers), and its rarity tier (to colour it).
     Empty when nothing is worn (an empty frame clears the client's panel, like Char.Target).
     Read-only projection of `session.equipped`; no value a client sees that the game would not."""
-    from kernel.world.items import ITEMS  # noqa: PLC0415
+    from kernel.world.items import ITEMS
 
     worn: dict[str, dict[str, object]] = {}
     for slot, iid in session.equipped.items():
@@ -327,7 +327,7 @@ def skills_report(session: Session) -> list[dict[str, object]]:
     recommend a SPECIFIC move for a foe's weakness ("cast Frostbite"), not just name the weakness.
     Empty when the character has no calling. Read-only projection of the ability data.
     """
-    from kernel.world.abilities import abilities_for_session  # noqa: PLC0415
+    from kernel.world.abilities import abilities_for_session
 
     kit: list[dict[str, object]] = []
     for _label, ability in abilities_for_session(session):
@@ -348,8 +348,8 @@ def resists_report(session: Session) -> dict[str, str]:
     mirror of a foe's profile in Char.Target. So a client can warn when a foe's blows strike an
     element you are Weak to (or reassure you it is one you shrug off). Empty before a calling, or
     when the calling resists nothing out of the ordinary. Read-only projection of the job's grid."""
-    from kernel.world.character_view import session_resistance  # noqa: PLC0415
-    from kernel.world.score_sheet_model import RESIST_ORDER  # noqa: PLC0415
+    from kernel.world.character_view import session_resistance
+    from kernel.world.score_sheet_model import RESIST_ORDER
 
     grid: dict[str, str] = {}
     for code in RESIST_ORDER:

@@ -78,7 +78,7 @@ class LuaSandbox:
 
     def __init__(self, *, instruction_budget: int = 200_000) -> None:
         if not _HAS_LUA:
-            raise ScriptError(  # noqa: TRY003
+            raise ScriptError(
                 "Lua scripting is unavailable (install the [lua] extra: pip install '.[lua]')"
             )
         self._budget = instruction_budget
@@ -114,7 +114,7 @@ class LuaSandbox:
         """Compile + run `code` in a fresh sandbox. Returns its value + emitted lines, or raises
         ScriptError on any syntax error, sandbox violation, or budget overrun."""
         if not isinstance(code, str):
-            raise ScriptError("script code must be a str")  # noqa: TRY003
+            raise ScriptError("script code must be a str")
         output: list[str] = []
 
         def emit(text: Any) -> None:
@@ -132,7 +132,7 @@ def main(
     argv: list[str] | None = None,
 ) -> None:  # pragma: no cover - a runnable demo, not unit-tested
     """Evaluate a Lua snippet in the sandbox: `python -m kernel.scripting 'return 2+2'`."""
-    import sys  # noqa: PLC0415
+    import sys
 
     args = argv if argv is not None else sys.argv[1:]
     if not scripting_available():

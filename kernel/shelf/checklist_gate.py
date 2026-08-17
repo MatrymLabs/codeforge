@@ -38,7 +38,7 @@ class Item:
 
     def __post_init__(self) -> None:
         if not self.key:
-            raise ChecklistError("item key must be non-empty")  # noqa: TRY003
+            raise ChecklistError("item key must be non-empty")
 
 
 @dataclass(frozen=True)
@@ -50,12 +50,12 @@ class Checklist:
 
     def __post_init__(self) -> None:
         if not self.phase:
-            raise ChecklistError("checklist phase must be non-empty")  # noqa: TRY003
+            raise ChecklistError("checklist phase must be non-empty")
         if not self.items:
-            raise ChecklistError("a checklist needs at least one item")  # noqa: TRY003
+            raise ChecklistError("a checklist needs at least one item")
         keys = [i.key for i in self.items]
         if len(keys) != len(set(keys)):
-            raise ChecklistError("checklist item keys must be unique")  # noqa: TRY003
+            raise ChecklistError("checklist item keys must be unique")
 
 
 def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str = "") -> None:  # noqa: ARG001
@@ -65,7 +65,7 @@ def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str
     checklist is authoritative). Passes silently when the gate is satisfied.
     """
     if not isinstance(attestations, Mapping):
-        raise ChecklistError("attestations must be a mapping of item key -> bool")  # noqa: TRY003
+        raise ChecklistError("attestations must be a mapping of item key -> bool")
     failures: list[str] = []
     for item in checklist.items:
         if not item.required:

@@ -88,7 +88,7 @@ def test_craft_fails_gracefully_when_the_output_is_unknown(monkeypatch):
 
 
 def test_craft_is_reachable_through_the_engine_tick(monkeypatch):
-    import forge  # noqa: PLC0415
+    import forge
 
     monkeypatch.setattr(crafting, "RECIPES", _RECIPES)
     out = forge.handle_command(Session(player_id="maker", location="courtyard"), "craft")
@@ -114,7 +114,7 @@ def test_an_open_recipe_has_no_lock():
 
 
 def test_a_gated_recipe_is_locked_until_the_profession_level(monkeypatch):
-    from kernel.world import professions  # noqa: PLC0415
+    from kernel.world import professions
 
     monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
     monkeypatch.setattr(crafting, "RECIPES", _GATED)
@@ -148,7 +148,7 @@ def test_an_order_gated_recipe_needs_the_sworn_order():
 
 
 def test_the_recipe_sheet_marks_a_locked_recipe(monkeypatch):
-    from kernel.world import professions  # noqa: PLC0415
+    from kernel.world import professions
 
     monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
     monkeypatch.setattr(crafting, "RECIPES", _GATED)
@@ -157,7 +157,7 @@ def test_the_recipe_sheet_marks_a_locked_recipe(monkeypatch):
 
 
 def test_load_recipes_accepts_a_valid_gate(tmp_path):
-    from kernel.world.seed import load_recipes  # noqa: PLC0415
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -173,7 +173,7 @@ def test_load_recipes_accepts_a_valid_gate(tmp_path):
 
 
 def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {level_up: 3}\n", encoding="utf-8")
@@ -182,7 +182,7 @@ def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
 
 
 def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -193,7 +193,7 @@ def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_pat
 
 
 def test_load_recipes_rejects_a_non_string_profession(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -205,7 +205,7 @@ def test_load_recipes_rejects_a_non_string_profession(tmp_path):
 
 
 def test_load_recipes_rejects_a_non_string_order(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: 3}\n", encoding="utf-8")
@@ -214,7 +214,7 @@ def test_load_recipes_rejects_a_non_string_order(tmp_path):
 
 
 def test_load_recipes_accepts_an_order_only_gate(tmp_path):
-    from kernel.world.seed import load_recipes  # noqa: PLC0415
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -251,7 +251,7 @@ def test_a_standing_gate_needs_the_reputation_tier(monkeypatch):
 
 
 def test_load_recipes_accepts_a_standing_gate(tmp_path):
-    from kernel.world.seed import load_recipes  # noqa: PLC0415
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -262,7 +262,7 @@ def test_load_recipes_accepts_a_standing_gate(tmp_path):
 
 
 def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -273,7 +273,7 @@ def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
 
 
 def test_load_recipes_rejects_a_non_positive_standing(tmp_path):
-    from kernel.world.seed import BlueprintError, load_recipes  # noqa: PLC0415
+    from kernel.world.seed import BlueprintError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(

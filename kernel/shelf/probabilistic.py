@@ -51,10 +51,10 @@ def _to_bytes(item: Item) -> bytes:
     if isinstance(item, str):
         return item.encode("utf-8")
     if isinstance(item, bool):  # bool is an int subclass; reject it explicitly as ambiguous
-        raise ProbabilisticError("bool is not a supported item (did you mean 0/1?)")  # noqa: TRY003
+        raise ProbabilisticError("bool is not a supported item (did you mean 0/1?)")
     if isinstance(item, int):
         return str(item).encode("ascii")
-    raise ProbabilisticError(  # noqa: TRY003
+    raise ProbabilisticError(
         f"unsupported item type: {type(item).__name__} (use str, bytes, or int)"
     )
 
@@ -91,9 +91,9 @@ class BloomFilter:
 
     def __init__(self, capacity: int, false_positive_rate: float = 0.01) -> None:
         if capacity <= 0:
-            raise ProbabilisticError(f"capacity must be >= 1, got {capacity}")  # noqa: TRY003
+            raise ProbabilisticError(f"capacity must be >= 1, got {capacity}")
         if not (0.0 < false_positive_rate < 1.0):
-            raise ProbabilisticError(  # noqa: TRY003
+            raise ProbabilisticError(
                 f"false_positive_rate must be in (0, 1), got {false_positive_rate}"
             )
         num_bits = math.ceil(-capacity * math.log(false_positive_rate) / (math.log(2) ** 2))
@@ -145,7 +145,7 @@ class HyperLogLog:
 
     def __init__(self, precision: int = 14) -> None:
         if not (4 <= precision <= 16):  # noqa: PLR2004
-            raise ProbabilisticError(f"precision must be in [4, 16], got {precision}")  # noqa: TRY003
+            raise ProbabilisticError(f"precision must be in [4, 16], got {precision}")
         self.precision = precision
         self.num_registers = 1 << precision
         self._registers = bytearray(self.num_registers)
@@ -203,9 +203,9 @@ class CountMinSketch:
 
     def __init__(self, epsilon: float = 0.001, delta: float = 0.001) -> None:
         if not (0.0 < epsilon < 1.0):
-            raise ProbabilisticError(f"epsilon must be in (0, 1), got {epsilon}")  # noqa: TRY003
+            raise ProbabilisticError(f"epsilon must be in (0, 1), got {epsilon}")
         if not (0.0 < delta < 1.0):
-            raise ProbabilisticError(f"delta must be in (0, 1), got {delta}")  # noqa: TRY003
+            raise ProbabilisticError(f"delta must be in (0, 1), got {delta}")
         self.epsilon = epsilon
         self.delta = delta
         self.width = math.ceil(math.e / epsilon)
@@ -220,7 +220,7 @@ class CountMinSketch:
         """Add `count` occurrences of an item. A negative count is refused (it would break
         the never-under-count guarantee)."""
         if count < 0:
-            raise ProbabilisticError(f"count must be >= 0, got {count}")  # noqa: TRY003
+            raise ProbabilisticError(f"count must be >= 0, got {count}")
         data = _to_bytes(item)
         for row, col in enumerate(self._columns(data)):
             self._rows[row][col] += count

@@ -70,29 +70,29 @@ def apply_ruleset(ruleset: Ruleset, attributes: Mapping[str, int], level: int) -
 
 def _term_from_dict(stat: str, raw: Any) -> Term:
     if not isinstance(raw, dict) or "coeff" not in raw or "attributes" not in raw:
-        raise RulesetError(f"stat {stat!r}: each term needs 'coeff' and 'attributes'")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r}: each term needs 'coeff' and 'attributes'")
     attrs = raw["attributes"]
     if isinstance(attrs, str) or not hasattr(attrs, "__iter__"):
-        raise RulesetError(f"stat {stat!r}: a term's 'attributes' must be a list")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r}: a term's 'attributes' must be a list")
     names = tuple(str(name) for name in attrs)
     unknown = [name for name in names if name not in ATTRIBUTES]
     if unknown:
-        raise RulesetError(f"stat {stat!r}: unknown attribute(s) {unknown}; valid: {ATTRIBUTES}")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r}: unknown attribute(s) {unknown}; valid: {ATTRIBUTES}")
     if not names:
-        raise RulesetError(f"stat {stat!r}: a term needs at least one attribute")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r}: a term needs at least one attribute")
     try:
         coeff = float(raw["coeff"])
     except (TypeError, ValueError) as exc:
-        raise RulesetError(f"stat {stat!r}: 'coeff' must be a number") from exc  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r}: 'coeff' must be a number") from exc
     return Term(coeff, names)
 
 
 def _rule_from_dict(stat: str, raw: Any) -> StatRule:
     if not isinstance(raw, dict):
-        raise RulesetError(f"stat {stat!r} must be a mapping")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r} must be a mapping")
     terms_raw = raw.get("terms", [])
     if not isinstance(terms_raw, list) or not terms_raw:
-        raise RulesetError(f"stat {stat!r} needs a non-empty 'terms' list")  # noqa: TRY003
+        raise RulesetError(f"stat {stat!r} needs a non-empty 'terms' list")
     return StatRule(
         base=int(raw.get("base", 0)),
         uses_level=bool(raw.get("level", False)),
@@ -104,8 +104,8 @@ def from_dict(raw: Any) -> Ruleset:
     """Build + validate a Ruleset from a mapping (a world's declared balance). Fails loud, and
     requires a rule for every derived stat so no stat silently falls back."""
     if not isinstance(raw, dict):
-        raise RulesetError(f"a ruleset must be a mapping, got {type(raw).__name__}")  # noqa: TRY003
+        raise RulesetError(f"a ruleset must be a mapping, got {type(raw).__name__}")
     missing = [stat for stat in DERIVED_STATS if stat not in raw]
     if missing:
-        raise RulesetError(f"ruleset is missing rule(s) for {missing}")  # noqa: TRY003
+        raise RulesetError(f"ruleset is missing rule(s) for {missing}")
     return {stat: _rule_from_dict(stat, raw[stat]) for stat in DERIVED_STATS}

@@ -61,7 +61,7 @@ def test_a_raising_subscriber_never_breaks_a_publish() -> None:
     delivered: list[str] = []
 
     def explode(_: dict[str, Any]) -> None:
-        raise RuntimeError("bad handler")  # noqa: TRY003
+        raise RuntimeError("bad handler")
 
     bus.get_bus().subscribe("chan", explode)
     bus.get_bus().subscribe("chan", lambda _p: delivered.append("ok"))

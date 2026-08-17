@@ -59,7 +59,7 @@ def run_due(now_beat: int) -> int:
 def tick(_session: object) -> str:
     """Drain jobs due on the current world beat. Silent, so it composes into the tick like the
     climate ticker; called AFTER the climate ticker has advanced the beat."""
-    from kernel.world import climate  # noqa: PLC0415
+    from kernel.world import climate
 
     run_due(climate.now())
     return ""

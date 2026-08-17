@@ -79,18 +79,18 @@ def run_load(
     measures genuine concurrent load rather than staggered starts.
     """
     if concurrency < 1:
-        raise LoadError(f"concurrency must be >= 1, got {concurrency}")  # noqa: TRY003
+        raise LoadError(f"concurrency must be >= 1, got {concurrency}")
     if per_worker < 1:
-        raise LoadError(f"per_worker must be >= 1, got {per_worker}")  # noqa: TRY003
+        raise LoadError(f"per_worker must be >= 1, got {per_worker}")
     if warmup < 0:
-        raise LoadError(f"warmup must be >= 0, got {warmup}")  # noqa: TRY003
+        raise LoadError(f"warmup must be >= 0, got {warmup}")
     if not rotation:
-        raise LoadError("rotation must name at least one command")  # noqa: TRY003
+        raise LoadError("rotation must name at least one command")
 
-    from forge import (  # noqa: PLC0415
+    from forge import (
         handle_command,
     )  # lazy: the tick is the top; parts do not import it eagerly
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.session import Session
 
     # Warm up single-threaded so first-call import/cache building never races across the workers.
     warm = Session(player_id="_load_warm")
@@ -149,7 +149,7 @@ def compare_to_slo(result: LoadResult) -> str:
     does not record into that series (different measurement conditions); it answers "does the
     objective still hold under load?" as supporting evidence for the SLO doc.
     """
-    from kernel import slo  # noqa: PLC0415
+    from kernel import slo
 
     threshold = slo.DEFAULT_THRESHOLD_US
     verdict = "within" if result.p50_us <= threshold else "OVER"
@@ -185,7 +185,7 @@ def write_load_report(
     result: LoadResult, root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/."""
-    from kernel.shelf.reporting import write_report  # noqa: PLC0415
+    from kernel.shelf.reporting import write_report
 
     return write_report(
         "performance", render_load(result), root=root, stamp=stamp, slug="engine-tick-load"
@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     Optional args: `loadtest [concurrency] [per_worker]`. Returns 1 if any call errored (a load
     test that produced errors is not a clean result), else 0.
     """
-    import sys  # noqa: PLC0415
+    import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     try:

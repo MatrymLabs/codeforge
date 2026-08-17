@@ -116,7 +116,7 @@ def _real_tracer(commands: list[str]) -> set[str]:
         check=False,
     )
     if result.returncode != 0:
-        raise CouplingError(f"trace failed: {result.stderr.strip()[-200:]}")  # noqa: TRY003
+        raise CouplingError(f"trace failed: {result.stderr.strip()[-200:]}")
     return set(json.loads(result.stdout.strip() or "[]"))
 
 
@@ -143,7 +143,7 @@ def _real_import_tracer(modules: list[str]) -> set[str]:
         check=False,
     )
     if result.returncode != 0:
-        raise CouplingError(f"import trace failed: {result.stderr.strip()[-200:]}")  # noqa: TRY003
+        raise CouplingError(f"import trace failed: {result.stderr.strip()[-200:]}")
     return set(json.loads(result.stdout.strip() or "[]"))
 
 
@@ -201,7 +201,7 @@ def closure(
             loaded |= imp_trace(list(SURFACE_IMPORTS[surface]))  # + the server modules
             loaded |= set(SURFACE_DATA.get(surface, ()))  # + declared data dirs (web assets)
         else:
-            raise CouplingError(f"unknown surface {surface!r}; known: {known}")  # noqa: TRY003
+            raise CouplingError(f"unknown surface {surface!r}; known: {known}")
     return loaded
 
 

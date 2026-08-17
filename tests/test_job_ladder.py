@@ -34,7 +34,7 @@ def test_validate_passes_for_the_shipped_roster():
 
 def test_the_cap_is_the_single_source_of_the_job_level_ceiling():
     assert jl.MAX_JOB_LEVEL == 30
-    from kernel.world import progression  # noqa: PLC0415
+    from kernel.world import progression
 
     assert progression.JP_TRACK[2] == jl.MAX_JOB_LEVEL  # progression reads the cap from here
 

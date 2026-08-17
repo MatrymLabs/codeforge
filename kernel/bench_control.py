@@ -51,7 +51,7 @@ def _refuse_pin(_pid: int, _cores: set[int], /) -> None:
     """Stand-in setter where the OS exposes no affinity control. Raises OSError on purpose:
     `pin_process` already reads that as a refused pin and reports `pinned=False` with the reason,
     which is the honest answer rather than a silently unpinned bench claiming control."""
-    raise OSError(f"core pinning is unavailable on {sys.platform}")  # noqa: TRY003
+    raise OSError(f"core pinning is unavailable on {sys.platform}")
 
 
 # Affinity control is a Linux capability - `os.sched_getaffinity`/`os.sched_setaffinity` are absent
@@ -86,7 +86,7 @@ def _cpu_count(ncpu: CpuCounter) -> int:
     """The machine's core count, failing loud if the OS cannot report one (never guess)."""
     n = ncpu()
     if not n or n < 1:
-        raise BenchControlError("cannot determine cpu count - refusing to guess a core layout")  # noqa: TRY003
+        raise BenchControlError("cannot determine cpu count - refusing to guess a core layout")
     return n
 
 
@@ -104,7 +104,7 @@ def quiet_core(
     affinity mask, so the subsequent pin cannot silently fail on an off-limits core."""
     available = getter(0)
     if not available:
-        raise BenchControlError("empty affinity mask - the OS reports no runnable core")  # noqa: TRY003
+        raise BenchControlError("empty affinity mask - the OS reports no runnable core")
 
     isolated = _read_isolated(isolated_path)
     usable_isolated = sorted(c for c in isolated if c in available)
@@ -149,7 +149,7 @@ def pin_process(
     can still run unpinned and say so. Governor noise is read for the pinned core."""
     n = _cpu_count(ncpu)
     if core < 0 or core >= n:
-        raise BenchControlError(f"core {core} is outside this machine's cores 0..{n - 1}")  # noqa: TRY003
+        raise BenchControlError(f"core {core} is outside this machine's cores 0..{n - 1}")
 
     note: str
     try:
@@ -181,9 +181,9 @@ def build_interleave(repeats: int, warmup: int, *, seed: int) -> list[str]:
     thermal/drift trends do not systematically favour whichever function runs first, while the
     same seed reproduces the same schedule exactly (an evidence artifact must be repeatable)."""
     if repeats < 1:
-        raise BenchControlError("repeats must be >= 1")  # noqa: TRY003
+        raise BenchControlError("repeats must be >= 1")
     if warmup < 0:
-        raise BenchControlError("warmup must be >= 0")  # noqa: TRY003
+        raise BenchControlError("warmup must be >= 0")
     total = warmup + repeats
     order = ["b"] * total + ["c"] * total
     random.Random(seed).shuffle(order)  # noqa: S311  # nosec B311

@@ -58,20 +58,20 @@ def _columns(
     """Normalize per-column align + max_width into one spec per column. Fails loud on bad input."""
     aligns = [align] * ncols if isinstance(align, str) else list(align)
     if len(aligns) != ncols:
-        raise TableError(f"align has {len(aligns)} entries but there are {ncols} columns")  # noqa: TRY003
+        raise TableError(f"align has {len(aligns)} entries but there are {ncols} columns")
     for a in aligns:
         if a not in _ALIGNS:
-            raise TableError(f"align must be one of {sorted(_ALIGNS)} (got {a!r})")  # noqa: TRY003
+            raise TableError(f"align must be one of {sorted(_ALIGNS)} (got {a!r})")
 
     if max_widths is None or isinstance(max_widths, int):
         widths: list[int | None] = [max_widths] * ncols
     else:
         widths = list(max_widths)
         if len(widths) != ncols:
-            raise TableError(f"max_widths has {len(widths)} entries but there are {ncols} columns")  # noqa: TRY003
+            raise TableError(f"max_widths has {len(widths)} entries but there are {ncols} columns")
     for w in widths:
         if w is not None and w < 1:
-            raise TableError(f"max_width must be >= 1 or None (got {w})")  # noqa: TRY003
+            raise TableError(f"max_width must be >= 1 or None (got {w})")
     return [_Col(a, w) for a, w in zip(aligns, widths, strict=True)]
 
 
@@ -95,7 +95,7 @@ def render(
     ncols = len(all_rows[0])
     for i, row in enumerate(all_rows):
         if len(row) != ncols:
-            raise TableError(f"row {i} has {len(row)} cells but the table has {ncols} columns")  # noqa: TRY003
+            raise TableError(f"row {i} has {len(row)} cells but the table has {ncols} columns")
 
     cols = _columns(ncols, align, max_widths)
 

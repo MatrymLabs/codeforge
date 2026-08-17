@@ -68,14 +68,14 @@ def refactor_available() -> bool:
 def _import_libcst() -> Any:  # pragma: no cover - import glue, exercised in the [refactor] run
     """Lazy-import LibCST's parser + scope metadata. Fails loud if the extra is absent."""
     try:
-        import libcst as cst  # type: ignore[import-not-found, unused-ignore]  # noqa: PLC0415
-        from libcst.metadata import (  # type: ignore[import-not-found, unused-ignore]  # noqa: PLC0415
+        import libcst as cst  # type: ignore[import-not-found, unused-ignore]
+        from libcst.metadata import (  # type: ignore[import-not-found, unused-ignore]
             FunctionScope,
             MetadataWrapper,
             ScopeProvider,
         )
     except ImportError as exc:  # pragma: no cover - exercised only when the extra is absent
-        raise RefactorError(  # noqa: TRY003
+        raise RefactorError(
             "the refactor tool needs the optional dependency: pip install 'codeforge[refactor]' "
             "(libcst). It is the only lossless scope-aware Python codemod path."
         ) from exc
@@ -97,11 +97,11 @@ def scoped_rename(source: str, func_name: str, old: str, new: str) -> str:  # pr
     """
     cst, wrapper_cls, scope_provider, func_scope = _import_libcst()
     if not new.isidentifier():
-        raise RefactorError(f"new name {new!r} is not a valid identifier")  # noqa: TRY003
+        raise RefactorError(f"new name {new!r} is not a valid identifier")
     try:
         module = cst.parse_module(source)
     except Exception as exc:
-        raise RefactorError(f"source does not parse: {exc}") from exc  # noqa: TRY003
+        raise RefactorError(f"source does not parse: {exc}") from exc
 
     wrapper = wrapper_cls(module)
     scopes = wrapper.resolve(scope_provider)
@@ -113,10 +113,10 @@ def scoped_rename(source: str, func_name: str, old: str, new: str) -> str:  # pr
             continue
         found_func = True
         if list(scope[new]):
-            raise RefactorError(f"{new!r} already exists in {func_name!r} (rename would collide)")  # noqa: TRY003
+            raise RefactorError(f"{new!r} already exists in {func_name!r} (rename would collide)")
         bindings = list(scope[old])
         if not bindings:
-            raise RefactorError(f"{old!r} is not a local or parameter of {func_name!r}")  # noqa: TRY003
+            raise RefactorError(f"{old!r} is not a local or parameter of {func_name!r}")
         for assignment in bindings:
             node = assignment.node
             if isinstance(node, cst.Param):
@@ -128,7 +128,7 @@ def scoped_rename(source: str, func_name: str, old: str, new: str) -> str:  # pr
         break
 
     if not found_func:
-        raise RefactorError(f"function {func_name!r} not found")  # noqa: TRY003
+        raise RefactorError(f"function {func_name!r} not found")
 
     class _Rename(cst.CSTTransformer):  # type: ignore[name-defined]
         def leave_Name(self, original_node: Any, updated_node: Any) -> Any:  # noqa: N802
@@ -161,8 +161,8 @@ def verified_rename(
     outcome, cex, notes = verdict.outcome, verdict.counterexample, list(verdict.notes)
 
     if deep and outcome is Outcome.PRESERVED:  # pragma: no cover - needs the [verify] extra
-        from kernel.verify_smt import Outcome as SmtOutcome  # noqa: PLC0415
-        from kernel.verify_smt import verify_transform_smt  # noqa: PLC0415
+        from kernel.verify_smt import Outcome as SmtOutcome
+        from kernel.verify_smt import verify_transform_smt
 
         smt = verify_transform_smt(source, new_source, func_name)
         notes.append(f"deep gate (crosshair): {smt.outcome.value}")

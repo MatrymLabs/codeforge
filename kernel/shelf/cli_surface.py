@@ -116,7 +116,7 @@ def analyze(source: str, *, module: str = "") -> CliSurfaceReport:  # noqa: PLR0
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise CliSurfaceError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
+        raise CliSurfaceError(f"cannot parse {module or 'source'}: {exc}") from exc
 
     subcommands: list[str] = []
     options: list[Option] = []

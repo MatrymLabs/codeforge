@@ -42,7 +42,7 @@ def test_every_class_has_its_own_combat_telegraph_pool():
     # The combat tell (read at the start of every fight) is keyed to the creature's class, so a wolf
     # circles and a colossus grinds. This gate pins that EVERY body-class has a real pool, or one
     # would silently fall back to the six generic tells and combat would read flat for that enemy.
-    from kernel.world.bestiary import _CLASS_TELEGRAPHS  # noqa: PLC0415
+    from kernel.world.bestiary import _CLASS_TELEGRAPHS
 
     for cls_name in _CLASSES:
         pool = _CLASS_TELEGRAPHS.get(cls_name)
@@ -50,7 +50,7 @@ def test_every_class_has_its_own_combat_telegraph_pool():
 
 
 def test_the_combat_tell_is_class_flavored_not_generic():
-    from kernel.world.bestiary import _CLASS_TELEGRAPHS, _telegraph  # noqa: PLC0415
+    from kernel.world.bestiary import _CLASS_TELEGRAPHS, _telegraph
 
     # A creature's opening line ends with a tell drawn from ITS class's pool (in-character), and two
     # different classes do not read alike at the same index -- combat is flavoured, not one of six.
@@ -81,7 +81,7 @@ def test_the_adjective_and_kin_axes_decorrelate():
     # The adjective pool (12) and a class's kin pool (3) must vary INDEPENDENTLY. A single shared
     # room-phase links them (3 divides 12), capping the adj-kin pairs at 12 of the 36 possible and
     # gutting the variety. Two independent phases must realize far more of the space.
-    from kernel.world.bestiary import _CLASSES  # noqa: PLC0415
+    from kernel.world.bestiary import _CLASSES
 
     pairs = set()
     for r in range(400):
@@ -120,8 +120,8 @@ def test_undead_class_carries_its_own_dark_element():
 def test_ambient_loot_carries_the_biome_spoil_matching_the_gather_economy():
     # A kill should feed the local crafting economy: its loot carries the biome's signature spoil,
     # the SAME material the biome's gather nodes yield and its town vendor buys. One source of truth
-    from kernel.world.bestiary import _ambient_loot  # noqa: PLC0415
-    from kernel.world.wildlands import biome_spoil, gatherable_materials  # noqa: PLC0415
+    from kernel.world.bestiary import _ambient_loot
+    from kernel.world.wildlands import biome_spoil, gatherable_materials
 
     for biome in _BIOME_LIFE:
         spoil = biome_spoil(biome)
@@ -133,14 +133,14 @@ def test_ambient_loot_carries_the_biome_spoil_matching_the_gather_economy():
 def test_ambient_loot_falls_back_cleanly_for_an_unknown_biome():
     # An unknown biome has no signature spoil; the table stays valid (ember/nothing/material) and
     # never injects a None outcome. Guards the spoil-absent branch.
-    from kernel.world.bestiary import _ambient_loot  # noqa: PLC0415
+    from kernel.world.bestiary import _ambient_loot
 
     loot = _ambient_loot("canid", "no-such-biome", "normal")
     assert set(loot) == {"ember_shard", "nothing", "raw_hide"}, "no spoil, no None, still valid"
 
 
 def test_an_elite_kill_always_pays_and_pays_heavier():
-    from kernel.world.bestiary import _ambient_loot  # noqa: PLC0415
+    from kernel.world.bestiary import _ambient_loot
 
     normal = _ambient_loot("canid", "temperate-meadow", "normal")
     elite = _ambient_loot("canid", "temperate-meadow", "elite")
@@ -182,7 +182,7 @@ def test_article_agrees_with_the_following_word():
 
 
 def test_make_notable_is_a_named_nonambient_guardian():
-    from kernel.world.bestiary import make_beast, make_notable  # noqa: PLC0415
+    from kernel.world.bestiary import make_beast, make_notable
 
     base = make_beast("volcanic-flats", 40, 3, "lair")
     lord = make_notable("volcanic-flats", 40, 3, "lair", 0)
@@ -196,7 +196,7 @@ def test_make_notable_is_a_named_nonambient_guardian():
 
 
 def test_roughly_one_in_six_guardians_is_a_boss():
-    from kernel.world.bestiary import make_notable  # noqa: PLC0415
+    from kernel.world.bestiary import make_notable
 
     tiers = [make_notable("wild-forest", 30, 1, "r", seq)["tier"] for seq in range(6)]
     assert tiers[5] == "boss" and tiers.count("boss") == 1  # seq 5 pays the boss curve

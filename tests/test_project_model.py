@@ -75,7 +75,7 @@ def test_new_fields_default_empty():
 
 
 def test_to_dict_from_dict_roundtrips():
-    from kernel.seedlab.project_model import ProjectModel  # noqa: PLC0415
+    from kernel.seedlab.project_model import ProjectModel
 
     m = extract_model(_source())
     rebuilt = ProjectModel.from_dict(m.to_dict())
@@ -83,7 +83,7 @@ def test_to_dict_from_dict_roundtrips():
 
 
 def test_render_shows_interfaces_and_unknowns():
-    from kernel.seedlab.project_model import ProjectModel  # noqa: PLC0415
+    from kernel.seedlab.project_model import ProjectModel
 
     m = ProjectModel(
         identity="X",
@@ -97,7 +97,7 @@ def test_render_shows_interfaces_and_unknowns():
 
 
 def test_from_dict_refuses_a_malformed_model():
-    from kernel.seedlab.project_model import ProjectModel  # noqa: PLC0415
+    from kernel.seedlab.project_model import ProjectModel
 
     with pytest.raises(BlueprintLabError, match="malformed project model"):
         ProjectModel.from_dict({"entities": ["X"]})  # no identity/provenance

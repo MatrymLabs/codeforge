@@ -95,8 +95,8 @@ def test_failing_a_lesson_earns_no_unlock():
 def test_a_lesson_can_never_grant_above_the_cap():
     # Even a lesson declaring earns_level 5 unlocks at most DEMONSTRATED_CAP -- a lesson never
     # grants level 4 (defendable); that needs a written keel record (KeelGate).
-    from kernel.assessment import Lesson, Question  # noqa: PLC0415
-    from kernel.classroom import DEMONSTRATED_CAP, _award_on_completion, _Learner  # noqa: PLC0415
+    from kernel.assessment import Lesson, Question
+    from kernel.classroom import DEMONSTRATED_CAP, _award_on_completion, _Learner
 
     q = Question("q", "p", {"A": "a", "B": "b", "C": "c", "D": "d"}, "A", "h", "e")
     greedy = Lesson("L", "x", "X", [q], proves_skill="entry.python.basics", earns_level=5)

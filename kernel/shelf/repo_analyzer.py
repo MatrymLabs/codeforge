@@ -158,7 +158,7 @@ def analyze_repo(modules: dict[str, str], *, package: str = "", hub_count: int =
     treated as internal; any import that does not resolve to a key is external.
     """
     if not isinstance(modules, dict):
-        raise RepoAnalyzerError("modules must be a dict of {module_name: source}")  # noqa: TRY003
+        raise RepoAnalyzerError("modules must be a dict of {module_name: source}")
     internal = set(modules)
     edges: set[tuple[str, str]] = set()
     externals: set[str] = set()

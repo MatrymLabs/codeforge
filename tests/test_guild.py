@@ -237,7 +237,7 @@ def test_disband_removes_the_treasury_row():
 
 # --- the verbs are reachable through the engine tick ------------------------------------------
 def test_the_guild_and_gsay_verbs_are_reachable():
-    import forge  # noqa: PLC0415
+    import forge
 
     try:
         alia = _hero("alia")
@@ -258,8 +258,8 @@ def _guilded_pair():
 
 
 def test_a_member_can_deposit_to_the_guild_vault():
-    from kernel.world import loose_store  # noqa: PLC0415
-    from kernel.world.items import carrier  # noqa: PLC0415
+    from kernel.world import loose_store
+    from kernel.world.items import carrier
 
     try:
         _alia, bram = _guilded_pair()
@@ -273,7 +273,7 @@ def test_a_member_can_deposit_to_the_guild_vault():
 
 
 def test_only_an_officer_may_withdraw_from_the_vault():
-    from kernel.world.items import carrier  # noqa: PLC0415
+    from kernel.world.items import carrier
 
     try:
         alia, bram = _guilded_pair()  # alia leader, bram member
@@ -292,8 +292,8 @@ def test_only_an_officer_may_withdraw_from_the_vault():
 
 
 def test_the_guild_vault_is_scoped_to_its_guild():
-    from kernel.world import loose_store  # noqa: PLC0415
-    from kernel.world.items import carrier  # noqa: PLC0415
+    from kernel.world import loose_store
+    from kernel.world.items import carrier
 
     try:
         _a, bram = _guilded_pair()
@@ -317,8 +317,8 @@ def test_vault_ops_refuse_the_guildless():
 
 
 def test_the_guild_vault_verb_is_reachable():
-    import forge  # noqa: PLC0415
-    from kernel.world.items import carrier  # noqa: PLC0415
+    import forge
+    from kernel.world.items import carrier
 
     try:
         _a, bram = _guilded_pair()

@@ -104,7 +104,7 @@ class FileModelStore:
         try:
             return ProjectModel.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
-            raise ModelStoreError(f"corrupt model record {path}: {exc}") from exc  # noqa: TRY003
+            raise ModelStoreError(f"corrupt model record {path}: {exc}") from exc
 
     def all_for_seed(self, seed_id: str) -> list[ProjectModel]:
         seed_dir = contained_path(self.root, seed_id, what="seed id")

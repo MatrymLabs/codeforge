@@ -55,7 +55,7 @@ def validate() -> None:
         return  # a seed may ship no callings (a non-combat world); nothing to arm
     unarmed = [c for c in CALLINGS if not is_armed(c)]
     if unarmed:
-        raise BlueprintError(  # noqa: TRY003
+        raise BlueprintError(
             f"job system: callings shipped with no ability kit: {sorted(unarmed)}."
         )
 

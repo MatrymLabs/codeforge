@@ -41,7 +41,7 @@ def _import_module(path: Path):
     """Import a plugin module from its file path, isolated under a codeforge_plugin_ name."""
     spec = importlib.util.spec_from_file_location(f"codeforge_plugin_{path.stem}", path)
     if spec is None or spec.loader is None:
-        raise ImportError(f"cannot build an import spec for {path}")  # noqa: TRY003
+        raise ImportError(f"cannot build an import spec for {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

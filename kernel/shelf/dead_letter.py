@@ -68,9 +68,9 @@ class DeadLetterQueue[T]:
 
     def __post_init__(self) -> None:
         if not isinstance(self.capacity, int) or isinstance(self.capacity, bool):
-            raise DeadLetterError(f"capacity must be an int, got {self.capacity!r}")  # noqa: TRY003
+            raise DeadLetterError(f"capacity must be an int, got {self.capacity!r}")
         if self.capacity < 1:
-            raise DeadLetterError(f"capacity must be >= 1, got {self.capacity}")  # noqa: TRY003
+            raise DeadLetterError(f"capacity must be >= 1, got {self.capacity}")
 
     def bury(self, message: T, reason: str, *, attempts: int = 1) -> DeadLetter[T]:
         """Set aside a message that could not be processed, with the reason and attempt count.
@@ -80,9 +80,9 @@ class DeadLetterQueue[T]:
         is always kept, so the most recent failure is never lost to make room.
         """
         if not reason or not reason.strip():
-            raise DeadLetterError("a dead letter needs a non-empty reason")  # noqa: TRY003
+            raise DeadLetterError("a dead letter needs a non-empty reason")
         if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 0:
-            raise DeadLetterError(f"attempts must be a non-negative int, got {attempts!r}")  # noqa: TRY003
+            raise DeadLetterError(f"attempts must be a non-negative int, got {attempts!r}")
         letter = DeadLetter(message=message, reason=reason, attempts=attempts)
         self._letters.append(letter)
         while len(self._letters) > self.capacity:

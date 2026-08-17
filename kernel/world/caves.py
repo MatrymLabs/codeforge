@@ -65,10 +65,10 @@ def load_families(path: Path | None = None) -> dict[str, Any]:
     so a cave can never be forged without its region's identity."""
     where = path if path is not None else _FAMILIES_PATH
     if not where.exists():
-        raise BlueprintError(f"Cave families file not found: {where}")  # noqa: TRY003
+        raise BlueprintError(f"Cave families file not found: {where}")
     data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Cave families file is not a mapping: {where}")  # noqa: TRY003
+        raise BlueprintError(f"Cave families file is not a mapping: {where}")
     defaults = data.get("defaults", {})
     families: dict[str, Any] = {}
     known_regions = {r["id"] for r in canon.regions()}
@@ -76,16 +76,16 @@ def load_families(path: Path | None = None) -> dict[str, Any]:
         if region_id == "defaults":
             continue
         if region_id not in known_regions:
-            raise BlueprintError(f"cave family {region_id!r}: not a canon region")  # noqa: TRY003
+            raise BlueprintError(f"cave family {region_id!r}: not a canon region")
         merged = {**defaults, **row}
         for field in _REQUIRED_FIELDS:
             if not merged.get(field):
-                raise BlueprintError(f"cave family {region_id!r}: missing required field {field!r}")  # noqa: TRY003
+                raise BlueprintError(f"cave family {region_id!r}: missing required field {field!r}")
         families[region_id] = merged
     # Every canon region deserves a cave family, so the generator never strands a region.
     missing = known_regions - set(families)
     if missing:
-        raise BlueprintError(f"cave families: no family for canon region(s) {sorted(missing)}")  # noqa: TRY003
+        raise BlueprintError(f"cave families: no family for canon region(s) {sorted(missing)}")
     return families
 
 
@@ -112,7 +112,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     an identical cave. Raises BlueprintError for an unknown region or an out-of-band size."""
     families = load_families()
     if region_id not in families:
-        raise BlueprintError(f"cannot generate a cave for unknown region {region_id!r}")  # noqa: TRY003
+        raise BlueprintError(f"cannot generate a cave for unknown region {region_id!r}")
     family = families[region_id]
     region = next(r for r in canon.regions() if r["id"] == region_id)
     rng = _rng(region_id, seed)
@@ -120,7 +120,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     lo, hi = family["min_rooms"], family["max_rooms"]
     total = size if size is not None else rng.randint(lo, hi)
     if not lo <= total <= hi:
-        raise BlueprintError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")  # noqa: TRY003
+        raise BlueprintError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")
 
     naming = family["naming"]
     subtype = rng.choice(family["subtypes"])

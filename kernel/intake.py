@@ -143,12 +143,12 @@ def read_ledger(path: Path = _LEDGER) -> list[TechnologyIntakeRecord]:
     try:
         raw = tomllib.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
-        raise IntakeError(f"intake ledger not found at {path}") from exc  # noqa: TRY003
+        raise IntakeError(f"intake ledger not found at {path}") from exc
     except tomllib.TOMLDecodeError as exc:
-        raise IntakeError(f"malformed intake ledger: {exc}") from exc  # noqa: TRY003
+        raise IntakeError(f"malformed intake ledger: {exc}") from exc
     tech = raw.get("tech", {})
     if not isinstance(tech, dict):
-        raise IntakeError("intake ledger: [tech] must be a table of records")  # noqa: TRY003
+        raise IntakeError("intake ledger: [tech] must be a table of records")
     return [TechnologyIntakeRecord(intake_id, fields) for intake_id, fields in tech.items()]
 
 

@@ -85,8 +85,8 @@ class Engine2D:
 
     def __init__(self, overlay: object | None = None) -> None:
         if overlay is None:
-            from kernel.overlay import load_overlay  # noqa: PLC0415
-            from kernel.world.seed import BLUEPRINT_DIR  # noqa: PLC0415
+            from kernel.overlay import load_overlay
+            from kernel.world.seed import BLUEPRINT_DIR
 
             overlay = load_overlay(BLUEPRINT_DIR / "world_overlay.json")
         self._overlay = overlay
@@ -176,7 +176,7 @@ class SeamVerdict:
 # answer that MUST NOT depend on which engine is running. C1 names the four aspects; a battery
 # missing one silently proves less than it claims, so the test asserts all four are present.
 def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
-    from kernel.world import callings, coinage, items, progression  # noqa: PLC0415
+    from kernel.world import callings, coinage, items, progression
 
     return [
         ("inventory", "carry_limit", lambda e: e.carry_limit()),
@@ -220,22 +220,22 @@ def _selected_battery(seed: str) -> list[tuple[str, str, object]]:
 
 def _denies_admin(engine: Engine) -> bool:
     """A permission decision must not consult position. D1 puts permissions above the seam."""
-    from kernel.world import ranks  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world import ranks
+    from kernel.world.session import Session
 
     # A rank decision consults the SESSION's rank, never its position. That is the whole point.
     return not ranks.has_rank(Session(player_id="probe", location="forge", engine=engine), "wizard")
 
 
 def _grant_key() -> str:
-    from kernel.world.reward_ledger import grant_key  # noqa: PLC0415
+    from kernel.world.reward_ledger import grant_key
 
     return grant_key("hero", "npc:dummy", 1)
 
 
 def _permission_denial(engine: Engine, rank: str, command: str) -> str:
-    from kernel.world.ranks import wizard_command  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.ranks import wizard_command
+    from kernel.world.session import Session
 
     room = "forge"
     session = Session(player_id="probe", location=room, engine=engine, rank=rank)
@@ -243,8 +243,8 @@ def _permission_denial(engine: Engine, rank: str, command: str) -> str:
 
 
 def _workshop_denial(engine: Engine) -> str:
-    from kernel.world import creator_workshop  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world import creator_workshop
+    from kernel.world.session import Session
 
     session = Session(player_id="probe", location="forge", engine=engine, rank="wizard")
     destination = creator_workshop.door_destination(session.location, "door")
@@ -256,7 +256,7 @@ def _workshop_denial(engine: Engine) -> str:
 
 
 def _blueprint_rooms(seed: str) -> dict[str, Room]:
-    from kernel.world.seed import BLUEPRINTS_ROOT, load_rooms  # noqa: PLC0415
+    from kernel.world.seed import BLUEPRINTS_ROOT, load_rooms
 
     return load_rooms(BLUEPRINTS_ROOT / seed / "rooms.yaml")
 
@@ -271,11 +271,11 @@ def _movement_route(rooms: dict[str, Room], preferred: str) -> tuple[str, str]:
 
 def _movement(engine: Engine, seed: str, preferred: str) -> tuple[str, str, str]:
     """Drive one real movement command through the loaded Blueprint's Session."""
-    from unittest.mock import patch  # noqa: PLC0415
+    from unittest.mock import patch
 
-    from forge import handle_command  # noqa: PLC0415
-    from kernel.world import world  # noqa: PLC0415
-    from kernel.world.session import Session  # noqa: PLC0415
+    from forge import handle_command
+    from kernel.world import world
+    from kernel.world.session import Session
 
     rooms = _blueprint_rooms(seed)
     room, direction = _movement_route(rooms, preferred)
@@ -288,8 +288,8 @@ def _movement(engine: Engine, seed: str, preferred: str) -> tuple[str, str, str]
 
 
 def _save_restore(engine: Engine) -> tuple[object, object]:
-    from kernel.world.character_store import InMemoryCharacterStore  # noqa: PLC0415
-    from kernel.world.characters import load_character, put_record  # noqa: PLC0415
+    from kernel.world.character_store import InMemoryCharacterStore
+    from kernel.world.characters import load_character, put_record
 
     store = InMemoryCharacterStore()
     casefile = {
@@ -304,7 +304,7 @@ def _save_restore(engine: Engine) -> tuple[object, object]:
 
 
 def _gameplay_save() -> tuple[str | None, str | None]:
-    from kernel.world.character_store import CharacterRecord, InMemoryCharacterStore  # noqa: I001, PLC0415
+    from kernel.world.character_store import CharacterRecord, InMemoryCharacterStore # noqa: I001
 
     store = InMemoryCharacterStore()
     original = CharacterRecord(name="probe", location="forge", auth_salt="salt", auth_hash="hash")
@@ -316,8 +316,8 @@ def _gameplay_save() -> tuple[str | None, str | None]:
 
 
 def _room_coverage(engine: Engine, seed: str = "first-forge") -> tuple[tuple[str, str], ...]:
-    from kernel.overlay import load_overlay  # noqa: PLC0415
-    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
+    from kernel.overlay import load_overlay
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     overlay = load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")
     return tuple((room, engine.room_of(engine.place(room))) for room in sorted(overlay))
@@ -325,16 +325,16 @@ def _room_coverage(engine: Engine, seed: str = "first-forge") -> tuple[tuple[str
 
 def _overlay_rooms(seed: str = "first-forge") -> tuple[str, ...]:
     """Every room the Blueprint under test has, derived from its overlay."""
-    from kernel.overlay import load_overlay  # noqa: PLC0415
-    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
+    from kernel.overlay import load_overlay
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     return tuple(sorted(load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")))
 
 
 def _overlay_for_seed(seed: str) -> object:
     """Make the tested overlay available without making non-coverage probes world-dependent."""
-    from kernel.overlay import load_overlay  # noqa: PLC0415
-    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
+    from kernel.overlay import load_overlay
+    from kernel.world.seed import BLUEPRINTS_ROOT
 
     tested = load_overlay(BLUEPRINTS_ROOT / seed / "world_overlay.json")
     if seed == "first-forge":

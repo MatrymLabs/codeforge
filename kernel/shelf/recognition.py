@@ -33,17 +33,17 @@ class RecognitionError(ValueError):
 
 def _check_label(name: str, kind: str) -> None:
     if not isinstance(name, str) or not _LABEL.match(name):
-        raise RecognitionError(f"{kind} must be lowercase_snake_case (got {name!r})")  # noqa: TRY003
+        raise RecognitionError(f"{kind} must be lowercase_snake_case (got {name!r})")
 
 
 def _check_text(text: str, kind: str, max_length: int) -> str:
     if not isinstance(text, str):
-        raise RecognitionError(f"{kind} must be a string (got {type(text).__name__})")  # noqa: TRY003
+        raise RecognitionError(f"{kind} must be a string (got {type(text).__name__})")
     stripped = text.strip()
     if not stripped:
-        raise RecognitionError(f"{kind} cannot be blank")  # noqa: TRY003
+        raise RecognitionError(f"{kind} cannot be blank")
     if len(stripped) > max_length:
-        raise RecognitionError(f"{kind} exceeds {max_length} chars (got {len(stripped)})")  # noqa: TRY003
+        raise RecognitionError(f"{kind} exceeds {max_length} chars (got {len(stripped)})")
     return stripped
 
 
@@ -78,7 +78,7 @@ class Book:
         _check_label(observer_id, "observer_id")
         _check_label(target_id, "target_id")
         if observer_id == target_id:
-            raise RecognitionError("an observer cannot recognize themselves")  # noqa: TRY003
+            raise RecognitionError("an observer cannot recognize themselves")
         clean = _check_text(alias, "alias", max_length)
         observer_book = {**self.recogs.get(observer_id, {}), target_id: clean}
         return Book(self.sdescs, {**self.recogs, observer_id: observer_book})
@@ -105,7 +105,7 @@ def resolve(book: Book, observer_id: str, target_id: str) -> str:
         return recog
     sdesc = book.sdescs.get(target_id)
     if sdesc is None:
-        raise RecognitionError(  # noqa: TRY003
+        raise RecognitionError(
             f"{observer_id} cannot name {target_id}: no recognition and no sdesc on record"
         )
     return sdesc

@@ -134,8 +134,8 @@ class Honesty(unittest.TestCase):
 
 class ScanPaths(unittest.TestCase):
     def test_scan_paths_reads_a_real_tree(self):
-        import tempfile  # noqa: PLC0415
-        from pathlib import Path  # noqa: PLC0415
+        import tempfile
+        from pathlib import Path
 
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
