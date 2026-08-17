@@ -138,7 +138,10 @@ _BANDIT_INSECURE = _HEAD + "\nimport requests\n\nrequests.get('https://x', verif
 # this file is itself scanned: a whole fake key sitting in the harness would make the repo's own
 # secret gate red forever and teach everyone to ignore it. The prefix and body are joined below.
 _LEAK_PREFIX = "AKIA"
-_LEAK_BODY = "".join(["QYLPZ3M7", "RTKW", "9XVB"])  # 16 chars, not the doc example
+# FLY002 wants this collapsed into one literal. It must NOT be: a whole credential-shaped string
+# sitting in this file makes the repo's own secret gate red forever, and a permanently red secret
+# gate is one everybody learns to ignore. The join is the point.
+_LEAK_BODY = "".join(["QYLPZ3M7", "RTKW", "9XVB"])  # noqa: FLY002  # 16 chars, not the AWS example
 _GITLEAKS = _HEAD + f'\nAWS_KEY = "{_LEAK_PREFIX}{_LEAK_BODY}"\n'
 
 # Two defects that strict alone does NOT both catch. The type error is caught by strict; the
@@ -321,7 +324,15 @@ def _tool_missing(case: Case) -> str | None:
 
 
 def _run(cmd: list[str]) -> tuple[int, str]:
-    done = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
+    # check=False is explicit and load-bearing: a NON-ZERO exit is the result this harness is
+    # looking for, not an error. Letting subprocess raise would turn every successful calibration
+    # into a crash.
+    # S603 is acknowledged rather than suppressed blindly: every `cmd` here comes from the CASES
+    # table in this file, never from input, and the gate commands are exactly the ones the
+    # Makefile already runs.
+    done = subprocess.run(  # noqa: S603
+        cmd, cwd=REPO, capture_output=True, text=True, check=False
+    )
     return done.returncode, done.stdout + done.stderr
 
 
