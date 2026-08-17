@@ -289,7 +289,13 @@ jobs:
           mkdir -p "$HOME/.local/bin"
           curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VER}/gitleaks_${GITLEAKS_VER}_linux_x64.tar.gz" | tar -xz -C "$HOME/.local/bin" gitleaks
           curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VER}/trivy_${TRIVY_VER}_Linux-64bit.tar.gz" | tar -xz -C "$HOME/.local/bin" trivy
-          go install golang.org/x/vuln/cmd/govulncheck@latest
+          # v1.1.4 is the NEWEST govulncheck that builds under this repo's Go 1.24: every release
+          # from v1.2.0 declares `go 1.25.0`, and setup-go sets GOTOOLCHAIN=local, so `@latest`
+          # cannot resolve and the step dies. Scanning with a NEWER toolchain is also the wrong
+          # repair: source mode reports stdlib vulnerabilities against the toolchain in use, so a
+          # 1.25 scan of a 1.24 artifact can read green over a stdlib hole that 1.25 already fixed
+          # and we still ship. This pin moves when the repo's Go moves, and not before.
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
@@ -298,7 +304,9 @@ jobs:
       - name: Regenerate the protocol-spine bindings
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+          # v1.34.2 matches the protobuf RUNTIME in native/spine/go.mod, and matches the pinned
+          # install the `spine` job already uses. Generate with the version you link against.
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
           make proto
 
       - name: Secrets, across the whole of git history
