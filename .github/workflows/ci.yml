@@ -46,8 +46,6 @@ jobs:
         run: uv pip install --system -e ".[dev]"
 
       - name: Regenerate and verify published contracts
-        env:
-          PYTHONPATH: .
         run: make contracts
 
       - name: Prove native seed workspace contracts
