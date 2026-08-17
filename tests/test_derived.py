@@ -40,7 +40,7 @@ def test_a_missing_attribute_reads_zero_not_a_crash() -> None:
 def test_derived_stats_uses_the_active_world_ruleset(monkeypatch) -> None:
     # A world's declared balance reaches the sheet: derived_stats() with no ruleset arg uses the
     # module-level active ruleset, bound at import from the booted world's world.yaml.
-    import kernel.world.derived as derived # noqa: PLR0402
+    import kernel.world.derived as derived  # noqa: PLR0402
     from kernel.world.stat_rules import from_dict
 
     custom = from_dict(

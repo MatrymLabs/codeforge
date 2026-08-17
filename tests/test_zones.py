@@ -476,7 +476,7 @@ def _seasonal_wanderer(seasons: list[str]) -> Item:
 
 
 def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
-    import kernel.world.climate as climate # noqa: PLR0402
+    import kernel.world.climate as climate  # noqa: PLR0402
 
     _wander_world(monkeypatch, _seasonal_wanderer(["winter"]))
     monkeypatch.setattr(climate, "_beat", 0)  # beat 0 -> spring (not winter)
@@ -491,7 +491,7 @@ def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
 
 
 def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
-    import kernel.world.climate as climate # noqa: PLR0402
+    import kernel.world.climate as climate  # noqa: PLR0402
 
     _wander_world(monkeypatch, _wanderer())  # no seasons -> unconditional
     monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH)  # summer

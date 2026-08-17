@@ -280,7 +280,7 @@ def test_script_command_is_owner_gated() -> None:
 
 def test_script_command_without_lua_reports_cleanly(monkeypatch) -> None:
     # Even with lupa installed, the graceful 'not installed' path must read cleanly (base gate).
-    import kernel.scripting as scripting # noqa: PLR0402
+    import kernel.scripting as scripting  # noqa: PLR0402
 
     monkeypatch.setattr(scripting, "scripting_available", lambda: False)
     session = _walker("forge")

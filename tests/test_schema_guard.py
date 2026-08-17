@@ -43,7 +43,9 @@ def test_a_table_missing_a_column_is_flagged_by_name():
     engine = _fresh_engine()
     try:
         with engine.begin() as conn:
-            conn.execute(text("ALTER TABLE characters DROP COLUMN secondary_job"))  # simulate the drift
+            conn.execute(
+                text("ALTER TABLE characters DROP COLUMN secondary_job")
+            )  # simulate the drift
         gaps = missing_columns(engine)
         assert "characters.secondary_job" in gaps
     finally:

@@ -53,7 +53,7 @@ def test_the_line_runs_token_bucket_green_through_all_eight_stations() -> None:
 
 def test_the_line_never_shells_a_subprocess(monkeypatch: pytest.MonkeyPatch) -> None:
     # cast.validate_cast / install_check spawn subprocesses; the line must never touch them.
-    import kernel.cast as cast # noqa: PLR0402
+    import kernel.cast as cast  # noqa: PLR0402
 
     monkeypatch.setattr(cast, "validate_cast", _boom)
     monkeypatch.setattr(cast, "install_check", _boom)
