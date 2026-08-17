@@ -32,10 +32,10 @@ from pathlib import Path
 from typing import Any
 
 from kernel.seedlab.kernel import (
+    BlueprintKernel,
+    BlueprintKernelError,
+    BlueprintRecord,
     FileSeedStore,
-    SeedKernel,
-    SeedKernelError,
-    SeedRecord,
     render_status,
 )
 from kernel.seedlab.model_store import FileModelStore, ModelStore, model_label
@@ -83,7 +83,7 @@ def _push_frame(session: Any, push: GmcpPush, package: str, payload: dict[str, o
     push(player_id, package, payload)
 
 
-def _emit_project_status(session: Any, record: SeedRecord, push: GmcpPush) -> None:
+def _emit_project_status(session: Any, record: BlueprintRecord, push: GmcpPush) -> None:
     """Project one workspace's status into a live `Project.Status` frame for the acting owner, so
     the client's Project Hub reflects a workspace the instant it is inspected or its lifecycle
     changes."""
@@ -101,16 +101,16 @@ def _allowed_root() -> Path | None:
     return Path(base).resolve() if base else None
 
 
-def _default_kernel() -> SeedKernel:
-    return SeedKernel(FileSeedStore(_home() / "seeds"))
+def _default_kernel() -> BlueprintKernel:
+    return BlueprintKernel(FileSeedStore(_home() / "seeds"))
 
 
 def _default_backups() -> Any:
     """The Seed backup store under $SEEDLAB_HOME/backups (lazy import keeps backup off the load
     path until a caller actually snapshots or restores)."""
-    from kernel.seedlab.backup import SeedBackups
+    from kernel.seedlab.backup import BlueprintBackups
 
-    return SeedBackups(_home() / "backups")
+    return BlueprintBackups(_home() / "backups")
 
 
 def _actor(session: Any) -> str:
@@ -122,7 +122,7 @@ def workspace_command(
     session: Any,
     arg: str,
     *,
-    kernel: SeedKernel | None = None,
+    kernel: BlueprintKernel | None = None,
     model_store: ModelStore | None = None,
     gmcp_push: GmcpPush | None = None,
     run_log: Any | None = None,
@@ -161,7 +161,7 @@ def workspace_command(
         name, purpose = rest[0], " ".join(rest[1:])
         try:
             record = kernel.create_seed(name, actor, purpose)
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         _emit_project_status(session, record, push)
         return f"Created workspace {record.identity.seed_id} (owner: {actor}, status: CREATED)."
@@ -171,7 +171,7 @@ def workspace_command(
             return f"usage: workspace {sub} <seed_id>"
         try:
             record = kernel.get(rest[0])
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         _emit_project_status(session, record, push)
         return render_status(record)
@@ -181,7 +181,7 @@ def workspace_command(
             return f"usage: workspace {sub} <seed_id>"
         try:
             record = getattr(kernel, sub)(rest[0], actor)
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         _emit_project_status(session, record, push)
         return f"{rest[0]} -> {record.status.upper()}"
@@ -191,7 +191,7 @@ def workspace_command(
             return "usage: workspace model <seed_id>"
         try:
             record = kernel.get(rest[0])  # confirm the workspace exists first
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         store = model_store or FileModelStore(_home() / "models")
         models = store.all_for_seed(rest[0])
@@ -211,7 +211,7 @@ def workspace_command(
         seed_id, path = rest[0], " ".join(rest[1:])
         try:
             record = kernel.get(seed_id)  # the workspace must exist
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         # If an operator set an allowed-sources base, refuse a path outside it (defence in depth on
         # top of owner-gating; the connector still bounds reads WITHIN the chosen root).
@@ -223,7 +223,7 @@ def workspace_command(
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
-        from kernel.seedlab.project_model import Provenance, SeedLabError
+        from kernel.seedlab.project_model import BlueprintLabError, Provenance
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.source_modeler import model_and_store
 
@@ -232,7 +232,7 @@ def workspace_command(
         try:
             source = LocalSource(resolved, Provenance(source_id, owner=actor))
             model = model_and_store(store, seed_id, source)
-        except (SourceConnectorError, SeedLabError) as exc:
+        except (SourceConnectorError, BlueprintLabError) as exc:
             return f"workspace: {exc}"
         # Connecting resolves a real source AND a fresh model, so push both live frames: the
         # client's Source Explorer and Model view light up the instant an owner connects a
@@ -264,7 +264,7 @@ def workspace_command(
         seed_id, path, profile = rest[0], rest[1], rest[2]
         try:
             record = kernel.get(seed_id)  # the workspace must exist
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         allowed = _allowed_root()  # same defence-in-depth as connect
         resolved = Path(path).resolve()
@@ -313,7 +313,7 @@ def workspace_command(
             return "usage: workspace report <seed_id>"
         try:
             record = kernel.get(rest[0])
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         from kernel.seedlab.tool_runner import FileRunLog, render_run
 
@@ -345,7 +345,7 @@ def workspace_command(
             return "usage: workspace backup <seed_id>"
         try:
             record = kernel.get(rest[0])  # the workspace must exist to snapshot it
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         store = backups if backups is not None else _default_backups()
         ref = store.backup(record)
@@ -359,7 +359,7 @@ def workspace_command(
             return f"usage: workspace {sub} <seed_id>"
         try:
             kernel.get(rest[0])  # confirm the workspace exists before listing its snapshots
-        except SeedKernelError as exc:
+        except BlueprintKernelError as exc:
             return f"workspace: {exc}"
         store = backups if backups is not None else _default_backups()
         refs = store.list_backups(rest[0])
@@ -380,7 +380,7 @@ def workspace_command(
         store = backups if backups is not None else _default_backups()
         try:
             record = restore(kernel, store, rest[0], rest[1], actor)
-        except (SeedKernelError, BackupError) as exc:
+        except (BlueprintKernelError, BackupError) as exc:
             return f"workspace: {exc}"
         # A restore rewrites live state (it is rollback), so refresh the client's Project Hub.
         _emit_project_status(session, record, push)

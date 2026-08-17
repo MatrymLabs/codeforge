@@ -24,7 +24,7 @@ from kernel.blueprint import load_all as load_blueprints
 from kernel.dashboard import router as dashboard_router
 from kernel.login_guard import LoginGuard
 from kernel.seedlab.artifact_store import FileArtifactStore
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintKernelError, FileSeedStore
 from kernel.seedlab.model_store import FileModelStore
 from kernel.seedlab.tool_runner import FileRunLog
 from kernel.seedlab.workspace_contract import (
@@ -176,8 +176,8 @@ def _seedlab_home() -> Path:
     return Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
 
 
-def _seedlab_kernel() -> SeedKernel:
-    return SeedKernel(FileSeedStore(_seedlab_home() / "seeds"))
+def _seedlab_kernel() -> BlueprintKernel:
+    return BlueprintKernel(FileSeedStore(_seedlab_home() / "seeds"))
 
 
 def _seedlab_model_store() -> FileModelStore:
@@ -257,7 +257,7 @@ def seedlab_workspace(seed_id: str) -> dict[str, object]:
     kernel = _seedlab_kernel()
     try:
         kernel.get(seed_id)
-    except SeedKernelError as exc:
+    except BlueprintKernelError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     models = _seedlab_model_store().all_for_seed(seed_id)
     contract = build_workspace_contract(

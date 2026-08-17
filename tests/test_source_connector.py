@@ -119,10 +119,10 @@ def test_source_connection_is_structured(tmp_path: Path) -> None:
 def test_a_registered_source_lights_up_the_hub_sources_facet(tmp_path: Path) -> None:
     # Stage 3 -> Stage 2 wiring: a registered source's label populates the Project Hub's `sources`
     # facet, turning "none yet" into real data over both the text render and the contract.
-    from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+    from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
     from kernel.seedlab.project_hub import ProjectHub, ProjectState
 
-    kernel = SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
+    kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-x")
     label = source_label(_source(tmp_path).register())
 

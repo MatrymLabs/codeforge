@@ -2,7 +2,7 @@
 
 Acceptance: a well-formed spec source yields a model with every named facet and its provenance,
 and renders inspectably. Refusal (fail loud, never model a lie): a missing identity, a non-list
-facet, a bad relationship triple, and a source_id-less provenance all raise SeedLabError.
+facet, a bad relationship triple, and a source_id-less provenance all raise BlueprintLabError.
 """
 
 from __future__ import annotations
@@ -10,9 +10,9 @@ from __future__ import annotations
 import pytest
 
 from kernel.seedlab.project_model import (
+    BlueprintLabError,
     ProjectSource,
     Provenance,
-    SeedLabError,
     SpecSource,
     extract_model,
     render_model,
@@ -99,38 +99,38 @@ def test_render_shows_interfaces_and_unknowns():
 def test_from_dict_refuses_a_malformed_model():
     from kernel.seedlab.project_model import ProjectModel
 
-    with pytest.raises(SeedLabError, match="malformed project model"):
+    with pytest.raises(BlueprintLabError, match="malformed project model"):
         ProjectModel.from_dict({"entities": ["X"]})  # no identity/provenance
 
 
 # --- refusal: a malformed source fails loud ----------------------------------------------------
 def test_a_spec_without_an_identity_is_refused():
-    with pytest.raises(SeedLabError, match="identity"):
+    with pytest.raises(BlueprintLabError, match="identity"):
         extract_model(_source({"entities": ["X"]}))
 
 
 def test_a_non_list_facet_is_refused():
-    with pytest.raises(SeedLabError, match="entities"):
+    with pytest.raises(BlueprintLabError, match="entities"):
         extract_model(_source({"identity": "x", "entities": "not-a-list"}))
 
 
 def test_a_bad_relationship_triple_is_refused():
-    with pytest.raises(SeedLabError, match="relationship"):
+    with pytest.raises(BlueprintLabError, match="relationship"):
         extract_model(_source({"identity": "x", "relationships": [["only", "two"]]}))
 
 
 def test_an_empty_entity_string_is_refused():
-    with pytest.raises(SeedLabError, match="entities"):
+    with pytest.raises(BlueprintLabError, match="entities"):
         extract_model(_source({"identity": "x", "entities": ["ok", "  "]}))
 
 
 def test_provenance_needs_a_source_id():
-    with pytest.raises(SeedLabError, match="source_id"):
+    with pytest.raises(BlueprintLabError, match="source_id"):
         Provenance("")
 
 
 def test_provenance_rejects_a_bad_visibility():
-    with pytest.raises(SeedLabError, match="visibility"):
+    with pytest.raises(BlueprintLabError, match="visibility"):
         Provenance("s", visibility="secret")
 
 
@@ -142,5 +142,5 @@ def test_a_non_mapping_spec_is_refused():
         def spec(self) -> dict:
             return ["not", "a", "dict"]  # type: ignore[return-value]
 
-    with pytest.raises(SeedLabError, match="mapping"):
+    with pytest.raises(BlueprintLabError, match="mapping"):
         extract_model(_Bad())
