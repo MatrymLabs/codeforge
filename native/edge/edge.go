@@ -49,13 +49,13 @@ func acceptLoop(ln net.Listener, backendAddr string) {
 // handleConn dials the backend for one client and pumps bytes both ways until either side closes.
 // If the backend is unreachable, the client is dropped cleanly rather than left hanging.
 func handleConn(client net.Conn, backendAddr string) {
-	defer func() { _ = client.Close() }()
+	defer func() { _ = client.Close() }() //nolint:errcheck // teardown close errors are uninteresting after the client handler ends
 
 	backend, err := net.Dial("tcp", backendAddr)
 	if err != nil {
 		return // backend down: close the client and move on
 	}
-	defer func() { _ = backend.Close() }()
+	defer func() { _ = backend.Close() }() //nolint:errcheck // teardown close errors are uninteresting after the backend handler ends
 
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -68,9 +68,9 @@ func handleConn(client net.Conn, backendAddr string) {
 // sees the close (a one-way shutdown, not a full teardown -- the other direction may still flow).
 func pump(wg *sync.WaitGroup, dst, src net.Conn) {
 	defer wg.Done()
-	io.Copy(dst, src) //nolint:errcheck // a closed peer is the normal end of a proxied stream
+	io.Copy(dst, src) //nolint:errcheck,gosec // a closed peer is the normal end of a proxied stream
 	if tcp, ok := dst.(*net.TCPConn); ok {
-		tcp.CloseWrite() //nolint:errcheck // best-effort half-close; full Close still runs on return
+		tcp.CloseWrite() //nolint:errcheck,gosec // best-effort half-close; full Close still runs on return
 	}
 }
 
@@ -92,5 +92,5 @@ func main() {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	<-sig
-	ln.Close() //nolint:errcheck // shutting down anyway
+	ln.Close() //nolint:errcheck,gosec // listener shutdown makes the close error uninteresting
 }
