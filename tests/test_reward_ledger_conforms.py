@@ -71,7 +71,7 @@ def test_an_empty_key_is_refused_loudly(store: GrantLedger) -> None:
     suite, matching nothing. I wrote this warning into the CX-003 packet for Codex and then walked
     into it myself, which is the argument for the warning rather than against it.
     """
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     for bad in ("", "   "):
         with pytest.raises(reward_ledger.GrantIdentityError):
@@ -90,7 +90,7 @@ def test_the_record_outlives_the_store_object(store: GrantLedger) -> None:
 
 def test_an_opaque_key_cannot_collide_with_a_real_grant(store: GrantLedger) -> None:
     """ADDED beyond the Store's suite: the engine flattens identities, so prove the seam is safe."""
-    from kernel.world.reward_ledger import claim_grant, grant_key
+    from kernel.world.reward_ledger import claim_grant, grant_key  # noqa: PLC0415
 
     assert claim_grant("hero", "npc:training_dummy", 1) is True
     assert store.seen(grant_key("hero", "npc:training_dummy", 1))
@@ -108,9 +108,9 @@ def test_only_one_of_many_concurrent_claimants_wins() -> None:
     Atomicity is the property that distinguishes this Part from the in-memory predecessor it
     supersedes, and it was the one property the contract could not falsify. Filed against the Part.
     """
-    import threading
+    import threading  # noqa: PLC0415
 
-    from kernel.world.reward_ledger import claim_grant
+    from kernel.world.reward_ledger import claim_grant  # noqa: PLC0415
 
     # Warm the archive FIRST. Eight threads hitting a cold engine each run create_all and collide
     # on "table already exists", which is a real race in open_archive_session but NOT the one under

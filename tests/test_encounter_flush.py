@@ -62,8 +62,8 @@ def test_the_flush_verb_is_owner_gated_and_reaches_the_boundary():
     """The trusted boundary is an OWNER verb run in the server process. A player is refused (the
     tick never flushes); an owner with an empty period reaches the boundary and is told nothing was
     flushed -- proving reachability + gating without writing the real (git-tracked) ledger."""
-    from forge import handle_command
-    from kernel.world.session import SESSIONS, Session
+    from forge import handle_command  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
 
     encounter_log.clear_tally()  # empty period: the owner path writes nothing to the real ledger
     player = Session(player_id="mortal", rank="player")

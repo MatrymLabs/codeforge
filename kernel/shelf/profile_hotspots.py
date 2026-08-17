@@ -85,9 +85,9 @@ def analyze(
     one from a real run.
     """
     if sort not in ("self", "cumulative"):
-        raise ProfileError(f"unknown sort {sort!r}; choose 'self' or 'cumulative'")
+        raise ProfileError(f"unknown sort {sort!r}; choose 'self' or 'cumulative'")  # noqa: TRY003
     if not isinstance(stats, dict):
-        raise ProfileError("stats must be a pstats mapping {(file, line, func): (...)}")
+        raise ProfileError("stats must be a pstats mapping {(file, line, func): (...)}")  # noqa: TRY003
 
     total_self = 0.0
     rows: list[tuple[StatsKey, int, float, float]] = []
@@ -95,7 +95,7 @@ def analyze(
         try:
             _cc, nc, tottime, cumtime, _callers = value
         except (ValueError, TypeError) as exc:
-            raise ProfileError(f"malformed stats row for {key!r}: {exc}") from exc
+            raise ProfileError(f"malformed stats row for {key!r}: {exc}") from exc  # noqa: TRY003
         total_self += tottime
         rows.append((key, nc, tottime, cumtime))
 

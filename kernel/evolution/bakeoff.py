@@ -80,9 +80,9 @@ def run_bakeoff(
 ) -> EvolutionRun:
     """Run the population and return the evidence. Never promotes; ends human_decision_required."""
     if kill_switch:
-        raise BakeoffError("kill switch engaged -- run aborted before any candidate executed")
+        raise BakeoffError("kill switch engaged -- run aborted before any candidate executed")  # noqa: TRY003
     if len(pairs) > MAX_CANDIDATES:
-        raise BakeoffError(f"v1 allows at most {MAX_CANDIDATES} candidates; got {len(pairs)}")
+        raise BakeoffError(f"v1 allows at most {MAX_CANDIDATES} candidates; got {len(pairs)}")  # noqa: TRY003
     validate_genome(genome)  # the constraint gate: a bad genome never reaches the population
 
     bank = bank if bank is not None else CounterexampleBank()

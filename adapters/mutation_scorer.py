@@ -65,7 +65,7 @@ def _write_config(workdir: Path, source: Path, per_mutant_timeout_seconds: float
 def _run_command(argv: list[str], workdir: Path, timeout_seconds: float) -> str | None:
     """Run one bounded cosmic-ray command, returning output only on success."""
     try:
-        completed = subprocess.run(  # nosec B603
+        completed = subprocess.run(  # nosec B603  # noqa: S603
             argv,
             cwd=workdir,
             check=False,
@@ -97,12 +97,12 @@ def _cap_session(session: Path, max_mutants: int) -> bool:
             placeholders = ", ".join("?" for _ in job_ids)
             # Safe: placeholder count only, values are parameterized.
             connection.execute(
-                f"DELETE FROM mutation_specs WHERE job_id NOT IN ({placeholders})",  # nosec B608
+                f"DELETE FROM mutation_specs WHERE job_id NOT IN ({placeholders})",  # nosec B608  # noqa: S608
                 job_ids,
             )
             # Safe: placeholder count only, values are parameterized.
             connection.execute(
-                f"DELETE FROM work_items WHERE job_id NOT IN ({placeholders})",  # nosec B608
+                f"DELETE FROM work_items WHERE job_id NOT IN ({placeholders})",  # nosec B608  # noqa: S608
                 job_ids,
             )
     except sqlite3.Error:
@@ -113,7 +113,7 @@ def _cap_session(session: Path, max_mutants: int) -> bool:
 def _run_cosmic_ray(
     workdir: Path,
     config: Path,
-    per_mutant_timeout_seconds: float,
+    per_mutant_timeout_seconds: float,  # noqa: ARG001
     whole_run_budget_seconds: float,
     max_mutants: int,
 ) -> str | None:
@@ -156,11 +156,11 @@ class CosmicRayMutationScorer:
 
     def __post_init__(self) -> None:
         if self.per_mutant_timeout_seconds <= 0:
-            raise ValueError("per_mutant_timeout_seconds must be positive")
+            raise ValueError("per_mutant_timeout_seconds must be positive")  # noqa: TRY003
         if self.whole_run_budget_seconds <= 0:
-            raise ValueError("whole_run_budget_seconds must be positive")
+            raise ValueError("whole_run_budget_seconds must be positive")  # noqa: TRY003
         if self.max_mutants <= 0:
-            raise ValueError("max_mutants must be positive")
+            raise ValueError("max_mutants must be positive")  # noqa: TRY003
 
     def score(self, target_dir: Path) -> float | None:
         """Return a measured kill rate, or None when cosmic-ray cannot produce one honestly."""
@@ -179,7 +179,7 @@ class CosmicRayMutationScorer:
         if report is None:
             return None
         try:
-            result = parse_cr_report(report, run_date=date.today())
+            result = parse_cr_report(report, run_date=date.today())  # noqa: DTZ011
         except MutationKpiError:
             return None
         if result.total == 0:

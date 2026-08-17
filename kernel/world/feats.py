@@ -36,10 +36,10 @@ FEATS: tuple[Feat, ...] = (
     Feat("Called", "take up a calling", lambda s: bool(s.job)),
     Feat("Twin-Souled", "swear a second calling as a subjob", lambda s: bool(s.secondary_job)),
     Feat("Sworn", "join one of the four Orders", lambda s: bool(s.order)),
-    Feat("Journeyman", "reach level 10", lambda s: s.level >= 10),
-    Feat("Veteran", "reach level 50", lambda s: s.level >= 50),
-    Feat("Master", "reach level 100", lambda s: s.level >= 100),
-    Feat("Ascendant", "reach the level cap (255)", lambda s: s.level >= 255),
+    Feat("Journeyman", "reach level 10", lambda s: s.level >= 10),  # noqa: PLR2004
+    Feat("Veteran", "reach level 50", lambda s: s.level >= 50),  # noqa: PLR2004
+    Feat("Master", "reach level 100", lambda s: s.level >= 100),  # noqa: PLR2004
+    Feat("Ascendant", "reach the level cap (255)", lambda s: s.level >= 255),  # noqa: PLR2004
     Feat("Coinbearer", "hold an ember of wealth (10,000 cinders)", lambda s: s.coins >= _EMBER),
     Feat("Forgemarked", "hold a forgemark (1,000,000 cinders)", lambda s: s.coins >= _FORGEMARK),
     Feat("The Maker", "bear the crown of the world's Seed Owner", lambda s: s.rank == "owner"),

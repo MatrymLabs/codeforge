@@ -75,7 +75,7 @@ def test_aethryn_elemental_abilities_carry_their_element():
 def test_aethryn_recipes_forge_real_items_from_real_materials():
     """The maker's loop is real content: the flagship ships recipes, and every recipe forges a real
     item from real materials (a cross-check, so a recipe can never make or need a phantom item)."""
-    from kernel.world.seed import load_recipes
+    from kernel.world.seed import load_recipes  # noqa: PLC0415
 
     recipes = load_recipes(AETHRYN / "recipes.yaml")
     assert recipes, "the flagship ships no crafting recipes -- the maker Jobs have nothing to forge"
@@ -90,7 +90,7 @@ def test_aethryn_the_makers_loop_reaches_the_new_content():
     """The maker Jobs can forge the new content, not just the four starter goods: the consumable
     ladder and the Emberhide set are craftable, the grand tiers and the elixir are gated behind
     boss-salvage (hollow_ingot) so crafting progresses with the journey, not ahead of it."""
-    from kernel.world.seed import load_recipes
+    from kernel.world.seed import load_recipes  # noqa: PLC0415
 
     recipes = load_recipes(AETHRYN / "recipes.yaml")
     by_make = {r["makes"]: r for r in recipes.values()}
@@ -116,8 +116,8 @@ def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
     flat bonus when all its pieces are worn. Every piece is a real item and every bonus stat is a
     real equip stat (a cross-check, so a set can never bonus off a phantom), and the bonus fires
     only on a COMPLETE set (measured through the gearsets bonus fold)."""
-    from kernel.world.gearsets import active_set_bonuses
-    from kernel.world.seed import load_sets
+    from kernel.world.gearsets import active_set_bonuses  # noqa: PLC0415
+    from kernel.world.seed import load_sets  # noqa: PLC0415
 
     sets = load_sets(AETHRYN / "sets.yaml")
     assert sets, "the flagship ships no gear sets -- the wide gear pass has no payoff"
@@ -138,8 +138,8 @@ def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
 def test_aethryn_boss_drops_are_real_gear_across_every_slot():
     """Felling a boss now yields equippable gear, not just keepsakes: the ladder fills all eight
     equipment slots (weapon, body, head, arm, leg, feet, two accessories) with flat stat mods."""
-    from kernel.world.equipment import SLOTS
-    from kernel.world.stat_rules import DERIVED_STATS
+    from kernel.world.equipment import SLOTS  # noqa: PLC0415
+    from kernel.world.stat_rules import DERIVED_STATS  # noqa: PLC0415
 
     items = load_items(AETHRYN / "items.yaml")
     ladder = {
@@ -301,7 +301,7 @@ def test_aethryn_ships_the_martial_and_precision_job_families():
     assert jobs["berserker"]["stats"]["strength"] > jobs["scout"]["stats"]["strength"]
     assert jobs["scout"]["stats"]["speed"] > jobs["berserker"]["stats"]["speed"]
     # each new calling carries a moveset (switchable in/out via the subjob kit)
-    from kernel.world.seed import load_abilities
+    from kernel.world.seed import load_abilities  # noqa: PLC0415
 
     abilities = load_abilities(AETHRYN / "abilities.yaml")
     for job in ("duelist", "berserker", "ranger", "saboteur"):
@@ -325,7 +325,7 @@ def test_aethryn_ships_the_arcane_and_divine_job_families():
 def test_aethryn_ships_the_full_thirty_switchable_callings():
     """The AAA-pivot target: 30 distinct callings a player can modulate and swap in/out. Every one
     has a two-move kit, so a subjob genuinely changes your loadout."""
-    from kernel.world.seed import load_abilities
+    from kernel.world.seed import load_abilities  # noqa: PLC0415
 
     jobs = load_jobs(AETHRYN / "jobs.yaml")
     assert len(jobs) == 30, f"expected 30 callings, got {len(jobs)}"
@@ -333,7 +333,7 @@ def test_aethryn_ships_the_full_thirty_switchable_callings():
     armed = {job for a in abilities.values() for job in a["jobs"]}
     assert armed == set(jobs)  # every calling is armed - none is a dead switch
     # each calling carries at least two moves (a signature + a utility)
-    from collections import Counter
+    from collections import Counter  # noqa: PLC0415
 
     per_job = Counter(job for a in abilities.values() for job in a["jobs"])
     assert all(count >= 2 for count in per_job.values()), "a calling has fewer than 2 abilities"
@@ -383,7 +383,7 @@ def test_aethryn_zones_carry_the_maps_level_bands():
 
 def test_aethryn_map_world_is_fully_connected_from_veridia():
     """A player can begin in Veridia and physically reach every hand-authored place on the map."""
-    from collections import deque
+    from collections import deque  # noqa: PLC0415
 
     rooms = load_rooms(AETHRYN / "rooms.yaml")
     seen, q = {"veridia"}, deque(["veridia"])

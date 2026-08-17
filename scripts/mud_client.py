@@ -46,7 +46,7 @@ def _mask_feed(buffer: bytearray, data: bytes) -> tuple[bytes, bytes | None]:
             if buffer:
                 buffer.pop()
                 echo += b"\b \b"  # rub out one mask character
-        elif byte >= 0x20:
+        elif byte >= 0x20:  # noqa: PLR2004
             buffer.append(byte)
             echo += b"*"
         # other control characters are ignored
@@ -72,7 +72,7 @@ class _SecretField:
         self._buf.clear()
         if self._saved is None:
             return
-        import termios
+        import termios  # noqa: PLC0415
 
         with contextlib.suppress(termios.error, OSError):
             attrs = termios.tcgetattr(self._fd)
@@ -89,7 +89,7 @@ class _SecretField:
         self._buf.clear()
         if self._saved is None:
             return
-        import termios
+        import termios  # noqa: PLC0415
 
         with contextlib.suppress(termios.error, OSError):
             termios.tcsetattr(self._fd, termios.TCSANOW, self._saved)
@@ -144,18 +144,18 @@ def _pump_from_server(chunk: bytes, out: int, echo_on, echo_off, leftover: bytes
 
 def main(argv: list[str]) -> int:
     host = argv[1] if len(argv) > 1 else "127.0.0.1"
-    port = int(argv[2]) if len(argv) > 2 else 4000
+    port = int(argv[2]) if len(argv) > 2 else 4000  # noqa: PLR2004
 
     stdin_fd = sys.stdin.fileno()
     saved = None
     if os.isatty(stdin_fd):
-        import termios
+        import termios  # noqa: PLC0415
 
         # Ignore SIGTTOU so tcsetattr works even when we're NOT the terminal's
         # foreground process group -- e.g. the ritual runs us beside a
         # backgrounded server. (Unix-only signal.)
         with contextlib.suppress(ValueError, OSError, AttributeError):
-            import signal
+            import signal  # noqa: PLC0415
 
             signal.signal(signal.SIGTTOU, signal.SIG_IGN)
         with contextlib.suppress(termios.error, OSError):

@@ -40,9 +40,9 @@ def test_generation_is_deterministic_and_ordered():
 
 def test_the_flagship_generates_a_real_board_of_contracts():
     # aethryn's combatant foes yield side-quest VOLUME -- the point of the generator.
-    from pathlib import Path
+    from pathlib import Path  # noqa: PLC0415
 
-    from kernel.world.seed import load_npcs
+    from kernel.world.seed import load_npcs  # noqa: PLC0415
 
     seeds = Path(__file__).resolve().parent.parent / "content" / "blueprints"
     board = generate_bounties(load_npcs(seeds / "aethryn" / "npcs.yaml"))
@@ -52,10 +52,10 @@ def test_the_flagship_generates_a_real_board_of_contracts():
 def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
     # inject one bounty into the live engine (the test seed has no levelled foes), then prove the
     # board lists it, the story view counts it, and felling the foe collects the contract.
-    from kernel.world import quest
-    from kernel.world.bounties import _bounty_for
-    from kernel.world.jobs import bind_calling
-    from kernel.world.session import Session
+    from kernel.world import quest  # noqa: PLC0415
+    from kernel.world.bounties import _bounty_for  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     spec = _bounty_for("brawler", {"name": "the brawler", "hp": 30, "level": 5})
     wf, name, xp = quest._from_seed(spec)
@@ -73,7 +73,7 @@ def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
 def test_register_bounties_folds_contracts_into_the_engine_idempotently():
     # world.py calls this once the full foe set (seed + Spiral) is assembled, so bounties cover
     # every combatant foe -- and a second call never duplicates.
-    from kernel.world import quest
+    from kernel.world import quest  # noqa: PLC0415
 
     npcs = {"grumpf": _foe(hp=40, level=12, name="the grumpf")}
     try:

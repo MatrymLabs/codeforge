@@ -92,7 +92,7 @@ class RunResult:
         return self.exit_code == 0 and not self.timed_out
 
 
-class CommandRefused(ValueError):
+class CommandRefused(ValueError):  # noqa: N818
     """The requested command is not on the allowlist -- it never ran."""
 
 
@@ -106,13 +106,13 @@ def run(
     table = ALLOWLIST if allowlist is None else allowlist
     argv = table.get(name)
     if argv is None:
-        raise CommandRefused(f"'{name}' is not an allowlisted command. Try: console")
+        raise CommandRefused(f"'{name}' is not an allowlisted command. Try: console")  # noqa: TRY003
     missing = missing_targets(name)
     if missing:
         # Refuse rather than run. A tool pointed at a path that no longer exists does not fail
         # honestly: compileall exits 0, mypy exits 2 with a message nobody reads in-game, and the
         # console reports on a measurement it never took.
-        raise CommandRefused(
+        raise CommandRefused(  # noqa: TRY003
             f"'{name}' reads {', '.join(missing)}, which "
             f"{'does' if len(missing) == 1 else 'do'} not exist under {REPO_ROOT}. "
             f"The allowlist is stale; it never ran."
@@ -122,7 +122,7 @@ def run(
         # Safe by construction: argv is a fixed allowlist entry (never user input),
         # run as a list with shell=False in the repo root. B607 (partial path) is
         # accepted -- these are dev tools resolved from PATH by design.
-        proc = subprocess.run(  # nosec B603
+        proc = subprocess.run(  # nosec B603  # noqa: S603
             argv,
             cwd=REPO_ROOT,
             capture_output=True,

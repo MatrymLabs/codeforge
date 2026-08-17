@@ -22,7 +22,7 @@ def _write(tmp_path: Path, text: str) -> Path:
 
 
 def _bump_mtime(path: Path) -> None:
-    st = os.stat(path)
+    st = os.stat(path)  # noqa: PTH116
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
 
 
@@ -52,7 +52,7 @@ def test_a_raising_parse_is_never_cached(tmp_path: Path) -> None:
     path = _write(tmp_path, "boom")
 
     def parse(p: Path) -> str:
-        raise ValueError("bad data")
+        raise ValueError("bad data")  # noqa: TRY003
 
     with pytest.raises(ValueError, match="bad data"):
         loader_cache.load_cached(path, parse)

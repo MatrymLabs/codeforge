@@ -20,7 +20,7 @@ from kernel.world.resources import Resource
 def _spawn() -> str:
     """The seed's first room. Imported lazily so `codeforge grant` (which touches
     Session but not the world) doesn't pay to load the whole seed."""
-    from kernel.world.world import START_ROOM
+    from kernel.world.world import START_ROOM  # noqa: PLC0415
 
     return START_ROOM
 

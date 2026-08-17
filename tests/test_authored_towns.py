@@ -112,9 +112,9 @@ def test_authored_towns_compose_into_the_real_aethryn_map():
 def _walk_quest(quest_file: str):
     """Load an authored town's quest and walk enter -> take -> enter to done; return the final
     Fired outcome. Every authored town's arc uses the same natural-trigger shape."""
-    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from kernel.world.quest import _from_seed
-    from kernel.world.seed import load_quest
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine  # noqa: PLC0415
+    from kernel.world.quest import _from_seed  # noqa: PLC0415
+    from kernel.world.seed import load_quest  # noqa: PLC0415
 
     spec = load_quest(_AETHRYN / "quests" / quest_file)
     assert spec is not None
@@ -136,9 +136,9 @@ def test_the_granary_quest_still_walks_to_done_and_rewards():
 
 def test_greenholds_second_quest_is_a_hunt_of_a_different_shape():
     # The field-beast quest is enter -> DEFEAT (a hunt), not a fetch: quest variety.
-    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from kernel.world.quest import _from_seed
-    from kernel.world.seed import load_quest
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine  # noqa: PLC0415
+    from kernel.world.quest import _from_seed  # noqa: PLC0415
+    from kernel.world.seed import load_quest  # noqa: PLC0415
 
     spec = load_quest(_AETHRYN / "quests" / "greenhold_fields.yaml")
     assert spec is not None and spec["name"] == "The Field-Beast"
@@ -222,9 +222,9 @@ def test_the_eldryn_city_quest_walks_and_grants_gathering():
 
 
 def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
-    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from kernel.world.quest import _from_seed
-    from kernel.world.seed import load_quest
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine  # noqa: PLC0415
+    from kernel.world.quest import _from_seed  # noqa: PLC0415
+    from kernel.world.seed import load_quest  # noqa: PLC0415
 
     spec = load_quest(_AETHRYN / "quests" / "ravenwatch_hollow.yaml")
     assert spec is not None and spec["name"] == "The Hollow Man"
@@ -240,9 +240,9 @@ def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
 def _walk_hunt(quest_file: str, order: str, reward: int) -> None:
     """Walk an authored town's HUNT-shape side quest: enter -> defeat -> done. Asserts the shape (a
     defeat, no fetch), the reward, and the granted Order. The second-quest twin of _walk_quest."""
-    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from kernel.world.quest import _from_seed
-    from kernel.world.seed import load_quest
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine  # noqa: PLC0415
+    from kernel.world.quest import _from_seed  # noqa: PLC0415
+    from kernel.world.seed import load_quest  # noqa: PLC0415
 
     spec = load_quest(_AETHRYN / "quests" / quest_file)
     assert spec is not None and spec["reward_xp"] == reward
@@ -455,10 +455,10 @@ def test_the_aurelian_quest_walks_and_grants_knowing():
 
 def test_every_canon_region_has_an_authored_town():
     # The content spine: a hand-authored place in every one of the fourteen reaches.
-    import yaml
+    import yaml  # noqa: PLC0415
 
-    from kernel.world import canon
-    from kernel.world.seed import _UniqueKeyLoader
+    from kernel.world import canon  # noqa: PLC0415
+    from kernel.world.seed import _UniqueKeyLoader  # noqa: PLC0415
 
     settlements = yaml.load(
         (_AETHRYN / "settlements.yaml").read_text(encoding="utf-8"), Loader=_UniqueKeyLoader
@@ -474,7 +474,7 @@ def test_every_canon_region_has_an_authored_town():
 
 def test_the_four_orders_are_each_granted_by_an_authored_quest():
     # Across the authored towns, every Order is earnable, so the reputation web is reachable.
-    from kernel.world.seed import load_quest
+    from kernel.world.seed import load_quest  # noqa: PLC0415
 
     effects = " ".join(
         step.get("effect", "")
@@ -585,7 +585,7 @@ def test_an_exit_to_a_foreign_room_fails_loud(tmp_path: Path):
 
 def test_a_resident_outside_the_town_fails_loud(tmp_path: Path):
     body = _BASE.replace("location: harbor_market}}\nitems", "location: elsewhere}}\nitems")
-    with pytest.raises(BlueprintError, match="npc .*not a town room"):
+    with pytest.raises(BlueprintError, match="npc .*not a town room"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -594,7 +594,7 @@ def test_an_item_outside_the_town_fails_loud(tmp_path: Path):
         "{name: k, keywords: [k], location: harbor_market}",
         "{name: k, keywords: [k], location: elsewhere}",
     )
-    with pytest.raises(BlueprintError, match="item .*not a town room"):
+    with pytest.raises(BlueprintError, match="item .*not a town room"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -617,7 +617,7 @@ def test_an_npc_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: W, keywords: [w], location: harbor_market}", "{name: W, location: harbor_market}"
     )
-    with pytest.raises(BlueprintError, match="npc .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="npc .*needs a name and keywords"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -625,7 +625,7 @@ def test_an_item_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: k, keywords: [k], location: harbor_market}", "{name: k, location: harbor_market}"
     )
-    with pytest.raises(BlueprintError, match="item .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="item .*needs a name and keywords"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 

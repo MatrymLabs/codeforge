@@ -45,7 +45,7 @@ class Hold:
     reason: str
 
     def covers(self, record: Record) -> bool:
-        if self.scope == "all" or self.scope == record.kind:
+        if self.scope == "all" or self.scope == record.kind:  # noqa: PLR1714
             return True
         if self.scope.startswith("subject:"):
             prefix = self.scope.split(":", 1)[1]
@@ -78,7 +78,7 @@ def record_age_days(record: Record, today: date) -> int:
     try:
         recorded = date.fromisoformat(record.recorded_utc[:10])
     except ValueError as exc:
-        raise RetentionError(
+        raise RetentionError(  # noqa: TRY003
             f"record has an unreadable recorded_utc {record.recorded_utc!r}"
         ) from exc
     return (today - recorded).days
@@ -107,7 +107,7 @@ def plan(
     """Partition records into active / hold-blocked / disposition-candidate. Reads only."""
     policy = policy if policy is not None else DEFAULT_POLICY
     holds = holds if holds is not None else []
-    when = today if today is not None else date.today()
+    when = today if today is not None else date.today()  # noqa: DTZ011
     active: list[Record] = []
     blocked: list[tuple[Record, Hold]] = []
     candidates: list[Record] = []
@@ -133,7 +133,7 @@ def dispose(
 ) -> DispositionPlan:
     """Return the disposition plan. R1 is dry-run ONLY: a real run refuses (R2 is owner-gated)."""
     if not dry_run:
-        raise RetentionError(
+        raise RetentionError(  # noqa: TRY003
             "real disposition is owner-gated and arrives in R2; R1 is dry-run only (writes none)"
         )
     return plan(records, policy, holds, today)
@@ -164,12 +164,12 @@ def render_doctor(result: DispositionPlan) -> str:
 
 
 def _load_yaml(path: Path) -> object:
-    import yaml  # lazy: keep this module light for the import chain
+    import yaml  # lazy: keep this module light for the import chain  # noqa: PLC0415
 
     try:
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     except (yaml.YAMLError, OSError) as exc:
-        raise RetentionError(f"could not read {path}: {exc}") from exc
+        raise RetentionError(f"could not read {path}: {exc}") from exc  # noqa: TRY003
 
 
 def load_policy(path: Path | None = None) -> dict[str, RetentionRule]:
@@ -177,17 +177,17 @@ def load_policy(path: Path | None = None) -> dict[str, RetentionRule]:
     if path is None:
         return dict(DEFAULT_POLICY)  # no override requested: the built-in policy stands
     if not path.exists():
-        raise RetentionError(f"{path}: policy file not found (a provided path must exist)")
+        raise RetentionError(f"{path}: policy file not found (a provided path must exist)")  # noqa: TRY003
     raw = _load_yaml(path)
     if not isinstance(raw, dict):
-        raise RetentionError(f"{path}: policy must be a mapping of kind -> settings")
+        raise RetentionError(f"{path}: policy must be a mapping of kind -> settings")  # noqa: TRY003
     policy: dict[str, RetentionRule] = {}
     for kind, settings in raw.items():
         if not isinstance(settings, dict) or "period_days" not in settings:
-            raise RetentionError(f"{path}: policy for {kind!r} needs a 'period_days'")
+            raise RetentionError(f"{path}: policy for {kind!r} needs a 'period_days'")  # noqa: TRY003
         days = settings["period_days"]
         if not isinstance(days, int) or isinstance(days, bool) or days < 0:
-            raise RetentionError(f"{path}: period_days for {kind!r} must be a non-negative int")
+            raise RetentionError(f"{path}: period_days for {kind!r} must be a non-negative int")  # noqa: TRY003
         policy[str(kind)] = RetentionRule(str(kind), days, str(settings.get("category", "")))
     return policy
 
@@ -200,33 +200,33 @@ def load_holds(path: Path | None = None) -> list[Hold]:
         # A provided-but-missing holds file must fail loud, never silently degrade to zero holds:
         # a litigation/audit hold silently dropped would let a held record become disposition-
         # eligible, and "a hold always wins" is the one rule that must never fail open.
-        raise RetentionError(
+        raise RetentionError(  # noqa: TRY003
             f"{path}: holds file not found -- refusing to run with zero holds "
             "(a held record must never silently become disposition-eligible)"
         )
     raw = _load_yaml(path)
     if not isinstance(raw, list):
-        raise RetentionError(f"{path}: holds must be a list of {{scope, reason}}")
+        raise RetentionError(f"{path}: holds must be a list of {{scope, reason}}")  # noqa: TRY003
     holds: list[Hold] = []
     for entry in raw:
         if not isinstance(entry, dict) or not entry.get("scope") or not entry.get("reason"):
-            raise RetentionError(f"{path}: each hold needs a non-empty 'scope' and 'reason'")
+            raise RetentionError(f"{path}: each hold needs a non-empty 'scope' and 'reason'")  # noqa: TRY003
         holds.append(Hold(str(entry["scope"]), str(entry["reason"])))
     return holds
 
 
-def retention(arg: str = "") -> str:
+def retention(arg: str = "") -> str:  # noqa: ARG001
     """The read-only `retention` verb: the retention doctor over the current Chronicle (R1)."""
-    from kernel import chronicle
+    from kernel import chronicle  # noqa: PLC0415
 
     try:
         records = chronicle.read()
     except chronicle.ChronicleError as exc:
         return f"The Chronicle failed its integrity check: {exc}"
-    return render_doctor(plan(records, load_policy(), load_holds(), date.today()))
+    return render_doctor(plan(records, load_policy(), load_holds(), date.today()))  # noqa: DTZ011
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`make retention`: print the read-only retention doctor for the current Chronicle."""
     print(retention())
     return 0

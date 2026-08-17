@@ -27,15 +27,15 @@ class Stat:
 
     def __post_init__(self) -> None:
         if not isinstance(self.base, int):
-            raise ValueError("base must be an integer")
+            raise ValueError("base must be an integer")  # noqa: TRY003, TRY004
         if not self.name or not self.name.strip():
-            raise ValueError("Stat name must be a non-empty string")
+            raise ValueError("Stat name must be a non-empty string")  # noqa: TRY003
         if self.min_value > self.max_value:
-            raise ValueError(
+            raise ValueError(  # noqa: TRY003
                 f"min_value ({self.min_value}) cannot exceed max_value ({self.max_value})"
             )
         if not (self.min_value <= self.base <= self.max_value):
-            raise ValueError(
+            raise ValueError(  # noqa: TRY003
                 f"base ({self.base}) must be within [{self.min_value}, {self.max_value}]"
             )
 
@@ -53,18 +53,18 @@ class StatBlock:
     def __post_init__(self) -> None:
         for s in self.stats:
             if not isinstance(s, Stat):
-                raise ValueError(f"StatBlock members must be Stat, got {type(s).__name__}")
+                raise ValueError(f"StatBlock members must be Stat, got {type(s).__name__}")  # noqa: TRY003, TRY004
         names = [s.name for s in self.stats]
         duplicates = {n for n in names if names.count(n) > 1}
         if duplicates:
-            raise ValueError(f"duplicate stat names: {sorted(duplicates)}")
+            raise ValueError(f"duplicate stat names: {sorted(duplicates)}")  # noqa: TRY003
 
     def get(self, name: str) -> Stat:
         """Return the Stat with this name, or raise KeyError."""
         for s in self.stats:
             if s.name == name:
                 return s
-        raise KeyError(f"no stat named {name!r}")
+        raise KeyError(f"no stat named {name!r}")  # noqa: TRY003
 
 
 @dataclass(frozen=True)
@@ -81,11 +81,11 @@ class StatModifier:
 
     def __post_init__(self) -> None:
         if not self.source or not self.source.strip():
-            raise ValueError("source must be a non-empty string")
+            raise ValueError("source must be a non-empty string")  # noqa: TRY003
         if not isinstance(self.flat, int) or isinstance(self.flat, bool):
-            raise ValueError("flat must be an integer")
+            raise ValueError("flat must be an integer")  # noqa: TRY003, TRY004
         if not isinstance(self.percent, (int, float)) or isinstance(self.percent, bool):
-            raise ValueError("percent must be a number")
+            raise ValueError("percent must be a number")  # noqa: TRY003, TRY004
 
     def apply(self, stat: Stat) -> int:
         """Return the modified effective value, clamped to the stat's bounds."""
@@ -113,10 +113,10 @@ class ModifierStack:
 
     def __post_init__(self) -> None:
         if self.mode not in _STACK_MODES:
-            raise ValueError(f"mode must be one of {_STACK_MODES}, got {self.mode!r}")
+            raise ValueError(f"mode must be one of {_STACK_MODES}, got {self.mode!r}")  # noqa: TRY003
         for m in self.modifiers:
             if not isinstance(m, StatModifier):
-                raise ValueError(
+                raise ValueError(  # noqa: TRY003, TRY004
                     f"ModifierStack members must be StatModifier, got {type(m).__name__}"
                 )
 

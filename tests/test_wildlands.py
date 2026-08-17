@@ -42,7 +42,7 @@ def _world_with(cfg):
 
 
 def test_region_expands_and_is_fully_reachable_from_the_attach_room():
-    world, rooms, npcs = _world_with(_CFG)
+    world, rooms, npcs = _world_with(_CFG)  # noqa: RUF059
     # BFS from the attach room reaches every generated room -- no orphans, no dead clouds.
     seen, q = {"anchor"}, deque(["anchor"])
     while q:
@@ -70,7 +70,7 @@ def test_branches_never_overwrite_the_trail_spine():
     # Regression: with the trail running `east`, a branch must not also leave `east` (it would
     # overwrite the spine and orphan the rooms ahead). Every trail room keeps its forward link.
     _, rooms, _ = _world_with(_CFG)
-    L = _CFG["trail_length"]
+    L = _CFG["trail_length"]  # noqa: N806
     for i in range(1, L):  # t1..t(L-1) must each keep an east link to the next trail room
         room = rooms[f"probe_wild_t{i}"]
         assert room["exits"].get("east") == f"probe_wild_t{i + 1}", f"t{i} lost its spine"
@@ -86,9 +86,9 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
     # The variety engine: a room's text pairs a terrain FEATURE (idx % F) with an ATMOSPHERE
     # (idx % A). If F and A share a factor the pair cannot reach F*A combinations and variety
     # silently collapses. This gate pins gcd(F, A) == 1 per biome, so the CRT multiplier holds.
-    from math import gcd
+    from math import gcd  # noqa: PLC0415
 
-    from kernel.world.wildlands import _BIOMES
+    from kernel.world.wildlands import _BIOMES  # noqa: PLC0415
 
     for biome, d in _BIOMES.items():
         f, a = len(d["features"]), len(d.get("atmospheres", []))
@@ -98,7 +98,7 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
 
 def test_a_room_description_carries_both_a_feature_and_an_atmosphere():
     _, rooms, _ = _world_with(_CFG)
-    from kernel.world.wildlands import _BIOMES
+    from kernel.world.wildlands import _BIOMES  # noqa: PLC0415
 
     meadow = _BIOMES["temperate-meadow"]
     a_room = next(iter(rooms.values()))
@@ -142,16 +142,16 @@ def test_attach_room_gains_exactly_one_exit_into_the_region():
     ],
 )
 def test_a_malformed_region_fails_loud(bad, match):
-    from kernel.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
 
     cfg = {k: v for k, v in _CFG.items() if k != "id"}
     cfg.update(bad)
     tmp = {"probe_wild": cfg}
-    import tempfile
-    from pathlib import Path
+    import tempfile  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
 
     with tempfile.TemporaryDirectory() as d:
-        import yaml
+        import yaml  # noqa: PLC0415
 
         p = Path(d) / "wildlands.yaml"
         p.write_text(yaml.safe_dump(tmp))
@@ -169,7 +169,7 @@ def test_regions_can_chain_off_earlier_generated_rooms():
     The chained region is fully reachable and its attach exit is reciprocal with the trail-head."""
     a = dict(_CFG, id="wa", attach="anchor", attach_dir="east", trail_length=10)
     b = dict(_CFG, id="wb", attach="wa_t5", attach_dir="north", trail_length=10)
-    rooms, npcs = generate_wildlands([a, b], {"anchor"})
+    rooms, npcs = generate_wildlands([a, b], {"anchor"})  # noqa: RUF059
     world = {"anchor": {"name": "A", "desc": "d", "exits": {}}}
     world.update(rooms)
     wire_attach_exits(world, [a, b])
@@ -211,7 +211,7 @@ def test_notables_are_off_by_default_in_a_hand_built_config():
 
 
 def test_the_guardian_count_is_capped_for_a_huge_region():
-    from kernel.world.wildlands import _NOTABLE_CAP
+    from kernel.world.wildlands import _NOTABLE_CAP  # noqa: PLC0415
 
     cfg = dict(_CFG, id="huge_wild", trail_length=_NOTABLE_CAP * 40, notable_every=1)
     _, _, npcs = _world_with(cfg)
@@ -219,12 +219,12 @@ def test_the_guardian_count_is_capped_for_a_huge_region():
 
 
 def test_notable_every_defaults_on_and_refuses_a_negative():
-    import tempfile
-    from pathlib import Path
+    import tempfile  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
 
-    import yaml
+    import yaml  # noqa: PLC0415
 
-    from kernel.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
 
     good = {k: v for k, v in _CFG.items() if k != "id"}
     with tempfile.TemporaryDirectory() as d:
@@ -241,7 +241,7 @@ def test_notable_every_defaults_on_and_refuses_a_negative():
 
 
 def _write_cfg(tmp_path):
-    import yaml
+    import yaml  # noqa: PLC0415
 
     p = tmp_path / "wildlands.yaml"
     p.write_text(yaml.safe_dump({"probe_wild": {k: v for k, v in _CFG.items() if k != "id"}}))
@@ -249,7 +249,7 @@ def _write_cfg(tmp_path):
 
 
 def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
-    from kernel.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
 
     p = _write_cfg(tmp_path)
     monkeypatch.delenv("CODEFORGE_WILD_SCALE", raising=False)
@@ -261,7 +261,7 @@ def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize("bad", ["abc", "0", "0.5", "-3"])
 def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad):
-    from kernel.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config  # noqa: PLC0415
 
     p = _write_cfg(tmp_path)
     monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)

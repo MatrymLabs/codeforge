@@ -27,7 +27,7 @@ def _parts_imports(source: str, where: str) -> set[str]:
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
-        raise ShelfBoundaryError(f"cannot parse {where}: {exc}") from exc
+        raise ShelfBoundaryError(f"cannot parse {where}: {exc}") from exc  # noqa: TRY003
     found: set[str] = set()
     roots = ("parts", "kernel", "adapters", "content")
     prefixes = tuple(r + "." for r in roots)

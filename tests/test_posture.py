@@ -101,16 +101,16 @@ class LoadAndRender(unittest.TestCase):
     def test_load_empty_dir_is_honest_not_an_error(
         self,
     ):
-        import tempfile
+        import tempfile  # noqa: PLC0415
 
         with tempfile.TemporaryDirectory() as d:
             ev = p.load_evidence(d, _TODAY)
             self.assertIsNone(ev.latest_scan_date)  # no scan -> freshness not_computable downstream
 
     def test_load_parses_advisory_count_and_date(self):
-        import json
-        import tempfile
-        from pathlib import Path
+        import json  # noqa: PLC0415
+        import tempfile  # noqa: PLC0415
+        from pathlib import Path  # noqa: PLC0415
 
         with tempfile.TemporaryDirectory() as d:
             scan = Path(d) / "2026-07-08-pip-audit.json"
@@ -130,8 +130,8 @@ class LoadAndRender(unittest.TestCase):
             self.assertEqual(ev.open_advisory_count, 2)
 
     def test_malformed_scan_fails_loud(self):
-        import tempfile
-        from pathlib import Path
+        import tempfile  # noqa: PLC0415
+        from pathlib import Path  # noqa: PLC0415
 
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "2026-07-08-pip-audit.json").write_text("{not json", "utf-8")
@@ -151,7 +151,7 @@ class MutationKillRate(unittest.TestCase):
     a faked zero) when there is no run or it is stale, and it breaches the 70% floor honestly."""
 
     def _run(self, killed: int, survived: int, run_date: date):
-        from kernel.shelf.mutation_kpi import MutationResult
+        from kernel.shelf.mutation_kpi import MutationResult  # noqa: PLC0415
 
         return MutationResult(
             total=killed + survived, killed=killed, survived=survived, run_date=run_date
@@ -180,7 +180,7 @@ class MutationKillRate(unittest.TestCase):
         self.assertIn("make mutation", mut.detail)
 
     def test_stale_run_is_not_computable(self):
-        from datetime import timedelta
+        from datetime import timedelta  # noqa: PLC0415
 
         ev = p.PostureEvidence(mutation_result=self._run(150, 29, _TODAY - timedelta(days=45)))
         mut = next(k for k in p.compute(ev, _TODAY) if k.spec.id == "mutation_kill_rate")
@@ -188,10 +188,10 @@ class MutationKillRate(unittest.TestCase):
         self.assertIn("stale", mut.detail)
 
     def test_load_evidence_reads_a_recorded_run_from_the_dir(self):
-        import tempfile
-        from pathlib import Path
+        import tempfile  # noqa: PLC0415
+        from pathlib import Path  # noqa: PLC0415
 
-        from kernel import mutation_recorder as mr
+        from kernel import mutation_recorder as mr  # noqa: PLC0415
 
         with tempfile.TemporaryDirectory() as d:
             mr.record(self._run(122, 57, _TODAY), Path(d) / "mutation-latest.json")

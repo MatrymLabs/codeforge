@@ -54,9 +54,9 @@ def witness(kind: str, who: str, detail: str = "") -> EncounterEvent:
     """Record one encounter beat: append it to the bounded ring and bump its running tally.
     Called from the tick; deliberately reaches nothing trusted. Returns the filed event."""
     if kind not in KINDS:
-        raise EncounterError(f"unknown encounter kind '{kind}', not in {KINDS}")
+        raise EncounterError(f"unknown encounter kind '{kind}', not in {KINDS}")  # noqa: TRY003
     if not who.strip():
-        raise EncounterError("an encounter needs a 'who'")
+        raise EncounterError("an encounter needs a 'who'")  # noqa: TRY003
     event = EncounterEvent(kind=kind, who=who, detail=detail)
     _ring.append(event)
     _tally[kind] += 1

@@ -360,7 +360,7 @@ _BIOMES: dict[str, dict[str, Any]] = {
 
 def _biome(name: str) -> dict[str, Any]:
     if name not in _BIOMES:
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"wildlands biome {name!r} is unknown. Known biomes: {sorted(_BIOMES)}."
         )
     return _BIOMES[name]
@@ -373,9 +373,9 @@ def _wild_scale() -> float:
     try:
         scale = float(raw)
     except ValueError:
-        raise BlueprintError(f"{_WILD_SCALE_ENV} must be a number, got {raw!r}.") from None
+        raise BlueprintError(f"{_WILD_SCALE_ENV} must be a number, got {raw!r}.") from None  # noqa: TRY003
     if scale < 1:
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"{_WILD_SCALE_ENV} must be >= 1 (scaling only grows the world), got {raw!r}."
         )
     return scale
@@ -393,11 +393,11 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
     scale = _wild_scale()
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("wildlands.yaml must be a mapping of region-id to config.")
+        raise BlueprintError("wildlands.yaml must be a mapping of region-id to config.")  # noqa: TRY003
     configs: list[dict[str, Any]] = []
     for rid, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise BlueprintError(f"wildlands region {rid!r} must be a mapping of config keys.")
+            raise BlueprintError(f"wildlands region {rid!r} must be a mapping of config keys.")  # noqa: TRY003
         # notable_every: a NAMED guardian foe every N generated rooms (a hunt target that mints a
         # bounty), 0 = none. Default on, so every wildlands zone carries MMO-density hunt content.
         merged = {"branch_every": 3, "branch_length": 3, "notable_every": 220, **cfg, "id": rid}
@@ -413,26 +413,26 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
         )
         missing = [k for k in required if k not in merged]
         if missing:
-            raise BlueprintError(f"wildlands region {rid!r} missing key(s): {', '.join(missing)}.")
+            raise BlueprintError(f"wildlands region {rid!r} missing key(s): {', '.join(missing)}.")  # noqa: TRY003
         _biome(merged["biome"])  # validate the biome exists
         if merged["attach_dir"] not in _OPPOSITE:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"wildlands region {rid!r}: attach_dir {merged['attach_dir']!r} is not a direction."
             )
         for key in ("level_min", "level_max", "trail_length", "branch_every", "branch_length"):
             value = merged[key]
             if not isinstance(value, int) or isinstance(value, bool) or value < 1:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"wildlands region {rid!r}: {key!r} must be a positive integer, got {value!r}."
                 )
-        if not merged["level_min"] <= merged["level_max"] <= 300:
-            raise BlueprintError(
+        if not merged["level_min"] <= merged["level_max"] <= 300:  # noqa: PLR2004
+            raise BlueprintError(  # noqa: TRY003
                 f"wildlands region {rid!r}: need level_min <= level_max <= 300 "
                 f"(got {merged['level_min']}-{merged['level_max']})."
             )
         ne = merged["notable_every"]
         if not isinstance(ne, int) or isinstance(ne, bool) or ne < 0:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"wildlands region {rid!r}: 'notable_every' must be a non-negative int (0 = off), "
                 f"got {ne!r}."
             )
@@ -493,7 +493,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     rid = cfg["id"]
     on = cfg["attach_dir"]
     back = _OPPOSITE[on]
-    L = cfg["trail_length"]
+    L = cfg["trail_length"]  # noqa: N806
     every = cfg["branch_every"]
     blen = cfg["branch_length"]
     rooms: dict[str, Room] = {}
@@ -512,7 +512,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     def add(label: str, name: str, desc: str, exits: dict[str, str]) -> None:
         nonlocal idx, seq
         if label in claimed or label in rooms:
-            raise BlueprintError(f"wildlands region {rid!r} would collide on room label {label!r}.")
+            raise BlueprintError(f"wildlands region {rid!r} would collide on room label {label!r}.")  # noqa: TRY003
         room = Room(name=name, desc=desc, exits=exits)
         material = _gather_node(cfg["biome"], idx)  # some rooms carry a harvestable node
         if material:
@@ -537,7 +537,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
         # flank must never reuse the trail's own axis (`on`/`back`) or it would overwrite the spine
         # and orphan the rooms ahead -- so branches leave strictly perpendicular to the trail.
         branch_head: str | None = None
-        flanks = [d for d in _FLANKS if d != on and d != back]
+        flanks = [d for d in _FLANKS if d != on and d != back]  # noqa: PLR1714
         if i > 0 and i % every == 0 and i + 1 < L:
             flank = flanks[(i // every) % len(flanks)]
             branch_head = f"{rid}_b{i}_1"
@@ -549,15 +549,15 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     return rooms, npcs
 
 
-def _branch(
+def _branch(  # noqa: PLR0917
     cfg: dict[str, Any],
     trail_i: int,
     flank: str,
     trunk: str,
     blen: int,
-    claimed: set[str],
+    claimed: set[str],  # noqa: ARG001
     rooms: dict[str, Room],
-    npcs: dict[str, Npc],
+    npcs: dict[str, Npc],  # noqa: ARG001
     add: Any,
 ) -> None:
     """A short side-trail off the main way, ending in a landmark pocket -- so the region reads as a
@@ -610,7 +610,7 @@ _PLACE_WORDS = (
 )
 
 
-def _place_word(cfg: dict[str, Any], idx: int) -> str:
+def _place_word(cfg: dict[str, Any], idx: int) -> str:  # noqa: ARG001
     """A varied local place-name so a generated room reads as a place, not `room 214`."""
     return _PLACE_WORDS[idx % len(_PLACE_WORDS)]
 
@@ -646,7 +646,7 @@ def generate_wildlands(
     for cfg in configs:
         attach = cfg["attach"]
         if attach not in claimed:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"wildlands region {cfg['id']!r} attaches to {attach!r}, not a real room "
                 "(a seed room, or one an earlier region generated)."
             )
@@ -657,7 +657,7 @@ def generate_wildlands(
             wanted = [cfg["attach_dir"]] + [d for d in _DIR_PREFERENCE if d != cfg["attach_dir"]]
             free = next((d for d in wanted if d not in taken), None)
             if free is None:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"wildlands region {cfg['id']!r} cannot attach to {attach!r}: no free dir."
                 )
             cfg["attach_dir"] = free
@@ -687,7 +687,7 @@ def wildlands_zones(configs: list[dict[str, Any]]) -> dict[str, Zone]:
     generated room belongs to geography (the audit reports it, like the hand-authored zones)."""
     zones: dict[str, Zone] = {}
     for cfg in configs:
-        L = cfg["trail_length"]
+        L = cfg["trail_length"]  # noqa: N806
         every, blen = cfg["branch_every"], cfg["branch_length"]
         members = [f"{cfg['id']}_t{i}" for i in range(1, L + 1)]
         for i in range(1, L):

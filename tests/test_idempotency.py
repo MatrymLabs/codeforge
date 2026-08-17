@@ -101,7 +101,7 @@ def test_failed_factory_stores_nothing_so_retry_reruns() -> None:
     def flaky() -> int:
         calls["n"] += 1
         if calls["n"] == 1:
-            raise RuntimeError("transient failure")
+            raise RuntimeError("transient failure")  # noqa: TRY003
         return 99
 
     # First attempt raises: nothing is cached as success.

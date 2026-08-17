@@ -21,7 +21,7 @@ class TravellerArrived(Signal):
     who: str
 
 
-def chime(session: Session, arg: str = "") -> str:
+def chime(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `chime` verb: ring the gate-chime for each traveller a world signal announces."""
     bus = SignalBus()
     rung: list[str] = []

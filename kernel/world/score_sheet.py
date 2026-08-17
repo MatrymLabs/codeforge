@@ -250,5 +250,5 @@ def render_score_sheet(sheet: CharacterSheet, display_mode: str = "standard") ->
     resistances, or developer. An unknown mode is refused loud."""
     renderer = _MODES.get(display_mode)
     if renderer is None:
-        raise ValueError(f"unknown display_mode {display_mode!r}; available: {sorted(_MODES)}")
+        raise ValueError(f"unknown display_mode {display_mode!r}; available: {sorted(_MODES)}")  # noqa: TRY003
     return renderer(sheet)

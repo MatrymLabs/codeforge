@@ -103,7 +103,7 @@ class InMemoryCharacterStore:
         self._rows[record.name] = record
 
     def upsert_gameplay(self, record: CharacterRecord) -> None:
-        from dataclasses import replace
+        from dataclasses import replace  # noqa: PLC0415
 
         existing = self._rows.get(record.name)
         # carry the stored auth forward; a gameplay save never rewrites it
@@ -114,7 +114,7 @@ class InMemoryCharacterStore:
         )
 
     def set_rank(self, name: str, rank: str) -> bool:
-        from dataclasses import replace
+        from dataclasses import replace  # noqa: PLC0415
 
         existing = self._rows.get(name)
         if existing is None:
@@ -128,7 +128,7 @@ class InMemoryCharacterStore:
         return sorted(name for name, r in self._rows.items() if r.guild == guild)
 
     def set_guild(self, name: str, guild: str, guild_rank: str) -> bool:
-        from dataclasses import replace
+        from dataclasses import replace  # noqa: PLC0415
 
         existing = self._rows.get(name)
         if existing is None:
@@ -137,7 +137,7 @@ class InMemoryCharacterStore:
         return True
 
     def add_coins(self, name: str, delta: int) -> bool:
-        from dataclasses import replace
+        from dataclasses import replace  # noqa: PLC0415
 
         existing = self._rows.get(name)
         if existing is None:

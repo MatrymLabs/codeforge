@@ -51,7 +51,7 @@ class ExporterHub:
     def export(self, name: str, rows: Sequence[Row]) -> str:
         exporter = self._registry.get(name)
         if exporter is None:
-            raise PluginError(f"no enabled exporter named {name!r}")
+            raise PluginError(f"no enabled exporter named {name!r}")  # noqa: TRY003
         return exporter.export(rows)
 
     def formats(self) -> list[str]:

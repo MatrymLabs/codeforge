@@ -53,9 +53,9 @@ def test_the_record_outlives_the_process() -> None:
     Reload the module's durable view the way a fresh process would and assert the grant is still
     known. If the ledger is in-memory only, this test cannot pass, which is the intended pressure.
     """
-    import importlib
+    import importlib  # noqa: PLC0415
 
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     record_grant("hero", "npc:training_dummy", 99)
     importlib.reload(reward_ledger)
@@ -93,9 +93,9 @@ def test_the_occurrence_does_not_rewind_when_a_fresh_process_starts() -> None:
     would reuse an occurrence already on disk and the ledger would REFUSE a payout the player had
     earned. Robbing the player is worse than paying twice, so the count comes from the record.
     """
-    import importlib
+    import importlib  # noqa: PLC0415
 
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     for _ in range(3):
         record_grant("hero", "npc:training_dummy", next_occurrence("hero", "npc:training_dummy"))
@@ -134,7 +134,7 @@ def test_an_unusable_grant_identity_is_refused_loudly(character, source, occurre
     would then fail to match the very error it just provoked. Import identity is not stable across
     a reload, and this file reloads.
     """
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     with pytest.raises(reward_ledger.GrantIdentityError):
         reward_ledger.record_grant(character, source, occurrence)
@@ -156,7 +156,7 @@ def test_the_ledger_reports_what_it_paid() -> None:
 
 def test_claiming_a_grant_returns_true_once_and_false_after() -> None:
     """The claim IS the insert, so the primary key picks the winner rather than a prior read."""
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     assert reward_ledger.claim_grant("hero", "npc:training_dummy", 1) is True
     assert reward_ledger.claim_grant("hero", "npc:training_dummy", 1) is False
@@ -164,7 +164,7 @@ def test_claiming_a_grant_returns_true_once_and_false_after() -> None:
 
 
 def test_a_lost_claim_does_not_disturb_the_grant_that_won() -> None:
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     reward_ledger.claim_grant("hero", "npc:training_dummy", 1)
     reward_ledger.claim_grant("hero", "npc:training_dummy", 1)
@@ -173,7 +173,7 @@ def test_a_lost_claim_does_not_disturb_the_grant_that_won() -> None:
 
 def test_every_occurrence_of_a_farmable_foe_can_be_claimed() -> None:
     """Three kills, three claims, three payouts. A ledger that breaks the dummy is the worse bug."""
-    from kernel.world import reward_ledger
+    from kernel.world import reward_ledger  # noqa: PLC0415
 
     for _ in range(3):
         occurrence = reward_ledger.next_occurrence("hero", "npc:training_dummy")

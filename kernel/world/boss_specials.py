@@ -28,7 +28,7 @@ from kernel.world.seed import Npc
 from kernel.world.session import sentence_case
 
 #: Runtime RNG for the charge cadence: encounter variety, not security. Tests monkeypatch it.
-_SPECIAL_RNG = random.Random()  # nosec B311
+_SPECIAL_RNG = random.Random()  # nosec B311  # noqa: S311
 
 DEFAULT_MULT = 2  # how much harder a `strike` unleash lands, atop any enrage scaling
 DEFAULT_CADENCE = 3  # begin a wind-up on at most 1-in-this of an enraged boss's beats
@@ -45,7 +45,7 @@ def maybe_begin_charge(npc: Npc) -> str:
     telegraph line. Returns '' (and starts nothing) for a non-boss, a boss without a `special`, a
     boss not yet enraged, one already charging, or when the cadence roll declines. The wind-up beat
     lands no blow (the caller returns this line), so the hero gets a beat to answer."""
-    from kernel.world.boss_phases import is_boss, is_enraged
+    from kernel.world.boss_phases import is_boss, is_enraged  # noqa: PLC0415
 
     special = npc.get("special")
     if not special or not is_boss(npc) or not is_enraged(npc) or is_charging(npc):

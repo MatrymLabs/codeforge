@@ -19,7 +19,7 @@ def test_season_wheels_through_the_year():
 
 
 def test_weather_belongs_to_its_season_and_holds_then_shifts():
-    from kernel.world.climate import _WEATHER
+    from kernel.world.climate import _WEATHER  # noqa: PLC0415
 
     for beat in (0, 7, 45, 120):
         assert weather_of(beat) in _WEATHER[season_of(beat)], "weather fits its season"

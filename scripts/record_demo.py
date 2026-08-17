@@ -23,9 +23,9 @@ import tempfile
 os.environ.setdefault("FORGE_SEED", "aethryn")
 # The coda swears an Order (a named-hero action that persists), so point at a throwaway DB -- the
 # recorder must never touch real save state, and a fresh file boots with the full current schema.
-_demo_db = os.path.join(tempfile.gettempdir(), "codeforge_demo_recorder.db")
-if os.path.exists(_demo_db):
-    os.remove(_demo_db)
+_demo_db = os.path.join(tempfile.gettempdir(), "codeforge_demo_recorder.db")  # noqa: PTH118
+if os.path.exists(_demo_db):  # noqa: PTH110
+    os.remove(_demo_db)  # noqa: PTH107
 os.environ.setdefault("CODEFORGE_DB", _demo_db)
 
 import forge  # noqa: E402  (import after FORGE_SEED so the world loads the flagship)
@@ -77,7 +77,7 @@ def build_cast(session: Session) -> list[list[object]]:
         emit(reply + "\r\n\r\n", hold)
         return reply
 
-    with open("seeds/aethryn/splash.txt", encoding="utf-8") as handle:
+    with open("seeds/aethryn/splash.txt", encoding="utf-8") as handle:  # noqa: PTH123
         splash = handle.read().rstrip("\n")
     emit("\x1b[38;5;214m" + splash + "\x1b[0m\r\n\r\n", 2.0)
     emit("Welcome, Forger. Type HELP to begin.\r\n\r\n", 1.1)
@@ -94,7 +94,7 @@ def build_cast(session: Session) -> list[list[object]]:
     beat("east", 1.4)
     for i in range(4):  # visible fights: an ability strike, a plain strike, and a level-up lands
         beat("use ember edge on wolf" if i % 2 == 0 else "attack wolf", 1.4)
-    while session.level < 5:  # then grind off-screen until strong enough to face the boss
+    while session.level < 5:  # then grind off-screen until strong enough to face the boss  # noqa: E501, PLR2004
         play("attack wolf")
 
     # 4. Delve: walk back and down into the Cold Cellar -- entering it advances the quest.
@@ -105,7 +105,7 @@ def build_cast(session: Session) -> list[list[object]]:
     # 5. The lethal boss: alternate an ability and a strike (checking MP first, so a skill only
     #    fires when it can) until the Relighting is complete; hold long on the victory epilogue.
     for i in range(16):
-        can_cast = session.resources["mp"].current >= 3  # Ember Edge costs 3 MP
+        can_cast = session.resources["mp"].current >= 3  # Ember Edge costs 3 MP  # noqa: PLR2004
         cmd = "use ember edge on wight" if (i % 2 == 0 and can_cast) else "attack wight"
         prompt_and_type(cmd)
         reply = play(cmd)
@@ -132,9 +132,9 @@ def main(argv: list[str] | None = None) -> int:
     cast_path = args[0] if args else "demo.cast"
     events = build_cast(Session(player_id="forger", location=START_ROOM))
     header = {"version": 2, "width": WIDTH, "height": HEIGHT, "title": "CodeForge: The Kindlands"}
-    with open(cast_path, "w", encoding="utf-8") as handle:
+    with open(cast_path, "w", encoding="utf-8") as handle:  # noqa: PTH123
         handle.write(json.dumps(header) + "\n")
-        for event in events:
+        for event in events:  # noqa: FURB122
             handle.write(json.dumps(event) + "\n")
     duration = events[-1][0] if events else 0
     print(

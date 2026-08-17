@@ -56,7 +56,7 @@ class BlueprintKernelError(Exception):
     """Base for every Seed Kernel failure. The Kernel fails loud, never mis-states a Seed."""
 
 
-class SeedNotFound(BlueprintKernelError):
+class SeedNotFound(BlueprintKernelError):  # noqa: N818
     """No Seed with the requested id exists in the store."""
 
 
@@ -101,7 +101,7 @@ class SeedIdentity:
         for field_name in ("seed_id", "name", "owner"):
             value = getattr(self, field_name)
             if not isinstance(value, str) or not value.strip():
-                raise BlueprintKernelError(f"a Seed needs a non-empty {field_name}")
+                raise BlueprintKernelError(f"a Seed needs a non-empty {field_name}")  # noqa: TRY003
         # Persisted JSON restores a list; coerce to a tuple so identity stays frozen + hashable.
         object.__setattr__(self, "domain_modules", tuple(self.domain_modules))
 
@@ -139,7 +139,7 @@ class BlueprintRecord:
             audit = tuple(AuditEvent(**e) for e in data.get("audit", []))
             status = data.get("status", CREATED)
             if status not in _STATUSES:
-                raise BlueprintKernelError(f"unknown persisted status {status!r}")
+                raise BlueprintKernelError(f"unknown persisted status {status!r}")  # noqa: TRY003
             return cls(
                 identity=identity,
                 status=status,
@@ -148,7 +148,7 @@ class BlueprintRecord:
                 audit=audit,
             )
         except (KeyError, TypeError) as exc:
-            raise BlueprintKernelError(f"malformed Seed record: {exc}") from exc
+            raise BlueprintKernelError(f"malformed Seed record: {exc}") from exc  # noqa: TRY003
 
 
 @runtime_checkable
@@ -220,7 +220,7 @@ class FileSeedStore:
         try:
             return BlueprintRecord.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
-            raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc
+            raise BlueprintKernelError(f"corrupt Seed record {path}: {exc}") from exc  # noqa: TRY003
 
     def all(self) -> list[BlueprintRecord]:
         out: list[BlueprintRecord] = []
@@ -250,7 +250,7 @@ class BlueprintKernel:
     def get(self, seed_id: str) -> BlueprintRecord:
         record = self._store.load(seed_id)
         if record is None:
-            raise SeedNotFound(f"no Seed with id {seed_id!r}")
+            raise SeedNotFound(f"no Seed with id {seed_id!r}")  # noqa: TRY003
         return record
 
     def list_seeds(self) -> list[BlueprintRecord]:
@@ -276,10 +276,10 @@ class BlueprintKernel:
         `product_type`/`domain_modules` carry the Engineering Form's verdict onto the Seed (empty
         when a Seed is minted directly)."""
         if not name or not name.strip():
-            raise BlueprintKernelError("a Seed needs a non-empty name")
+            raise BlueprintKernelError("a Seed needs a non-empty name")  # noqa: TRY003
         chosen = seed_id or self._mint(name)
         if self._store.load(chosen) is not None:
-            raise BlueprintKernelError(f"a Seed with id {chosen!r} already exists")
+            raise BlueprintKernelError(f"a Seed with id {chosen!r} already exists")  # noqa: TRY003
         now = self._clock()
         identity = SeedIdentity(
             seed_id=chosen,
@@ -327,13 +327,13 @@ class BlueprintKernel:
         if current is not None:
             self._authorize(current, actor)
             if record.identity.owner != current.identity.owner:
-                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")
+                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")  # noqa: TRY003
         else:
             self._authorize(record, actor)
         now = self._clock()
         reinstated = replace(
             record,
-            audit=record.audit + (AuditEvent(now, actor, "reinstated", detail),),
+            audit=record.audit + (AuditEvent(now, actor, "reinstated", detail),),  # noqa: RUF005
         )
         self._store.save(reinstated)
         return reinstated
@@ -352,14 +352,14 @@ class BlueprintKernel:
         record = self.get(seed_id)
         self._authorize(record, actor)
         if new_status not in _TRANSITIONS[record.status]:
-            raise SeedLifecycleError(f"cannot {action} a {record.status} Seed (id {seed_id!r})")
+            raise SeedLifecycleError(f"cannot {action} a {record.status} Seed (id {seed_id!r})")  # noqa: TRY003
         now = self._clock()
         evolved = replace(
             record,
             status=new_status,
             started_at=now if started else record.started_at,
             stopped_at=now if stopped else record.stopped_at,
-            audit=record.audit + (AuditEvent(now, actor, action, f"-> {new_status}"),),
+            audit=record.audit + (AuditEvent(now, actor, action, f"-> {new_status}"),),  # noqa: RUF005
         )
         self._store.save(evolved)
         return evolved
@@ -368,7 +368,7 @@ class BlueprintKernel:
     def _authorize(record: BlueprintRecord, actor: str) -> None:
         """Least privilege: only the Seed's owner may operate it. The Kernel is a control plane."""
         if actor != record.identity.owner:
-            raise SeedAuthError(
+            raise SeedAuthError(  # noqa: TRY003
                 f"actor {actor!r} is not the owner of Seed {record.identity.seed_id!r}"
             )
 
@@ -381,7 +381,7 @@ def render_status(record: BlueprintRecord) -> str:
         f"== Seed: {i.name}  [{i.seed_id}] ==",
         f"owner: {i.owner}  version: {i.version}  status: {record.status.upper()}",
         f"purpose: {i.purpose or '-'}",
-        f"created: {i.created_at or '-'}  last start: {record.started_at or '-'}  "
+        f"created: {i.created_at or '-'}  last start: {record.started_at or '-'}  "  # noqa: ISC004
         f"last stop: {record.stopped_at or '-'}",
         "recent activity:",
     ]
@@ -396,7 +396,7 @@ def _open_kernel(home: str | None = None) -> BlueprintKernel:
     return BlueprintKernel(FileSeedStore(root))
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """CLI: make the Seed lifecycle real and inspectable from the shell (no hidden state).
 
     Usage:
@@ -405,7 +405,7 @@ def main(argv: list[str] | None = None) -> int:
       python3 -m kernel.seedlab.kernel status <seed_id>
       python3 -m kernel.seedlab.kernel start|stop|archive <seed_id> <actor>
     """
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(argv if argv is not None else sys.argv[1:])
     if not args:
@@ -415,10 +415,10 @@ def main(argv: list[str] | None = None) -> int:
     cmd, rest = args[0], args[1:]
     try:
         if cmd == "create":
-            if len(rest) < 2:
+            if len(rest) < 2:  # noqa: PLR2004
                 print("usage: create <name> <owner> [purpose]", file=sys.stderr)
                 return 2
-            record = kernel.create_seed(rest[0], rest[1], rest[2] if len(rest) > 2 else "")
+            record = kernel.create_seed(rest[0], rest[1], rest[2] if len(rest) > 2 else "")  # noqa: PLR2004
             print(f"created {record.identity.seed_id}")
             return 0
         if cmd == "list":
@@ -433,14 +433,14 @@ def main(argv: list[str] | None = None) -> int:
             print(kernel.status(rest[0]))
             return 0
         if cmd in ("start", "stop", "archive"):
-            if len(rest) < 2:
+            if len(rest) < 2:  # noqa: PLR2004
                 print(f"usage: {cmd} <seed_id> <actor>", file=sys.stderr)
                 return 2
             record = getattr(kernel, cmd)(rest[0], rest[1])
             print(f"{rest[0]} -> {record.status.upper()}")
             return 0
         print(f"unknown command {cmd!r}", file=sys.stderr)
-        return 2
+        return 2  # noqa: TRY300
     except BlueprintKernelError as exc:
         print(f"seed-kernel: {exc}", file=sys.stderr)
         return 1

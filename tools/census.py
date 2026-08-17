@@ -117,9 +117,9 @@ def abilities() -> dict[str, object]:
 
 def systems() -> dict[str, object]:
     """Engine constants read from their modules, so a change at the source shows here."""
-    from kernel.world.equipment import SLOTS
-    from kernel.world.orders import ORDERS
-    from kernel.world.score_sheet_model import RESIST_ORDER
+    from kernel.world.equipment import SLOTS  # noqa: PLC0415
+    from kernel.world.orders import ORDERS  # noqa: PLC0415
+    from kernel.world.score_sheet_model import RESIST_ORDER  # noqa: PLC0415
 
     return {
         "orders_factions": len(ORDERS),

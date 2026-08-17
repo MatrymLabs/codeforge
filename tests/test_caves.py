@@ -34,7 +34,7 @@ def test_all_regions_generate_caves_that_pass_their_own_validation():
 
 
 def test_every_cave_satisfies_the_generation_contract():
-    from kernel.world import generation_contract as gc
+    from kernel.world import generation_contract as gc  # noqa: PLC0415
 
     for region in caves.cave_regions():
         for seed in (0, 1, 7, 13):  # includes seed 0 (a real value, not a blank)
@@ -54,7 +54,7 @@ def test_a_cave_carries_its_narrative_and_provenance():
 
 
 def test_archetype_is_one_the_contract_knows():
-    from kernel.world import generation_contract as gc
+    from kernel.world import generation_contract as gc  # noqa: PLC0415
 
     known = set(gc.archetype_shares())
     for region in caves.cave_regions():
@@ -244,7 +244,7 @@ def _valid_area() -> dict:
         "canon_status": "GENERATED_LOCAL",
     }
     # A valid area is also generation-contract-complete: give it every required field.
-    from kernel.world import generation_contract as gc
+    from kernel.world import generation_contract as gc  # noqa: PLC0415
 
     for field in gc.required_area_fields():
         area.setdefault(field, "x")

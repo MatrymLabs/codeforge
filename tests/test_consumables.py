@@ -8,7 +8,7 @@ import copy
 
 import pytest
 
-import forge  # noqa: F401 -- boot the world before the fixture clones items
+import forge  # noqa: F401, RUF100
 from kernel.world import items
 from kernel.world.consumables import quaff
 from kernel.world.jobs import bind_calling

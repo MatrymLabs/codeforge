@@ -281,7 +281,7 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
 
     hp = int((18 + level * 4) * float(cls["hp"]) * size_mult)  # type: ignore[arg-type]
     atk = int((5 + level // 2) * float(cls["atk"]))  # type: ignore[arg-type]
-    tier = "elite" if idx % 11 == 10 else "normal"
+    tier = "elite" if idx % 11 == 10 else "normal"  # noqa: PLR2004
     if tier == "elite":
         hp = int(hp * 1.6)
         atk = int(atk * 1.25)
@@ -312,7 +312,7 @@ def _ambient_loot(cls_name: str, biome: str, tier: str = "normal") -> dict[str, 
 
     The biome spoil is resolved through wildlands.biome_spoil (the single source of truth for a
     biome's herb); the import is local to avoid a cycle (wildlands imports this module)."""
-    from kernel.world.wildlands import biome_spoil
+    from kernel.world.wildlands import biome_spoil  # noqa: PLC0415
 
     loot = {"ember_shard": 3, "nothing": 2}
     material = _CLASS_MATERIAL.get(cls_name)
@@ -379,7 +379,7 @@ def make_notable(biome: str, level: int, idx: int, room: str, seq: int) -> Npc:
     role = _EPITHETS[(idx + seq) % len(_EPITHETS)]
     display = f"{name} the {mark.capitalize()} {role}"
 
-    is_boss = seq % 6 == 5  # roughly one in six guardians is a boss-tier payout (10x reward curve)
+    is_boss = seq % 6 == 5  # roughly one in six guardians is a boss-tier payout (10x reward curve)  # noqa: E501, PLR2004
     hp = int(beast["hp"] * (2.4 if is_boss else 1.5))
     beast["name"] = display
     beast["keywords"] = list(dict.fromkeys([name.lower(), role.lower(), *beast["keywords"]]))

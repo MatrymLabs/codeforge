@@ -27,7 +27,7 @@ from kernel.world.session import Session
 def _default_store() -> CharacterStore:
     """The default backend: the SQL adapter, imported lazily so this module stays engine-free at
     import time (EXP-003 -- a DB-free `import forge` never pays the ~400ms SQLAlchemy import)."""
-    from kernel.world.character_store_sql import SqlCharacterStore
+    from kernel.world.character_store_sql import SqlCharacterStore  # noqa: PLC0415
 
     return SqlCharacterStore()
 
@@ -37,7 +37,7 @@ def snapshot_item(iid: str) -> dict[str, Any] | None:
     plus the instance's rolled name, mods, and rarity, so an AFFIXED drop ('a Cruel blade of the
     Bear [rare]') survives logout with its roll intact, not just the base item. None if the id names
     no live item. The one shape both worn gear and loose inventory persist through."""
-    from kernel.world.items import ITEMS, prototype_of
+    from kernel.world.items import ITEMS, prototype_of  # noqa: PLC0415
 
     item = ITEMS.get(iid)
     if item is None:
@@ -49,7 +49,7 @@ def snapshot_item(iid: str) -> dict[str, Any] | None:
         "rarity": item.get("rarity", "common"),
     }
     if item.get("slot"):  # only gear wears; carry its durability so wear survives logout
-        from kernel.world.durability import current as _durability
+        from kernel.world.durability import current as _durability  # noqa: PLC0415
 
         snap["durability"] = _durability(iid)
     return snap
@@ -59,7 +59,7 @@ def reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
     """Re-mint a snapshotted item into a carrier, restoring its rolled affixes over a fresh base
     clone. Accepts the legacy bare-prototype string too (backward-compatible). None (skipped, not a
     crash) if the prototype is unknown or has been retired from the seed."""
-    from kernel.world.items import ITEMS, PROTOTYPES, clone
+    from kernel.world.items import ITEMS, PROTOTYPES, clone  # noqa: PLC0415
 
     if isinstance(snapshot, str):
         prototype: Any = snapshot
@@ -102,8 +102,8 @@ def _restore_gear(session: Session, raw: str) -> None:
         gear = json.loads(raw)
     except (ValueError, TypeError):
         return
-    from kernel.world.equipment import SLOTS
-    from kernel.world.items import carrier
+    from kernel.world.equipment import SLOTS  # noqa: PLC0415
+    from kernel.world.items import carrier  # noqa: PLC0415
 
     for slot, saved in gear.items():
         if slot not in SLOTS:
@@ -117,7 +117,7 @@ def _snapshot_loose(session: Session) -> list[dict[str, Any]]:
     """Every LOOSE item a hero carries (in the bag, not worn) as snapshots. Worn gear is excluded on
     purpose: it persists on the character row via _serialize_gear, so a snapshot here would double
     it. loose = the items tagged to this hero's carrier, minus the ones currently equipped."""
-    from kernel.world.items import carrier, items_in
+    from kernel.world.items import carrier, items_in  # noqa: PLC0415
 
     equipped = set(session.equipped.values())
     bag: list[dict[str, Any]] = []
@@ -134,7 +134,7 @@ def _clear_carrier(player_id: str) -> None:
     """Drop every item currently tagged to a hero's carrier from the live ITEMS map. Called before a
     restore re-clones from storage, so a reconnect in the same process can never DUPLICATE a bag by
     stacking freshly-cloned items on top of the previous session's orphaned instances."""
-    from kernel.world.items import ITEMS, carrier, items_in
+    from kernel.world.items import ITEMS, carrier, items_in  # noqa: PLC0415
 
     for iid in items_in(carrier(player_id)):
         ITEMS.pop(iid, None)
@@ -173,7 +173,7 @@ def load_character(name: str, store: CharacterStore | None = None) -> dict[str, 
 
 def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None = None) -> None:
     """Write one full casefile through the single storage door (auth columns included)."""
-    from kernel.world.world import START_ROOM
+    from kernel.world.world import START_ROOM  # noqa: PLC0415
 
     auth = casefile.get("auth") or {}
     record = CharacterRecord(
@@ -208,7 +208,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
     the merge-save law, enforced by upsert_gameplay (never the auth columns)."""
     if not session.named:
         return
-    from kernel.world.quest import save_state
+    from kernel.world.quest import save_state  # noqa: PLC0415
 
     record = CharacterRecord(
         name=session.player_id,
@@ -236,7 +236,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
     if session.job_progress:
         save_job_progress(session.player_id, session.job_progress.values())
     # Persist the loose bag (Keystone A): everything carried but not worn, so it survives logout.
-    from kernel.world.loose_store import save as save_loose
+    from kernel.world.loose_store import save as save_loose  # noqa: PLC0415
 
     save_loose(session.player_id, _snapshot_loose(session))
 
@@ -249,7 +249,7 @@ def save_all(store: CharacterStore | None = None) -> int:
     Lock-agnostic on purpose: the caller holds the tick lock (or is the shutdown path) so no session
     is mutating mid-save. Iterates a snapshot of the roster, so a disconnect pruning SESSIONS during
     the loop never trips it."""
-    from kernel.world.session import SESSIONS
+    from kernel.world.session import SESSIONS  # noqa: PLC0415
 
     saved = 0
     for session in list(SESSIONS.values()):
@@ -264,7 +264,7 @@ def safe_location(loc: str) -> str:
     migration (or any content change) can remove a room a hero was standing in; without this a
     returning player would wake in a dead room. The start is always present, so a reshape of the
     world can never strand a save."""
-    from kernel.world.world import START_ROOM, WORLD
+    from kernel.world.world import START_ROOM, WORLD  # noqa: PLC0415
 
     return loc if loc in WORLD else START_ROOM
 
@@ -294,13 +294,13 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     # ...then re-clone and re-equip THIS hero's own persisted gear (folds back into their stats).
     _restore_gear(session, str(casefile.get("equipped_gear", "")))
     # ...and re-clone their loose bag (Keystone A), so everything carried but not worn is back too.
-    from kernel.world.items import carrier as _carrier
-    from kernel.world.loose_store import load as load_loose
+    from kernel.world.items import carrier as _carrier  # noqa: PLC0415
+    from kernel.world.loose_store import load as load_loose  # noqa: PLC0415
 
     for snap in load_loose(session.player_id):
         reclone_item(snap, _carrier(session.player_id))
     # ...and seed their quest arc back to where they left it, so a story-in-progress survives.
-    from kernel.world.quest import restore_state
+    from kernel.world.quest import restore_state  # noqa: PLC0415
 
     restore_state(session.player_id, str(casefile.get("quest_state", "")))
     # ...and restore the daily lockout ledger, so the once-a-day boss bonus cap survives logout.

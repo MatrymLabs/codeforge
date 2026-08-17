@@ -72,7 +72,7 @@ def scan_source(source: str) -> list[FunctionComplexity]:
     try:
         tree = ast.parse(source)
     except SyntaxError as exc:
-        raise ComplexityError(f"could not parse source: {exc}") from exc
+        raise ComplexityError(f"could not parse source: {exc}") from exc  # noqa: TRY003
     found = [
         FunctionComplexity(node.name, complexity_of(node), node.lineno)
         for node in ast.walk(tree)

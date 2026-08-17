@@ -14,7 +14,7 @@ from pathlib import Path
 from kernel.blueprint import _find, load_all, to_markdown
 
 
-def blueprint(arg: str = "", root: Path | None = None) -> str:
+def blueprint(arg: str = "", root: Path | None = None) -> str:  # noqa: PLR0911
     """The in-game `blueprint` verb: browse, read, or render a filed plan to HTML."""
     parts = arg.split(maxsplit=1)
     sub = parts[0].lower() if parts else ""
@@ -42,7 +42,7 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:
         found = _find(rest, root)
         if not found:
             return f"No blueprint filed as '{rest}'."
-        from kernel.blueprint_render import write_html
+        from kernel.blueprint_render import write_html  # noqa: PLC0415
 
         path = write_html(found, root=root)
         return f"Rendered '{found.blueprint_id}' to {path}"
@@ -50,8 +50,8 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:
     if sub == "draft":
         if not rest:
             return "Describe the idea: blueprint draft <what you want to build>"
-        from adapters.architect import ArchitectError
-        from adapters.blueprint_ai import BlueprintDraftError, build_claude_drafter
+        from adapters.architect import ArchitectError  # noqa: PLC0415
+        from adapters.blueprint_ai import BlueprintDraftError, build_claude_drafter  # noqa: PLC0415
 
         try:
             drafter = build_claude_drafter()

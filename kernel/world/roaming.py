@@ -21,7 +21,7 @@ from kernel.world.session import Session, sentence_case
 from kernel.world.world import WORLD
 
 # World flavor, not security: a seeded module RNG so tests replace it for exact drift.
-_ROAM_RNG = random.Random()  # nosec B311
+_ROAM_RNG = random.Random()  # nosec B311  # noqa: S311
 
 # One in this many beats a given wanderer moves. A drift, not a frenzy: high enough that a room does
 # not churn every turn, low enough that the world visibly breathes over a short walk.

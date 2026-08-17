@@ -35,13 +35,13 @@ def ask_architect(session: Session, prompt: str) -> str:
     decision = _bucket(session.player_id).consume()
     if not decision.allowed:
         return f"The Architect is still thinking. Ask again in {decision.retry_after:.0f}s."
-    from adapters.architect import consult
+    from adapters.architect import consult  # noqa: PLC0415
 
     return consult(prompt)
 
 
 def reset_ai_throttle(clock: Clock | None = None) -> None:
     """Test hook: clear all per-player buckets and optionally inject a clock for new ones."""
-    global _clock_override
+    global _clock_override  # noqa: PLW0603
     _clock_override = clock
     _BUCKETS.clear()

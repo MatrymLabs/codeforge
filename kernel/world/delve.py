@@ -38,17 +38,17 @@ _CHAMBER_STAGES = (
     ),
     (
         "the mid-depths",
-        "Deeper beneath {name}, the passage narrows and the air turns stale and close. "
+        "Deeper beneath {name}, the passage narrows and the air turns stale and close. "  # noqa: ISC004
         "{note} {mood}",
     ),
     (
         "the deep",
-        "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "
+        "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "  # noqa: ISC004
         "{note} {mood}",
     ),
     (
         "the lair",
-        "The way opens into a great vault at the root of {name}, where the deep thing makes its "
+        "The way opens into a great vault at the root of {name}, where the deep thing makes its "  # noqa: ISC004
         "lair. {note} {mood}",
     ),
 )
@@ -83,18 +83,18 @@ def load_dungeons(path: Path) -> list[dict[str, Any]] | None:
         return None
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
-        raise BlueprintError("dungeons.yaml must be a mapping of room-id to dungeon config.")
+        raise BlueprintError("dungeons.yaml must be a mapping of room-id to dungeon config.")  # noqa: TRY003
     configs: list[dict[str, Any]] = []
     for room, cfg in raw.items():
         if not isinstance(cfg, dict):
-            raise BlueprintError(f"dungeon {room!r} must be a mapping of config keys.")
+            raise BlueprintError(f"dungeon {room!r} must be a mapping of config keys.")  # noqa: TRY003
         merged = {**cfg, "room": room}
         for key in ("name", "zone", "level", "biome"):
             if key not in merged:
-                raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")
+                raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")  # noqa: TRY003
         level = merged["level"]
-        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
-            raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")
+        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:  # noqa: PLR2004
+            raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")  # noqa: TRY003
         configs.append(merged)
     return configs
 

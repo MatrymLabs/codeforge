@@ -257,7 +257,7 @@ def load_module_designations(path: Path | str | None = None) -> list[dict[str, o
     registry = Path(path) if path is not None else _MODULES_REGISTRY
     data = json.loads(registry.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise BlueprintKernelError(f"module registry {registry} is not a JSON list")
+        raise BlueprintKernelError(f"module registry {registry} is not a JSON list")  # noqa: TRY003
     return [module for module in data if isinstance(module, dict)]
 
 
@@ -311,7 +311,7 @@ def load_research_findings(path: Path | str) -> list[dict[str, object]]:
     manifest = Path(path)
     data = json.loads(manifest.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise BlueprintKernelError(f"research manifest {manifest} is not a JSON list")
+        raise BlueprintKernelError(f"research manifest {manifest} is not a JSON list")  # noqa: TRY003
     return [finding for finding in data if isinstance(finding, dict)]
 
 
@@ -337,13 +337,13 @@ def parse_seed_create(data: object) -> SeedCreateRequest:
     optional. The engine re-validates what the client already checked - defense in depth: a
     malformed or hostile frame never reaches the Kernel."""
     if not isinstance(data, dict):
-        raise WorkspaceContractError("Seed.Create: payload must be an object")
+        raise WorkspaceContractError("Seed.Create: payload must be an object")  # noqa: TRY003
     name = data.get("name")
     if not isinstance(name, str) or not name.strip():
-        raise WorkspaceContractError("Seed.Create: 'name' must be a non-empty string")
+        raise WorkspaceContractError("Seed.Create: 'name' must be a non-empty string")  # noqa: TRY003
     kind = data.get("kind")
     if not isinstance(kind, str) or kind.strip().lower() not in SEED_KINDS:
-        raise WorkspaceContractError(f"Seed.Create: 'kind' must be one of {', '.join(SEED_KINDS)}")
+        raise WorkspaceContractError(f"Seed.Create: 'kind' must be one of {', '.join(SEED_KINDS)}")  # noqa: TRY003
     description = data.get("description")
     description = description.strip() if isinstance(description, str) else ""
     return SeedCreateRequest(name=name.strip(), kind=kind.strip().lower(), description=description)
@@ -496,7 +496,7 @@ def form_schema(definition: FormDefinition, *, seed: str | None = None) -> dict[
         if question.choices:
             entry["choices"] = list(question.choices)
         if question.applies_when:
-            entry["applies_when"] = {key: value for key, value in question.applies_when}
+            entry["applies_when"] = {key: value for key, value in question.applies_when}  # noqa: C416
         questions[qid] = entry
     product_types = [
         {
@@ -537,13 +537,13 @@ def parse_form_submit(data: object) -> FormSubmitRequest:
     answers map is allowed - the Form re-validates and fails on any missing required answer). The
     engine re-checks the shape the client already checked (defense in depth)."""
     if not isinstance(data, dict):
-        raise WorkspaceContractError("Form.Submit: payload must be an object")
+        raise WorkspaceContractError("Form.Submit: payload must be an object")  # noqa: TRY003
     product_type = data.get("product_type")
     if not isinstance(product_type, str) or not product_type.strip():
-        raise WorkspaceContractError("Form.Submit: 'product_type' must be a non-empty string")
+        raise WorkspaceContractError("Form.Submit: 'product_type' must be a non-empty string")  # noqa: TRY003
     answers = data.get("answers", {})
     if not isinstance(answers, dict):
-        raise WorkspaceContractError("Form.Submit: 'answers' must be an object")
+        raise WorkspaceContractError("Form.Submit: 'answers' must be an object")  # noqa: TRY003
     return FormSubmitRequest(product_type=product_type.strip(), answers=dict(answers))
 
 

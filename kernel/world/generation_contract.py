@@ -35,10 +35,10 @@ def load_contract(path: Path | None = None) -> dict[str, Any]:
     the archetype shares do not sum to 1, so a broken contract never silently under-checks."""
     where = path if path is not None else _CONTRACT_PATH
     if not where.exists():
-        raise BlueprintError(f"Generation contract file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"Generation contract file not found: {where}")  # noqa: TRY003
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Generation contract file is not a mapping: {where}")
+        raise BlueprintError(f"Generation contract file is not a mapping: {where}")  # noqa: TRY003
 
     for section in (
         "required_area_fields",
@@ -48,17 +48,17 @@ def load_contract(path: Path | None = None) -> dict[str, Any]:
         "minor_area_archetypes",
     ):
         if not data.get(section):
-            raise BlueprintError(f"generation contract: missing or empty section {section!r}")
+            raise BlueprintError(f"generation contract: missing or empty section {section!r}")  # noqa: TRY003
 
     archetypes = data["minor_area_archetypes"]
     for arch in archetypes:
         if not arch.get("id") or arch.get("share") is None:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"generation contract archetype {arch.get('id')!r}: needs an id and share"
             )
     total = sum(a["share"] for a in archetypes)
-    if abs(total - 1.0) > 1e-6:
-        raise BlueprintError(f"generation contract: archetype shares must sum to 1.0, got {total}")
+    if abs(total - 1.0) > 1e-6:  # noqa: PLR2004
+        raise BlueprintError(f"generation contract: archetype shares must sum to 1.0, got {total}")  # noqa: TRY003
     return data
 
 
@@ -90,7 +90,7 @@ def archetype_shares(contract: dict[str, Any] | None = None) -> dict[str, float]
 def _is_blank(value: Any) -> bool:
     """A field counts as missing when it is absent, None, or an empty string/list/dict, so a
     placeholder cannot pass. A real 0 or False is a value, not a blank (a seed of 0 is valid)."""
-    return value is None or value == "" or value == [] or value == {}
+    return value is None or value == "" or value == [] or value == {}  # noqa: PLR1714
 
 
 def missing_fields(area: dict[str, Any], contract: dict[str, Any] | None = None) -> list[str]:

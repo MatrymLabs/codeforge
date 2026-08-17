@@ -30,7 +30,7 @@ class FakeMachine:
     def setter(self, pid: int, mask: set[int]) -> None:
         self.set_calls.append(set(mask))
         if mask & self.refuse:
-            raise PermissionError("Operation not permitted")  # an OSError subclass, like real EPERM
+            raise PermissionError("Operation not permitted")  # an OSError subclass, like real EPERM  # noqa: E501, TRY003
         self.mask = set(mask)
 
     def getter(self, pid: int) -> set[int]:
@@ -175,7 +175,7 @@ class ControlledCompare(unittest.TestCase):
         clock = _Clock()
 
         def boom() -> None:
-            raise RuntimeError("workload blew up mid-measure")
+            raise RuntimeError("workload blew up mid-measure")  # noqa: TRY003
 
         with self.assertRaises(RuntimeError):
             bc.controlled_compare(
@@ -227,7 +227,7 @@ class _TmpText:
 
     def read_text(self, *_a, **_k) -> str:
         if self._content is None:
-            raise OSError("no such file")
+            raise OSError("no such file")  # noqa: TRY003
         return self._content
 
 

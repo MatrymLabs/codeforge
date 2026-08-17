@@ -48,7 +48,7 @@ DEFAULT_PROFILE: dict[str, list[str]] = {
 
 # Patterns scrubbed from captured output before it is stored or shown.
 _REDACTIONS = (
-    re.compile(r"-----BEGIN [^-]+-----.*?-----END [^-]+-----", re.S),
+    re.compile(r"-----BEGIN [^-]+-----.*?-----END [^-]+-----", re.S),  # noqa: FURB167
     re.compile(r"(?i)\b(token|secret|password|passwd|api[_-]?key)\b\s*[=:]\s*\S+"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
@@ -65,7 +65,7 @@ def _utcnow() -> str:
     return datetime.now(UTC).isoformat()
 
 
-class CommandRefused(ValueError):
+class CommandRefused(ValueError):  # noqa: N818
     """The requested profile is not on the approved allowlist -- it never ran."""
 
 
@@ -111,7 +111,7 @@ class ToolRunResult:
                 when=data.get("when", ""),
             )
         except (KeyError, TypeError, ValueError) as exc:
-            raise RunLogError(f"malformed run record: {exc}") from exc
+            raise RunLogError(f"malformed run record: {exc}") from exc  # noqa: TRY003
 
 
 def run_tool(
@@ -130,12 +130,12 @@ def run_tool(
     table = allowlist if allowlist is not None else DEFAULT_PROFILE
     argv = table.get(profile)
     if argv is None:
-        raise CommandRefused(f"{profile!r} is not an approved command profile")
+        raise CommandRefused(f"{profile!r} is not an approved command profile")  # noqa: TRY003
     root = Path(source.root)  # the connector already resolved + bounded this
     started = time.monotonic()
     try:
         # Fixed allowlisted argv, shell=False, cwd-bounded.
-        proc = subprocess.run(  # nosec B603
+        proc = subprocess.run(  # nosec B603  # noqa: S603
             argv, cwd=root, capture_output=True, text=True, timeout=timeout, check=False
         )
         output = (proc.stdout or "") + (proc.stderr or "")
@@ -225,7 +225,7 @@ class FileRunLog:
                 try:
                     out.append(ToolRunResult.from_dict(json.loads(line)))
                 except json.JSONDecodeError as exc:
-                    raise RunLogError(f"corrupt run log line in {path}: {exc}") from exc
+                    raise RunLogError(f"corrupt run log line in {path}: {exc}") from exc  # noqa: TRY003
         return out
 
 

@@ -53,7 +53,7 @@ class HealthRegistry:
     def register(self, name: str, check: Check) -> None:
         """Add a named check. Raises HealthCheckError on a duplicate name."""
         if name in self._checks:
-            raise HealthCheckError(f"a check named {name!r} is already registered")
+            raise HealthCheckError(f"a check named {name!r} is already registered")  # noqa: TRY003
         self._checks[name] = check
 
     def run(self) -> list[HealthResult]:
@@ -62,7 +62,7 @@ class HealthRegistry:
         for name, check in self._checks.items():
             try:
                 value = check()
-            except Exception as exc:  # a broken check must not crash the report
+            except Exception as exc:  # a broken check must not crash the report  # noqa: BLE001
                 results.append(HealthResult(name, UNKNOWN, f"check raised: {exc!r}"))
                 continue
             if value in _STATUSES:

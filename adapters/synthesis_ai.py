@@ -84,11 +84,11 @@ class ClaudeImplementer:
         generated = response.parsed_output
         if generated is None:
             # The model declined or returned no schema-valid JSON. Surface it, don't guess.
-            raise ImplementerError("the model returned no usable source")
+            raise ImplementerError("the model returned no usable source")  # noqa: TRY003
         # Integrity: drop anything that would clobber a spec test -- source changes, tests never do.
         source: TargetFiles = {f.path: f.content for f in generated.files if f.path not in tests}
         if not source:
-            raise ImplementerError("the model produced no source files to build")
+            raise ImplementerError("the model produced no source files to build")  # noqa: TRY003
         return source
 
 

@@ -28,7 +28,7 @@ def test_a_new_exporter_can_be_registered():
 
 
 def test_one_core_powers_both_the_game_heralds_and_the_practical_exporters():
-    import kernel.heralds as game
+    import kernel.heralds as game  # noqa: PLC0415
 
     hub = ExporterHub()
     assert isinstance(hub._registry, PluginRegistry)  # the exporter hub uses the core

@@ -18,9 +18,9 @@ def test_the_verdict_values() -> None:
 
 def test_the_gates_share_the_one_vocabulary() -> None:
     # qualitygate / stewardship / evolution / frameup all bind the SAME constants now.
-    from adapters.stewardship import gate
-    from kernel import frameup, qualitygate
-    from kernel.evolution import fitness
+    from adapters.stewardship import gate  # noqa: PLC0415
+    from kernel import frameup, qualitygate  # noqa: PLC0415
+    from kernel.evolution import fitness  # noqa: PLC0415
 
     assert qualitygate.PASS is verdicts.PASS and qualitygate.FAIL is verdicts.FAIL
     assert qualitygate.WATCH is verdicts.WATCH and qualitygate.NA is verdicts.NA

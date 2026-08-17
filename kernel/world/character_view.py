@@ -66,7 +66,7 @@ def session_stat_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     """Every flat stat modifier a live character carries, merged by target: equipped gear + the
     active job's unlocked perks + the sworn Order. This is the ONE place the sheet and combat both
     read, so a mod that bends a stat on the score sheet bends it in a fight too (no drift)."""
-    from kernel.world.orders import order_modifiers
+    from kernel.world.orders import order_modifiers  # noqa: PLC0415
 
     merged: dict[str, list[StatModifier]] = {}
     sources = [equipped_modifiers(session), order_modifiers(session.order)]
@@ -104,7 +104,7 @@ def build_job_sheet(
     seeded is a bug, not a renderable state.
     """
     if job_label not in JOBS:
-        raise KeyError(f"no job named {job_label!r}; seeded jobs: {sorted(JOBS)}")
+        raise KeyError(f"no job named {job_label!r}; seeded jobs: {sorted(JOBS)}")  # noqa: TRY003
     job = JOBS[job_label]
     stats = job["stats"]
     hp_max = BASE_HP + stats["stamina"]

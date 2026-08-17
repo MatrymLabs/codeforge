@@ -32,7 +32,7 @@ _BAR = "+" + "=" * (_WIDTH - 2) + "+"
 
 def _sticky_note() -> str:
     """A post-it stuck to the corner of the screen: the few commands to drive the terminal."""
-    return "\n".join(
+    return "\n".join(  # noqa: FLY002
         [
             "        __________________________________",
             "       / STICKY NOTE  (how to drive me)   /|",
@@ -48,50 +48,50 @@ def _sticky_note() -> str:
     )
 
 
-def _run(name: str) -> str:
+def _run(name: str) -> str:  # noqa: PLR0911
     """Dispatch one program to its existing renderer (lazy imports avoid a load-time web)."""
     if name == "functions":
-        from kernel.functions import render_functions
+        from kernel.functions import render_functions  # noqa: PLC0415
 
         return render_functions()
     if name == "inspect":
-        from kernel.frameup import render_frameup
+        from kernel.frameup import render_frameup  # noqa: PLC0415
 
         return render_frameup()
     if name == "career":
-        from kernel.career import render_overview
+        from kernel.career import render_overview  # noqa: PLC0415
 
         return render_overview()
     if name == "pioneer":
-        from kernel.pioneer import render_overview as pioneer_overview
+        from kernel.pioneer import render_overview as pioneer_overview  # noqa: PLC0415
 
         return pioneer_overview()
     if name == "pm":
-        from kernel.pm import pm_status
+        from kernel.pm import pm_status  # noqa: PLC0415
 
         return pm_status()
     if name == "truth":
-        from kernel.evidence_gate import render_truth
+        from kernel.evidence_gate import render_truth  # noqa: PLC0415
 
         return render_truth()
     if name == "qa":
-        from kernel.qualitygate import render_gate_all
+        from kernel.qualitygate import render_gate_all  # noqa: PLC0415
 
         return render_gate_all()
     if name == "docs":
-        from kernel.qualitygate import docs_check
+        from kernel.qualitygate import docs_check  # noqa: PLC0415
 
         return docs_check()
     if name == "deps":
-        from adapters.dependencies import render_dependencies
+        from adapters.dependencies import render_dependencies  # noqa: PLC0415
 
         return render_dependencies()
     if name == "bench":
-        from kernel.bench import bench as run_bench
+        from kernel.bench import bench as run_bench  # noqa: PLC0415
 
         return run_bench()
     if name == "config":
-        from kernel.shelf.config import render_config
+        from kernel.shelf.config import render_config  # noqa: PLC0415
 
         return render_config()
     return f"no such program '{name}'"

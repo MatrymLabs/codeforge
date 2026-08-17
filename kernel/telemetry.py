@@ -50,7 +50,7 @@ def kind_for_package(package: str) -> str | None:
 
 def _require(kind: str) -> None:
     if kind not in KINDS:
-        raise SpineError(f"unknown telemetry kind {kind!r}; expected one of {KINDS}")
+        raise SpineError(f"unknown telemetry kind {kind!r}; expected one of {KINDS}")  # noqa: TRY003
 
 
 # --- the JSON codec: the Python-first reference (always available) -----------------------------
@@ -69,10 +69,10 @@ class JsonCodec:
         obj = json.loads(data)
         kind = obj.get("kind")
         if kind not in KINDS:
-            raise SpineError(f"decoded an unknown telemetry kind {kind!r}")
+            raise SpineError(f"decoded an unknown telemetry kind {kind!r}")  # noqa: TRY003
         payload = obj.get("payload")
         if not isinstance(payload, dict):
-            raise SpineError("telemetry frame is missing its payload object")
+            raise SpineError("telemetry frame is missing its payload object")  # noqa: TRY003
         return kind, payload
 
 
@@ -161,7 +161,7 @@ class ProtobufCodec:
 
     def __init__(self) -> None:
         if not _HAS_PROTOBUF:
-            raise SpineError(
+            raise SpineError(  # noqa: TRY003
                 "protobuf codec unavailable: run `make proto` to generate proto/telemetry_pb2.py"
             )
 
@@ -171,7 +171,7 @@ class ProtobufCodec:
         try:
             _TO_PB[kind](frame, payload)
         except KeyError as missing:
-            raise SpineError(f"telemetry {kind} frame missing field {missing}") from missing
+            raise SpineError(f"telemetry {kind} frame missing field {missing}") from missing  # noqa: TRY003
         return frame.SerializeToString()
 
     def decode(self, data: bytes) -> tuple[str, dict[str, object]]:
@@ -179,7 +179,7 @@ class ProtobufCodec:
         frame.ParseFromString(data)
         kind = frame.WhichOneof("body")
         if kind is None:
-            raise SpineError("decoded an empty telemetry frame (no body set)")
+            raise SpineError("decoded an empty telemetry frame (no body set)")  # noqa: TRY003
         return kind, _FROM_PB[kind](getattr(frame, kind))
 
 

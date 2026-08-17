@@ -86,7 +86,7 @@ def test_the_allocation_persists_through_serialize_and_restore():
 
 
 def test_allocation_survives_a_character_restore_folded_into_stats():
-    from kernel.world.characters import restore_character
+    from kernel.world.characters import restore_character  # noqa: PLC0415
 
     casefile = {
         "job": "vanguard",

@@ -98,11 +98,11 @@ def render_abilities(session: Session) -> str:
     return "\n".join(lines)
 
 
-def use_ability(session: Session, arg: str) -> str:
+def use_ability(session: Session, arg: str) -> str:  # noqa: PLR0911, PLR0912
     """Channel one ability: `use <ability> [on <target>]`. Fails loud, spends MP only on success."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you channel a skill."
-    from kernel.world.afflictions import is_dazed
+    from kernel.world.afflictions import is_dazed  # noqa: PLC0415
 
     if is_dazed(session):
         return "You are dazed and cannot channel a skill -- it will pass."
@@ -207,7 +207,7 @@ def _channel_regen(
     """Weave a heal-over-time on the wielder or an ally: it mends a share each beat for a few beats
     (the friendly mirror of a `brand` burn). Spends MP + arms the cooldown only on a real target; a
     named ally who is not present fails loud, so the MP is never burned into the void."""
-    from kernel.world import afflictions
+    from kernel.world import afflictions  # noqa: PLC0415
 
     ally = _trace_ally(target_word, session)
     if ally is None:
@@ -232,7 +232,7 @@ def _channel_cleanse(
     """Purge an ally's afflictions (the support's counter to a boss's venom and stuns). Costs MP and
     arms the cooldown ONLY when there was something to cleanse -- a wasted cleanse on a clean hero
     never burns the MP. Reuses _trace_ally, so `on me` / `on <ally>` resolve like a heal."""
-    from kernel.world import afflictions
+    from kernel.world import afflictions  # noqa: PLC0415
 
     ally = _trace_ally(target_word, session)
     if ally is None:
@@ -286,7 +286,7 @@ def _channel_buff(
 def _heal_threat(session: Session, amount: int) -> None:
     """A heal is loud: it generates threat on every aggressive foe in the room, so a healer climbs
     the aggro table and a tank must peel them off. Half the mended amount, the MMO convention."""
-    from kernel.world.npcs import npcs_in
+    from kernel.world.npcs import npcs_in  # noqa: PLC0415
 
     gain = max(1, amount // 2)
     for nid in npcs_in(session.location):
@@ -341,7 +341,7 @@ def combat_tail(session: Session, npc: Npc) -> str:
     return f"({foe})" if mp is None else f"({foe}; MP {mp.current}/{mp.maximum})"
 
 
-def _channel_offense(
+def _channel_offense(  # noqa: PLR0911
     session: Session, ability: Ability, npc: Npc, nid: str, who: str, move: str
 ) -> str:
     """Resolve a target-facing ability (daze / weaken / brand / drain / strike) and return its line.

@@ -92,28 +92,28 @@ class Designation:
     def __post_init__(self) -> None:
         match = DESIGNATION_RE.match(self.designation)
         if match is None:
-            raise RegistryError(f"'{self.designation}' is not a valid designation")
+            raise RegistryError(f"'{self.designation}' is not a valid designation")  # noqa: TRY003
         self.type = match.group("type")
         self.domain = match.group("domain")
         self.ordinal = match.group("ordinal")
         if self.domain not in DOMAINS:
-            raise RegistryError(f"{self.designation}: domain '{self.domain}' is not a known domain")
+            raise RegistryError(f"{self.designation}: domain '{self.domain}' is not a known domain")  # noqa: TRY003
         if self.status not in STATUSES:
-            raise RegistryError(f"{self.designation}: status '{self.status}' not in {STATUSES}")
+            raise RegistryError(f"{self.designation}: status '{self.status}' not in {STATUSES}")  # noqa: TRY003
         for required in ("name", "function", "label", "file"):
             if not str(getattr(self, required)).strip():
-                raise RegistryError(f"{self.designation}: '{required}' is required")
+                raise RegistryError(f"{self.designation}: '{required}' is required")  # noqa: TRY003
 
 
 def _from_dict(raw: Any) -> Designation:
     if not isinstance(raw, dict):
-        raise RegistryError("a designation record must be a mapping")
+        raise RegistryError("a designation record must be a mapping")  # noqa: TRY003
     fields = set(Designation.__dataclass_fields__)
     unknown = set(raw) - fields
     if unknown:
-        raise RegistryError(f"unknown field(s): {', '.join(sorted(unknown))}")
+        raise RegistryError(f"unknown field(s): {', '.join(sorted(unknown))}")  # noqa: TRY003
     if "designation" not in raw:
-        raise RegistryError("record missing 'designation'")
+        raise RegistryError("record missing 'designation'")  # noqa: TRY003
     return Designation(**{key: value for key, value in raw.items() if key in fields})
 
 
@@ -121,7 +121,7 @@ def _parse_designations(path: Path) -> list[Designation]:
     """Parse+validate one designations file into records (a bad row raises before caching)."""
     data: Any = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise RegistryError(f"{path.name} must be a list of records")
+        raise RegistryError(f"{path.name} must be a list of records")  # noqa: TRY003
     return [_from_dict(entry) for entry in data]
 
 
@@ -167,9 +167,9 @@ def mint_designation(
     """Mint the next free subnet designation TYPE-DD.NNN for (type, domain). Fills the
     lowest unused ordinal, so ids never collide and gaps are reused. See ADR-0008."""
     if type_ not in TYPES:
-        raise RegistryError(f"type '{type_}' not in {TYPES}")
+        raise RegistryError(f"type '{type_}' not in {TYPES}")  # noqa: TRY003
     if domain not in DOMAINS:
-        raise RegistryError(f"domain '{domain}' is not a known domain")
+        raise RegistryError(f"domain '{domain}' is not a known domain")  # noqa: TRY003
     used: set[int] = set()
     for item in existing:
         match = DESIGNATION_RE.match(_designation_of(item))
@@ -178,8 +178,8 @@ def mint_designation(
     ordinal = 1
     while ordinal in used:
         ordinal += 1
-    if ordinal > 999:
-        raise RegistryError(f"domain {type_}-{domain} is full (999 ordinals)")
+    if ordinal > 999:  # noqa: PLR2004
+        raise RegistryError(f"domain {type_}-{domain} is full (999 ordinals)")  # noqa: TRY003
     return f"{type_}-{domain}.{ordinal:03d}"
 
 
@@ -317,7 +317,7 @@ def _is_live(record: Designation) -> bool:
     )
 
 
-def validate(
+def validate(  # noqa: PLR0912
     records: list[Designation], root: Path | None = None, check_files: bool = True
 ) -> list[str]:
     """Report every filing problem (empty list == clean). No dupes, no orphans, no

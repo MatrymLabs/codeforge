@@ -158,7 +158,7 @@ def test_edit_distance_is_capped_and_correct() -> None:
 
 
 def test_screen_uses_the_real_ledger_and_clears_our_own_deps() -> None:
-    from adapters.dependencies import screen_name
+    from adapters.dependencies import screen_name  # noqa: PLC0415
 
     # every real declared dep is justified (trusted), so none trips the screen
     assert screen_name("sqlalchemy") == []
@@ -247,5 +247,5 @@ def test_screen_source_finds_setup_py_in_a_directory(tmp_path: Path) -> None:
 
 
 def test_screen_source_missing_file_is_loud(tmp_path: Path) -> None:
-    with pytest.raises(OSError):  # noqa: PT011 - FileNotFoundError; a screen you cannot run is not "clean"
+    with pytest.raises(OSError):  # noqa: PT011, RUF100
         screen_source(tmp_path / "nope.py")

@@ -35,7 +35,7 @@ def test_a_raising_check_is_unknown_never_healthy():
     reg.register("ok", lambda: HEALTHY)
 
     def boom() -> str:
-        raise RuntimeError("probe failed")
+        raise RuntimeError("probe failed")  # noqa: TRY003
 
     reg.register("broken", boom)
     results = {r.name: r.status for r in reg.run()}

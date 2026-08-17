@@ -210,10 +210,10 @@ def test_an_unknown_path_is_404():
 def generate_web_api(model: ProjectModel, dest: Path) -> GeneratedArtifact:
     """Generate a runnable web API from a model into an empty `dest`. Reproducible + checksummed."""
     if not model.identity or not model.identity.strip():
-        raise GeneratorError("a project model needs a non-empty identity to generate a web API")
+        raise GeneratorError("a project model needs a non-empty identity to generate a web API")  # noqa: TRY003
     dest = Path(dest)
     if dest.exists() and any(dest.iterdir()):
-        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")
+        raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")  # noqa: TRY003
     package = _package_name(model.identity)
     name = package.replace("_", "-")
     contents = _emit_files(model, package, name)
@@ -278,7 +278,7 @@ def render_artifact(artifact: GeneratedArtifact) -> str:
             f"  routes:       {', '.join('/' + r for r in artifact.commands)}",
             f"  files ({len(artifact.files)}): {', '.join(artifact.files)}",
             f"  manifest sha: {artifact.manifest_hash[:16]}...",
-            f"  provenance:   {artifact.provenance.source_id} "
+            f"  provenance:   {artifact.provenance.source_id} "  # noqa: ISC004
             f"(owner: {artifact.provenance.owner}, {artifact.provenance.visibility})",
             f"  path:         {artifact.dest}",
         ]

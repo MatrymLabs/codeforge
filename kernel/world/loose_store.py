@@ -20,9 +20,9 @@ from typing import Any
 def save(owner: str, snapshots: list[dict[str, Any]]) -> None:
     """Replace `owner`'s entire loose bag with `snapshots` (each {prototype, name, mods, rarity}).
     Delete-then-insert under one commit, so the stored bag is always exactly the live one."""
-    from sqlalchemy import delete
+    from sqlalchemy import delete  # noqa: PLC0415
 
-    from kernel.world.db import LooseItemRow, open_archive_session
+    from kernel.world.db import LooseItemRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         db.execute(delete(LooseItemRow).where(LooseItemRow.owner == owner))
@@ -57,7 +57,7 @@ def stow(owner: str, snapshot: dict[str, Any]) -> int:
     """Add ONE item to an owner's storage (a bank vault, a guild vault) and return its new row id.
     The item-level complement to save(): where save() mirrors a whole live bag, stow() puts a single
     item away to sit in storage until it is taken back out."""
-    from kernel.world.db import LooseItemRow, open_archive_session
+    from kernel.world.db import LooseItemRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = LooseItemRow(
@@ -76,7 +76,7 @@ def take(row_id: int, owner: str) -> dict[str, Any] | None:
     """Remove ONE stored item by id and return its snapshot, but ONLY from its own owner's storage,
     so no one withdraws another's goods by guessing an id. None if there is no such row for that
     owner (already taken, or not theirs)."""
-    from kernel.world.db import LooseItemRow, open_archive_session
+    from kernel.world.db import LooseItemRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(LooseItemRow, row_id)
@@ -91,9 +91,9 @@ def take(row_id: int, owner: str) -> dict[str, Any] | None:
 def contents(owner: str) -> list[tuple[int, dict[str, Any]]]:
     """An owner's stored items as (row_id, snapshot) pairs, oldest first, so a client or a verb can
     list them and refer to one by id. Empty for empty storage."""
-    from sqlalchemy import select
+    from sqlalchemy import select  # noqa: PLC0415
 
-    from kernel.world.db import LooseItemRow, open_archive_session
+    from kernel.world.db import LooseItemRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         rows = db.scalars(
@@ -121,9 +121,9 @@ def match(stored: list[tuple[int, dict[str, Any]]], arg: str) -> tuple[int, dict
 def load(owner: str) -> list[dict[str, Any]]:
     """A hero's persisted loose bag as snapshots ready to re-clone. Empty for a hero who carried
     nothing. A malformed mods blob (should not happen) decodes to {} rather than crash login."""
-    from sqlalchemy import select
+    from sqlalchemy import select  # noqa: PLC0415
 
-    from kernel.world.db import LooseItemRow, open_archive_session
+    from kernel.world.db import LooseItemRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         rows = db.scalars(select(LooseItemRow).where(LooseItemRow.owner == owner))

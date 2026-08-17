@@ -29,18 +29,18 @@ def parse_target(token: str) -> tuple[int, str]:
     an empty name once the ordinal is stripped.
     """
     if not isinstance(token, str):
-        raise TargetError(f"target token must be a string, got {type(token).__name__}")
+        raise TargetError(f"target token must be a string, got {type(token).__name__}")  # noqa: TRY003
 
     cleaned = token.strip()
     if not cleaned:
-        raise TargetError("target token is empty")
+        raise TargetError("target token is empty")  # noqa: TRY003
 
     ordinal, name = _split_ordinal(cleaned)
 
     if not name:
-        raise TargetError(f"target token {token!r} has no name")
+        raise TargetError(f"target token {token!r} has no name")  # noqa: TRY003
     if ordinal < 1:
-        raise TargetError(f"target ordinal must be >= 1 (1-based), got {ordinal} from {token!r}")
+        raise TargetError(f"target ordinal must be >= 1 (1-based), got {ordinal} from {token!r}")  # noqa: TRY003
     return ordinal, name
 
 
@@ -63,10 +63,10 @@ def pick[T](matches: list[T], ordinal: int) -> T:
     (the message names how many are actually here).
     """
     if ordinal < 1:
-        raise TargetError(f"target ordinal must be >= 1 (1-based), got {ordinal}")
+        raise TargetError(f"target ordinal must be >= 1 (1-based), got {ordinal}")  # noqa: TRY003
     count = len(matches)
     if ordinal > count:
-        raise TargetError(f"no target #{ordinal}: only {count} here")
+        raise TargetError(f"no target #{ordinal}: only {count} here")  # noqa: TRY003
     return matches[ordinal - 1]
 
 

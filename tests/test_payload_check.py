@@ -21,8 +21,8 @@ def test_a_missing_required_field_is_caught():
 
 
 def test_one_core_powers_both_the_game_name_check_and_the_practical_payload_check():
-    import kernel.name_check as game
-    import kernel.payload_check as practical
+    import kernel.name_check as game  # noqa: PLC0415
+    import kernel.payload_check as practical  # noqa: PLC0415
 
     assert isinstance(game._VALIDATOR, Validator)
     assert isinstance(practical.SIGNUP, Validator)

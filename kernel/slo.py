@@ -77,9 +77,9 @@ def evaluate(
     empty series returns a `no-data` verdict, never a crash and never a false pass.
     """
     if threshold_us <= 0:
-        raise SloError(f"threshold_us must be > 0, got {threshold_us}")
-    if not 0.0 < objective_pct < 100.0:
-        raise SloError(f"objective_pct must be in (0, 100), got {objective_pct}")
+        raise SloError(f"threshold_us must be > 0, got {threshold_us}")  # noqa: TRY003
+    if not 0.0 < objective_pct < 100.0:  # noqa: PLR2004
+        raise SloError(f"objective_pct must be in (0, 100), got {objective_pct}")  # noqa: TRY003
 
     budget_pct = 100.0 - objective_pct
     series = chronicle.trend(sli_name, root=root)
@@ -137,7 +137,7 @@ def render(v: SloVerdict) -> str:
         return "\n".join(
             [
                 f"SLO - {v.sli_name}: NO DATA",
-                f"  objective  : >= {v.objective_pct:g}% of runs with median <= "
+                f"  objective  : >= {v.objective_pct:g}% of runs with median <= "  # noqa: ISC004
                 f"{v.threshold_us:g}us",
                 "  No SLI points are recorded yet; run `make trend` to file a measured run.",
                 "  (Absence reads as no-data, never a false pass.)",
@@ -165,7 +165,7 @@ def render(v: SloVerdict) -> str:
     return "\n".join(lines)
 
 
-def slo(arg: str = "") -> str:
+def slo(arg: str = "") -> str:  # noqa: ARG001
     """The read-only `slo` verb: evaluate the engine-tick SLI against its objective + error budget.
 
     Reads only. A tampered ledger surfaces its integrity failure honestly (via the Chronicle)
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
     "budget exhausted" signal, so a pipeline can act on it); 0 on pass, watchlist, or no-data.
     Deliberately NOT wired into `make check`: the SLI is host-relative and sparse.
     """
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(sys.argv[1:] if argv is None else argv)
     try:

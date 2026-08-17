@@ -67,15 +67,15 @@ def load_board(path: Path | None = None) -> dict:
     try:
         data = json.loads(src.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise CareerError(f"unreadable career matrix at {src}: {exc}") from exc
+        raise CareerError(f"unreadable career matrix at {src}: {exc}") from exc  # noqa: TRY003
     board = data.get("career_board")
     if not isinstance(board, dict) or "levels" not in board:
-        raise CareerError("career matrix missing 'career_board' / 'levels'")
+        raise CareerError("career matrix missing 'career_board' / 'levels'")  # noqa: TRY003
     for lvl in board["levels"]:
         for skill in lvl.get("skills", []):
             for req in ("skill_id", "skill", "status", "repo_proof", "next_proof_task"):
                 if req not in skill:
-                    raise CareerError(f"skill {skill.get('skill_id', '?')} missing '{req}'")
+                    raise CareerError(f"skill {skill.get('skill_id', '?')} missing '{req}'")  # noqa: TRY003
             _validate_ownership(skill)
     return board
 
@@ -90,10 +90,10 @@ def _validate_ownership(skill: dict) -> None:
     if own is None:
         return
     if not isinstance(own, dict) or "level" not in own:
-        raise CareerError(f"skill {skill['skill_id']}: ownership must be a mapping with a 'level'")
+        raise CareerError(f"skill {skill['skill_id']}: ownership must be a mapping with a 'level'")  # noqa: TRY003
     level = own["level"]
     if not isinstance(level, int) or isinstance(level, bool) or level not in _OWNERSHIP_NAMES:
-        raise CareerError(
+        raise CareerError(  # noqa: TRY003
             f"skill {skill['skill_id']}: ownership level must be an int 0-5, got {level!r}"
         )
 
@@ -224,7 +224,7 @@ def render_overview(board: dict | None = None) -> str:
         )
     lines += [
         "",
-        f"  TOTAL  proven {c.get(PROVEN, 0)} · partial {c.get(PARTIAL, 0)} · "
+        f"  TOTAL  proven {c.get(PROVEN, 0)} · partial {c.get(PARTIAL, 0)} · "  # noqa: ISC004
         f"missing {c.get(MISSING, 0)} of {len(skills)} skills",
         "",
         "  views:  career checklist · career gaps · career evidence · career ownership",
@@ -319,7 +319,7 @@ def render_ownership(board: dict | None = None, demonstrated: dict[str, int] | N
             lines.append(f"    [-] {s['skill']}")
         lines.append("")
     lines += [
-        f"  declared {len(declared)} · demonstrated {len(shown)} · undeclared {len(undeclared)} "
+        f"  declared {len(declared)} · demonstrated {len(shown)} · undeclared {len(undeclared)} "  # noqa: ISC004
         f"of {len(skills)} skills",
         "  Undeclared ownership is an honest gap, not a claim - Josh claims each as he",
         "  defends it. Level 4+ requires a real keel record (KeelGate).",
@@ -369,7 +369,7 @@ def render_claim(
 def _lesson_record_for(skill_id: str) -> str:
     """The real lesson file that proves this skill, as a provenance path for a claim block
     (or a placeholder if none is found). Read-only; imports lazily to avoid an import cycle."""
-    from kernel.assessment import _default_lessons_dir, load_lesson
+    from kernel.assessment import _default_lessons_dir, load_lesson  # noqa: PLC0415
 
     lessons_dir = _default_lessons_dir()
     if lessons_dir.is_dir():
@@ -399,7 +399,7 @@ def render_resume(board: dict | None = None) -> str:
     return "\n".join(lines)
 
 
-def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
+def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:  # noqa: PLR0911
     """The `career` command: dispatch on the argument (mirrors `law <arg>`).
 
     `demonstrated` (skill_id -> level) is the caller's per-player Classroom unlocks, injected

@@ -69,7 +69,7 @@ class Action(Node):
             return result
         if isinstance(result, bool):
             return Status.SUCCESS if result else Status.FAILURE
-        raise BehaviorTreeError(
+        raise BehaviorTreeError(  # noqa: TRY003
             f"action {self._label()} returned {type(result).__name__}, expected Status or bool"
         )
 
@@ -124,7 +124,7 @@ class Parallel(Node):
 
     def __post_init__(self) -> None:
         if self.threshold < 1:
-            raise BehaviorTreeError(f"parallel {self._label()} threshold must be >= 1")
+            raise BehaviorTreeError(f"parallel {self._label()} threshold must be >= 1")  # noqa: TRY003
 
     def tick(self, context: Context) -> Status:
         successes = failures = 0
@@ -212,7 +212,7 @@ def run(root: Node, context: Context, *, max_ticks: int = 1000) -> RunResult:
     """Tick the tree until it settles to SUCCESS/FAILURE, or until `max_ticks` (a guard
     against an always-RUNNING tree). Returns the final status and the tick count."""
     if max_ticks < 1:
-        raise BehaviorTreeError("max_ticks must be >= 1")
+        raise BehaviorTreeError("max_ticks must be >= 1")  # noqa: TRY003
     ticks = 0
     status = Status.RUNNING
     while ticks < max_ticks:

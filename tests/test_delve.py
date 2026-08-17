@@ -29,7 +29,7 @@ _CFG = [
 
 
 def test_a_dungeon_sinks_a_connected_descent_of_chambers():
-    rooms, npcs = generate_delves(_CFG)
+    rooms, npcs = generate_delves(_CFG)  # noqa: RUF059
     assert len(rooms) == _DEPTH + 1  # one chamber per depth, plus the treasure-vault pocket
     # every chamber is reachable walking `down` from the mouth once the mouth is wired
     world = {"black_hollow": {"name": "mouth", "desc": "d", "exits": {}}}
@@ -84,7 +84,7 @@ def test_a_delve_reads_as_a_descent_with_distinct_depth_stages():
 def test_a_delve_inherits_its_biome_note():
     # A dungeon carries the stone-and-air of the Reach it sinks below: a forest delve reads unlike
     # an ice delve, on the same dungeon.
-    from kernel.world.delve import _BIOME_DELVE_NOTE
+    from kernel.world.delve import _BIOME_DELVE_NOTE  # noqa: PLC0415
 
     forest = generate_delves(_CFG)[0]["black_hollow_delve_1"]["desc"]
     assert _BIOME_DELVE_NOTE["wild-forest"] in forest
@@ -94,7 +94,7 @@ def test_a_delve_inherits_its_biome_note():
 
 
 def test_an_unknown_biome_delve_falls_back_to_a_plain_note():
-    from kernel.world.delve import _DEFAULT_DELVE_NOTE, _chamber
+    from kernel.world.delve import _DEFAULT_DELVE_NOTE, _chamber  # noqa: PLC0415
 
     desc = _chamber("Nowhere Deep", 1, "no-such-biome")["desc"]
     assert _DEFAULT_DELVE_NOTE in desc, "an unknown biome still gets a valid note, never a crash"

@@ -24,13 +24,13 @@ def test_every_message_carries_its_version() -> None:
     assert encode(hello(session="s1"))["v"] == WIRE_VERSION
 
 
-def test_a_message_from_an_unknown_version_is_REFUSED_not_parsed() -> None:
+def test_a_message_from_an_unknown_version_is_REFUSED_not_parsed() -> None:  # noqa: N802
     """A protocol that guesses will one day act on a message three versions ahead of it."""
     with pytest.raises(WireRefused):
         decode({"v": WIRE_VERSION + 999, "type": "hello", "session": "s1"})
 
 
-def test_a_message_with_NO_version_is_refused() -> None:
+def test_a_message_with_NO_version_is_refused() -> None:  # noqa: N802
     """Absent is not 'probably current'."""
     with pytest.raises(WireRefused):
         decode({"type": "hello", "session": "s1"})
@@ -56,8 +56,8 @@ def test_a_hostile_payload_is_refused_rather_than_crashing(hostile) -> None:
 def test_the_client_contract_is_satisfied_by_the_server_message() -> None:
     """Contract Jig, consumed where it sits. The consumer declares what it reads; this test is the
     PROVIDER-side check that the server still sends it."""
-    from kernel.seam.wire import CLIENT_CONTRACTS
-    from kernel.shelf.contract import verify
+    from kernel.seam.wire import CLIENT_CONTRACTS  # noqa: PLC0415
+    from kernel.shelf.contract import verify  # noqa: PLC0415
 
     assert CLIENT_CONTRACTS, "a registry with no contracts pins nothing"
     for contract in CLIENT_CONTRACTS:
@@ -66,10 +66,10 @@ def test_the_client_contract_is_satisfied_by_the_server_message() -> None:
             assert verify(contract, sample) == [], f"the server no longer satisfies {contract.name}"
 
 
-def test_dropping_a_field_the_client_reads_fails_HERE_not_in_the_client() -> None:
+def test_dropping_a_field_the_client_reads_fails_HERE_not_in_the_client() -> None:  # noqa: N802
     """The whole point of the packet. A server-side test must catch it."""
-    from kernel.seam.wire import CLIENT_CONTRACTS
-    from kernel.shelf.contract import verify
+    from kernel.seam.wire import CLIENT_CONTRACTS  # noqa: PLC0415
+    from kernel.shelf.contract import verify  # noqa: PLC0415
 
     hello_contract = next((c for c in CLIENT_CONTRACTS if c.name == "hello"), None)
     assert hello_contract is not None
@@ -81,9 +81,9 @@ def test_dropping_a_field_the_client_reads_fails_HERE_not_in_the_client() -> Non
 
 
 def test_the_engine_2d_route_returns_a_versioned_hello() -> None:
-    from fastapi.testclient import TestClient
+    from fastapi.testclient import TestClient  # noqa: PLC0415
 
-    from adapters.web_gateway import app
+    from adapters.web_gateway import app  # noqa: PLC0415
 
     with TestClient(app).websocket_connect("/ws/engine-2d") as ws:
         ws.send_json(encode(hello(session="s1")))
@@ -122,7 +122,7 @@ _SAMPLE: dict[type, object] = {str: "s1", int: 7}
 
 def test_the_declared_wire_surface_has_not_changed_shape() -> None:
     """Drop or retype a field in the schema and this fails, which is the criterion WO-S2 states."""
-    from kernel.seam.wire import _FIELDS
+    from kernel.seam.wire import _FIELDS  # noqa: PLC0415
 
     assert _FIELDS == WIRE_SURFACE, (
         "the wire schema no longer matches the surface this test declares. If the change is "
@@ -168,7 +168,7 @@ def test_the_consumer_contract_and_the_validator_cannot_drift_apart() -> None:
     Two declarations of one shape are two places to be wrong. Neither is authoritative alone, so
     the test that matters is that they agree.
     """
-    from kernel.seam.wire import _FIELDS, CLIENT_CONTRACTS
+    from kernel.seam.wire import _FIELDS, CLIENT_CONTRACTS  # noqa: PLC0415
 
     for contract in CLIENT_CONTRACTS:
         declared = {field.name for field in contract.fields} - {"v", "type"}

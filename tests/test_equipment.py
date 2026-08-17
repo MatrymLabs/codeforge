@@ -128,8 +128,8 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
     """derived_stats documents it can return a negative/oversized value on hostile attributes;
     the next stage must clamp it into the Stat's own [0, 9999] bounds, not raise. (Not reachable
     in normal play - attributes start at 0 - but the two pure functions must not disagree.)"""
-    from kernel.world.derived import derived_stats
-    from kernel.world.equipment import StatModifier, apply_stat_modifiers
+    from kernel.world.derived import derived_stats  # noqa: PLC0415
+    from kernel.world.equipment import StatModifier, apply_stat_modifiers  # noqa: PLC0415
 
     base = derived_stats({"strength": -50}, 0)  # yields a negative ATK
     out = apply_stat_modifiers(base, {"ATK": [StatModifier("sword", flat=5)]})
@@ -140,13 +140,13 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
 
 
 def test_item_power_sums_an_items_mods() -> None:
-    from kernel.world.equipment import item_power
+    from kernel.world.equipment import item_power  # noqa: PLC0415
 
     assert item_power("forge_wrench") == 9  # ATK 6 + ACC 3
 
 
 def test_gear_score_is_zero_ungeared_and_sums_worn_power() -> None:
-    from kernel.world.equipment import gear_score
+    from kernel.world.equipment import gear_score  # noqa: PLC0415
 
     s = _engineer_with_wrench()
     assert gear_score(s) == 0  # nothing worn yet
@@ -155,7 +155,7 @@ def test_gear_score_is_zero_ungeared_and_sums_worn_power() -> None:
 
 
 def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
-    from kernel.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet  # noqa: PLC0415
 
     s = _engineer_with_wrench()
     equip(s, "wrench")
@@ -166,7 +166,7 @@ def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
 
 
 def test_an_ungeared_sheet_hides_the_gear_score() -> None:
-    from kernel.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet  # noqa: PLC0415
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
@@ -191,7 +191,7 @@ def test_leg_and_feet_gear_equips_into_its_slots() -> None:
 
 
 def test_leg_and_feet_gear_counts_toward_the_gear_score() -> None:
-    from kernel.world.equipment import gear_score
+    from kernel.world.equipment import gear_score  # noqa: PLC0415
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
@@ -203,7 +203,7 @@ def test_leg_and_feet_gear_counts_toward_the_gear_score() -> None:
 
 
 def test_the_score_sheet_shows_the_leg_and_feet_slots() -> None:
-    from kernel.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet  # noqa: PLC0415
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")

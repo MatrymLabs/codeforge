@@ -12,7 +12,7 @@ and stay with their own systems -- they answer different questions and should no
 """
 
 # A readiness verdict word, not a password.
-PASS = "pass"  # nosec B105
+PASS = "pass"  # nosec B105  # noqa: S105
 FAIL = "fail"
 WATCH = "watch"  # a soft gap: not a hard fail, but not clean either
 NA = "n/a"  # not applicable (e.g. a prototype not built yet, so a file check is moot)

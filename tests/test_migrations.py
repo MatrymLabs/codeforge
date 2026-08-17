@@ -14,7 +14,7 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 
-import kernel.world.db as db
+import kernel.world.db as db  # noqa: PLR0402
 
 _REPO = Path(__file__).resolve().parent.parent
 

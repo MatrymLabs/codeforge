@@ -29,7 +29,7 @@ _POOLS = ("hp", "mp", "power")
 def pray(session: Session) -> str:
     """`pray` -- take the boon of the current room's shrine, if it has one and has renewed. Restores
     a share of each pool toward its maximum. Fails cleanly with no shrine, or when it is spent."""
-    from kernel.world.world import WORLD
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     room = WORLD.get(session.location)
     kind = room.get("shrine") if room else None
@@ -58,7 +58,7 @@ def pray(session: Session) -> str:
 def shrine_hint(location: str) -> str:
     """A one-line `look` hint for a room that holds a shrine, or "". Lets a passing traveller see
     the boon without a full `pray`, mirroring the gather node's hint."""
-    from kernel.world.world import WORLD
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     room = WORLD.get(location)
     return "A wayshrine stands here; you could pray at it." if room and room.get("shrine") else ""

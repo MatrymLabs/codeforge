@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 
-import kernel.world.guild_store as guild_store
+import kernel.world.guild_store as guild_store  # noqa: PLR0402
 from kernel.world.characters import _default_store, save_character
 from kernel.world.coinage import purse
 from kernel.world.events import announce_to, push_channel
@@ -270,7 +270,7 @@ def _guild_vault(guild: str) -> str:
 
 def vault_render(session: Session) -> str:
     """The guild's shared item vault, numbered. Any member may look."""
-    from kernel.world import loose_store
+    from kernel.world import loose_store  # noqa: PLC0415
 
     if not session.guild:
         return "You are not in a guild."
@@ -286,9 +286,9 @@ def vault_render(session: Session) -> str:
 
 def vault_deposit(session: Session, keyword: str) -> str:
     """Contribute a carried item to the guild vault. Any member may give (like a coin deposit)."""
-    from kernel.world import loose_store
-    from kernel.world.characters import snapshot_item
-    from kernel.world.items import ITEMS, carrier, trace_item
+    from kernel.world import loose_store  # noqa: PLC0415
+    from kernel.world.characters import snapshot_item  # noqa: PLC0415
+    from kernel.world.items import ITEMS, carrier, trace_item  # noqa: PLC0415
 
     if not session.guild:
         return "You are not in a guild."
@@ -316,9 +316,9 @@ def vault_deposit(session: Session, keyword: str) -> str:
 def vault_withdraw(session: Session, arg: str) -> str:
     """Take an item from the guild vault. Officer or leader only, so a member cannot loot the
     guild's shared goods (the same gate the coin treasury keeps)."""
-    from kernel.world import loose_store
-    from kernel.world.characters import reclone_item
-    from kernel.world.items import carrier
+    from kernel.world import loose_store  # noqa: PLC0415
+    from kernel.world.characters import reclone_item  # noqa: PLC0415
+    from kernel.world.items import carrier  # noqa: PLC0415
 
     if not session.guild:
         return "You are not in a guild."

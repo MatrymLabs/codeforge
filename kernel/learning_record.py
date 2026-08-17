@@ -43,18 +43,18 @@ class LearningRecord:
 def _text(raw: dict[str, Any], key: str, rid: str) -> str:
     value = str(raw.get(key, "")).strip()
     if not value:
-        raise LearningRecordError(f"learning record {rid!r}: {key!r} is required")
+        raise LearningRecordError(f"learning record {rid!r}: {key!r} is required")  # noqa: TRY003
     return value
 
 
 def _clean_list(raw: Any, key: str, rid: str) -> tuple[str, ...]:
     if not isinstance(raw, list) or not raw:
-        raise LearningRecordError(f"learning record {rid!r}: {key!r} must be a non-empty list")
+        raise LearningRecordError(f"learning record {rid!r}: {key!r} must be a non-empty list")  # noqa: TRY003
     out: list[str] = []
     for i, item in enumerate(raw):
         text = str(item).strip()
         if not text:
-            raise LearningRecordError(f"learning record {rid!r}: {key!r}[{i}] is empty")
+            raise LearningRecordError(f"learning record {rid!r}: {key!r}[{i}] is empty")  # noqa: TRY003
         out.append(text)
     return tuple(out)
 
@@ -62,10 +62,10 @@ def _clean_list(raw: Any, key: str, rid: str) -> tuple[str, ...]:
 def from_dict(raw: Any) -> LearningRecord:
     """Validate a raw mapping into a LearningRecord. Every gap fails loud, early, and by name."""
     if not isinstance(raw, dict):
-        raise LearningRecordError(f"expected a mapping, got {type(raw).__name__}")
+        raise LearningRecordError(f"expected a mapping, got {type(raw).__name__}")  # noqa: TRY003
     rid = str(raw.get("record_id", "")).strip()
     if not _ID.match(rid):
-        raise LearningRecordError(f"record_id {rid!r} must be lowercase kebab/snake_case")
+        raise LearningRecordError(f"record_id {rid!r} must be lowercase kebab/snake_case")  # noqa: TRY003
     return LearningRecord(
         record_id=rid,
         title=_text(raw, "title", rid),

@@ -29,12 +29,12 @@ def _stamp() -> str:
 def list_item(session: Session, arg: str) -> str:
     """`auction list <item> <price>`: escrow a carried item for sale at a coin price. Refused for a
     bad price, a worn item, or one you are not carrying."""
-    from kernel.world import auction_store, climate
-    from kernel.world.characters import snapshot_item
-    from kernel.world.items import ITEMS, carrier, trace_item
+    from kernel.world import auction_store, climate  # noqa: PLC0415
+    from kernel.world.characters import snapshot_item  # noqa: PLC0415
+    from kernel.world.items import ITEMS, carrier, trace_item  # noqa: PLC0415
 
     parts = arg.rsplit(maxsplit=1)
-    if len(parts) < 2 or not parts[1].strip().lstrip("-").isdigit():
+    if len(parts) < 2 or not parts[1].strip().lstrip("-").isdigit():  # noqa: PLR2004
         return "List what, for how much? (auction list <item> <price>)"
     item_kw, price = parts[0].strip().lower(), int(parts[1])
     if price <= 0:
@@ -55,7 +55,7 @@ def list_item(session: Session, arg: str) -> str:
 
 def browse(session: Session) -> str:
     """`auction`: the live listings, numbered by id, with price and seller."""
-    from kernel.world import auction_store
+    from kernel.world import auction_store  # noqa: PLC0415
 
     listings = auction_store.active()
     if not listings:
@@ -72,11 +72,11 @@ def browse(session: Session) -> str:
 def buy(session: Session, id_word: str) -> str:
     """`auction buy <#>`: buy a listing. Pays the seller (online or not) and re-clones the item into
     your bag. Refused for a bad number, your own listing, or too little coin."""
-    from kernel.world import auction_store
-    from kernel.world.characters import _default_store, reclone_item, save_character
-    from kernel.world.events import announce_to
-    from kernel.world.items import carrier
-    from kernel.world.session import SESSIONS, display_name
+    from kernel.world import auction_store  # noqa: I001, PLC0415
+    from kernel.world.characters import _default_store, reclone_item, save_character  # noqa: PLC0415
+    from kernel.world.events import announce_to  # noqa: PLC0415
+    from kernel.world.items import carrier  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, display_name  # noqa: PLC0415
 
     try:
         listing_id = int(id_word.strip())
@@ -106,7 +106,7 @@ def buy(session: Session, id_word: str) -> str:
     else:
         _default_store().add_coins(sold.seller, sold.price)
     reclone_item(sold.item, carrier(session.player_id))  # the item is yours
-    from kernel.world import audit
+    from kernel.world import audit  # noqa: PLC0415
 
     audit.record(  # the coin/item move is on record for economy accounting
         session.player_id,
@@ -120,7 +120,7 @@ def sweep_expired() -> int:
     """Return every lapsed listing to its seller by mail (with the item attached), and remove it.
     The scheduler's recurring job. Returns how many were returned. Reuses mail attachments, so a
     seller collects an unsold item on their own time, online or not."""
-    from kernel.world import auction_store, climate, mail_store
+    from kernel.world import auction_store, climate, mail_store  # noqa: PLC0415
 
     returned = 0
     for listing in auction_store.expired(climate.now()):
@@ -135,6 +135,6 @@ def sweep_expired() -> int:
 
 def register_sweep() -> None:
     """Arm the recurring expiry sweep on the scheduler (called once at world assembly)."""
-    from kernel.world import scheduler
+    from kernel.world import scheduler  # noqa: PLC0415
 
     scheduler.schedule(SWEEP_EVERY, sweep_expired, every=SWEEP_EVERY)

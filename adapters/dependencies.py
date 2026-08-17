@@ -120,7 +120,7 @@ def admission_concerns(
     for pop in sorted(popular):
         if _edit_distance(canon, pop) == 1:
             return [
-                f"{canon!r} is one edit from the popular package {pop!r}: possible typo-squat or "
+                f"{canon!r} is one edit from the popular package {pop!r}: possible typo-squat or "  # noqa: ISC004
                 f"a hallucinated name. Verify it is the package you mean before trusting it."
             ]
     return []
@@ -173,7 +173,7 @@ def install_hook_concerns(source: str) -> list[str]:
         tree = ast.parse(source)
     except SyntaxError as exc:
         return [
-            f"install script does not parse as Python ({exc.msg}); cannot be screened safely - "
+            f"install script does not parse as Python ({exc.msg}); cannot be screened safely - "  # noqa: ISC004
             f"treat as suspicious"
         ]
     imported: set[str] = set()
@@ -245,7 +245,7 @@ class Declared:
 def read_declared(path: Path = _PYPROJECT) -> Declared:
     """Parse the runtime + dev dependency names from pyproject.toml (fails loud if absent)."""
     if not path.is_file():
-        raise LedgerError(f"pyproject not found: {path}")
+        raise LedgerError(f"pyproject not found: {path}")  # noqa: TRY003
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     project = data.get("project", {})
     optional = project.get("optional-dependencies", {})
@@ -263,16 +263,16 @@ def read_declared(path: Path = _PYPROJECT) -> Declared:
 def read_ledger(path: Path = _LEDGER) -> dict[str, dict[str, str]]:
     """Parse the justification rows; a missing file or an incomplete row fails loud."""
     if not path.is_file():
-        raise LedgerError(f"dependency ledger not found: {path}")
+        raise LedgerError(f"dependency ledger not found: {path}")  # noqa: TRY003
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     entries: dict[str, dict[str, str]] = {}
     for scope in ("runtime", "dev"):
         for name, row in data.get(scope, {}).items():
             if not isinstance(row, dict):
-                raise LedgerError(f"[{scope}.{name}] must be a table of justification fields")
+                raise LedgerError(f"[{scope}.{name}] must be a table of justification fields")  # noqa: TRY003
             missing = [f for f in _REQUIRED_FIELDS if not str(row.get(f, "")).strip()]
             if missing:
-                raise LedgerError(
+                raise LedgerError(  # noqa: TRY003
                     f"[{scope}.{name}] missing required field(s): {', '.join(missing)}"
                 )
             entries[_canonical(name)] = {
@@ -311,7 +311,7 @@ def format_audit(audit: DependencyAudit) -> str:
     verdict = "PASS" if audit.passed else "FAIL"
     lines = [
         "DEPENDENCY GATE - every dependency earns its place (frameless Python)",
-        f"  {len(audit.ok)} justified, {len(audit.unjustified)} unjustified, "
+        f"  {len(audit.ok)} justified, {len(audit.unjustified)} unjustified, "  # noqa: ISC004
         f"{len(audit.stale)} stale  ->  {verdict}",
         "",
     ]
@@ -337,14 +337,14 @@ def render_dependencies(pyproject: Path = _PYPROJECT, ledger: Path = _LEDGER) ->
     return format_audit(audit_dependencies(pyproject, ledger))
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
     `python -m adapters.dependencies screen <name>`: run the name admission screen.
     `... screen-source <path>`: run the behavioral install-hook screen on a setup.py."""
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) >= 2 and args[0] == "screen-source":
+    if len(args) >= 2 and args[0] == "screen-source":  # noqa: PLR2004
         try:
             concerns = screen_source(Path(args[1]))
         except OSError as exc:
@@ -360,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
         for concern in concerns:
             print(f"  - {concern}")
         return 1
-    if len(args) >= 2 and args[0] == "screen":
+    if len(args) >= 2 and args[0] == "screen":  # noqa: PLR2004
         try:
             concerns = screen_name(args[1])
         except LedgerError as exc:

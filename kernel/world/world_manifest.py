@@ -50,25 +50,25 @@ class WorldManifest:
 
 def _str_tuple(raw: Any, name: str) -> tuple[str, ...]:
     if isinstance(raw, str) or not hasattr(raw, "__iter__"):
-        raise WorldManifestError(f"{name} must be a list of strings, got {raw!r}")
+        raise WorldManifestError(f"{name} must be a list of strings, got {raw!r}")  # noqa: TRY003
     return tuple(str(item) for item in raw)
 
 
 def from_dict(raw: Any) -> WorldManifest:
     """Build + validate a WorldManifest from a mapping (a parsed world.yaml). Fails loud."""
     if not isinstance(raw, dict):
-        raise WorldManifestError(f"a world manifest must be a mapping, got {type(raw).__name__}")
+        raise WorldManifestError(f"a world manifest must be a mapping, got {type(raw).__name__}")  # noqa: TRY003
     world_id = str(raw.get("world_id", "")).strip()
     if not _ID_RE.match(world_id):
-        raise WorldManifestError(
+        raise WorldManifestError(  # noqa: TRY003
             f"world_id {world_id!r} must be lowercase, hyphenated (first-forge)"
         )
     title = str(raw.get("title", "")).strip()
     if not title:
-        raise WorldManifestError(f"world {world_id!r}: 'title' is required")
+        raise WorldManifestError(f"world {world_id!r}: 'title' is required")  # noqa: TRY003
     start_room = str(raw.get("start_room", "")).strip()
     if not start_room:
-        raise WorldManifestError(
+        raise WorldManifestError(  # noqa: TRY003
             f"world {world_id!r}: 'start_room' is required (the declared spawn)"
         )
     return WorldManifest(
@@ -114,7 +114,7 @@ def to_markdown(manifest: WorldManifest) -> str:
 
 
 def _seeds_root(root: Path | None) -> Path:
-    from kernel.world.seed import BLUEPRINTS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
 
     if root is None or root == BLUEPRINTS_ROOT.parents[1]:
         return BLUEPRINTS_ROOT
@@ -126,7 +126,7 @@ def _first_room(seed_dir: Path) -> str:
     rooms = seed_dir / "rooms.yaml"
     if not rooms.exists():
         return ""
-    from kernel.world.seed import (
+    from kernel.world.seed import (  # noqa: PLC0415
         load_rooms,
     )  # lazy: seed.py binds env at import, keep this module light
 
@@ -190,7 +190,7 @@ def check_world(seed_name: str, root: Path | None = None) -> list[str]:
     real_spawn = _first_room(_seeds_root(root) / seed_name)
     if real_spawn and manifest.start_room != real_spawn:
         return [
-            f"{seed_name}: manifest start_room '{manifest.start_room}' != the seed's first room "
+            f"{seed_name}: manifest start_room '{manifest.start_room}' != the seed's first room "  # noqa: ISC004
             f"'{real_spawn}' (the engine spawns at the first room; update world.yaml)"
         ]
     return []

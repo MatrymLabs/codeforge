@@ -49,9 +49,9 @@ class DomainModuleRegistry:
         ame`. A duplicate name fails loud (two loaders
                 for one module is an ambiguity, never a silent overwrite)."""
         if not name or not name.strip():
-            raise DomainModuleError("a domain module needs a non-empty name")
+            raise DomainModuleError("a domain module needs a non-empty name")  # noqa: TRY003
         if name in self._loaders:
-            raise DomainModuleError(f"domain module {name!r} is already registered")
+            raise DomainModuleError(f"domain module {name!r} is already registered")  # noqa: TRY003
         self._loaders[name] = loader
 
     def get(self, name: str) -> Any:
@@ -59,7 +59,7 @@ class DomainModuleRegistry:
         ame`, or fail loud if none is."""
         if name not in self._loaders:
             known = ", ".join(sorted(self._loaders)) or "(none)"
-            raise DomainModuleError(f"domain module {name!r} is not registered; known: {known}")
+            raise DomainModuleError(f"domain module {name!r} is not registered; known: {known}")  # noqa: TRY003
         return self._loaders[name]
 
     def names(self) -> list[str]:
@@ -91,7 +91,7 @@ def resolve_modules(modules: Iterable[str], registry: DomainModuleRegistry) -> d
     selected = list(modules)
     missing = [m for m in selected if m not in registry]
     if missing:
-        raise DomainModuleError(
+        raise DomainModuleError(  # noqa: TRY003
             f"selected domain module(s) not registered: {', '.join(sorted(missing))}"
         )
     return {name: registry.get(name) for name in selected}

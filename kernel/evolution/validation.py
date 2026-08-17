@@ -158,5 +158,5 @@ def validate_genome(genome: BlueprintGenome) -> BlueprintGenome:
     blocking = [r for r in check_constraints(genome) if r.blocking]
     if blocking:
         detail = "; ".join(f"{r.rule_id}: {r.summary}" for r in blocking)
-        raise GenomeError(f"genome {genome.genome_id!r} failed validation -- {detail}")
+        raise GenomeError(f"genome {genome.genome_id!r} failed validation -- {detail}")  # noqa: TRY003
     return genome

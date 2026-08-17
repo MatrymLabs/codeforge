@@ -126,7 +126,7 @@ def test_a_full_inbox_returns_the_letter():
 
 # --- the verb is reachable through the engine tick --------------------------------------------
 def test_the_mail_verb_is_reachable():
-    import forge
+    import forge  # noqa: PLC0415
 
     try:
         alia = _sender()
@@ -139,7 +139,7 @@ def test_the_mail_verb_is_reachable():
 
 # --- item attachments (mail gift / mail claim) --------------------------------------------------
 def test_gift_mails_a_carried_item_and_claim_brings_it_back():
-    from kernel.world.items import carrier, items_in, prototype_of
+    from kernel.world.items import carrier, items_in, prototype_of  # noqa: PLC0415
 
     try:
         alia = _sender("alia")
@@ -162,7 +162,7 @@ def test_gift_mails_a_carried_item_and_claim_brings_it_back():
 
 
 def test_gift_refuses_a_bad_target_uncarried_or_worn_item():
-    from kernel.world.items import carrier
+    from kernel.world.items import carrier  # noqa: PLC0415
 
     try:
         alia = _sender("alia")

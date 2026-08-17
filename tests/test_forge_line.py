@@ -39,7 +39,7 @@ class FakeWriter:
 
 
 def _boom(*_a: object, **_k: object) -> object:
-    raise AssertionError("the line must not reach a subprocess station")
+    raise AssertionError("the line must not reach a subprocess station")  # noqa: TRY003
 
 
 def test_the_line_runs_token_bucket_green_through_all_eight_stations() -> None:
@@ -53,7 +53,7 @@ def test_the_line_runs_token_bucket_green_through_all_eight_stations() -> None:
 
 def test_the_line_never_shells_a_subprocess(monkeypatch: pytest.MonkeyPatch) -> None:
     # cast.validate_cast / install_check spawn subprocesses; the line must never touch them.
-    import kernel.cast as cast
+    import kernel.cast as cast  # noqa: PLC0415, PLR0402
 
     monkeypatch.setattr(cast, "validate_cast", _boom)
     monkeypatch.setattr(cast, "install_check", _boom)
@@ -133,6 +133,6 @@ def test_forge_new_rejects_an_invalid_name(tmp_path: Path) -> None:
 
 
 def test_the_forge_verb_needs_a_name() -> None:
-    from kernel.forge_line import forge
+    from kernel.forge_line import forge  # noqa: PLC0415
 
     assert "forge what" in forge("")

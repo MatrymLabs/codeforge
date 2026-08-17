@@ -45,11 +45,11 @@ class FilePlanRule:
 
     def __post_init__(self) -> None:
         if self.kind not in _KINDS:
-            raise FilePlanError(f"unknown rule kind {self.kind!r} for {self.id}; choose {_KINDS}")
+            raise FilePlanError(f"unknown rule kind {self.kind!r} for {self.id}; choose {_KINDS}")  # noqa: TRY003
         if self.severity not in ("error", "warn", "info"):
-            raise FilePlanError(f"unknown severity {self.severity!r} for {self.id}")
+            raise FilePlanError(f"unknown severity {self.severity!r} for {self.id}")  # noqa: TRY003
         if not self.targets:
-            raise FilePlanError(f"rule {self.id} has no targets")
+            raise FilePlanError(f"rule {self.id} has no targets")  # noqa: TRY003
 
 
 @dataclass(frozen=True)
@@ -183,7 +183,7 @@ def _check_rule(rule: FilePlanRule, paths: set[str]) -> bool:
         return not any(_matches(t, paths) for t in rule.targets)
     if rule.kind in ("glob", "any_of"):
         return any(_matches(t, paths) for t in rule.targets)
-    raise FilePlanError(
+    raise FilePlanError(  # noqa: TRY003
         f"unhandled kind {rule.kind!r}"
     )  # pragma: no cover - guarded in __post_init__
 
@@ -196,7 +196,7 @@ def check(paths: Iterable[str], plan: tuple[FilePlanRule, ...] = DEFAULT_PLAN) -
     every "error"-severity rule is satisfied (passed).
     """
     if not plan:
-        raise FilePlanError("an empty plan grades nothing")
+        raise FilePlanError("an empty plan grades nothing")  # noqa: TRY003
 
     def _norm(p: str) -> str:
         p = p.replace("\\", "/")

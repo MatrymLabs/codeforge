@@ -30,9 +30,9 @@ class Item:
 
     def __post_init__(self) -> None:
         if not self.id:
-            raise ContextError("item id must be non-empty")
+            raise ContextError("item id must be non-empty")  # noqa: TRY003
         if self.cost <= 0:
-            raise ContextError(f"item {self.id!r} cost must be > 0")
+            raise ContextError(f"item {self.id!r} cost must be > 0")  # noqa: TRY003
 
 
 @dataclass(frozen=True)
@@ -65,13 +65,13 @@ def select(
     skipped (not a blocker), so a smaller item behind it can still be chosen.
     """
     if not weights:
-        raise ContextError("weights must be non-empty")
+        raise ContextError("weights must be non-empty")  # noqa: TRY003
     if max_items is None and max_cost is None:
-        raise ContextError("provide at least one of max_items / max_cost")
+        raise ContextError("provide at least one of max_items / max_cost")  # noqa: TRY003
     if max_items is not None and max_items <= 0:
-        raise ContextError("max_items must be > 0")
+        raise ContextError("max_items must be > 0")  # noqa: TRY003
     if max_cost is not None and max_cost <= 0:
-        raise ContextError("max_cost must be > 0")
+        raise ContextError("max_cost must be > 0")  # noqa: TRY003
 
     ranked = sorted(items, key=lambda it: (-score(it, weights), it.id))
     chosen: list[Item] = []

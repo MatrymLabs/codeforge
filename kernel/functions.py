@@ -20,8 +20,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 # --- Live demos: (call shown, output shown). Each is pure or uses a temp dir. -----------
 def _demo_rank_gate() -> tuple[str, str]:
-    from kernel.world.ranks import has_rank
-    from kernel.world.session import Session
+    from kernel.world.ranks import has_rank  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     novice = has_rank(Session(player_id="novice", rank="player"), "wizard")
     owner = has_rank(Session(player_id="owner", rank="owner"), "wizard")
@@ -29,7 +29,7 @@ def _demo_rank_gate() -> tuple[str, str]:
 
 
 def _demo_report_writer() -> tuple[str, str]:
-    from kernel.shelf.reporting import write_report
+    from kernel.shelf.reporting import write_report  # noqa: PLC0415
 
     with tempfile.TemporaryDirectory() as d:
         p = write_report("demo", "hello world", root=Path(d), stamp="2026-07-10")
@@ -40,7 +40,7 @@ def _demo_report_writer() -> tuple[str, str]:
 
 
 def _demo_assessment() -> tuple[str, str]:
-    from kernel.assessment import available_lessons
+    from kernel.assessment import available_lessons  # noqa: PLC0415
 
     lessons = available_lessons()
     total_q = sum(len(x.questions) for x in lessons)
@@ -51,7 +51,7 @@ def _demo_assessment() -> tuple[str, str]:
 
 
 def _demo_validated_loader() -> tuple[str, str]:
-    from kernel.world.seed import BlueprintError, load_rooms
+    from kernel.world.seed import BlueprintError, load_rooms  # noqa: PLC0415
 
     with tempfile.TemporaryDirectory() as d:
         bad = Path(d) / "rooms.yaml"
@@ -60,15 +60,15 @@ def _demo_validated_loader() -> tuple[str, str]:
         )  # duplicate key
         try:
             load_rooms(bad)
-            return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")
+            return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")  # noqa: TRY300
         except (BlueprintError, Exception) as exc:  # noqa: BLE001 - the point is it refuses, loudly
             kind = type(exc).__name__
             return ("load_rooms(<duplicate-key yaml>)", f"{kind} -- refuses a bad row (fails loud)")
 
 
 def _demo_event_ledger() -> tuple[str, str]:
-    from kernel.world.events import announce, bind_echo, unbind_echo
-    from kernel.world.session import SESSIONS, Session
+    from kernel.world.events import announce, bind_echo, unbind_echo  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
 
     pid = "_fn_evt_demo"
     got: list[str] = []
@@ -88,18 +88,18 @@ def _demo_event_ledger() -> tuple[str, str]:
 
 
 def _demo_safe_runner() -> tuple[str, str]:
-    from kernel.shelf.console import ALLOWLIST, CommandRefused, run
+    from kernel.shelf.console import ALLOWLIST, CommandRefused, run  # noqa: PLC0415
 
     try:
         run("rm -rf /")  # not on the allowlist
-        return ("run('rm -rf /')", "ran (unexpected -- allowlist bypass!)")
+        return ("run('rm -rf /')", "ran (unexpected -- allowlist bypass!)")  # noqa: TRY300
     except CommandRefused:
         sample = ", ".join(sorted(ALLOWLIST)[:3])
         return ("run('rm -rf /')", f"CommandRefused -- never ran (allowlist: {sample}, ...)")
 
 
 def _demo_gate_runner() -> tuple[str, str]:
-    import importlib.util
+    import importlib.util  # noqa: PLC0415
 
     spec = importlib.util.spec_from_file_location("_fn_doctor", _ROOT / "scripts" / "doctor.py")
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
@@ -162,7 +162,7 @@ def render_functions() -> str:
                 lines.append(f"  [runs]   {part.id:<18} {call}")
                 lines.append(f"           -> {out}")
                 ran += 1
-            except Exception as exc:  # a part whose demo breaks must surface, never hide
+            except Exception as exc:  # a part whose demo breaks must surface, never hide  # noqa: BLE001, E501
                 lines.append(f"  [BROKEN] {part.id:<18} demo raised: {exc}")
         else:
             twin = _test_twin(part.id, part.source)
@@ -178,6 +178,6 @@ def render_functions() -> str:
     return "\n".join(lines)
 
 
-def functions(arg: str = "") -> str:
+def functions(arg: str = "") -> str:  # noqa: ARG001
     """The `functions` command: the Hardware Store functions check."""
     return render_functions()

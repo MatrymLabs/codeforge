@@ -145,8 +145,8 @@ def test_run_labels_feed_the_hub_facets(tmp_path: Path) -> None:
 
 
 def test_run_lights_up_the_hub_tests_facet(tmp_path: Path) -> None:
-    from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
-    from kernel.seedlab.project_hub import ProjectHub, ProjectState
+    from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore  # noqa: PLC0415
+    from kernel.seedlab.project_hub import ProjectHub, ProjectState  # noqa: PLC0415
 
     kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: _CLOCK)
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-1")

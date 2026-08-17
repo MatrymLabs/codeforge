@@ -49,14 +49,14 @@ class Blueprint:
 def _clean_list(raw: Any, field: str, bp_id: str) -> tuple[str, ...]:
     """A list of non-empty strings, or a loud refusal."""
     if not isinstance(raw, list):
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"blueprint {bp_id!r}: '{field}' must be a list, got {type(raw).__name__}"
         )
     out: list[str] = []
     for i, item in enumerate(raw):
         text = str(item).strip()
         if not text:
-            raise BlueprintError(f"blueprint {bp_id!r}: '{field}[{i}]' is empty")
+            raise BlueprintError(f"blueprint {bp_id!r}: '{field}[{i}]' is empty")  # noqa: TRY003
         out.append(text)
     return tuple(out)
 
@@ -64,33 +64,33 @@ def _clean_list(raw: Any, field: str, bp_id: str) -> tuple[str, ...]:
 def from_dict(raw: Any) -> Blueprint:
     """Validate a raw mapping into a Blueprint. Every gap fails loud, early, and by name."""
     if not isinstance(raw, dict):
-        raise BlueprintError(f"expected a mapping, got {type(raw).__name__}")
+        raise BlueprintError(f"expected a mapping, got {type(raw).__name__}")  # noqa: TRY003
     bp_id = str(raw.get("blueprint_id", "")).strip()
     if not _LABEL.match(bp_id):
-        raise BlueprintError(f"blueprint_id {bp_id!r} must be lowercase_snake_case")
+        raise BlueprintError(f"blueprint_id {bp_id!r} must be lowercase_snake_case")  # noqa: TRY003
     title = str(raw.get("title", "")).strip()
     if not title:
-        raise BlueprintError(f"blueprint {bp_id!r}: 'title' is required")
+        raise BlueprintError(f"blueprint {bp_id!r}: 'title' is required")  # noqa: TRY003
     intent = str(raw.get("intent", "")).strip()
     if not intent:
-        raise BlueprintError(f"blueprint {bp_id!r}: 'intent' is required")
+        raise BlueprintError(f"blueprint {bp_id!r}: 'intent' is required")  # noqa: TRY003
     requirements = _clean_list(raw.get("requirements", []), "requirements", bp_id)
     if not requirements:
-        raise BlueprintError(f"blueprint {bp_id!r}: needs at least one requirement")
+        raise BlueprintError(f"blueprint {bp_id!r}: needs at least one requirement")  # noqa: TRY003
     security = _clean_list(raw.get("security", []), "security", bp_id)
     if not security:
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"blueprint {bp_id!r}: needs at least one 'security' consideration "
             "(threat model, trust boundaries, authz, failure modes) -- security by design"
         )
     tasks = _clean_list(raw.get("tasks", []), "tasks", bp_id) if raw.get("tasks") else ()
     stack_raw = raw.get("stack", {})
     if not isinstance(stack_raw, dict):
-        raise BlueprintError(f"blueprint {bp_id!r}: 'stack' must be a mapping of layer -> choice")
+        raise BlueprintError(f"blueprint {bp_id!r}: 'stack' must be a mapping of layer -> choice")  # noqa: TRY003
     stack = tuple((str(layer), str(choice)) for layer, choice in stack_raw.items())
     status = str(raw.get("status", "draft"))
     if status not in _STATUSES:
-        raise BlueprintError(f"blueprint {bp_id!r}: status must be one of {_STATUSES}")
+        raise BlueprintError(f"blueprint {bp_id!r}: status must be one of {_STATUSES}")  # noqa: TRY003
     return Blueprint(bp_id, title, intent, requirements, security, tasks, stack, status)
 
 
@@ -103,7 +103,7 @@ def to_dict(bp: Blueprint) -> dict[str, Any]:
         "requirements": list(bp.requirements),
         "security": list(bp.security),
         "tasks": list(bp.tasks),
-        "stack": {layer: choice for layer, choice in bp.stack},
+        "stack": {layer: choice for layer, choice in bp.stack},  # noqa: C416
         "status": bp.status,
     }
 

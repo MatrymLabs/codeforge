@@ -88,7 +88,7 @@ def test_a_seat_with_no_active_job_earns_no_jp():
 
 
 def test_earned_jp_persists_for_a_named_character():
-    from kernel.world.characters import load_character, restore_character
+    from kernel.world.characters import load_character, restore_character  # noqa: PLC0415
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s
@@ -103,7 +103,7 @@ def test_earned_jp_persists_for_a_named_character():
 
 def test_jp_only_touches_the_active_job():
     s = _fighter("engineer")
-    from kernel.world.job_progress import JobProgress
+    from kernel.world.job_progress import JobProgress  # noqa: PLC0415
 
     s.job_progress["scholar"] = JobProgress("scholar", job_level=5, jp=200)
     award_jp(s, 30)
@@ -121,7 +121,7 @@ def test_no_active_job_earns_no_tp():
 
 
 def test_earned_tp_persists_for_a_named_character():
-    from kernel.world.characters import load_character, restore_character
+    from kernel.world.characters import load_character, restore_character  # noqa: PLC0415
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s
@@ -135,7 +135,7 @@ def test_earned_tp_persists_for_a_named_character():
 
 
 def test_xp_debt_costs_progress_into_the_level_never_a_level():
-    from kernel.world.progression_awards import apply_xp_debt
+    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
 
     s = _fighter()
     award_xp(s, 100)  # level 2 (needs 75), 25 XP into the level
@@ -147,7 +147,7 @@ def test_xp_debt_costs_progress_into_the_level_never_a_level():
 
 
 def test_xp_debt_floors_at_the_level_threshold():
-    from kernel.world.progression_awards import apply_xp_debt
+    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
 
     s = _fighter()
     award_xp(s, 75)  # exactly level 2, 0 XP into the level
@@ -156,7 +156,7 @@ def test_xp_debt_floors_at_the_level_threshold():
 
 
 def test_xp_debt_at_level_one_floors_at_zero():
-    from kernel.world.progression_awards import apply_xp_debt
+    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
 
     s = _fighter()
     award_xp(s, 40)  # still level 1 (needs 75)
@@ -165,7 +165,7 @@ def test_xp_debt_at_level_one_floors_at_zero():
 
 
 def test_a_zero_fraction_debt_is_a_noop():
-    from kernel.world.progression_awards import apply_xp_debt
+    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
 
     s = _fighter()
     award_xp(s, 100)

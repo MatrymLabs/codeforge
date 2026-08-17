@@ -83,7 +83,15 @@ extend-exclude = ["docs/evidence"]
 [tool.ruff.lint]
 # E/F: core errors  I: import sorting  UP: modernize syntax
 # B: common bug patterns  SIM: simplifications
-select = ["E", "F", "I", "UP", "B", "SIM"]
+extend-select = ["E", "F", "B", "UP", "RUF", "I", "N", "SIM", "PL", "S", "TRY", "RET", "ARG", "PTH", "ASYNC", "C4", "PIE"]
+ignore = ["PLR0913", "S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "PLR2004", "ARG"]
+"**/conftest.py" = ["ARG"]
+
+[tool.ruff.lint.pylint]
+max-args = 8
 
 [tool.mypy]
 python_version = "3.13"
@@ -135,7 +143,9 @@ testpaths = ["tests"]
 # Fail loud on typos, not silently: an unregistered marker or an unknown config
 # key is a mistake, not a warning. importlib import mode is the modern default
 # (no sys.path games, no __init__.py needed in tests).
-addopts = "--strict-markers --strict-config --import-mode=importlib"
+addopts = "--strict-markers --strict-config --import-mode=importlib -ra --showlocals"
+filterwarnings = ["error"]
+xfail_strict = true
 # Repo root on the path so tests can import the dev-only `benchmarks/` harness
 # (it is not part of the installed package, unlike `parts`/`forge`).
 pythonpath = ["."]

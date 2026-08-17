@@ -150,7 +150,7 @@ def _diagnose_source(source_text: str, label: str) -> StationReport:
         return StationReport("DIAGNOSE", PASS, "no functions to score, 0 clones")
     peak = max(functions, key=lambda f: f.complexity)
     clone_note = f"{len(clones)} clone group(s)" if clones else "0 clones"
-    verdict = WATCH if peak.complexity >= 10 else PASS
+    verdict = WATCH if peak.complexity >= 10 else PASS  # noqa: PLR2004
     return StationReport(
         "DIAGNOSE", verdict, f"peak McCabe {peak.complexity} in {peak.name}, {clone_note}"
     )
@@ -211,7 +211,7 @@ def run_line(
 
     Read-and-verify only: no catalog/registry mutation, no subprocess. The single disk-writing seam
     is `writer` (defaults to the dated ReportWriter); inject a fake to keep a test offline."""
-    stamp = stamp or date.today().isoformat()
+    stamp = stamp or date.today().isoformat()  # noqa: DTZ011
     emit: Writer = writer or (
         lambda category, text: write_report(category, text, root=root, stamp=stamp)
     )
@@ -300,7 +300,7 @@ def forge_new(
     a scaffold: TEST/DOCUMENT/CATALOG+FILE WATCH: the part is not yet implemented, manifested,
     or filed. Promotion into parts/ stays a human branch -> check -> PR step. Never writes to parts/
     or the catalog/registry; the sole non-sandbox write (the report) goes through the Writer."""
-    stamp = stamp or date.today().isoformat()
+    stamp = stamp or date.today().isoformat()  # noqa: DTZ011
     emit: Writer = writer or (
         lambda category, text: write_report(category, text, root=root, stamp=stamp)
     )

@@ -172,7 +172,7 @@ def install_workshop(world: dict[str, Room]) -> None:
     if GRAND_LIBRARY in world:  # idempotent: never place the Library twice
         return
     if not world:  # a world with no rooms has no spawn to anchor the Library to
-        raise WorkshopError("cannot install the Creator's Workshop into an empty world")
+        raise WorkshopError("cannot install the Creator's Workshop into an empty world")  # noqa: TRY003
     spawn = next(iter(world))
 
     world[GRAND_LIBRARY] = Room(
@@ -238,10 +238,10 @@ def world_survey(session: Session) -> str:
     # Lazy imports: this module is loaded during world assembly, so it must not import the world,
     # NPC, or Seed Package modules at import time (a cycle / premature read). At call time they are
     # fully built.
-    from kernel import seed_package as sp
-    from kernel.world.npcs import NPCS
-    from kernel.world.world import WORLD
-    from kernel.world.zones import ZONES
+    from kernel import seed_package as sp  # noqa: PLC0415
+    from kernel.world.npcs import NPCS  # noqa: PLC0415
+    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.zones import ZONES  # noqa: PLC0415
 
     rooms = len(WORLD)
     zones = len(ZONES)
@@ -285,9 +285,9 @@ def live_activity(session: Session) -> str:
     if not is_seed_owner(session):
         return "The wall shows you nothing here."
 
-    from kernel.world.session import SESSIONS, display_name, roster
-    from kernel.world.world import WORLD
-    from kernel.world.zones import zone_of
+    from kernel.world.session import SESSIONS, display_name, roster  # noqa: PLC0415
+    from kernel.world.world import WORLD  # noqa: PLC0415
+    from kernel.world.zones import zone_of  # noqa: PLC0415
 
     online = roster()
     lines = ["== The Statistics Wall ==", f"Players online: {len(online)}"]
@@ -399,7 +399,7 @@ def _stage(session: Session, rest: str, spec: _Creatable) -> str:
     if not name:
         return f"Give it a name: {usage}"
 
-    from kernel.world.world import WORLD
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     if room not in WORLD:
         return f"There is no room labelled '{room}'. Name a real room to place it in."
@@ -421,11 +421,11 @@ def _stage(session: Session, rest: str, spec: _Creatable) -> str:
 def _live_labels(kind: str) -> set[str]:
     """The labels already taken in the live world for a creatable kind (so a new one is unique)."""
     if kind == "create_npc":
-        from kernel.world.npcs import NPCS
+        from kernel.world.npcs import NPCS  # noqa: PLC0415
 
         return set(NPCS)
     if kind == "create_item":
-        from kernel.world.items import ITEMS
+        from kernel.world.items import ITEMS  # noqa: PLC0415
 
         return set(ITEMS)
     return set()
@@ -484,13 +484,13 @@ def _apply(change: StagedChange) -> str:
         return _apply_create_npc(change.payload)
     if change.kind == "create_item":
         return _apply_create_item(change.payload)
-    raise WorkshopError(f"unknown staged change kind: {change.kind!r}")
+    raise WorkshopError(f"unknown staged change kind: {change.kind!r}")  # noqa: TRY003
 
 
 def _apply_create_item(payload: dict[str, str]) -> str:
     """Add a fresh, plain item to the live world, lying in its room. It is its own prototype (no
     equipment slot, no modifiers): a created object a hero can find and pick up."""
-    from kernel.world.items import ITEMS
+    from kernel.world.items import ITEMS  # noqa: PLC0415
 
     name, room, label = payload["name"], payload["room"], payload["label"]
     keywords = list(dict.fromkeys([*re.findall(r"[a-z0-9]+", name.lower()), label]))
@@ -507,7 +507,7 @@ def _apply_create_item(payload: dict[str, str]) -> str:
 def _apply_create_npc(payload: dict[str, str]) -> str:
     """Add a fresh, peaceful NPC to the live world and re-index its room so it appears at once. The
     NPC is peaceful (hp 0, atk 0): a created townsperson, never a hidden weapon."""
-    from kernel.world.npcs import NPCS, reindex_npcs
+    from kernel.world.npcs import NPCS, reindex_npcs  # noqa: PLC0415
 
     name, room, label = payload["name"], payload["room"], payload["label"]
     keywords = list(dict.fromkeys([*re.findall(r"[a-z0-9]+", name.lower()), label]))

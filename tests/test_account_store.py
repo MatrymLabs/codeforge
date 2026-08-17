@@ -97,7 +97,7 @@ def test_a_too_short_password_is_refused_before_the_store_is_touched():
 
 
 def test_import_legacy_json_reports_nothing_when_no_files_are_present(tmp_path, monkeypatch):
-    from kernel.world.accounts import import_legacy_json
+    from kernel.world.accounts import import_legacy_json  # noqa: PLC0415
 
     monkeypatch.chdir(tmp_path)  # an empty working dir -- no characters.json / accounts.json
     assert "No legacy JSON found" in import_legacy_json()
@@ -106,11 +106,11 @@ def test_import_legacy_json_reports_nothing_when_no_files_are_present(tmp_path, 
 def test_import_legacy_json_moves_accounts_and_links_their_characters(tmp_path, monkeypatch):
     """The importer creates account credentials through the store and links each listed character
     onto its account -- proven end to end by a real login afterwards."""
-    import json
+    import json  # noqa: PLC0415
 
-    import kernel.world.accounts as acc
-    from kernel.world.accounts import import_legacy_json, inspect_login
-    from kernel.world.characters import load_character
+    import kernel.world.accounts as acc  # noqa: PLC0415
+    from kernel.world.accounts import import_legacy_json, inspect_login  # noqa: PLC0415
+    from kernel.world.characters import load_character  # noqa: PLC0415
 
     monkeypatch.chdir(tmp_path)
     (tmp_path / "characters.json").write_text(
@@ -144,9 +144,9 @@ def test_rotate_refuses_a_too_short_or_unknown_account():
 
 
 def test_migrate_refuses_missing_char_missing_password_and_taken_account():
-    from kernel.world.accounts import migrate, set_password
-    from kernel.world.characters import save_character
-    from kernel.world.session import SESSIONS, Session
+    from kernel.world.accounts import migrate, set_password  # noqa: PLC0415
+    from kernel.world.characters import save_character  # noqa: PLC0415
+    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
 
     SESSIONS.clear()
     mem = InMemoryAccountCredentialStore()

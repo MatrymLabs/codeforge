@@ -94,7 +94,7 @@ def _check_permissions(doc: Mapping[str, object], findings: list[Finding]) -> No
 
 
 def _check_uses(where: str, uses: str, budget: Budget, findings: list[Finding]) -> None:
-    if uses.startswith("./") or uses.startswith("."):
+    if uses.startswith("./") or uses.startswith("."):  # noqa: PIE810
         return  # a local action, no SHA to pin
     m = _USES_REF.match(uses.strip())
     if not m:
@@ -124,7 +124,7 @@ def lint_workflow(
 ) -> list[Finding]:
     """Return the findings for one parsed workflow document (empty = clean)."""
     if not isinstance(doc, Mapping):
-        raise WorkflowLintError("workflow document must be a mapping (parsed YAML)")
+        raise WorkflowLintError("workflow document must be a mapping (parsed YAML)")  # noqa: TRY003
     budget = budget or Budget()
     findings: list[Finding] = []
 
@@ -195,9 +195,9 @@ def worst_severity(findings: list[Finding]) -> str | None:
 def lint_yaml(text: str, *, name: str = "", budget: Budget | None = None) -> list[Finding]:
     """Convenience: parse a workflow YAML string and lint it. Requires PyYAML."""
     try:
-        import yaml  # optional; the core lint_workflow is dependency-free
+        import yaml  # optional; the core lint_workflow is dependency-free  # noqa: PLC0415
     except ImportError as exc:  # pragma: no cover - environment-dependent
-        raise WorkflowLintError(
+        raise WorkflowLintError(  # noqa: TRY003
             "lint_yaml needs PyYAML; use lint_workflow(parsed_dict) to stay stdlib"
         ) from exc
     doc = yaml.safe_load(text)

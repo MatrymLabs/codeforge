@@ -72,16 +72,16 @@ def build(states: Iterable[str], start: str, transitions: Iterable[Transition]) 
     state_set = frozenset(states)
     edges = tuple(transitions)
     if start not in state_set:
-        raise ValueError(f"start state {start!r} is not in the state set")
+        raise ValueError(f"start state {start!r} is not in the state set")  # noqa: TRY003
     index: dict[tuple[str, str], Transition] = {}
     for t in edges:
         if t.src not in state_set:
-            raise ValueError(f"transition from unknown state {t.src!r}")
+            raise ValueError(f"transition from unknown state {t.src!r}")  # noqa: TRY003
         if t.dst not in state_set:
-            raise ValueError(f"transition to unknown state {t.dst!r}")
+            raise ValueError(f"transition to unknown state {t.dst!r}")  # noqa: TRY003
         key = (t.src, t.event)
         if key in index:
-            raise ValueError(f"non-deterministic machine: two transitions for {key!r}")
+            raise ValueError(f"non-deterministic machine: two transitions for {key!r}")  # noqa: TRY003
         index[key] = t
     return Machine(states=state_set, start=start, transitions=edges, index=index)
 
@@ -106,10 +106,10 @@ def advance(
     if transition.guard is not None:
         guard_fn = (guards or {}).get(transition.guard)
         if guard_fn is None:
-            raise KeyError(f"guard {transition.guard!r} is not in the guard registry")
+            raise KeyError(f"guard {transition.guard!r} is not in the guard registry")  # noqa: TRY003
         try:
             reason = guard_fn(ctx or {})
-        except Exception as exc:  # a broken guard refuses; it must never crash the tick
+        except Exception as exc:  # a broken guard refuses; it must never crash the tick  # noqa: BLE001, E501
             return Refusal(f"guard {transition.guard!r} errored: {exc}")
         if reason is not None:
             return Refusal(reason)

@@ -267,7 +267,7 @@ def test_verify_pour_build_reports_a_failed_install(tmp_path: Path) -> None:
 def test_main_build_subcommand_runs_the_build(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import kernel.shelf_pour as sp
+    import kernel.shelf_pour as sp  # noqa: PLC0415
 
     # the real build needs network (pip); stub the verify so the CLI dispatch is covered offline
     monkeypatch.setattr(sp, "verify_pour_build", lambda dest, work, **k: (True, "built a wheel"))
@@ -330,7 +330,7 @@ def test_main_pours_verifies_and_runs_tests(
 
 
 def test_pour_drift_is_empty_for_a_fresh_pour(tmp_path: Path) -> None:
-    from kernel.shelf_pour import pour_drift, pour_shelf
+    from kernel.shelf_pour import pour_drift, pour_shelf  # noqa: PLC0415
 
     dest = tmp_path / "shelf"
     pour_shelf(dest)
@@ -338,7 +338,7 @@ def test_pour_drift_is_empty_for_a_fresh_pour(tmp_path: Path) -> None:
 
 
 def test_pour_drift_flags_a_stale_or_edited_core(tmp_path: Path) -> None:
-    from kernel.shelf_pour import pour_drift, pour_shelf
+    from kernel.shelf_pour import pour_drift, pour_shelf  # noqa: PLC0415
 
     dest = tmp_path / "shelf"
     poured = pour_shelf(dest)
@@ -350,7 +350,7 @@ def test_pour_drift_flags_a_stale_or_edited_core(tmp_path: Path) -> None:
 
 
 def test_pour_never_declares_an_in_tree_native_accelerator_as_a_dep() -> None:
-    from kernel.shelf_pour import shelf_third_party_deps
+    from kernel.shelf_pour import shelf_third_party_deps  # noqa: PLC0415
 
     # textmatch imports the optional codeforge_textkernel behind a fallback; it is not a PyPI dep
     assert not any(dep.startswith("codeforge_") for dep in shelf_third_party_deps())
@@ -377,8 +377,8 @@ def test_poured_action_pins_track_this_repo_s_own_workflows() -> None:
     major is read from the comment and no network call is made. A test that resolved a SHA
     against the GitHub API would be a test that fails when the network does.
     """
-    import re
-    from pathlib import Path
+    import re  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
 
     repo = Path(__file__).resolve().parents[1]
     pinned = re.compile(r"uses:\s*(actions/[\w-]+)@[0-9a-f]{7,40}\s*#\s*v(\d+)")

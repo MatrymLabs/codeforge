@@ -28,7 +28,7 @@ class Advisor(Protocol):
 
 def _matching_parts(text: str) -> list[Part]:
     """Catalog parts whose haystack shares a meaningful word with the prompt."""
-    words = {word for word in re.findall(r"[a-z]{4,}", text.lower())}
+    words = {word for word in re.findall(r"[a-z]{4,}", text.lower())}  # noqa: C416
     if not words:
         return []
     return [part for part in load_catalog() if words & set(part_haystack(part).split())]
@@ -137,11 +137,11 @@ def anthropic_client() -> Any:
     ANTHROPIC_API_KEY in the env and the `anthropic` package (`pip install codeforge[ai]`).
     Never reached in CI or offline play (tests inject a fake client)."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise ArchitectError("set ANTHROPIC_API_KEY to use a Claude-backed feature")
+        raise ArchitectError("set ANTHROPIC_API_KEY to use a Claude-backed feature")  # noqa: TRY003
     try:
-        import anthropic
+        import anthropic  # noqa: PLC0415
     except ImportError as exc:  # an optional extra, not a core dependency
-        raise ArchitectError("Claude features need `pip install codeforge[ai]`") from exc
+        raise ArchitectError("Claude features need `pip install codeforge[ai]`") from exc  # noqa: TRY003
     return anthropic.Anthropic()
 
 

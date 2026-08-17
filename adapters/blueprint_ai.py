@@ -66,7 +66,7 @@ class ClaudeBlueprintDrafter:
     def draft(self, idea: str) -> Blueprint:
         text = idea.strip()
         if not text:
-            raise BlueprintDraftError("describe the idea to draft a blueprint")
+            raise BlueprintDraftError("describe the idea to draft a blueprint")  # noqa: TRY003
         response = self._client.messages.parse(
             model=self._model,
             max_tokens=8000,
@@ -77,12 +77,12 @@ class ClaudeBlueprintDrafter:
         draft = response.parsed_output
         if draft is None:
             # The model declined or returned no schema-valid JSON. Surface it, don't guess.
-            raise BlueprintDraftError("the model returned no usable draft")
+            raise BlueprintDraftError("the model returned no usable draft")  # noqa: TRY003
         try:
             # Force status to 'draft' (AI output is Tier-4) and re-validate through the gate.
             return from_dict({**draft.model_dump(), "status": "draft"})
         except BlueprintError as exc:
-            raise BlueprintDraftError(f"the model's draft was invalid: {exc}") from exc
+            raise BlueprintDraftError(f"the model's draft was invalid: {exc}") from exc  # noqa: TRY003
 
 
 def build_claude_drafter(model: str | None = None) -> BlueprintDrafter:

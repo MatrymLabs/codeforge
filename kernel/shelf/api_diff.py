@@ -147,7 +147,7 @@ def diff(old_source: str, new_source: str, *, module: str = "") -> DiffReport:
         old_tree = ast.parse(old_source, filename=f"{module or 'source'} (old)")
         new_tree = ast.parse(new_source, filename=f"{module or 'source'} (new)")
     except SyntaxError as exc:
-        raise ApiDiffError(f"cannot parse {module or 'source'}: {exc}") from exc
+        raise ApiDiffError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
 
     old_syms, old_bodies = _public_surface(old_tree)
     new_syms, new_bodies = _public_surface(new_tree)

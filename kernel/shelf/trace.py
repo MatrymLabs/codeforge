@@ -49,11 +49,11 @@ class TraceError(ValueError):
 
 def _require_hex(value: str, length: int, label: str) -> None:
     if not isinstance(value, str):
-        raise TraceError(f"{label} must be a string, got {type(value).__name__}")
+        raise TraceError(f"{label} must be a string, got {type(value).__name__}")  # noqa: TRY003
     if len(value) != length:
-        raise TraceError(f"{label} must be {length} hex chars, got {len(value)}")
+        raise TraceError(f"{label} must be {length} hex chars, got {len(value)}")  # noqa: TRY003
     if not _LOWER_HEX.match(value):
-        raise TraceError(f"{label} must be lowercase hex: {value!r}")
+        raise TraceError(f"{label} must be lowercase hex: {value!r}")  # noqa: TRY003
 
 
 # --------------------------------------------------------------------- Trace
@@ -70,13 +70,13 @@ class Trace:
         _require_hex(self.trace_id, _TRACE_ID_HEX, "trace_id")
         _require_hex(self.span_id, _SPAN_ID_HEX, "span_id")
         if self.trace_id == _ZERO_TRACE:
-            raise TraceError("trace_id must not be all zero")
+            raise TraceError("trace_id must not be all zero")  # noqa: TRY003
         if self.span_id == _ZERO_SPAN:
-            raise TraceError("span_id must not be all zero")
+            raise TraceError("span_id must not be all zero")  # noqa: TRY003
         if self.parent_span_id is not None:
             _require_hex(self.parent_span_id, _SPAN_ID_HEX, "parent_span_id")
             if self.parent_span_id == _ZERO_SPAN:
-                raise TraceError("parent_span_id must not be all zero")
+                raise TraceError("parent_span_id must not be all zero")  # noqa: TRY003
 
     def traceparent(self) -> str:
         """Serialize to the W3C wire format for carrying across a boundary."""
@@ -114,16 +114,16 @@ def parse_traceparent(header: str) -> Trace:
     child under it.
     """
     if not isinstance(header, str):
-        raise TraceError(f"traceparent must be a string, got {type(header).__name__}")
+        raise TraceError(f"traceparent must be a string, got {type(header).__name__}")  # noqa: TRY003
     if not _TRACEPARENT.match(header):
-        raise TraceError(f"malformed traceparent: {header!r}")
+        raise TraceError(f"malformed traceparent: {header!r}")  # noqa: TRY003
     version, trace_id, span_id, flags = header.split("-")
     if version == _INVALID_VERSION:
-        raise TraceError("traceparent version ff is invalid")
+        raise TraceError("traceparent version ff is invalid")  # noqa: TRY003
     if version != _SUPPORTED_VERSION:
-        raise TraceError(f"unsupported traceparent version {version!r}")
+        raise TraceError(f"unsupported traceparent version {version!r}")  # noqa: TRY003
     if trace_id == _ZERO_TRACE or span_id == _ZERO_SPAN:
-        raise TraceError("traceparent contains an all-zero id")
+        raise TraceError("traceparent contains an all-zero id")  # noqa: TRY003
     sampled = bool(int(flags, 16) & FLAG_SAMPLED)
     return Trace(trace_id=trace_id, span_id=span_id, sampled=sampled)
 

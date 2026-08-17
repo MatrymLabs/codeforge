@@ -56,7 +56,7 @@ def find_clones(sources: dict[str, str], *, min_nodes: int = DEFAULT_MIN_NODES) 
         try:
             tree = ast.parse(source)
         except SyntaxError as exc:
-            raise CloneError(f"could not parse {label}: {exc}") from exc
+            raise CloneError(f"could not parse {label}: {exc}") from exc  # noqa: TRY003
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                 sig = shape(node)
@@ -64,7 +64,7 @@ def find_clones(sources: dict[str, str], *, min_nodes: int = DEFAULT_MIN_NODES) 
                     occ = Occurrence(label, node.name, node.lineno, len(sig))
                     buckets.setdefault(sig, []).append(occ)
     groups = [
-        CloneGroup(_signature(sig), tuple(occ)) for sig, occ in buckets.items() if len(occ) >= 2
+        CloneGroup(_signature(sig), tuple(occ)) for sig, occ in buckets.items() if len(occ) >= 2  # noqa: PLR2004
     ]
     return sorted(groups, key=lambda g: (-g.occurrences[0].size, -len(g.occurrences)))
 

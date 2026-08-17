@@ -34,13 +34,13 @@ def town_files(directory: Path | None = None) -> list[Path]:
 
 def _load(path: Path) -> dict[str, Any]:
     if not path.exists():
-        raise BlueprintError(f"Authored town file not found: {path}")
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"Authored town file not found: {path}")  # noqa: TRY003
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Authored town file is not a mapping: {path}")
+        raise BlueprintError(f"Authored town file is not a mapping: {path}")  # noqa: TRY003
     for section in ("rooms", "hub", "npcs", "items"):
         if not data.get(section):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {path.stem!r}: missing or empty section {section!r}"
             )
     return data
@@ -58,7 +58,7 @@ def raise_town(path: Path) -> tuple[dict[str, Room], dict[str, Npc], dict[str, I
     for label, room in rooms.items():
         for direction, dest in room["exits"].items():
             if dest not in interior:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"authored town {town!r} room '{label}' exit '{direction}' -> '{dest}': "
                     "not a room of this town"
                 )
@@ -76,7 +76,7 @@ def _build_rooms(town: str, records: dict[str, Any]) -> dict[str, Room]:
     rooms: dict[str, Room] = {}
     for label, rec in records.items():
         if not rec.get("name") or not rec.get("desc") or not isinstance(rec.get("exits"), dict):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {town!r} room '{label}': needs a name, desc, and exits"
             )
         room = Room(name=rec["name"], desc=rec["desc"], exits=dict(rec["exits"]))
@@ -114,15 +114,15 @@ def _build_npcs(town: str, records: dict[str, Any], rooms: dict[str, Room]) -> d
     for label, rec in records.items():
         location = rec.get("location")
         if location not in rooms:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {town!r} npc '{label}': location '{location}' is not a town room"
             )
         if not rec.get("name") or not rec.get("keywords"):
-            raise BlueprintError(f"authored town {town!r} npc '{label}': needs a name and keywords")
+            raise BlueprintError(f"authored town {town!r} npc '{label}': needs a name and keywords")  # noqa: TRY003
         hp = int(rec.get("hp", 0))
         atk = int(rec.get("atk", 0))
         if rec.get("aggressive") and (hp <= 0 or atk <= 0):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {town!r} npc '{label}': an aggressive foe needs hp > 0 and atk > 0"
             )
         npc: Npc = Npc(
@@ -148,11 +148,11 @@ def _build_items(town: str, records: dict[str, Any], rooms: dict[str, Room]) -> 
     for label, rec in records.items():
         location = rec.get("location")
         if location not in rooms:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {town!r} item '{label}': location '{location}' is not a town room"
             )
         if not rec.get("name") or not rec.get("keywords"):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"authored town {town!r} item '{label}': needs a name and keywords"
             )
         item: Item = Item(

@@ -69,10 +69,10 @@ def test_a_node_shows_on_look():
 
 
 def test_the_wildlands_seed_nodes_that_feed_real_recipes():
-    from pathlib import Path
+    from pathlib import Path  # noqa: PLC0415
 
-    from kernel.world.seed import load_recipes
-    from kernel.world.wildlands import _gather_node
+    from kernel.world.seed import load_recipes  # noqa: PLC0415
+    from kernel.world.wildlands import _gather_node  # noqa: PLC0415
 
     # every material the generator seeds must be a real crafting input, or the loop is dead.
     seeded = {_gather_node("wild-forest", i) for i in range(30)} | {

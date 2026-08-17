@@ -86,13 +86,13 @@ def swear_order(session: Session, arg: str) -> str:
     session.order = choice
     # Swearing earns a starting standing with the new Order (and spills over its allies/rivals),
     # so allegiance and reputation move together (kernel.world.reputation).
-    from kernel.world.reputation import SWEAR_STANDING, grant
+    from kernel.world.reputation import SWEAR_STANDING, grant  # noqa: PLC0415
 
     grant(session, choice, SWEAR_STANDING)
-    from kernel.world.characters import save_character
+    from kernel.world.characters import save_character  # noqa: PLC0415
 
     save_character(session)
-    from kernel.world.events import announce
+    from kernel.world.events import announce  # noqa: PLC0415
 
     announce(
         session.location,

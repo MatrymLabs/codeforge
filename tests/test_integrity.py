@@ -206,7 +206,7 @@ def test_save_report_writes_a_dated_file(tmp_path: Path):
 
 
 def test_run_repo_integrity_writes_a_real_report():
-    from kernel.integrity import run_repo_integrity
+    from kernel.integrity import run_repo_integrity  # noqa: PLC0415
 
     path = run_repo_integrity()  # builds + saves under reports/repo_integrity/ (gitignored)
     assert path.exists()

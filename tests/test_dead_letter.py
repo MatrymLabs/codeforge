@@ -51,7 +51,7 @@ def test_replay_recovers_accepted_and_keeps_failing() -> None:
 
     def handler(msg: str) -> None:
         if msg == "bad":
-            raise RuntimeError("still broken")
+            raise RuntimeError("still broken")  # noqa: TRY003
 
     result = dlq.replay(handler)
     assert result.recovered == ("good",)
@@ -107,14 +107,14 @@ def test_at_least_once_consumer_flow() -> None:
 
     def process(msg: str) -> None:
         if world_is_broken["state"]:
-            raise RuntimeError("downstream 503")
+            raise RuntimeError("downstream 503")  # noqa: TRY003
 
     def consume(msg: str, *, max_attempts: int = 3) -> None:
         last_reason = ""
         for _attempt in range(1, max_attempts + 1):
             try:
                 process(msg)
-                return  # success
+                return  # success  # noqa: TRY300
             except Exception as exc:  # noqa: BLE001 - the consumer decides retry vs bury
                 last_reason = str(exc)
         dlq.bury(msg, last_reason, attempts=max_attempts)  # retries exhausted -> dead-letter

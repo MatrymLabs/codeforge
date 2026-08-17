@@ -107,9 +107,9 @@ class Ledger:
     ) -> Account:
         """Open a new zero-balance account. A blank or duplicate id is refused."""
         if not account_id or not account_id.strip():
-            raise LedgerError("an account id must be a non-empty string")
+            raise LedgerError("an account id must be a non-empty string")  # noqa: TRY003
         if account_id in self._accounts:
-            raise LedgerError(f"account {account_id!r} already exists")
+            raise LedgerError(f"account {account_id!r} already exists")  # noqa: TRY003
         account = Account(
             id=account_id,
             debits_must_not_exceed_credits=debits_must_not_exceed_credits,
@@ -123,7 +123,7 @@ class Ledger:
         try:
             return self._accounts[account_id]
         except KeyError as exc:
-            raise LedgerError(f"unknown account {account_id!r}") from exc
+            raise LedgerError(f"unknown account {account_id!r}") from exc  # noqa: TRY003
 
     def balance(self, account_id: str) -> int:
         """The neutral balance (debits minus credits) of an opened account."""
@@ -164,17 +164,17 @@ class Ledger:
         """Validate every rule, then apply the double posting. Validation happens BEFORE any
         mutation, so a refusal leaves the ledger untouched."""
         if not transfer_id or not transfer_id.strip():
-            raise LedgerError("a transfer id must be a non-empty string")
+            raise LedgerError("a transfer id must be a non-empty string")  # noqa: TRY003
         if not isinstance(amount, int) or isinstance(amount, bool):
-            raise LedgerError(f"amount must be an int (smallest unit), got {amount!r}")
+            raise LedgerError(f"amount must be an int (smallest unit), got {amount!r}")  # noqa: TRY003
         if amount <= 0:
-            raise LedgerError(f"a transfer must move a positive amount, got {amount}")
+            raise LedgerError(f"a transfer must move a positive amount, got {amount}")  # noqa: TRY003
         if debit_account_id == credit_account_id:
-            raise LedgerError(
+            raise LedgerError(  # noqa: TRY003
                 f"a transfer cannot debit and credit the same account ({debit_account_id!r})"
             )
         if any(t.id == transfer_id for t in self._transfers):
-            raise LedgerError(f"transfer id {transfer_id!r} was already posted")
+            raise LedgerError(f"transfer id {transfer_id!r} was already posted")  # noqa: TRY003
         debit = self.account(debit_account_id)  # raises LedgerError if unknown
         credit = self.account(credit_account_id)  # raises LedgerError if unknown
 
@@ -183,7 +183,7 @@ class Ledger:
             debit.debits_must_not_exceed_credits
             and debit.debits_posted + amount > debit.credits_posted
         ):
-            raise LedgerError(
+            raise LedgerError(  # noqa: TRY003
                 f"transfer would overdraw {debit_account_id!r}: debits "
                 f"{debit.debits_posted + amount} would exceed credits {debit.credits_posted}"
             )
@@ -191,7 +191,7 @@ class Ledger:
             credit.credits_must_not_exceed_debits
             and credit.credits_posted + amount > credit.debits_posted
         ):
-            raise LedgerError(
+            raise LedgerError(  # noqa: TRY003
                 f"transfer would overdraw {credit_account_id!r}: credits "
                 f"{credit.credits_posted + amount} would exceed debits {credit.debits_posted}"
             )
@@ -226,7 +226,7 @@ class Ledger:
         """Fail loud if the double-entry invariant is ever violated (it cannot be, by construction;
         this is a defensive check for tests and reconciliation)."""
         if self.total_debits() != self.total_credits():
-            raise LedgerError(
+            raise LedgerError(  # noqa: TRY003
                 f"ledger is not balanced: total debits {self.total_debits()} "
                 f"!= total credits {self.total_credits()}"
             )

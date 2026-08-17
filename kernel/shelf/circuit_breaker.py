@@ -46,7 +46,7 @@ class CircuitBreakerError(ValueError):
     """A circuit breaker was built with invalid settings. Fails loud at construction."""
 
 
-class CircuitOpen(Exception):
+class CircuitOpen(Exception):  # noqa: N818
     """A call was rejected because the breaker is open (fail fast, do not run the operation)."""
 
 
@@ -64,15 +64,15 @@ class CircuitBreaker:
 
     def __post_init__(self) -> None:
         if not isinstance(self.failure_threshold, int) or isinstance(self.failure_threshold, bool):
-            raise CircuitBreakerError(
+            raise CircuitBreakerError(  # noqa: TRY003
                 f"failure_threshold must be an int, got {self.failure_threshold!r}"
             )
         if self.failure_threshold < 1:
-            raise CircuitBreakerError(
+            raise CircuitBreakerError(  # noqa: TRY003
                 f"failure_threshold must be >= 1, got {self.failure_threshold}"
             )
         if not math.isfinite(self.reset_timeout) or self.reset_timeout < 0:
-            raise CircuitBreakerError("reset_timeout must be a finite, non-negative number")
+            raise CircuitBreakerError("reset_timeout must be a finite, non-negative number")  # noqa: TRY003
         self._clock: Clock = self.clock or time.monotonic
         self._state = _MACHINE.start
 
@@ -113,7 +113,7 @@ class CircuitBreaker:
     def call[T](self, fn: Callable[[], T]) -> T:
         """Run `fn` if the breaker allows; else raise CircuitOpen. Records the outcome."""
         if not self.allow():
-            raise CircuitOpen("circuit is open; call rejected")
+            raise CircuitOpen("circuit is open; call rejected")  # noqa: TRY003
         try:
             result = fn()
         except Exception:

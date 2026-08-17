@@ -96,7 +96,7 @@ def _path_for(store: Path, source_id: str) -> Path:
         not source_id.startswith("repository-")
         or not source_id.removeprefix("repository-").isalnum()
     ):
-        raise RepositoryProofError(f"invalid repository proof id: {source_id!r}")
+        raise RepositoryProofError(f"invalid repository proof id: {source_id!r}")  # noqa: TRY003
     return store / f"{source_id}.json"
 
 
@@ -114,7 +114,7 @@ def recover(store: Path, source_id: str) -> RepositoryProof:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise RepositoryProofError(f"cannot recover repository proof {source_id!r}") from exc
+        raise RepositoryProofError(f"cannot recover repository proof {source_id!r}") from exc  # noqa: TRY003
     try:
         return RepositoryProof(
             source_id=payload["source_id"],
@@ -125,7 +125,7 @@ def recover(store: Path, source_id: str) -> RepositoryProof:
             vcs=payload["vcs"],
         )
     except (KeyError, TypeError) as exc:
-        raise RepositoryProofError(f"invalid repository proof {source_id!r}") from exc
+        raise RepositoryProofError(f"invalid repository proof {source_id!r}") from exc  # noqa: TRY003
 
 
 def _repository_files(root: Path, connector: LocalSource) -> tuple[str, ...]:
@@ -159,7 +159,7 @@ def _git_tracked(root: Path) -> list[str] | None:
     if git is None:
         return None
     try:
-        done = subprocess.run(  # nosec B603 -- fixed argv, shell=False, read-only
+        done = subprocess.run(  # nosec B603 -- fixed argv, shell=False, read-only  # noqa: S603
             [git, "-C", str(root), "ls-files", "-z"],
             capture_output=True,
             text=True,

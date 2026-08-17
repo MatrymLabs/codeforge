@@ -44,12 +44,12 @@ class Command:
 
     def __post_init__(self) -> None:
         if self.namespace not in NAMESPACES:
-            raise CommandError(f"{self.verb}: namespace '{self.namespace}' not in {NAMESPACES}")
+            raise CommandError(f"{self.verb}: namespace '{self.namespace}' not in {NAMESPACES}")  # noqa: TRY003
         wears_sigil = self.verb.startswith(ADMIN_SIGIL)
         if wears_sigil and self.namespace != ADMIN:
-            raise CommandError(f"{self.verb}: only ADMIN verbs may use the '{ADMIN_SIGIL}' sigil")
+            raise CommandError(f"{self.verb}: only ADMIN verbs may use the '{ADMIN_SIGIL}' sigil")  # noqa: TRY003
         if self.namespace == ADMIN and not wears_sigil:
-            raise CommandError(f"{self.verb}: an ADMIN verb must start with '{ADMIN_SIGIL}'")
+            raise CommandError(f"{self.verb}: an ADMIN verb must start with '{ADMIN_SIGIL}'")  # noqa: TRY003
 
 
 @dataclass
@@ -61,7 +61,7 @@ class CommandSet:
 
     def add(self, command: Command) -> None:
         if any(c.verb.lower() == command.verb.lower() for c in self.commands):
-            raise CommandError(f"duplicate verb: {command.verb}")
+            raise CommandError(f"duplicate verb: {command.verb}")  # noqa: TRY003
         self.commands.append(command)
 
     def _match(self, text: str) -> tuple[Command, str] | None:
@@ -112,6 +112,6 @@ def guard_seed_verbs(seed_verbs: list[str], reserved: set[str]) -> None:
     for verb in seed_verbs:
         low = verb.lower()
         if verb.startswith(ADMIN_SIGIL):
-            raise CommandError(f"seed verb '{verb}' may not use the reserved '{ADMIN_SIGIL}' sigil")
+            raise CommandError(f"seed verb '{verb}' may not use the reserved '{ADMIN_SIGIL}' sigil")  # noqa: TRY003
         if low.split(" ", 1)[0] in reserved:
-            raise CommandError(f"seed verb '{verb}' shadows a reserved word")
+            raise CommandError(f"seed verb '{verb}' shadows a reserved word")  # noqa: TRY003

@@ -1,5 +1,5 @@
 # ruff: noqa: E501  (data-heavy map emitter: long place descriptions)
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # noqa: EXE005
 """Emit the canonical Aethryn seed geography from the world map (Pictures/Map.png).
 
 The map is the blueprint; this encodes it as data and generates the consistent seed files
@@ -615,7 +615,7 @@ def q(s: str) -> str:
     return s.replace('"', "'")
 
 
-class MapCollision(RuntimeError):
+class MapCollision(RuntimeError):  # noqa: N818
     """Two routes claim one hub's direction, so one route would lose its return path."""
 
 
@@ -652,7 +652,7 @@ def _wire_hubs(
     return bound
 
 
-def emit(out_root: Path | None = None) -> None:
+def emit(out_root: Path | None = None) -> None:  # noqa: PLR0915
     rooms: list[str] = [
         "# SEED: aethryn -- rooms.yaml  (GENERATED from the world map by tools/emit_map_world.py)",
         "# The canonical map of Aethryn: 14 zones, their settlements, dungeons, and landmarks,",
@@ -848,9 +848,9 @@ _WANDER_LINE = "wander: true  # ambient: strolls the town on the beat (world lif
 _FOE_TUNING: dict[str, dict[str, Any]] = {
     "the_black_hollow_guardian": {
         "trailing": [
-            "inflicts: {status: daze, chance: 3, beats: 1}"
+            "inflicts: {status: daze, chance: 3, beats: 1}"  # noqa: ISC004
             "  # a dark, reeling blow costs the hero an action",
-            'special: {telegraph: "The guardian draws the hollow\'s dark in around its fists", '
+            'special: {telegraph: "The guardian draws the hollow\'s dark in around its fists", '  # noqa: ISC004
             "mult: 2, cadence: 3}",
         ],
     },
@@ -860,16 +860,16 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
     },
     "dreadmaw_hold_guardian": {
         "trailing": [
-            "special: {kind: mend, telegraph: \"The dreadmaw's torn flesh writhes, "
+            "special: {kind: mend, telegraph: \"The dreadmaw's torn flesh writhes, "  # noqa: ISC004
             'knitting itself whole", heal: 100, cadence: 3}'
             "  # a flesh-maw that regrows: enraged, it knits its wounds -- a DPS race",
         ],
     },
     "heart_of_xilnath_guardian": {
         "trailing": [
-            "inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}"
+            "inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}"  # noqa: ISC004
             "  # its bite leaves a venom that saps you",
-            'special: {telegraph: "The guardian rears, venom beading along its fangs", '
+            'special: {telegraph: "The guardian rears, venom beading along its fangs", '  # noqa: ISC004
             "mult: 2, cadence: 3}",
         ],
     },
@@ -877,7 +877,7 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
         "raid": "  # the final weekly raid: Netharion's Throne, the apex of the climb",
         "drops": "[greater_healing_draught, abyssal_legguards, abyssal_sabatons]",
         "trailing": [
-            'special: {kind: drain, telegraph: "Netharion bares its fangs and hungers", '
+            'special: {kind: drain, telegraph: "Netharion bares its fangs and hungers", '  # noqa: ISC004
             "mult: 2, cadence: 3}"
             "  # vampiric apex mechanic: its unleash drinks your wound to heal -- mitigate/interrupt",
         ],
@@ -933,10 +933,10 @@ def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str)
     tuning = _FOE_TUNING.get(nid, {})
     out.append(f"{nid}:")
     out.append(f"{SP}name: {name}{tuning.get('name_comment', '')}")
-    out.append(f"{SP}keywords: [guardian, {room.split('_')[0]}]")
+    out.append(f"{SP}keywords: [guardian, {room.split('_')[0]}]")  # noqa: PLC0207
     out.append(f"{SP}location: {room}")
     out.append(f"{SP}dialogue:")
-    out.append(f"{SP}{SP}- The guardian bars the way into {name.split('of ')[-1]}.")
+    out.append(f"{SP}{SP}- The guardian bars the way into {name.split('of ')[-1]}.")  # noqa: PLC0207
     out.append(f"{SP}hp: {120 + level * 6}")
     out.append(f"{SP}atk: {12 + level // 2}")
     # A mouth guardian BARS the way (defensive) -- it is not aggressive, so it never passively
@@ -982,7 +982,7 @@ def _fill_trail(zid: str) -> int:
     return max(18, int(_ZONE_FILL.get(zid, 1400) / 1.75))
 
 
-def _wild_dir(zid: str, hub_exits: dict, places) -> str:
+def _wild_dir(zid: str, hub_exits: dict, places) -> str:  # noqa: ARG001
     """Pick a free direction on the hub for the wilderness attach (not used by a link or a place)."""
     used = set(hub_exits[zid])
     for d in (

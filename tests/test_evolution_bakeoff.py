@@ -27,7 +27,7 @@ def _genome(**over: object) -> BlueprintGenome:
     seed = bp.Blueprint(
         "fit_column", "Fit Column", "Fit text to a fixed width.", ("pure",), ("no untrusted input",)
     )
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         genome_id="fit_column",
         seed=seed,
         purpose="Evolve a fixed-width column formatter.",
@@ -100,7 +100,7 @@ def test_the_counterexample_bank_dedups_a_repeat() -> None:
 def test_too_many_candidates_is_refused() -> None:
     genome = _genome()
     pairs = build_score_sheet_pairs("fit_column")
-    extra = pairs + [
+    extra = pairs + [  # noqa: RUF005
         (Candidate("cand_x", "fit_column", "x", "candidate_minimal"), candidate_minimal)
     ]
     assert len(extra) > MAX_CANDIDATES
@@ -133,8 +133,8 @@ def test_a_run_with_only_passing_candidates_reports_no_counterexamples() -> None
 
 
 def test_a_candidate_that_raises_is_a_correctness_failure() -> None:
-    from kernel.evolution.evaluators import evaluate_correctness
-    from kernel.evolution.subjects import oracle_fit
+    from kernel.evolution.evaluators import evaluate_correctness  # noqa: PLC0415
+    from kernel.evolution.subjects import oracle_fit  # noqa: PLC0415
 
     def boom(text: str, width: int) -> str:
         raise RuntimeError("kaboom")

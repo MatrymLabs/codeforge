@@ -156,7 +156,7 @@ def express(genome: BlueprintGenome) -> Phenotype:
     try:
         validate_genome(genome)
     except GenomeError as exc:
-        raise EmitterError(f"cannot express an invalid genome {genome.genome_id!r}: {exc}") from exc
+        raise EmitterError(f"cannot express an invalid genome {genome.genome_id!r}: {exc}") from exc  # noqa: TRY003
 
     targets = genome.expression_targets or ("code", "tests")
     files: list[tuple[str, str]] = []
@@ -168,7 +168,7 @@ def express(genome: BlueprintGenome) -> Phenotype:
             try:
                 ast.parse(content)
             except SyntaxError as exc:  # pragma: no cover - guards against a future template typo
-                raise EmitterError(
+                raise EmitterError(  # noqa: TRY003
                     f"emitted {target} for {genome.genome_id!r} does not parse: {exc}"
                 ) from exc
         files.append((name_fn(genome), content))

@@ -149,7 +149,7 @@ def test_the_vault_is_scoped_to_its_owner():
 
 # --- the verb is reachable through the engine tick --------------------------------------------
 def test_the_bank_verb_is_reachable():
-    import forge
+    import forge  # noqa: PLC0415
 
     try:
         ada = _hero()

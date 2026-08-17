@@ -37,8 +37,8 @@ def render_condition(session: Session) -> str:
     lines.append("  " + (ail if ail else "Hale: nothing ails you."))
 
     if session.order:
-        from kernel.world.orders import order_name
-        from kernel.world.reputation import standing_of, tier_for
+        from kernel.world.orders import order_name  # noqa: PLC0415
+        from kernel.world.reputation import standing_of, tier_for  # noqa: PLC0415
 
         rep = standing_of(session, session.order)
         lines.append(f"  Sworn to {order_name(session.order)}: {tier_for(rep)} ({rep})")

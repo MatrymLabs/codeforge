@@ -42,9 +42,9 @@ def decode_frame(line: bytes) -> dict[str, Any]:
     try:
         frame = json.loads(line)
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
-        raise BrokerProtocolError(f"not JSON: {line!r}") from exc
+        raise BrokerProtocolError(f"not JSON: {line!r}") from exc  # noqa: TRY003
     if not isinstance(frame, dict) or "op" not in frame or "topic" not in frame:
-        raise BrokerProtocolError(f"missing op/topic: {frame!r}")
+        raise BrokerProtocolError(f"missing op/topic: {frame!r}")  # noqa: TRY003
     return frame
 
 

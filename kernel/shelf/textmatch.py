@@ -34,7 +34,7 @@ def levenshtein_py(a: str, b: str) -> int:
     the C kernel is proven against; keep them in step.
     """
     if not isinstance(a, str) or not isinstance(b, str):
-        raise TypeError("levenshtein requires two str")
+        raise TypeError("levenshtein requires two str")  # noqa: TRY003
     if len(a) > len(b):
         a, b = b, a  # work over columns of the longer string; row stays the shorter length
     if not a:

@@ -59,7 +59,7 @@ def test_render_summary_does_not_call_reached_modules_unreached(monkeypatch):
 
 def test_a_failed_trace_fails_loud(monkeypatch):
     def boom(commands):
-        raise CouplingError("trace failed: exploded")
+        raise CouplingError("trace failed: exploded")  # noqa: TRY003
 
     with __import__("pytest").raises(CouplingError, match="exploded"):
         analyze(tracer=boom)
@@ -69,8 +69,8 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
     # Patch the real tracer so the tick test does not spawn subprocesses.
     monkeypatch.setattr(coupling_mod, "_all_modules", lambda: ["core", "dev"])
     monkeypatch.setattr(coupling_mod, "_real_tracer", lambda commands: {"core"})
-    from forge import handle_command
-    from kernel.world.session import Session
+    from forge import handle_command  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "coupling")
     assert "ENGINE COUPLING REPORT" in out
@@ -80,7 +80,7 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
 
 
 def test_closure_unions_the_surface_traces():
-    from kernel.coupling import closure
+    from kernel.coupling import closure  # noqa: PLC0415
 
     base = tuple(coupling_mod.SURFACES["solo"])
     save = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["save"])
@@ -89,14 +89,14 @@ def test_closure_unions_the_surface_traces():
 
 
 def test_closure_rejects_an_unknown_surface():
-    from kernel.coupling import CouplingError, closure
+    from kernel.coupling import CouplingError, closure  # noqa: PLC0415
 
     with __import__("pytest").raises(CouplingError, match="unknown surface"):
         closure(["nope"], tracer=lambda c: set())
 
 
 def test_surface_commands_gathers_base_plus_each_surface():
-    from kernel.coupling import SURFACES, surface_commands
+    from kernel.coupling import SURFACES, surface_commands  # noqa: PLC0415
 
     cmds = surface_commands(["solo", "save"])
     assert set(SURFACES["solo"]).issubset(cmds)
@@ -107,7 +107,7 @@ def test_surface_commands_gathers_base_plus_each_surface():
 
 
 def test_closure_handles_an_import_surface():
-    from kernel.coupling import closure
+    from kernel.coupling import closure  # noqa: PLC0415
 
     base = tuple(coupling_mod.SURFACES["solo"])
     cmd_tracer = _fake_tracer({base: {"core"}})
@@ -118,7 +118,7 @@ def test_closure_handles_an_import_surface():
 
 
 def test_surface_imports_lists_the_server_modules():
-    from kernel.coupling import surface_imports
+    from kernel.coupling import surface_imports  # noqa: PLC0415
 
     assert surface_imports(["solo", "multiplayer"]) == ["adapters.gateway", "adapters.web_gateway"]
     assert surface_imports(["solo", "save"]) == []
@@ -128,7 +128,7 @@ def test_surface_imports_lists_the_server_modules():
 
 
 def test_admin_is_a_known_command_surface():
-    from kernel.coupling import SURFACES, surface_commands
+    from kernel.coupling import SURFACES, surface_commands  # noqa: PLC0415
 
     assert "admin" in SURFACES
     cmds = surface_commands(["admin"])
@@ -137,7 +137,7 @@ def test_admin_is_a_known_command_surface():
 
 
 def test_closure_includes_admin_modules(monkeypatch):
-    from kernel.coupling import closure
+    from kernel.coupling import closure  # noqa: PLC0415
 
     base = tuple(coupling_mod.SURFACES["solo"])
     admin = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["admin"])

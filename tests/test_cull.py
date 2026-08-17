@@ -69,7 +69,7 @@ def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
 def test_the_board_reads_varied_not_a_thousand_clones():
     # The mechanic is fixed, but presentation must vary: across a zone's kinds the contract framings
     # differ (not all "Cull the X"), tiers get distinct words, and the close is region-toned.
-    from kernel.world.cull import generate_culls
+    from kernel.world.cull import generate_culls  # noqa: PLC0415
 
     culls = generate_culls(_ZONES)
     # name reads "<tier-phrase> <framing>: the <kind>-kind of <zone>", e.g. "A great Purge: ...".
@@ -83,7 +83,7 @@ def test_the_board_reads_varied_not_a_thousand_clones():
 
 
 def test_the_flavour_is_deterministic():
-    from kernel.world.cull import generate_culls
+    from kernel.world.cull import generate_culls  # noqa: PLC0415
 
     a = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}
     b = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}

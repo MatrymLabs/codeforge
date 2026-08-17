@@ -31,7 +31,7 @@ def next_step(session: Session) -> str:
             f"Welcome to {WORLD_TITLE}, Forger. First, choose a calling: type JOBS to see them, "
             "then JOB <name> to take one."
         )
-    if session.level < 2:
+    if session.level < 2:  # noqa: PLR2004
         return (
             "You have a calling. Now learn to fight: ATTACK a foe (a training dummy is safe), "
             "and type SKILLS to see the abilities your calling wields."

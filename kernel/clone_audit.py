@@ -91,7 +91,7 @@ def find_clones(sources: Mapping[str, str], *, min_statements: int = 3) -> Clone
     skipped as trivial. Unparsable files are recorded in `skipped`, never fatal.
     """
     if min_statements < 1:
-        raise CloneAuditError(f"min_statements must be >= 1, got {min_statements}")
+        raise CloneAuditError(f"min_statements must be >= 1, got {min_statements}")  # noqa: TRY003
 
     buckets: dict[str, list[CloneLocation]] = {}
     sizes: dict[str, int] = {}
@@ -157,7 +157,7 @@ def scan_paths(paths: Iterable[Path], *, min_statements: int = 3) -> CloneReport
 def render(report: CloneReport) -> str:
     """A human summary: the clone families, ranked, with the caveat attached."""
     lines = [
-        f"clone audit: {len(report.families)} clone families across "
+        f"clone audit: {len(report.families)} clone families across "  # noqa: ISC004
         f"{report.functions_scanned} functions in {report.files_scanned} files"
     ]
     for fam in report.families:

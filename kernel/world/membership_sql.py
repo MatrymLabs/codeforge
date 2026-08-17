@@ -19,7 +19,7 @@ class SqlMembershipStore:
 
     def account_of(self, char: str) -> str | None:
         """The account owning a character, or None if the character has no row."""
-        from kernel.world.db import CharacterRow, open_archive_session
+        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, char)
@@ -27,7 +27,7 @@ class SqlMembershipStore:
 
     def set_account(self, char: str, account: str) -> bool:
         """Point a character at an account. False if the character has no row."""
-        from kernel.world.db import CharacterRow, open_archive_session
+        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, char)
@@ -40,7 +40,7 @@ class SqlMembershipStore:
     def retire_v1_and_set_account(self, char: str, account: str) -> None:
         """Move a character onto a new account and null its v1 per-character auth columns. The
         caller has confirmed the character exists."""
-        from kernel.world.db import CharacterRow, open_archive_session
+        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
 
         with open_archive_session() as db:
             row = db.get(CharacterRow, char)
@@ -52,9 +52,9 @@ class SqlMembershipStore:
 
     def has_owner(self, account: str) -> bool:
         """True if any character on the account holds the owner rank."""
-        from sqlalchemy import select
+        from sqlalchemy import select  # noqa: PLC0415
 
-        from kernel.world.db import CharacterRow, open_archive_session
+        from kernel.world.db import CharacterRow, open_archive_session  # noqa: PLC0415
 
         with open_archive_session() as db:
             rows = db.scalars(select(CharacterRow).where(CharacterRow.account == account))

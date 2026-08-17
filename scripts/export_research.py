@@ -71,7 +71,7 @@ def export_findings(register: Any) -> list[dict[str, object]]:
     malformed register (not a mapping with a `candidates` list) fails loud, never a silent empty
     manifest."""
     if not isinstance(register, dict) or not isinstance(register.get("candidates"), list):
-        raise ValueError("candidate register must be a mapping with a 'candidates' list")
+        raise ValueError("candidate register must be a mapping with a 'candidates' list")  # noqa: TRY003, TRY004
     findings = [finding for finding in (_finding(c) for c in register["candidates"]) if finding]
     return sorted(findings, key=lambda finding: str(finding["id"]))
 

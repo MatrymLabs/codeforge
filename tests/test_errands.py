@@ -51,8 +51,8 @@ def test_no_settlements_or_no_destinations_yields_no_errands():
 def test_an_errand_completes_by_arriving_through_the_tick():
     # a booted world already carries errands; walking a fresh session into an errand's destination
     # room fires its on_enter and completes it. Prove the wiring end to end on the default seed.
-    from kernel.world import quest
-    from kernel.world.session import Session
+    from kernel.world import quest  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     errand_ids = [qid for qid in quest._QUESTS if is_errand(qid)]
     if not errand_ids:  # the default test seed (first-forge) ships no settlements -> no errands

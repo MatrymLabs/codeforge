@@ -78,7 +78,7 @@ def test_env_example_has_no_real_secret_value() -> None:
     env = af.plan_scaffold("svc").files[".env.example"]
     # Variable names + comments only; the values are blank placeholders (nothing to leak).
     for line in env.splitlines():
-        if line.startswith("POSTGRES_PASSWORD") or line.startswith("SECRET_KEY"):
+        if line.startswith("POSTGRES_PASSWORD") or line.startswith("SECRET_KEY"):  # noqa: PIE810
             assert line.split("=", 1)[1].strip() == ""
 
 

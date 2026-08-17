@@ -24,6 +24,6 @@ def test_a_seeded_world_is_healthy():
 
 
 def test_vitals_flows_through_the_engine_tick():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     assert "HEALTH:" in handle_command(_player(), "vitals")

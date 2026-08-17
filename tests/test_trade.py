@@ -25,7 +25,7 @@ def _give(name: str, iid: str, item_name: str) -> None:
     """Put an item straight into a hero's hands."""
     items.ITEMS[iid] = {
         "name": item_name,
-        "keywords": [item_name.split()[-1]],
+        "keywords": [item_name.split()[-1]],  # noqa: PLC0207
         "location": carrier(name),
         "slot": "",
         "mods": {},
@@ -190,7 +190,7 @@ def test_a_logout_cancels_an_open_trade_with_nothing_moved():
 
 # --- the verb is reachable through the engine tick ---------------------------------------------
 def test_the_trade_verb_is_reachable():
-    import forge
+    import forge  # noqa: PLC0415
 
     try:
         _hero("alia")

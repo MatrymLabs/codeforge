@@ -134,7 +134,7 @@ async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session:
     handle = await _ask(ws, outbox, "Choose your character@account:")
     initial_calling: str | None = None
     if SEED_NAME == "aethryn":
-        from kernel.world.jobs import calling_label, character_creation_menu
+        from kernel.world.jobs import calling_label, character_creation_menu  # noqa: PLC0415
 
         outbox.put_nowait(character_creation_menu())
         for _ in range(3):
@@ -201,7 +201,7 @@ async def _world_loop(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
 
 @app.websocket("/ws")
 async def play(ws: WebSocket) -> None:
-    global _web_seats
+    global _web_seats  # noqa: PLW0603
     if _web_seats >= MAX_CONNECTIONS:
         await ws.accept()
         await ws.send_text("The forge is full right now. Try again shortly.")
@@ -262,10 +262,10 @@ async def engine_2d(ws: WebSocket) -> None:
         try:
             payload = json.loads(await ws.receive_text())
         except json.JSONDecodeError as exc:
-            raise WireRefused("REFUSED: invalid JSON") from exc
+            raise WireRefused("REFUSED: invalid JSON") from exc  # noqa: TRY003
         message = decode_wire(payload)
         if message["type"] != "hello":
-            raise WireRefused("REFUSED: hello is required before other messages")
+            raise WireRefused("REFUSED: hello is required before other messages")  # noqa: TRY003, TRY301
         await ws.send_json(encode_wire(hello(session=message["session"])))
     except WireRefused as exc:
         await ws.send_json(encode_wire(refused(reason=str(exc))))

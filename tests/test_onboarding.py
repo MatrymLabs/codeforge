@@ -30,11 +30,11 @@ def test_run_demo_is_a_full_non_game_transcript():
 
 def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
     # The whole point of the vertical slice: the SAME engine class drives both adapters.
-    from kernel.world import quest
+    from kernel.world import quest  # noqa: PLC0415
 
     game_engine = quest._QUESTS["coilward_contract"].engine  # the game quest (the built-in arc)
     assert isinstance(game_engine, WorkflowEngine)
-    biz_engine, biz_run = new_onboarding()  # the practical workflow
+    biz_engine, biz_run = new_onboarding()  # the practical workflow  # noqa: RUF059
     assert isinstance(biz_engine, WorkflowEngine)
     assert type(game_engine) is type(biz_engine)
     # And they are genuinely different workflows sharing one engine.
@@ -79,8 +79,8 @@ def test_drive_rejects_an_unavailable_action_then_lets_you_quit():
 
 
 def test_the_onboard_cli_subcommand_routes_to_drive(monkeypatch):
-    import kernel.onboarding as onboarding_mod
-    from adapters.cli import main
+    import kernel.onboarding as onboarding_mod  # noqa: PLC0415
+    from adapters.cli import main  # noqa: PLC0415
 
     called = {"n": 0}
     monkeypatch.setattr(onboarding_mod, "drive", lambda: called.__setitem__("n", called["n"] + 1))

@@ -151,12 +151,12 @@ def read_ledger(path: Path = _LEDGER) -> list[AddieSelfCheck]:
     try:
         raw = tomllib.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
-        raise AddieError(f"ADDIE ledger not found at {path}") from exc
+        raise AddieError(f"ADDIE ledger not found at {path}") from exc  # noqa: TRY003
     except tomllib.TOMLDecodeError as exc:
-        raise AddieError(f"malformed ADDIE ledger: {exc}") from exc
+        raise AddieError(f"malformed ADDIE ledger: {exc}") from exc  # noqa: TRY003
     cycles = raw.get("cycle", {})
     if not isinstance(cycles, dict):
-        raise AddieError("ADDIE ledger: [cycle] must be a table of records")
+        raise AddieError("ADDIE ledger: [cycle] must be a table of records")  # noqa: TRY003
     return [AddieSelfCheck(cycle_id, fields) for cycle_id, fields in cycles.items()]
 
 
@@ -220,7 +220,7 @@ def addie(arg: str = "") -> str:
     return "Unknown addie action. Try: addie status"
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`python -m kernel.addie` / `make addie`: print the report, exit non-zero on a FAIL."""
     print(render_addie())
     return 0 if audit_addie().passed else 1

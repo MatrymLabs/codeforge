@@ -53,13 +53,13 @@ def _checked(character: str, source: str, occurrence: int) -> tuple[str, str, in
     at all, except it looks like one.
     """
     if not isinstance(character, str) or not character.strip():
-        raise GrantIdentityError(f"character must be a non-empty string, got {character!r}")
+        raise GrantIdentityError(f"character must be a non-empty string, got {character!r}")  # noqa: TRY003
     if not isinstance(source, str) or not source.strip():
-        raise GrantIdentityError(f"source must be a non-empty string, got {source!r}")
+        raise GrantIdentityError(f"source must be a non-empty string, got {source!r}")  # noqa: TRY003
     if isinstance(occurrence, bool) or not isinstance(occurrence, int):
-        raise GrantIdentityError(f"occurrence must be an int, got {occurrence!r}")
+        raise GrantIdentityError(f"occurrence must be an int, got {occurrence!r}")  # noqa: TRY003
     if occurrence < 0:
-        raise GrantIdentityError(f"occurrence must not be negative, got {occurrence!r}")
+        raise GrantIdentityError(f"occurrence must not be negative, got {occurrence!r}")  # noqa: TRY003
     return character.strip(), source.strip(), occurrence
 
 
@@ -181,9 +181,9 @@ class GrantLedger:
 
     def _split(self, key: str) -> tuple[str, str, int]:
         if not isinstance(key, str) or not key.strip():
-            raise GrantIdentityError(f"key must be a non-empty string, got {key!r}")
+            raise GrantIdentityError(f"key must be a non-empty string, got {key!r}")  # noqa: TRY003
         parts = key.split(_KEY_SEPARATOR)
-        if len(parts) == 3 and parts[2].isdigit():
+        if len(parts) == 3 and parts[2].isdigit():  # noqa: PLR2004
             return parts[0], parts[1], int(parts[2])
         return key, self.OPAQUE_SOURCE, 0
 

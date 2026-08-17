@@ -87,7 +87,7 @@ def measure_scale(cast_dir: Path, *, timeout: float = 120.0) -> tuple[int, str]:
     env = dict(os.environ, FORGE_SEED=AETHRYN_SEED)
     try:
         # Fixed argv, no shell; boots the poured cast to measure its world.
-        result = subprocess.run(  # nosec B603
+        result = subprocess.run(  # nosec B603  # noqa: S603
             [sys.executable, "-c", _SCALE_PROBE],
             cwd=cast_dir,
             capture_output=True,
@@ -125,12 +125,12 @@ def deploy_aethryn_seed(
     corpus = corpus if corpus is not None else list(AETHRYN_CORPUS)
     the_plan = plan(FLAGSHIP_TEMPLATE, "AethrynDeployProof", root=root)
     if the_plan.verdict != READY:
-        raise CastError(
+        raise CastError(  # noqa: TRY003
             f"cannot pour the Aethryn Seed: plan is {the_plan.verdict.upper()} "
             f"({'; '.join(the_plan.warnings) or 'no detail'})"
         )
     if the_plan.manifest.starter_seed_pack != AETHRYN_SEED:
-        raise CastError(
+        raise CastError(  # noqa: TRY003
             f"flagship template must pour '{AETHRYN_SEED}', got "
             f"{the_plan.manifest.starter_seed_pack!r}"
         )
@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     Usage: python3 scripts/deploy_aethryn_seed.py [YYYY-MM-DD] [DEST]
     """
     args = argv if argv is not None else sys.argv[1:]
-    when = args[0] if args else date.today().isoformat()
+    when = args[0] if args else date.today().isoformat()  # noqa: DTZ011
     dest_arg = args[1] if len(args) > 1 else None
     with tempfile.TemporaryDirectory(prefix="aethryn-cast-") as tmp:
         dest = Path(dest_arg) if dest_arg else Path(tmp) / "aethryn-cast"

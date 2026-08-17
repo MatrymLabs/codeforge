@@ -65,10 +65,10 @@ def load_families(path: Path | None = None) -> dict[str, Any]:
     so a cave can never be forged without its region's identity."""
     where = path if path is not None else _FAMILIES_PATH
     if not where.exists():
-        raise BlueprintError(f"Cave families file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"Cave families file not found: {where}")  # noqa: TRY003
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Cave families file is not a mapping: {where}")
+        raise BlueprintError(f"Cave families file is not a mapping: {where}")  # noqa: TRY003
     defaults = data.get("defaults", {})
     families: dict[str, Any] = {}
     known_regions = {r["id"] for r in canon.regions()}
@@ -76,16 +76,16 @@ def load_families(path: Path | None = None) -> dict[str, Any]:
         if region_id == "defaults":
             continue
         if region_id not in known_regions:
-            raise BlueprintError(f"cave family {region_id!r}: not a canon region")
+            raise BlueprintError(f"cave family {region_id!r}: not a canon region")  # noqa: TRY003
         merged = {**defaults, **row}
         for field in _REQUIRED_FIELDS:
             if not merged.get(field):
-                raise BlueprintError(f"cave family {region_id!r}: missing required field {field!r}")
+                raise BlueprintError(f"cave family {region_id!r}: missing required field {field!r}")  # noqa: TRY003
         families[region_id] = merged
     # Every canon region deserves a cave family, so the generator never strands a region.
     missing = known_regions - set(families)
     if missing:
-        raise BlueprintError(f"cave families: no family for canon region(s) {sorted(missing)}")
+        raise BlueprintError(f"cave families: no family for canon region(s) {sorted(missing)}")  # noqa: TRY003
     return families
 
 
@@ -97,7 +97,7 @@ def cave_regions() -> list[str]:
 def _rng(region_id: str, seed: int) -> random.Random:
     """A reproducible PRNG for this exact (region, seed): sha512-seeded, PYTHONHASHSEED-immune."""
     # Deterministic world generation, not cryptography.
-    return random.Random(f"cave:{region_id}:{seed}")  # nosec B311
+    return random.Random(f"cave:{region_id}:{seed}")  # nosec B311  # noqa: S311
 
 
 def _connect(a: dict[str, Any], b: dict[str, Any], direction: str) -> None:
@@ -112,7 +112,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     an identical cave. Raises BlueprintError for an unknown region or an out-of-band size."""
     families = load_families()
     if region_id not in families:
-        raise BlueprintError(f"cannot generate a cave for unknown region {region_id!r}")
+        raise BlueprintError(f"cannot generate a cave for unknown region {region_id!r}")  # noqa: TRY003
     family = families[region_id]
     region = next(r for r in canon.regions() if r["id"] == region_id)
     rng = _rng(region_id, seed)
@@ -120,7 +120,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     lo, hi = family["min_rooms"], family["max_rooms"]
     total = size if size is not None else rng.randint(lo, hi)
     if not lo <= total <= hi:
-        raise BlueprintError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")
+        raise BlueprintError(f"cave size {total} outside the {lo}-{hi} band for {region_id!r}")  # noqa: TRY003
 
     naming = family["naming"]
     subtype = rng.choice(family["subtypes"])
@@ -180,7 +180,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
 
     # An optional hidden feature (roughly one cave in three) tucked onto a room to reward searching.
     hidden = None
-    if rng.random() < 0.34 and family.get("hidden"):
+    if rng.random() < 0.34 and family.get("hidden"):  # noqa: PLR2004
         hidden = rng.choice(family["hidden"])
         rng.choice(interior)["hidden"] = hidden
 
@@ -365,19 +365,19 @@ def _micro_story(rng: random.Random, family: dict[str, Any], subtype: str, landm
 def _maybe_rumor(rng: random.Random) -> str | None:
     """Roughly one cave in four carries a RUMOR: it RAISES an open canon question, never answers it
     (the generated-lore guardrail; forbidden global canon may only be raised, marked RUMOR)."""
-    if rng.random() < 0.25:
+    if rng.random() < 0.25:  # noqa: PLR2004
         return f"RUMOR: {rng.choice(canon.unresolved_questions())} No one down here can prove it."
     return None
 
 
-def _validation_report(area: dict[str, Any]) -> list[str]:
+def _validation_report(area: dict[str, Any]) -> list[str]:  # noqa: PLR0912
     """The generator's own acceptance gate: every forged cave must satisfy the prompt's cave rules.
     Returns violation lines (empty == a valid cave). A non-empty report is a generator defect."""
     rooms = area["rooms"]
     by_id = {r["id"]: r for r in rooms}
     problems: list[str] = []
 
-    if not 5 <= len(rooms) <= 18:
+    if not 5 <= len(rooms) <= 18:  # noqa: PLR2004
         problems.append(f"room count {len(rooms)} outside the 5-18 band")
 
     # Every exit must be reciprocal and land on a real room (navigability).

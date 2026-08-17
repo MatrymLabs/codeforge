@@ -122,8 +122,8 @@ _STARTED_AT = time.monotonic()
 def _server_version() -> str:
     """The running engine's version, from the installed distribution (unknown when run un-packaged,
     e.g. a source checkout with no metadata) -- an honest self-report, never a hardcoded guess."""
-    from importlib.metadata import PackageNotFoundError
-    from importlib.metadata import version as _dist_version
+    from importlib.metadata import PackageNotFoundError  # noqa: PLC0415
+    from importlib.metadata import version as _dist_version  # noqa: PLC0415
 
     try:
         return _dist_version("codeforge")
@@ -132,7 +132,7 @@ def _server_version() -> str:
 
 
 def _next_player_id() -> str:
-    global _counter
+    global _counter  # noqa: PLW0603
     with _counter_lock:
         _counter += 1
         return f"player{_counter}"
@@ -276,7 +276,7 @@ def _read_message(reader: _ByteReader, max_bytes: int) -> tuple[bytes, bool]:
         # no newline, it is a standalone out-of-band package -- return it now, not at the next line.
         if (
             chunk == bytes([SE])
-            and len(buf) >= 2
+            and len(buf) >= 2  # noqa: PLR2004
             and buf[-2] == IAC
             and read_gmcp_package(bytes(buf)) is not None
         ):
@@ -351,7 +351,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         package = read_gmcp_package(raw)
         if package is None:
             return  # the common case: a normal command line carries no GMCP data frame
-        from kernel.seedlab.workspace_gmcp import (
+        from kernel.seedlab.workspace_gmcp import (  # noqa: PLC0415
             FORM_SUBMIT_PACKAGE,
             SEED_CREATE_PACKAGE,
             SEED_CREATED_PACKAGE,
@@ -386,7 +386,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             if name == SEED_CREATE_PACKAGE:
                 verdict = create_from_request(kernel, payload, owner=owner)
             else:
-                from kernel.seedlab.form import load_definition
+                from kernel.seedlab.form import load_definition  # noqa: PLC0415
 
                 verdict = create_from_form_submit(kernel, load_definition(), payload, owner=owner)
             self._send_gmcp(SEED_CREATED_PACKAGE, verdict)
@@ -406,11 +406,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
         by default, `$SEEDLAB_HOME/research.json`) points at a JSON list of finding records. The
         engine never vendors research; a deployment mounts it, and an absent mount is a legible
         empty panel, not a fabricated one."""
-        from pathlib import Path
+        from pathlib import Path  # noqa: PLC0415
 
-        from kernel.seed_package import BlueprintPackageError, compile_manifest
-        from kernel.seedlab.kernel import BlueprintKernelError
-        from kernel.seedlab.workspace_gmcp import (
+        from kernel.seed_package import BlueprintPackageError, compile_manifest  # noqa: PLC0415
+        from kernel.seedlab.kernel import BlueprintKernelError  # noqa: PLC0415
+        from kernel.seedlab.workspace_gmcp import (  # noqa: PLC0415
             DEPLOY_MANIFEST_PACKAGE,
             DEPLOY_STATUS_PACKAGE,
             RESEARCH_FINDINGS_PACKAGE,
@@ -459,9 +459,9 @@ class _GateHandler(socketserver.StreamRequestHandler):
         `.seedlab/seeds`), the same store the in-MUD `workspace` verb uses. Read at call time so a
         test can point `SEEDLAB_HOME` at a tmp dir; lazy-imported so seedlab stays off the gateway's
         load path (the game path never imports it)."""
-        from pathlib import Path
+        from pathlib import Path  # noqa: PLC0415
 
-        from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
+        from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore  # noqa: PLC0415
 
         root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "seeds"
         return BlueprintKernel(FileSeedStore(root))
@@ -470,8 +470,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
         """Push the engineering creation Form (`Form.Schema`) to a logged-in owner's Native-Seed
         client, so its Seed Creation Wizard can render. Owner-gated by the caller; additive and
         optional (a game client ignores the package). A missing catalog is logged, never a crash."""
-        from kernel.seedlab.form import FormError, load_definition
-        from kernel.seedlab.workspace_gmcp import FORM_SCHEMA_PACKAGE, form_schema
+        from kernel.seedlab.form import FormError, load_definition  # noqa: PLC0415
+        from kernel.seedlab.workspace_gmcp import FORM_SCHEMA_PACKAGE, form_schema  # noqa: PLC0415
 
         try:
             definition = load_definition()
@@ -488,9 +488,9 @@ class _GateHandler(socketserver.StreamRequestHandler):
         additive and optional (a game client ignores them). A missing or broken source is logged and
         skipped, never a crash. `Deploy.Manifest` (needs a chosen tier) and `Research.Findings` (a
         per-Seed manifest) are request-driven, not auto-pushed."""
-        from kernel.blueprint import load_all
-        from kernel.seedlab.kernel import BlueprintKernelError
-        from kernel.seedlab.workspace_gmcp import (
+        from kernel.blueprint import load_all  # noqa: PLC0415
+        from kernel.seedlab.kernel import BlueprintKernelError  # noqa: PLC0415
+        from kernel.seedlab.workspace_gmcp import (  # noqa: PLC0415
             ARCHITECTURE_MAP_PACKAGE,
             BLUEPRINT_LIST_PACKAGE,
             architecture_map,
@@ -647,7 +647,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         handle = handle.strip()
         initial_calling: str | None = None
         if SEED_NAME == "aethryn":
-            from kernel.world.jobs import calling_label, character_creation_menu
+            from kernel.world.jobs import calling_label, character_creation_menu  # noqa: PLC0415
 
             self._send(character_creation_menu())
             for _ in range(_AETHRYN_CREATION_TRIES):
@@ -679,7 +679,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self._send(response)  # a fixable password: nudge, then re-ask in place
         return response
 
-    def _front_desk(self, session: Session) -> bool:
+    def _front_desk(self, session: Session) -> bool:  # noqa: PLR0911, PLR0912
         """The classic connection ritual: authenticate BEFORE the world.
         The dialogue assembles login/register commands for the engine
         tick -- UX out here, but the tick stays the only door."""
@@ -740,7 +740,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         except BulkheadFull:
             self._send("The forge is full right now. Try again shortly.")
 
-    def _serve_player(self) -> None:
+    def _serve_player(self) -> None:  # noqa: PLR0912, PLR0915
         player_id = _next_player_id()
         session = Session(player_id=player_id)
         entered = False
@@ -820,10 +820,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
             _LOG.info("connection_close", player=session.player_id, entered=entered)
 
 
-def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
+def serve(host: str = "0.0.0.0", port: int = 4000) -> None:  # noqa: S104
     # Power-on check: refuse to serve on a database whose columns are behind the models, rather
     # than crash the first login on `no such column`. Read-only; it names the fix, never migrates.
-    from kernel.world.schema_guard import SchemaError, require_current_schema
+    from kernel.world.schema_guard import SchemaError, require_current_schema  # noqa: PLC0415
 
     try:
         require_current_schema()

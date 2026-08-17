@@ -27,7 +27,7 @@ except ImportError:
 
 
 def _pairs(n: int, length: int, seed: int) -> list[tuple[str, str]]:
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # noqa: S311
     letters = "abcdefghijklmnopqrstuvwxyz"
 
     def word() -> str:

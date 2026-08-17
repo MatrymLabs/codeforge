@@ -15,7 +15,7 @@ from __future__ import annotations
 
 def ensure(name: str) -> None:
     """Create a guild's treasury row (at zero) if it does not exist yet. Called on found()."""
-    from kernel.world.db import GuildRow, open_archive_session
+    from kernel.world.db import GuildRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         if db.get(GuildRow, name) is None:
@@ -25,7 +25,7 @@ def ensure(name: str) -> None:
 
 def remove(name: str) -> None:
     """Delete a guild's treasury row (on disband). A no-op if it is already gone."""
-    from kernel.world.db import GuildRow, open_archive_session
+    from kernel.world.db import GuildRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(GuildRow, name)
@@ -36,7 +36,7 @@ def remove(name: str) -> None:
 
 def coins(name: str) -> int:
     """The guild's current treasury balance (0 if it has no row)."""
-    from kernel.world.db import GuildRow, open_archive_session
+    from kernel.world.db import GuildRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(GuildRow, name)
@@ -47,7 +47,7 @@ def adjust(name: str, delta: int) -> int:
     """Add `delta` (may be negative) to a guild's treasury and return the new balance. Creates the
     row at zero first if needed. Never lets the balance go below zero (a withdrawal is checked by
     the caller against the balance; this is the storage floor, not the rule)."""
-    from kernel.world.db import GuildRow, open_archive_session
+    from kernel.world.db import GuildRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(GuildRow, name) or GuildRow(name=name, coins=0)

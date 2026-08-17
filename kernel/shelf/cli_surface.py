@@ -103,20 +103,20 @@ def _env_read(call: ast.Call, out: list[EnvVar]) -> None:
     if not (isinstance(first, ast.Constant) and isinstance(first.value, str)):
         return
     name = first.value
-    if len(call.args) >= 2:
+    if len(call.args) >= 2:  # noqa: PLR2004
         text, _ = _literal(call.args[1])
         out.append(EnvVar(name, text, True))
     else:
         out.append(EnvVar(name, "", False))
 
 
-def analyze(source: str, *, module: str = "") -> CliSurfaceReport:
+def analyze(source: str, *, module: str = "") -> CliSurfaceReport:  # noqa: PLR0912
     """Reverse-engineer the CLI + env surface of one module. Never raises on dynamic
     construction; it records the gap and lowers confidence."""
     try:
         tree = ast.parse(source, filename=module or "<source>")
     except SyntaxError as exc:
-        raise CliSurfaceError(f"cannot parse {module or 'source'}: {exc}") from exc
+        raise CliSurfaceError(f"cannot parse {module or 'source'}: {exc}") from exc  # noqa: TRY003
 
     subcommands: list[str] = []
     options: list[Option] = []

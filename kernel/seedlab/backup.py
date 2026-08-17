@@ -134,9 +134,9 @@ class BlueprintBackups:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
-            raise BackupError(f"unreadable backup {path}: {exc}") from exc
+            raise BackupError(f"unreadable backup {path}: {exc}") from exc  # noqa: TRY003
         if not isinstance(data, dict):
-            raise BackupError(f"malformed backup {path}: not an object")
+            raise BackupError(f"malformed backup {path}: not an object")  # noqa: TRY003
         return data
 
     def verify(self, seed_id: str, backup_id: str) -> str:
@@ -158,7 +158,7 @@ class BlueprintBackups:
         so a corrupt or missing snapshot can never be restored as if it were the truth."""
         verdict = self.verify(seed_id, backup_id)
         if verdict != INTACT:
-            raise BackupError(f"backup {backup_id!r} for Seed {seed_id!r} is {verdict}")
+            raise BackupError(f"backup {backup_id!r} for Seed {seed_id!r} is {verdict}")  # noqa: TRY003
         wrapper = self._read_wrapper(seed_id, backup_id)
         assert wrapper is not None  # verify already proved it exists and is intact
         return BlueprintRecord.from_dict(wrapper["record"])

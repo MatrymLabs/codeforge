@@ -117,7 +117,7 @@ def test_non_serializable_payload_fails_loud_as_chronicle_error(tmp_path: Path) 
 def test_a_non_utc_stamp_is_converted_before_labelling_it_utc(tmp_path: Path) -> None:
     """recorded_utc must be the real UTC instant: a tz-aware stamp in another zone is converted,
     not just stamped with a 'Z' it hasn't earned."""
-    from datetime import timedelta, timezone
+    from datetime import timedelta, timezone  # noqa: PLC0415
 
     est = timezone(timedelta(hours=-5))
     rec = append(
@@ -134,7 +134,7 @@ def test_a_naive_stamp_is_taken_as_utc_unchanged(tmp_path: Path) -> None:
     """A naive stamp (no tzinfo) carries no zone to convert from, so it is taken as UTC as-is
     rather than being shifted by the host's local zone."""
     rec = append(
-        "evidence", {"x": 1}, commit="c", root=tmp_path, stamp=datetime(2026, 1, 1, 5, 0, 0)
+        "evidence", {"x": 1}, commit="c", root=tmp_path, stamp=datetime(2026, 1, 1, 5, 0, 0)  # noqa: DTZ001
     )
     assert rec.recorded_utc == "2026-01-01T05:00:00Z"
 
@@ -292,7 +292,7 @@ def test_metric_refuses_an_empty_name(tmp_path: Path) -> None:
 
 
 def test_chronicle_trend_verb() -> None:
-    from kernel.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb  # noqa: PLC0415
 
     assert verb("trend") == "usage: chronicle trend <metric-name>"
     # Reads the real (empty in tests) ledger; an unrecorded metric renders honestly, never crashes.
@@ -343,7 +343,7 @@ def test_edge_refuses_an_empty_endpoint(tmp_path: Path) -> None:
 
 
 def test_chronicle_provenance_verb() -> None:
-    from kernel.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb  # noqa: PLC0415
 
     assert verb("provenance") == "usage: chronicle provenance <node>"
     assert verb("provenance nonexistent_node_xyz").startswith("No provenance")
@@ -394,7 +394,7 @@ def test_incident_refuses_a_bad_status(tmp_path: Path) -> None:
 
 
 def test_chronicle_incidents_verb() -> None:
-    from kernel.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb  # noqa: PLC0415
 
     # Reads the real (empty in tests) ledger; renders honestly, never crashes.
     assert verb("incidents") == "No incidents recorded."
@@ -444,7 +444,7 @@ def test_ai_eval_refuses_an_empty_subject_and_non_bool_passed(tmp_path: Path) ->
 
 
 def test_chronicle_evals_verb() -> None:
-    from kernel.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb  # noqa: PLC0415
 
     assert verb("evals") == "No AI evaluations recorded."
 
@@ -453,7 +453,7 @@ def test_chronicle_evals_verb() -> None:
 
 
 def test_emit_opens_a_fracas_incident_on_a_blocked_release(tmp_path: Path) -> None:
-    from kernel.arc_ledger import emit
+    from kernel.arc_ledger import emit  # noqa: PLC0415
 
     emit("badsha", root=tmp_path, runner=lambda check: check != "security")  # security fails
     opened = incidents("open", root=tmp_path)
@@ -463,14 +463,14 @@ def test_emit_opens_a_fracas_incident_on_a_blocked_release(tmp_path: Path) -> No
 
 
 def test_a_ready_release_files_no_incident(tmp_path: Path) -> None:
-    from kernel.arc_ledger import emit
+    from kernel.arc_ledger import emit  # noqa: PLC0415
 
     emit("goodsha", root=tmp_path, runner=lambda check: True)
     assert incidents(root=tmp_path) == []  # no failure -> no FRACAS noise
 
 
 def test_emit_retains_its_evidence_verdict_in_the_chronicle(tmp_path: Path) -> None:
-    from kernel.arc_ledger import emit
+    from kernel.arc_ledger import emit  # noqa: PLC0415
 
     emit("abc123", root=tmp_path, runner=lambda check: True)  # injected runner: no subprocess
     latest = read_latest("evidence", root=tmp_path)
@@ -481,7 +481,7 @@ def test_emit_retains_its_evidence_verdict_in_the_chronicle(tmp_path: Path) -> N
 
 
 def test_emit_records_the_gate_runs_provenance_edges(tmp_path: Path) -> None:
-    from kernel.arc_ledger import emit
+    from kernel.arc_ledger import emit  # noqa: PLC0415
 
     emit("sha9", root=tmp_path, runner=lambda check: True)
     around = provenance("evidence:sha9", root=tmp_path)
@@ -493,8 +493,8 @@ def test_emit_records_the_gate_runs_provenance_edges(tmp_path: Path) -> None:
 
 
 def test_chronicle_verb_reachable_through_the_engine_tick() -> None:
-    from forge import handle_command
-    from kernel.world.session import Session
+    from forge import handle_command  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "chronicle")
     assert "hronicle" in out.lower()  # empty or populated, the panel always names itself
@@ -508,8 +508,8 @@ def test_the_retained_chronicle_is_not_an_empty_vault():
     verdict, so the store accumulates on the human ritual. conftest quarantines the Chronicle for
     every test (even an explicit repo root), so this reads the committed ledger FILE directly to
     check main's real state, not the empty tmp store."""
-    import json
-    from pathlib import Path
+    import json  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
 
     ledger = Path(__file__).resolve().parent.parent / "chronicle" / "ledger.jsonl"
     assert ledger.is_file(), "no retained Chronicle ledger on main -- run `make arc-verdicts`"
@@ -524,7 +524,7 @@ def test_make_daily_records_to_the_chronicle():
     """The wired last inch: `make daily` runs arc-verdicts, which appends the gate verdict to the
     retained Chronicle. So the store keeps accumulating on the HUMAN ritual cadence (not a robot
     auto-committing from CI, which the keel deferred). Pins the wiring vs a silent regression."""
-    from pathlib import Path
+    from pathlib import Path  # noqa: PLC0415
 
     makefile = (Path(__file__).resolve().parent.parent / "Makefile").read_text(encoding="utf-8")
     daily = next(line for line in makefile.splitlines() if line.startswith("daily:"))

@@ -36,7 +36,7 @@ def _delve_npcs(room: str, depth_count: int = 3) -> dict[str, Npc]:
 
 def test_each_delve_trash_foe_drops_one_set_piece_in_a_distinct_slot():
     npcs = _delve_npcs("the_black_hollow")
-    items, sets = forge_delve_sets(_DUNGEONS, npcs)
+    items, sets = forge_delve_sets(_DUNGEONS, npcs)  # noqa: RUF059
     assert len(items) == 3 and all(is_delve_set_piece(label) for label in items)
     slots = {item["slot"] for item in items.values()}
     assert slots == {"head", "body", "arm"}, "the three pieces wear together, never fighting a slot"
@@ -60,7 +60,7 @@ def test_the_set_is_named_for_its_dungeon():
 
 def test_a_shallow_delve_forms_no_set():
     # only one trash foe -> fewer than two pieces -> no set worth collecting
-    items, sets = forge_delve_sets(_DUNGEONS, _delve_npcs("the_black_hollow", depth_count=1))
+    items, sets = forge_delve_sets(_DUNGEONS, _delve_npcs("the_black_hollow", depth_count=1))  # noqa: RUF059
     assert sets == {}
 
 

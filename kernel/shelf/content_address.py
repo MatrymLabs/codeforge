@@ -118,7 +118,7 @@ def canonicalize(
     try:
         tree = ast.parse(source)
     except SyntaxError as exc:
-        raise ContentAddressError(f"cannot parse source: {exc}") from exc
+        raise ContentAddressError(f"cannot parse source: {exc}") from exc  # noqa: TRY003
     if rename_binding:
         _strip_binding_name(tree)
     if normalize_locals:

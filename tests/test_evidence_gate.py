@@ -38,7 +38,7 @@ def test_truth_cli_exits_zero_when_the_repo_is_honest(capsys) -> None:
 
 def test_truth_cli_exits_one_when_a_claim_is_flagged(monkeypatch, capsys) -> None:
     # A FLAGGED claim must fail the gate loud (exit 1), never pass silently.
-    from kernel import evidence_gate as v
+    from kernel import evidence_gate as v  # noqa: PLC0415
 
     flagged = [v.TruthCheck("some claim", FLAGGED, "does not correspond")]
     monkeypatch.setattr(v, "truth_checks", lambda: flagged)
@@ -61,7 +61,7 @@ def test_a_planted_overclaim_and_hardcoded_count_are_flagged(tmp_path: Path) -> 
 def test_a_hardcoded_test_count_in_living_docs_is_flagged_but_snapshots_are_exempt(
     tmp_path: Path,
 ) -> None:
-    from kernel.evidence_gate import _hardcoded_counts
+    from kernel.evidence_gate import _hardcoded_counts  # noqa: PLC0415
 
     (tmp_path / "README.md").write_text("a clean readme with no counts")
     docs = tmp_path / "docs"

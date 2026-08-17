@@ -47,7 +47,7 @@ def equipped_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     """Gather every equipped item's modifiers, grouped by the stat they target, PLUS any set bonus
     earned by wearing a whole gear set at once (kernel.world.gearsets). Set bonuses stack on top of
     the pieces' own mods, so a full regional set beats three unrelated pieces of the same tier."""
-    from kernel.world import durability
+    from kernel.world import durability  # noqa: PLC0415
 
     by_target: dict[str, list[StatModifier]] = {}
     worn_prototypes: set[str] = set()

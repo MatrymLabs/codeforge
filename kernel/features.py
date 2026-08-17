@@ -22,7 +22,7 @@ def feature_on(name: str) -> bool:
     return _REGISTRY.is_on(name)
 
 
-def features(session: Session, arg: str = "") -> str:
+def features(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `features` verb: a panel of the world's feature flags and their state."""
     lines = ["World feature flags:"]
     for flag in _REGISTRY.all():

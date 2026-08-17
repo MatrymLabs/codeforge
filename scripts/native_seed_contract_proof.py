@@ -44,12 +44,12 @@ def _load_client(src: Path):
     if not (src / "codeforge" / "mudclient" / "core" / "build.py").exists():
         return None
     sys.path.insert(0, str(src))
-    from codeforge.mudclient.core import build, model, project, source
+    from codeforge.mudclient.core import build, model, project, source  # noqa: PLC0415
 
     return build, model, project, source
 
 
-def main() -> int:
+def main() -> int:  # noqa: PLR0912, PLR0915
     src = Path(os.environ.get("CODEFORGE_CLIENT_SRC", _DEFAULT_CLIENT_SRC))
     client = _load_client(src)
     if client is None:
@@ -106,7 +106,7 @@ def main() -> int:
         "Source.Tree",
         eng.SOURCE_TREE_PACKAGE,
         cli_source.SOURCE_TREE_PACKAGE,
-        parsed_tree.repository == "job-tracker" and len(parsed_tree.files) == 2,
+        parsed_tree.repository == "job-tracker" and len(parsed_tree.files) == 2,  # noqa: PLR2004
         f"repo={parsed_tree.repository!r} files={len(parsed_tree.files)}",
     )
 
@@ -162,7 +162,7 @@ def main() -> int:
     modules = eng.load_module_designations()[:5]
     arch = eng.architecture_map(modules, seed="Job Tracker")
     try:
-        from codeforge.mudclient.core import architecture as cli_arch
+        from codeforge.mudclient.core import architecture as cli_arch  # noqa: PLC0415
     except ImportError:
         checks.append(("Architecture.Map", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -183,7 +183,7 @@ def main() -> int:
     ]
     research = eng.research_findings(findings, seed="Job Tracker")
     try:
-        from codeforge.mudclient.core import research as cli_research
+        from codeforge.mudclient.core import research as cli_research  # noqa: PLC0415
     except ImportError:
         checks.append(("Research.Findings", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -199,7 +199,7 @@ def main() -> int:
     # Form.Schema is the creation front door (CR-0002): the engine projects the Engineering Form,
     # the client parses it into a FormSchema. Same additive rule - prove it only when the client
     # checkout carries the parser, so this proof stays green against an older client.
-    from kernel.seedlab.form import FormDefinition
+    from kernel.seedlab.form import FormDefinition  # noqa: PLC0415
 
     form_def = FormDefinition.from_dict(
         {
@@ -227,7 +227,7 @@ def main() -> int:
     )
     form = eng.form_schema(form_def, seed="Job Tracker")
     try:
-        from codeforge.mudclient.core import form as cli_form
+        from codeforge.mudclient.core import form as cli_form  # noqa: PLC0415
     except ImportError:
         checks.append(("Form.Schema", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -246,7 +246,7 @@ def main() -> int:
     # Blueprint.List is the planning surface (CR-0003): the engine projects a Seed's filed
     # Blueprints, the client parses them. Same additive rule - prove it only when the client
     # checkout carries the parser, so this proof stays green against an older client.
-    from kernel.blueprint import from_dict as make_blueprint
+    from kernel.blueprint import from_dict as make_blueprint  # noqa: PLC0415
 
     blueprints = [
         make_blueprint(
@@ -262,7 +262,7 @@ def main() -> int:
     ]
     blueprint_pkg = eng.blueprint_list(blueprints, seed="Job Tracker")
     try:
-        from codeforge.mudclient.core import blueprint as cli_blueprint
+        from codeforge.mudclient.core import blueprint as cli_blueprint  # noqa: PLC0415
     except ImportError:
         checks.append(("Blueprint.List", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -279,13 +279,13 @@ def main() -> int:
     # Deploy.Manifest is the deployment-sizing surface (CR-0004): the engine projects a Seed's
     # compiled BuildManifest, the client parses it. Same additive rule - prove it only when the
     # client checkout carries the parser, so this proof stays green against an older client.
-    from kernel.seed_package import compile_manifest
+    from kernel.seed_package import compile_manifest  # noqa: PLC0415
 
     manifest_pkg = eng.deploy_manifest(
         compile_manifest("Job Tracker", "prototype"), seed="Job Tracker"
     )
     try:
-        from codeforge.mudclient.core import deploy as cli_deploy
+        from codeforge.mudclient.core import deploy as cli_deploy  # noqa: PLC0415
     except ImportError:
         checks.append(("Deploy.Manifest", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -294,7 +294,7 @@ def main() -> int:
             "Deploy.Manifest",
             eng.DEPLOY_MANIFEST_PACKAGE,
             cli_deploy.DEPLOY_MANIFEST_PACKAGE,
-            parsed_deploy.tier_id == "prototype" and parsed_deploy.sizing.target_players == 500,
+            parsed_deploy.tier_id == "prototype" and parsed_deploy.sizing.target_players == 500,  # noqa: PLR2004
             f"tier={parsed_deploy.tier_id} players={parsed_deploy.sizing.target_players}",
         )
 
@@ -309,7 +309,7 @@ def main() -> int:
         tls=True,
     )
     try:
-        from codeforge.mudclient.core import deploy_status as cli_status
+        from codeforge.mudclient.core import deploy_status as cli_status  # noqa: PLC0415
     except ImportError:
         checks.append(("Deploy.Status", True, "SKIP: client parser absent (additive contract)"))
     else:
@@ -318,7 +318,7 @@ def main() -> int:
             "Deploy.Status",
             eng.DEPLOY_STATUS_PACKAGE,
             cli_status.DEPLOY_STATUS_PACKAGE,
-            parsed_status.version == "0.1.0" and parsed_status.connections_max == 128,
+            parsed_status.version == "0.1.0" and parsed_status.connections_max == 128,  # noqa: PLR2004
             f"version={parsed_status.version} conns={parsed_status.connections_max}",
         )
 

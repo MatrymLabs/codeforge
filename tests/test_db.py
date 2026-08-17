@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-import kernel.world.db as db
+import kernel.world.db as db  # noqa: PLR0402
 from kernel.world.characters import load_character, put_record, save_character
 from kernel.world.db import CharacterRow, _default_db_path, engine_url, open_archive_session
 from kernel.world.session import SESSIONS, Session
@@ -109,9 +109,9 @@ def test_unnamed_seats_write_no_rows():
 
 
 def test_backup_db_makes_a_valid_sqlite_copy(monkeypatch, tmp_path):
-    import sqlite3
+    import sqlite3  # noqa: PLC0415
 
-    from kernel.world.db import backup_db
+    from kernel.world.db import backup_db  # noqa: PLC0415
 
     monkeypatch.delenv("DATABASE_URL", raising=False)
     live = tmp_path / "codeforge.db"
@@ -130,7 +130,7 @@ def test_backup_db_makes_a_valid_sqlite_copy(monkeypatch, tmp_path):
 
 
 def test_backup_db_refuses_a_non_sqlite_backend(monkeypatch):
-    from kernel.world.db import backup_db
+    from kernel.world.db import backup_db  # noqa: PLC0415
 
     monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@localhost/x")
     with pytest.raises(RuntimeError, match="pg_dump"):
@@ -141,7 +141,7 @@ def test_a_backup_restores_and_the_store_boots_against_it(tmp_path):
     # The restore TEST the infra spec asks for: a backup is only real if it restores AND the store
     # boots against it. conftest already points DB_PATH at a tmp live db; write a real character,
     # snapshot it, LOSE the live db, restore from the snapshot, and confirm the store reads it back.
-    from kernel.world.db import backup_db, restore_db
+    from kernel.world.db import backup_db, restore_db  # noqa: PLC0415
 
     put_record("ada", {"job": "vanguard", "level": 7, "location": "hall", "xp": 300})
     assert load_character("ada")["level"] == 7  # a real row in the live db
@@ -163,7 +163,7 @@ def test_a_backup_restores_and_the_store_boots_against_it(tmp_path):
 
 
 def test_restore_db_refuses_a_missing_backup_or_a_non_sqlite_backend(monkeypatch, tmp_path):
-    from kernel.world.db import restore_db
+    from kernel.world.db import restore_db  # noqa: PLC0415
 
     with pytest.raises(FileNotFoundError):
         restore_db(tmp_path / "nope.db")

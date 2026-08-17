@@ -74,7 +74,7 @@ def test_an_all_peaceful_or_empty_world_is_a_zero_faucet():
 
 
 def test_sink_rates_reuse_the_owning_constants():
-    from kernel.world import combat, durability
+    from kernel.world import combat, durability  # noqa: PLC0415
 
     assert coin_flow.SINK_RATES.repair_cost_per_wear_point == durability.REPAIR_COST_PER_POINT
     assert coin_flow.SINK_RATES.fall_penalty_fraction == combat.DEATH_COIN_PENALTY
@@ -83,7 +83,7 @@ def test_sink_rates_reuse_the_owning_constants():
 
 
 def test_foe_faucet_is_exactly_the_live_combat_drop():
-    from kernel.world import combat
+    from kernel.world import combat  # noqa: PLC0415
 
     foe = _foe(level=7, tier="elite")
     assert foe_faucet(foe) == combat._coin_reward(foe)  # audit == game, always

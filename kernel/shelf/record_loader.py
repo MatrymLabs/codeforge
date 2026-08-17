@@ -21,7 +21,7 @@ def load_record[T](
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise error(f"unreadable {label} at {path}: {exc}") from exc
+        raise error(f"unreadable {label} at {path}: {exc}") from exc  # noqa: TRY003
     return parse(raw)
 
 

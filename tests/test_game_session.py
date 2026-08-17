@@ -45,7 +45,7 @@ _JOURNEY = GameSpec(
 
 
 def _quest_registered(quest_id: str) -> bool:
-    from kernel.world.quest import _QUESTS
+    from kernel.world.quest import _QUESTS  # noqa: PLC0415
 
     return quest_id in _QUESTS
 
@@ -115,7 +115,7 @@ def test_a_quest_needing_a_manual_step_is_inoperable(tmp_path: Path) -> None:
 
 
 def test_state_of_is_empty_for_unknown_or_malformed(monkeypatch) -> None:
-    from kernel.domains import game_session
+    from kernel.domains import game_session  # noqa: PLC0415
 
     assert game_session._state_of("nobody_here", "q") == ""  # no runs -> empty save
     monkeypatch.setattr("kernel.world.quest.save_state", lambda pid: "not-json")

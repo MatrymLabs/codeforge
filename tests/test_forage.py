@@ -24,7 +24,7 @@ _ZONES = [
 
 
 def test_each_zone_posts_a_forage_per_material_per_tier():
-    from kernel.world.wildlands import gatherable_materials
+    from kernel.world.wildlands import gatherable_materials  # noqa: PLC0415
 
     forages = generate_forages(_ZONES)
     assert all(is_forage(q["id"]) for q in forages)
@@ -59,7 +59,7 @@ def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
 
 
 def test_the_forage_board_reads_varied():
-    from kernel.world.forage import generate_forages
+    from kernel.world.forage import generate_forages  # noqa: PLC0415
 
     forages = generate_forages(_ZONES)
     framings = {f["name"].split(":")[0].split(" ")[-1] for f in forages}
@@ -71,7 +71,7 @@ def test_the_forage_board_reads_varied():
 
 
 def test_the_forage_flavour_is_deterministic():
-    from kernel.world.forage import generate_forages
+    from kernel.world.forage import generate_forages  # noqa: PLC0415
 
     a = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}
     b = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}

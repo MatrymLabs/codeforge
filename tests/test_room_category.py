@@ -104,7 +104,7 @@ def test_an_empty_room_list_is_not_an_error() -> None:
 
 
 def test_the_renderer_places_the_category_under_the_title() -> None:
-    from kernel.world.world import render_room
+    from kernel.world.world import render_room  # noqa: PLC0415
 
     rendered = render_room("forge")
     lines = [ln for ln in rendered.splitlines() if ln.strip()]
@@ -114,6 +114,6 @@ def test_the_renderer_places_the_category_under_the_title() -> None:
 
 def test_a_world_without_categories_leaves_no_empty_bracket() -> None:
     """The line is OMITTED, not rendered blank. An empty `[]` is worse than nothing."""
-    from kernel.world.world import render_room
+    from kernel.world.world import render_room  # noqa: PLC0415
 
     assert "[]" not in render_room("forge")

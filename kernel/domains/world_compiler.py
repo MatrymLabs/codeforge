@@ -119,13 +119,13 @@ def load_aethryn_profiles(path: Path | None = None) -> tuple[AethrynRegionProfil
     where = path or (BLUEPRINTS_ROOT / "aethryn" / "zones.yaml")
     raw = yaml.safe_load(where.read_text(encoding="utf-8"))
     if not isinstance(raw, dict):
-        raise WorldCompilerError(f"Aethryn zones file is not a mapping: {where}")
+        raise WorldCompilerError(f"Aethryn zones file is not a mapping: {where}")  # noqa: TRY003
     profiles: list[AethrynRegionProfile] = []
     for zone_id, row in raw.items():
         if not isinstance(zone_id, str) or not zone_id.endswith("_zone"):
             continue
         if not isinstance(row, dict):
-            raise WorldCompilerError(f"Aethryn zone {zone_id!r} must be a mapping")
+            raise WorldCompilerError(f"Aethryn zone {zone_id!r} must be a mapping")  # noqa: TRY003
         region_id = zone_id.removesuffix("_zone")
         try:
             display = str(row["region"])
@@ -133,7 +133,7 @@ def load_aethryn_profiles(path: Path | None = None) -> tuple[AethrynRegionProfil
             level_min = int(row["level_min"])
             level_max = int(row["level_max"])
         except (KeyError, TypeError, ValueError) as exc:
-            raise WorldCompilerError(
+            raise WorldCompilerError(  # noqa: TRY003
                 f"Aethryn zone {zone_id!r} is missing compiler fields"
             ) from exc
         display_name = "The Veridia Wilds" if region_id == "veridia" else f"{display} Wilds"
@@ -153,7 +153,7 @@ def load_aethryn_profiles(path: Path | None = None) -> tuple[AethrynRegionProfil
             )
         )
     if not profiles:
-        raise WorldCompilerError(f"Aethryn zones file contains no compiler profiles: {where}")
+        raise WorldCompilerError(f"Aethryn zones file contains no compiler profiles: {where}")  # noqa: TRY003
     return tuple(profiles)
 
 
@@ -162,25 +162,25 @@ def _validate_graph(graph: dict[str, Any], selected: set[str], start_region: str
     rows = graph.get("regions")
     seas = graph.get("seas")
     if not isinstance(rows, dict) or set(rows) != selected:
-        raise WorldCompilerError("assembled graph rows must exactly match selected region profiles")
+        raise WorldCompilerError("assembled graph rows must exactly match selected region profiles")  # noqa: TRY003
     if not isinstance(seas, list) or not seas:
-        raise WorldCompilerError("assembled graph needs at least one sea or land route")
+        raise WorldCompilerError("assembled graph needs at least one sea or land route")  # noqa: TRY003
     if start_region not in selected:
-        raise WorldCompilerError(f"assembled graph has no start region {start_region!r}")
+        raise WorldCompilerError(f"assembled graph has no start region {start_region!r}")  # noqa: TRY003
     for region_id, row in rows.items():
         if not isinstance(row, dict):
-            raise WorldCompilerError(f"assembled graph row {region_id!r} must be a mapping")
+            raise WorldCompilerError(f"assembled graph row {region_id!r} must be a mapping")  # noqa: TRY003
         for neighbour in row.get("land", []):
             if neighbour == region_id or neighbour not in selected:
-                raise WorldCompilerError(
+                raise WorldCompilerError(  # noqa: TRY003
                     f"assembled graph {region_id!r} has invalid land neighbour {neighbour!r}"
                 )
         for sea in row.get("seas", []):
             if sea not in seas:
-                raise WorldCompilerError(f"assembled graph {region_id!r} has unknown sea {sea!r}")
+                raise WorldCompilerError(f"assembled graph {region_id!r} has unknown sea {sea!r}")  # noqa: TRY003
     unreachable = worldgraph.unreachable_regions(start_region, graph)
     if unreachable:
-        raise WorldCompilerError(f"assembled graph has unreachable regions: {unreachable}")
+        raise WorldCompilerError(f"assembled graph has unreachable regions: {unreachable}")  # noqa: TRY003
 
 
 def _induced_graph(
@@ -190,13 +190,13 @@ def _induced_graph(
     canonical = source or worldgraph.load_graph()
     rows = canonical.get("regions")
     if not isinstance(rows, dict):
-        raise WorldCompilerError("canonical Aethryn graph has no region rows")
+        raise WorldCompilerError("canonical Aethryn graph has no region rows")  # noqa: TRY003
     selected = {profile.region_id for profile in profiles}
     if len(selected) != len(profiles):
-        raise WorldCompilerError("Aethryn region profile ids must be unique")
+        raise WorldCompilerError("Aethryn region profile ids must be unique")  # noqa: TRY003
     missing = sorted(selected - set(rows))
     if missing:
-        raise WorldCompilerError(f"selected regions are absent from the canonical graph: {missing}")
+        raise WorldCompilerError(f"selected regions are absent from the canonical graph: {missing}")  # noqa: TRY003
     graph = {
         "seas": sorted({sea for region_id in selected for sea in rows[region_id].get("seas", [])}),
         "regions": {
@@ -244,7 +244,7 @@ def _generated_item_records(npcs: dict[str, Npc]) -> dict[str, dict[str, Any]]:
     raw = yaml.safe_load(source.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or not required.issubset(raw):
         missing = sorted(required - set(raw or {})) if isinstance(raw, dict) else sorted(required)
-        raise WorldCompilerError(
+        raise WorldCompilerError(  # noqa: TRY003
             f"canonical Aethryn item pack is missing generated loot: {missing}"
         )
     return {label: dict(raw[label]) for label in sorted(required)}
@@ -275,10 +275,10 @@ def compile_aethryn_world(
 ) -> CompiledAethrynWorld:
     """Compile and connect a selected set of Aethryn regions from one manifest."""
     if manifest.project.strip().lower() != "aethryn":
-        raise WorldCompilerError("the Aethryn world compiler requires project 'Aethryn'")
+        raise WorldCompilerError("the Aethryn world compiler requires project 'Aethryn'")  # noqa: TRY003
     selected_profiles = tuple(profiles or load_aethryn_profiles())
     if not selected_profiles:
-        raise WorldCompilerError("an Aethryn world needs at least one region profile")
+        raise WorldCompilerError("an Aethryn world needs at least one region profile")  # noqa: TRY003
     induced = _induced_graph(selected_profiles, start_region, graph)
     compiled_regions = tuple(
         compile_aethryn_region(manifest, profile) for profile in selected_profiles
@@ -289,11 +289,11 @@ def compile_aethryn_world(
     for compiled in compiled_regions:
         for label, room in compiled.region.rooms.items():
             if label in rooms:
-                raise WorldCompilerError(f"compiled room id collision: {label!r}")
+                raise WorldCompilerError(f"compiled room id collision: {label!r}")  # noqa: TRY003
             rooms[label] = {**room, "exits": dict(room.get("exits", {}))}
         for label, npc in compiled.npcs.items():
             if label in npcs:
-                raise WorldCompilerError(f"compiled NPC id collision: {label!r}")
+                raise WorldCompilerError(f"compiled NPC id collision: {label!r}")  # noqa: TRY003
             npcs[label] = npc
     _connect_regions(rooms, by_region, induced)
     return CompiledAethrynWorld(
@@ -318,12 +318,12 @@ def _validate_assembled_artifact(seed_dir: Path, world: CompiledAethrynWorld) ->
     inspect_world_links(rooms, items, npcs)
     raw_graph = yaml.safe_load((seed_dir / "world_graph.yaml").read_text(encoding="utf-8"))
     if not isinstance(raw_graph, dict):
-        raise WorldCompilerError("assembled world_graph.yaml is not a mapping")
+        raise WorldCompilerError("assembled world_graph.yaml is not a mapping")  # noqa: TRY003
     _validate_graph(
         raw_graph, {profile.region_id for profile in world.profiles}, world.start_region
     )
     if set(rooms) != set(world.rooms):
-        raise WorldCompilerError("installed rooms differ from the compiler's assembled rooms")
+        raise WorldCompilerError("installed rooms differ from the compiler's assembled rooms")  # noqa: TRY003
 
 
 def install_compiled_world(

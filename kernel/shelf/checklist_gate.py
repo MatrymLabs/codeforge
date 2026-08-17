@@ -19,7 +19,7 @@ class ChecklistError(ValueError):
     """Raised when a checklist is declared malformed."""
 
 
-class GateBlocked(Exception):
+class GateBlocked(Exception):  # noqa: N818
     """Raised when required attestations are missing or unchecked (the gate holds)."""
 
     def __init__(self, phase: str, failures: tuple[str, ...]) -> None:
@@ -38,7 +38,7 @@ class Item:
 
     def __post_init__(self) -> None:
         if not self.key:
-            raise ChecklistError("item key must be non-empty")
+            raise ChecklistError("item key must be non-empty")  # noqa: TRY003
 
 
 @dataclass(frozen=True)
@@ -50,22 +50,22 @@ class Checklist:
 
     def __post_init__(self) -> None:
         if not self.phase:
-            raise ChecklistError("checklist phase must be non-empty")
+            raise ChecklistError("checklist phase must be non-empty")  # noqa: TRY003
         if not self.items:
-            raise ChecklistError("a checklist needs at least one item")
+            raise ChecklistError("a checklist needs at least one item")  # noqa: TRY003
         keys = [i.key for i in self.items]
         if len(keys) != len(set(keys)):
-            raise ChecklistError("checklist item keys must be unique")
+            raise ChecklistError("checklist item keys must be unique")  # noqa: TRY003
 
 
-def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str = "") -> None:
+def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str = "") -> None:  # noqa: ARG001
     """Raise GateBlocked unless every REQUIRED item is attested True.
 
     An optional item may be absent. An unknown attestation key is ignored (the
     checklist is authoritative). Passes silently when the gate is satisfied.
     """
     if not isinstance(attestations, Mapping):
-        raise ChecklistError("attestations must be a mapping of item key -> bool")
+        raise ChecklistError("attestations must be a mapping of item key -> bool")  # noqa: TRY003
     failures: list[str] = []
     for item in checklist.items:
         if not item.required:

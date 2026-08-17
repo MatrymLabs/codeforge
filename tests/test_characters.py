@@ -55,8 +55,8 @@ def test_daily_lockouts_survive_save_and_restore():
 def test_restore_relocates_a_hero_from_a_removed_room():
     # A world-topology migration can delete the room a hero was standing in. Restore must relocate
     # them to the world start, never strand them in a room that no longer exists.
-    from kernel.world.characters import safe_location
-    from kernel.world.world import START_ROOM, WORLD
+    from kernel.world.characters import safe_location  # noqa: PLC0415
+    from kernel.world.world import START_ROOM, WORLD  # noqa: PLC0415
 
     fresh = Session(player_id="ghost")
     restore_character(
@@ -97,7 +97,7 @@ def test_save_and_load_roundtrip():
 def test_profession_practice_survives_a_save_and_restore(monkeypatch):
     """A maker's trade skill is a persisted character fact: it must ride through save -> load ->
     restore. (Patch the trade registry so 'mining' is known under the test seed.)"""
-    from kernel.world import professions
+    from kernel.world import professions  # noqa: PLC0415
 
     monkeypatch.setattr(
         professions,
@@ -168,7 +168,7 @@ def test_restored_hero_matches_a_live_grown_one():
 
 
 def test_name_command_restores_a_saved_hero():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     veteran = _hero()
     veteran.level, veteran.xp = 2, 90
@@ -186,8 +186,8 @@ def test_name_command_restores_a_saved_hero():
 
 def test_equipped_gear_persists_across_a_save_and_restore():
     """Worn gear survives logout: it is stored by prototype and re-cloned + re-equipped on login."""
-    from kernel.world.equipment import equip
-    from kernel.world.items import carrier, clone, prototype_of
+    from kernel.world.equipment import equip  # noqa: PLC0415
+    from kernel.world.items import carrier, clone, prototype_of  # noqa: PLC0415
 
     s = _hero()
     clone("forge_wrench", carrier("matrym"))
@@ -217,9 +217,9 @@ def test_an_unknown_persisted_prototype_is_skipped_not_fatal():
 
 def test_quest_progress_persists_across_a_save_and_restore():
     """A story-in-progress survives logout: the quest state saves with the character and reseeds."""
-    import json
+    import json  # noqa: PLC0415
 
-    from kernel.world.quest import quest_view, reset_quests, save_state
+    from kernel.world.quest import quest_view, reset_quests, save_state  # noqa: PLC0415
 
     reset_quests()
     s = _hero()
@@ -236,8 +236,8 @@ def test_quest_progress_persists_across_a_save_and_restore():
 
 def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     """A rolled legendary survives logout with its name, mods, AND rarity tier."""
-    from kernel.world.equipment import equip
-    from kernel.world.items import ITEMS, carrier, clone
+    from kernel.world.equipment import equip  # noqa: PLC0415
+    from kernel.world.items import ITEMS, carrier, clone  # noqa: PLC0415
 
     s = _hero()
     iid = clone("forge_wrench", carrier("matrym"))
@@ -257,7 +257,7 @@ def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
 def test_restoring_pre_rarity_dict_gear_applies_no_rarity():
     """Gear saved before the rarity field (a dict with name/mods but no 'rarity') restores fine and
     simply carries no rarity - the backward-compatible path."""
-    from kernel.world.items import ITEMS
+    from kernel.world.items import ITEMS  # noqa: PLC0415
 
     s = _hero()
     restore_character(
@@ -287,7 +287,7 @@ def test_the_legacy_bare_prototype_gear_format_still_restores():
         "equipped_gear": '{"weapon": "forge_wrench"}',  # the pre-affix-persistence format
     }
     restore_character(fresh, casefile)
-    from kernel.world.items import ITEMS, prototype_of
+    from kernel.world.items import ITEMS, prototype_of  # noqa: PLC0415
 
     assert prototype_of(fresh.equipped["weapon"]) == "forge_wrench"
     assert ITEMS[fresh.equipped["weapon"]]["name"]  # a real base clone, no override
@@ -378,7 +378,7 @@ def test_a_reconnect_does_not_duplicate_the_bag():
 
 
 def test_equipped_gear_is_not_also_stored_as_a_loose_item():
-    from kernel.world.loose_store import load as load_loose
+    from kernel.world.loose_store import load as load_loose  # noqa: PLC0415
 
     hero = _hero()
     iid = items.clone("forge_wrench", items.carrier("matrym"))

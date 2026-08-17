@@ -37,39 +37,39 @@ def load_graph(path: Path | None = None) -> dict[str, Any]:
     neighbour or sea that canon does not know, or links to itself, so a broken graph never loads."""
     where = path if path is not None else _GRAPH_PATH
     if not where.exists():
-        raise BlueprintError(f"World graph file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"World graph file not found: {where}")  # noqa: TRY003
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"World graph file is not a mapping: {where}")
+        raise BlueprintError(f"World graph file is not a mapping: {where}")  # noqa: TRY003
 
     seas = set(data.get("seas", []))
     if not seas:
-        raise BlueprintError("world graph: 'seas' must list the world's bodies of water")
+        raise BlueprintError("world graph: 'seas' must list the world's bodies of water")  # noqa: TRY003
 
     region_rows = data.get("regions")
     if not isinstance(region_rows, dict):
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             "world graph: 'regions' must be a mapping of region id -> {land, seas}"
         )
 
     known_regions = {r["id"] for r in canon.regions()}
     missing = known_regions - set(region_rows)
     if missing:
-        raise BlueprintError(f"world graph: no topology row for canon region(s) {sorted(missing)}")
+        raise BlueprintError(f"world graph: no topology row for canon region(s) {sorted(missing)}")  # noqa: TRY003
 
     for region_id, row in region_rows.items():
         if region_id not in known_regions:
-            raise BlueprintError(f"world graph {region_id!r}: not a canon region")
+            raise BlueprintError(f"world graph {region_id!r}: not a canon region")  # noqa: TRY003
         for neighbour in row.get("land", []):
             if neighbour == region_id:
-                raise BlueprintError(f"world graph {region_id!r}: a region cannot border itself")
+                raise BlueprintError(f"world graph {region_id!r}: a region cannot border itself")  # noqa: TRY003
             if neighbour not in known_regions:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"world graph {region_id!r}: unknown land neighbour {neighbour!r}"
                 )
         for sea in row.get("seas", []):
             if sea not in seas:
-                raise BlueprintError(f"world graph {region_id!r}: unknown sea {sea!r}")
+                raise BlueprintError(f"world graph {region_id!r}: unknown sea {sea!r}")  # noqa: TRY003
     return data
 
 
@@ -82,7 +82,7 @@ def neighbors(region_id: str, graph: dict[str, Any] | None = None) -> set[str]:
     one-way listing still connects) plus any region that borders a shared sea."""
     rows = _rows(graph)
     if region_id not in rows:
-        raise BlueprintError(f"unknown region {region_id!r}")
+        raise BlueprintError(f"unknown region {region_id!r}")  # noqa: TRY003
     found: set[str] = set()
     # Land, both directions: what this region lists, and what lists this region.
     found.update(rows[region_id].get("land", []))
@@ -103,7 +103,7 @@ def reachable_from(start: str = DEFAULT_START, graph: dict[str, Any] | None = No
     """Every region reachable from start by land or sea (breadth-first over undirected edges)."""
     graph = graph or load_graph()
     if start not in _rows(graph):
-        raise BlueprintError(f"unknown start region {start!r}")
+        raise BlueprintError(f"unknown start region {start!r}")  # noqa: TRY003
     seen = {start}
     frontier = [start]
     while frontier:
@@ -128,10 +128,10 @@ def region_detail(region_id: str, graph: dict[str, Any] | None = None) -> str:
     in the graph (land neighbours, sea neighbours, whether the spawn can reach it)."""
     graph = graph or load_graph()
     if region_id not in _rows(graph):
-        raise BlueprintError(f"unknown region {region_id!r}")
+        raise BlueprintError(f"unknown region {region_id!r}")  # noqa: TRY003
     region = next((r for r in canon.regions() if r["id"] == region_id), None)
     if region is None:
-        raise BlueprintError(f"region {region_id!r} is in the graph but not in canon")
+        raise BlueprintError(f"region {region_id!r} is in the graph but not in canon")  # noqa: TRY003
     row = _rows(graph)[region_id]
     land = sorted(row.get("land", []))
     sea_kin = sorted(neighbors(region_id, graph) - set(land))
@@ -139,7 +139,7 @@ def region_detail(region_id: str, graph: dict[str, Any] | None = None) -> str:
     return "\n".join(
         [
             f"{region['name']}  [{region_id}]",
-            f"  canon_status {region['canon_status']} | "
+            f"  canon_status {region['canon_status']} | "  # noqa: ISC004
             f"threat {region['threat_min']}-{region['threat_max']}",
             f"  land neighbours: {', '.join(land) if land else '(none)'}",
             f"  reachable by sea: {', '.join(sea_kin) if sea_kin else '(none)'}",

@@ -99,7 +99,7 @@ def load(path: Path | str) -> Store:
         return {}
     states: Store = {}
     for lineno, line in enumerate(p.read_text("utf-8").splitlines(), 1):
-        line = line.strip()
+        line = line.strip()  # noqa: PLW2901
         if not line:
             continue
         try:
@@ -112,7 +112,7 @@ def load(path: Path | str) -> Store:
                 resolved=date.fromisoformat(resolved) if resolved else None,
             )
         except (json.JSONDecodeError, KeyError, ValueError) as exc:
-            raise AdvisoryLedgerError(f"{p}:{lineno}: malformed advisory record: {exc}") from exc
+            raise AdvisoryLedgerError(f"{p}:{lineno}: malformed advisory record: {exc}") from exc  # noqa: TRY003
     return states
 
 

@@ -49,7 +49,7 @@ requires_hook = pytest.mark.skipif(
 
 def _run_hook(target: Path) -> subprocess.CompletedProcess[str]:
     """Run the real gate command the way `make secrets` does: hook against the baseline."""
-    return subprocess.run(
+    return subprocess.run(  # noqa: PLW1510
         ["detect-secrets-hook", "--baseline", str(_BASELINE), str(target)],
         capture_output=True,
         text=True,

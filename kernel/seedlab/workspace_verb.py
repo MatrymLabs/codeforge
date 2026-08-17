@@ -66,11 +66,11 @@ _USAGE = (
 GmcpPush = Callable[[str, str, object], None]
 
 
-def _drop_frame(player_id: str, package: str, data: object) -> None:
+def _drop_frame(player_id: str, package: str, data: object) -> None:  # noqa: ARG001
     """Default transport: drop the frame. A domain-neutral platform verb cannot reach into the game
     world for a bus, so with no transport injected (plain-text caller, tests) the frame is a no-op;
     a text client has no GMCP sink anyway. The game tick supplies the real push at dispatch."""
-    return None
+    return None  # noqa: RET501
 
 
 def _push_frame(session: Any, push: GmcpPush, package: str, payload: dict[str, object]) -> None:
@@ -108,7 +108,7 @@ def _default_kernel() -> BlueprintKernel:
 def _default_backups() -> Any:
     """The Seed backup store under $SEEDLAB_HOME/backups (lazy import keeps backup off the load
     path until a caller actually snapshots or restores)."""
-    from kernel.seedlab.backup import BlueprintBackups
+    from kernel.seedlab.backup import BlueprintBackups  # noqa: PLC0415
 
     return BlueprintBackups(_home() / "backups")
 
@@ -118,7 +118,7 @@ def _actor(session: Any) -> str:
     return getattr(session, "account", "") or getattr(session, "player_id", "owner")
 
 
-def workspace_command(
+def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
     session: Any,
     arg: str,
     *,
@@ -144,7 +144,7 @@ def workspace_command(
     rest = parts[1:]
 
     if sub in ("list", "ls"):
-        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed
+        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed  # noqa: I001, PLC0415
 
         ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
         lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
@@ -206,7 +206,7 @@ def workspace_command(
         return "Models:\n" + "\n".join(f"  - {model_label(m)}" for m in models)
 
     if sub == "connect":
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             return "usage: workspace connect <seed_id> <path>"
         seed_id, path = rest[0], " ".join(rest[1:])
         try:
@@ -223,9 +223,9 @@ def workspace_command(
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
-        from kernel.seedlab.project_model import BlueprintLabError, Provenance
-        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
-        from kernel.seedlab.source_modeler import model_and_store
+        from kernel.seedlab.project_model import BlueprintLabError, Provenance  # noqa: I001, PLC0415
+        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError  # noqa: PLC0415
+        from kernel.seedlab.source_modeler import model_and_store  # noqa: PLC0415
 
         store = model_store or FileModelStore(_home() / "models")
         source_id = resolved.name or "source"
@@ -259,7 +259,7 @@ def workspace_command(
         )
 
     if sub == "run":
-        if len(rest) < 3:
+        if len(rest) < 3:  # noqa: PLR2004
             return "usage: workspace run <seed_id> <path> <profile>"
         seed_id, path, profile = rest[0], rest[1], rest[2]
         try:
@@ -273,9 +273,9 @@ def workspace_command(
                 resolved.relative_to(allowed)
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
-        from kernel.seedlab.project_model import Provenance
-        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
-        from kernel.seedlab.tool_runner import (
+        from kernel.seedlab.project_model import Provenance  # noqa: I001, PLC0415
+        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError  # noqa: PLC0415
+        from kernel.seedlab.tool_runner import (  # noqa: PLC0415
             CommandRefused,
             FileRunLog,
             render_run,
@@ -315,7 +315,7 @@ def workspace_command(
             record = kernel.get(rest[0])
         except BlueprintKernelError as exc:
             return f"workspace: {exc}"
-        from kernel.seedlab.tool_runner import FileRunLog, render_run
+        from kernel.seedlab.tool_runner import FileRunLog, render_run  # noqa: PLC0415
 
         log = run_log if run_log is not None else FileRunLog(_home() / "runs")
         runs = log.for_seed(rest[0])
@@ -373,9 +373,9 @@ def workspace_command(
         return "\n".join(lines)
 
     if sub == "restore":
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             return "usage: workspace restore <seed_id> <backup_id>"
-        from kernel.seedlab.backup import BackupError, restore
+        from kernel.seedlab.backup import BackupError, restore  # noqa: PLC0415
 
         store = backups if backups is not None else _default_backups()
         try:

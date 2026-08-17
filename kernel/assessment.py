@@ -53,16 +53,16 @@ class LessonError(ValueError):
 
 def _coerce_question(raw: Any, index: int) -> Question:
     if not isinstance(raw, dict):
-        raise LessonError(f"question #{index}: expected a mapping")
+        raise LessonError(f"question #{index}: expected a mapping")  # noqa: TRY003
     missing = [key for key in _REQUIRED if key not in raw]
     if missing:
-        raise LessonError(f"question #{index}: missing {', '.join(missing)}")
+        raise LessonError(f"question #{index}: missing {', '.join(missing)}")  # noqa: TRY003
     choices = raw["choices"]
     if not isinstance(choices, dict) or set(choices) != set(CHOICES):
-        raise LessonError(f"question {raw['id']!r}: choices must be exactly keys {CHOICES}")
+        raise LessonError(f"question {raw['id']!r}: choices must be exactly keys {CHOICES}")  # noqa: TRY003
     correct = str(raw["correct"]).strip().upper()
     if correct not in CHOICES:
-        raise LessonError(f"question {raw['id']!r}: correct must be one of {CHOICES}")
+        raise LessonError(f"question {raw['id']!r}: correct must be one of {CHOICES}")  # noqa: TRY003
     return Question(
         id=str(raw["id"]),
         prompt=str(raw["prompt"]).strip(),
@@ -77,13 +77,13 @@ def load_lesson(path: Path) -> Lesson:
     """Load and validate one lesson bank."""
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(data, dict) or "questions" not in data:
-        raise LessonError(f"{path.name}: a lesson needs a 'title' and 'questions'")
+        raise LessonError(f"{path.name}: a lesson needs a 'title' and 'questions'")  # noqa: TRY003
     questions = [_coerce_question(q, i) for i, q in enumerate(data["questions"], start=1)]
     if not questions:
-        raise LessonError(f"{path.name}: a lesson needs at least one question")
+        raise LessonError(f"{path.name}: a lesson needs at least one question")  # noqa: TRY003
     earns_level = data.get("earns_level", 0)
     if not isinstance(earns_level, int) or isinstance(earns_level, bool) or earns_level < 0:
-        raise LessonError(
+        raise LessonError(  # noqa: TRY003
             f"{path.name}: earns_level must be a non-negative int, got {earns_level!r}"
         )
     default_subject = path.stem.split("_")[0]

@@ -55,7 +55,7 @@ def send(
     attachment: dict[str, Any] | None = None,
 ) -> None:
     """Deliver a letter into `recipient`'s inbox, optionally carrying an item snapshot parcel."""
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = MailRow(recipient=recipient, sender=sender, body=body, sent_utc=sent_utc, read=False)
@@ -72,7 +72,7 @@ def claim(letter_id: int, recipient: str) -> dict[str, Any] | None:
     """Take a letter's attached item (scoped to its recipient), returning its snapshot and clearing
     the attachment so it can never be claimed twice. None if there is no such letter for that
     recipient, or it carries nothing to claim."""
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(MailRow, letter_id)
@@ -86,9 +86,9 @@ def claim(letter_id: int, recipient: str) -> dict[str, Any] | None:
 
 def inbox(recipient: str) -> list[Letter]:
     """A hero's inbox, newest first (highest id = most recent)."""
-    from sqlalchemy import select
+    from sqlalchemy import select  # noqa: PLC0415
 
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         rows = db.scalars(
@@ -99,9 +99,9 @@ def inbox(recipient: str) -> list[Letter]:
 
 def count(recipient: str) -> int:
     """How many letters sit in a hero's inbox (used to bound its growth)."""
-    from sqlalchemy import func, select
+    from sqlalchemy import func, select  # noqa: PLC0415
 
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         return (
@@ -115,9 +115,9 @@ def count(recipient: str) -> int:
 def unread_count(recipient: str) -> int:
     """How many UNREAD letters wait in a hero's inbox (for a client's mail badge). A COUNT query, so
     it stays cheap enough to read on the state tick without fetching every letter."""
-    from sqlalchemy import func, select
+    from sqlalchemy import func, select  # noqa: PLC0415
 
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         return (
@@ -132,7 +132,7 @@ def unread_count(recipient: str) -> int:
 
 def mark_read(letter_id: int) -> None:
     """Mark one letter read. A no-op if it no longer exists."""
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(MailRow, letter_id)
@@ -144,7 +144,7 @@ def mark_read(letter_id: int) -> None:
 def delete(letter_id: int, recipient: str) -> bool:
     """Delete a letter, but ONLY from its own recipient's inbox. Returns True if one was removed,
     False if there was none with that id for that recipient (so no one deletes another's mail)."""
-    from kernel.world.db import MailRow, open_archive_session
+    from kernel.world.db import MailRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(MailRow, letter_id)

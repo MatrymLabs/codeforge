@@ -35,7 +35,7 @@ def test_repeated_surges_trip_the_relay_shut():
 
 
 def test_channel_flows_through_the_engine_tick():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     reset_relay(rng=lambda: 0.9)
     assert "Power flows" in handle_command(_player(), "channel")

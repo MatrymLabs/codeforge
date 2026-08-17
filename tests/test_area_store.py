@@ -91,7 +91,7 @@ def test_run_generate_then_preview_then_promote(tmp_path: Path):
 
 
 def test_run_generate_honours_size(tmp_path: Path):
-    code, text = area_store.run(
+    code, text = area_store.run(  # noqa: RUF059
         ["generate-area", "caeloria", "--seed", "1", "--size", "10"], tmp_path
     )
     assert code == 0
@@ -107,7 +107,7 @@ def test_run_generate_tolerates_a_stray_flag(tmp_path: Path):
 def test_run_export(tmp_path: Path):
     area_store.generate_and_save("eldryn_forest", 8, area_dir=tmp_path)
     dest = tmp_path / "exported.json"
-    code, text = area_store.run(["export", "gen_cave_eldryn_forest_8", str(dest)], tmp_path)
+    code, text = area_store.run(["export", "gen_cave_eldryn_forest_8", str(dest)], tmp_path)  # noqa: RUF059
     assert code == 0 and dest.exists()
 
 

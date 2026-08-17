@@ -17,7 +17,7 @@ from datetime import UTC, datetime
 
 def ban(name: str, reason: str, moderator: str) -> None:
     """Impose (or update) a ban on `name` with a reason and the moderator who set it."""
-    from kernel.world.db import BanRow, open_archive_session
+    from kernel.world.db import BanRow, open_archive_session  # noqa: PLC0415
 
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     with open_archive_session() as db:
@@ -31,7 +31,7 @@ def ban(name: str, reason: str, moderator: str) -> None:
 
 def unban(name: str) -> bool:
     """Lift a ban. True if there was one to lift, False if the hero was not banned."""
-    from kernel.world.db import BanRow, open_archive_session
+    from kernel.world.db import BanRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(BanRow, name)
@@ -44,7 +44,7 @@ def unban(name: str) -> bool:
 
 def is_banned(name: str) -> bool:
     """True if `name` is currently banned (the login-gate check)."""
-    from kernel.world.db import BanRow, open_archive_session
+    from kernel.world.db import BanRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         return db.get(BanRow, name) is not None
@@ -52,7 +52,7 @@ def is_banned(name: str) -> bool:
 
 def reason(name: str) -> str:
     """The stored ban reason for `name`, or "" if not banned."""
-    from kernel.world.db import BanRow, open_archive_session
+    from kernel.world.db import BanRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         row = db.get(BanRow, name)
@@ -61,9 +61,9 @@ def reason(name: str) -> str:
 
 def all_bans() -> list[tuple[str, str, str]]:
     """Every ban as (name, reason, moderator), for the moderation roster."""
-    from sqlalchemy import select
+    from sqlalchemy import select  # noqa: PLC0415
 
-    from kernel.world.db import BanRow, open_archive_session
+    from kernel.world.db import BanRow, open_archive_session  # noqa: PLC0415
 
     with open_archive_session() as db:
         rows = db.scalars(select(BanRow).order_by(BanRow.name))

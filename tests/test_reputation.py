@@ -53,7 +53,7 @@ def test_grant_spills_over_allies_and_rivals():
 
 def test_a_negative_grant_lowers_standing_and_flips_the_spillover():
     s = _hero()
-    allies, rivals = relations_of("making")
+    allies, rivals = relations_of("making")  # noqa: RUF059
     reputation.grant(s, "making", -100)
     assert reputation.standing_of(s, "making") == -100
     for rival in rivals:
@@ -83,7 +83,7 @@ def test_the_sheet_lists_every_order_with_tier_and_marks_the_sworn():
 
 
 def test_swearing_an_order_earns_a_starting_standing():
-    from kernel.world.orders import swear_order
+    from kernel.world.orders import swear_order  # noqa: PLC0415
 
     s = Session(player_id="rep", location="void", named=True)
     swear_order(s, "making")

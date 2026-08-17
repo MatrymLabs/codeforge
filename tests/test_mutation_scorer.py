@@ -82,7 +82,7 @@ def test_returns_none_on_timeout_and_does_not_hang(tmp_path: Path) -> None:
         max_mutants: int,
     ) -> None:
         calls.append((workdir, config, per_mutant_timeout, whole_run_budget, max_mutants))
-        return None
+        return None  # noqa: PLR1711, RET501
 
     scorer = CosmicRayMutationScorer(
         runner=timed_out, per_mutant_timeout_seconds=0.01, whole_run_budget_seconds=120.0
@@ -110,7 +110,7 @@ def test_writes_its_config_into_the_workdir_and_never_touches_the_repo_config(
         self: Path, encoding: str | None = None, errors: str | None = None
     ) -> str:
         if self == repository_config:
-            raise AssertionError("the scorer must not read the repository cosmic-ray.toml")
+            raise AssertionError("the scorer must not read the repository cosmic-ray.toml")  # noqa: TRY003
         return original_read_text(self, encoding=encoding, errors=errors)
 
     monkeypatch.setattr(Path, "read_text", refuse_repository_config)

@@ -148,23 +148,23 @@ class ProgressionError(ValueError):
 def _track_from_dict(name, raw):
     """Validate + build one (base, tiers, cap) track from a mapping. Fails loud by field."""
     if not isinstance(raw, dict):
-        raise ProgressionError(f"the {name!r} track must be a mapping")
+        raise ProgressionError(f"the {name!r} track must be a mapping")  # noqa: TRY003
     base, cap, tiers_raw = raw.get("base"), raw.get("cap"), raw.get("tiers")
     if not isinstance(base, int) or isinstance(base, bool) or base <= 0:
-        raise ProgressionError(f"{name!r} track: 'base' must be a positive int")
+        raise ProgressionError(f"{name!r} track: 'base' must be a positive int")  # noqa: TRY003
     if not isinstance(cap, int) or isinstance(cap, bool) or cap <= 0:
-        raise ProgressionError(f"{name!r} track: 'cap' must be a positive int")
+        raise ProgressionError(f"{name!r} track: 'cap' must be a positive int")  # noqa: TRY003
     if not isinstance(tiers_raw, list) or not tiers_raw:
-        raise ProgressionError(f"{name!r} track: 'tiers' must be a non-empty list")
+        raise ProgressionError(f"{name!r} track: 'tiers' must be a non-empty list")  # noqa: TRY003
     tiers = []
     for tier in tiers_raw:
-        if not isinstance(tier, (list, tuple)) or len(tier) != 3:
-            raise ProgressionError(f"{name!r} track: each tier must be [start, end, multiplier]")
+        if not isinstance(tier, (list, tuple)) or len(tier) != 3:  # noqa: PLR2004
+            raise ProgressionError(f"{name!r} track: each tier must be [start, end, multiplier]")  # noqa: TRY003
         start, end, mult = tier
         if not all(isinstance(x, int) and not isinstance(x, bool) for x in (start, end, mult)):
-            raise ProgressionError(f"{name!r} track: tier values must be ints")
+            raise ProgressionError(f"{name!r} track: tier values must be ints")  # noqa: TRY003
         if start > end:
-            raise ProgressionError(f"{name!r} track: tier start {start} > end {end}")
+            raise ProgressionError(f"{name!r} track: tier start {start} > end {end}")  # noqa: TRY003
         tiers.append((start, end, mult))
     return (base, tiers, cap)
 
@@ -172,10 +172,10 @@ def _track_from_dict(name, raw):
 def tracks_from_dict(raw):
     """Build + validate the (xp, jp) tracks from a world's `progression:` block. Fails loud."""
     if not isinstance(raw, dict):
-        raise ProgressionError("a progression block must be a mapping")
+        raise ProgressionError("a progression block must be a mapping")  # noqa: TRY003
     for axis in ("xp", "jp"):
         if axis not in raw:
-            raise ProgressionError(f"progression block is missing the {axis!r} track")
+            raise ProgressionError(f"progression block is missing the {axis!r} track")  # noqa: TRY003
     return (_track_from_dict("xp", raw["xp"]), _track_from_dict("jp", raw["jp"]))
 
 
@@ -212,7 +212,7 @@ def gains_from_dict(raw):
     """Build + validate the per-level gains from a world's `gains:` block. Fails loud; the two
     `*_per` divisors must be positive (a zero would divide by zero on a level-up)."""
     if not isinstance(raw, dict):
-        raise ProgressionError("a gains block must be a mapping")
+        raise ProgressionError("a gains block must be a mapping")  # noqa: TRY003
     values = {}
     for field, default, positive in (
         ("hp_base", 4, False),
@@ -222,11 +222,11 @@ def gains_from_dict(raw):
     ):
         value = raw.get(field, default)
         if not isinstance(value, int) or isinstance(value, bool):
-            raise ProgressionError(f"gains: {field!r} must be an int")
+            raise ProgressionError(f"gains: {field!r} must be an int")  # noqa: TRY003
         if positive and value <= 0:
-            raise ProgressionError(f"gains: {field!r} must be positive (it is a divisor)")
+            raise ProgressionError(f"gains: {field!r} must be positive (it is a divisor)")  # noqa: TRY003
         if not positive and value < 0:
-            raise ProgressionError(f"gains: {field!r} must be non-negative")
+            raise ProgressionError(f"gains: {field!r} must be non-negative")  # noqa: TRY003
         values[field] = value
     return Gains(**values)
 

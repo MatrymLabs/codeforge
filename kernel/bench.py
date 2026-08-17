@@ -44,14 +44,14 @@ def benchmark(
 ) -> BenchResult:
     """Drive the tick `iterations` times over the rotation and report the distribution."""
     if iterations <= 0:
-        raise BenchError(f"iterations must be > 0, got {iterations}")
+        raise BenchError(f"iterations must be > 0, got {iterations}")  # noqa: TRY003
     if warmup < 0:
-        raise BenchError(f"warmup must be >= 0, got {warmup}")
+        raise BenchError(f"warmup must be >= 0, got {warmup}")  # noqa: TRY003
     if not rotation:
-        raise BenchError("rotation must name at least one command")
+        raise BenchError("rotation must name at least one command")  # noqa: TRY003
 
-    from forge import handle_command  # lazy: the tick is the top, parts do not import it eagerly
-    from kernel.world.session import Session
+    from forge import handle_command  # lazy: the tick is the top, parts do not import it eagerly  # noqa: E501, I001, PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     session = Session(player_id="_bench")
     perf = time.perf_counter
@@ -88,7 +88,7 @@ def render_bench(result: BenchResult) -> str:
             f"  commands   : {', '.join(result.commands)}",
             f"  samples    : {result.samples:,}",
             f"  throughput : {result.throughput_per_s:,.0f} commands/sec",
-            f"  latency    : median {result.median_us:.1f}us  p95 {result.p95_us:.1f}us  "
+            f"  latency    : median {result.median_us:.1f}us  p95 {result.p95_us:.1f}us  "  # noqa: ISC004
             f"p99 {result.p99_us:.1f}us  max {result.max_us:.1f}us",
             "",
             "  Renders never mutate state (architecture law 1), so the rotation is repeatable.",
@@ -101,14 +101,14 @@ def write_bench_report(
     result: BenchResult, root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/."""
-    from kernel.shelf.reporting import write_report
+    from kernel.shelf.reporting import write_report  # noqa: PLC0415
 
     return write_report(
         "performance", render_bench(result), root=root, stamp=stamp, slug="engine-tick"
     )
 
 
-def bench(arg: str = "") -> str:
+def bench(arg: str = "") -> str:  # noqa: ARG001
     """The in-game / terminal `bench`: a quick, responsive run (small sample)."""
     return render_bench(benchmark(iterations=5_000, warmup=200))
 
@@ -119,7 +119,7 @@ def main(argv: list[str] | None = None) -> int:
     `--record <commit>` additionally appends the median as a Chronicle `metric` point (the retained
     trend series); `make trend` uses it. Plain `make bench` never touches the Chronicle.
     """
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(sys.argv[1:] if argv is None else argv)
     result = benchmark()
@@ -127,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
     path = write_bench_report(result)
     print(f"\n  evidence -> {path}")
     if args and args[0] == "--record":
-        from kernel import chronicle
+        from kernel import chronicle  # noqa: PLC0415
 
         commit = args[1] if len(args) > 1 else "unknown"
         rec = chronicle.record_metric(

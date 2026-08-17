@@ -8,10 +8,10 @@ import os
 
 os.environ.setdefault("FORGE_SEED", "aethryn")
 
-from kernel.world.campaign import load_campaign, report  # noqa: E402
-from kernel.world.quest import all_ids  # noqa: E402
-from kernel.world.seed import BLUEPRINT_DIR, load_zones  # noqa: E402
-from kernel.world.world import NPCS, WORLD, _dungeons, _settlements  # noqa: E402
+from kernel.world.campaign import load_campaign, report  # noqa: E402, RUF100
+from kernel.world.quest import all_ids  # noqa: E402, RUF100
+from kernel.world.seed import BLUEPRINT_DIR, load_zones  # noqa: E402, RUF100
+from kernel.world.world import NPCS, WORLD, _dungeons, _settlements  # noqa: E402, RUF100
 
 
 def main() -> int:
@@ -21,7 +21,7 @@ def main() -> int:
     ]
     contract = load_campaign(BLUEPRINT_DIR / "campaign.yaml")
     if contract is None:  # pragma: no cover - the flagship seed ships the contract
-        raise SystemExit("Aethryn campaign.yaml is missing")
+        raise SystemExit("Aethryn campaign.yaml is missing")  # noqa: TRY003
     print(
         json.dumps(
             report(contract, zones, _dungeons or [], _settlements or [], NPCS, all_ids()), indent=2

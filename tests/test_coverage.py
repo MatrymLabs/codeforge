@@ -107,7 +107,7 @@ def test_a_stale_reserve_is_flagged(monkeypatch):
 
 def _world_without_aggression(tmp_path):
     """A copy of the live seeds with the aethryn boss disarmed, so proactive_combat goes dark."""
-    import shutil
+    import shutil  # noqa: PLC0415
 
     world = tmp_path / "seeds"
     shutil.copytree(cov.BLUEPRINTS_ROOT, world)

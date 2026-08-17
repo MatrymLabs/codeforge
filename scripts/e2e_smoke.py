@@ -124,7 +124,7 @@ def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
 def register(
     sock: socket.socket,
     handle: str,
-    password: str = "lumos_1234",
+    password: str = "lumos_1234",  # noqa: S107
     calling: str | None = None,
 ) -> str:
     """Register a fresh account/character and land in the world; return the welcome text."""
@@ -146,7 +146,7 @@ def connect(port: int = PORT) -> socket.socket:
             return socket.create_connection((HOST, port), timeout=2)
         except OSError:
             time.sleep(0.25)
-    raise SystemExit("server never came up")
+    raise SystemExit("server never came up")  # noqa: TRY003
 
 
 def aethryn_journey() -> None:
@@ -159,7 +159,7 @@ def aethryn_journey() -> None:
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-ae-")) / "ae.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
-    server = subprocess.Popen(
+    server = subprocess.Popen(  # noqa: S603
         [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={AETHRYN_PORT})"],
         cwd=ROOT,
         env=env,
@@ -169,9 +169,9 @@ def aethryn_journey() -> None:
     try:
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
+        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time  # noqa: E501, PLR2004
             if server.poll() is not None:
-                raise SystemExit("aethryn server exited during boot")
+                raise SystemExit("aethryn server exited during boot")  # noqa: TRY003
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("AETHRYN boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
@@ -225,7 +225,7 @@ def multiplayer_journey() -> None:
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-mp-")) / "mp.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
-    server = subprocess.Popen(
+    server = subprocess.Popen(  # noqa: S603
         [
             sys.executable,
             "-c",
@@ -239,9 +239,9 @@ def multiplayer_journey() -> None:
     try:
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 20:
+        while time.monotonic() - boot < 20:  # noqa: PLR2004
             if server.poll() is not None:
-                raise SystemExit("multiplayer server exited during boot")
+                raise SystemExit("multiplayer server exited during boot")  # noqa: TRY003
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("MULTIPLAYER boot (isolated)", True, (time.monotonic() - t0) * 1000, ""))
@@ -295,9 +295,9 @@ def _forgeward_hubs() -> list[tuple[str, str]]:
     each paired with its waystone display name. Read from the same seed files the live server forges
     spine + network from (zones.yaml / waystones.yaml), so the walk matches the server however many
     zones the flagship grows."""
-    import yaml
+    import yaml  # noqa: PLC0415
 
-    from kernel.world.seed import BLUEPRINTS_ROOT
+    from kernel.world.seed import BLUEPRINTS_ROOT  # noqa: PLC0415
 
     ae = BLUEPRINTS_ROOT / "aethryn"
     zones = yaml.safe_load((ae / "zones.yaml").read_text(encoding="utf-8"))
@@ -328,7 +328,7 @@ def spine_journey() -> None:
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-spine-")) / "spine.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
-    server = subprocess.Popen(
+    server = subprocess.Popen(  # noqa: S603
         [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={SPINE_PORT})"],
         cwd=ROOT,
         env=env,
@@ -338,9 +338,9 @@ def spine_journey() -> None:
     try:
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
+        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time  # noqa: E501, PLR2004
             if server.poll() is not None:
-                raise SystemExit("spine server exited during boot")
+                raise SystemExit("spine server exited during boot")  # noqa: TRY003
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
                 break
         results.append(("SPINE boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
@@ -352,11 +352,11 @@ def spine_journey() -> None:
         s.sendall(b"quit\n")
         time.sleep(0.7)  # let the disconnect-save settle before we touch the record
         s.close()
-        prov = subprocess.run(
+        prov = subprocess.run(  # noqa: PLW1510
             [
                 sys.executable,
                 "-c",
-                "from kernel.world.characters import _default_store; "
+                "from kernel.world.characters import _default_store; "  # noqa: ISC004
                 "print(_default_store().add_coins('wayfarer', 100_000_000))",
             ],
             cwd=ROOT,
@@ -405,13 +405,13 @@ def spine_journey() -> None:
             server.kill()
 
 
-def main() -> int:
+def main() -> int:  # noqa: PLR0915
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-")) / "e2e.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
 
     # --- START THE RITUAL (essence): an isolated forge lights -----------------
     t0 = time.monotonic()
-    server = subprocess.Popen(
+    server = subprocess.Popen(  # noqa: S603
         [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={PORT})"],
         cwd=ROOT,
         env=env,
@@ -422,9 +422,9 @@ def main() -> int:
         # wait for "listening"
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 20:
+        while time.monotonic() - boot < 20:  # noqa: PLR2004
             if server.poll() is not None:
-                raise SystemExit("server exited during boot")
+                raise SystemExit("server exited during boot")  # noqa: TRY003
             line = server.stdout.readline().decode(errors="ignore")
             if "listening on" in line:
                 break
@@ -489,7 +489,7 @@ def main() -> int:
         # --- DO THINGS as owner: grant + reconnect + generate -----------------
         # Use set_rank directly (what `codeforge grant` calls) -- robust regardless
         # of whether the console script is on PATH in this subprocess.
-        grant = subprocess.run(
+        grant = subprocess.run(  # noqa: PLW1510
             [
                 sys.executable,
                 "-c",
@@ -550,7 +550,7 @@ def main() -> int:
 def _port_open() -> bool:
     try:
         socket.create_connection((HOST, PORT), timeout=0.5).close()
-        return True
+        return True  # noqa: TRY300
     except OSError:
         return False
 

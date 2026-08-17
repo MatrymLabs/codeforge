@@ -50,7 +50,7 @@ def to_wire(frame: Frame) -> dict[str, Any]:
     """Serialise a frame to a JSON-safe dict for the bus. A non-dataclass or unregistered frame
     fails loud rather than crossing the wire half-formed."""
     if not is_dataclass(frame) or type(frame).__name__ not in _WIRE_REGISTRY:
-        raise ValueError(f"frame {type(frame).__name__} is not registered for the wire")
+        raise ValueError(f"frame {type(frame).__name__} is not registered for the wire")  # noqa: TRY003
     return {"type": type(frame).__name__, "fields": asdict(frame)}
 
 
@@ -59,10 +59,10 @@ def from_wire(payload: dict[str, Any]) -> Frame:
     or a malformed field set fails loud (ValueError), so a garbled frame never renders as noise."""
     cls = _WIRE_REGISTRY.get(payload.get("type", ""))
     if cls is None:
-        raise ValueError(f"unknown frame type {payload.get('type')!r}")
+        raise ValueError(f"unknown frame type {payload.get('type')!r}")  # noqa: TRY003
     fields = payload.get("fields")
     if not isinstance(fields, dict):
-        raise ValueError("frame wire payload missing its fields")
+        raise ValueError("frame wire payload missing its fields")  # noqa: TRY003, TRY004
     return cls(**fields)
 
 
@@ -76,11 +76,11 @@ class SpeechFrame(Frame):
 
     def __post_init__(self) -> None:
         if not self.speaker_id:
-            raise ValueError("SpeechFrame needs a speaker_id")
+            raise ValueError("SpeechFrame needs a speaker_id")  # noqa: TRY003
         if not self.words.strip():
-            raise ValueError("SpeechFrame needs non-empty words")
+            raise ValueError("SpeechFrame needs non-empty words")  # noqa: TRY003
 
-    def render_for(self, viewer_id: str) -> str:
+    def render_for(self, viewer_id: str) -> str:  # noqa: ARG002
         # The per-recipient seam: today every bystander sees the same third-person
         # line, but the projection now happens HERE, at delivery, so a viewer's own
         # perspective (name, tense, locale) can diverge later without touching the
@@ -104,15 +104,15 @@ class StrikeFrame(Frame):
 
     def __post_init__(self) -> None:
         if not self.attacker_name.strip():
-            raise ValueError("StrikeFrame needs an attacker_name")
+            raise ValueError("StrikeFrame needs an attacker_name")  # noqa: TRY003
         if not self.verb.strip():
-            raise ValueError("StrikeFrame needs a verb")
+            raise ValueError("StrikeFrame needs a verb")  # noqa: TRY003
         if not self.target_id:
-            raise ValueError("StrikeFrame needs a target_id")
+            raise ValueError("StrikeFrame needs a target_id")  # noqa: TRY003
         if self.amount <= 0:
-            raise ValueError("StrikeFrame amount must be a positive blow")
+            raise ValueError("StrikeFrame amount must be a positive blow")  # noqa: TRY003
 
-    def render_for(self, viewer_id: str) -> str:
+    def render_for(self, viewer_id: str) -> str:  # noqa: ARG002
         # Same seam as SpeechFrame: one third-person line today, per-viewer later.
         return (
             f"{self.attacker_name} {self.verb} at {display_name(self.target_id)} for {self.amount}."

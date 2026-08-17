@@ -81,7 +81,7 @@ def diagnostic_scan(session: Session, word: str) -> str:
     tick(session)
     duration = analyzed_duration(session)
     session.statuses["analyzed"] = duration
-    from kernel.world.combat import elemental_profile  # lazy: engineer sits above the combat loop
+    from kernel.world.combat import elemental_profile  # lazy: engineer sits above the combat loop  # noqa: E501, I001, PLC0415
 
     profile = elemental_profile(npc)
     nature = f" {profile}" if profile else ""

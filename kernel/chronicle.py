@@ -99,67 +99,67 @@ def _ledger_path(root: Path | None) -> Path:
     return base / CHRONICLE_DIR / LEDGER_FILE
 
 
-def _validate_payload(kind: str, payload: object, where: str) -> None:
+def _validate_payload(kind: str, payload: object, where: str) -> None:  # noqa: PLR0912
     """Fail loud if a payload is not the shape its kind requires (checked on append AND on read)."""
     if not isinstance(payload, dict):
-        raise ChronicleError(f"{where}: payload must be an object, got {type(payload).__name__}")
+        raise ChronicleError(f"{where}: payload must be an object, got {type(payload).__name__}")  # noqa: TRY003
     if kind == "metric":
         name = payload.get("name")
         value = payload.get("value")
         if not isinstance(name, str) or not name.strip():
-            raise ChronicleError(f"{where}: a metric record needs a non-empty string 'name'")
+            raise ChronicleError(f"{where}: a metric record needs a non-empty string 'name'")  # noqa: TRY003
         if not isinstance(value, (int, float)) or isinstance(value, bool):
-            raise ChronicleError(f"{where}: a metric 'value' must be a number, got {value!r}")
+            raise ChronicleError(f"{where}: a metric 'value' must be a number, got {value!r}")  # noqa: TRY003
     if kind == "edge":
         for field in ("from", "relation", "to"):
             val = payload.get(field)
             if not isinstance(val, str) or not val.strip():
-                raise ChronicleError(f"{where}: an edge needs a non-empty string {field!r}")
+                raise ChronicleError(f"{where}: an edge needs a non-empty string {field!r}")  # noqa: TRY003
         if payload["relation"] not in RELATIONS:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{where}: unknown edge relation {payload['relation']!r}; expected {RELATIONS}"
             )
     if kind == "incident":
         what = payload.get("what")
         if not isinstance(what, str) or not what.strip():
-            raise ChronicleError(f"{where}: an incident needs a non-empty 'what'")
+            raise ChronicleError(f"{where}: an incident needs a non-empty 'what'")  # noqa: TRY003
         if payload.get("severity") not in INCIDENT_SEVERITIES:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{where}: incident severity must be one of {INCIDENT_SEVERITIES}, "
                 f"got {payload.get('severity')!r}"
             )
         if payload.get("status") not in INCIDENT_STATUSES:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{where}: incident status must be one of {INCIDENT_STATUSES}, "
                 f"got {payload.get('status')!r}"
             )
         if not isinstance(payload.get("corrective_action", ""), str):
-            raise ChronicleError(f"{where}: incident 'corrective_action' must be a string")
+            raise ChronicleError(f"{where}: incident 'corrective_action' must be a string")  # noqa: TRY003
     if kind == "ai-eval":
         subject = payload.get("subject")
         score = payload.get("score")
         model = payload.get("model")
         if not isinstance(subject, str) or not subject.strip():
-            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'subject'")
+            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'subject'")  # noqa: TRY003
         if not isinstance(score, (int, float)) or isinstance(score, bool):
-            raise ChronicleError(f"{where}: an ai-eval 'score' must be a number, got {score!r}")
+            raise ChronicleError(f"{where}: an ai-eval 'score' must be a number, got {score!r}")  # noqa: TRY003
         if not 0.0 <= score <= 1.0:
-            raise ChronicleError(f"{where}: an ai-eval 'score' must be in [0.0, 1.0], got {score}")
+            raise ChronicleError(f"{where}: an ai-eval 'score' must be in [0.0, 1.0], got {score}")  # noqa: TRY003
         if not isinstance(model, str) or not model.strip():
-            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'model'")
+            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'model'")  # noqa: TRY003
         if not isinstance(payload.get("passed"), bool):
-            raise ChronicleError(f"{where}: an ai-eval 'passed' must be a bool")
+            raise ChronicleError(f"{where}: an ai-eval 'passed' must be a bool")  # noqa: TRY003
     if kind == "counterexample":
         if payload.get("source") not in COUNTEREXAMPLE_SOURCES:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{where}: counterexample source must be one of {COUNTEREXAMPLE_SOURCES}, "
                 f"got {payload.get('source')!r}"
             )
         signature = payload.get("signature")
         if not isinstance(signature, str) or not signature.strip():
-            raise ChronicleError(f"{where}: a counterexample needs a non-empty 'signature'")
+            raise ChronicleError(f"{where}: a counterexample needs a non-empty 'signature'")  # noqa: TRY003
         if not isinstance(payload.get("guard", ""), str):
-            raise ChronicleError(f"{where}: counterexample 'guard' must be a string")
+            raise ChronicleError(f"{where}: counterexample 'guard' must be a string")  # noqa: TRY003
 
 
 def _parse_line(line: str, where: str) -> Record:
@@ -167,7 +167,7 @@ def _parse_line(line: str, where: str) -> Record:
     try:
         raw = json.loads(line)
     except json.JSONDecodeError as exc:
-        raise ChronicleError(f"{where}: unreadable record ({exc})") from exc
+        raise ChronicleError(f"{where}: unreadable record ({exc})") from exc  # noqa: TRY003
     try:
         record = Record(
             kind=raw["kind"],
@@ -178,9 +178,9 @@ def _parse_line(line: str, where: str) -> Record:
             content_hash=raw["content_hash"],
         )
     except (KeyError, TypeError) as exc:
-        raise ChronicleError(f"{where}: malformed record (missing {exc})") from exc
+        raise ChronicleError(f"{where}: malformed record (missing {exc})") from exc  # noqa: TRY003
     if record.kind not in KINDS:
-        raise ChronicleError(f"{where}: unknown kind {record.kind!r}; expected {KINDS}")
+        raise ChronicleError(f"{where}: unknown kind {record.kind!r}; expected {KINDS}")  # noqa: TRY003
     _validate_payload(record.kind, record.payload, where)
     return record
 
@@ -205,11 +205,11 @@ def read(kind: str | None = None, *, root: Path | None = None) -> list[Record]:
             record.kind, record.payload, record.commit, record.recorded_utc, record.prior_hash
         )
         if recomputed != record.content_hash:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{LEDGER_FILE} line {i}: content hash mismatch (record was tampered with)"
             )
         if record.prior_hash != expected_prior:
-            raise ChronicleError(
+            raise ChronicleError(  # noqa: TRY003
                 f"{LEDGER_FILE} line {i}: broken chain "
                 f"(prior_hash {record.prior_hash[:8] or '<genesis>'} != expected "
                 f"{expected_prior[:8] or '<genesis>'})"
@@ -219,7 +219,7 @@ def read(kind: str | None = None, *, root: Path | None = None) -> list[Record]:
     if kind is None:
         return records
     if kind not in KINDS:
-        raise ChronicleError(f"unknown kind {kind!r}; expected {KINDS}")
+        raise ChronicleError(f"unknown kind {kind!r}; expected {KINDS}")  # noqa: TRY003
     return [r for r in records if r.kind == kind]
 
 
@@ -244,7 +244,7 @@ def append(
     the shape its kind requires, before anything is written.
     """
     if kind not in KINDS:
-        raise ChronicleError(f"unknown kind {kind!r}; expected {KINDS}")
+        raise ChronicleError(f"unknown kind {kind!r}; expected {KINDS}")  # noqa: TRY003
     _validate_payload(kind, payload, "append")
     existing = read(None, root=root)  # verifies the chain before we extend it
     prior_hash = existing[-1].content_hash if existing else _GENESIS
@@ -258,7 +258,7 @@ def append(
     except (TypeError, ValueError) as exc:
         # The contract is fail-loud with ChronicleError; a non-serializable payload (a set, a
         # mixed-key dict) must not escape as a raw TypeError the chronicle() verb can't catch.
-        raise ChronicleError(f"payload for {kind!r} is not JSON-serializable: {exc}") from exc
+        raise ChronicleError(f"payload for {kind!r} is not JSON-serializable: {exc}") from exc  # noqa: TRY003
     record = Record(
         kind=kind,
         payload=payload,
@@ -517,7 +517,7 @@ def render(records: list[Record]) -> str:
     return "\n".join(lines)
 
 
-def chronicle(arg: str = "") -> str:
+def chronicle(arg: str = "") -> str:  # noqa: PLR0911
     """The read-only `chronicle` verb: show the ship's filed memory.
 
     - `chronicle`                 all records, newest first
@@ -557,23 +557,23 @@ def chronicle(arg: str = "") -> str:
         return f"The Chronicle failed its integrity check: {exc}"
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """CLI: `python -m kernel.chronicle trend <name>` (render) or `record-metric <name> <value>
     <commit>` (append a point). Used by `make trend`; recording is a deliberate, evidenced act."""
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) >= 2 and args[0] == "trend":
+    if len(args) >= 2 and args[0] == "trend":  # noqa: PLR2004
         print(render_trend(args[1], trend(args[1])))
         return 0
-    if len(args) >= 2 and args[0] == "provenance":
+    if len(args) >= 2 and args[0] == "provenance":  # noqa: PLR2004
         print(render_provenance(args[1], provenance(args[1])))
         return 0
-    if len(args) >= 4 and args[0] == "record-metric":
+    if len(args) >= 4 and args[0] == "record-metric":  # noqa: PLR2004
         rec = record_metric(args[1], float(args[2]), commit=args[3])
         print(f"  recorded {rec.payload['name']}={rec.payload['value']} @ {rec.commit} (chronicle)")
         return 0
-    if len(args) >= 5 and args[0] == "record-edge":
+    if len(args) >= 5 and args[0] == "record-edge":  # noqa: PLR2004
         edge = record_edge(args[1], args[2], args[3], commit=args[4])
         p = edge.payload
         print(f"  recorded {p['from']} -{p['relation']}-> {p['to']} @ {edge.commit} (chronicle)")
@@ -589,13 +589,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if (
         # record-counterexample <source> <commit> <signature...>
-        len(args) >= 4 and args[0] == "record-counterexample"
+        len(args) >= 4 and args[0] == "record-counterexample"  # noqa: PLR2004
     ):
         ce = record_counterexample(args[1], " ".join(args[3:]), commit=args[2])
         print(f"  recorded counterexample [{ce.payload['source']}] {ce.payload['signature']}")
         return 0
     if (
-        len(args) >= 4 and args[0] == "record-incident"
+        len(args) >= 4 and args[0] == "record-incident"  # noqa: PLR2004
     ):  # record-incident <severity> <commit> <what...>
         inc = record_incident(" ".join(args[3:]), args[1], commit=args[2])
         print(f"  recorded incident [{inc.payload['severity']}] {inc.payload['what']} (chronicle)")

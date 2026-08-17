@@ -25,7 +25,7 @@ MAX_FRIENDS = 100  # the most names one hero may keep (bounds unbounded list gro
 def _character_exists(name: str) -> bool:
     """True if `name` is a real saved hero (a friend may be offline, so we check the store, not who
     is logged in)."""
-    from kernel.world.characters import _default_store
+    from kernel.world.characters import _default_store  # noqa: PLC0415
 
     return _default_store().find(name) is not None
 
@@ -44,7 +44,7 @@ def add(session: Session, arg: str) -> str:
         return f"Your friends list is full ({MAX_FRIENDS}); remove someone first."
     if not _character_exists(target):
         return f"There is no hero named '{target}' to befriend."
-    from kernel.world.characters import save_character
+    from kernel.world.characters import save_character  # noqa: PLC0415
 
     session.friends.append(target)
     save_character(session)
@@ -56,7 +56,7 @@ def remove(session: Session, arg: str) -> str:
     target = arg.strip().lower()
     if target not in session.friends:
         return f"{display_name(target) if target else 'Whom'} is not on your friends list."
-    from kernel.world.characters import save_character
+    from kernel.world.characters import save_character  # noqa: PLC0415
 
     session.friends.remove(target)
     save_character(session)

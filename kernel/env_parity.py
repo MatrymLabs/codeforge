@@ -188,7 +188,7 @@ def _marker_applies(marker: str, environment: Mapping[str, str]) -> bool:
     return False
 
 
-def _marker_term_applies(term: str, environment: Mapping[str, str]) -> bool:
+def _marker_term_applies(term: str, environment: Mapping[str, str]) -> bool:  # noqa: PLR0911
     match = re.fullmatch(r"([A-Za-z_]+)\s*(==|!=|>=|<=|>|<|in|not in)\s*'([^']+)'", term)
     if match is None:
         return True

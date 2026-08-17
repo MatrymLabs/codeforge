@@ -102,7 +102,7 @@ def verify_seed_recovery(
 
     # Re-validate the bootable IDENTITY through the engine's own gates -- the manifest half that
     # game_lifecycle never sees. A backup can carry a manifest that was never valid; catch it.
-    from kernel.world.world_manifest import WorldManifestError, check_world, describe_world
+    from kernel.world.world_manifest import WorldManifestError, check_world, describe_world  # noqa: I001, PLC0415
 
     try:
         describe_world(seed_name, root=blueprint_root)

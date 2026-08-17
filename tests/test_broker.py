@@ -28,7 +28,7 @@ class FakeClient:
 
     def send(self, data: bytes) -> None:
         if self._explode:
-            raise OSError("dead socket")
+            raise OSError("dead socket")  # noqa: TRY003
         self.received.append(data)
 
 

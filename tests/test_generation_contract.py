@@ -50,12 +50,12 @@ def test_canon_tier_map():
 
 
 def test_missing_fields_is_empty_for_a_complete_area():
-    area = {field: "x" for field in gc.required_area_fields()}
+    area = {field: "x" for field in gc.required_area_fields()}  # noqa: C420
     assert gc.missing_fields(area) == []
 
 
 def test_missing_fields_flags_absent_and_empty_fields():
-    area = {field: "x" for field in gc.required_area_fields()}
+    area = {field: "x" for field in gc.required_area_fields()}  # noqa: C420
     del area["identity"]  # absent
     area["hazard"] = ""  # present but empty (a placeholder must not pass)
     missing = gc.missing_fields(area)
@@ -64,7 +64,7 @@ def test_missing_fields_flags_absent_and_empty_fields():
 
 def test_a_real_zero_or_false_is_not_blank():
     # A generation_seed of 0 is a valid value, not a missing field (regression: `not 0` is True).
-    area = {field: "x" for field in gc.required_area_fields()}
+    area = {field: "x" for field in gc.required_area_fields()}  # noqa: C420
     area["generation_seed"] = 0
     assert gc.missing_fields(area) == []
 
@@ -138,7 +138,7 @@ def test_a_missing_section_fails_loud(tmp_path: Path):
 def test_shares_that_do_not_sum_to_one_fail_loud(tmp_path: Path):
     data = _good()
     data["minor_area_archetypes"] = [{"id": "natural", "share": 0.5}, {"id": "scar", "share": 0.2}]
-    with pytest.raises(BlueprintError, match="sum to 1.0"):
+    with pytest.raises(BlueprintError, match="sum to 1.0"):  # noqa: RUF043
         gc.load_contract(_write(tmp_path, data))
 
 

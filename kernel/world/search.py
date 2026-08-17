@@ -69,7 +69,7 @@ class _WorldIndex:
         self._fts = allow_fts
         try:
             if not allow_fts:
-                raise sqlite3.OperationalError("fts disabled")  # forced substring path (tests)
+                raise sqlite3.OperationalError("fts disabled")  # forced substring path (tests)  # noqa: E501, TRY003, TRY301
             self._con.execute("CREATE VIRTUAL TABLE docs USING fts5(doc_id UNINDEXED, body)")
         except sqlite3.OperationalError:  # FTS5 not compiled in -> substring fallback
             self._fts = False
@@ -119,7 +119,7 @@ _sentinel: tuple[int, int, int] = (-1, -1, -1)
 
 def _get_index() -> _WorldIndex:
     """The world index, built lazily and rebuilt when the world's content count changes."""
-    global _index, _sentinel
+    global _index, _sentinel  # noqa: PLW0603
     sig = (len(WORLD), len(ITEMS), len(NPCS))
     if _index is None or sig != _sentinel:
         if _index is not None:
@@ -131,7 +131,7 @@ def _get_index() -> _WorldIndex:
 
 def reset() -> None:
     """Drop the cached index (for tests or after a reseed)."""
-    global _index, _sentinel
+    global _index, _sentinel  # noqa: PLW0603
     if _index is not None:
         _index.close()
     _index = None

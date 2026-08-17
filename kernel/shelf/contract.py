@@ -26,7 +26,7 @@ class ContractError(ValueError):
     """Raised when a contract or field is declared malformed."""
 
 
-class ContractViolation(AssertionError):
+class ContractViolation(AssertionError):  # noqa: N818
     """Raised by check() when a sample does not satisfy a contract (test-facing)."""
 
 
@@ -47,9 +47,9 @@ class Field:
 
     def __post_init__(self) -> None:
         if not isinstance(self.name, str) or self.name.strip() == "":
-            raise ContractError("field name must be a non-empty string")
+            raise ContractError("field name must be a non-empty string")  # noqa: TRY003
         if not _is_field_type(self.type):
-            raise ContractError(f"field {self.name!r} has an invalid type spec: {self.type!r}")
+            raise ContractError(f"field {self.name!r} has an invalid type spec: {self.type!r}")  # noqa: TRY003
 
 
 def _is_field_type(spec: Any) -> bool:
@@ -70,11 +70,11 @@ class Contract:
 
     def __post_init__(self) -> None:
         if not isinstance(self.name, str) or self.name.strip() == "":
-            raise ContractError("contract name must be a non-empty string")
+            raise ContractError("contract name must be a non-empty string")  # noqa: TRY003
         if not isinstance(self.consumer, str) or self.consumer.strip() == "":
-            raise ContractError("contract consumer must be a non-empty string")
+            raise ContractError("contract consumer must be a non-empty string")  # noqa: TRY003
         if not self.fields:
-            raise ContractError(f"contract {self.name!r} declares no fields")
+            raise ContractError(f"contract {self.name!r} declares no fields")  # noqa: TRY003
 
 
 def _scalar_ok(expected: type, value: Any) -> bool:
@@ -136,7 +136,7 @@ class ContractRegistry:
 
     def register(self, contract: Contract) -> None:
         if not isinstance(contract, Contract):
-            raise ContractError("register expects a Contract")
+            raise ContractError("register expects a Contract")  # noqa: TRY003
         self._by_interaction.setdefault(contract.name, []).append(contract)
 
     def for_interaction(self, name: str) -> list[Contract]:

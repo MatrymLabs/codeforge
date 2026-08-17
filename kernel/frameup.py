@@ -41,7 +41,7 @@ class SystemFrame:
 
 def _career_line() -> SystemFrame:
     try:
-        from kernel.career import PARTIAL, PROVEN, load_board
+        from kernel.career import PARTIAL, PROVEN, load_board  # noqa: PLC0415
 
         skills = [s for lvl in load_board()["levels"] for s in lvl["skills"]]
         c = Counter(s["status"] for s in skills)
@@ -52,17 +52,17 @@ def _career_line() -> SystemFrame:
             f"{c.get('missing', 0)} missing (gaps tracked honestly)",
             gating=False,
         )
-    except Exception as exc:  # pragma: no cover - defensive; a broken board shouldn't crash inspect
+    except Exception as exc:  # pragma: no cover - defensive; a broken board shouldn't crash inspect  # noqa: BLE001, E501
         return SystemFrame("career board", YELLOW, f"unavailable: {exc}", gating=False)
 
 
 def _pioneer_line() -> SystemFrame:
     try:
-        from kernel.pioneer import _EXPERIMENTS
+        from kernel.pioneer import _EXPERIMENTS  # noqa: PLC0415
 
         n = len(list(_EXPERIMENTS.glob("*.md"))) if _EXPERIMENTS.is_dir() else 0
         return SystemFrame("pioneer mode", GREEN, f"{n} experiment(s) filed", gating=False)
-    except Exception as exc:  # pragma: no cover
+    except Exception as exc:  # pragma: no cover  # noqa: BLE001
         return SystemFrame("pioneer mode", YELLOW, f"unavailable: {exc}", gating=False)
 
 
@@ -164,19 +164,19 @@ def inspect(arg: str = "") -> str:
     if a in ("", "forge", "the forge"):
         return render_frameup()
     if a == "qa":
-        from kernel.qualitygate import render_gate_all
+        from kernel.qualitygate import render_gate_all  # noqa: PLC0415
 
         return render_gate_all()
     if a == "truth":
-        from kernel.evidence_gate import render_truth
+        from kernel.evidence_gate import render_truth  # noqa: PLC0415
 
         return render_truth()
     if a == "pm":
-        from kernel.pm import pm_status
+        from kernel.pm import pm_status  # noqa: PLC0415
 
         return pm_status()
     if a == "save":
-        from kernel.shelf.reporting import write_report
+        from kernel.shelf.reporting import write_report  # noqa: PLC0415
 
         report = render_frameup()
         path = write_report("frameup", report, slug="frameup")

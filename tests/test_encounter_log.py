@@ -36,7 +36,7 @@ def fresh_log():
 
 
 def _fighter(location: str = "courtyard") -> Session:
-    from kernel.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
 
     s = Session(player_id="matrym", location=location)
     bind_calling(s, "vanguard")
@@ -110,7 +110,7 @@ def test_encounter_log_never_imports_the_chronicle():
 
 
 def test_the_encounters_verb_renders_through_the_tick():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     witness("defeat", "the training dummy")
     out = handle_command(_fighter(), "encounters")
@@ -119,7 +119,7 @@ def test_the_encounters_verb_renders_through_the_tick():
 
 
 def test_felling_a_foe_witnesses_a_defeat():
-    from kernel.world.combat import attack
+    from kernel.world.combat import attack  # noqa: PLC0415
 
     s = _fighter()
     for _ in range(10):  # strike until the dummy collapses
@@ -130,7 +130,7 @@ def test_felling_a_foe_witnesses_a_defeat():
 
 
 def test_an_aggressive_open_strike_is_witnessed():
-    from kernel.world.aggression import menace
+    from kernel.world.aggression import menace  # noqa: PLC0415
 
     npcs.NPCS["reaver"] = Npc(
         name="the reaver",

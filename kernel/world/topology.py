@@ -61,14 +61,14 @@ def default_gates() -> TopologyGates:
 def load_topology_spec(path: Path | None = None) -> dict[str, Any]:
     """The World Topology Doctrine as data: directions, terrain + passability, zone backings, gates,
     and the two-layer generation design. Fails loud if the spec is missing or malformed."""
-    import yaml  # a real dep (loaders use it); imported here to keep the module light
+    import yaml  # a real dep (loaders use it); imported here to keep the module light  # noqa: E501, PLC0415
 
     spec_path = path or _SPEC_PATH
     if not spec_path.exists():
-        raise TopologyError(f"topology spec not found at {spec_path}")
+        raise TopologyError(f"topology spec not found at {spec_path}")  # noqa: TRY003
     data = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or "gates" not in data or "terrain" not in data:
-        raise TopologyError("topology spec must be a mapping with 'gates' and 'terrain'")
+        raise TopologyError("topology spec must be a mapping with 'gates' and 'terrain'")  # noqa: TRY003
     return data
 
 
@@ -91,13 +91,13 @@ class TopologyReport:
 
 def _validate(exits: Exits, start: str) -> None:
     if not exits:
-        raise TopologyError("an empty graph has no topology to judge")
+        raise TopologyError("an empty graph has no topology to judge")  # noqa: TRY003
     if start not in exits:
-        raise TopologyError(f"start room {start!r} is not in the graph")
+        raise TopologyError(f"start room {start!r} is not in the graph")  # noqa: TRY003
     for room, outs in exits.items():
         for direction, dest in outs.items():
             if dest not in exits:
-                raise TopologyError(
+                raise TopologyError(  # noqa: TRY003
                     f"room {room!r} exit {direction!r} -> {dest!r}: names no room (dangling exit)"
                 )
 
@@ -132,7 +132,7 @@ def _bridges(adj: dict[str, set[str]]) -> set[frozenset[str]]:
     low: dict[str, int] = {}
     bridges: set[frozenset[str]] = set()
     timer = 0
-    for root in adj:
+    for root in adj:  # noqa: PLC0206
         if root in disc:
             continue
         # iterative DFS; the stack holds (node, parent, iterator over neighbours)
@@ -179,7 +179,7 @@ def audit_topology(
     n = len(exits)
     degrees = [len(outs) for outs in exits.values()]
     mean_degree = sum(degrees) / n
-    linearity = sum(1 for d in degrees if d == 2) / n
+    linearity = sum(1 for d in degrees if d == 2) / n  # noqa: PLR2004
 
     adj = _undirected(exits)
     bridges = _bridges(adj)
@@ -194,7 +194,7 @@ def audit_topology(
     # >= 2), so it separates two real areas -- not a leaf-spur to a deliberate dead end.
     undeclared: list[tuple[str, str]] = []
     for edge in bridges:
-        if all(len(adj[node]) >= 2 for node in edge) and edge not in declared:
+        if all(len(adj[node]) >= 2 for node in edge) and edge not in declared:  # noqa: PLR2004
             a, b = sorted(edge)
             undeclared.append((a, b))
     undeclared.sort()

@@ -44,74 +44,74 @@ _CROWN_FIELDS = ("id", "map_name", "mythic_title", "region", "ancient_function",
 _REGION_FIELDS = ("id", "name", "threat_min", "threat_max")
 
 
-def load_canon(path: Path | None = None) -> dict[str, Any]:
+def load_canon(path: Path | None = None) -> dict[str, Any]:  # noqa: PLR0912
     """Read and VALIDATE the locked canon. Fails loud (BlueprintError) on any malformed record, so a
     canon file that could mislead a generator never loads silently. Returns the parsed mapping."""
     where = path if path is not None else _CANON_PATH
     if not where.exists():
-        raise BlueprintError(f"Canon file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"Canon file not found: {where}")  # noqa: TRY003
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
-        raise BlueprintError(f"Canon file is not a mapping: {where}")
+        raise BlueprintError(f"Canon file is not a mapping: {where}")  # noqa: TRY003
 
     def _status(record: dict[str, Any], label: str) -> None:
         status = record.get("canon_status")
         if status not in CANON_STATUSES:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"canon {label}: canon_status must be one of {CANON_STATUSES}, got {status!r}"
             )
 
     world = data.get("world")
     if not isinstance(world, dict) or world.get("id") != "aethryn":
-        raise BlueprintError("canon: 'world' must name id 'aethryn'")
+        raise BlueprintError("canon: 'world' must name id 'aethryn'")  # noqa: TRY003
     _status(world, "world")
 
     crowns = data.get("seven_crowns")
-    if not isinstance(crowns, list) or len(crowns) != 7:
-        raise BlueprintError(
+    if not isinstance(crowns, list) or len(crowns) != 7:  # noqa: PLR2004
+        raise BlueprintError(  # noqa: TRY003
             f"canon: 'seven_crowns' must list exactly 7 sites, got {len(crowns or [])}"
         )
     for crown in crowns:
         for field in _CROWN_FIELDS:
             if not crown.get(field):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"canon crown {crown.get('id')!r}: missing required field {field!r}"
                 )
         if crown.get("canon_status") != "CANON_LOCKED":
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"canon crown {crown['id']!r}: a Seven Crown site must be CANON_LOCKED"
             )
 
     world_regions = data.get("regions")
-    if not isinstance(world_regions, list) or len(world_regions) != 14:
-        raise BlueprintError(
+    if not isinstance(world_regions, list) or len(world_regions) != 14:  # noqa: PLR2004
+        raise BlueprintError(  # noqa: TRY003
             f"canon: 'regions' must list exactly 14 regions, got {len(world_regions or [])}"
         )
     for region in world_regions:
         for field in _REGION_FIELDS:
             if region.get(field) is None:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"canon region {region.get('id')!r}: missing required field {field!r}"
                 )
         if region["threat_min"] > region["threat_max"]:
-            raise BlueprintError(f"canon region {region['id']!r}: threat_min exceeds threat_max")
+            raise BlueprintError(f"canon region {region['id']!r}: threat_min exceeds threat_max")  # noqa: TRY003
         _status(region, f"region {region['id']!r}")
 
     for fact in data.get("facts", []):
         if not fact.get("id") or not fact.get("text"):
-            raise BlueprintError(f"canon fact {fact.get('id')!r}: needs an id and text")
+            raise BlueprintError(f"canon fact {fact.get('id')!r}: needs an id and text")  # noqa: TRY003
         _status(fact, f"fact {fact.get('id')!r}")
 
     for term in data.get("collective_names", []):
         if not term.get("name") or not term.get("usage"):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"canon collective name {term.get('id')!r}: needs a name and usage"
             )
         _status(term, f"collective name {term.get('id')!r}")
 
     for faction in data.get("world_factions", []):
         if not faction.get("id") or not faction.get("name") or not faction.get("stance"):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"canon faction {faction.get('id')!r}: needs an id, name, and stance"
             )
         _status(faction, f"faction {faction.get('id')!r}")
@@ -190,7 +190,7 @@ def _correspondence_violations(
 
 def _names_in(path: Path) -> set[str]:
     """The display names of every top-level record in a seed YAML file (skipping a template)."""
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
         return set()
     return {

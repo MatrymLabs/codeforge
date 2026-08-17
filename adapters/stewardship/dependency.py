@@ -59,10 +59,10 @@ class StaticOracle:
     def exists(self, name: str) -> bool:
         return name in self.known
 
-    def critical_cve_count(self, name: str, version: str) -> int:
+    def critical_cve_count(self, name: str, version: str) -> int:  # noqa: ARG002
         return self.vulns.get(name, 0)
 
-    def license_of(self, name: str, version: str) -> str:
+    def license_of(self, name: str, version: str) -> str:  # noqa: ARG002
         return self.licenses.get(name, "UNKNOWN")
 
 
@@ -98,7 +98,7 @@ def ledger_packages(path: Path | None = None) -> set[str]:
     a second time. A missing ledger is an empty allowlist -- so a new dependency then requires a
     ledger row, a safe default for admission control.
     """
-    from adapters.dependencies import read_ledger
+    from adapters.dependencies import read_ledger  # noqa: PLC0415
 
     src = path or (_ROOT / "dependency_ledger.toml")
     if not src.is_file():

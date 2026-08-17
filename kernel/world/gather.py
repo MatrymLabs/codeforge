@@ -21,7 +21,7 @@ GATHER_COOLDOWN = 6  # world-beats before a node renews for the player who worke
 def gather(session: Session) -> str:
     """`gather` -- harvest the current room's node into your hands, if it has one and has renewed.
     Fails cleanly when there is nothing here, or the node is still spent."""
-    from kernel.world.world import WORLD
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     room = WORLD.get(session.location)
     node = room.get("node") if room else None
@@ -31,7 +31,7 @@ def gather(session: Session) -> str:
     if left > 0:
         return f"You have worked this node bare; give it a while to renew ({left} beats)."
 
-    from kernel.world import items
+    from kernel.world import items  # noqa: PLC0415
 
     try:
         iid = items.clone(node, items.carrier(session.player_id))
@@ -41,16 +41,16 @@ def gather(session: Session) -> str:
     line = f"You gather {items.ITEMS[iid]['name']}."
     # Working a material advances the gather trade that claims it (mining/herbalism/prospecting);
     # a rank-up appends its own line, a no-op is silent (kernel.world.professions).
-    from kernel.world.professions import advance, trade_for_gather
+    from kernel.world.professions import advance, trade_for_gather  # noqa: PLC0415
 
     rose = advance(session, trade_for_gather(str(node)))
     if rose:
         line = f"{line}\n{rose}"
     # A forage contract ('gather N of a material HERE') advances on the harvest, scoped to this zone
     # -- the non-combat twin of a cull (kernel.world.forage). Cheap: an unrouted key is a dict miss.
-    from kernel.world import quest
-    from kernel.world.cull import scope_key
-    from kernel.world.zones import zone_of
+    from kernel.world import quest  # noqa: PLC0415
+    from kernel.world.cull import scope_key  # noqa: PLC0415
+    from kernel.world.zones import zone_of  # noqa: PLC0415
 
     zone = zone_of(session.location)
     if zone:
@@ -63,8 +63,8 @@ def gather(session: Session) -> str:
 def gather_hint(location: str) -> str:
     """A one-line look hint for a room with a gather node (the material by name), or "". Lets a
     forager SEE what a place offers instead of guessing with `gather`."""
-    from kernel.world import items
-    from kernel.world.world import WORLD
+    from kernel.world import items  # noqa: PLC0415
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     room = WORLD.get(location)
     node = room.get("node") if room else None

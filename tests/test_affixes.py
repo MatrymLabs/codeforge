@@ -23,7 +23,7 @@ def test_a_common_roll_leaves_the_base_unchanged():
         if r.rarity == "common":
             assert r.name == "blade" and r.mods == {"ATK": 10}  # no affix, no scaling
             return
-    raise AssertionError("expected at least one common roll in 80 tries")
+    raise AssertionError("expected at least one common roll in 80 tries")  # noqa: TRY003
 
 
 def test_a_rarer_roll_boosts_the_base_and_adds_named_affixes():
@@ -34,7 +34,7 @@ def test_a_rarer_roll_boosts_the_base_and_adds_named_affixes():
             assert r.name != "blade"  # affixes rename it (a prefix and/or suffix)
             assert all(stat in DERIVED_STATS for stat in r.mods)  # only real combat stats
             return
-    raise AssertionError("expected a legendary roll in 400 tries")
+    raise AssertionError("expected a legendary roll in 400 tries")  # noqa: TRY003
 
 
 def test_the_full_rarity_spread_is_reachable():

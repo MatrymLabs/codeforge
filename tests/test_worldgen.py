@@ -97,7 +97,7 @@ def test_road_between_returns_empty_when_blocked() -> None:
 
 
 def test_paving_a_road_leaves_a_crossing_unpaved() -> None:
-    from kernel.world.worldgen import _pave_roads
+    from kernel.world.worldgen import _pave_roads  # noqa: PLC0415
 
     cells = {(x, 0): Cell("plain") for x in range(5)}
     cells[(2, 0)] = Cell("ford")  # a crossing on the road's path
@@ -148,7 +148,7 @@ def test_a_glacier_breaks_into_impassable_cliffs() -> None:
 
 
 def test_an_unknown_biome_falls_back_to_the_plains_default() -> None:
-    from kernel.world.worldgen import _DEFAULT_PROFILE, _profile
+    from kernel.world.worldgen import _DEFAULT_PROFILE, _profile  # noqa: PLC0415
 
     assert _profile("no-such-biome") is _DEFAULT_PROFILE
     assert _descs("") == _descs("no-such-biome")  # empty + unknown both read through the default
@@ -230,7 +230,7 @@ def test_a_degenerate_size_is_refused_loud() -> None:
 
 def test_a_landmark_on_impassable_terrain_is_refused_loud(monkeypatch) -> None:
     # force a cell impassable under a landmark, then place a landmark on it -> loud refusal
-    import kernel.world.worldgen as wg
+    import kernel.world.worldgen as wg  # noqa: PLC0415
 
     real = wg._terrain
 
@@ -251,7 +251,7 @@ def test_a_landmark_on_impassable_terrain_is_refused_loud(monkeypatch) -> None:
 
 def _living_vale(seed: int = 7, **life_kw):
     """A world-shaped region plus its life, for the life-layer proofs."""
-    from kernel.world.worldgen import LifeSpec, populate_region
+    from kernel.world.worldgen import LifeSpec, populate_region  # noqa: PLC0415
 
     region = generate_region(RegionSpec("vale", 24, 18, seed=seed, landmarks=(_TOWN, _KEEP)))
     npcs = populate_region(region, LifeSpec("temperate-meadow", 1, 30, **life_kw))
@@ -266,7 +266,7 @@ def test_a_field_comes_alive_with_foes_gather_and_guardians() -> None:
         room = region.rooms[npc["location"]]
         assert not room.get("landmark"), "no monster dens in the anchored sites"
     # gather nodes were hung, each a material this biome can actually yield
-    from kernel.world.wildlands import gatherable_materials
+    from kernel.world.wildlands import gatherable_materials  # noqa: PLC0415
 
     yields = set(gatherable_materials("temperate-meadow"))
     nodes = [r["node"] for r in region.rooms.values() if "node" in r]
@@ -287,7 +287,7 @@ def test_every_wild_cell_holds_exactly_one_creature_at_the_default_rate() -> Non
 
 
 def test_a_guardian_replaces_the_ambient_on_its_cell() -> None:
-    region, npcs = _living_vale()
+    region, npcs = _living_vale()  # noqa: RUF059
     guardian_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_lord_")}
     ambient_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_beast_")}
     assert guardian_cells, "there must be at least one guardian to check"
@@ -299,7 +299,7 @@ def test_a_guardian_replaces_the_ambient_on_its_cell() -> None:
 def test_the_wild_deepens_with_distance_from_the_spawn() -> None:
     region, npcs = _living_vale()
     # the creature nearest the spawn is weaker than the one deepest in the field
-    from kernel.world.worldgen import _cell_order
+    from kernel.world.worldgen import _cell_order  # noqa: PLC0415
 
     exits = {rid: r["exits"] for rid, r in region.rooms.items()}
     order = [
@@ -335,7 +335,7 @@ def test_life_never_disturbs_the_world_shape() -> None:
 
 
 def test_the_same_seed_breathes_the_same_life() -> None:
-    from kernel.world.worldgen import LifeSpec, populate_region
+    from kernel.world.worldgen import LifeSpec, populate_region  # noqa: PLC0415
 
     spec = RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,))
     life = LifeSpec("temperate-meadow", 1, 30)
@@ -350,9 +350,9 @@ def test_the_same_seed_breathes_the_same_life() -> None:
 
 
 def test_an_empty_region_cannot_be_brought_to_life() -> None:
-    import dataclasses
+    import dataclasses  # noqa: PLC0415
 
-    from kernel.world.worldgen import LifeSpec, populate_region
+    from kernel.world.worldgen import LifeSpec, populate_region  # noqa: PLC0415
 
     region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
     empty = dataclasses.replace(region, rooms={})
@@ -361,7 +361,7 @@ def test_an_empty_region_cannot_be_brought_to_life() -> None:
 
 
 def test_a_non_positive_cadence_is_refused_loud() -> None:
-    from kernel.world.worldgen import LifeSpec, populate_region
+    from kernel.world.worldgen import LifeSpec, populate_region  # noqa: PLC0415
 
     region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
     for bad in (
@@ -375,7 +375,7 @@ def test_a_non_positive_cadence_is_refused_loud() -> None:
 
 def test_life_deepens_from_a_chosen_origin_not_just_the_spawn() -> None:
     # the on-ramp: pass an ENTRANCE as origin and the gentlest wild sits there, deepening outward
-    from kernel.world.worldgen import LifeSpec, _cell_order, populate_region
+    from kernel.world.worldgen import LifeSpec, _cell_order, populate_region  # noqa: PLC0415
 
     region = generate_region(RegionSpec("vale", 24, 18, seed=7, landmarks=(_TOWN, _KEEP)))
     exits = {rid: r["exits"] for rid, r in region.rooms.items()}
@@ -390,7 +390,7 @@ def test_life_deepens_from_a_chosen_origin_not_just_the_spawn() -> None:
 
 
 def test_a_life_origin_that_is_not_a_cell_is_refused() -> None:
-    from kernel.world.worldgen import LifeSpec, populate_region
+    from kernel.world.worldgen import LifeSpec, populate_region  # noqa: PLC0415
 
     region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
     with pytest.raises(WorldgenError, match="origin"):
@@ -398,7 +398,7 @@ def test_a_life_origin_that_is_not_a_cell_is_refused() -> None:
 
 
 def test_band_flattens_when_the_field_is_a_single_cell() -> None:
-    from kernel.world.worldgen import _band
+    from kernel.world.worldgen import _band  # noqa: PLC0415
 
     assert _band(1, 30, 0, 1) == 1  # span<=1: no gradient, everything sits at the floor
     assert _band(1, 30, 5, 0) == 1

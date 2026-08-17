@@ -19,7 +19,7 @@ from dataclasses import dataclass
 
 # A module RNG for dynamic spawning: runtime game variety, not world-gen (which stays fixed).
 # Tests seed or replace it to draw an exact site; it is never a source of security or secrecy.
-SPAWN_RNG = random.Random()  # nosec B311
+SPAWN_RNG = random.Random()  # nosec B311  # noqa: S311
 
 
 @dataclass(frozen=True)
@@ -107,7 +107,7 @@ def pick_room(
     draw = rng or SPAWN_RNG
     if weights is not None:
         if len(weights) != len(candidates):
-            raise ValueError("pick_room: weights and candidates must be the same length")
+            raise ValueError("pick_room: weights and candidates must be the same length")  # noqa: TRY003
         return draw.choices(candidates, weights=weights, k=1)[0]
     return draw.choice(candidates)
 

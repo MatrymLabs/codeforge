@@ -72,9 +72,9 @@ def test_a_session_with_no_calling_has_no_sheet() -> None:
 
 
 def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
-    from kernel.world.character_view import sheet_from_session
-    from kernel.world.jobs import bind_calling
-    from kernel.world.session import Session
+    from kernel.world.character_view import sheet_from_session  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")
@@ -89,9 +89,9 @@ def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
 def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
     """The seam combat reads: a declared resistance is real, an undeclared one (or no calling)
     reads Normal -- the same grid the sheet renders, so a fight never lies about it."""
-    from kernel.world.character_view import session_resistance
-    from kernel.world.jobs import bind_calling
-    from kernel.world.session import Session
+    from kernel.world.character_view import session_resistance  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     assert session_resistance(Session(player_id="matrym"), "FIR") == "Normal"  # no calling yet
     s = Session(player_id="matrym")
@@ -101,10 +101,10 @@ def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
 
 
 def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
-    from kernel.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
-    from kernel.world.job_progress import JobProgress
-    from kernel.world.jobs import JOBS, bind_calling
-    from kernel.world.session import Session
+    from kernel.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session  # noqa: I001, PLC0415
+    from kernel.world.job_progress import JobProgress  # noqa: PLC0415
+    from kernel.world.jobs import JOBS, bind_calling  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")

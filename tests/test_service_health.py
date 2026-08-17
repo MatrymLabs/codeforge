@@ -17,7 +17,7 @@ def test_a_raising_dependency_makes_the_service_not_ready():
     svc = ServiceHealth()
 
     def boom() -> str:
-        raise ConnectionError("upstream unreachable")
+        raise ConnectionError("upstream unreachable")  # noqa: TRY003
 
     svc.add("upstream", boom)
     assert svc.ready() is False  # unknown is never ready
@@ -25,7 +25,7 @@ def test_a_raising_dependency_makes_the_service_not_ready():
 
 
 def test_one_core_powers_both_the_game_vitals_and_the_practical_service_health():
-    import kernel.vitals as game
+    import kernel.vitals as game  # noqa: PLC0415
 
     svc = ServiceHealth()
     assert isinstance(svc._registry, HealthRegistry)  # the practical probe uses the core

@@ -20,10 +20,10 @@ def snapshot() -> dict[str, int]:
     """The current world metrics as {name: count}. Aggregate queries only, so it stays cheap even as
     the tables grow: characters + total coin in circulation, guilds + their treasuries, live auction
     listings, mail in flight, standing bans, and players online now (off the bus-fed roster)."""
-    from sqlalchemy import func, select
+    from sqlalchemy import func, select  # noqa: PLC0415
 
-    from kernel.world import presence
-    from kernel.world.db import (
+    from kernel.world import presence  # noqa: PLC0415
+    from kernel.world.db import (  # noqa: PLC0415
         AuctionRow,
         BanRow,
         CharacterRow,

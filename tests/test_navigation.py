@@ -78,7 +78,7 @@ def test_world_navgraph_is_cached_between_calls():
 
 
 def test_world_navgraph_rebuilds_when_the_world_is_swapped(monkeypatch):
-    import kernel.world.world as world_mod
+    import kernel.world.world as world_mod  # noqa: PLC0415
 
     first = navigation.world_navgraph()
     mini = {
@@ -94,9 +94,9 @@ def test_world_navgraph_rebuilds_when_the_world_is_swapped(monkeypatch):
 # --- Rust <-> Python parity (skips when the native kernel is not built) -------------------------
 @pytest.mark.skipif(not _HAS_RUST, reason="native codeforge_nav not built (maturin develop)")
 def test_rust_matches_the_python_reference():
-    import random
+    import random  # noqa: PLC0415
 
-    import codeforge_nav
+    import codeforge_nav  # noqa: PLC0415
 
     rng = random.Random(1234)
     n = 4000
@@ -117,18 +117,18 @@ def test_rust_matches_the_python_reference():
 
 
 def test_route_command_is_reachable_through_the_tick():
-    import forge
-    from kernel.world.session import Session
-    from kernel.world.world import START_ROOM
+    import forge  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.world import START_ROOM  # noqa: PLC0415
 
     out = forge.handle_command(Session(player_id="walker", location=START_ROOM), "route")
     assert "Route to where" in out  # the verb is wired into the engine tick
 
 
 def test_route_finds_a_path_between_two_real_rooms():
-    import forge
-    from kernel.world.session import Session
-    from kernel.world.world import WORLD
+    import forge  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.world import WORLD  # noqa: PLC0415
 
     start = next(r for r, room in WORLD.items() if room.get("exits"))
     dest = WORLD[start]["exits"][next(iter(WORLD[start]["exits"]))]  # a direct neighbour
@@ -138,7 +138,7 @@ def test_route_finds_a_path_between_two_real_rooms():
 
 # --- route command edge cases (over a small monkeypatched world) --------------------------------
 def _mini_world(monkeypatch):
-    import kernel.world.world as world_mod
+    import kernel.world.world as world_mod  # noqa: PLC0415
 
     world = {
         "a": {"name": "A", "desc": "", "exits": {"north": "b"}},
@@ -148,24 +148,24 @@ def _mini_world(monkeypatch):
 
 
 def test_route_refuses_an_unknown_target(monkeypatch):
-    from kernel.world.session import Session
-    from kernel.world.travel import route
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.travel import route  # noqa: PLC0415
 
     _mini_world(monkeypatch)
     assert "no room called 'zzz'" in route(Session(player_id="w", location="a"), "zzz")
 
 
 def test_route_notices_you_are_already_there(monkeypatch):
-    from kernel.world.session import Session
-    from kernel.world.travel import route
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.travel import route  # noqa: PLC0415
 
     _mini_world(monkeypatch)
     assert "already there" in route(Session(player_id="w", location="a"), "a")
 
 
 def test_route_reports_no_path_on_foot(monkeypatch):
-    from kernel.world.session import Session
-    from kernel.world.travel import route
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.travel import route  # noqa: PLC0415
 
     _mini_world(monkeypatch)
     # b -> a has no directed path (a->b only)
@@ -173,8 +173,8 @@ def test_route_reports_no_path_on_foot(monkeypatch):
 
 
 def test_route_needs_a_destination(monkeypatch):
-    from kernel.world.session import Session
-    from kernel.world.travel import route
+    from kernel.world.session import Session  # noqa: PLC0415
+    from kernel.world.travel import route  # noqa: PLC0415
 
     _mini_world(monkeypatch)
     assert "Route to where" in route(Session(player_id="w", location="a"), "")

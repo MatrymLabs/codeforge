@@ -79,16 +79,16 @@ def run_load(
     measures genuine concurrent load rather than staggered starts.
     """
     if concurrency < 1:
-        raise LoadError(f"concurrency must be >= 1, got {concurrency}")
+        raise LoadError(f"concurrency must be >= 1, got {concurrency}")  # noqa: TRY003
     if per_worker < 1:
-        raise LoadError(f"per_worker must be >= 1, got {per_worker}")
+        raise LoadError(f"per_worker must be >= 1, got {per_worker}")  # noqa: TRY003
     if warmup < 0:
-        raise LoadError(f"warmup must be >= 0, got {warmup}")
+        raise LoadError(f"warmup must be >= 0, got {warmup}")  # noqa: TRY003
     if not rotation:
-        raise LoadError("rotation must name at least one command")
+        raise LoadError("rotation must name at least one command")  # noqa: TRY003
 
-    from forge import handle_command  # lazy: the tick is the top; parts do not import it eagerly
-    from kernel.world.session import Session
+    from forge import handle_command  # lazy: the tick is the top; parts do not import it eagerly  # noqa: E501, I001, PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     # Warm up single-threaded so first-call import/cache building never races across the workers.
     warm = Session(player_id="_load_warm")
@@ -147,7 +147,7 @@ def compare_to_slo(result: LoadResult) -> str:
     does not record into that series (different measurement conditions); it answers "does the
     objective still hold under load?" as supporting evidence for the SLO doc.
     """
-    from kernel import slo
+    from kernel import slo  # noqa: PLC0415
 
     threshold = slo.DEFAULT_THRESHOLD_US
     verdict = "within" if result.p50_us <= threshold else "OVER"
@@ -163,11 +163,11 @@ def render_load(result: LoadResult) -> str:
         [
             "ENGINE TICK LOAD TEST - handle_command under concurrent sessions (read-only rotation)",
             f"  commands    : {', '.join(result.commands)}",
-            f"  concurrency : {result.concurrency} sessions x {result.per_worker} calls each "
+            f"  concurrency : {result.concurrency} sessions x {result.per_worker} calls each "  # noqa: ISC004
             f"= {result.total_calls:,} calls",
             f"  duration    : {result.duration_s:.3f}s",
             f"  throughput  : {result.throughput_per_s:,.0f} commands/sec (aggregate)",
-            f"  latency     : p50 {result.p50_us:.1f}us  p95 {result.p95_us:.1f}us  "
+            f"  latency     : p50 {result.p50_us:.1f}us  p95 {result.p95_us:.1f}us  "  # noqa: ISC004
             f"p99 {result.p99_us:.1f}us  max {result.max_us:.1f}us",
             f"  errors      : {result.errors}",
             compare_to_slo(result),
@@ -183,14 +183,14 @@ def write_load_report(
     result: LoadResult, root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/."""
-    from kernel.shelf.reporting import write_report
+    from kernel.shelf.reporting import write_report  # noqa: PLC0415
 
     return write_report(
         "performance", render_load(result), root=root, stamp=stamp, slug="engine-tick-load"
     )
 
 
-def loadtest(arg: str = "") -> str:
+def loadtest(arg: str = "") -> str:  # noqa: ARG001
     """The in-game / terminal `loadtest`: a quick, responsive concurrent run (small sample)."""
     return render_load(run_load(concurrency=4, per_worker=500, warmup=100))
 
@@ -201,7 +201,7 @@ def main(argv: list[str] | None = None) -> int:
     Optional args: `loadtest [concurrency] [per_worker]`. Returns 1 if any call errored (a load
     test that produced errors is not a clean result), else 0.
     """
-    import sys
+    import sys  # noqa: PLC0415
 
     args = list(sys.argv[1:] if argv is None else argv)
     try:

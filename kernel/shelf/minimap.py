@@ -55,16 +55,16 @@ def render(graph: Graph, center: str, *, radius: int = 2) -> str:
     or any exit points at a room id not present in the graph (a dangling exit).
     """
     if radius < 0:
-        raise MinimapError(f"radius must be >= 0, got {radius}")
+        raise MinimapError(f"radius must be >= 0, got {radius}")  # noqa: TRY003
     if center not in graph:
-        raise MinimapError(f"center room {center!r} is not in the graph")
+        raise MinimapError(f"center room {center!r} is not in the graph")  # noqa: TRY003
 
     # Fail loud on any dangling exit anywhere in the graph: an internally
     # inconsistent map is a defect, not something to paper over silently.
     for room_id, exits in graph.items():
         for direction, target in exits.items():
             if target not in graph:
-                raise MinimapError(
+                raise MinimapError(  # noqa: TRY003
                     f"dangling exit: room {room_id!r} exit {direction!r} "
                     f"points at unknown room {target!r}"
                 )

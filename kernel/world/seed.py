@@ -475,12 +475,12 @@ def _construct_unique_mapping(loader: _UniqueKeyLoader, node: yaml.MappingNode) 
         try:
             is_duplicate = key in mapping
         except TypeError as exc:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Unusable key in Blueprint file: {key!r} is not hashable. "
                 "Keys must be scalar labels."
             ) from exc
         if is_duplicate:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Duplicate label '{key}' in seed file. "
                 "Every label must be unique -- rename one of them."
             )
@@ -496,7 +496,7 @@ _UniqueKeyLoader.add_constructor(
 def _check_label(label: str, what: str) -> None:
     if not isinstance(label, str) or not LABEL_RE.match(label):
         suggestion = re.sub(r"[^a-z0-9_]+", "_", str(label).lower()).strip("_") or "my_label"
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"{what} label '{label}' is invalid. Labels must be lowercase_snake_case "
             f"(letters, digits, underscores; starts with a letter). Try: '{suggestion}'."
         )
@@ -523,20 +523,20 @@ def _open_seed_bin(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], di
 
     Returns (entries, file_template)."""
     if not path.exists():
-        raise BlueprintError(f"Seed file not found: {path}")
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+        raise BlueprintError(f"Seed file not found: {path}")  # noqa: TRY003
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict) or not data:
-        raise BlueprintError(f"Seed file is empty or not a mapping: {path}")
+        raise BlueprintError(f"Seed file is empty or not a mapping: {path}")  # noqa: TRY003
     file_template = data.pop("template", None) or {}
     if not isinstance(file_template, dict):
-        raise BlueprintError("'template:' must be a mapping of default fields.")
+        raise BlueprintError("'template:' must be a mapping of default fields.")  # noqa: TRY003
     entries: dict[str, dict[str, Any]] = {}
     for label, raw in data.items():
         _check_label(label, what)
         if raw is None:
-            raw = {}  # a bare label is valid: all defaults
+            raw = {}  # a bare label is valid: all defaults  # noqa: PLW2901
         if not isinstance(raw, dict):
-            raise BlueprintError(f"{what} '{label}' is not a mapping.")
+            raise BlueprintError(f"{what} '{label}' is not a mapping.")  # noqa: TRY003
         entries[label] = raw
     return entries, file_template
 
@@ -546,7 +546,7 @@ def _inspect_required_types(
 ) -> None:
     for field, kind in spec:
         if not isinstance(merged[field], kind):
-            raise BlueprintError(f"'{label}' field '{field}' must be {kind.__name__}.")
+            raise BlueprintError(f"'{label}' field '{field}' must be {kind.__name__}.")  # noqa: TRY003
 
 
 def load_rooms(path: Path) -> dict[str, Room]:
@@ -567,11 +567,11 @@ def load_rooms(path: Path) -> dict[str, Room]:
         )
         for direction in merged["one_way"]:
             if not isinstance(direction, str) or direction not in CANONICAL_DIRECTIONS:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Room '{label}': 'one_way' direction {direction!r} must be canonical."
                 )
             if direction not in merged["exits"]:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Room '{label}': 'one_way' direction '{direction}' is not an exit."
                 )
         room = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
@@ -583,14 +583,14 @@ def load_rooms(path: Path) -> dict[str, Room]:
     for label, room in rooms.items():
         for direction, destination in room["exits"].items():
             if destination not in rooms:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Room '{label}' has exit '{direction}' -> '{destination}', "
                     "which does not exist in this seed."
                 )
     return rooms
 
 
-def load_items(path: Path) -> dict[str, Item]:
+def load_items(path: Path) -> dict[str, Item]:  # noqa: PLR0912, PLR0915
     """Read items.yaml, validate it, return items with tagged locations."""
     entries, file_template = _open_seed_bin(path, "Item")
     items: dict[str, Item] = {}
@@ -606,7 +606,7 @@ def load_items(path: Path) -> dict[str, Item]:
             **raw,
         }
         if "location" not in merged:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Item '{label}' is missing required field 'location' (a room label)."
             )
         _inspect_required_types(
@@ -616,7 +616,7 @@ def load_items(path: Path) -> dict[str, Item]:
         )
         for target, amount in merged["mods"].items():
             if not isinstance(amount, int) or isinstance(amount, bool):
-                raise BlueprintError(f"Item '{label}': mod '{target}' must be an integer")
+                raise BlueprintError(f"Item '{label}': mod '{target}' must be an integer")  # noqa: TRY003
         loc = merged["location"]
         # `nowhere` is a drop-only PROTOTYPE: a template that is never placed in a room (so it
         # never renders or can be taken from the floor), existing only to be spawned by clone()
@@ -624,7 +624,7 @@ def load_items(path: Path) -> dict[str, Item]:
         # native to instancing. `player` and room labels place a live instance as before.
         tagged = loc if loc in ("player", UNPLACED) else f"room:{loc}"
         if not isinstance(merged["resettable"], bool):
-            raise BlueprintError(f"Item '{label}': 'resettable' must be true or false.")
+            raise BlueprintError(f"Item '{label}': 'resettable' must be true or false.")  # noqa: TRY003
         consume = merged.get("consume")
         if consume is not None and (
             not isinstance(consume, dict)
@@ -636,12 +636,12 @@ def load_items(path: Path) -> dict[str, Item]:
                 for pool, amount in consume.items()
             )
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Item '{label}': 'consume' must map hp/mp to a positive integer restore."
             )
         lore = merged.get("lore")
         if lore is not None and (not isinstance(lore, str) or not lore.strip()):
-            raise BlueprintError(f"Item '{label}': 'lore' must be non-empty readable text.")
+            raise BlueprintError(f"Item '{label}': 'lore' must be non-empty readable text.")  # noqa: TRY003
         spawn_pool = merged.get("spawn_pool")
         if spawn_pool is not None:
             if (
@@ -649,11 +649,11 @@ def load_items(path: Path) -> dict[str, Item]:
                 or not spawn_pool
                 or not all(isinstance(r, str) and r for r in spawn_pool)
             ):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Item '{label}': 'spawn_pool' must be a non-empty list of room labels."
                 )
             if loc != UNPLACED:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Item '{label}': a wandering 'spawn_pool' item must have location: {UNPLACED} "
                     "(it appears in the world, it is not placed in one room)."
                 )
@@ -661,27 +661,27 @@ def load_items(path: Path) -> dict[str, Item]:
         if spawn_chance is not None and (
             not isinstance(spawn_chance, int) or isinstance(spawn_chance, bool) or spawn_chance < 1
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Item '{label}': 'spawn_chance' must be a positive integer (1 = every reset)."
             )
         if spawn_chance is not None and spawn_pool is None:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Item '{label}': 'spawn_chance' only applies to a 'spawn_pool' item."
             )
         seasons = merged.get("seasons")
         if seasons is not None:
-            from kernel.world.climate import SEASONS
+            from kernel.world.climate import SEASONS  # noqa: PLC0415
 
             if (
                 not isinstance(seasons, list)
                 or not seasons
                 or not all(s in SEASONS for s in seasons)
             ):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Item '{label}': 'seasons' must be a non-empty list drawn from {SEASONS}."
                 )
             if spawn_pool is None:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Item '{label}': 'seasons' only applies to a 'spawn_pool' item."
                 )
         item = Item(
@@ -710,7 +710,7 @@ def load_items(path: Path) -> dict[str, Item]:
     return items
 
 
-def load_npcs(path: Path) -> dict[str, Npc]:
+def load_npcs(path: Path) -> dict[str, Npc]:  # noqa: PLR0912, PLR0915
     """Read npcs.yaml, validate it, return NPCs. next_line is runtime state."""
     entries, file_template = _open_seed_bin(path, "NPC")
     npcs: dict[str, Npc] = {}
@@ -730,7 +730,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             **raw,
         }
         if "location" not in merged:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}' is missing required field 'location' (a room label)."
             )
         _inspect_required_types(
@@ -751,12 +751,12 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         # A lethal foe must be combatable: an hp-0 poser can never fell anyone, so 'lethal' on it
         # is a contradiction -- refuse loud rather than ship a boss that can't be a boss.
         if merged["lethal"] and merged["hp"] <= 0:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}' is lethal but has hp {merged['hp']}; a lethal foe must be "
                 "combatable (hp > 0)."
             )
         if merged["atk"] < 0:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}' has a negative atk ({merged['atk']}); "
                 "counter-attack damage cannot be negative."
             )
@@ -764,12 +764,12 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         # blow (atk 0) or cannot be fought back (hp 0) is a contradiction -- refuse loud.
         if merged["aggressive"]:
             if merged["atk"] <= 0:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}' is aggressive but has atk {merged['atk']}; "
                     "an aggressive NPC needs atk > 0 to strike first."
                 )
             if merged["hp"] <= 0:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}' is aggressive but has hp {merged['hp']}; "
                     "an aggressive NPC must be combatable (hp > 0)."
                 )
@@ -777,12 +777,12 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         # read as an unfightable corpse. Refuse both loud and early, as we do for atk.
         for field in ("xp", "hp"):
             if merged[field] < 0:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}' has a negative {field} ({merged[field]}); cannot be negative."
                 )
         drops = merged["drops"]
         if not isinstance(drops, list) or not all(isinstance(d, str) for d in drops):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'drops' must be a list of item prototype labels (strings)."
             )
         loot = merged["loot"]
@@ -790,7 +790,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             isinstance(k, str) and isinstance(w, int) and not isinstance(w, bool) and w > 0
             for k, w in loot.items()
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'loot' must be a mapping of item prototype (or 'nothing') "
                 "to a positive integer weight."
             )
@@ -803,16 +803,16 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             or isinstance(level, bool)
             or not LEVEL_MIN <= level <= LEVEL_MAX
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'level' must be an integer {LEVEL_MIN}-{LEVEL_MAX}, got {level!r}."
             )
         tier = merged.get("tier")
         if tier is not None and tier not in TIER_MULTIPLIERS:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'tier' must be one of {sorted(TIER_MULTIPLIERS)}, got {tier!r}."
             )
         if tier is not None and level is None:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'tier' {tier!r} is set but 'level' is not; a tier only scales a "
                 "levelled foe. Give the NPC a level or drop the tier."
             )
@@ -820,13 +820,13 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         # so a raid flag without tier 'boss' is a contradiction. Refuse it loud rather than ship a
         # 'raid' that pays like a trash mob.
         if merged.get("raid") and tier != "boss":
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'raid' is set but tier is {tier!r}; a raid must be tier 'boss'."
             )
         # A wanderer is ambient life, not a foe: an aggressive NPC that drifts away would break off
         # a fight it started. Refuse the contradiction loud rather than ship a foe that flees.
         if merged.get("wander") and merged["aggressive"]:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'wander' is set but the NPC is aggressive; a wanderer must be "
                 "peaceful (it must not leave a fight it opened)."
             )
@@ -842,7 +842,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 for key, lines in topics.items()
             )
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'topics' must map a keyword to a non-empty list of reply strings."
             )
         # Optional attack element: a typed blow whose damage the player's job resistance scales.
@@ -850,7 +850,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         # score sheet has no row for -- refuse an unknown one loud rather than ship a dead type.
         element = merged.get("attack_element")
         if element is not None and element not in RESIST_ORDER:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}': 'attack_element' must be one of {list(RESIST_ORDER)}, "
                 f"got {element!r}."
             )
@@ -860,17 +860,17 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         resistances = merged.get("resistances")
         if resistances is not None:
             if not isinstance(resistances, dict):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'resistances' must map an element code to a level."
                 )
             for code, resist_level in resistances.items():
                 if code not in RESIST_ORDER:
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}': resistance code {code!r} must be one of "
                         f"{list(RESIST_ORDER)}."
                     )
                 if resist_level not in RESIST_LEVELS:
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}': resistance {code!r} must be one of {RESIST_LEVELS}, "
                         f"got {resist_level!r}."
                     )
@@ -883,12 +883,12 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 "ticks",
                 "beats",
             }:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'inflicts' allows only status/chance/damage/ticks/beats keys."
                 )
             status = inflicts.get("status")
             if not isinstance(status, str) or not status:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'inflicts.status' must name an affliction ('poison', 'daze')."
                 )
             for key in ("chance", "damage", "ticks", "beats"):
@@ -896,30 +896,30 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 if value is not None and (
                     not isinstance(value, int) or isinstance(value, bool) or value < 1
                 ):
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}': 'inflicts.{key}' must be a positive integer."
                     )
         special = merged.get("special")
         if special is not None:
             allowed = {"kind", "telegraph", "mult", "heal", "cadence"}
             if not isinstance(special, dict) or set(special) - allowed:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'special' allows only kind/telegraph/mult/heal/cadence keys."
                 )
             kind = special.get("kind")
             if kind is not None and kind not in ("strike", "mend", "drain"):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'special.kind' must be 'strike', 'mend', or 'drain'."
                 )
             tele = special.get("telegraph")
             if tele is not None and (not isinstance(tele, str) or not tele.strip()):
-                raise BlueprintError(f"NPC '{label}': 'special.telegraph' must be non-empty text.")
+                raise BlueprintError(f"NPC '{label}': 'special.telegraph' must be non-empty text.")  # noqa: TRY003
             for key in ("mult", "heal", "cadence"):
                 value = special.get(key)
                 if value is not None and (
                     not isinstance(value, int) or isinstance(value, bool) or value < 1
                 ):
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}': 'special.{key}' must be a positive integer."
                     )
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
@@ -927,7 +927,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         shop = merged.get("shop")
         if shop is not None:
             if not isinstance(shop, dict) or set(shop) - {"sells", "buys"}:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'shop' must be a mapping with only 'sells' and/or 'buys'."
                 )
             for side in ("sells", "buys"):
@@ -936,7 +936,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                     isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
                     for k, v in table.items()
                 ):
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}': shop '{side}' must map an item prototype to a positive "
                         "integer price."
                     )
@@ -966,11 +966,11 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         reassembles = merged.get("reassembles")
         if reassembles is not None:
             if not isinstance(reassembles, bool):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'reassembles' must be true/false, got {reassembles!r}."
                 )
             if reassembles and merged["hp"] <= 0:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}': 'reassembles' is set but hp is {merged['hp']}; a reassembling "
                     "foe must be combatable (hp > 0)."
                 )
@@ -996,7 +996,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
     return npcs
 
 
-def inspect_world_links(
+def inspect_world_links(  # noqa: PLR0912
     rooms: dict[str, Room], items: dict[str, Item], npcs: dict[str, Npc]
 ) -> None:
     """The cross-component gate: everything placed somewhere must be
@@ -1004,41 +1004,41 @@ def inspect_world_links(
     for label, item in items.items():
         loc = item["location"]
         if loc not in ("player", UNPLACED) and loc.removeprefix("room:") not in rooms:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"Item '{label}' is placed in room '{loc.removeprefix('room:')}', "
                 "which does not exist."
             )
         for site in item.get("spawn_pool", []):  # a wanderer's candidate rooms must all be real
             if site not in rooms:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"Item '{label}' spawn_pool names room '{site}', which does not exist."
                 )
     for label, npc in npcs.items():
         if npc["location"] not in rooms:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"NPC '{label}' is placed in room '{npc['location']}', which does not exist."
             )
         for drop in npc.get("drops", []):  # loot must name a real item prototype (caught at boot)
             if drop not in items:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}' drops '{drop}', which is not an item in this seed."
                 )
         for side in ("sells", "buys"):  # a shop's wares must name real item prototypes
             for proto in npc.get("shop", {}).get(side, {}):
                 if proto not in items:
-                    raise BlueprintError(
+                    raise BlueprintError(  # noqa: TRY003
                         f"NPC '{label}' shop {side} names '{proto}', which is not an item "
                         "in this seed."
                     )
         for outcome in npc.get("loot", {}):  # weighted loot: every outcome but `nothing` is real
             if outcome != "nothing" and outcome not in items:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"NPC '{label}' loot names '{outcome}', which is not an item in this seed "
                     "(use 'nothing' for a no-drop weight)."
                 )
 
 
-def load_jobs(path: Path) -> dict[str, Job]:
+def load_jobs(path: Path) -> dict[str, Job]:  # noqa: PLR0912
     """Load and gate the job pack: every job gets name, description, stats."""
     entries, template = _open_seed_bin(path, "job")
     jobs: dict[str, Job] = {}
@@ -1092,36 +1092,36 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 and isinstance(perk.get("amount"), int)
                 and not isinstance(perk.get("amount"), bool)
             ):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"job '{label}': each milestone perk needs name(str), target(str), amount(int)"
                 )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
         for stat_name, value in stats.items():
             if not isinstance(value, int) or isinstance(value, bool):
-                raise BlueprintError(f"job '{label}': stat '{stat_name}' must be an integer")
+                raise BlueprintError(f"job '{label}': stat '{stat_name}' must be an integer")  # noqa: TRY003
         for list_field in ("role_tags", "abilities"):
             if not all(isinstance(entry, str) for entry in merged[list_field]):
-                raise BlueprintError(f"job '{label}': every {list_field} entry must be a string")
+                raise BlueprintError(f"job '{label}': every {list_field} entry must be a string")  # noqa: TRY003
         for code, level in merged["resistances"].items():
             if level not in RESIST_LEVELS:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"job '{label}': resistance '{code}' must be one of {RESIST_LEVELS}"
                 )
         for needed, needed_level in merged["requires"].items():
             if not isinstance(needed, str) or not needed.strip():
-                raise BlueprintError(f"job '{label}': each requires key must be a calling label")
+                raise BlueprintError(f"job '{label}': each requires key must be a calling label")  # noqa: TRY003
             if not isinstance(needed_level, int) or isinstance(needed_level, bool):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"job '{label}': requires '{needed}' must be an integer level, "
                     f"got {needed_level!r}"
                 )
             if needed_level < 1:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"job '{label}': requires '{needed}' must be at least level 1, "
                     f"got {needed_level}"
                 )
             if needed == label:
-                raise BlueprintError(f"job '{label}': a calling cannot require itself")
+                raise BlueprintError(f"job '{label}': a calling cannot require itself")  # noqa: TRY003
         jobs[label] = Job(
             name=merged["name"],
             description=merged["description"],
@@ -1145,11 +1145,11 @@ def load_jobs(path: Path) -> dict[str, Job]:
     for label, job in jobs.items():
         for needed in job["requires"]:
             if needed not in jobs:
-                raise BlueprintError(f"job '{label}': requires unknown calling '{needed}'")
+                raise BlueprintError(f"job '{label}': requires unknown calling '{needed}'")  # noqa: TRY003
     cycles = prerequisite_cycles(jobs)
     if cycles:
-        drawn = "; ".join(" -> ".join(cycle + (cycle[0],)) for cycle in cycles)
-        raise BlueprintError(f"job prerequisites form a cycle no character can enter: {drawn}")
+        drawn = "; ".join(" -> ".join(cycle + (cycle[0],)) for cycle in cycles)  # noqa: RUF005
+        raise BlueprintError(f"job prerequisites form a cycle no character can enter: {drawn}")  # noqa: TRY003
     return jobs
 
 
@@ -1161,17 +1161,17 @@ def load_quest(path: Path) -> QuestSpec | None:
         return None
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
-        raise BlueprintError(f"quest file must be a mapping: {path}")
+        raise BlueprintError(f"quest file must be a mapping: {path}")  # noqa: TRY003
     for key in ("id", "start", "steps"):
         if key not in data:
-            raise BlueprintError(f"{path}: quest needs '{key}'")
+            raise BlueprintError(f"{path}: quest needs '{key}'")  # noqa: TRY003
     steps = data["steps"]
     if not isinstance(steps, list) or not steps:
-        raise BlueprintError(f"{path}: quest 'steps' must be a non-empty list")
+        raise BlueprintError(f"{path}: quest 'steps' must be a non-empty list")  # noqa: TRY003
     clean_steps: list[QuestStep] = []
     for raw in steps:
         if not isinstance(raw, dict) or not all(k in raw for k in ("state", "event", "to")):
-            raise BlueprintError(f"{path}: each quest step needs 'state', 'event', and 'to'")
+            raise BlueprintError(f"{path}: each quest step needs 'state', 'event', and 'to'")  # noqa: TRY003
         step: QuestStep = {
             "state": str(raw["state"]),
             "event": str(raw["event"]),
@@ -1185,11 +1185,11 @@ def load_quest(path: Path) -> QuestSpec | None:
         clean_steps.append(step)
     reward = data.get("reward_xp", 50)
     if not isinstance(reward, int) or isinstance(reward, bool) or reward < 0:
-        raise BlueprintError(f"{path}: 'reward_xp' must be a non-negative integer")
+        raise BlueprintError(f"{path}: 'reward_xp' must be a non-negative integer")  # noqa: TRY003
     terminal = data.get("terminal", [])
     labels = data.get("labels", {})
     if not isinstance(terminal, list) or not isinstance(labels, dict):
-        raise BlueprintError(f"{path}: 'terminal' must be a list and 'labels' a mapping")
+        raise BlueprintError(f"{path}: 'terminal' must be a list and 'labels' a mapping")  # noqa: TRY003
     return QuestSpec(
         id=str(data["id"]),
         name=str(data.get("name", _phrase(str(data["id"])).title())),
@@ -1222,10 +1222,10 @@ def load_doors(path: Path) -> dict[str, Door]:
         blocks = merged["blocks"]
         if not (
             isinstance(blocks, list)
-            and len(blocks) == 2
+            and len(blocks) == 2  # noqa: PLR2004
             and all(isinstance(part, str) for part in blocks)
         ):
-            raise BlueprintError(f"door '{label}': 'blocks' must be [room_label, direction]")
+            raise BlueprintError(f"door '{label}': 'blocks' must be [room_label, direction]")  # noqa: TRY003
         _inspect_required_types(
             label,
             {**merged, "blocks": tuple(blocks)},
@@ -1233,20 +1233,20 @@ def load_doors(path: Path) -> dict[str, Door]:
         )
         recloses = merged["recloses_after"]
         if not isinstance(recloses, int) or isinstance(recloses, bool) or recloses < 0:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"door '{label}': 'recloses_after' must be a non-negative integer "
                 f"(beats before a self-closing door relocks), got {recloses!r}."
             )
         requires = merged.get("requires")
         if requires is not None:
             if not isinstance(requires, str):
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"door '{label}': 'requires' must be a condition string, got {requires!r}."
                 )
             try:
                 validate(requires)  # a load-time gate: reject a malformed/unsafe condition now
             except ConditionError as exc:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"door '{label}': invalid 'requires' condition: {exc}"
                 ) from exc
         door = Door(
@@ -1300,7 +1300,7 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        _KINDS = (
+        _KINDS = (  # noqa: N806
             "strike",
             "heal",
             "brand",
@@ -1313,26 +1313,26 @@ def load_abilities(path: Path) -> dict[str, Ability]:
             "regen",
         )
         if merged["kind"] not in _KINDS:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"ability '{label}': 'kind' must be one of {', '.join(map(repr, _KINDS))}, "
                 f"got {merged['kind']!r}."
             )
         for num_field in ("power", "mp_cost", "cooldown"):
             value = merged[num_field]
             if isinstance(value, bool) or value < 0:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"ability '{label}': '{num_field}' must be a non-negative int, got {value!r}."
                 )
         scales = merged["scales"]
         if scales and scales not in attrs:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"ability '{label}': 'scales' must be an attribute or empty, got {scales!r}."
             )
         # Optional element: a typed hit whose damage the target's resistance scales. Must be a
         # canonical resistance code so a move can never deal a type no foe grid could answer.
         element = merged.get("element")
         if element is not None and element not in RESIST_ORDER:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"ability '{label}': 'element' must be a RESIST code {list(RESIST_ORDER)}, "
                 f"got {element!r}."
             )
@@ -1369,13 +1369,13 @@ def load_recipes(path: Path) -> dict[str, Recipe]:
         merged.update(fields)
         _inspect_required_types(label, merged, (("name", str), ("makes", str), ("inputs", dict)))
         if not merged["makes"]:
-            raise BlueprintError(f"recipe '{label}': 'makes' must name the output item prototype.")
+            raise BlueprintError(f"recipe '{label}': 'makes' must name the output item prototype.")  # noqa: TRY003
         inputs = merged["inputs"]
         if not inputs or not all(
             isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
             for k, v in inputs.items()
         ):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"recipe '{label}': 'inputs' must map a material prototype to a positive count "
                 "(at least one input)."
             )
@@ -1404,30 +1404,30 @@ def _inspect_recipe_gate(label: str, requires: object) -> dict[str, object]:
         "order",
         "standing",
     }:
-        raise BlueprintError(
+        raise BlueprintError(  # noqa: TRY003
             f"recipe '{label}': 'requires' allows only profession/level/order/standing keys."
         )
     gate: dict[str, object] = {}
     if "profession" in requires or "level" in requires:
         prof, level = requires.get("profession"), requires.get("level")
         if not isinstance(prof, str) or not prof:
-            raise BlueprintError(f"recipe '{label}': 'requires.profession' must name a trade.")
+            raise BlueprintError(f"recipe '{label}': 'requires.profession' must name a trade.")  # noqa: TRY003
         if not isinstance(level, int) or isinstance(level, bool) or level < 1:
-            raise BlueprintError(f"recipe '{label}': 'requires.level' must be a positive integer.")
+            raise BlueprintError(f"recipe '{label}': 'requires.level' must be a positive integer.")  # noqa: TRY003
         gate["profession"], gate["level"] = prof, level
     order = requires.get("order")
     if order is not None:
         if not isinstance(order, str) or not order:
-            raise BlueprintError(f"recipe '{label}': 'requires.order' must name an Order.")
+            raise BlueprintError(f"recipe '{label}': 'requires.order' must name an Order.")  # noqa: TRY003
         gate["order"] = order
     standing = requires.get("standing")
     if standing is not None:
         if not isinstance(standing, int) or isinstance(standing, bool) or standing < 1:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"recipe '{label}': 'requires.standing' must be a positive integer."
             )
         if order is None:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"recipe '{label}': 'requires.standing' needs an 'order' to stand with"
             )
         gate["standing"] = standing
@@ -1462,13 +1462,13 @@ def load_professions(path: Path) -> dict[str, Profession]:
         )
         kind = merged["kind"]
         if kind not in ("gather", "craft"):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"profession '{label}': 'kind' must be 'gather' or 'craft', got {kind!r}."
             )
         key = "works" if kind == "gather" else "makes"
         governed = merged[key]
         if not governed or not all(isinstance(x, str) and x for x in governed):
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"profession '{label}': a {kind} trade needs a non-empty '{key}' list of labels."
             )
         professions[label] = Profession(
@@ -1497,14 +1497,14 @@ def load_sets(path: Path) -> dict[str, "GearSet"]:
         merged.update(fields)
         _inspect_required_types(label, merged, (("name", str), ("pieces", list), ("bonus", dict)))
         pieces = merged["pieces"]
-        if len(pieces) < 2 or not all(isinstance(p, str) for p in pieces):
-            raise BlueprintError(f"set '{label}': 'pieces' must list at least two item prototypes.")
+        if len(pieces) < 2 or not all(isinstance(p, str) for p in pieces):  # noqa: PLR2004
+            raise BlueprintError(f"set '{label}': 'pieces' must list at least two item prototypes.")  # noqa: TRY003
         bonus = merged["bonus"]
         if not bonus or not all(
             isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
             for k, v in bonus.items()
         ):
-            raise BlueprintError(f"set '{label}': 'bonus' must map a stat to a positive amount.")
+            raise BlueprintError(f"set '{label}': 'bonus' must map a stat to a positive amount.")  # noqa: TRY003
         sets[label] = GearSet(
             name=str(merged["name"]),
             pieces=[str(p) for p in pieces],
@@ -1541,27 +1541,27 @@ def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:
             (("name", str), ("rooms", list), ("reset_mode", str), ("beats_between", int)),
         )
         if isinstance(merged["beats_between"], bool) or merged["beats_between"] <= 0:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"zone '{label}': 'beats_between' must be a positive integer, "
                 f"got {merged['beats_between']!r}."
             )
         if merged["reset_mode"] not in RESET_MODES:
-            raise BlueprintError(
+            raise BlueprintError(  # noqa: TRY003
                 f"zone '{label}': 'reset_mode' must be one of {RESET_MODES}, "
                 f"got {merged['reset_mode']!r}."
             )
         if not merged["rooms"]:
-            raise BlueprintError(f"zone '{label}': must name at least one member room.")
+            raise BlueprintError(f"zone '{label}': must name at least one member room.")  # noqa: TRY003
         members: list[str] = []
         for room in merged["rooms"]:
             if not isinstance(room, str):
-                raise BlueprintError(f"zone '{label}': room labels must be strings, got {room!r}.")
+                raise BlueprintError(f"zone '{label}': room labels must be strings, got {room!r}.")  # noqa: TRY003
             if room not in known_rooms:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"zone '{label}' names room '{room}', which does not exist in this seed."
                 )
             if room in claimed:
-                raise BlueprintError(
+                raise BlueprintError(  # noqa: TRY003
                     f"zone '{label}' claims room '{room}', already claimed by "
                     f"zone '{claimed[room]}'. A room belongs to at most one zone."
                 )
@@ -1586,25 +1586,25 @@ def _attach_zone_metadata(label: str, merged: dict[str, Any], zone: Zone) -> Non
     region = merged.get("region")
     if region is not None:
         if not isinstance(region, str) or not region.strip():
-            raise BlueprintError(f"zone '{label}': 'region' must be a non-empty string.")
+            raise BlueprintError(f"zone '{label}': 'region' must be a non-empty string.")  # noqa: TRY003
         zone["region"] = region
     lo = merged.get("level_min")
     hi = merged.get("level_max")
     for name, value in (("level_min", lo), ("level_max", hi)):
         if value is not None and (isinstance(value, bool) or not isinstance(value, int)):
-            raise BlueprintError(f"zone '{label}': '{name}' must be an integer.")
+            raise BlueprintError(f"zone '{label}': '{name}' must be an integer.")  # noqa: TRY003
     if lo is not None:
-        if lo < 1 or lo > 300:
-            raise BlueprintError(f"zone '{label}': 'level_min' must be within 1-300, got {lo}.")
+        if lo < 1 or lo > 300:  # noqa: PLR2004
+            raise BlueprintError(f"zone '{label}': 'level_min' must be within 1-300, got {lo}.")  # noqa: TRY003
         zone["level_min"] = lo
     if hi is not None:
-        if hi < 1 or hi > 300:
-            raise BlueprintError(f"zone '{label}': 'level_max' must be within 1-300, got {hi}.")
+        if hi < 1 or hi > 300:  # noqa: PLR2004
+            raise BlueprintError(f"zone '{label}': 'level_max' must be within 1-300, got {hi}.")  # noqa: TRY003
         zone["level_max"] = hi
     if lo is not None and hi is not None and hi < lo:
-        raise BlueprintError(f"zone '{label}': 'level_max' ({hi}) must be >= 'level_min' ({lo}).")
+        raise BlueprintError(f"zone '{label}': 'level_max' ({hi}) must be >= 'level_min' ({lo}).")  # noqa: TRY003
     biome = merged.get("biome")
     if biome is not None:
         if not isinstance(biome, str) or not biome.strip():
-            raise BlueprintError(f"zone '{label}': 'biome' must be a non-empty string.")
+            raise BlueprintError(f"zone '{label}': 'biome' must be a non-empty string.")  # noqa: TRY003
         zone["biome"] = biome

@@ -18,7 +18,7 @@ def test_every_live_demo_actually_runs() -> None:
 
 
 def test_report_writer_demo_prints_hello_world() -> None:
-    call, out = _DEMOS["report-writer"]()
+    call, out = _DEMOS["report-writer"]()  # noqa: RUF059
     assert "hello world" in out  # the part wrote it, for real, to a temp file
 
 
@@ -65,8 +65,8 @@ def test_render_lists_parts_with_run_or_tested_status() -> None:
 
 
 def test_functions_reachable_through_the_engine_tick() -> None:
-    from forge import handle_command
-    from kernel.world.session import Session
+    from forge import handle_command  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     out = handle_command(Session(player_id="fn"), "functions")
     assert "FUNCTIONS CHECK" in out

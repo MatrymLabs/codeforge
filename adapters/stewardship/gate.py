@@ -101,7 +101,7 @@ def render_verdict(verdict: Verdict) -> str:
     r = verdict.risk
     lines = [
         f"STEWARDSHIP GATE -- change {verdict.change_id}",
-        f"  risk: {r.tier.upper()} ({r.score}/100)   "
+        f"  risk: {r.tier.upper()} ({r.score}/100)   "  # noqa: ISC004
         f"approvals: {verdict.human_approvals}/{r.required_approvals}",
     ]
     for factor in r.factors:
@@ -115,7 +115,7 @@ def render_verdict(verdict: Verdict) -> str:
             lines.append(f"        -> {c.detail}")
     lines += [
         "",
-        f"VERDICT: {'ELIGIBLE' if verdict.eligible else 'BLOCKED'}"
+        f"VERDICT: {'ELIGIBLE' if verdict.eligible else 'BLOCKED'}"  # noqa: ISC004
         f" -- advisory; a human and CI branch protection still decide, nothing auto-merges.",
     ]
     return "\n".join(lines)

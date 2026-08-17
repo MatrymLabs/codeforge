@@ -158,7 +158,7 @@ def analyze_repo(modules: dict[str, str], *, package: str = "", hub_count: int =
     treated as internal; any import that does not resolve to a key is external.
     """
     if not isinstance(modules, dict):
-        raise RepoAnalyzerError("modules must be a dict of {module_name: source}")
+        raise RepoAnalyzerError("modules must be a dict of {module_name: source}")  # noqa: TRY003
     internal = set(modules)
     edges: set[tuple[str, str]] = set()
     externals: set[str] = set()
@@ -189,7 +189,7 @@ def analyze_repo(modules: dict[str, str], *, package: str = "", hub_count: int =
     for src, dst in edges:
         adj[src].add(dst)
     fan_out = {m: len(adj[m]) for m in internal}
-    fan_in = {m: 0 for m in internal}
+    fan_in = {m: 0 for m in internal}  # noqa: C420
     for _src, dst in edges:
         fan_in[dst] += 1
 

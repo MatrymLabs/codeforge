@@ -16,7 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 
-class OutOfRange(ValueError):
+class OutOfRange(ValueError):  # noqa: N818
     """A read ran past the end of the source. Raised, never truncated.
 
     A short read is the dangerous failure: sixteen bytes requested, nine returned, and the decoder
@@ -37,10 +37,10 @@ class ByteSource:
     def read(self, offset: int, count: int) -> bytes:
         """`count` bytes at `offset`, or OutOfRange. Never fewer than asked for."""
         if offset < 0 or count < 0:
-            raise OutOfRange(f"{self.name}: negative read, offset={offset} count={count}")
+            raise OutOfRange(f"{self.name}: negative read, offset={offset} count={count}")  # noqa: TRY003
         end = offset + count
         if end > len(self.data):
-            raise OutOfRange(
+            raise OutOfRange(  # noqa: TRY003
                 f"{self.name}: read of {count} byte(s) at offset {offset} ends at {end}, "
                 f"past the {len(self.data)}-byte source"
             )

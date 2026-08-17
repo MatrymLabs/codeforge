@@ -36,7 +36,7 @@ def forge_spine(zones: list[dict[str, Any]]) -> QuestSpec | None:
     first room) in level order. Returns the QuestSpec, or None if fewer than two zones exist.
     The reward lands on reaching the final zone; deterministic for a given set of zones."""
     ordered = [z for z in _ordered(zones) if z.get("rooms")]
-    if len(ordered) < 2:
+    if len(ordered) < 2:  # noqa: PLR2004
         return None
     names = [str(z["name"]) for z in ordered]
     reward = int(ordered[-1].get("level_max") or 1) * _XP_PER_CAP

@@ -165,7 +165,7 @@ def test_verb_reports_evaluation_failure_instead_of_raising(
 ) -> None:
     # A tampered/broken ledger surfaces its integrity failure as text, never raising into the tick.
     def _boom(*_a: object, **_k: object) -> list[object]:
-        raise chronicle.ChronicleError("broken chain")
+        raise chronicle.ChronicleError("broken chain")  # noqa: TRY003
 
     monkeypatch.setattr(chronicle, "trend", _boom)
     out = slo.slo()

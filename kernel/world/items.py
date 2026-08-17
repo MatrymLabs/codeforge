@@ -78,7 +78,7 @@ def restore_instance(iid: str, prototype: str, location: str) -> None:
     `location` is the already-tagged string as stored. Fails loud on an unknown prototype."""
     template = PROTOTYPES.get(prototype)
     if template is None:
-        raise ItemError(f"cannot restore instance {iid!r}: unknown prototype {prototype!r}")
+        raise ItemError(f"cannot restore instance {iid!r}: unknown prototype {prototype!r}")  # noqa: TRY003
     ITEMS[iid] = Item(
         name=template["name"],
         keywords=list(template["keywords"]),
@@ -107,9 +107,9 @@ def clone(prototype: str, location: str) -> str:
     unknown prototype (fail loud, never spawn a ghost)."""
     template = PROTOTYPES.get(prototype)
     if template is None:
-        raise ItemError(f"unknown item prototype {prototype!r}; cannot clone it")
+        raise ItemError(f"unknown item prototype {prototype!r}; cannot clone it")  # noqa: TRY003
     if count_instances(prototype) >= MAX_INSTANCES_PER_PROTOTYPE:
-        raise ItemError(
+        raise ItemError(  # noqa: TRY003
             f"prototype {prototype!r} is at its instance ceiling ({MAX_INSTANCES_PER_PROTOTYPE}); "
             "refusing to spawn more (bounds runaway growth)"
         )

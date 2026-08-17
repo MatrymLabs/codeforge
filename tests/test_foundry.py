@@ -34,7 +34,7 @@ def _clear_pending():
 
 
 def _good(**over):
-    kw = dict(
+    kw = dict(  # noqa: C408
         proposal_id="my_part",
         target="generated/my_part.py",
         content="print('hi')\n",
@@ -202,7 +202,7 @@ def test_arch_preview_of_an_unknown_game_is_refused():
 
 def test_arch_preview_does_not_swap_the_running_world():
     # A projection, never a boot: previewing another seed leaves the live world untouched.
-    from kernel.world import world
+    from kernel.world import world  # noqa: PLC0415
 
     before = world.START_ROOM
     preview_seed("first-forge")

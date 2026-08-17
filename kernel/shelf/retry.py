@@ -34,7 +34,7 @@ OnRetry = Callable[["Attempt"], None]
 
 # Default source of backoff jitter. Not security-sensitive (it spreads retries in time to avoid a
 # thundering herd), so a plain Random is right; callers inject a seeded one for deterministic tests.
-_JITTER_RNG = random.Random()  # nosec B311 -- backoff jitter, not a security decision
+_JITTER_RNG = random.Random()  # nosec B311 -- backoff jitter, not a security decision  # noqa: S311
 
 
 class RetryError(ValueError):
@@ -52,9 +52,9 @@ class Attempt:
 
 def _finite_nonneg(name: str, value: float) -> float:
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
-        raise RetryError(f"{name} must be a finite number, got {value!r}")
+        raise RetryError(f"{name} must be a finite number, got {value!r}")  # noqa: TRY003
     if value < 0:
-        raise RetryError(f"{name} must be non-negative, got {value}")
+        raise RetryError(f"{name} must be non-negative, got {value}")  # noqa: TRY003
     return float(value)
 
 
@@ -71,15 +71,15 @@ class RetryPolicy:
 
     def __post_init__(self) -> None:
         if not isinstance(self.max_attempts, int) or isinstance(self.max_attempts, bool):
-            raise RetryError(f"max_attempts must be an int, got {self.max_attempts!r}")
+            raise RetryError(f"max_attempts must be an int, got {self.max_attempts!r}")  # noqa: TRY003
         if self.max_attempts < 1:
-            raise RetryError(f"max_attempts must be >= 1, got {self.max_attempts}")
+            raise RetryError(f"max_attempts must be >= 1, got {self.max_attempts}")  # noqa: TRY003
         _finite_nonneg("base_delay", self.base_delay)
         _finite_nonneg("max_delay", self.max_delay)
         if not math.isfinite(self.factor) or self.factor < 1:
-            raise RetryError(f"factor must be >= 1, got {self.factor}")
+            raise RetryError(f"factor must be >= 1, got {self.factor}")  # noqa: TRY003
         if not self.retry_on:
-            raise RetryError("retry_on must name at least one exception type")
+            raise RetryError("retry_on must name at least one exception type")  # noqa: TRY003
 
     def is_transient(self, exc: BaseException) -> bool:
         """True if `exc` is one the policy will retry."""

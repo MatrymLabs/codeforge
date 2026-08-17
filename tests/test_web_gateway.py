@@ -28,7 +28,7 @@ def _register_and_enter(ws, handle: str = "hero@co") -> None:
 
 @pytest.fixture(autouse=True)
 def fresh_world():
-    import copy
+    import copy  # noqa: PLC0415
 
     items_snap = copy.deepcopy(items.ITEMS)
     doors_snap = copy.deepcopy(doors.DOORS)
@@ -191,7 +191,7 @@ def test_a_failed_connection_setup_frees_the_seat(monkeypatch):
     inside the try/finally, so setup blowing up still frees it."""
 
     def boom(*args, **kwargs):
-        raise RuntimeError("client aborted the handshake")
+        raise RuntimeError("client aborted the handshake")  # noqa: TRY003
 
     monkeypatch.setattr(web, "bind_echo", boom)  # a setup step fails after the seat is claimed
     client = TestClient(app)

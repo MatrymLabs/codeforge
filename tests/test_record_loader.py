@@ -5,13 +5,13 @@ import pytest
 from kernel.shelf.record_loader import load_dir, load_record
 
 
-class _Err(ValueError):
+class _Err(ValueError):  # noqa: N818
     """A caller's domain error."""
 
 
 def _parse(raw: object) -> int:
     if not isinstance(raw, dict) or "v" not in raw:
-        raise _Err("needs 'v'")
+        raise _Err("needs 'v'")  # noqa: TRY003
     return int(raw["v"])
 
 

@@ -86,7 +86,7 @@ def _score(formula: str, ef: int, ep: int, total_failed: int, total_passed: int)
         return ef / denom if denom else 0.0
     if formula == "op2":
         return ef - ep / (total_passed + 1)
-    raise SbflError(f"unknown formula {formula!r}; choose from {_FORMULAS}")
+    raise SbflError(f"unknown formula {formula!r}; choose from {_FORMULAS}")  # noqa: TRY003
 
 
 def localize(
@@ -104,10 +104,10 @@ def localize(
     Elements executed by no failing test score 0 (they cannot be the fault by this method).
     """
     if formula not in _FORMULAS:
-        raise SbflError(f"unknown formula {formula!r}; choose from {_FORMULAS}")
+        raise SbflError(f"unknown formula {formula!r}; choose from {_FORMULAS}")  # noqa: TRY003
     missing = set(coverage) - set(outcomes)
     if missing:
-        raise SbflError(f"coverage without an outcome for tests: {sorted(missing)}")
+        raise SbflError(f"coverage without an outcome for tests: {sorted(missing)}")  # noqa: TRY003
 
     total_failed = sum(1 for t, passed in outcomes.items() if not passed)
     total_passed = sum(1 for t, passed in outcomes.items() if passed)

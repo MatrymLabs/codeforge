@@ -19,7 +19,7 @@ _BURSTS = [
 ]
 
 
-def telegraph(session: Session, arg: str = "") -> str:
+def telegraph(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `telegraph` verb: reassemble a bursty dispatch into clean lines."""
     framer = StreamFramer()
     lines: list[str] = ["A telegraph arrives, burst by burst:"]

@@ -114,7 +114,7 @@ def test_a_manifest_that_cannot_be_read_falls_back(tmp_path: Path) -> None:
     class _Flaky(LocalSource):
         def read(self, relpath: str, **kw: object) -> str:
             if relpath == "pyproject.toml":
-                raise SourceConnectorError("simulated unreadable manifest")
+                raise SourceConnectorError("simulated unreadable manifest")  # noqa: TRY003
             return super().read(relpath, **kw)  # type: ignore[arg-type]
 
     src = _Flaky(_cli_project(tmp_path).root, Provenance("f-src"))

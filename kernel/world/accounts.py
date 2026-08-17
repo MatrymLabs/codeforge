@@ -112,7 +112,7 @@ class InMemoryAccountCredentialStore:
 def _default_store() -> AccountCredentialStore:
     """The default backend: the SQL adapter, imported lazily so this module stays engine-free at
     import time (EXP-003 -- the crypto helpers ride the hot `import forge` path)."""
-    from kernel.world.accounts_sql import SqlAccountCredentialStore
+    from kernel.world.accounts_sql import SqlAccountCredentialStore  # noqa: PLC0415
 
     return SqlAccountCredentialStore()
 
@@ -120,7 +120,7 @@ def _default_store() -> AccountCredentialStore:
 def _default_membership() -> MembershipStore:
     """The default membership backend: the SQL adapter, imported lazily (EXP-003). Account-to-
     character linkage lives behind its own port so this module touches no ORM row directly."""
-    from kernel.world.membership_sql import SqlMembershipStore
+    from kernel.world.membership_sql import SqlMembershipStore  # noqa: PLC0415
 
     return SqlMembershipStore()
 
@@ -272,8 +272,8 @@ def import_legacy_json(
     store: AccountCredentialStore | None = None, membership: MembershipStore | None = None
 ) -> str:
     """One-time importer: characters.json + accounts.json -> SQLite."""
-    import json
-    from pathlib import Path
+    import json  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
 
     moved = []
     chars = Path("characters.json")

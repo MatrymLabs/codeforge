@@ -25,9 +25,9 @@ def _vault(player_id: str) -> str:
 def deposit(session: Session, keyword: str) -> str:
     """`bank deposit <item>`: put a carried item away into your vault. Refused for a bad word or a
     worn item (unequip it first); worn gear persists on its own and is not loose to store."""
-    from kernel.world import loose_store
-    from kernel.world.characters import snapshot_item
-    from kernel.world.items import ITEMS, carrier, trace_item
+    from kernel.world import loose_store  # noqa: PLC0415
+    from kernel.world.characters import snapshot_item  # noqa: PLC0415
+    from kernel.world.items import ITEMS, carrier, trace_item  # noqa: PLC0415
 
     kw = keyword.strip().lower()
     if not kw:
@@ -49,9 +49,9 @@ def deposit(session: Session, keyword: str) -> str:
 def withdraw(session: Session, arg: str) -> str:
     """`bank withdraw <n|item>`: take a vaulted item back into the bag, by its list number or a
     word from its name. Refused when the vault is empty or nothing matches."""
-    from kernel.world import loose_store
-    from kernel.world.characters import reclone_item
-    from kernel.world.items import carrier
+    from kernel.world import loose_store  # noqa: PLC0415
+    from kernel.world.characters import reclone_item  # noqa: PLC0415
+    from kernel.world.items import carrier  # noqa: PLC0415
 
     stored = loose_store.contents(_vault(session.player_id))
     if not stored:
@@ -69,7 +69,7 @@ def withdraw(session: Session, arg: str) -> str:
 
 def render(session: Session) -> str:
     """The vault's contents, numbered so `bank withdraw <n>` can name one."""
-    from kernel.world import loose_store
+    from kernel.world import loose_store  # noqa: PLC0415
 
     stored = loose_store.contents(_vault(session.player_id))
     if not stored:

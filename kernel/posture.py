@@ -141,7 +141,7 @@ KPI_CATALOG: tuple[KpiSpec, ...] = (
 _BY_ID = {s.id: s for s in KPI_CATALOG}
 
 
-def _measured(spec_id: str, value: float | int, detail: str, breaches: bool) -> Kpi:
+def _measured(spec_id: str, value: float | int, detail: str, breaches: bool) -> Kpi:  # noqa: PYI041
     return Kpi(_BY_ID[spec_id], MEASURED, value, detail, breaches)
 
 
@@ -149,7 +149,7 @@ def _not_computable(spec_id: str, why: str) -> Kpi:
     return Kpi(_BY_ID[spec_id], NOT_COMPUTABLE, None, why, breaches_target=False)
 
 
-def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
+def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:  # noqa: PLR0912
     """Compute the posture scorecard from injected evidence: each KPI measured or honestly not."""
     out: list[Kpi] = []
 
@@ -196,7 +196,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
                 "oldest_open_advisory_days",
                 age,
                 f"oldest open advisory exposed {age}d",
-                breaches=age > 7,
+                breaches=age > 7,  # noqa: PLR2004
             )
         )
 
@@ -214,7 +214,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
                 "mean_time_to_remediate_days",
                 mttr,
                 f"MTTR {mttr}d over {len(evidence.remediation_days)} fixes",
-                breaches=mttr > 7,
+                breaches=mttr > 7,  # noqa: PLR2004
             )
         )
 
@@ -248,7 +248,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
 
     # Mutation kill rate: delegate the honesty logic to the shelf part (lazy import keeps posture
     # loadable even if the shelf part is absent, mirroring the advisory_ledger seam below).
-    from kernel.shelf.mutation_kpi import mutation_score_kpi
+    from kernel.shelf.mutation_kpi import mutation_score_kpi  # noqa: PLC0415
 
     mkpi = mutation_score_kpi(evidence.mutation_result, today)
     if mkpi.measured:
@@ -299,7 +299,7 @@ def scorecard(evidence: PostureEvidence, today: date) -> Scorecard:
 
 def load_evidence(
     security_evidence_dir: Path | str,
-    today: date,
+    today: date,  # noqa: ARG001
     *,
     cadence_days: int = 1,
     advisory_ledger_path: Path | str | None = None,
@@ -316,7 +316,7 @@ def load_evidence(
     root = Path(security_evidence_dir)
 
     # Mutation evidence is independent of the pip-audit scan, so load it before the no-scan return.
-    from kernel import mutation_recorder
+    from kernel import mutation_recorder  # noqa: PLC0415
 
     mpath = (
         Path(mutation_evidence_path)
@@ -332,20 +332,20 @@ def load_evidence(
     try:
         data = json.loads(newest.read_text("utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
-        raise PostureError(f"cannot read scan evidence {newest}: {exc}") from exc
+        raise PostureError(f"cannot read scan evidence {newest}: {exc}") from exc  # noqa: TRY003
     deps = data.get("dependencies", []) if isinstance(data, dict) else data
     advisories = sum(len(d.get("vulns", [])) for d in deps if isinstance(d, dict))
     # the file name carries its date: YYYY-MM-DD-pip-audit.json
     try:
         scan_date = date.fromisoformat(newest.name[:10])
     except ValueError:
-        scan_date = date.fromtimestamp(newest.stat().st_mtime)
+        scan_date = date.fromtimestamp(newest.stat().st_mtime)  # noqa: DTZ012
 
     oldest_first_seen: date | None = None
     remediation: tuple[int, ...] | None = None
     if advisory_ledger_path is not None:
         # lazy import: advisory_ledger is the optional lifecycle store; posture works without it
-        from kernel import advisory_ledger as al
+        from kernel import advisory_ledger as al  # noqa: PLC0415
 
         states = al.load(advisory_ledger_path)
         oldest_first_seen = al.oldest_open_first_seen(states)

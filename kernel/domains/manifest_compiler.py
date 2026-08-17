@@ -60,20 +60,20 @@ class AethrynRegionProfile:
 
     def validate(self) -> None:
         if not self.region_id.strip() or not self.display_name.strip():
-            raise ManifestCompilerError("an Aethryn region needs an id and display name")
+            raise ManifestCompilerError("an Aethryn region needs an id and display name")  # noqa: TRY003
         if not self.biome.strip():
-            raise ManifestCompilerError("an Aethryn region needs a biome")
-        if not 1 <= self.level_min <= self.level_max <= 300:
-            raise ManifestCompilerError("an Aethryn region level band must be within 1-300")
-        if self.base_width < 8 or self.base_height < 8:
-            raise ManifestCompilerError(
+            raise ManifestCompilerError("an Aethryn region needs a biome")  # noqa: TRY003
+        if not 1 <= self.level_min <= self.level_max <= 300:  # noqa: PLR2004
+            raise ManifestCompilerError("an Aethryn region level band must be within 1-300")  # noqa: TRY003
+        if self.base_width < 8 or self.base_height < 8:  # noqa: PLR2004
+            raise ManifestCompilerError(  # noqa: TRY003
                 "an Aethryn region profile needs a base size of at least 8x8"
             )
         for x, y, name, kind in self.landmarks:
             if not 0.0 <= x <= 1.0 or not 0.0 <= y <= 1.0:
-                raise ManifestCompilerError(f"landmark {name!r} must use normalized coordinates")
+                raise ManifestCompilerError(f"landmark {name!r} must use normalized coordinates")  # noqa: TRY003
             if not name.strip() or not kind.strip():
-                raise ManifestCompilerError("Aethryn landmarks need names and kinds")
+                raise ManifestCompilerError("Aethryn landmarks need names and kinds")  # noqa: TRY003
 
 
 VERIDIA_PROFILE = AethrynRegionProfile()
@@ -158,7 +158,7 @@ def _nearest_anchor(
         )
     )
     if not choices:
-        raise ManifestCompilerError("Aethryn compiler could not place a unique landmark")
+        raise ManifestCompilerError("Aethryn compiler could not place a unique landmark")  # noqa: TRY003
     _, cx, cy, _ = choices[0]
     return cx, cy
 
@@ -196,7 +196,7 @@ def compile_aethryn_region(
 ) -> CompiledAethrynRegion:
     """Compile one deterministic, living Aethryn region from a deployment manifest."""
     if manifest.project.strip().lower() != "aethryn":
-        raise ManifestCompilerError(
+        raise ManifestCompilerError(  # noqa: TRY003
             f"the Aethryn compiler requires project 'Aethryn', got {manifest.project!r}"
         )
     profile.validate()
@@ -218,7 +218,7 @@ def compile_aethryn_region(
     )
     preview = generate_region(base)
     if not preview.world_shaped:
-        raise ManifestCompilerError(
+        raise ManifestCompilerError(  # noqa: TRY003
             f"generated region {profile.region_id!r} failed the topology gate: "
             f"{preview.topology.verdict}"
         )
@@ -236,7 +236,7 @@ def compile_aethryn_region(
 
     region = generate_region(replace(base, landmarks=tuple(anchors)))
     if not region.ok:
-        raise ManifestCompilerError(
+        raise ManifestCompilerError(  # noqa: TRY003
             f"generated region {profile.region_id!r} failed validation: "
             f"topology={region.topology.verdict}, landmarks_reachable={region.landmarks_reachable}"
         )
@@ -278,7 +278,7 @@ def _validate_artifact(seed_dir: Path, zone_id: str) -> None:
     if not rooms or zone_id not in yaml.safe_load(
         (seed_dir / "zones.yaml").read_text(encoding="utf-8")
     ):
-        raise ManifestCompilerError("compiled artifact did not emit its complete zone record")
+        raise ManifestCompilerError("compiled artifact did not emit its complete zone record")  # noqa: TRY003
 
 
 def install_compiled_region(

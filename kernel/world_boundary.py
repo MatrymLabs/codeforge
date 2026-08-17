@@ -50,7 +50,7 @@ def _parts_imports(source: str, where: str) -> set[str]:
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
-        raise WorldBoundaryError(f"cannot parse {where}: {exc}") from exc
+        raise WorldBoundaryError(f"cannot parse {where}: {exc}") from exc  # noqa: TRY003
     found: set[str] = set()
     for node in ast.walk(tree):
         names: list[str] = []
@@ -65,13 +65,13 @@ def _parts_imports(source: str, where: str) -> set[str]:
             if name == "kernel.world" or name.startswith("kernel.world."):
                 bits = name.split(".")
                 found.add(
-                    bits[2] if len(bits) >= 3 else "world"
+                    bits[2] if len(bits) >= 3 else "world"  # noqa: PLR2004
                 )  # unwrap to the intra-world module
                 continue
             if not name.startswith(("parts", "kernel", "adapters", "content")):
                 continue
             bits = name.split(".")
-            if len(bits) < 2:
+            if len(bits) < 2:  # noqa: PLR2004
                 continue
             found.add(bits[1])  # any other internal reach is a platform module
     return found

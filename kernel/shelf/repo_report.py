@@ -66,7 +66,7 @@ class RepoReport:
 def synthesize(modules: dict[str, str], *, package: str = "") -> RepoReport:
     """Run every single-snapshot Lab rung over a package and fold into one RepoReport."""
     if not isinstance(modules, dict):
-        raise TypeError("modules must be a dict of {module_name: source}")
+        raise TypeError("modules must be a dict of {module_name: source}")  # noqa: TRY003
 
     conf: dict[str, float] = {}
 

@@ -10,7 +10,7 @@ from kernel.shelf.contract import Contract, Field
 WIRE_VERSION = 1
 
 
-class WireRefused(ValueError):
+class WireRefused(ValueError):  # noqa: N818
     """A frame was not a message this version of the protocol can safely use."""
 
     verdict = "REFUSED"
@@ -32,17 +32,17 @@ def _refuse(reason: str) -> WireRefused:
 def _validate(message: Mapping[str, Any]) -> dict[str, Any]:
     message_type = message.get("type")
     if not isinstance(message_type, str) or message_type not in _FIELDS:
-        raise _refuse("unknown message type")
+        raise _refuse("unknown message type")  # noqa: TRY003
     for name, expected_type in _FIELDS[message_type].items():
         if name not in message:
-            raise _refuse(f"{message_type}.{name} is required")
+            raise _refuse(f"{message_type}.{name} is required")  # noqa: TRY003
         value = message[name]
         if expected_type is int:
             valid = isinstance(value, int) and not isinstance(value, bool)
         else:
             valid = isinstance(value, expected_type)
         if not valid:
-            raise _refuse(f"{message_type}.{name} must be {expected_type.__name__}")
+            raise _refuse(f"{message_type}.{name} must be {expected_type.__name__}")  # noqa: TRY003
     return dict(message)
 
 
@@ -78,21 +78,21 @@ def refused(*, reason: str) -> dict[str, Any]:
 def encode(message: Mapping[str, Any]) -> dict[str, Any]:
     """Validate an outbound message and add this schema's version."""
     if not isinstance(message, Mapping):
-        raise _refuse("message must be an object")
+        raise _refuse("message must be an object")  # noqa: TRY003
     if "v" in message:
-        raise _refuse("outbound messages must not set their own version")
+        raise _refuse("outbound messages must not set their own version")  # noqa: TRY003
     return {"v": WIRE_VERSION, **_validate(message)}
 
 
 def decode(payload: Any) -> dict[str, Any]:
     """Refuse unknown versions and malformed frames before application code sees them."""
     if not isinstance(payload, Mapping):
-        raise _refuse("message must be an object")
+        raise _refuse("message must be an object")  # noqa: TRY003
     version = payload.get("v")
     if not isinstance(version, int) or isinstance(version, bool):
-        raise _refuse("message version is required")
+        raise _refuse("message version is required")  # noqa: TRY003
     if version != WIRE_VERSION:
-        raise _refuse(f"unknown message version {version}")
+        raise _refuse(f"unknown message version {version}")  # noqa: TRY003
     return _validate({key: value for key, value in payload.items() if key != "v"})
 
 

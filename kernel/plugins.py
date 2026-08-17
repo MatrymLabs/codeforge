@@ -41,7 +41,7 @@ def _import_module(path: Path):
     """Import a plugin module from its file path, isolated under a codeforge_plugin_ name."""
     spec = importlib.util.spec_from_file_location(f"codeforge_plugin_{path.stem}", path)
     if spec is None or spec.loader is None:
-        raise ImportError(f"cannot build an import spec for {path}")
+        raise ImportError(f"cannot build an import spec for {path}")  # noqa: TRY003
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -81,7 +81,7 @@ def load_plugins(
         name = path.stem
         try:
             module = importer(path)
-        except Exception as exc:  # a broken plugin never bricks the engine; the error is recorded
+        except Exception as exc:  # a broken plugin never bricks the engine; the error is recorded  # noqa: BLE001, E501
             errors.append(f"{name}: import failed: {exc}")
             continue
         hook = getattr(module, PLUGIN_HOOK, None)
@@ -90,7 +90,7 @@ def load_plugins(
             continue
         try:
             provided = list(hook())
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             errors.append(f"{name}: {PLUGIN_HOOK}() raised: {exc}")
             continue
         reason = _reject(provided, existing, added)

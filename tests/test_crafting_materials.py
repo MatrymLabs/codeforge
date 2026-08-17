@@ -84,7 +84,7 @@ def test_every_refinement_link_references_a_real_item(aethryn):
 def test_every_recipe_gate_names_a_real_trade_and_order(aethryn):
     """A gated recipe (slice 1d) must require a real CRAFT profession and/or a real Order, else a
     maker could never earn it."""
-    from kernel.world.orders import ORDERS
+    from kernel.world.orders import ORDERS  # noqa: PLC0415
 
     profs = load_professions(_AETHRYN / "professions.yaml")
     craft_trades = {p for p in profs if profs[p]["kind"] == "craft"}
@@ -107,7 +107,7 @@ def test_each_tier_feeds_the_next(aethryn):
     it is two disconnected recipes, not a RAW -> REFINED -> PRODUCT climb."""
     recipes = aethryn["recipes"]
     for name, steps in _CHAINS.items():
-        for (label, output), (next_label, _) in zip(steps, steps[1:], strict=False):
+        for (label, output), (next_label, _) in zip(steps, steps[1:], strict=False):  # noqa: RUF007
             assert output in recipes[next_label]["inputs"], (
                 f"{name} chain break: {label} makes {output}, but {next_label} does not use it"
             )

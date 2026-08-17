@@ -52,7 +52,7 @@ def _owner() -> Session:
 
 
 def test_the_maintenance_verb_toggles_the_gate_for_an_owner():
-    import forge
+    import forge  # noqa: PLC0415
 
     try:
         owner = _owner()
@@ -67,7 +67,7 @@ def test_the_maintenance_verb_toggles_the_gate_for_an_owner():
 
 
 def test_a_non_owner_cannot_toggle_maintenance():
-    import forge
+    import forge  # noqa: PLC0415
 
     try:
         player = Session(player_id="pleb", named=True)

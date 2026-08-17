@@ -237,18 +237,18 @@ def backup_db(dest_dir: Path | None = None) -> Path:
     """Make a consistent, online copy of the SQLite database (safe while the server runs) under
     a timestamped file, and return its path. The live public demo had no recovery path; `make
     backup` files a snapshot. Refuses loud on a non-SQLite backend (use pg_dump for PostgreSQL)."""
-    import sqlite3
-    from contextlib import closing
-    from datetime import UTC, datetime
+    import sqlite3  # noqa: PLC0415
+    from contextlib import closing  # noqa: PLC0415
+    from datetime import UTC, datetime  # noqa: PLC0415
 
     url = engine_url()
     if not url.startswith("sqlite"):
-        raise RuntimeError(
+        raise RuntimeError(  # noqa: TRY003
             f"backup_db supports SQLite only; the backend is {url.split(':', 1)[0]}. "
             "For PostgreSQL use pg_dump (see docs/database.md)."
         )
     if not Path(DB_PATH).exists():
-        raise FileNotFoundError(f"no database to back up at {DB_PATH}")
+        raise FileNotFoundError(f"no database to back up at {DB_PATH}")  # noqa: TRY003
     base = dest_dir if dest_dir is not None else Path(DB_PATH).parent / "backups"
     base.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
@@ -267,17 +267,17 @@ def restore_db(backup_path: Path, dest: Path | None = None) -> Path:
     path -- the recovery half of backup_db. Disposes any cached engine on the target so the next
     session opens the RESTORED file, not a pre-restore connection. Refuses loud on a missing backup
     or a non-SQLite backend."""
-    import shutil
+    import shutil  # noqa: PLC0415
 
     url = engine_url()
     if not url.startswith("sqlite"):
-        raise RuntimeError(
+        raise RuntimeError(  # noqa: TRY003
             f"restore_db supports SQLite only; the backend is {url.split(':', 1)[0]}. "
             "For PostgreSQL use pg_restore (see docs/database.md)."
         )
     src = Path(backup_path)
     if not src.exists():
-        raise FileNotFoundError(f"no backup to restore at {src}")
+        raise FileNotFoundError(f"no backup to restore at {src}")  # noqa: TRY003
     target = Path(dest) if dest is not None else Path(DB_PATH)
     target.parent.mkdir(parents=True, exist_ok=True)
     dead = _ENGINES.pop(f"sqlite:///{target}", None)  # drop the stale engine on the target URL

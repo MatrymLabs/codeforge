@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 
-class KeyRefused(ValueError):
+class KeyRefused(ValueError):  # noqa: N818
     """Raised when a key cannot name a record that can later be looked up."""
 
 

@@ -56,13 +56,13 @@ class Hourglass:
         """Fire `payload` (or `label` if no payload) after `after` beats. `every > 0` rearms the
         timer to repeat on that period. Scheduling an existing label REPLACES it (reschedule)."""
         if not isinstance(after, int) or isinstance(after, bool) or after <= 0:
-            raise HourglassError(f"'after' must be a positive whole number of beats, got {after!r}")
+            raise HourglassError(f"'after' must be a positive whole number of beats, got {after!r}")  # noqa: TRY003
         if not isinstance(every, int) or isinstance(every, bool) or every < 0:
-            raise HourglassError(
+            raise HourglassError(  # noqa: TRY003
                 f"'every' must be a non-negative whole number of beats, got {every!r}"
             )
         if label not in self._grains and len(self._grains) >= MAX_TIMERS:
-            raise HourglassError(
+            raise HourglassError(  # noqa: TRY003
                 f"hourglass is full ({MAX_TIMERS} timers); cannot schedule '{label}'"
             )
         self._grains[label] = _Grain(label=label, remaining=after, period=every, payload=payload)

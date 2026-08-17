@@ -41,12 +41,12 @@ class FlagRegistry:
     def register(self, name: str, default: bool = False, description: str = "") -> None:
         """Register a flag. Raises FeatureFlagError on a duplicate name."""
         if name in self._flags:
-            raise FeatureFlagError(f"a flag named {name!r} is already registered")
+            raise FeatureFlagError(f"a flag named {name!r} is already registered")  # noqa: TRY003
         self._flags[name] = Flag(name, default, description)
 
     def _require(self, name: str) -> None:
         if name not in self._flags:
-            raise FeatureFlagError(f"unknown flag {name!r}")
+            raise FeatureFlagError(f"unknown flag {name!r}")  # noqa: TRY003
 
     def is_on(self, name: str) -> bool:
         """Whether the flag is on now (override if set, else the default). Unknown flag raises."""

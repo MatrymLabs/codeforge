@@ -58,7 +58,7 @@ def _place_the_real_boss(location: str) -> None:
 
 
 def test_a_stranger_can_play_the_proactive_combat_loop():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     s = _fighter_at("courtyard")
     _place_the_real_boss("courtyard")

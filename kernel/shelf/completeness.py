@@ -52,7 +52,7 @@ def coverage(present: Iterable[str], required: Iterable[str]) -> Coverage:
     is a meaningless pass."""
     required_set = frozenset(required)
     if not required_set:
-        raise CoverageError("completeness needs at least one required category")
+        raise CoverageError("completeness needs at least one required category")  # noqa: TRY003
     present_set = frozenset(present)
     return Coverage(
         covered=required_set & present_set,

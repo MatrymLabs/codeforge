@@ -82,7 +82,7 @@ def test_a_wanderer_leaves_the_players_room(monkeypatch):
     monkeypatch.setattr(roaming, "_ROAM_RNG", _AlwaysMove())
     s = _player_at("forge")
     _wanderer("stroller", "forge")
-    first_exit = sorted(WORLD["forge"]["exits"])[0]
+    first_exit = sorted(WORLD["forge"]["exits"])[0]  # noqa: FURB192
     dest = WORLD["forge"]["exits"][first_exit]
     out = roam(s)
     assert f"wanders {first_exit}" in out

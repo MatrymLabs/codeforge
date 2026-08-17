@@ -69,12 +69,12 @@ class Dimension:
 
     def __post_init__(self) -> None:
         if self.status not in _DIM_STATUSES:
-            raise ArcError(
+            raise ArcError(  # noqa: TRY003
                 f"dimension {self.name!r}: status must be one of {_DIM_STATUSES}, "
                 f"got {self.status!r}"
             )
         if not self.source.strip():
-            raise ArcError(f"dimension {self.name!r}: a status must cite its source")
+            raise ArcError(f"dimension {self.name!r}: a status must cite its source")  # noqa: TRY003
 
 
 @dataclass(frozen=True)
@@ -93,7 +93,7 @@ def compose(dimensions: list[Dimension] | tuple[Dimension, ...]) -> ArcReport:
     """
     dims = tuple(dimensions)
     if not dims:
-        raise ArcError("ARC needs at least one dimension to review")
+        raise ArcError("ARC needs at least one dimension to review")  # noqa: TRY003
     statuses = {d.status for d in dims}
     if BLOCKED in statuses:
         verdict = BLOCKED
@@ -163,7 +163,7 @@ def _improvement_dim(root: Path) -> Dimension:
     cycle that never evaluated shows up here. Reads only (architecture law 1); a malformed ledger
     fails loud (AddieError), exactly as the other filed dimensions do - never a false pass.
     """
-    from kernel import addie
+    from kernel import addie  # noqa: PLC0415
 
     ledger = root / "addie_ledger.toml"
     if not ledger.is_file():
@@ -189,7 +189,7 @@ def _control_dim(root: Path) -> Dimension:
     verdict rather than a store nothing reads. A tampered Chronicle fails loud on read (the
     Chronicle's own law), exactly as the evidence dimension does - never a false pass.
     """
-    from kernel import chronicle
+    from kernel import chronicle  # noqa: PLC0415
 
     serious = [
         r
@@ -231,7 +231,7 @@ def _evidence_dim(root: Path) -> Dimension:
     hash-chained Chronicle, so ARC now reads retained, cited evidence. Absence is MISSING (never a
     pass); a record with an unknown status or an empty source fails loud (ChronicleError).
     """
-    from kernel import chronicle
+    from kernel import chronicle  # noqa: PLC0415
 
     record = chronicle.read_latest("evidence", root=root)
     if record is None:
@@ -239,7 +239,7 @@ def _evidence_dim(root: Path) -> Dimension:
     status = record.payload.get("status")
     source = str(record.payload.get("source", "")).strip()
     if not isinstance(status, str) or status not in _DIM_STATUSES or not source:
-        raise chronicle.ChronicleError(
+        raise chronicle.ChronicleError(  # noqa: TRY003
             f"chronicle evidence record is malformed (status={status!r}, source={source!r})"
         )
     return Dimension("evidence", status, f"{source} (filed {record.commit}, chronicle)")

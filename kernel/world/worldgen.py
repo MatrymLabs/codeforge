@@ -113,7 +113,7 @@ def _heightmap(w: int, h: int, seed: int) -> dict[tuple[int, int], float]:
     """A smooth, deterministic heightmap in [0, 1]: a coarse seeded grid, bilinearly interpolated so
     elevation flows (hills and valleys), not per-cell noise."""
     # This RNG seeds deterministic terrain for reproducible worlds, not security.
-    rng = random.Random(seed)  # nosec B311
+    rng = random.Random(seed)  # nosec B311  # noqa: S311
     step = 4
     grid = {(cx, cy): rng.random() for cx in range(w // step + 2) for cy in range(h // step + 2)}
     hm: dict[tuple[int, int], float] = {}
@@ -255,7 +255,7 @@ def _pave_roads(cells: dict[tuple[int, int], Cell], landmarks: tuple[Landmark, .
         xy for xy, c in cells.items() if c.terrain not in ("river", "water", "cliff", "wall")
     }
     anchors = [lm.at for lm in landmarks]
-    for a, b in zip(anchors, anchors[1:], strict=False):
+    for a, b in zip(anchors, anchors[1:], strict=False):  # noqa: RUF007
         for xy in _road_between(a, b, passable):
             c = cells[xy]
             # pave any walkable land (sand + shore too); a crossing keeps its ford/bridge
@@ -299,7 +299,7 @@ def generate_region(spec: RegionSpec) -> Region:
     """Generate a region in two layers and judge it by every gate. Returns a Region whose `.ok` is
     True only when it is WORLD_SHAPED and every landmark is reachable."""
     if spec.width < 1 or spec.height < 1:
-        raise WorldgenError(f"region {spec.name!r}: width and height must be >= 1")
+        raise WorldgenError(f"region {spec.name!r}: width and height must be >= 1")  # noqa: TRY003
 
     river: list[tuple[int, int]] = []
     if spec.corridor:
@@ -310,14 +310,14 @@ def generate_region(spec: RegionSpec) -> Region:
         crossmap = {(x, y): kind for x, y, kind in spec.crossings}
         if spec.river_source is not None:
             river = _trace_river(hm, spec.width, spec.height, spec.river_source)
-            if not crossmap and len(river) >= 3:
+            if not crossmap and len(river) >= 3:  # noqa: PLR2004
                 # the mission layer's deliberate crossings: auto-place a ford and a bridge along the
                 # river so it is crossable by construction (a river you cannot cross would wall off
                 # half the region -- two crossings keep two routes, so no undeclared bottleneck).
                 crossmap = {river[len(river) // 3]: "ford", river[2 * len(river) // 3]: "bridge"}
         river_set = set(river) - set(crossmap)  # a crossing overrides the river channel
         cells = _terrain(hm, river_set, crossmap, _profile(spec.biome))
-        if spec.roads and len(spec.landmarks) >= 2:
+        if spec.roads and len(spec.landmarks) >= 2:  # noqa: PLR2004
             _pave_roads(cells, spec.landmarks)  # trails threading the field between living places
         declared = _declared_crossings(spec.name, cells, crossmap)
 
@@ -339,7 +339,7 @@ def generate_region(spec: RegionSpec) -> Region:
     for lm in spec.landmarks:
         rid = f"{spec.name}_{lm.at[0]}_{lm.at[1]}"
         if rid not in rooms:
-            raise WorldgenError(f"landmark {lm.name!r} at {lm.at}: on impassable terrain, no room")
+            raise WorldgenError(f"landmark {lm.name!r} at {lm.at}: on impassable terrain, no room")  # noqa: TRY003
         rooms[rid]["name"] = lm.name
         rooms[rid]["desc"] = f"{lm.name}. {rooms[rid]['desc']}"
         rooms[rid]["landmark"] = lm.kind
@@ -392,12 +392,12 @@ def populate_region(region: Region, life: LifeSpec, *, origin: str | None = None
     meets level-1 life at the door, exactly as a trail's attach point did -- the on-ramp, preserved.
     Fails loud on an empty region, a non-positive cadence, or an origin that is not a real cell."""
     if not region.rooms:
-        raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")
+        raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")  # noqa: TRY003
     if life.foe_every < 1 or life.gather_every < 1 or life.notable_every < 1:
-        raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")
+        raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")  # noqa: TRY003
     start = origin if origin is not None else region.start
     if start not in region.rooms:
-        raise WorldgenError(f"region {region.name!r}: life origin {start!r} is not a cell")
+        raise WorldgenError(f"region {region.name!r}: life origin {start!r} is not a cell")  # noqa: TRY003
 
     exits = {rid: r["exits"] for rid, r in region.rooms.items()}
     # the wilderness fills the open field, never the anchored sites (a town cell is no beast's den).

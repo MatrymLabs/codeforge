@@ -51,8 +51,8 @@ def test_unknown_program_is_reported_not_run() -> None:
 
 
 def test_terminal_is_reachable_through_the_engine_tick() -> None:
-    from forge import handle_command
-    from kernel.world.session import Session
+    from forge import handle_command  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     out = handle_command(Session(player_id="term"), "terminal")
     assert "Programs" in out and "diagnostic console" in out

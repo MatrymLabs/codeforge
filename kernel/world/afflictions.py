@@ -23,7 +23,7 @@ from kernel.world.session import Session
 DOT_TICKS = 3
 
 #: Runtime RNG for the infliction roll: game variety, not security. Tests seed or replace it.
-_AFFLICT_RNG = random.Random()  # nosec B311
+_AFFLICT_RNG = random.Random()  # nosec B311  # noqa: S311
 
 
 def apply_dot(session: Session, name: str, damage: int, ticks: int = DOT_TICKS) -> None:
@@ -64,7 +64,7 @@ def tick_regens(session: Session) -> str:
 def apply_daze(session: Session, beats: int) -> None:
     """Daze the player for `beats` world beats: their offensive actions are lost until it wears off.
     Refreshes to the LONGER of current and new duration, so a fresh daze never shortens a stun."""
-    session.dazed = max(session.dazed, max(1, beats))
+    session.dazed = max(session.dazed, max(1, beats))  # noqa: PLW3301
 
 
 def is_dazed(session: Session) -> bool:

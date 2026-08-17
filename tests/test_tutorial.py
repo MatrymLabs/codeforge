@@ -55,7 +55,7 @@ def test_greeting_is_silent_for_an_established_hero():
 
 
 def test_tutorial_reaches_through_the_engine_tick():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     out = handle_command(Session(player_id="new"), "tutorial")
     assert "choose a calling" in out  # the verb surfaces the current step
@@ -68,9 +68,9 @@ def test_the_tutorial_names_the_booted_world_not_a_hardcoded_one() -> None:
     DEFAULT seed) was welcomed to a world they were not in, and a third-party seed had no way to
     correct it without editing the engine. Found by driving the actual login walk, not by a test.
     """
-    from kernel.world.seed import SEED_NAME
-    from kernel.world.tutorial import WORLD_TITLE, next_step
-    from kernel.world.world_manifest import describe_world
+    from kernel.world.seed import SEED_NAME  # noqa: PLC0415
+    from kernel.world.tutorial import WORLD_TITLE, next_step  # noqa: PLC0415
+    from kernel.world.world_manifest import describe_world  # noqa: PLC0415
 
     assert describe_world(SEED_NAME).title == WORLD_TITLE
     greeting = next_step(Session(player_id="newcomer"))

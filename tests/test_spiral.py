@@ -21,7 +21,7 @@ _ROOMS = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
 
 
 def test_generation_chains_marches_from_attach_east_to_the_far_end():
-    rooms, npcs, first = generate_spiral(_CONFIG, _ROOMS)
+    rooms, npcs, first = generate_spiral(_CONFIG, _ROOMS)  # noqa: RUF059
     assert first == "coil_4_ascent"
     # the attach room's east should point at the first march (the caller wires it; we report it)
     assert rooms["coil_4_ascent"]["exits"]["west"] == "base"
@@ -55,7 +55,7 @@ def test_each_coils_gate_boss_climbs_above_the_last():
 def test_extend_world_with_road_merges_and_wires_the_attach_exit():
     """The world-wiring helper (what world.py calls) merges the generated marches into a seed's
     world and grows the attach room's flat `east` exit onto the first march -- no climb, no `up`."""
-    from kernel.world.spiral import extend_world_with_road
+    from kernel.world.spiral import extend_world_with_road  # noqa: PLC0415
 
     world = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
     npcs: dict = {}
@@ -114,7 +114,7 @@ def test_each_coil_takes_a_rotating_elemental_theme():
 
 
 def test_the_summit_sovereign_stays_an_untyped_final_test():
-    from kernel.world.spiral import SUMMIT_BOSS
+    from kernel.world.spiral import SUMMIT_BOSS  # noqa: PLC0415
 
     _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
     sovereign = npcs[SUMMIT_BOSS]
@@ -124,7 +124,7 @@ def test_the_summit_sovereign_stays_an_untyped_final_test():
 def test_the_summit_boss_drops_the_configured_legendary_or_a_default():
     """The final boss deserves a capstone: a seed may name a legendary via `summit_drop`, and the
     Sovereign drops it. With no `summit_drop`, it falls back to the road keystone (not nothing)."""
-    from kernel.world.spiral import SUMMIT_BOSS
+    from kernel.world.spiral import SUMMIT_BOSS  # noqa: PLC0415
 
     _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)  # _CONFIG ships no summit_drop
     assert npcs[SUMMIT_BOSS]["drops"] == ["coil_keystone"]  # the honest default
@@ -170,7 +170,7 @@ def test_load_spiral_config_rejects_a_top_above_the_curve_cap(tmp_path):
 def test_spiral_zones_name_every_generated_coil():
     """The generated marches get area identity: every generated room lands in exactly one named zone
     (so the frontier renders an '[Area: The Nth March]' banner, not an anonymous stretch)."""
-    from kernel.world.spiral import SUMMIT_ROOM, spiral_zones
+    from kernel.world.spiral import SUMMIT_ROOM, spiral_zones  # noqa: PLC0415
 
     rooms, _, _ = generate_spiral(_CONFIG, _ROOMS)
     zones = spiral_zones(_CONFIG)
@@ -184,7 +184,7 @@ def test_spiral_zones_name_every_generated_coil():
 def test_the_summit_uses_stable_labels_for_a_capstone_quest():
     """The far room + road-warden carry fixed labels (not the march number), so a quest can name
     them however far the Road runs."""
-    from kernel.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
+    from kernel.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM  # noqa: PLC0415
 
     rooms, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
     assert SUMMIT_ROOM in rooms and SUMMIT_ROOM == "the_spiral_summit"

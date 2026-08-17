@@ -29,7 +29,7 @@ class DeadlineError(ValueError):
     """A deadline was built with an invalid budget. Fails loud at construction."""
 
 
-class DeadlineExceeded(Exception):
+class DeadlineExceeded(Exception):  # noqa: N818
     """The budget is spent. Raised by `check()` so a caller can stop loud, not poll-and-branch."""
 
 
@@ -50,9 +50,9 @@ class Deadline:
             or isinstance(self.seconds, bool)
             or not math.isfinite(self.seconds)
         ):
-            raise DeadlineError(f"seconds must be a finite number, got {self.seconds!r}")
+            raise DeadlineError(f"seconds must be a finite number, got {self.seconds!r}")  # noqa: TRY003
         if self.seconds < 0:
-            raise DeadlineError(f"seconds must be non-negative, got {self.seconds}")
+            raise DeadlineError(f"seconds must be non-negative, got {self.seconds}")  # noqa: TRY003
         self._clock = self.clock or time.monotonic
         self._start = self._clock()
 
@@ -71,7 +71,7 @@ class Deadline:
     def check(self) -> None:
         """Raise DeadlineExceeded if the budget is spent; otherwise return. Fail-loud polling."""
         if self.expired():
-            raise DeadlineExceeded(
+            raise DeadlineExceeded(  # noqa: TRY003
                 f"deadline of {self.seconds}s exceeded ({self.elapsed():.3f}s elapsed)"
             )
 

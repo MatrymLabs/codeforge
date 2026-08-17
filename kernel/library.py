@@ -47,8 +47,8 @@ def library_index(home: Path | None = None) -> str:
     lines = ["The Archive preserves these documents:", header, "-" * len(header)]
     for d in sorted(docs, key=lambda x: str(x.get("document_id", ""))):
         lines.append(
-            f"{str(d.get('document_id', '?')):32}{str(d.get('domain', '?')):10}"
-            f"{str(d.get('freshness_status', '?')):13}{d.get('title', '(untitled)')}"
+            f"{str(d.get('document_id', '?')):32}{str(d.get('domain', '?')):10}"  # noqa: RUF010
+            f"{str(d.get('freshness_status', '?')):13}{d.get('title', '(untitled)')}"  # noqa: RUF010
         )
     lines.append(f"\n{len(docs)} document(s). `library <id>` to read one.")
     return "\n".join(lines)
@@ -63,7 +63,7 @@ def library_read(doc_id: str, home: Path | None = None) -> str:
         return f"No document '{doc_id}'. Try `library` for the index."
     head = [
         f"== {match.get('title', '(untitled)')} ==",
-        f"Freshness: {match.get('freshness_status') or 'unknown'} · "
+        f"Freshness: {match.get('freshness_status') or 'unknown'} · "  # noqa: ISC004
         f"published: {match.get('publication_date') or 'unknown'} · "
         f"retrieved: {match.get('retrieved_date') or 'unknown'}",
         f"Source: {match.get('source_url') or '(none)'}",

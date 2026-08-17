@@ -46,7 +46,7 @@ def test_a_hand_written_arc_is_authored():
 def test_the_live_world_partitions_cleanly_into_archetypes():
     # the completeness gate: whatever seed booted, every quest matches at most one archetype, and
     # classify agrees with the predicates. So no archetype is uncatalogued and none double-counts.
-    from kernel.world import quest
+    from kernel.world import quest  # noqa: PLC0415
 
     for qid in quest._QUESTS:
         matches = [a.key for a in CATALOG if a.member(qid)]

@@ -144,12 +144,12 @@ def _imports(
     return name_to_symbol, module_alias, unknowns
 
 
-def analyze_repo(
+def analyze_repo(  # noqa: PLR0912, PLR0915
     modules: dict[str, str], *, package: str = "", hub_count: int = 10
 ) -> CrossModuleReport:
     """Reverse-engineer cross-module symbol usage from {module_name: source}. Pure/testable."""
     if not isinstance(modules, dict):
-        raise CrossModuleError("modules must be a dict of {module_name: source}")
+        raise CrossModuleError("modules must be a dict of {module_name: source}")  # noqa: TRY003
     internal = set(modules)
 
     # pass 1: parse + catalog public definitions
@@ -262,7 +262,7 @@ def render(report: CrossModuleReport) -> str:
             f"  UNUSED-PUBLIC CANDIDATES ({len(report.unused_public)}): "
             + ", ".join(report.unused_public[:12])
         )
-        if len(report.unused_public) > 12:
+        if len(report.unused_public) > 12:  # noqa: PLR2004
             lines.append(f"    ... and {len(report.unused_public) - 12} more")
     else:
         lines.append("  unused-public candidates: none")

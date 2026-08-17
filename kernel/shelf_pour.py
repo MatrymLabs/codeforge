@@ -51,7 +51,7 @@ def _core_files(shelf_dir: Path) -> list[Path]:
     # consumed from the Hardware Store is not this engine's to redistribute: pouring it would put
     # PRT-0007's contract into a public package that carries no card for it and claims a provenance
     # it does not have. The engine consumes the Part; it does not resell it.
-    from kernel.hardware import VENDORED_CORES
+    from kernel.hardware import VENDORED_CORES  # noqa: PLC0415
 
     return [
         p
@@ -69,7 +69,7 @@ def _reaches_engine(source: str, where: str) -> bool:
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
-        raise ShelfPourError(f"cannot parse {where}: {exc}") from exc
+        raise ShelfPourError(f"cannot parse {where}: {exc}") from exc  # noqa: TRY003
     for node in ast.walk(tree):
         mods: list[str] = []
         if isinstance(node, ast.ImportFrom) and node.module:
@@ -98,7 +98,7 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
         try:
             tree = ast.parse(py.read_text(encoding="utf-8"), filename=str(py))
         except SyntaxError as exc:
-            raise ShelfPourError(f"cannot parse {py}: {exc}") from exc
+            raise ShelfPourError(f"cannot parse {py}: {exc}") from exc  # noqa: TRY003
         for node in ast.walk(tree):
             names: list[str] = []
             if isinstance(node, ast.Import):
@@ -469,7 +469,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     tests_src = shelf_dir.parent.parent / "tests" if shelf_dir is not None else _ROOT / "tests"
     cores = _core_files(src)
     if not cores:
-        raise ShelfPourError(f"no shelf cores found under {src}")
+        raise ShelfPourError(f"no shelf cores found under {src}")  # noqa: TRY003
     deps = shelf_third_party_deps(src)
     twins, held = poolable_twins(src, tests_src)
     # test deps = what the poured twins import beyond the runtime deps (e.g. pytest, hypothesis)
@@ -522,7 +522,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
 
 def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
     # Fixed argv, no shell; used only inside the poured package directory.
-    proc = subprocess.run(  # nosec B603
+    proc = subprocess.run(  # nosec B603  # noqa: PLW1510, S603
         cmd, cwd=str(cwd) if cwd is not None else None, capture_output=True, text=True
     )
     return proc.returncode, (proc.stdout + proc.stderr)
@@ -592,7 +592,7 @@ def verify_pour_build(dest: Path, workdir: Path, *, runner=None) -> tuple[bool, 
         if rc != 0:
             return (
                 False,
-                f"'{cmd[2] if len(cmd) > 2 else cmd[0]}' step failed: {out.strip()[-160:]}",
+                f"'{cmd[2] if len(cmd) > 2 else cmd[0]}' step failed: {out.strip()[-160:]}",  # noqa: PLR2004
             )
     wheels = sorted(dist.glob("codeforge_shelf-*.whl"))
     if not wheels:
@@ -610,8 +610,8 @@ def verify_pour_build(dest: Path, workdir: Path, *, runner=None) -> tuple[bool, 
 
 def _build_main(argv: list[str]) -> int:
     """`... build <dest> <workdir>`: pour, then build the wheel + install it in a fresh venv."""
-    dest = Path(argv[2]) if len(argv) > 2 else _ROOT / "workspace" / "shelf-pour"
-    workdir = Path(argv[3]) if len(argv) > 3 else _ROOT / "workspace" / "shelf-build"
+    dest = Path(argv[2]) if len(argv) > 2 else _ROOT / "workspace" / "shelf-pour"  # noqa: PLR2004
+    workdir = Path(argv[3]) if len(argv) > 3 else _ROOT / "workspace" / "shelf-build"  # noqa: PLR2004
     pour_shelf(dest)
     ok, detail = verify_pour_build(dest, workdir)
     print(f"built {dest} -> {workdir}")
@@ -661,7 +661,7 @@ def _main(argv: list[str]) -> int:
     """`python3 -m kernel.shelf_pour [build|--drift] <dest>`: pour + prove imports/tests."""
     if len(argv) > 1 and argv[1] == "build":
         return _build_main(argv)
-    if len(argv) > 2 and argv[1] == "--drift":
+    if len(argv) > 2 and argv[1] == "--drift":  # noqa: PLR2004
         return _drift_main(argv)
     dest = Path(argv[1]) if len(argv) > 1 else _ROOT / "workspace" / "shelf-pour"
     poured = pour_shelf(dest)

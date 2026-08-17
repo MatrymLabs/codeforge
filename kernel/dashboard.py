@@ -65,7 +65,7 @@ def _fail_card(key: str, title: str, exc: Exception) -> Card:
 
 def _career_card(root: Path) -> Card:
     """Skills-to-proof board: how many claims are proven, and are all of them backed?"""
-    from kernel.career import load_board, unproven_claims
+    from kernel.career import load_board, unproven_claims  # noqa: PLC0415
 
     board = load_board()
     skills = [s for lvl in board["levels"] for s in lvl.get("skills", [])]
@@ -86,7 +86,7 @@ def _career_card(root: Path) -> Card:
 
 def _qa_card(root: Path) -> Card:
     """QualityGate self-audit over every filed object: pass / watch / fail."""
-    from kernel.qualitygate import gate_all
+    from kernel.qualitygate import gate_all  # noqa: PLC0415
 
     results = gate_all(root=root)
     tally: dict[str, int] = {}
@@ -103,9 +103,9 @@ def _qa_card(root: Path) -> Card:
     return Card("qa", "QualityGate audit", status, f"{passed}/{len(results)} pass", detail, rows)
 
 
-def _hardware_card(root: Path) -> Card:
+def _hardware_card(root: Path) -> Card:  # noqa: ARG001
     """The reusable-parts catalog: how many parts, and across how many domains."""
-    from kernel.hardware import load_catalog
+    from kernel.hardware import load_catalog  # noqa: PLC0415
 
     parts = load_catalog()
     domains = sorted({d for p in parts for d in p.reuse})
@@ -145,7 +145,7 @@ def build_snapshot(root: Path | None = None) -> Snapshot:
     for key, title, builder in _BUILDERS:
         try:
             cards.append(builder(base))  # type: ignore[operator]
-        except Exception as exc:  # a dashboard must never 500; it must tell the truth instead
+        except Exception as exc:  # a dashboard must never 500; it must tell the truth instead  # noqa: BLE001, E501
             cards.append(_fail_card(key, title, exc))
     return Snapshot(tuple(cards))
 
@@ -186,7 +186,7 @@ def status_payload(snapshot: Snapshot) -> StatusPayload:
                 status=c.status,
                 headline=c.headline,
                 detail=c.detail,
-                rows={label: value for label, value in c.rows},
+                rows={label: value for label, value in c.rows},  # noqa: C416
             )
             for c in snapshot.cards
         ],
@@ -276,7 +276,7 @@ def render_board(snapshot: Snapshot) -> str:
 def _blueprint_list_html() -> str:
     """The filed blueprints as HTMX links. Each is a real <a href> too, so it still works
     without JavaScript (progressive enhancement); HTMX just renders it in-page instead."""
-    from kernel.blueprint import load_all
+    from kernel.blueprint import load_all  # noqa: PLC0415
 
     plans = load_all()
     if not plans:
@@ -370,8 +370,8 @@ def ui_board() -> str:
 def ui_blueprint(blueprint_id: str) -> str:
     """A Blueprint rendered as an HTML fragment, for in-page HTMX rendering. The id is matched
     against filed blueprints (never used to open a path), so there is no traversal risk."""
-    from kernel.blueprint import load_all
-    from kernel.blueprint_render import render_fragment
+    from kernel.blueprint import load_all  # noqa: PLC0415
+    from kernel.blueprint_render import render_fragment  # noqa: PLC0415
 
     bp = next((b for b in load_all() if b.blueprint_id == blueprint_id), None)
     if bp is None:

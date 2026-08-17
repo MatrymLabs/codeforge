@@ -1,0 +1,7 @@
+enable=add-default-case
+enable=require-variable-braces
+enable=quote-safe-variables
+enable=check-unassigned-uppercase
+enable=deprecate-which
+severity=style
+external-sources=true

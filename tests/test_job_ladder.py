@@ -34,7 +34,7 @@ def test_validate_passes_for_the_shipped_roster():
 
 def test_the_cap_is_the_single_source_of_the_job_level_ceiling():
     assert jl.MAX_JOB_LEVEL == 30
-    from kernel.world import progression
+    from kernel.world import progression  # noqa: PLC0415
 
     assert progression.JP_TRACK[2] == jl.MAX_JOB_LEVEL  # progression reads the cap from here
 
@@ -44,7 +44,7 @@ def test_an_unarmed_calling_fails_loud(monkeypatch):
     roster = dict(jl.CALLINGS)
     roster["ghostwright"] = {"name": "Ghostwright", "description": "d", "stats": {}}
     monkeypatch.setattr(jl, "CALLINGS", roster)
-    with pytest.raises(BlueprintError, match="no ability kit.*ghostwright"):
+    with pytest.raises(BlueprintError, match="no ability kit.*ghostwright"):  # noqa: RUF043
         jl.validate()
 
 

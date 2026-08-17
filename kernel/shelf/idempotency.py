@@ -30,7 +30,7 @@ class IdempotencyError(ValueError):
     """A malformed idempotency request (empty key or fingerprint): fail loud, store nothing."""
 
 
-class IdempotencyConflict(IdempotencyError):
+class IdempotencyConflict(IdempotencyError):  # noqa: N818
     """The same key was reused for a different request fingerprint: refuse, never return the wrong
     result. The key is the client's promise that two calls are the same call; a changed fingerprint
     breaks that promise."""
@@ -70,15 +70,15 @@ class IdempotencyStore[T]:
         so a real retry runs it again. Empty key or fingerprint raises `IdempotencyError`.
         """
         if not key or not key.strip():
-            raise IdempotencyError("idempotency key must be a non-empty string")
+            raise IdempotencyError("idempotency key must be a non-empty string")  # noqa: TRY003
         if not fingerprint or not fingerprint.strip():
-            raise IdempotencyError("request fingerprint must be a non-empty string")
+            raise IdempotencyError("request fingerprint must be a non-empty string")  # noqa: TRY003
 
         existing = self._entries.get(key)
         if existing is not None:
             stored_fingerprint, stored_result = existing
             if stored_fingerprint != fingerprint:
-                raise IdempotencyConflict(
+                raise IdempotencyConflict(  # noqa: TRY003
                     f"idempotency key {key!r} was already used for a different request "
                     "(fingerprint mismatch); reusing a key for a changed request is refused"
                 )

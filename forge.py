@@ -223,43 +223,43 @@ HELP_TEXT = (
 
 
 def ask_architect(session: Session, prompt: str) -> str:
-    from adapters.ai_throttle import ask_architect as run
+    from adapters.ai_throttle import ask_architect as run  # noqa: PLC0415
 
     return run(session, prompt)
 
 
 def blueprint(arg: str = "") -> str:
-    from adapters.blueprint_verb import blueprint as run
+    from adapters.blueprint_verb import blueprint as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
-    from kernel.career import career as run
+    from kernel.career import career as run  # noqa: PLC0415
 
     return run(arg, demonstrated=demonstrated)
 
 
 def console_menu() -> str:
-    from kernel.shelf.console import console_menu as run
+    from kernel.shelf.console import console_menu as run  # noqa: PLC0415
 
     return run()
 
 
 def diagnostics_view() -> str:
-    from kernel.shelf.console import diagnostics_view as run
+    from kernel.shelf.console import diagnostics_view as run  # noqa: PLC0415
 
     return run()
 
 
 def run_view(name: str) -> str:
-    from kernel.shelf.console import run_view as run
+    from kernel.shelf.console import run_view as run  # noqa: PLC0415
 
     return run(name)
 
 
 def after_action() -> str:
-    from kernel.world.encounter_log import render_recent
+    from kernel.world.encounter_log import render_recent  # noqa: PLC0415
 
     return render_recent()
 
@@ -268,91 +268,91 @@ def flush_encounters(arg: str) -> str:
     """The trusted boundary, run IN the server process by an owner: aggregate the after-action
     tallies into the Chronicle. Owner-gated on the spine, so only a trusted actor reaches it -- the
     tick never does. An optional arg supplies the commit for provenance (default 'runtime')."""
-    from kernel.encounter_flush import flush
+    from kernel.encounter_flush import flush  # noqa: PLC0415
 
     return flush(arg.strip() or "runtime")
 
 
 def evolution(arg: str = "") -> str:
-    from kernel.evolution.command import evolution as run
+    from kernel.evolution.command import evolution as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def chronicle(arg: str = "") -> str:
-    from kernel.chronicle import chronicle as run
+    from kernel.chronicle import chronicle as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def retention(arg: str = "") -> str:
-    from kernel.retention import retention as run
+    from kernel.retention import retention as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def coupling(arg: str = "") -> str:
-    from kernel.coupling import coupling as run
+    from kernel.coupling import coupling as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def forge_command(session: Session, arg: str) -> str:
-    from kernel.foundry import forge_command as run
+    from kernel.foundry import forge_command as run  # noqa: PLC0415
 
     return run(session, arg)
 
 
 def arch_command(session: Session, arg: str) -> str:
-    from kernel.foundry import arch_command as run
+    from kernel.foundry import arch_command as run  # noqa: PLC0415
 
     return run(session, arg)
 
 
 def inspect(arg: str = "") -> str:
-    from kernel.frameup import inspect as run
+    from kernel.frameup import inspect as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def functions(arg: str = "") -> str:
-    from kernel.functions import functions as run
+    from kernel.functions import functions as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def system_generate(session: Session, arg: str) -> str:
-    from kernel.generate import system_generate as run
+    from kernel.generate import system_generate as run  # noqa: PLC0415
 
     return run(session, arg)
 
 
 def law(arg: str = "") -> str:
-    from kernel.law import law as run
+    from kernel.law import law as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def library(arg: str = "") -> str:
-    from kernel.library import library as run
+    from kernel.library import library as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def pioneer(arg: str = "") -> str:
-    from kernel.pioneer import pioneer as run
+    from kernel.pioneer import pioneer as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def pm_metrics() -> str:
-    from kernel.pm import pm_metrics as run
+    from kernel.pm import pm_metrics as run  # noqa: PLC0415
 
     return run()
 
 
 def pm_status() -> str:
-    from kernel.pm import pm_status as run
+    from kernel.pm import pm_status as run  # noqa: PLC0415
 
     return run()
 
@@ -363,8 +363,8 @@ def _workspace(session: Session, arg: str) -> str:
     game world owns the GMCP bus (grammar before worlds keeps it out of the platform verb), so the
     tick injects the real transport here: seedlab pushes (player_id, package, data), we fan it onto
     kernel.world.events.push_gmcp."""
-    from kernel.seedlab.workspace_verb import workspace_command
-    from kernel.world.events import push_gmcp
+    from kernel.seedlab.workspace_verb import workspace_command  # noqa: PLC0415
+    from kernel.world.events import push_gmcp  # noqa: PLC0415
 
     def push(player_id: str, package: str, data: object) -> None:
         push_gmcp([player_id], package, data)
@@ -379,10 +379,10 @@ def domain_registry() -> "DomainModuleRegistry":
     the line). A Seed still loads ONLY the modules it selected -- registering a module here just
     makes it available, so a classroom that selected `education` never loads `game` even though both
     sit in this registry."""
-    from kernel.domains.education import EducationModule
-    from kernel.domains.game import register_game_module
-    from kernel.seedlab.domain import register_module
-    from kernel.seedlab.provision import DomainModuleRegistry
+    from kernel.domains.education import EducationModule  # noqa: PLC0415
+    from kernel.domains.game import register_game_module  # noqa: PLC0415
+    from kernel.seedlab.domain import register_module  # noqa: PLC0415
+    from kernel.seedlab.provision import DomainModuleRegistry  # noqa: PLC0415
 
     registry = DomainModuleRegistry()
     register_game_module(registry)  # the world-dependent module, bound at the tick
@@ -391,61 +391,61 @@ def domain_registry() -> "DomainModuleRegistry":
 
 
 def docs_check() -> str:
-    from kernel.qualitygate import docs_check as run
+    from kernel.qualitygate import docs_check as run  # noqa: PLC0415
 
     return run()
 
 
 def render_gate(arg: str) -> str:
-    from kernel.qualitygate import render_gate as run
+    from kernel.qualitygate import render_gate as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def render_gate_all() -> str:
-    from kernel.qualitygate import render_gate_all as run
+    from kernel.qualitygate import render_gate_all as run  # noqa: PLC0415
 
     return run()
 
 
 def render_safety(arg: str) -> str:
-    from kernel.qualitygate import render_safety as run
+    from kernel.qualitygate import render_safety as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def regs(arg: str = "") -> str:
-    from kernel.regulations import regs as run
+    from kernel.regulations import regs as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def terminal(arg: str = "") -> str:
-    from adapters.terminal import terminal as run
+    from adapters.terminal import terminal as run  # noqa: PLC0415
 
     return run(arg)
 
 
 def render_truth() -> str:
-    from kernel.evidence_gate import render_truth as run
+    from kernel.evidence_gate import render_truth as run  # noqa: PLC0415
 
     return run()
 
 
 def catalog_view() -> str:
-    from kernel.workshop import catalog_view as run
+    from kernel.workshop import catalog_view as run  # noqa: PLC0415
 
     return run()
 
 
 def reuse_search(term: str = "") -> str:
-    from kernel.workshop import reuse_search as run
+    from kernel.workshop import reuse_search as run  # noqa: PLC0415
 
     return run(term)
 
 
 def workshop_menu() -> str:
-    from kernel.workshop import workshop_menu as run
+    from kernel.workshop import workshop_menu as run  # noqa: PLC0415
 
     return run()
 
@@ -455,7 +455,7 @@ def workshop_menu() -> str:
 # case (kernel/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
 
 
-def _authenticate(session: Session, verb: str, arg: str) -> str:
+def _authenticate(session: Session, verb: str, arg: str) -> str:  # noqa: PLR0911
     """Register or log in, binding an account to this session and restoring a returning hero.
 
     `verb` is "register" or "login". A brand-new character is welcomed; a known casefile is
@@ -464,7 +464,7 @@ def _authenticate(session: Session, verb: str, arg: str) -> str:
     words = arg.split()
     handle = parse_handle(words[0].lower()) if words else None
     secret = words[1] if len(words) > 1 else ""  # TRUE case: secrets are never lowered
-    if handle is None or len(words) != 2:
+    if handle is None or len(words) != 2:  # noqa: PLR2004
         return f"Usage: {verb} <character>@<account> <password>"
     char, account = handle
     if not NAME_RE.match(char) or not NAME_RE.match(account):
@@ -522,7 +522,7 @@ def _passwd_cmd(session: Session, arg: str) -> str:
             "Only account logins can change a password. Try: login <character>@<account> <password>"
         )
     words = arg.split()  # TRUE case: secrets are never lowered
-    if len(words) != 3:
+    if len(words) != 3:  # noqa: PLR2004
         return "Usage: passwd <old> <new> <new-again>"
     old, new, again = words
     if new != again:
@@ -546,7 +546,7 @@ def _name_cmd(session: Session, arg: str) -> str:
     wanted = words[0].lower() if words else ""
     casefile = load_character(wanted) if wanted else None
     protected = casefile is not None and has_password(casefile)
-    bad_shape = len(words) > 2 or (len(words) == 2 and not protected)
+    bad_shape = len(words) > 2 or (len(words) == 2 and not protected)  # noqa: PLR2004
     if not wanted or not NAME_RE.match(wanted) or bad_shape:
         return (
             "Names are 2-16 characters: lowercase letters, digits, underscores, "
@@ -554,7 +554,7 @@ def _name_cmd(session: Session, arg: str) -> str:
         )
     if wanted in SESSIONS:
         return f"Someone here is already called {display_name(wanted)}."
-    secret = words[1] if len(words) == 2 else ""
+    secret = words[1] if len(words) == 2 else ""  # noqa: PLR2004
     if protected and not verify_password(wanted, secret):
         return f"That name is protected. Prove it is yours: name {wanted} <password>"
     old = session.player_id
@@ -607,12 +607,12 @@ def _say_cmd(session: Session, message: str) -> str:
 PLUGIN_LOAD: PluginLoad | None = None
 
 
-def _script_command(session: Session, arg: str) -> str:
+def _script_command(session: Session, arg: str) -> str:  # noqa: ARG001
     """Owner-only sandboxed Lua console: run a snippet, show its emit() output + return value.
 
     The safety boundary is kernel.scripting.LuaSandbox (no os/io/require; loops bounded), so the
     owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
-    from kernel.scripting import LuaSandbox, ScriptError, scripting_available
+    from kernel.scripting import LuaSandbox, ScriptError, scripting_available  # noqa: PLC0415
 
     code = arg.strip()
     if not code:
@@ -660,7 +660,7 @@ def _help_cmd(session: Session, arg: str) -> str:
         return f"No help for '{query}'. Type 'help' for the command list."
 
 
-def _build_commands() -> CommandSet:
+def _build_commands() -> CommandSet:  # noqa: PLR0915
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
     cs = CommandSet()
@@ -742,7 +742,7 @@ def _build_commands() -> CommandSet:
             "@forge",
             "CMD-10.020",
             "the Foundry: propose a part skeleton, approve, generate into the sandbox (owner)",
-            lambda s, arg: forge_command(s, arg),
+            lambda s, arg: forge_command(s, arg),  # noqa: PLW0108
             namespace=ADMIN,
             min_rank="owner",
         )
@@ -752,7 +752,7 @@ def _build_commands() -> CommandSet:
             "@arch",
             "CMD-10.021",
             "step to the arch: review forged candidates, or preview <seed> a built game (owner)",
-            lambda s, arg: arch_command(s, arg),
+            lambda s, arg: arch_command(s, arg),  # noqa: PLW0108
             namespace=ADMIN,
             min_rank="owner",
         )
@@ -1157,7 +1157,7 @@ def _build_commands() -> CommandSet:
             "create",
             "CMD-04.083",
             "the Workshop create tool: stage a new npc or item (owner, in the Creator's Workshop)",
-            lambda s, a: creator_workshop.create(s, a),
+            lambda s, a: creator_workshop.create(s, a),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1358,7 +1358,7 @@ def _build_commands() -> CommandSet:
             "ai",
             "CMD-04.031",
             "consult the Architect (advisory AI)",
-            lambda s, arg: ask_architect(s, arg),
+            lambda s, arg: ask_architect(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1370,7 +1370,7 @@ def _build_commands() -> CommandSet:
             "shout",
             "CMD-04.033",
             "shout a line to everyone",
-            lambda s, arg: shout(s, arg),
+            lambda s, arg: shout(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1401,7 +1401,7 @@ def _build_commands() -> CommandSet:
             "examine",
             "CMD-04.078",
             "size up a creature: its HP and elemental nature (examine <target>)",
-            lambda s, a: examine_foe(s, a),
+            lambda s, a: examine_foe(s, a),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1657,7 +1657,7 @@ def _build_commands() -> CommandSet:
             "use",
             "CMD-04.067",
             "channel a combat ability (use <ability> [on <foe>])",
-            lambda s, arg: use_ability(s, arg),
+            lambda s, arg: use_ability(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1684,7 +1684,7 @@ def _build_commands() -> CommandSet:
             "join",
             "CMD-04.069",
             "swear to an Order (join <order>)",
-            lambda s, arg: swear_order(s, arg),
+            lambda s, arg: swear_order(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1740,7 +1740,7 @@ def _build_commands() -> CommandSet:
             "quaff",
             "CMD-04.074",
             "drink a consumable (quaff <item>)",
-            lambda s, arg: quaff(s, arg),
+            lambda s, arg: quaff(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1749,7 +1749,7 @@ def _build_commands() -> CommandSet:
             "craft",
             "CMD-04.079",
             "forge gathered materials into goods (craft <recipe>)",
-            lambda s, arg: craft(s, arg),
+            lambda s, arg: craft(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1821,7 +1821,7 @@ def _build_commands() -> CommandSet:
             "gsay",
             "CMD-04.103",
             "speak on your guild's channel (gsay <message>)",
-            lambda s, arg: guild_mod.guild_say(s, arg),
+            lambda s, arg: guild_mod.guild_say(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1857,7 +1857,7 @@ def _build_commands() -> CommandSet:
             "chat",
             "CMD-04.107",
             "speak on the world channel, heard by every hero online (chat <message>)",
-            lambda s, arg: chat_mod.world_say(s, arg),
+            lambda s, arg: chat_mod.world_say(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1911,7 +1911,7 @@ def _build_commands() -> CommandSet:
             "buy",
             "CMD-04.072",
             "buy an item (buy <item>)",
-            lambda s, arg: buy(s, arg),
+            lambda s, arg: buy(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1920,7 +1920,7 @@ def _build_commands() -> CommandSet:
             "sell",
             "CMD-04.073",
             "sell a carried item (sell <item>)",
-            lambda s, arg: sell(s, arg),
+            lambda s, arg: sell(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -1996,7 +1996,7 @@ def _build_commands() -> CommandSet:
             "journal",
             "CMD-04.058",
             "write or read your journal (journal <entry>)",
-            lambda s, arg: journal(s, arg),
+            lambda s, arg: journal(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -2005,7 +2005,7 @@ def _build_commands() -> CommandSet:
             "title",
             "CMD-04.059",
             "set your displayed title (title <text>)",
-            lambda s, arg: title(s, arg),
+            lambda s, arg: title(s, arg),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -2023,7 +2023,7 @@ def _build_commands() -> CommandSet:
             "allocate",
             "CMD-04.087",
             "spend attribute points (allocate <stat> [n])",
-            lambda s, a: allocate.allocate(s, a),
+            lambda s, a: allocate.allocate(s, a),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -2032,7 +2032,7 @@ def _build_commands() -> CommandSet:
             "signet",
             "CMD-04.088",
             "the Maker's Signet: the Creator Interface, borne anywhere (owner)",
-            lambda s, a: artifact.signet(s, a),
+            lambda s, a: artifact.signet(s, a),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -2068,7 +2068,7 @@ def _build_commands() -> CommandSet:
             "route",
             "CMD-04.097",
             "the shortest on-foot path to a room, as directions (route <room>)",
-            lambda s, a: travel_net.route(s, a),
+            lambda s, a: travel_net.route(s, a),  # noqa: PLW0108
             namespace=CORE,
         )
     )
@@ -2157,7 +2157,7 @@ def _build_commands() -> CommandSet:
     # Third-party command plugins register LAST (so collision checks see every built-in verb). The
     # plugins/ dir is absent by default, so this is a no-op until an operator adds one. The
     # kept for a diagnostic; a rejected plugin is recorded, never silently dropped.
-    global PLUGIN_LOAD
+    global PLUGIN_LOAD  # noqa: PLW0603
     PLUGIN_LOAD = load_plugins(cs)
     return cs
 
@@ -2167,7 +2167,7 @@ def _loop_trace_handler(arg: str) -> str:
     part_id = arg.strip()
     if not part_id:
         return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
-    from kernel.loop import render_trace, trace
+    from kernel.loop import render_trace, trace  # noqa: PLC0415
 
     return render_trace(trace(part_id))
 
@@ -2207,9 +2207,9 @@ def _recognized_name(viewer: str, target: str) -> str:
     return alias if alias is not None else display_name(target)
 
 
-def _recog_cmd(session: Session, arg: str) -> str:
+def _recog_cmd(session: Session, arg: str) -> str:  # noqa: PLR0911
     """`recog` (list) | `recog <someone here> as <name>` | `recog forget <someone>`."""
-    global _RECOG
+    global _RECOG  # noqa: PLW0603
     viewer = session.player_id
     text = arg.strip()
     if not text:
@@ -2225,7 +2225,7 @@ def _recog_cmd(session: Session, arg: str) -> str:
         _RECOG = _RECOG.forget(viewer, pid)
         return f"You let go of your private name for {display_name(pid)}."
     parts = re.split(r"\s+as\s+", text, maxsplit=1, flags=re.IGNORECASE)
-    if len(parts) != 2:
+    if len(parts) != 2:  # noqa: PLR2004
         return "Usage: recog <someone here> as <name>  |  recog forget <someone>  |  recog"
     target_word, alias = parts[0].strip(), parts[1].strip()
     pid = _find_actor(session.location, target_word)
@@ -2421,7 +2421,7 @@ def _party_cmd(session: Session, arg: str) -> str:
     return "Party: party, party invite <player>, party join <player>, party leave, party disband."
 
 
-def _mail_cmd(session: Session, arg: str) -> str:
+def _mail_cmd(session: Session, arg: str) -> str:  # noqa: PLR0911
     """The `mail` verb: async letters. Bare `mail` shows the inbox; `mail send <player>
     <message>`, `mail read <n>`, `mail delete <n>`. The spine preserves the letter's case."""
     parts_ = arg.split(maxsplit=1)
@@ -2448,7 +2448,7 @@ def _mail_cmd(session: Session, arg: str) -> str:
 def _ban_cmd(session: Session, arg: str) -> str:
     """`@ban <player> <reason>`: bar a character from the world (wizard+), audited. If online they
     drop on their next command. A ban outranks maintenance and even a wizard's rank."""
-    from kernel.world import audit, bans
+    from kernel.world import audit, bans  # noqa: PLC0415
 
     parts_ = arg.split(maxsplit=1)
     name = parts_[0].strip().lower() if parts_ else ""
@@ -2465,7 +2465,7 @@ def _ban_cmd(session: Session, arg: str) -> str:
 
 def _unban_cmd(session: Session, arg: str) -> str:
     """`@unban <player>`: lift a ban (wizard+), audited."""
-    from kernel.world import audit, bans
+    from kernel.world import audit, bans  # noqa: PLC0415
 
     name = arg.strip().lower()
     if not name:
@@ -2478,7 +2478,7 @@ def _unban_cmd(session: Session, arg: str) -> str:
 
 def _bans_cmd(_session: Session, _arg: str) -> str:
     """`@bans`: the moderation roster of banned characters (wizard+)."""
-    from kernel.world import bans
+    from kernel.world import bans  # noqa: PLC0415
 
     rows = bans.all_bans()
     if not rows:
@@ -2491,7 +2491,7 @@ def _bans_cmd(_session: Session, _arg: str) -> str:
 
 def _metrics_cmd(_session: Session, _arg: str) -> str:
     """`@metrics`: a live-ops snapshot from storage (population + economy health) (owner)."""
-    from kernel.world import metrics
+    from kernel.world import metrics  # noqa: PLC0415
 
     return metrics.render()
 
@@ -2499,7 +2499,7 @@ def _metrics_cmd(_session: Session, _arg: str) -> str:
 def _audit_cmd(_session: Session, arg: str) -> str:
     """`@audit [verify]`: the tamper-evident admin/economy log (owner). Bare shows recent entries;
     `@audit verify` checks the hash chain end to end."""
-    from kernel.world import audit
+    from kernel.world import audit  # noqa: PLC0415
 
     if arg.strip().lower() == "verify":
         return "Audit log: chain intact." if audit.verify() else "Audit log: CHAIN BROKEN."
@@ -2513,7 +2513,7 @@ def _audit_cmd(_session: Session, arg: str) -> str:
     return "\n".join(lines)
 
 
-def _maintenance_cmd(session: Session, arg: str) -> str:
+def _maintenance_cmd(session: Session, arg: str) -> str:  # noqa: ARG001
     """`@maintenance [on <reason>|off]`: close or open the forge to non-staff (owner). Bare shows
     the status. On/off broadcast to everyone online so players in the world can wrap up."""
     parts_ = arg.split(maxsplit=1)
@@ -2576,7 +2576,7 @@ def _friend_cmd(session: Session, arg: str) -> str:
     return "Friends: friend | friend add <player> | friend remove <player>."
 
 
-def _guild_cmd(session: Session, arg: str) -> str:
+def _guild_cmd(session: Session, arg: str) -> str:  # noqa: PLR0911, PLR0912
     """The `guild` verb: a persisted player organization. `guild found <name>`, `guild invite
     <player>`, `guild accept`, `guild promote <player>`, `guild leave`, `guild disband`; bare
     `guild` shows the roster. Guild chat is the separate `gsay` verb."""
@@ -2618,7 +2618,7 @@ def _guild_cmd(session: Session, arg: str) -> str:
     )
 
 
-def _trade_cmd(session: Session, arg: str) -> str:
+def _trade_cmd(session: Session, arg: str) -> str:  # noqa: PLR0911
     """The `trade` verb: a safe atomic swap with a co-located hero. The spine preserves argument
     case, so a player name / item word arrives as typed; names lower to their label downstream.
     `trade <player>` proposes; `trade accept`; `trade add <item>`; `trade coins <n>`;
@@ -2700,7 +2700,7 @@ def _did_you_mean(session: Session, routed_signal: str) -> str:
     near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
 
     Uses the textmatch shelf part (kernel.shelf.textmatch), C-accelerated when built (ADR-0010)."""
-    from kernel.shelf.textmatch import closest
+    from kernel.shelf.textmatch import closest  # noqa: PLC0415
 
     typed = routed_signal.split(" ", 1)[0]
     if not typed:
@@ -2770,7 +2770,7 @@ def _sands_beat(session: Session) -> str:
     player should see because they are in the affected room (else '')."""
     lines: list[str] = []
     for event in WORLD_SANDS.advance():
-        if isinstance(event, tuple) and len(event) == 2 and event[0] == "reclose":
+        if isinstance(event, tuple) and len(event) == 2 and event[0] == "reclose":  # noqa: PLR2004
             closed = reclose(event[1])
             if closed is not None:
                 room, name = closed

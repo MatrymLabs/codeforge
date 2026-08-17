@@ -24,8 +24,8 @@ from kernel.world.job_progress_sql import SqlJobProgressStore
 def _sql_store():
     """The SQL adapter over the tmp DB. The character FK must exist before job rows save, so a bare
     named character is persisted first (save_character writes the CharacterRow the FK needs)."""
-    from kernel.world.characters import save_character
-    from kernel.world.session import Session
+    from kernel.world.characters import save_character  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     hero = Session(player_id="rowan", named=True, account="acct")
     save_character(hero)  # creates the character row the job_progress FK needs

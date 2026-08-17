@@ -140,7 +140,7 @@ def test_underscore_and_non_py_files_are_ignored(tmp_path: Path) -> None:
 
 
 def test_import_module_fails_loud_when_no_spec(tmp_path: Path, monkeypatch) -> None:
-    import kernel.plugins as pl
+    import kernel.plugins as pl  # noqa: PLC0415
 
     monkeypatch.setattr(pl.importlib.util, "spec_from_file_location", lambda *a, **k: None)
     with pytest.raises(ImportError, match="cannot build an import spec"):

@@ -56,7 +56,7 @@ class ResumeReport:
 
 def _state_of(player_id: str, quest_id: str) -> str:
     """The player's current state in one quest, read from the engine's own save map (or "")."""
-    from kernel.world.quest import save_state
+    from kernel.world.quest import save_state  # noqa: PLC0415
 
     raw = save_state(player_id)
     if not raw:
@@ -75,14 +75,14 @@ def operate_and_recover(
     Registers the quest, drives it to a terminal by travelling the objective rooms, backs up the
     player's state, simulates a restart (unload -> reload from disk -> restore), and verifies the
     resume -- always unregistering the quest afterward so no global state leaks."""
-    from kernel.world.quest import (
+    from kernel.world.quest import (  # noqa: PLC0415
         register_specs,
         reset_quests,
         restore_state,
         unregister_specs,
     )
-    from kernel.world.seed import load_quest
-    from kernel.world.session import Session
+    from kernel.world.seed import load_quest  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     linked, verdict = link_and_validate(spec, dest)
     if verdict.verdict != LINKED:
@@ -97,7 +97,7 @@ def operate_and_recover(
 
     register_specs([quest])
     try:
-        from kernel.world.quest import on_event
+        from kernel.world.quest import on_event  # noqa: PLC0415
 
         session = Session(player_id=player_id, location=spec.start)
         for room in objectives:  # travel: entering each objective room fires its quest step

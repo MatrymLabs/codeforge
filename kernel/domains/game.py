@@ -59,7 +59,7 @@ class GameModule:
         target = _CAPABILITY_MODULES.get(capability)
         if target is None:
             known = ", ".join(self.capabilities)
-            raise GameError(f"game has no capability {capability!r}; has: {known}")
+            raise GameError(f"game has no capability {capability!r}; has: {known}")  # noqa: TRY003
         return importlib.import_module(target)
 
 

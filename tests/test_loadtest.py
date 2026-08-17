@@ -93,10 +93,10 @@ def test_percentile_of_empty_is_zero() -> None:
 def test_faulting_command_is_counted_not_fatal(monkeypatch: pytest.MonkeyPatch) -> None:
     # A handler that raises is counted as an error and never aborts the run (warmup=0 so the
     # faulting handler is only hit inside the guarded worker loop).
-    import forge
+    import forge  # noqa: PLC0415
 
     def _boom(_session: object, _text: str) -> str:
-        raise RuntimeError("handler blew up")
+        raise RuntimeError("handler blew up")  # noqa: TRY003
 
     monkeypatch.setattr(forge, "handle_command", _boom)
     result = loadtest.run_load(concurrency=2, per_worker=10, warmup=0)

@@ -61,7 +61,7 @@ def test_frame_refuses_an_empty_package():
         gmcp_frame("", {"x": 1})
     except ValueError:
         return
-    raise AssertionError("empty package name must fail loud")
+    raise AssertionError("empty package name must fail loud")  # noqa: TRY003
 
 
 # --- IAC escaping (the desync trap) ----------------------------------------
@@ -154,7 +154,7 @@ def test_room_report_on_an_unknown_location_renders_honestly():
 
 
 def test_room_report_carries_the_area_when_a_zone_owns_the_room(monkeypatch):
-    import kernel.world.zones as zones
+    import kernel.world.zones as zones  # noqa: PLC0415, PLR0402
 
     session = _hero()
     monkeypatch.setattr(
@@ -165,7 +165,7 @@ def test_room_report_carries_the_area_when_a_zone_owns_the_room(monkeypatch):
 
 
 def test_room_report_omits_the_area_for_a_room_in_no_zone(monkeypatch):
-    import kernel.world.zones as zones
+    import kernel.world.zones as zones  # noqa: PLC0415, PLR0402
 
     session = _hero()
     monkeypatch.setattr(zones, "zone_of", lambda room: None)  # a room outside every area
@@ -184,7 +184,7 @@ def test_skills_report_lists_the_wieldable_kit():
 
 
 def test_skills_report_carries_an_abilitys_element(monkeypatch):
-    from kernel.world.abilities import ABILITIES
+    from kernel.world.abilities import ABILITIES  # noqa: PLC0415
 
     session = _hero()
     monkeypatch.setitem(ABILITIES["power_strike"], "element", "FIR")
@@ -210,7 +210,7 @@ def test_resists_report_is_empty_before_a_calling():
 
 
 def test_items_report_lists_the_equipped_loadout_with_mods_and_is_empty_when_bare():
-    from kernel.world.items import ITEMS, clone
+    from kernel.world.items import ITEMS, clone  # noqa: PLC0415
 
     session = _hero()
     assert items_report(session) == {}  # nothing worn: an empty frame clears the client panel
@@ -244,7 +244,7 @@ def test_target_report_names_an_engaged_foe_with_its_hp():
 
 
 def test_target_report_reads_a_wounded_foe_even_without_aggression(monkeypatch):
-    from kernel.world.npcs import NPCS
+    from kernel.world.npcs import NPCS  # noqa: PLC0415
 
     session = _hero()
     session.location = "courtyard"
@@ -257,7 +257,7 @@ def test_target_report_carries_a_typed_foes_elemental_profile(monkeypatch):
     """The Char.Target frame names the foe's attack element and its non-normal resistances, so a
     client's co-pilot can advise the right element. Both keys are additive: a Normal row is omitted
     and an untyped foe carries neither."""
-    from kernel.world.npcs import NPCS
+    from kernel.world.npcs import NPCS  # noqa: PLC0415
 
     session = _hero()
     session.location = "courtyard"
@@ -297,7 +297,7 @@ def test_quest_report_tracks_the_active_story_quest():
 
 
 def test_quest_report_is_none_when_no_authored_quest_is_active(monkeypatch):
-    from kernel.world import quest as quest_card
+    from kernel.world import quest as quest_card  # noqa: PLC0415
 
     monkeypatch.setattr(quest_card, "_QUESTS", {})  # a world with no story arcs
     assert quest_report(_hero()) is None
@@ -310,8 +310,8 @@ def test_party_report_is_none_when_solo():
 
 
 def test_party_report_names_the_fellowship_and_leader():
-    from kernel.world import party
-    from kernel.world.session import SESSIONS
+    from kernel.world import party  # noqa: PLC0415
+    from kernel.world.session import SESSIONS  # noqa: PLC0415
 
     try:
         ada = _hero()  # player_id "ada"
@@ -340,7 +340,7 @@ def test_guild_report_carries_the_guild_name_and_rank():
 
 
 def test_mail_report_is_none_for_an_empty_inbox_or_unnamed_hero():
-    from kernel.world.session import Session
+    from kernel.world.session import Session  # noqa: PLC0415
 
     solo = _hero()  # not named
     assert mail_report(solo) is None  # unnamed: no inbox
@@ -349,8 +349,8 @@ def test_mail_report_is_none_for_an_empty_inbox_or_unnamed_hero():
 
 
 def test_mail_report_counts_unread_and_total():
-    from kernel.world import mail_store
-    from kernel.world.session import Session
+    from kernel.world import mail_store  # noqa: PLC0415
+    from kernel.world.session import Session  # noqa: PLC0415
 
     ada = Session(player_id="ada", named=True)
     mail_store.send("ada", "bram", "one", sent_utc="2026-07-28T12:00:00Z")
@@ -364,7 +364,7 @@ def test_friends_report_is_none_with_no_friends():
 
 
 def test_friends_report_counts_online_and_names_them():
-    from kernel.world.session import SESSIONS, Session
+    from kernel.world.session import SESSIONS, Session  # noqa: PLC0415
 
     try:
         ada = _hero()

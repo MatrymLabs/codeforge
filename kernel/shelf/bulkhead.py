@@ -28,7 +28,7 @@ class BulkheadError(ValueError):
     """A bulkhead was built with an invalid limit. Fails loud at construction."""
 
 
-class BulkheadFull(Exception):
+class BulkheadFull(Exception):  # noqa: N818
     """A slot was requested but the compartment is full. Fail-fast rejection; do not run the op."""
 
 
@@ -39,9 +39,9 @@ class Bulkhead:
 
     def __init__(self, limit: int) -> None:
         if not isinstance(limit, int) or isinstance(limit, bool):
-            raise BulkheadError(f"limit must be an int, got {limit!r}")
+            raise BulkheadError(f"limit must be an int, got {limit!r}")  # noqa: TRY003
         if limit < 1:
-            raise BulkheadError(f"limit must be >= 1, got {limit}")
+            raise BulkheadError(f"limit must be >= 1, got {limit}")  # noqa: TRY003
         self._limit = limit
         self._lock = threading.Lock()
         self._active = 0
@@ -68,7 +68,7 @@ class Bulkhead:
         The slot is released on exit even if the block raises (capacity is never leaked)."""
         with self._lock:
             if self._active >= self._limit:
-                raise BulkheadFull(f"bulkhead full ({self._active}/{self._limit})")
+                raise BulkheadFull(f"bulkhead full ({self._active}/{self._limit})")  # noqa: TRY003
             self._active += 1
         try:
             yield

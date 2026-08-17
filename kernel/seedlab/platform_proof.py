@@ -166,7 +166,7 @@ def run_first_platform_proof(
     for run in runs:
         run_log.append(run)
     if not all(run.ok for run in runs):
-        raise PlatformProofError("generated target validation did not pass")
+        raise PlatformProofError("generated target validation did not pass")  # noqa: TRY003
 
     artifact_store = FileArtifactStore(root / "artifacts")
     artifact = record_generated_artifact(seed_id, generated, runs=runs, clock=clock_fn)
@@ -198,7 +198,7 @@ def run_first_platform_proof(
     backup = backups.backup(record)
     backup_verdict = backups.verify(seed_id, backup.backup_id)
     if backup_verdict != INTACT:
-        raise PlatformProofError(f"backup was not intact: {backup_verdict}")
+        raise PlatformProofError(f"backup was not intact: {backup_verdict}")  # noqa: TRY003
 
     recovered_kernel = BlueprintKernel(FileSeedStore(root / "seeds"), clock=clock_fn)
     recovered_record = recovered_kernel.get(seed_id)
@@ -266,7 +266,7 @@ def _write_original_source(root: Path) -> Path:
         encoding="utf-8",
     )
     (package / "core.py").write_text(
-        "\n".join(
+        "\n".join(  # noqa: FLY002
             [
                 "from dataclasses import dataclass",
                 "",
@@ -285,7 +285,7 @@ def _write_original_source(root: Path) -> Path:
         encoding="utf-8",
     )
     (tests / "test_core.py").write_text(
-        "\n".join(
+        "\n".join(  # noqa: FLY002
             [
                 "from proof_workload.core import WorkItem, complete",
                 "",

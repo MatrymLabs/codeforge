@@ -48,7 +48,7 @@ def test_a_recurring_job_re_arms_each_interval():
 # --- refusal / safety --------------------------------------------------------------------------
 def test_a_job_that_raises_is_dropped_not_propagated():
     def _boom() -> None:
-        raise RuntimeError("scheduled task blew up")
+        raise RuntimeError("scheduled task blew up")  # noqa: TRY003
 
     good: list[int] = []
     scheduler.schedule(1, _boom)

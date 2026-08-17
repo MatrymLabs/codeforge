@@ -132,9 +132,9 @@ def test_planning_blocks_when_the_starter_pack_is_missing(tmp_path: Path) -> Non
 
 
 def test_the_plan_writes_nothing(tmp_path: Path) -> None:
-    before = set(p.name for p in tmp_path.iterdir())
+    before = set(p.name for p in tmp_path.iterdir())  # noqa: C401
     plan_cast("blank_mud", "Sandbox")
-    after = set(p.name for p in tmp_path.iterdir())
+    after = set(p.name for p in tmp_path.iterdir())  # noqa: C401
     assert before == after  # a dry run touches nothing on disk
 
 
@@ -260,7 +260,7 @@ def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
 
 
 def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) -> None:
-    from kernel.cast import VALIDATED, validate_cast
+    from kernel.cast import VALIDATED, validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -270,7 +270,7 @@ def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) ->
 
 
 def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
-    from kernel.cast import NOT_VALIDATED, validate_cast
+    from kernel.cast import NOT_VALIDATED, validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=False)  # forge.handle_command raises
@@ -284,7 +284,7 @@ def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path
     seed (via FORGE_SEED), never the engine default first-forge, which the cast deliberately
     shed. Here kernel/world/world.py refuses any seed but the cast's own -> validate passes only if
     the probe was launched with FORGE_SEED=aethryn."""
-    from kernel.cast import VALIDATED, validate_cast
+    from kernel.cast import VALIDATED, validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -304,7 +304,7 @@ def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path
 def test_validate_without_a_manifest_boots_on_the_engine_default(tmp_path: Path) -> None:
     """A cast dir with no manifest can't name its seed, so validate degrades gracefully to the
     engine default rather than crashing (exercises the no-manifest branch of the FORGE_SEED pin)."""
-    from kernel.cast import validate_cast
+    from kernel.cast import validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -333,7 +333,7 @@ def test_generated_pyproject_declares_dependencies(tmp_path: Path) -> None:
 
 
 def test_declared_deps_reads_the_pyproject(tmp_path: Path) -> None:
-    from kernel.cast import _declared_deps
+    from kernel.cast import _declared_deps  # noqa: PLC0415
 
     (tmp_path / "pyproject.toml").write_text(
         '[project]\ndependencies = ["pyyaml", "pydantic"]\n', encoding="utf-8"
@@ -343,7 +343,7 @@ def test_declared_deps_reads_the_pyproject(tmp_path: Path) -> None:
 
 
 def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
-    from kernel.cast import install_check
+    from kernel.cast import install_check  # noqa: PLC0415
 
     _fixture_engine(tmp_path)
     out = generate_cast(
@@ -355,13 +355,13 @@ def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
         steps.append("venv" if "venv" in cmd else "install" if "install" in cmd else "boot")
         return 0, "ok"
 
-    ok, detail = install_check(out, tmp_path / "work", runner=fake)
+    ok, detail = install_check(out, tmp_path / "work", runner=fake)  # noqa: RUF059
     assert ok and steps == ["venv", "install", "boot"]
     assert read_manifest(out / "cast_manifest.json").isolation_proven is True
 
 
 def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
-    from kernel.cast import install_check
+    from kernel.cast import install_check  # noqa: PLC0415
 
     _fixture_engine(tmp_path)
     out = generate_cast(
@@ -379,7 +379,7 @@ def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
 def test_install_check_without_a_manifest_uses_the_default_boot_probe(tmp_path: Path) -> None:
     """No manifest -> the boot step falls back to the plain probe (engine default seed) instead
     of injecting FORGE_SEED. Covers the no-manifest branch of install_check's seed pin."""
-    from kernel.cast import install_check
+    from kernel.cast import install_check  # noqa: PLC0415
 
     cast_dir = tmp_path / "cast"
     cast_dir.mkdir()
@@ -397,7 +397,7 @@ def test_install_check_without_a_manifest_uses_the_default_boot_probe(tmp_path: 
 
 
 def test_install_check_needs_declared_deps(tmp_path: Path) -> None:
-    from kernel.cast import install_check
+    from kernel.cast import install_check  # noqa: PLC0415
 
     (tmp_path / "cast" / "").mkdir(parents=True, exist_ok=True)
     cast_dir = tmp_path / "cast"
@@ -435,7 +435,7 @@ def _bootable_multiplayer_fixture(root: Path) -> None:
 
 
 def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> None:
-    from kernel.cast import VENDORED_SELECTIVE
+    from kernel.cast import VENDORED_SELECTIVE  # noqa: PLC0415
 
     _fixture_engine(tmp_path)
     plan = plan_cast("blank_mud", "Slim", commit="c", root=tmp_path)
@@ -447,7 +447,7 @@ def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> No
 
 
 def test_validate_cast_runs_a_command_corpus(tmp_path: Path) -> None:
-    from kernel.cast import validate_cast
+    from kernel.cast import validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -456,7 +456,7 @@ def test_validate_cast_runs_a_command_corpus(tmp_path: Path) -> None:
 
 
 def test_validate_cast_fails_when_a_surface_command_breaks(tmp_path: Path) -> None:
-    from kernel.cast import NOT_VALIDATED, validate_cast
+    from kernel.cast import NOT_VALIDATED, validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=False)  # handle_command raises -> a wrongly-excluded module would too
@@ -466,7 +466,7 @@ def test_validate_cast_fails_when_a_surface_command_breaks(tmp_path: Path) -> No
 
 
 def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
-    from kernel.cast import VENDORED_SELECTIVE, pour_selective
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective  # noqa: PLC0415
 
     _bootable_fixture_engine(tmp_path)
     # a fake tracer: the closure collapses kernel.world.* to "world" subpackage, plus top-level x
@@ -484,8 +484,8 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
 def test_pour_selective_validates_an_admin_cast(tmp_path: Path) -> None:
     # A cast that carries the owner/admin tier: the broad harness must run its @-verbs clean too,
     # not just the solo+save game. Proves the third command-traceable surface end to end.
-    from kernel.cast import VENDORED_SELECTIVE, pour_selective
-    from kernel.coupling import surface_commands
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective  # noqa: PLC0415
+    from kernel.coupling import surface_commands  # noqa: PLC0415
 
     _bootable_fixture_engine(tmp_path)
     surfaces = ["solo", "save", "admin"]
@@ -503,7 +503,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
     # The import-based server tier: the cut must carry importable gateway/web_gateway + the web/
     # data dir, and validate by IMPORTING the servers (not by tracing commands). The import surface
     # is exercised through the injected `import_tracer`, so no real server is imported here.
-    from kernel.cast import VENDORED_SELECTIVE, pour_selective
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective  # noqa: PLC0415
 
     _bootable_multiplayer_fixture(tmp_path)
     fake_cmd = lambda commands: {"world", "x"}  # noqa: E731
@@ -529,7 +529,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
 
 
 def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
-    from kernel.cast import VENDORED_SELECTIVE, forge_game
+    from kernel.cast import VENDORED_SELECTIVE, forge_game  # noqa: PLC0415
 
     _bootable_fixture_engine(tmp_path)
     fake = lambda commands: {"world", "x"}  # noqa: E731
@@ -544,7 +544,7 @@ def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
 
 
 def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
-    from kernel.cast import forge_game, render_forge
+    from kernel.cast import forge_game, render_forge  # noqa: PLC0415
 
     _bootable_fixture_engine(tmp_path)
     report = forge_game(
@@ -562,7 +562,7 @@ def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
 
 
 def test_validate_cast_import_checks_server_modules(tmp_path: Path) -> None:
-    from kernel.cast import validate_cast
+    from kernel.cast import validate_cast  # noqa: PLC0415
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)

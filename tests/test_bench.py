@@ -64,7 +64,7 @@ def test_report_is_filed_as_dated_evidence(tmp_path: Path) -> None:
 
 
 def test_bench_reachable_through_the_terminal() -> None:
-    from adapters.terminal import terminal
+    from adapters.terminal import terminal  # noqa: PLC0415
 
     out = terminal("bench")
     assert "ENGINE TICK BENCHMARK" in out

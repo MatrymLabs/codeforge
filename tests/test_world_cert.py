@@ -18,6 +18,6 @@ def test_a_seeded_world_certifies_as_pass():
 
 
 def test_certify_flows_through_the_engine_tick():
-    from forge import handle_command
+    from forge import handle_command  # noqa: PLC0415
 
     assert "EVIDENCE:" in handle_command(_player(), "certify")

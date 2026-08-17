@@ -72,7 +72,7 @@ def on_rewire(hook: Callable[[], None]) -> None:
 
 
 def _fire_rewire() -> None:
-    for hook in list(_REWIRE_HOOKS):
+    for hook in list(_REWIRE_HOOKS):  # noqa: PERF101
         # One bad rewire hook must not block the others.
         with suppress(Exception):  # nosec B110
             hook()
@@ -86,13 +86,13 @@ def get_bus() -> MessageBus:
 def set_bus(bus: MessageBus) -> None:
     """Swap the backing bus (a network adapter in production, a fake in tests). Callers are
     unchanged; they always go through get_bus(). Core subscribers re-attach via the rewire hooks."""
-    global _BUS
+    global _BUS  # noqa: PLW0603
     _BUS = bus
     _fire_rewire()
 
 
 def reset_bus() -> None:
     """Restore the default single-process bus (for tests, so one test's bus never leaks onward)."""
-    global _BUS
+    global _BUS  # noqa: PLW0603
     _BUS = InProcessBus()
     _fire_rewire()

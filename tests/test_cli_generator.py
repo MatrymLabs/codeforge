@@ -79,7 +79,7 @@ def test_identity_with_symbols_yields_a_valid_package(tmp_path: Path) -> None:
 
 def test_full_flow_from_a_source(tmp_path: Path) -> None:
     # Stage 4 -> 6: model a real source, then generate + run a CLI from that model.
-    from kernel.seedlab.source_modeler import model_from_source
+    from kernel.seedlab.source_modeler import model_from_source  # noqa: PLC0415
 
     src_root = tmp_path / "proj"
     (src_root / "widget").mkdir(parents=True)

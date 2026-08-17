@@ -10,7 +10,7 @@ import time
 
 import pytest
 
-import adapters.gateway as gateway
+import adapters.gateway as gateway  # noqa: PLR0402
 from adapters.gateway import ForgeGateServer, _GateHandler, _sanitize
 from kernel.shelf.bulkhead import Bulkhead
 from kernel.world import doors, items, npcs
@@ -90,7 +90,7 @@ def _connect_player(srv: ForgeGateServer, who: str | None = None) -> socket.sock
     """Register a fresh character@account and step into the world. Anonymous
     'guest' access was removed -- login is required -- so tests that just need
     a body in the world register one here."""
-    global _acct_seq
+    global _acct_seq  # noqa: PLW0603
     if who is None:
         _acct_seq += 1
         who = f"hero{_acct_seq}"
@@ -155,7 +155,7 @@ def test_register_over_the_wire_seats_and_enters(server):
 
 def test_aethryn_new_character_gets_a_calling_menu_and_persists_choice(server, monkeypatch):
     """Aethryn's network creation path chooses a calling before the new hero enters the world."""
-    from kernel.world.characters import load_character
+    from kernel.world.characters import load_character  # noqa: PLC0415
 
     monkeypatch.setattr(gateway, "SEED_NAME", "aethryn")
     sock = _connect(server)
@@ -294,7 +294,7 @@ def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish
 def test_passwd_flow_rotates_the_secret_with_blackout(server):
     """Bare 'passwd' in-world triggers the three-prompt dialogue, each
     prompt echo-blacked-out; the new secret then opens the door."""
-    from kernel.world.accounts import account_password_ok
+    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
 
     _saved_account()
     sock = _login(server)
@@ -314,7 +314,7 @@ def test_passwd_flow_rotates_the_secret_with_blackout(server):
 
 
 def test_passwd_flow_rejects_a_mismatch_over_the_wire(server):
-    from kernel.world.accounts import account_password_ok
+    from kernel.world.accounts import account_password_ok  # noqa: PLC0415
 
     _saved_account()
     sock = _login(server)
@@ -466,7 +466,7 @@ _DO_GMCP = bytes([255, 253, 201])  # IAC DO GMCP (a client enabling GMCP)
 
 def _saved_hero_with_calling(char="mira", account="mlabs", pw="swordfish", job="vanguard"):
     """A saved character that has taken a calling, so vitals actually derive on restore."""
-    from kernel.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
 
     hero = Session(player_id=char, location="courtyard", named=True, account=account)
     bind_calling(hero, job)
@@ -516,8 +516,8 @@ def test_a_gmcp_client_is_announced_the_seed_on_enabling_gmcp(server):
 def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
     """An equipped hero's loadout is pushed as Char.Items on entry, so the client can draw the
     inventory panel from data - a frame we emit because we own the engine, not a MUD standard."""
-    from kernel.world.items import clone
-    from kernel.world.jobs import bind_calling
+    from kernel.world.items import clone  # noqa: PLC0415
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
 
     hero = Session(player_id="mira", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "vanguard")
@@ -542,7 +542,7 @@ def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
 def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
     """A calling's kit is pushed as Char.Skills on entry, so a client's co-pilot can recommend a
     specific move for a foe's weakness - a frame we emit because we own the engine."""
-    from kernel.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
 
     hero = Session(player_id="tovi", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "vanguard")  # wields Power Strike
@@ -571,7 +571,7 @@ def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
 def test_a_gmcp_client_receives_char_resists_for_the_defensive_grid(server):
     """An engineer's non-normal resistances are pushed as Char.Resists, so a client can warn when a
     foe's element hits a weakness - the defensive mirror of the foe's profile in Char.Target."""
-    from kernel.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling  # noqa: PLC0415
 
     hero = Session(player_id="vess", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "engineer")  # declares LGT: Weak, ERT: Resist
@@ -679,7 +679,7 @@ def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pai
 
 # --- structured server logging ------------------------------------------------------------------
 def test_the_gateway_emits_structured_lifecycle_events():
-    from structlog.testing import capture_logs
+    from structlog.testing import capture_logs  # noqa: PLC0415
 
     with capture_logs() as logs:
         gateway._LOG.info("gateway_start", host="0.0.0.0", port=4000, tls=True)
@@ -755,7 +755,7 @@ def test_a_non_owner_login_gets_no_workspace_packages(server, tmp_path, monkeypa
 
 
 def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -779,7 +779,7 @@ def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_pa
 
 
 def test_seed_create_over_gmcp_mints_a_seed(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -791,7 +791,7 @@ def test_seed_create_over_gmcp_mints_a_seed(server, tmp_path, monkeypatch):
 
 
 def test_a_non_owner_is_refused_seed_creation_over_gmcp(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_account()  # a default player-rank account (matrym@matlabs)
@@ -824,18 +824,18 @@ def _read_until_in(sock: socket.socket, marker: bytes, limit: int = 25) -> bytes
 
 
 def test_read_message_returns_a_line_at_the_newline():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
+    from adapters.gateway import _read_message  # noqa: PLC0415
 
     assert _read_message(io.BytesIO(b"look\nmore"), 1024) == (b"look\n", False)
 
 
 def test_read_message_returns_a_bare_gmcp_frame_before_any_newline():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
-    from kernel.gmcp import gmcp_frame
+    from adapters.gateway import _read_message  # noqa: PLC0415
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     frame = gmcp_frame("Form.Submit", {"product_type": "training", "answers": {}})
     reader = io.BytesIO(frame + b"look\n")  # a bare out-of-band frame, THEN a command line
@@ -847,18 +847,18 @@ def test_read_message_returns_a_bare_gmcp_frame_before_any_newline():
 
 
 def test_read_message_keeps_glued_negotiation_inside_the_line():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
+    from adapters.gateway import _read_message  # noqa: PLC0415
 
     line = bytes([255, 253, 201]) + b"mira@mlabs\n"  # IAC DO GMCP glued before the login line
     assert _read_message(io.BytesIO(line), 1024) == (line, False)  # whole line, negotiation intact
 
 
 def test_read_message_does_not_early_return_on_a_non_gmcp_subnegotiation():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
+    from adapters.gateway import _read_message  # noqa: PLC0415
 
     naws = bytes([255, 250, 31, 0, 80, 0, 24, 255, 240])  # IAC SB NAWS ... IAC SE (option 31)
     reader = io.BytesIO(naws + b"look\n")
@@ -867,17 +867,17 @@ def test_read_message_does_not_early_return_on_a_non_gmcp_subnegotiation():
 
 
 def test_read_message_at_eof_returns_what_it_has_as_a_line():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
+    from adapters.gateway import _read_message  # noqa: PLC0415
 
     assert _read_message(io.BytesIO(b"partial"), 1024) == (b"partial", False)  # no newline, EOF
 
 
 def test_read_message_respects_the_size_cap():
-    import io
+    import io  # noqa: PLC0415
 
-    from adapters.gateway import _read_message
+    from adapters.gateway import _read_message  # noqa: PLC0415
 
     msg, is_frame = _read_message(io.BytesIO(b"x" * 100), 10)
     assert (
@@ -886,7 +886,7 @@ def test_read_message_respects_the_size_cap():
 
 
 def test_a_bare_out_of_band_form_submit_is_served_without_a_newline(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -912,7 +912,7 @@ def test_a_bare_out_of_band_form_submit_is_served_without_a_newline(server, tmp_
 
 
 def test_an_owner_workspace_request_serves_the_deploy_manifest(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -927,7 +927,7 @@ def test_an_owner_workspace_request_serves_the_deploy_manifest(server, tmp_path,
 
 
 def test_a_workspace_request_defaults_the_tier_when_none_is_given(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -939,7 +939,7 @@ def test_a_workspace_request_defaults_the_tier_when_none_is_given(server, tmp_pa
 
 
 def test_an_unknown_tier_is_an_honest_no_op(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -955,7 +955,7 @@ def test_an_unknown_tier_is_an_honest_no_op(server, tmp_path, monkeypatch):
 
 
 def test_a_non_owner_workspace_request_is_silently_ignored(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_account()  # a player-rank account
@@ -975,9 +975,9 @@ def test_a_non_owner_workspace_request_is_silently_ignored(server, tmp_path, mon
 def test_a_mounted_research_manifest_is_served_on_a_workspace_request(
     server, tmp_path, monkeypatch
 ):
-    import json as _json
+    import json as _json  # noqa: PLC0415
 
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     (tmp_path / "research.json").write_text(
@@ -995,7 +995,7 @@ def test_a_mounted_research_manifest_is_served_on_a_workspace_request(
 
 
 def test_an_unmounted_research_source_serves_no_findings(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))  # no research.json mounted here
     _saved_owner()
@@ -1012,7 +1012,7 @@ def test_an_unmounted_research_source_serves_no_findings(server, tmp_path, monke
 
 
 def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path, monkeypatch):
-    from kernel.gmcp import gmcp_frame
+    from kernel.gmcp import gmcp_frame  # noqa: PLC0415
 
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_owner()
@@ -1025,7 +1025,7 @@ def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path,
     sock.close()
 
 
-def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_path, monkeypatch):
+def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_path, monkeypatch):  # noqa: PLR0915
     """The first live SeedLab vertical slice: the Master Client's text commands and GMCP panels
     cross a real gateway, and the Seed remains addressable after a fresh gateway reads the same
     file-backed workspace. The source is deliberately tiny, but pytest is a real subprocess run.

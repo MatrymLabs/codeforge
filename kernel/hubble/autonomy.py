@@ -41,7 +41,7 @@ class Trigger:
 
     def __post_init__(self) -> None:
         if self.max_mode not in _RANK:
-            raise AutonomyError(f"trigger {self.condition!r}: unknown max_mode {self.max_mode!r}")
+            raise AutonomyError(f"trigger {self.condition!r}: unknown max_mode {self.max_mode!r}")  # noqa: TRY003
 
 
 # The default policy (from the research's escalation-trigger list). Each caps authority; the lowest
@@ -96,7 +96,7 @@ def permits(
 
     Permitted iff the requested mode is no higher than what the active triggers allow."""
     if requested not in _RANK:
-        raise AutonomyError(f"unknown autonomy mode {requested!r}; choose {_MODES}")
+        raise AutonomyError(f"unknown autonomy mode {requested!r}; choose {_MODES}")  # noqa: TRY003
     allowed, reasons = max_allowed(context, triggers)
     ok = _RANK[requested] <= _RANK[allowed]
     if ok:

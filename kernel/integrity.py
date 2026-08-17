@@ -164,8 +164,8 @@ def _latest_capability_change(root: Path | None = None) -> date | None:
     base = root if root is not None else _ROOT
     try:
         # Fixed argv, no shell; reads git log for one date, read-only.
-        proc = subprocess.run(  # nosec B603 B607
-            [
+        proc = subprocess.run(  # nosec B603 B607  # noqa: S603
+            [  # noqa: S607
                 "git",
                 "-C",
                 str(base),
@@ -205,7 +205,7 @@ def career_currency_gaps(
     calendar staleness so the check still nudges off-VCS. The fix is always human: claim the shipped
     work on the board (and storefront), or bump `last_updated` once you confirm it is current."""
     base = root if root is not None else _ROOT
-    stamp = today if today is not None else date.today()
+    stamp = today if today is not None else date.today()  # noqa: DTZ011
     path = base / _CAREER_MATRIX
     if not path.exists():
         return []
@@ -217,14 +217,14 @@ def career_currency_gaps(
     if capability_change is not None:
         if capability_change > last:
             return [
-                f"capability changed {capability_change.isoformat()} after the career board's last "
+                f"capability changed {capability_change.isoformat()} after the career board's last "  # noqa: ISC004
                 f"update {last.isoformat()}: claim the shipped work on the board (and storefront), "
                 "or bump last_updated once confirmed current."
             ]
         return []  # board is current with respect to the newest capability change
     if (stamp - last).days > _CURRENCY_STALE_DAYS:
         return [
-            f"career board last updated {last.isoformat()} ({(stamp - last).days} days ago; no git "
+            f"career board last updated {last.isoformat()} ({(stamp - last).days} days ago; no git "  # noqa: ISC004
             "to check capability): run a convergence pass to confirm shipped work is claimed."
         ]
     return []
@@ -249,7 +249,7 @@ class _ReportData:
     qa: Counter[str]
 
 
-def _gather_signals(base: Path, stamp: date, tools: dict[str, bool]) -> _ReportData:
+def _gather_signals(base: Path, stamp: date, tools: dict[str, bool]) -> _ReportData:  # noqa: ARG001
     """Run every in-process check the report reads: catalog, registry (+ completeness), presence,
     overclaim, forward-claim + evidence-currency queues, and QA readiness. No I/O of its own beyond
     the checks it composes."""
@@ -382,9 +382,9 @@ def _report_lines(
         f"- registry validates:   {reg_line}",
         f"- QA readiness:         {qa_line}",
         f"- overclaim scan:       {overclaim_line}",
-        f"- forward-claim queue:  {n_claims} to reconcile across {data.n_roadmaps} roadmaps "
+        f"- forward-claim queue:  {n_claims} to reconcile across {data.n_roadmaps} roadmaps "  # noqa: ISC004
         f"(reverse-drift{' incl. ship plan' if _ship_home(base) else ''}; a queue, not a verdict)",
-        f"- evidence currency:    {len(data.currency)} career-board reconciliation(s) "
+        f"- evidence currency:    {len(data.currency)} career-board reconciliation(s) "  # noqa: ISC004
         "(shipped capability vs the claimed board; a queue, not a verdict)",
         "",
         "Architecture / Hardware Store:",
@@ -415,7 +415,7 @@ def build_report(
     A thin orchestrator: gather the signals once, decide the next actions, render the lines. `tools`
     is injectable (a name->present map) so tests are deterministic whatever is installed."""
     base = root if root is not None else _ROOT
-    stamp = today if today is not None else date.today()
+    stamp = today if today is not None else date.today()  # noqa: DTZ011
     tools = tools if tools is not None else tool_status()
     data = _gather_signals(base, stamp, tools)
     actions = _next_actions(tools, data)
@@ -425,9 +425,9 @@ def build_report(
 def save_report(text: str, root: Path | None = None, today: date | None = None) -> Path:
     """Write the report under reports/repo_integrity/<date>-repo-integrity.md via the shared
     ReportWriter (one dated-report seam for every producer)."""
-    from kernel.shelf.reporting import write_report
+    from kernel.shelf.reporting import write_report  # noqa: PLC0415
 
-    stamp = (today if today is not None else date.today()).isoformat()
+    stamp = (today if today is not None else date.today()).isoformat()  # noqa: DTZ011
     return write_report("repo_integrity", text, root=root, stamp=stamp, slug="repo-integrity")
 
 

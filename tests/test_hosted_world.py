@@ -72,7 +72,7 @@ def test_an_unslugable_region_name_fails_loud(tmp_path: Path) -> None:
 
 
 def test_a_bad_world_id_is_unhostable(tmp_path: Path) -> None:
-    from kernel.domains.hosted_world import UNHOSTABLE
+    from kernel.domains.hosted_world import UNHOSTABLE  # noqa: PLC0415
 
     # An explicit seed_name that is not a valid world_id (uppercase/underscore) is caught by the
     # engine's own manifest gate -> UNHOSTABLE, with the problem surfaced (never a false HOSTABLE).

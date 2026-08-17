@@ -69,9 +69,9 @@ class ArtifactRecord:
         for field_name in ("artifact_id", "seed_id", "name", "kind", "manifest_hash"):
             value = getattr(self, field_name)
             if not isinstance(value, str) or not value.strip():
-                raise ArtifactStoreError(f"artifact record needs a non-empty {field_name}")
+                raise ArtifactStoreError(f"artifact record needs a non-empty {field_name}")  # noqa: TRY003
         if self.bytes < 0:
-            raise ArtifactStoreError("artifact bytes cannot be negative")
+            raise ArtifactStoreError("artifact bytes cannot be negative")  # noqa: TRY003
         object.__setattr__(self, "files", tuple(self.files))
         object.__setattr__(self, "run_profiles", tuple(self.run_profiles))
 
@@ -102,10 +102,10 @@ class ArtifactRecord:
     @classmethod
     def from_dict(cls, data: object) -> ArtifactRecord:
         if not isinstance(data, dict):
-            raise ArtifactStoreError("artifact record must be an object")
+            raise ArtifactStoreError("artifact record must be an object")  # noqa: TRY003
         try:
             if int(data.get("schema", _SCHEMA)) != _SCHEMA:
-                raise ArtifactStoreError(f"unsupported artifact schema {data.get('schema')!r}")
+                raise ArtifactStoreError(f"unsupported artifact schema {data.get('schema')!r}")  # noqa: TRY003
             return cls(
                 artifact_id=str(data["artifact_id"]),
                 seed_id=str(data["seed_id"]),
@@ -122,7 +122,7 @@ class ArtifactRecord:
                 created_at=str(data.get("created_at", "")),
             )
         except (KeyError, TypeError, ValueError, BlueprintLabError) as exc:
-            raise ArtifactStoreError(f"malformed artifact record: {exc}") from exc
+            raise ArtifactStoreError(f"malformed artifact record: {exc}") from exc  # noqa: TRY003
 
 
 @runtime_checkable
@@ -186,7 +186,7 @@ class FileArtifactStore:
         try:
             return ArtifactRecord.from_dict(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError as exc:
-            raise ArtifactStoreError(f"corrupt artifact record {path}: {exc}") from exc
+            raise ArtifactStoreError(f"corrupt artifact record {path}: {exc}") from exc  # noqa: TRY003
 
     def all_for_seed(self, seed_id: str) -> list[ArtifactRecord]:
         seed_dir = contained_path(self.root, seed_id, what="seed id")
@@ -232,14 +232,14 @@ def _artifact_bytes(artifact: GeneratedArtifact) -> int:
     total = 0
     for rel in artifact.files:
         if Path(rel).is_absolute():
-            raise ArtifactStoreError(f"artifact file path must be relative: {rel!r}")
+            raise ArtifactStoreError(f"artifact file path must be relative: {rel!r}")  # noqa: TRY003
         path = (root / rel).resolve()
         try:
             path.relative_to(root)
         except ValueError as exc:
-            raise ArtifactStoreError(f"artifact file path escapes its root: {rel!r}") from exc
+            raise ArtifactStoreError(f"artifact file path escapes its root: {rel!r}") from exc  # noqa: TRY003
         if not path.is_file():
-            raise ArtifactStoreError(f"artifact file is missing: {rel!r}")
+            raise ArtifactStoreError(f"artifact file is missing: {rel!r}")  # noqa: TRY003
         total += path.stat().st_size
     return total
 

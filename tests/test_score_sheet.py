@@ -172,7 +172,7 @@ def test_developer_mode_marks_prototype_formulas() -> None:
 
 
 def test_jobs_mode_lists_unlocked_jobs() -> None:
-    from kernel.world.score_sheet_model import JobLine
+    from kernel.world.score_sheet_model import JobLine  # noqa: PLC0415
 
     sheet = replace(_matrym(), jobs=(JobLine("Engineer", 9, 1150, 340),), primary_job="Engineer")
     out = render_score_sheet(sheet, display_mode="jobs")

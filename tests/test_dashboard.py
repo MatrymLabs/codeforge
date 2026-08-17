@@ -59,7 +59,7 @@ def test_perf_card_is_honest_about_whether_a_run_exists():
 
 def test_a_broken_source_renders_a_fail_card_not_a_crash(monkeypatch):
     def boom(*_a, **_k):
-        raise RuntimeError("registry gone")
+        raise RuntimeError("registry gone")  # noqa: TRY003
 
     monkeypatch.setattr("kernel.qualitygate.gate_all", boom)
     card = next(c for c in build_snapshot().cards if c.key == "qa")
