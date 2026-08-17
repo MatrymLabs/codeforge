@@ -39,6 +39,8 @@ dev = [
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
     "pytest-xdist==3.8.0",
+    "pytest-randomly==4.0.1",
+    "pytest-timeout==2.4.0",
     "coverage==7.15.4",  # named explicitly: the coverage threshold is a gate, pytest-cov floats it
     "pip-audit==2.10.1",
     "bandit[toml]==1.9.4",
@@ -146,6 +148,7 @@ testpaths = ["tests"]
 addopts = "--strict-markers --strict-config --import-mode=importlib -ra --showlocals"
 filterwarnings = ["error"]
 xfail_strict = true
+timeout = 300
 # Repo root on the path so tests can import the dev-only `benchmarks/` harness
 # (it is not part of the installed package, unlike `parts`/`forge`).
 pythonpath = ["."]

@@ -40,6 +40,8 @@ def _pump(broker: Broker, broker_sock: socket.socket) -> None:
             pass
         finally:
             broker.drop(client)
+            rfile.close()
+            broker_sock.close()
 
     threading.Thread(target=loop, name="test-broker-pump", daemon=True).start()
 
