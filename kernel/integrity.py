@@ -17,6 +17,7 @@ import os
 import re
 import shutil
 import subprocess  # nosec B404
+import sys
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -431,12 +432,39 @@ def save_report(text: str, root: Path | None = None, today: date | None = None) 
     return write_report("repo_integrity", text, root=root, stamp=stamp, slug="repo-integrity")
 
 
+def _echo(text: str) -> None:
+    """Print a report that may contain characters the console cannot encode.
+
+    The report quotes source documents verbatim, and those documents carry status glyphs: the
+    security roadmap's legend line alone holds four. A default Windows console is cp1252, which
+    cannot encode any of them, so `make repo-integrity` died mid-report with
+
+        UnicodeEncodeError: 'charmap' codec can't encode character '\\u2705' in position 1845
+
+    The FILE was already written by then. Only the terminal echo failed, which means the ritual
+    was reporting a crash while its actual output sat on disk intact.
+
+    Degrade rather than crash, and only where the console forces it: the text is written as-is
+    first, so a UTF-8 terminal still shows the glyphs. The fallback re-encodes through the
+    console's own codec with replacement, so an unencodable glyph becomes `?` instead of taking
+    the whole report down. Nothing is silently dropped: every glyph in this report sits beside the
+    word it stands for ("done", "in progress"), so a replaced character loses decoration, not
+    meaning. That is the reason this is safe here and would not be safe for a report whose glyph
+    IS the verdict.
+    """
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        codec = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(text.encode(codec, errors="replace").decode(codec))
+
+
 def run_repo_integrity() -> Path:
     """Build the report, save it, and return its path (the `make repo-integrity` entry)."""
     text = build_report()
     path = save_report(text)
-    print(text)
-    print(f"\nSaved: {path.relative_to(_ROOT)}")
+    _echo(text)
+    _echo(f"\nSaved: {path.relative_to(_ROOT)}")
     return path
 
 
