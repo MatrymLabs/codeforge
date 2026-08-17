@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 
 from kernel.seedlab.form import BlueprintSpec
-from kernel.seedlab.kernel import FileSeedStore, InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore, InMemorySeedStore
 from kernel.seedlab.provision import (
     DomainModuleError,
     DomainModuleRegistry,
@@ -31,8 +31,8 @@ from kernel.seedlab.provision import (
 _CLOCK = iter(f"2026-08-03T00:00:{n:02d}+00:00" for n in range(60))
 
 
-def _kernel(store=None) -> SeedKernel:
-    return SeedKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
+def _kernel(store=None) -> BlueprintKernel:
+    return BlueprintKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
 
 
 def _spec(
@@ -61,11 +61,11 @@ def test_seed_from_spec_records_product_type_and_modules() -> None:
 
 
 def test_a_spec_seed_survives_restart_with_its_modules(tmp_path: Path) -> None:
-    kernel = SeedKernel(FileSeedStore(tmp_path / "seeds"), clock=lambda: next(_CLOCK))
+    kernel = BlueprintKernel(FileSeedStore(tmp_path / "seeds"), clock=lambda: next(_CLOCK))
     seed_from_spec(kernel, _spec("mmorpg", ("game",), name="Aethryn"))
     sid = kernel.list_seeds()[0].identity.seed_id
     # A fresh kernel over the same store recovers the product type + modules (persisted facts).
-    recovered = SeedKernel(FileSeedStore(tmp_path / "seeds")).get(sid)
+    recovered = BlueprintKernel(FileSeedStore(tmp_path / "seeds")).get(sid)
     assert recovered.identity.product_type == "mmorpg"
     assert recovered.identity.domain_modules == ("game",)
 

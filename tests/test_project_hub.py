@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import pytest
 
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedNotFound
+from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore, SeedNotFound
 from kernel.seedlab.project_hub import (
     CONTRACT_VERSION,
     ProjectHub,
@@ -25,7 +25,7 @@ _CLOCK = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(60))
 
 
 def _hub_with_seed(owner: str = "josh") -> tuple[ProjectHub, str]:
-    kernel = SeedKernel(InMemorySeedStore(), clock=lambda: next(_CLOCK))
+    kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: next(_CLOCK))
     record = kernel.create_seed("Task Ledger", owner, "a tiny CLI tracker", seed_id="seed-01")
     return ProjectHub(kernel), record.identity.seed_id
 

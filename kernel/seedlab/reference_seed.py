@@ -13,7 +13,7 @@ game is one stable Seed (`aethryn`), minted once and recovered thereafter. No `k
 
 from __future__ import annotations
 
-from kernel.seedlab.kernel import SeedKernel, SeedNotFound, SeedRecord
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintRecord, SeedNotFound
 
 AETHRYN_SEED_ID = "aethryn"
 _NAME = "Aethryn"
@@ -21,7 +21,7 @@ _OWNER = "matrym"
 _PURPOSE = "the flagship game world -- the reference Seed proving a game is one kind of Seed"
 
 
-def ensure_reference_seed(kernel: SeedKernel, *, detail: str = "") -> SeedRecord:
+def ensure_reference_seed(kernel: BlueprintKernel, *, detail: str = "") -> BlueprintRecord:
     """Idempotently register the Aethryn game as a Seed; return the record (existing or freshly
     minted). Uses only standard Kernel fields, so the game adds nothing game-specific to it."""
     try:
@@ -31,6 +31,6 @@ def ensure_reference_seed(kernel: SeedKernel, *, detail: str = "") -> SeedRecord
         return kernel.create_seed(_NAME, _OWNER, purpose, seed_id=AETHRYN_SEED_ID)
 
 
-def is_reference_seed(record: SeedRecord) -> bool:
+def is_reference_seed(record: BlueprintRecord) -> bool:
     """True for the Aethryn reference Seed (so a renderer can mark the game distinctly)."""
     return record.identity.seed_id == AETHRYN_SEED_ID

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from kernel.seedlab.kernel import FileSeedStore, InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore, InMemorySeedStore
 from kernel.seedlab.reference_seed import (
     AETHRYN_SEED_ID,
     ensure_reference_seed,
@@ -17,8 +17,8 @@ from kernel.seedlab.reference_seed import (
 )
 
 
-def _kernel() -> SeedKernel:
-    return SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
+def _kernel() -> BlueprintKernel:
+    return BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
 
 
 def test_registers_the_game_with_a_stable_id() -> None:
@@ -50,9 +50,9 @@ def test_detail_rides_the_purpose() -> None:
 
 
 def test_survives_restart(tmp_path: Path) -> None:
-    ensure_reference_seed(SeedKernel(FileSeedStore(tmp_path / "seeds")))
+    ensure_reference_seed(BlueprintKernel(FileSeedStore(tmp_path / "seeds")))
     # A fresh Kernel over the same store recovers the reference Seed (idempotent, no duplicate).
-    k2 = SeedKernel(FileSeedStore(tmp_path / "seeds"))
+    k2 = BlueprintKernel(FileSeedStore(tmp_path / "seeds"))
     again = ensure_reference_seed(k2)
     assert again.identity.seed_id == AETHRYN_SEED_ID and len(k2.list_seeds()) == 1
 

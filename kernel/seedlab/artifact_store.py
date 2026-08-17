@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 from kernel.seedlab.cli_generator import GeneratedArtifact
-from kernel.seedlab.project_model import Provenance, SeedLabError
+from kernel.seedlab.project_model import BlueprintLabError, Provenance
 from kernel.seedlab.safe_path import contained_path, safe_segment
 from kernel.seedlab.tool_runner import ToolRunResult
 from kernel.shelf.atomic_write import atomic_write_text
@@ -121,7 +121,7 @@ class ArtifactRecord:
                 bytes=int(data.get("bytes", 0)),
                 created_at=str(data.get("created_at", "")),
             )
-        except (KeyError, TypeError, ValueError, SeedLabError) as exc:
+        except (KeyError, TypeError, ValueError, BlueprintLabError) as exc:
             raise ArtifactStoreError(f"malformed artifact record: {exc}") from exc
 
 

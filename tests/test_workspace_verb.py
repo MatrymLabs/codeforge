@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintKernelError, InMemorySeedStore
 from kernel.seedlab.model_store import InMemorySeedModels
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import LocalSource
@@ -22,8 +22,8 @@ from kernel.seedlab.workspace_verb import GmcpPush, workspace_command
 from kernel.world.session import Session
 
 
-def _kernel() -> SeedKernel:
-    return SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
+def _kernel() -> BlueprintKernel:
+    return BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
 
 
 def _owner() -> Session:
@@ -282,9 +282,9 @@ def test_subcommands_need_an_id(sub: str) -> None:
 
 
 def test_a_create_failure_is_reported_cleanly() -> None:
-    class _FailKernel(SeedKernel):
+    class _FailKernel(BlueprintKernel):
         def create_seed(self, *a: object, **k: object):
-            raise SeedKernelError("boom")
+            raise BlueprintKernelError("boom")
 
     out = workspace_command(_owner(), "create X", kernel=_FailKernel(InMemorySeedStore()))
     assert out == "workspace: boom"
@@ -317,7 +317,7 @@ def test_create_persists_across_the_tick(tmp_path: Path, monkeypatch) -> None:
 _ECHO = {"say-ok": ["python", "-c", "print('tooling ok')"]}
 
 
-def _runnable(tmp_path: Path) -> tuple[SeedKernel, str, Path]:
+def _runnable(tmp_path: Path) -> tuple[BlueprintKernel, str, Path]:
     k = _kernel()
     workspace_command(_owner(), "create Proj a demo", kernel=k)
     sid = k.list_seeds()[0].identity.seed_id
@@ -409,18 +409,18 @@ def test_report_reachable_through_the_tick(tmp_path: Path, monkeypatch) -> None:
 
 
 def _tick_seed_id(tmp_path: Path) -> str:
-    from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+    from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
 
-    k = SeedKernel(FileSeedStore(tmp_path / "lab" / "seeds"))
+    k = BlueprintKernel(FileSeedStore(tmp_path / "lab" / "seeds"))
     seeds = [r for r in k.list_seeds() if r.identity.name == "TickProj"]
     return seeds[0].identity.seed_id if seeds else "unknown"
 
 
 # --- backup / restore: surface the Seed backup lifecycle in-world (Slice C in the MUD) -----------
 def _backups(tmp_path: Path):
-    from kernel.seedlab.backup import SeedBackups
+    from kernel.seedlab.backup import BlueprintBackups
 
-    return SeedBackups(tmp_path / "bk", clock=lambda: "2026-08-02T00:00:00+00:00")
+    return BlueprintBackups(tmp_path / "bk", clock=lambda: "2026-08-02T00:00:00+00:00")
 
 
 def test_backup_then_list_then_restore_rolls_back(tmp_path: Path) -> None:
@@ -496,11 +496,11 @@ def test_backup_and_restore_through_the_tick(tmp_path: Path, monkeypatch) -> Non
     handle_command(_owner(), "workspace create ProjX a demo")
     # find the created seed id from the list output's second line
     handle_command(_owner(), "workspace list")
-    from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+    from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
 
     sid = next(
         r.identity.seed_id
-        for r in SeedKernel(FileSeedStore(tmp_path / "seeds")).list_seeds()
+        for r in BlueprintKernel(FileSeedStore(tmp_path / "seeds")).list_seeds()
         if r.identity.name == "ProjX"
     )
     handle_command(_owner(), f"workspace start {sid}")

@@ -67,7 +67,7 @@ from kernel.world.session import SESSIONS, Session
 from kernel.world.socket_bus import maybe_wire_broker
 
 if TYPE_CHECKING:
-    from kernel.seedlab.kernel import SeedKernel
+    from kernel.seedlab.kernel import BlueprintKernel
 
 TICK_LOCK = threading.Lock()
 # Serializes seedlab (engineering-workspace) mutations across connection threads. The seedlab Kernel
@@ -409,7 +409,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         from pathlib import Path
 
         from kernel.seed_package import BlueprintPackageError, compile_manifest
-        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.kernel import BlueprintKernelError
         from kernel.seedlab.workspace_gmcp import (
             DEPLOY_MANIFEST_PACKAGE,
             DEPLOY_STATUS_PACKAGE,
@@ -450,21 +450,21 @@ class _GateHandler(socketserver.StreamRequestHandler):
         )
         try:
             findings = load_research_findings(research_path)
-        except (OSError, ValueError, SeedKernelError):
+        except (OSError, ValueError, BlueprintKernelError):
             return  # no research mounted (or unreadable): the panel stays honestly empty
         self._send_gmcp(RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=SEED_NAME))
 
-    def _workspace_kernel(self) -> "SeedKernel":
+    def _workspace_kernel(self) -> "BlueprintKernel":
         """A Kernel over the file-backed seedlab store at `$SEEDLAB_HOME/seeds` (default
         `.seedlab/seeds`), the same store the in-MUD `workspace` verb uses. Read at call time so a
         test can point `SEEDLAB_HOME` at a tmp dir; lazy-imported so seedlab stays off the gateway's
         load path (the game path never imports it)."""
         from pathlib import Path
 
-        from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+        from kernel.seedlab.kernel import BlueprintKernel, FileSeedStore
 
         root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "seeds"
-        return SeedKernel(FileSeedStore(root))
+        return BlueprintKernel(FileSeedStore(root))
 
     def _push_workspace_form(self) -> None:
         """Push the engineering creation Form (`Form.Schema`) to a logged-in owner's Native-Seed
@@ -489,7 +489,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         skipped, never a crash. `Deploy.Manifest` (needs a chosen tier) and `Research.Findings` (a
         per-Seed manifest) are request-driven, not auto-pushed."""
         from kernel.blueprint import load_all
-        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.kernel import BlueprintKernelError
         from kernel.seedlab.workspace_gmcp import (
             ARCHITECTURE_MAP_PACKAGE,
             BLUEPRINT_LIST_PACKAGE,
@@ -500,7 +500,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
 
         try:
             modules = load_module_designations()
-        except (OSError, ValueError, SeedKernelError) as exc:
+        except (OSError, ValueError, BlueprintKernelError) as exc:
             _LOG.warning("workspace_architecture_unavailable", error=str(exc))
         else:
             self._send_gmcp(ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=SEED_NAME))
