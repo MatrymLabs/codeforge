@@ -10,6 +10,10 @@
 *.ico binary
 *.pdf binary
 *.zip binary
+# RF-001 decodes NES ROMs. Without this, * text=auto normalises a ROM and corrupts it.
+*.nes binary
+*.rom binary
+*.chr binary
 *.jar binary
 *.class binary
 *.dll binary

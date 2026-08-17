@@ -20,15 +20,21 @@ import os
 import sys
 from pathlib import Path
 
+# Pin THIS repository's root ahead of everything else, BEFORE the engine imports below.
+# Running `python scripts/foo.py` puts `scripts/` on sys.path[0], not the repo root, so `kernel`
+# resolved through the venv's editable install into whichever checkout that pointed at. The proof
+# then tested a tree it did not live in and reported ALL CONTRACTS AGREE about the wrong code.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT))
 
-from kernel.gmcp import gmcp_frame
-from kernel.seedlab import workspace_gmcp as eng
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
-from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
-from kernel.seedlab.source_connector import SourceRecord
-from kernel.seedlab.tool_runner import ToolRunResult
+# E402 is unavoidable and intended: these imports MUST follow the sys.path pin above, or they
+# resolve to the wrong tree, which is the whole defect being fixed.
+from kernel.gmcp import gmcp_frame  # noqa: E402
+from kernel.seedlab import workspace_gmcp as eng  # noqa: E402
+from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore  # noqa: E402
+from kernel.seedlab.project_model import Provenance, SpecSource, extract_model  # noqa: E402
+from kernel.seedlab.source_connector import SourceRecord  # noqa: E402
+from kernel.seedlab.tool_runner import ToolRunResult  # noqa: E402
 
 _DEFAULT_CLIENT_SRC = Path(__file__).resolve().parents[2] / "codeforge-client" / "src"
 
@@ -52,7 +58,7 @@ def main() -> int:
     cli_build, cli_model, cli_project, cli_source = client
 
     clock = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(50))
-    kernel = SeedKernel(InMemorySeedStore(), clock=lambda: next(clock))
+    kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: next(clock))
     record = kernel.create_seed("Job Tracker", "seed-owner", "a tiny tracker", seed_id="seed-jt")
     provenance = Provenance("demo", owner="seed-owner")
     source_record = SourceRecord(
