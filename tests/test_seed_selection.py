@@ -5,7 +5,7 @@ import importlib
 import pytest
 
 import kernel.world.seed
-from adapters.cli import _pop_seed, main
+from adapters.cli import _BLUEPRINT_REQUIRED, _pop_seed, _seeds_available, main
 from kernel.world.seed import (
     BLUEPRINTS_ROOT,
     BlueprintError,
@@ -468,7 +468,6 @@ def test_every_advertised_blueprint_carries_the_files_a_boot_requires():
     excluded on purpose: those loaders return empty for a pack that ships none, and a world with
     no doors is a legitimate world.
     """
-    from adapters.cli import _BLUEPRINT_REQUIRED, _seeds_available
 
     for name in _seeds_available():
         pack = BLUEPRINTS_ROOT / name
@@ -482,7 +481,6 @@ def test_the_differential_fixture_is_not_advertised_as_a_game():
     It WAS advertised, because the listing checked only rooms.yaml. That is the product
     overclaiming, not merely the docs: `codeforge seeds` named a world that fails at import.
     """
-    from adapters.cli import _seeds_available
 
     assert (BLUEPRINTS_ROOT / "seam-probe" / "rooms.yaml").is_file(), (
         "this test is meaningless if seam-probe stopped shipping rooms.yaml: it would then be "
@@ -498,7 +496,6 @@ def test_a_pack_missing_any_required_file_is_not_advertised(tmp_path, monkeypatc
     Asserting against the packs that happen to ship today would pass even if the filter were
     deleted. This constructs the bad state for each required file in turn.
     """
-    from adapters.cli import _BLUEPRINT_REQUIRED, _seeds_available
 
     pack = tmp_path / "probe-world"
     pack.mkdir()
