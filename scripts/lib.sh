@@ -18,8 +18,8 @@ else
   BOLD=""; DIM=""; GREEN=""; RED=""; YELLOW=""; CYAN=""; OFF=""
 fi
 
-spark_line() { printf '%b⚒  %s%b\n' "$CYAN" "$1" "$OFF"; }
+spark_line() { printf '%b⚒  %s%b\n' "${CYAN}" "$1" "${OFF}"; }
 step()       { spark_line "$1"; }              # the shutdown ceremony's name for the same line
-ok()         { printf '%b   ✓ %s%b\n' "$GREEN"  "$1" "$OFF"; }
-warn()       { printf '%b   ! %s%b\n' "$YELLOW" "$1" "$OFF"; }
-die()        { printf '%b   ✗ %s%b\n' "$RED"    "$1" "$OFF"; exit 1; }
+ok()         { printf '%b   ✓ %s%b\n' "${GREEN}"  "$1" "${OFF}"; }
+warn()       { printf '%b   ! %s%b\n' "${YELLOW}" "$1" "${OFF}"; }
+die()        { printf '%b   ✗ %s%b\n' "${RED}"    "$1" "${OFF}"; exit 1; }

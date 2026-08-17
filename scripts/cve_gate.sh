@@ -39,7 +39,7 @@ RETRIES="${CVE_GATE_RETRIES:-3}"
 UNREACHABLE_RE='ConnectionError|Connection aborted|Connection reset|ConnectionResetError|Max retries|Temporary failure in name resolution|Name or service not known|TimeoutError|ReadTimeout|ConnectTimeout|Read timed out|ServiceUnavailable|BadGateway|HTTP 5[0-9][0-9]|502 |503 |504 |RemoteDisconnected|SSLError'
 
 is_unreachable() {
-    grep -qEi "$UNREACHABLE_RE" "$1"
+    grep -qEi "${UNREACHABLE_RE}" "$1"
 }
 
 usage() {
@@ -54,33 +54,33 @@ run_audit() {
     _out="$2"
     _rc=2
     _i=1
-    while [ "$_i" -le "$RETRIES" ]; do
-        pip-audit -r "$_target" >"$_out" 2>&1
+    while [ "${_i}" -le "${RETRIES}" ]; do
+        pip-audit -r "${_target}" >"${_out}" 2>&1
         _code=$?
-        [ "$_code" -eq 0 ] && return 0
+        [ "${_code}" -eq 0 ] && return 0
         # 126/127 mean the shell could not execute it at all. Belt and braces alongside the
         # preflight check: a tool that vanishes mid-run must not be read as a finding either.
-        if [ "$_code" -eq 127 ] || [ "$_code" -eq 126 ]; then
+        if [ "${_code}" -eq 127 ] || [ "${_code}" -eq 126 ]; then
             return 3
         fi
-        if is_unreachable "$_out"; then
-            echo "  advisory service unreachable (attempt $_i/$RETRIES)" >&2
+        if is_unreachable "${_out}"; then
+            echo "  advisory service unreachable (attempt ${_i}/${RETRIES})" >&2
             _rc=2
-            [ "$_i" -lt "$RETRIES" ] && sleep $((_i * 5))
+            [ "${_i}" -lt "${RETRIES}" ] && sleep $((_i * 5))
         else
             return 1
         fi
         _i=$((_i + 1))
     done
-    return "$_rc"
+    return "${_rc}"
 }
 
 mode="${1:-}"
 target="${2:-}"
-if [ -z "$mode" ] || [ -z "$target" ]; then
+if [ -z "${mode}" ] || [ -z "${target}" ]; then
     usage
 fi
-[ -f "$target" ] || { echo "cve_gate: no such file: $target" >&2; exit 2; }
+[ -f "${target}" ] || { echo "cve_gate: no such file: ${target}" >&2; exit 2; }
 
 # TOOLCHAIN check FIRST, before any outcome can be inferred from an exit code. A missing binary
 # and a vulnerable dependency are different facts and must never share a verdict.
@@ -93,26 +93,26 @@ fi
 
 out="$(mktemp)"
 # shellcheck disable=SC2064  # expand $out now, on purpose: the trap must name this file.
-trap "rm -f '$out'" EXIT
+trap "rm -f '${out}'" EXIT
 
-run_audit "$target" "$out"
+run_audit "${target}" "${out}"
 rc=$?
-cat "$out"
+cat "${out}"
 
-case "$mode" in
+case "${mode}" in
     audit)
-        case "$rc" in
+        case "${rc}" in
             0) echo "audit-runtime: CLEAN - no known advisory in the runtime set" ;;
             1) echo "audit-runtime: FAIL - a runtime dependency has a known advisory"; exit 1 ;;
             3) echo "audit-runtime: TOOLCHAIN - pip-audit could not be executed. Nothing measured."; exit 2 ;;
-            *) echo "audit-runtime: UNVERIFIED - the advisory service was unreachable after $RETRIES attempts."
+            *) echo "audit-runtime: UNVERIFIED - the advisory service was unreachable after ${RETRIES} attempts."
                echo "               This is a NETWORK fault. It is NOT a clean audit and claims nothing"
                echo "               about the dependency set. Re-run, or rely on 'make patch' / 'make daily'." ;;
         esac
         ;;
     canary)
         # The canary asserts the gate BLOCKS, and blocks FOR THE RIGHT REASON. A crash is not teeth.
-        case "$rc" in
+        case "${rc}" in
             0) echo "GATE CANARY FAILED: pip-audit did NOT flag the known-vulnerable fixture."
                echo "                    The CVE gate is toothless."; exit 1 ;;
             1) echo "  ok: the CVE gate flags the known-vulnerable fixture (has teeth)" ;;

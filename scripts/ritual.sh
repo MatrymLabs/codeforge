@@ -31,17 +31,17 @@ set -euo pipefail
 
 # --- Resolve the repo root from this script's own location -----------------
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$HERE/.." && pwd)"
-cd "$ROOT"
+ROOT="$(cd "${HERE}/.." && pwd)"
+cd "${ROOT}"
 
 PORT=4000
 SEED="${FORGE_SEED:-first-forge}"
 
 # --- A little light + the shared voice (colours, spark_line/ok/warn/die) ----
 # shellcheck source=scripts/lib.sh
-source "$HERE/lib.sh"
+source "${HERE}/lib.sh"
 
-printf '\n%b=== T H E   R I T U A L ===%b   %bseed: %s%b\n\n' "$BOLD" "$OFF" "$DIM" "$SEED" "$OFF"
+printf '\n%b=== T H E   R I T U A L ===%b   %bseed: %s%b\n\n' "${BOLD}" "${OFF}" "${DIM}" "${SEED}" "${OFF}"
 
 # --- Make the venv's tools reachable (spark / codeforge / make gates) -------
 if [ -f ".venv/bin/activate" ]; then
@@ -59,9 +59,9 @@ spark_line "Ignition -- running the gates (lint · types · tests · coverage)..
 if make check >/tmp/ritual-check.log 2>&1; then
   IGN_TESTS="$(grep -Eo '[0-9]+ passed' /tmp/ritual-check.log | awk '{s+=$1} END{if(s)print s" passed"}')"
   IGN_COV="$(grep -Eo 'Total coverage: [0-9.]+%' /tmp/ritual-check.log | tail -1 | sed 's/Total coverage: //')"
-  ok "All gates green. ${IGN_TESTS:-tests passed}${IGN_COV:+ · coverage $IGN_COV}."
+  ok "All gates green. ${IGN_TESTS:-tests passed}${IGN_COV:+ · coverage ${IGN_COV}}."
 else
-  printf '%b' "$DIM"; tail -20 /tmp/ritual-check.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -20 /tmp/ritual-check.log; printf '%b' "${OFF}"
   die "A gate is red -- the forge stays cold. Fix it (see /tmp/ritual-check.log), then start the ritual again."
 fi
 
@@ -73,13 +73,13 @@ spark_line "Wards -- checking security posture (SAST + secrets + dependency CVEs
 if bandit -c pyproject.toml -r parts forge.py -q >/tmp/ritual-bandit.log 2>&1; then
   ok "SAST clean (bandit)."
 else
-  printf '%b' "$DIM"; tail -20 /tmp/ritual-bandit.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -20 /tmp/ritual-bandit.log; printf '%b' "${OFF}"
   die "SAST found an issue -- the forge stays cold. Fix it (bandit), then start the ritual again."
 fi
 if git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline >/tmp/ritual-secrets.log 2>&1; then
   ok "No secrets committed (detect-secrets)."
 else
-  printf '%b' "$DIM"; tail -12 /tmp/ritual-secrets.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -12 /tmp/ritual-secrets.log; printf '%b' "${OFF}"
   die "A secret was detected -- do NOT enter the MUD. Remove it (or audit the baseline), then restart."
 fi
 WARDS_AUDIT="clean"
@@ -97,9 +97,9 @@ fi
 spark_line "Readiness -- the system audits itself (registry + QA + docs)..."
 if make readiness >/tmp/ritual-readiness.log 2>&1; then
   ok "Registry validates. Readiness dashboard:"
-  printf '%b' "$DIM"; sed 's/^/     /' /tmp/ritual-readiness.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; sed 's/^/     /' /tmp/ritual-readiness.log; printf '%b' "${OFF}"
 else
-  printf '%b' "$DIM"; tail -20 /tmp/ritual-readiness.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -20 /tmp/ritual-readiness.log; printf '%b' "${OFF}"
   die "Readiness check failed (registry invalid) -- fix it, then start the ritual again."
 fi
 
@@ -111,7 +111,7 @@ spark_line "Veritas -- checking the project's claims against reality (truth chec
 if make truth >/tmp/ritual-truth.log 2>&1; then
   ok "All claims verified (VeritasGate)."
 else
-  printf '%b' "$DIM"; tail -24 /tmp/ritual-truth.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -24 /tmp/ritual-truth.log; printf '%b' "${OFF}"
   die "A claim is FLAGGED -- correct the claim (or the code) before entering. See /tmp/ritual-truth.log."
 fi
 
@@ -138,24 +138,24 @@ if git rev-parse --abbrev-ref @'{u}' >/dev/null 2>&1; then
   LOCAL="$(git rev-parse @)"; REMOTE="$(git rev-parse @'{u}')"; BASE="$(git merge-base @ @'{u}')"
   if [ -n "$(git status --porcelain)" ]; then
     MIRROR_STATUS="dirty tree (untouched)"
-    warn "Working tree is dirty on '$BRANCH' -- leaving it untouched (nothing pulled or pushed)."
-  elif [ "$LOCAL" = "$REMOTE" ]; then
+    warn "Working tree is dirty on '${BRANCH}' -- leaving it untouched (nothing pulled or pushed)."
+  elif [ "${LOCAL}" = "${REMOTE}" ]; then
     MIRROR_STATUS="in sync"
-    ok "In sync with origin/$BRANCH."
-  elif [ "$LOCAL" = "$BASE" ]; then
+    ok "In sync with origin/${BRANCH}."
+  elif [ "${LOCAL}" = "${BASE}" ]; then
     MIRROR_STATUS="fast-forwarded to origin"
-    git merge --ff-only --quiet @'{u}' && ok "Fast-forwarded '$BRANCH' to match GitHub."
-  elif [ "$REMOTE" = "$BASE" ]; then
+    git merge --ff-only --quiet @'{u}' && ok "Fast-forwarded '${BRANCH}' to match GitHub."
+  elif [ "${REMOTE}" = "${BASE}" ]; then
     MIRROR_STATUS="ahead $(git rev-list --count @'{u}'..@) (unpushed)"
-    warn "'$BRANCH' is ahead by $(git rev-list --count @'{u}'..@) commit(s) -- unpushed. Review, then ship the PR: make ship"
+    warn "'${BRANCH}' is ahead by $(git rev-list --count @'{u}'..@) commit(s) -- unpushed. Review, then ship the PR: make ship"
   else
     MIRROR_STATUS="diverged (reconcile by hand)"
-    warn "'$BRANCH' has diverged from GitHub. Reconcile by hand (the ritual never force-syncs)."
+    warn "'${BRANCH}' has diverged from GitHub. Reconcile by hand (the ritual never force-syncs)."
   fi
 else
   BRANCH="$(git rev-parse --abbrev-ref HEAD)"
   MIRROR_STATUS="no upstream"
-  warn "Branch '$BRANCH' has no upstream -- skipping mirror."
+  warn "Branch '${BRANCH}' has no upstream -- skipping mirror."
 fi
 
 # --- 6. SMOKE: prove the whole engine end-to-end before opening the door -----
@@ -166,9 +166,9 @@ SMOKE_RESULT="skipped"
 spark_line "Smoke -- proving the engine end-to-end (login · look · do · logout)..."
 if make smoke >/tmp/ritual-smoke.log 2>&1; then
   SMOKE_RESULT="$(grep -Eo '[0-9]+/[0-9]+ steps passed.*round-trips' /tmp/ritual-smoke.log | tail -1)"
-  ok "End-to-end smoke passed${SMOKE_RESULT:+ ($SMOKE_RESULT)}."
+  ok "End-to-end smoke passed${SMOKE_RESULT:+ (${SMOKE_RESULT})}."
 else
-  printf '%b' "$DIM"; tail -20 /tmp/ritual-smoke.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -20 /tmp/ritual-smoke.log; printf '%b' "${OFF}"
   die "The end-to-end smoke failed -- the engine is not ready. Fix it, then start the ritual again."
 fi
 
@@ -176,11 +176,11 @@ fi
 # Written once all gates are green, before the forge lights -- so the record exists
 # even if you leave at the login prompt. Traceable to the commit that produced it.
 RITUAL_REPORTS="reports/ritual"
-mkdir -p "$RITUAL_REPORTS"
-REPORT_FILE="$RITUAL_REPORTS/$(date -u +%Y-%m-%d).md"
+mkdir -p "${RITUAL_REPORTS}"
+REPORT_FILE="${RITUAL_REPORTS}/$(date -u +%Y-%m-%d).md"
 {
   echo "## Ritual START $(date -u +%Y-%m-%dT%H:%M:%SZ)  ($(git rev-parse --short HEAD 2>/dev/null || echo '?'))"
-  echo "- seed: \`$SEED\`"
+  echo "- seed: \`${SEED}\`"
   echo "- IGNITION: gates green - ${IGN_TESTS:-tests passed}; coverage ${IGN_COV:-ok}"
   echo "- WARDS: SAST clean · secrets clean · deps ${WARDS_AUDIT:-clean}"
   echo "- READINESS: registry validates"
@@ -189,8 +189,8 @@ REPORT_FILE="$RITUAL_REPORTS/$(date -u +%Y-%m-%d).md"
   echo "- SMOKE: ${SMOKE_RESULT:-passed}"
   echo "- MIRROR: ${BRANCH:-?} - ${MIRROR_STATUS:-unknown}"
   echo ""
-} >> "$REPORT_FILE"
-ok "After-action record banked: $REPORT_FILE"
+} >> "${REPORT_FILE}"
+ok "After-action record banked: ${REPORT_FILE}"
 
 # Is something already listening on :$PORT? Prefer `ss` (no connection made);
 # fall back to a single, harmless connect only if ss is unavailable. We avoid
@@ -199,7 +199,7 @@ forge_is_up() {
   if command -v ss >/dev/null 2>&1; then
     ss -ltnH 2>/dev/null | grep -q ":${PORT}[[:space:]]" && return 0 || return 1
   fi
-  (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null && { exec 3>&- 2>/dev/null; return 0; }
+  (exec 3<>"/dev/tcp/127.0.0.1/${PORT}") 2>/dev/null && { exec 3>&- 2>/dev/null; return 0; }
   return 1
 }
 
@@ -208,56 +208,56 @@ forge_is_up() {
 STARTED_HERE=0
 FORGE_PID=""
 extinguish() {
-  if [ "$STARTED_HERE" = "1" ] && [ -n "$FORGE_PID" ] && kill -0 "$FORGE_PID" 2>/dev/null; then
-    printf '\n%b⚒  The forge banks its coals. Your deeds are remembered.%b\n' "$CYAN" "$OFF"
-    kill "$FORGE_PID" 2>/dev/null || true
-  elif [ "$STARTED_HERE" = "0" ]; then
-    printf '\n%b⚒  Ritual closed. The forge you joined burns on.%b\n' "$CYAN" "$OFF"
+  if [ "${STARTED_HERE}" = "1" ] && [ -n "${FORGE_PID}" ] && kill -0 "${FORGE_PID}" 2>/dev/null; then
+    printf '\n%b⚒  The forge banks its coals. Your deeds are remembered.%b\n' "${CYAN}" "${OFF}"
+    kill "${FORGE_PID}" 2>/dev/null || true
+  elif [ "${STARTED_HERE}" = "0" ]; then
+    printf '\n%b⚒  Ritual closed. The forge you joined burns on.%b\n' "${CYAN}" "${OFF}"
   fi
 }
 trap extinguish EXIT INT TERM
 
 # --- 7. THE FORGE: light the gateway ---------------------------------------
-spark_line "The Forge -- lighting the gateway on :$PORT..."
+spark_line "The Forge -- lighting the gateway on :${PORT}..."
 if forge_is_up; then
-  ok "A forge is already burning on :$PORT -- joining it (won't disturb it on exit)."
+  ok "A forge is already burning on :${PORT} -- joining it (won't disturb it on exit)."
 else
   : >/tmp/ritual-spark.log
   # PYTHONUNBUFFERED so the gateway's "listening" line hits the log immediately
   # -- we wait on that line instead of connecting (a connect would spawn a real
   # session on the very server we're booting).
-  PYTHONUNBUFFERED=1 FORGE_SEED="$SEED" spark >/tmp/ritual-spark.log 2>&1 &
+  PYTHONUNBUFFERED=1 FORGE_SEED="${SEED}" spark >/tmp/ritual-spark.log 2>&1 &
   FORGE_PID=$!
   STARTED_HERE=1
   for _ in $(seq 1 60); do
     if grep -q "listening on" /tmp/ritual-spark.log 2>/dev/null; then break; fi
-    if ! kill -0 "$FORGE_PID" 2>/dev/null; then
-      printf '%b' "$DIM"; cat /tmp/ritual-spark.log; printf '%b' "$OFF"
+    if ! kill -0 "${FORGE_PID}" 2>/dev/null; then
+      printf '%b' "${DIM}"; cat /tmp/ritual-spark.log; printf '%b' "${OFF}"
       die "The forge failed to light (see above)."
     fi
     sleep 0.25
   done
   grep -q "listening on" /tmp/ritual-spark.log || die "The forge did not announce itself in time."
-  ok "The forge is lit (pid $FORGE_PID) -- '$SEED' is live on :$PORT."
+  ok "The forge is lit (pid ${FORGE_PID}) -- '${SEED}' is live on :${PORT}."
 fi
 
 # --- 8. THE GATE: open the MUD window --------------------------------------
 spark_line "The Gate -- opening the MUD window (log in at the front desk)..."
-printf '%b   Character (character@account) or NEW awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
+printf '%b   Character (character@account) or NEW awaits. Ctrl-C or QUIT to leave.%b\n\n' "${DIM}" "${OFF}"
 sleep 0.4
 # Prefer our own client: it honours the password blackout with only the stdlib,
 # so secrets stay hidden even where `telnet` isn't installed. `nc` cannot mask a
 # password (it ignores telnet negotiation) -- it's the last resort, and loud.
-if [ -f "$ROOT/scripts/mud_client.py" ]; then
-  python3 "$ROOT/scripts/mud_client.py" 127.0.0.1 "$PORT"
+if [ -f "${ROOT}/scripts/mud_client.py" ]; then
+  python3 "${ROOT}/scripts/mud_client.py" 127.0.0.1 "${PORT}"
 elif command -v telnet >/dev/null 2>&1; then
-  telnet 127.0.0.1 "$PORT"
+  telnet 127.0.0.1 "${PORT}"
 elif command -v nc >/dev/null 2>&1; then
   warn "Falling back to nc -- your PASSWORD WILL BE VISIBLE (nc can't mask it)."
   warn "Prefer scripts/mud_client.py or telnet/Mudlet to keep it hidden. See docs/RUNNING.md."
-  nc 127.0.0.1 "$PORT"
+  nc 127.0.0.1 "${PORT}"
 else
-  warn "No client found. The forge is lit on :$PORT -- connect with Mudlet."
+  warn "No client found. The forge is lit on :${PORT} -- connect with Mudlet."
   warn "Press Ctrl-C here to end the ritual and bank the forge."
-  while [ "$STARTED_HERE" = "1" ] && kill -0 "${FORGE_PID:-0}" 2>/dev/null; do sleep 1; done
+  while [ "${STARTED_HERE}" = "1" ] && kill -0 "${FORGE_PID:-0}" 2>/dev/null; do sleep 1; done
 fi
