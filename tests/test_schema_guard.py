@@ -22,30 +22,42 @@ def _fresh_engine():
 
 def test_a_current_schema_reports_no_gaps():
     engine = _fresh_engine()
-    assert missing_columns(engine) == []
-    require_current_schema(engine)  # no raise
+    try:
+        assert missing_columns(engine) == []
+        require_current_schema(engine)  # no raise
+    finally:
+        engine.dispose()
 
 
 def test_a_brand_new_empty_database_is_not_drift():
     # no tables at all is a new DB create_all will build, not a behind-schema one
     engine = create_engine(engine_url())
-    assert missing_columns(engine) == []
-    require_current_schema(engine)
+    try:
+        assert missing_columns(engine) == []
+        require_current_schema(engine)
+    finally:
+        engine.dispose()
 
 
 def test_a_table_missing_a_column_is_flagged_by_name():
     engine = _fresh_engine()
-    with engine.begin() as conn:
-        conn.execute(text("ALTER TABLE characters DROP COLUMN secondary_job"))  # simulate the drift
-    gaps = missing_columns(engine)
-    assert "characters.secondary_job" in gaps
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE characters DROP COLUMN secondary_job"))  # simulate the drift
+        gaps = missing_columns(engine)
+        assert "characters.secondary_job" in gaps
+    finally:
+        engine.dispose()
 
 
 def test_require_current_schema_fails_loud_and_names_the_fix():
     engine = _fresh_engine()
-    with engine.begin() as conn:
-        conn.execute(text("ALTER TABLE characters DROP COLUMN coins"))
-    with pytest.raises(SchemaError) as err:
-        require_current_schema(engine)
-    assert "characters.coins" in str(err.value)
-    assert "db-migrate" in str(err.value)  # the guard names the one command that fixes it
+    try:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE characters DROP COLUMN coins"))
+        with pytest.raises(SchemaError) as err:
+            require_current_schema(engine)
+        assert "characters.coins" in str(err.value)
+        assert "db-migrate" in str(err.value)  # the guard names the one command that fixes it
+    finally:
+        engine.dispose()

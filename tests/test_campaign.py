@@ -2,11 +2,7 @@
 
 from __future__ import annotations
 
-import os
-
 import pytest
-
-os.environ.setdefault("FORGE_SEED", "aethryn")
 
 from kernel.world.campaign import load_campaign, report, validate  # noqa: E402, RUF100
 from kernel.world.quest import all_ids  # noqa: E402, RUF100
