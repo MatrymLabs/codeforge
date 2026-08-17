@@ -474,7 +474,9 @@ security-go:
 		echo "security-go: no Go modules in this tree, nothing to inspect"; \
 	elif ! command -v govulncheck >/dev/null 2>&1; then \
 		echo "security-go: UNVERIFIED - no \`govulncheck\` on PATH. Install:"; \
-		echo "          go install golang.org/x/vuln/cmd/govulncheck@latest"; \
+		echo "          go install golang.org/x/vuln/cmd/govulncheck@v1.7.0"; \
+		echo "       (pinned to match CI. It needs Go 1.25+, which is also this repo's floor:"; \
+		echo "        1.24 ships a reachable net panic, GO-2026-4971.)"; \
 		exit 1; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \

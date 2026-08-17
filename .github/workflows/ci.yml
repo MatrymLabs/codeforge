@@ -257,6 +257,74 @@ jobs:
           terraform init -backend=false
           terraform validate
 
+  # The security scanners, moved from the bench to the merge.
+  #
+  # `make security` grew four non-Python scanners on 2026-08-17 and CI ran NONE of them: the only
+  # thing it invoked from that family was `make secrets`. So git history, the Go dependency graph
+  # and the filesystem surface were inspected on whichever bench happened to run the target by
+  # hand, and never on the path that decides what merges. A gate the merge does not run is a
+  # suggestion.
+  #
+  # Versions are PINNED to the ones the bench verified, so CI and the bench inspect the same tool.
+  # An unpinned scanner silently changes its own verdict on a schedule nobody chose.
+  #
+  # security-rust is deliberately ABSENT: cargo-deny needs deny.toml, which is still on an
+  # unmerged branch. Adding the step now would put a permanently red job in front of every merge,
+  # and a job everyone learns to ignore protects nothing. It joins when the config lands.
+  security-scanners:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          fetch-depth: 0  # gitleaks reads HISTORY; a shallow clone would scan almost nothing
+
+      # Go 1.25, and this job is why. The FIRST run of this gate found GO-2026-4971 reachable from
+      # our own code: `edge.handleConn calls net.Dial`, a NUL-byte panic in net on Windows, present
+      # in go1.24.13 and fixed in go1.25.10. The bench is a Windows host, so this was reachable on
+      # the machine that builds it. Every Go job moved together -- scanning one toolchain while
+      # shipping another is how a scan reports green about an artifact nobody built.
+      # If these ever move to 1.26, the floor is 1.26.3: the same bug was reintroduced in 1.26.0.
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
+        with:
+          go-version: "1.25"
+
+      - name: Install the scanners, pinned to the versions the bench verified
+        run: |
+          GITLEAKS_VER=8.30.1
+          TRIVY_VER=0.74.0
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VER}/gitleaks_${GITLEAKS_VER}_linux_x64.tar.gz" | tar -xz -C "$HOME/.local/bin" gitleaks
+          curl -fsSL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VER}/trivy_${TRIVY_VER}_Linux-64bit.tar.gz" | tar -xz -C "$HOME/.local/bin" trivy
+          # Pinned, not `@latest`. An unpinned scanner changes its own verdict on a schedule
+          # nobody chose, and then the bench and CI disagree for reasons neither can see. v1.7.0
+          # is the current release and needs `go 1.25.0`, which the bump above now provides --
+          # under the old 1.24 pin this resolved to nothing and the step died outright, since
+          # setup-go sets GOTOOLCHAIN=local and no newer toolchain can be fetched.
+          go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      # spine imports generated bindings that are git-ignored (ADR-0012), so govulncheck cannot
+      # build its call graph until codegen runs. Without this the Go scan inspects one module of two.
+      - name: Regenerate the protocol-spine bindings
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
+          # v1.34.2 matches the protobuf RUNTIME in native/spine/go.mod, and matches the pinned
+          # install the `spine` job already uses. Generate with the version you link against.
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          make proto
+
+      - name: Secrets, across the whole of git history
+        run: make security-secrets-history
+
+      # SOURCE mode: reports only vulnerabilities the code can actually reach, rather than every
+      # advisory touching any module in the graph.
+      - name: Go dependency vulnerabilities (reachability-aware)
+        run: make security-go
+
+      - name: Filesystem scan (vulns, secrets, misconfiguration)
+        run: make security-fs
+
   # Polyglot native extension (Rust / PyO3): build the codeforge_nav navigation kernel and prove it
   # matches the pure-Python fallback byte-for-byte (the parity test). NOT a required check -- the
   # main `check` gate runs on the fallback, so a Rust-toolchain hiccup never blocks a merge
@@ -341,7 +409,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.24"
+          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
 
       - name: Vet, race-test + build the Go edge
         run: |
@@ -373,7 +441,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.24"
+          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
 
       - name: Install protoc + protoc-gen-go (pinned)
         run: |
