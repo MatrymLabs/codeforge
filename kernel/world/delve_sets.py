@@ -77,7 +77,9 @@ def forge_delve_sets(
                 drops.append(label)
             foe["drops"] = drops
             pieces.append(label)
-        if len(pieces) < 2:  # a set needs at least two pieces to be worth collecting  # noqa: E501, PLR2004
+        if (
+            len(pieces) < 2  # noqa: PLR2004
+        ):  # a set needs at least two pieces to be worth collecting
             continue
         name = str(dungeon["name"])
         title = f"{name} set" if name.lower().startswith("the ") else f"the {name} set"

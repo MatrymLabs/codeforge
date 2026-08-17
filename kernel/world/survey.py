@@ -43,7 +43,8 @@ _COMMANDS = (
 def _records(filename: str) -> dict[str, dict[str, Any]]:
     """Every top-level record in an aethryn seed file, keyed by id (skipping a template block)."""
     data = yaml.load(
-        (canon.AETHRYN_DIR / filename).read_text(encoding="utf-8"), Loader=_UniqueKeyLoader  # noqa: S506
+        (canon.AETHRYN_DIR / filename).read_text(encoding="utf-8"),
+        Loader=_UniqueKeyLoader,  # noqa: S506
     )
     if not isinstance(data, dict):
         return {}

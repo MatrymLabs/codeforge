@@ -288,4 +288,6 @@ def _coerce(question: Question, value: Any) -> Any:  # noqa: PLR0911, PLR0912
         if bad:
             raise FormError(f"{question.id!r}: not valid choice(s): {', '.join(map(str, bad))}")  # noqa: TRY003
         return chosen
-    raise FormError(f"{question.id!r}: unhandled kind {kind!r}")  # pragma: no cover (guarded above)  # noqa: E501, TRY003
+    raise FormError(  # noqa: TRY003
+        f"{question.id!r}: unhandled kind {kind!r}"
+    )  # pragma: no cover (guarded above)

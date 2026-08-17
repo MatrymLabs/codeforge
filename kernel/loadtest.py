@@ -87,7 +87,9 @@ def run_load(
     if not rotation:
         raise LoadError("rotation must name at least one command")  # noqa: TRY003
 
-    from forge import handle_command  # lazy: the tick is the top; parts do not import it eagerly  # noqa: E501, I001, PLC0415
+    from forge import (  # noqa: PLC0415
+        handle_command,
+    )  # lazy: the tick is the top; parts do not import it eagerly
     from kernel.world.session import Session  # noqa: PLC0415
 
     # Warm up single-threaded so first-call import/cache building never races across the workers.

@@ -379,7 +379,9 @@ def make_notable(biome: str, level: int, idx: int, room: str, seq: int) -> Npc:
     role = _EPITHETS[(idx + seq) % len(_EPITHETS)]
     display = f"{name} the {mark.capitalize()} {role}"
 
-    is_boss = seq % 6 == 5  # roughly one in six guardians is a boss-tier payout (10x reward curve)  # noqa: E501, PLR2004
+    is_boss = (
+        seq % 6 == 5  # noqa: PLR2004
+    )  # roughly one in six guardians is a boss-tier payout (10x reward curve)
     hp = int(beast["hp"] * (2.4 if is_boss else 1.5))
     beast["name"] = display
     beast["keywords"] = list(dict.fromkeys([name.lower(), role.lower(), *beast["keywords"]]))

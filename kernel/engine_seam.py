@@ -506,7 +506,9 @@ def run_differential(
         # dominant defect of this Workshop reproduced inside the instrument built to catch it.
         try:
             a, b = probe(left), probe(right)  # type: ignore[operator]
-        except Exception as exc:  # a probe that cannot run is UNMEASURED, never agreement  # noqa: BLE001, E501
+        except (
+            Exception  # noqa: BLE001
+        ) as exc:  # a probe that cannot run is UNMEASURED, never agreement
             unmeasured.append(f"{aspect}/{name}: {type(exc).__name__}: {exc}")
             continue
         compared += 1

@@ -94,7 +94,9 @@ def build_cast(session: Session) -> list[list[object]]:
     beat("east", 1.4)
     for i in range(4):  # visible fights: an ability strike, a plain strike, and a level-up lands
         beat("use ember edge on wolf" if i % 2 == 0 else "attack wolf", 1.4)
-    while session.level < 5:  # then grind off-screen until strong enough to face the boss  # noqa: E501, PLR2004
+    while (
+        session.level < 5  # noqa: PLR2004
+    ):  # then grind off-screen until strong enough to face the boss
         play("attack wolf")
 
     # 4. Delve: walk back and down into the Cold Cellar -- entering it advances the quest.

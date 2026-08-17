@@ -169,7 +169,9 @@ def aethryn_journey() -> None:
     try:
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time  # noqa: E501, PLR2004
+        while (
+            time.monotonic() - boot < 30  # noqa: PLR2004
+        ):  # the flagship seed is larger; allow more boot time
             if server.poll() is not None:
                 raise SystemExit("aethryn server exited during boot")  # noqa: TRY003
             if "listening on" in server.stdout.readline().decode(errors="ignore"):
@@ -338,7 +340,9 @@ def spine_journey() -> None:
     try:
         assert server.stdout is not None
         boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time  # noqa: E501, PLR2004
+        while (
+            time.monotonic() - boot < 30  # noqa: PLR2004
+        ):  # the flagship seed is larger; allow more boot time
             if server.poll() is not None:
                 raise SystemExit("spine server exited during boot")  # noqa: TRY003
             if "listening on" in server.stdout.readline().decode(errors="ignore"):

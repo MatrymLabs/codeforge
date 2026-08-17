@@ -39,7 +39,9 @@ def assign_drop(killer_id: str, room: str, iid: str) -> str | None:
     if band is None:
         return None
     eligible = [m for m in members_in_room(killer_id, room) if SESSIONS.get(m) is not None]
-    if len(eligible) < 2:  # solo here: leave it on the floor to be taken (unchanged behavior)  # noqa: E501, PLR2004
+    if (
+        len(eligible) < 2  # noqa: PLR2004
+    ):  # solo here: leave it on the floor to be taken (unchanged behavior)
         return None
     turn = _TURN.get(band.leader, 0) % len(eligible)
     winner = eligible[turn]

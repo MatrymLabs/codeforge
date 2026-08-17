@@ -109,7 +109,9 @@ def advance(
             raise KeyError(f"guard {transition.guard!r} is not in the guard registry")  # noqa: TRY003
         try:
             reason = guard_fn(ctx or {})
-        except Exception as exc:  # a broken guard refuses; it must never crash the tick  # noqa: BLE001, E501
+        except (
+            Exception  # noqa: BLE001
+        ) as exc:  # a broken guard refuses; it must never crash the tick
             return Refusal(f"guard {transition.guard!r} errored: {exc}")
         if reason is not None:
             return Refusal(reason)

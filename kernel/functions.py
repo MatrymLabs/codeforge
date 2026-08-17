@@ -162,7 +162,9 @@ def render_functions() -> str:
                 lines.append(f"  [runs]   {part.id:<18} {call}")
                 lines.append(f"           -> {out}")
                 ran += 1
-            except Exception as exc:  # a part whose demo breaks must surface, never hide  # noqa: BLE001, E501
+            except (
+                Exception  # noqa: BLE001
+            ) as exc:  # a part whose demo breaks must surface, never hide
                 lines.append(f"  [BROKEN] {part.id:<18} demo raised: {exc}")
         else:
             twin = _test_twin(part.id, part.source)

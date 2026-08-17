@@ -30,7 +30,9 @@ class FakeMachine:
     def setter(self, pid: int, mask: set[int]) -> None:
         self.set_calls.append(set(mask))
         if mask & self.refuse:
-            raise PermissionError("Operation not permitted")  # an OSError subclass, like real EPERM  # noqa: E501, TRY003
+            raise PermissionError(  # noqa: TRY003
+                "Operation not permitted"
+            )  # an OSError subclass, like real EPERM
         self.mask = set(mask)
 
     def getter(self, pid: int) -> set[int]:

@@ -265,8 +265,10 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     room at full health, and the foe recovers -- the fight is earned again. A real death carries
     real, reversible stakes: scattered coins, battered gear (K2), and XP progress toward the next
     level (K5) -- but NEVER a level: the hero keeps every level they earned."""
-    from kernel.world.progression_awards import apply_xp_debt  # noqa: I001, PLC0415
-    from kernel.world.world import START_ROOM  # lazy: world binds seed state at import  # noqa: E501, PLC0415
+    from kernel.world.progression_awards import apply_xp_debt  # noqa: PLC0415
+    from kernel.world.world import (  # noqa: PLC0415
+        START_ROOM,
+    )  # lazy: world binds seed state at import
 
     lost = _death_toll(session)
     battered = _death_gear_toll(session)  # K2: a real death batters your gear (mend it)
