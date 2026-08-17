@@ -103,9 +103,7 @@ def _eval(node: ast.AST, ctx: dict[str, Any]) -> Any:
                 return False
             left = right
         return True
-    raise ConditionError(
-        f"unsupported condition node: {type(node).__name__}"
-    )  # pragma: no cover
+    raise ConditionError(f"unsupported condition node: {type(node).__name__}")  # pragma: no cover
 
 
 def _compare(op: ast.cmpop, left: Any, right: Any) -> bool:

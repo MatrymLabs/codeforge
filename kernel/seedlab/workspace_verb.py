@@ -144,7 +144,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
     rest = parts[1:]
 
     if sub in ("list", "ls"):
-        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed # noqa: I001
+        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed  # noqa: I001
 
         ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
         lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
@@ -223,7 +223,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
-        from kernel.seedlab.project_model import BlueprintLabError, Provenance # noqa: I001
+        from kernel.seedlab.project_model import BlueprintLabError, Provenance
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.source_modeler import model_and_store
 
@@ -273,7 +273,7 @@ def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
                 resolved.relative_to(allowed)
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
-        from kernel.seedlab.project_model import Provenance # noqa: I001
+        from kernel.seedlab.project_model import Provenance
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.tool_runner import (
             CommandRefused,

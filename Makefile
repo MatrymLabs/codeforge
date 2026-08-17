@@ -216,18 +216,18 @@ typecheck-native:
 JOBS ?= auto
 
 test:
-	pytest -n $(JOBS) -m "not property and not fuzz"
+	$(PY) -m pytest -n $(JOBS) -m "not property and not fuzz"
 
 test-order:
-	pytest -p randomly --randomly-seed=1 -m "not property and not fuzz"
+	$(PY) -m pytest -p randomly --randomly-seed=1 -m "not property and not fuzz"
 
 property:
-	pytest -m property
+	$(PY) -m pytest -m property
 
 # Fuzz the trust-boundary gates (hostile input: seed/catalog/manifest YAML). The law:
 # a gate refuses with its own error type, never crashes. Hypothesis-driven, no new deps.
 fuzz:
-	pytest -m fuzz
+	$(PY) -m pytest -m fuzz
 
 # Mutation testing (cosmic-ray) - the "Mutate" rung. On-demand ONLY: one test run per mutant is
 # slow, so this is never a PR/CI gate. cosmic-ray is not in the default dev deps (its aiohttp/git
@@ -376,7 +376,7 @@ evolution:
 # data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
 # inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	$(PY) -m pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
@@ -671,7 +671,7 @@ demo-gif:
 # --- E2E: drive the live dashboard with a real browser (isolated from `make check`). ---
 e2e:
 	@python -m playwright install chromium
-	pytest e2e -q
+	$(PY) -m pytest e2e -q
 
 # --- The Ritual: one command lights the whole workshop -- gates run, GitHub
 # mirrors, the forge lights, the MUD window opens at the front desk. Bound to

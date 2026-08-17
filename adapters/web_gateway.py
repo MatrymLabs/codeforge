@@ -265,7 +265,7 @@ async def engine_2d(ws: WebSocket) -> None:
             raise WireRefused("REFUSED: invalid JSON") from exc
         message = decode_wire(payload)
         if message["type"] != "hello":
-            raise WireRefused("REFUSED: hello is required before other messages") # noqa: TRY301
+            raise WireRefused("REFUSED: hello is required before other messages")  # noqa: TRY301
         await ws.send_json(encode_wire(hello(session=message["session"])))
     except WireRefused as exc:
         await ws.send_json(encode_wire(refused(reason=str(exc))))

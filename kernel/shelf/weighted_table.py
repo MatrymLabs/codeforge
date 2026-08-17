@@ -55,6 +55,4 @@ class WeightedTable[T]:
             upto += weight
             if roll <= upto:
                 return outcome
-        raise WeightedTableError(
-            "unreachable: roll exceeded total weight"
-        )  # pragma: no cover
+        raise WeightedTableError("unreachable: roll exceeded total weight")  # pragma: no cover

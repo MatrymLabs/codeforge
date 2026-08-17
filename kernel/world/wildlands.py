@@ -537,6 +537,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
         # flank must never reuse the trail's own axis (`on`/`back`) or it would overwrite the spine
         # and orphan the rooms ahead -- so branches leave strictly perpendicular to the trail.
         branch_head: str | None = None
+        flank: str | None = None
         flanks = [d for d in _FLANKS if d != on and d != back]  # noqa: PLR1714
         if i > 0 and i % every == 0 and i + 1 < L:
             flank = flanks[(i // every) % len(flanks)]
@@ -544,7 +545,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
             exits[flank] = branch_head
         name = f"{cfg['name']} - {_place_word(cfg, i)}"
         add(room, name, _describe(cfg, i, back, on if i + 1 < L else None, None), exits)
-        if branch_head:
+        if branch_head and flank is not None:
             _branch(cfg, i, flank, room, blen, claimed, rooms, npcs, add)
     return rooms, npcs
 

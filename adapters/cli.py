@@ -462,7 +462,7 @@ def _cmd_host(args: list[str]) -> int:
     except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
         return int(exc.code or 0)
 
-    from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world # noqa: I001
+    from kernel.domains.hosted_world import HOSTABLE, HostedWorldError, install_world
     from kernel.domains.journey import JourneyError, journey_region
 
     blueprint_root = Path(ns.blueprint_root)
@@ -486,7 +486,7 @@ def _cmd_host(args: list[str]) -> int:
         # + verify it (byte-identical AND identity re-validated through the engine's own gates). The
         # seed is already installed, so compose the two primitives on the live artifact -- no
         # redundant re-install. A failed proof fails the command loud (never a false success).
-        from kernel.domains.game_lifecycle import RECOVERED # noqa: I001
+        from kernel.domains.game_lifecycle import RECOVERED
         from kernel.domains.hosted_recovery import snapshot_seed, verify_seed_recovery
 
         report = verify_seed_recovery(

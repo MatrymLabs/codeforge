@@ -85,7 +85,7 @@ def _load_function(src: str, func_name: str, tag: str) -> Any:
 def _import_crosshair() -> Any:
     """Lazy-import CrossHair (opcode patches + the diff API). Fails loud if it is absent."""
     try:
-        import crosshair.core_and_libs  # type: ignore[import-not-found] # noqa: F401, I001
+        import crosshair.core_and_libs  # type: ignore[import-not-found] # noqa: F401
         from crosshair.diff_behavior import diff_behavior  # type: ignore[import-not-found]
         from crosshair.fnutil import FunctionInfo  # type: ignore[import-not-found]
         from crosshair.options import DEFAULT_OPTIONS  # type: ignore[import-not-found]

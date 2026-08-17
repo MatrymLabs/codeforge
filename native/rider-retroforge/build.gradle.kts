@@ -15,6 +15,7 @@ plugins {
     // inspecting it. ktlint is the instrument. It runs from the wrapper, so CI needs a JDK and
     // nothing else, and `check` depends on it so a lint failure cannot be skipped by running tests.
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 group = "labs.matrym.retroforge"
@@ -41,6 +42,16 @@ kotlin {
 }
 
 tasks.test { useJUnitPlatform() }
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("detekt.yml"))
+    baseline = file("detekt-baseline.xml")
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
+}
 
 ktlint {
     version.set("1.3.1")

@@ -61,7 +61,7 @@ def default_gates() -> TopologyGates:
 def load_topology_spec(path: Path | None = None) -> dict[str, Any]:
     """The World Topology Doctrine as data: directions, terrain + passability, zone backings, gates,
     and the two-layer generation design. Fails loud if the spec is missing or malformed."""
-    import yaml  # a real dep (loaders use it); imported here to keep the module light # noqa: E501
+    import yaml  # a real dep (loaders use it); imported here to keep the module light
 
     spec_path = path or _SPEC_PATH
     if not spec_path.exists():

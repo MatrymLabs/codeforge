@@ -111,9 +111,7 @@ def _gate_cell(rooms: dict[str, Room], back: str) -> str:
     for rid in sorted(rooms):
         if back not in rooms[rid]["exits"]:
             return rid
-    raise FieldZoneError(
-        f"no edge cell free to graft a {back!r} exit home"
-    )  # pragma: no cover
+    raise FieldZoneError(f"no edge cell free to graft a {back!r} exit home")  # pragma: no cover
 
 
 def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:

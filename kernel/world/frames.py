@@ -15,7 +15,7 @@ State stays canonical; a Frame is a projection request, never a mutation.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, is_dataclass
-from typing import Any
+from typing import Any, cast
 
 from kernel.world.session import display_name
 
@@ -49,9 +49,13 @@ def register_frame(cls: type[Frame]) -> type[Frame]:
 def to_wire(frame: Frame) -> dict[str, Any]:
     """Serialise a frame to a JSON-safe dict for the bus. A non-dataclass or unregistered frame
     fails loud rather than crossing the wire half-formed."""
-    if not is_dataclass(frame) or type(frame).__name__ not in _WIRE_REGISTRY:
-        raise ValueError(f"frame {type(frame).__name__} is not registered for the wire")
-    return {"type": type(frame).__name__, "fields": asdict(frame)}
+    frame_type = type(frame)
+    dataclass_frame = is_dataclass(frame)
+    if not dataclass_frame:
+        raise ValueError(f"frame {frame_type.__name__} is not registered for the wire")
+    if frame_type.__name__ not in _WIRE_REGISTRY:
+        raise ValueError(f"frame {frame_type.__name__} is not registered for the wire")
+    return {"type": frame_type.__name__, "fields": asdict(cast(Any, frame))}
 
 
 def from_wire(payload: dict[str, Any]) -> Frame:
@@ -62,7 +66,7 @@ def from_wire(payload: dict[str, Any]) -> Frame:
         raise ValueError(f"unknown frame type {payload.get('type')!r}")
     fields = payload.get("fields")
     if not isinstance(fields, dict):
-        raise ValueError("frame wire payload missing its fields") # noqa: TRY004
+        raise ValueError("frame wire payload missing its fields")  # noqa: TRY004
     return cls(**fields)
 
 

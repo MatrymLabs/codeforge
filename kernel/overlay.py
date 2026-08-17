@@ -106,11 +106,11 @@ def load_overlay(path: Path) -> Overlay:
     """Load a generated overlay as an immutable runtime mapping."""
     payload = json.loads(path.read_bytes())
     if not isinstance(payload, dict):
-        raise ValueError("overlay root must be an object") # noqa: TRY004
+        raise ValueError("overlay root must be an object")  # noqa: TRY004
     entries: dict[str, OverlayEntry] = {}
     for room, value in payload.items():
         if not isinstance(room, str) or not isinstance(value, dict):
-            raise ValueError("overlay entries must map room labels to objects") # noqa: TRY004
+            raise ValueError("overlay entries must map room labels to objects")  # noqa: TRY004
         entries[room] = {
             "chunk_x": int(value["chunk_x"]),
             "chunk_y": int(value["chunk_y"]),

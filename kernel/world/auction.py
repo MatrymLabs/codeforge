@@ -72,7 +72,7 @@ def browse(session: Session) -> str:
 def buy(session: Session, id_word: str) -> str:
     """`auction buy <#>`: buy a listing. Pays the seller (online or not) and re-clones the item into
     your bag. Refused for a bad number, your own listing, or too little coin."""
-    from kernel.world import auction_store # noqa: I001
+    from kernel.world import auction_store
     from kernel.world.characters import _default_store, reclone_item, save_character
     from kernel.world.events import announce_to
     from kernel.world.items import carrier

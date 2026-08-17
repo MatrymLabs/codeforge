@@ -301,7 +301,7 @@ class Job(TypedDict):
     resistances: dict[str, str]  # element/status code -> level (Normal/Weak/Resist/Immune/Absorb)
     power_cells: int  # size of the job's custom resource pool (0 = none, runs on MP)
     power_regen: int  # power cells regained per combat tick
-    milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
+    milestone_perks: list[dict[str, Any]]  # ordered passive perks unlocked at each TP milestone
     requires: dict[str, int]  # calling label -> minimum job_level; empty means open to all
 
 

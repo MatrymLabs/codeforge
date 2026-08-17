@@ -304,7 +304,7 @@ def _save_restore(engine: Engine) -> tuple[object, object]:
 
 
 def _gameplay_save() -> tuple[str | None, str | None]:
-    from kernel.world.character_store import CharacterRecord, InMemoryCharacterStore # noqa: I001
+    from kernel.world.character_store import CharacterRecord, InMemoryCharacterStore
 
     store = InMemoryCharacterStore()
     original = CharacterRecord(name="probe", location="forge", auth_salt="salt", auth_hash="hash")

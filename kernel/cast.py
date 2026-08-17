@@ -663,7 +663,7 @@ def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR09
                 file=sys.stderr,
             )
             return 2
-        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift # noqa: I001
+        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift  # noqa: I001
 
         try:
             drift = diff_cast(rest[0], rest[1])
