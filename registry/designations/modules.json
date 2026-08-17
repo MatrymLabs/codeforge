@@ -8859,8 +8859,8 @@
     "related": [
       "MOD-10.056"
     ],
-    "reuse": "The Seed Platform's backup manager: closes the create -> operate -> backup -> restore -> roll back lifecycle the platform requires of every Seed feature. SeedBackups.backup(record) writes a schema-versioned wrapper with a sha256 over the canonical record bytes (mirrors FileSeedStore's write-temp-then-replace durability); verify() re-hashes to report intact/corrupt/missing; load_record() refuses anything but intact; the module-level restore(kernel, backups, ...) composes load + kernel.reinstate so rollback is owner-authorized + audited. A generic snapshot/verify/restore mechanism -- extraction candidate for the Hardware Store (route via R&D Factory).",
-    "notes": "Slice C of the Stream-1 engine directive: prove restart/recovery is real, not claimed. Domain-neutral (grammar before worlds): no kernel/world/ import. Adds SeedKernel.reinstate as the sole sanctioned path back to an earlier state (a backup manager cannot smuggle state past the control plane). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+    "reuse": "The Seed Platform's backup manager: closes the create -> operate -> backup -> restore -> roll back lifecycle the platform requires of every Seed feature. BlueprintBackups.backup(record) writes a schema-versioned wrapper with a sha256 over the canonical record bytes (mirrors FileSeedStore's write-temp-then-replace durability); verify() re-hashes to report intact/corrupt/missing; load_record() refuses anything but intact; the module-level restore(kernel, backups, ...) composes load + kernel.reinstate so rollback is owner-authorized + audited. A generic snapshot/verify/restore mechanism -- extraction candidate for the Hardware Store (route via R&D Factory).",
+    "notes": "Slice C of the Stream-1 engine directive: prove restart/recovery is real, not claimed. Domain-neutral (grammar before worlds): no kernel/world/ import. Adds BlueprintKernel.reinstate as the sole sanctioned path back to an earlier state (a backup manager cannot smuggle state past the control plane). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
     "tags": [
       "module"
     ],

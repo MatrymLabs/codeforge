@@ -11,7 +11,7 @@ real Seed through the Kernel.
 Two laws hold, the same as kernel/gmcp.py:
 
 - **State is canonical; a report is a read-only projection.** Each builder takes a seedlab record
-  (`SeedRecord`, `SourceRecord`, `ProjectModel`) and returns a JSON-able dict - never a second
+  (`BlueprintRecord`, `SourceRecord`, `ProjectModel`) and returns a JSON-able dict - never a second
   source of truth, never a mutation. The gateway owns the socket and decides when to send.
 - **Honest by construction (No Vision Theater).** A builder emits only what THIS card wires. Per-
   entity fields are not modeled yet, so `Model.Schema` carries entity names with empty field lists.
@@ -22,7 +22,8 @@ Two laws hold, the same as kernel/gmcp.py:
 
 The client's parsers are defensive (a missing field takes a default, a bad frame is surfaced), so
 the engine emits the subset it has and the client renders it. Pure and offline: the only side effect
-is through an injected `SeedKernel` (a test injects an in-memory store); nothing touches a socket.
+is through an injected `BlueprintKernel` (a test injects an in-memory store);
+nothing touches a socket.
 """
 
 from __future__ import annotations
@@ -38,7 +39,7 @@ from kernel.blueprint import to_dict as blueprint_record
 from kernel.seed_package import BuildManifest
 from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
-from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintKernelError, BlueprintRecord
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.source_connector import SourceRecord, source_connection
 from kernel.seedlab.tool_runner import ToolRunResult
@@ -92,7 +93,7 @@ class WorkspaceContractError(ValueError):
 
 
 def project_status(
-    record: SeedRecord,
+    record: BlueprintRecord,
     *,
     branch: str | None = None,
     build: str | None = None,
@@ -256,7 +257,7 @@ def load_module_designations(path: Path | str | None = None) -> list[dict[str, o
     registry = Path(path) if path is not None else _MODULES_REGISTRY
     data = json.loads(registry.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise SeedKernelError(f"module registry {registry} is not a JSON list")
+        raise BlueprintKernelError(f"module registry {registry} is not a JSON list")
     return [module for module in data if isinstance(module, dict)]
 
 
@@ -310,7 +311,7 @@ def load_research_findings(path: Path | str) -> list[dict[str, object]]:
     manifest = Path(path)
     data = json.loads(manifest.read_text(encoding="utf-8"))
     if not isinstance(data, list):
-        raise SeedKernelError(f"research manifest {manifest} is not a JSON list")
+        raise BlueprintKernelError(f"research manifest {manifest} is not a JSON list")
     return [finding for finding in data if isinstance(finding, dict)]
 
 
@@ -360,7 +361,7 @@ def seed_created(name: str, ok: bool, *, seed_id: str = "", reason: str = "") ->
     return payload
 
 
-def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict[str, object]:
+def create_from_request(kernel: BlueprintKernel, data: object, *, owner: str) -> dict[str, object]:
     """Turn a client's `Seed.Create` frame into a real Seed and return the `Seed.Created` verdict.
 
     Parse + validate the untrusted frame, mint a Seed through the Kernel (authoritative: the Kernel
@@ -375,7 +376,7 @@ def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict
     purpose = request.description or f"{request.kind} Seed"
     try:
         record = kernel.create_seed(request.name, owner, purpose)
-    except SeedKernelError as exc:
+    except BlueprintKernelError as exc:
         return seed_created(request.name, False, reason=str(exc))
     return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
 
@@ -547,7 +548,7 @@ def parse_form_submit(data: object) -> FormSubmitRequest:
 
 
 def create_from_form_submit(
-    kernel: SeedKernel, definition: FormDefinition, data: object, *, owner: str
+    kernel: BlueprintKernel, definition: FormDefinition, data: object, *, owner: str
 ) -> dict[str, object]:
     """Turn a client's `Form.Submit` frame into a real Seed and return the `Seed.Created` verdict.
 
@@ -580,7 +581,7 @@ def create_from_form_submit(
             product_type=spec.product_type,
             domain_modules=spec.domain_modules,
         )
-    except SeedKernelError as exc:
+    except BlueprintKernelError as exc:
         return seed_created(spec.name, False, reason=str(exc))
     return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
 
@@ -589,7 +590,7 @@ def create_from_form_submit(
 
 
 def workspace_packages(
-    record: SeedRecord,
+    record: BlueprintRecord,
     *,
     source: SourceRecord | None = None,
     files: list[str] | None = None,

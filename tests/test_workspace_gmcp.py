@@ -19,7 +19,7 @@ from kernel.blueprint import from_dict as make_blueprint
 from kernel.gmcp import gmcp_frame
 from kernel.seed_package import compile_manifest
 from kernel.seedlab.form import FormDefinition
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintKernelError, InMemorySeedStore
 from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
 from kernel.seedlab.source_connector import SourceRecord
 from kernel.seedlab.tool_runner import ToolRunResult
@@ -63,11 +63,11 @@ from kernel.seedlab.workspace_gmcp import (
 _CLOCK = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(120))
 
 
-def _kernel() -> SeedKernel:
-    return SeedKernel(InMemorySeedStore(), clock=lambda: next(_CLOCK))
+def _kernel() -> BlueprintKernel:
+    return BlueprintKernel(InMemorySeedStore(), clock=lambda: next(_CLOCK))
 
 
-def _seed(kernel: SeedKernel, name: str = "Job Tracker", sid: str = "seed-jt"):
+def _seed(kernel: BlueprintKernel, name: str = "Job Tracker", sid: str = "seed-jt"):
     return kernel.create_seed(name, "seed-owner", "a tiny tracker", seed_id=sid)
 
 
@@ -219,7 +219,7 @@ def test_a_malformed_create_frame_never_reaches_the_kernel() -> None:
 def test_a_kernel_refusal_becomes_an_honest_ok_false_verdict() -> None:
     # a fixed minter forces the second create to collide on id, so the Kernel refuses; the refusal
     # is surfaced as a verdict, not a crash.
-    kernel = SeedKernel(
+    kernel = BlueprintKernel(
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-fixed"
     )
     first = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="seed-owner")
@@ -430,7 +430,7 @@ def test_load_module_designations_reads_a_registry_and_skips_non_dicts(tmp_path)
 def test_load_module_designations_fails_loud_on_a_non_list_registry(tmp_path) -> None:
     registry = tmp_path / "bad.json"
     registry.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
-    with pytest.raises(SeedKernelError, match="not a JSON list"):
+    with pytest.raises(BlueprintKernelError, match="not a JSON list"):
         load_module_designations(registry)
 
 
@@ -532,7 +532,7 @@ def test_load_research_findings_reads_a_manifest_and_skips_non_dicts(tmp_path) -
 def test_load_research_findings_fails_loud_on_a_non_list_manifest(tmp_path) -> None:
     manifest = tmp_path / "bad.json"
     manifest.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
-    with pytest.raises(SeedKernelError, match="not a JSON list"):
+    with pytest.raises(BlueprintKernelError, match="not a JSON list"):
         load_research_findings(manifest)
 
 
@@ -721,7 +721,7 @@ def test_create_from_form_submit_refuses_an_out_of_range_choice() -> None:
 
 def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
     # a fixed minter forces both submits onto one id, so the Kernel refuses the second, honestly
-    kernel = SeedKernel(
+    kernel = BlueprintKernel(
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-dupe"
     )
     frame = {"product_type": "game", "answers": _game_answers()}

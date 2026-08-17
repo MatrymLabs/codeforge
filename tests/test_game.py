@@ -19,12 +19,12 @@ import pytest
 from kernel.domains.game import GameError, GameModule, register_game_module
 from kernel.seedlab.domain import DomainModule
 from kernel.seedlab.form import SeedSpec
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
 from kernel.seedlab.provision import DomainModuleError, DomainModuleRegistry, provision
 
 
-def _kernel() -> SeedKernel:
-    return SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-03T00:00:00+00:00")
+def _kernel() -> BlueprintKernel:
+    return BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-03T00:00:00+00:00")
 
 
 def _spec(product_type: str, modules: tuple[str, ...], name: str = "Aethryn") -> SeedSpec:

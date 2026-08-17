@@ -20,10 +20,10 @@ from kernel.seedlab.artifact_store import (
     build_report_artifacts,
     record_generated_artifact,
 )
-from kernel.seedlab.backup import INTACT, BackupRef, SeedBackups
+from kernel.seedlab.backup import INTACT, BackupRef, BlueprintBackups
 from kernel.seedlab.cli_generator import generate_cli, validate_runs, validate_tests
 from kernel.seedlab.form import load_definition
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedRecord
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintRecord, FileSeedStore
 from kernel.seedlab.model_store import FileModelStore, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel, Provenance
@@ -47,7 +47,7 @@ class PlatformProofResult:
     """Evidence emitted by the first SeedLab platform proof."""
 
     seed_id: str
-    record: SeedRecord
+    record: BlueprintRecord
     source: SourceRecord
     files: tuple[str, ...]
     model: ProjectModel
@@ -58,7 +58,7 @@ class PlatformProofResult:
     hub_text: str
     hub_contract: dict[str, object]
     packages: tuple[tuple[str, dict[str, object]], ...]
-    recovered_record: SeedRecord
+    recovered_record: BlueprintRecord
     recovered_models: tuple[ProjectModel, ...]
     recovered_runs: tuple[ToolRunResult, ...]
     recovered_artifacts: tuple[ArtifactRecord, ...]
@@ -132,9 +132,9 @@ def run_first_platform_proof(
 
     seed_store = FileSeedStore(root / "seeds")
     kernel = (
-        SeedKernel(seed_store, clock=clock_fn, id_minter=id_minter)
+        BlueprintKernel(seed_store, clock=clock_fn, id_minter=id_minter)
         if id_minter is not None
-        else SeedKernel(seed_store, clock=clock_fn)
+        else BlueprintKernel(seed_store, clock=clock_fn)
     )
     created = _create_seed_from_form(kernel, owner=owner)
     seed_id = created.identity.seed_id
@@ -194,13 +194,13 @@ def run_first_platform_proof(
         )
     )
 
-    backups = SeedBackups(root / "backups", clock=clock_fn)
+    backups = BlueprintBackups(root / "backups", clock=clock_fn)
     backup = backups.backup(record)
     backup_verdict = backups.verify(seed_id, backup.backup_id)
     if backup_verdict != INTACT:
         raise PlatformProofError(f"backup was not intact: {backup_verdict}")
 
-    recovered_kernel = SeedKernel(FileSeedStore(root / "seeds"), clock=clock_fn)
+    recovered_kernel = BlueprintKernel(FileSeedStore(root / "seeds"), clock=clock_fn)
     recovered_record = recovered_kernel.get(seed_id)
     recovered_models = tuple(FileModelStore(root / "models").all_for_seed(seed_id))
     recovered_runs = tuple(FileRunLog(root / "runs").for_seed(seed_id))
@@ -227,7 +227,7 @@ def run_first_platform_proof(
     )
 
 
-def _create_seed_from_form(kernel: SeedKernel, *, owner: str) -> SeedRecord:
+def _create_seed_from_form(kernel: BlueprintKernel, *, owner: str) -> BlueprintRecord:
     verdict = create_from_form_submit(
         kernel,
         load_definition(),

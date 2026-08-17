@@ -22,14 +22,14 @@ from kernel.seedlab.kernel import (
     RUNNING,
     STOPPED,
     AuditEvent,
+    BlueprintKernel,
+    BlueprintKernelError,
+    BlueprintRecord,
     FileSeedStore,
     InMemorySeedStore,
     SeedAuthError,
-    SeedKernel,
-    SeedKernelError,
     SeedLifecycleError,
     SeedNotFound,
-    SeedRecord,
     SeedStore,
     render_status,
 )
@@ -38,11 +38,11 @@ from kernel.seedlab.kernel import (
 _CLOCK = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(60))
 
 
-def _kernel(store: SeedStore | None = None) -> SeedKernel:
-    return SeedKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
+def _kernel(store: SeedStore | None = None) -> BlueprintKernel:
+    return BlueprintKernel(store or InMemorySeedStore(), clock=lambda: next(_CLOCK))
 
 
-def _seed(kernel: SeedKernel, owner: str = "josh") -> SeedRecord:
+def _seed(kernel: BlueprintKernel, owner: str = "josh") -> BlueprintRecord:
     return kernel.create_seed("Task Ledger", owner, "a tiny CLI tracker", seed_id="seed-fixed-01")
 
 
@@ -86,19 +86,19 @@ def test_list_and_status_render() -> None:
 
 def test_structured_contract_roundtrips() -> None:
     record = _seed(_kernel())
-    rebuilt = SeedRecord.from_dict(record.to_dict())
+    rebuilt = BlueprintRecord.from_dict(record.to_dict())
     assert rebuilt == record  # the client contract and persistence share one honest shape
 
 
 def test_identity_survives_restart(tmp_path: Path) -> None:
     # The load-bearing Stage-1 claim: a fresh Kernel over the same file store recovers the Seed.
     store_a = FileSeedStore(tmp_path / "seeds")
-    kernel_a = SeedKernel(store_a, clock=lambda: next(_CLOCK))
+    kernel_a = BlueprintKernel(store_a, clock=lambda: next(_CLOCK))
     _seed(kernel_a)
     kernel_a.start("seed-fixed-01", "josh")
 
     # Simulate a restart: a brand-new Kernel + store object over the SAME directory.
-    kernel_b = SeedKernel(FileSeedStore(tmp_path / "seeds"))
+    kernel_b = BlueprintKernel(FileSeedStore(tmp_path / "seeds"))
     recovered = kernel_b.get("seed-fixed-01")
     assert recovered.identity.name == "Task Ledger" and recovered.status == RUNNING
     assert recovered.identity.created_at  # the original creation time persisted
@@ -135,7 +135,7 @@ def test_unknown_seed_raises_not_found() -> None:
 def test_duplicate_id_is_refused() -> None:
     k = _kernel()
     _seed(k)
-    with pytest.raises(SeedKernelError, match="already exists"):
+    with pytest.raises(BlueprintKernelError, match="already exists"):
         _seed(k)
 
 
@@ -155,24 +155,24 @@ def test_stopping_a_created_seed_is_refused() -> None:
 
 
 def test_an_empty_owner_is_refused() -> None:
-    with pytest.raises(SeedKernelError, match="owner"):
+    with pytest.raises(BlueprintKernelError, match="owner"):
         _kernel().create_seed("X", "", "p", seed_id="x")
 
 
 def test_a_corrupt_record_raises_not_loads_a_lie(tmp_path: Path) -> None:
     store = FileSeedStore(tmp_path / "seeds")
     (store.root / "seed-bad.json").write_text("{not json", encoding="utf-8")
-    with pytest.raises(SeedKernelError, match="corrupt"):
+    with pytest.raises(BlueprintKernelError, match="corrupt"):
         store.load("seed-bad")
 
 
 def test_a_malformed_record_shape_is_refused() -> None:
-    with pytest.raises(SeedKernelError, match="malformed"):
-        SeedRecord.from_dict({"status": CREATED})  # no identity
+    with pytest.raises(BlueprintKernelError, match="malformed"):
+        BlueprintRecord.from_dict({"status": CREATED})  # no identity
 
 
 def test_render_status_is_pure_text() -> None:
-    record = SeedRecord(
+    record = BlueprintRecord(
         identity=_seed(_kernel()).identity,
         audit=(AuditEvent("2026-08-01T00:00:00+00:00", "josh", "created", "hi"),),
     )
@@ -203,7 +203,7 @@ def test_reinstate_cannot_change_a_seeds_owner() -> None:
     differs from the current owner is refused even for the current owner."""
     kernel = _kernel()
     record = _seed(kernel, owner="josh")
-    forged = SeedRecord(identity=replace(record.identity, owner="mallory"))
+    forged = BlueprintRecord(identity=replace(record.identity, owner="mallory"))
     with pytest.raises(SeedAuthError, match="owner"):
         kernel.reinstate(forged, "josh")
 
@@ -239,10 +239,10 @@ def test_an_old_record_without_the_new_fields_still_loads() -> None:
         "version": "0.1.0",
         "created_at": "2026-08-01T00:00:00+00:00",
     }
-    record = SeedRecord.from_dict({"identity": legacy_identity, "status": CREATED})
+    record = BlueprintRecord.from_dict({"identity": legacy_identity, "status": CREATED})
     assert record.identity.product_type == "" and record.identity.domain_modules == ()
     # And a record whose domain_modules persisted as a JSON list rebuilds as a tuple.
-    modern = SeedRecord.from_dict(
+    modern = BlueprintRecord.from_dict(
         {
             "identity": {**legacy_identity, "domain_modules": ["education", "extra"]},
             "status": CREATED,

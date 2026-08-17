@@ -21,15 +21,15 @@ from kernel.seedlab.backup import (
     INTACT,
     MISSING,
     BackupError,
-    SeedBackups,
+    BlueprintBackups,
     restore,
 )
 from kernel.seedlab.kernel import (
     RUNNING,
     STOPPED,
+    BlueprintKernel,
     FileSeedStore,
     SeedAuthError,
-    SeedKernel,
     SeedNotFound,
 )
 
@@ -41,12 +41,12 @@ def _tick() -> str:
     return next(_CLOCK)
 
 
-def _kernel(root: Path) -> SeedKernel:
-    return SeedKernel(FileSeedStore(root / "seeds"), clock=_tick)
+def _kernel(root: Path) -> BlueprintKernel:
+    return BlueprintKernel(FileSeedStore(root / "seeds"), clock=_tick)
 
 
-def _backups(root: Path) -> SeedBackups:
-    return SeedBackups(root / "backups", clock=_tick)
+def _backups(root: Path) -> BlueprintBackups:
+    return BlueprintBackups(root / "backups", clock=_tick)
 
 
 # --- acceptance: the mandatory create -> operate -> backup -> LOSE -> restore -> verify ----------
@@ -165,10 +165,11 @@ def test_restore_of_missing_backup_is_refused(tmp_path: Path) -> None:
 
 
 def test_default_clock_is_used_when_none_injected(tmp_path: Path) -> None:
-    """With no clock injected, SeedBackups uses wall time; the snapshot is still INTACT + restorable
+    """With no clock injected, BlueprintBackups uses wall time; the snapshot is still INTACT +
+    restorable
     (the id embeds a real timestamp, so we don't assert on it)."""
     kernel = _kernel(tmp_path)
-    backups = SeedBackups(tmp_path / "backups")  # default clock (_utcnow)
+    backups = BlueprintBackups(tmp_path / "backups")  # default clock (_utcnow)
     record = kernel.create_seed("Clocked", "josh", "", seed_id="seed-08")
     ref = backups.backup(record)
     assert backups.verify("seed-08", ref.backup_id) == INTACT
@@ -206,7 +207,8 @@ def test_verify_raises_on_a_non_object_wrapper(tmp_path: Path) -> None:
 
 
 def test_verify_reports_corrupt_when_the_record_shape_is_malformed(tmp_path: Path) -> None:
-    """A wrapper that parses but whose `record` is not a valid SeedRecord verifies CORRUPT (not a
+    """A wrapper that parses but whose `record` is not a valid BlueprintRecord verifies CORRUPT
+    (not a
     crash): the snapshot is untrustworthy, so it is refused, not restored."""
     kernel = _kernel(tmp_path)
     backups = _backups(tmp_path)

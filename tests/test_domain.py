@@ -15,12 +15,12 @@ import pytest
 from kernel.domains.education import EducationModule
 from kernel.seedlab.domain import DomainModule, register_module
 from kernel.seedlab.form import SeedSpec
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
 from kernel.seedlab.provision import DomainModuleError, DomainModuleRegistry, provision
 
 
-def _kernel() -> SeedKernel:
-    return SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-03T00:00:00+00:00")
+def _kernel() -> BlueprintKernel:
+    return BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-03T00:00:00+00:00")
 
 
 def _education_registry() -> DomainModuleRegistry:

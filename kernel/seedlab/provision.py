@@ -25,10 +25,10 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from kernel.seedlab.form import SeedSpec
-from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
+from kernel.seedlab.kernel import BlueprintKernel, BlueprintKernelError, BlueprintRecord
 
 
-class DomainModuleError(SeedKernelError):
+class DomainModuleError(BlueprintKernelError):
     """A Seed selected a domain module that is not registered (or a module was double-registered).
     Fails loud: the platform never pretends to load a module that does not exist."""
 
@@ -65,7 +65,7 @@ class DomainModuleRegistry:
         return name in self._loaders
 
 
-def seed_from_spec(kernel: SeedKernel, spec: SeedSpec) -> SeedRecord:
+def seed_from_spec(kernel: BlueprintKernel, spec: SeedSpec) -> BlueprintRecord:
     """Create a live Seed FROM a validated SeedSpec, recording its product type and selected domain
     modules on the Seed's identity (they survive restart). Does not require the modules to be
     registered -- recording intent is separate from loading it."""
@@ -92,8 +92,8 @@ def resolve_modules(modules: Iterable[str], registry: DomainModuleRegistry) -> d
 
 
 def provision(
-    kernel: SeedKernel, spec: SeedSpec, registry: DomainModuleRegistry
-) -> tuple[SeedRecord, dict[str, Any]]:
+    kernel: BlueprintKernel, spec: SeedSpec, registry: DomainModuleRegistry
+) -> tuple[BlueprintRecord, dict[str, Any]]:
     """The full pipeline step: resolve the spec's domain modules against the registry FIRST (fail
     loud before creating a half-provisioned Seed), then create the Seed. Returns the new Seed record
     and the resolved {name: loader} map the caller loads. Use `seed_from_spec` instead when you want

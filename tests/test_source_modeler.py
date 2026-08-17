@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import BlueprintKernel, InMemorySeedStore
 from kernel.seedlab.model_store import FileModelStore, InMemorySeedModels, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import Provenance
@@ -123,7 +123,7 @@ def test_a_manifest_that_cannot_be_read_falls_back(tmp_path: Path) -> None:
 
 def test_full_flow_lights_up_the_hub_models_facet(tmp_path: Path) -> None:
     # Stage 3 + 4 -> Stage 2: register a source, model it, and the Hub's `models` facet shows it.
-    kernel = SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
+    kernel = BlueprintKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-1")
     store = InMemorySeedModels()
     model_and_store(store, "seed-1", _cli_project(tmp_path))
