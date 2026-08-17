@@ -1,0 +1,25 @@
+﻿# SEED: spiral-ascent -- abilities.yaml (calling kits)
+
+iron_reckoning:
+  name: Iron Reckoning
+  kind: strike
+  power: 12
+  scales: strength
+  mp_cost: 3
+  jobs: [vanguard]
+
+trailcut:
+  name: Trailcut
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+forgehammer:
+  name: Forgehammer
+  kind: strike
+  power: 11
+  scales: stamina
+  mp_cost: 3
+  jobs: [forgewright]
