@@ -1,0 +1,171 @@
+# MATRYM LABS — MASTER CHECKLIST
+## Where the whole enterprise stands. One page. Updated at each day close.
+## `[x]` done with evidence · `[~]` partial · `[ ]` not started · `[?]` needs verifying
+
+**The rule: a box is `[x]` only when a command proved it. Anything else is `[~]`
+or `[?]`. This document is worthless the moment it flatters.**
+
+Last updated: 2026-08-18  ·  Day: 230
+Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment). Section 1, the scanner
+fixture box and the lane toolchain half are Codex's and remain `[?]` until its report lands.
+
+---
+
+## 1. FOUNDATION — the machine
+```
+[x] PC migrated from Pi, repos at C:\Projects\MatrymLabs
+[x] rig specs recorded (i9-13900KF / 32GB / RTX 4090 / 2TB NVMe / Win11 Home)
+[?] BIOS current on Z790-E (Raptor Lake microcode) + Intel Default power
+[?] Defender exclusions, long paths, Developer Mode, sleep-off, OneDrive clear
+[?] .gitattributes committed per repo, no committed .venv or abs-path symlinks
+[?] git globals: autocrlf/fileMode/fsmonitor/untrackedcache/symlinks
+[?] parallelism set: pytest -n auto, gradle workers.max 8
+[ ] Tailscale on PC + Pi; NoMachine bound to it, no forwarded ports
+[ ] Pi mirroring via scheduled git pull
+[ ] winget DSC bootstrap file committed (machine reproducible from one command)
+```
+
+## 2. INSTRUMENTS — gates that actually catch things
+```
+[x] strict configs authored (ruff, mypy, pytest, clippy, golangci v2, detekt, etc.)
+[x] configs merged to main — ALL 9 now on origin/main (was 4 of 9 on day 229)
+        deny · trivy · rustfmt · .shellcheckrc · .gitleaks · .golangci · mutants · pyproject · detekt
+[~] EVERY present language invoked by the gate — 6 of 7 in `make lint`
+        code present: py 883 · kt 8 · tf 8 · sh 6 · go 4 · rs 1 · c 1
+        `lint` wires: python rust go shell terraform c.  KOTLIN IS NOT IN IT (standalone by
+        a recorded 2026-08-14 decision; CI's `jvm` job runs ktlintCheck, so it is governed)
+    [ ] DETEKT IS CONFIGURED AND INVOKED NOWHERE. detekt.yml is on main with a 16-entry
+        baseline; 0 occurrences in ci.yml, and `make lint-kotlin` runs ktlintCheck only.
+        A gate that exists and is never run is the defect class this line names.
+[~] EVERY gate calibrated red-then-green — harness has 13 cases, 3 re-run 2026-08-18
+        covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform
+        NO CASE EXISTS for: detekt/kotlin, trivy, cargo-deny
+[x] security scanners on the merge path (caught a real Go stdlib panic)
+[~] scanners invocable — all four resolve on PATH (trivy gitleaks govulncheck cargo-deny),
+        verified 2026-08-18. The known-hit FIXTURE proof is Codex's box and stays `[?]`
+[x] ledgers exist with day-zero counts + reproduce commands
+        DAY ZERO 2026-08-18 on main 198c81f0: noqa 734 · mypy 181 across 64 modules ·
+        detekt 16 · Gradle CC 0.  The 2026-08-17 figures are superseded: they were taken
+        against an unmerged branch that landed the same evening
+[ ] UNMEASURABLE reported as a first-class verdict across all gates
+[ ] differential test executable on all 4 Blueprints — CONFIRMED BROKEN 2026-08-17
+        run_differential('aethryn') raises FileNotFoundError on a missing world_overlay.json;
+        aethryn and spiral-ascent have none, first-forge and seam-probe do. It raises rather
+        than reporting, so it has read as a broken environment rather than a broken gate
+```
+
+## 3. DOCTRINE — installed and honest
+```
+[x] docs/WORKSHOP.md saved verbatim — 211 lines, sha256 identical to source
+[x] docs/ROAD_TO_THE_FACTORY.md saved verbatim — 598 lines, sha256 identical
+[x] CLAUDE.md file map — 14 of 14 paths tested individually from the Workshop root.
+        4 dead paths removed; the law pointer aimed at a 9-line retired stub and now
+        points at MATRYM_WORKSHOP_CANON.md (1,527 lines)
+[x] HARD LAW blocks present VERBATIM — all 5 extracted blocks byte-identical to the
+        pre-v2 card. They were ENTIRELY ABSENT (0 hits for all six terms), dropped when
+        the card was shortened in #336. Restored by extraction, never retyped
+[x] board header — 4 lines at the top of .ai/WORKBENCH.md, one deviation recorded in-file
+        (`Active Build:` bolded; unbolded it failed active_build_gate.py)
+[x] anchor system live — 42 orders sorted, 5 PARKED, 3 killed with reasons
+[x] two commands defined (open project, rack and stack)
+[x] historical session logs moved — 1,552 lines to .ai/history/, board 2,736 -> 1,200.
+        Accounting proved: exactly 1 line of main is in neither file, the retired ANCHOR: L0
+```
+
+## 4. THE FACTORY STAGES — the actual scoreboard
+```
+[x] STAGE 0  Baseline held — BASELINE HELD declared 2026-08-18, 10 of 10 boxes
+[ ] STAGE 1  Crank turns once: one Blueprint -> one working output
+       [ ] DONE-1  Blueprint: produce · persist · emit · restart · survives
+                   BLOCKED FIRST: the flagship Blueprint has no world_overlay.json, so the
+                   differential is UNMEASURABLE on it. Part 4 names this as a DONE-1 blocker
+       [ ] DONE-2  RF-001: load · decode · manifest · display · bytes untouched
+                   NO ORDERS, NO BENCH ASSIGNED, NOTHING WRITTEN. Half the launch has no
+                   work behind it. This is the largest hole on the board
+[ ] STAGE 2  Generality proof: a second, non-game product (Excel-to-PDF)
+       [ ] built through the same loop
+       [ ] used once by someone who is not the founder
+[ ] STAGE 3  Intake real: a third product started from an Intake Form
+[ ] STAGE 4  Language ladder: one PROVEN lane per rung
+[ ] STAGE 5  Factory floor: one work order dispatched from inside the world
+```
+
+## 5. LANGUAGE LANES — CANDIDATE / INSTALLED / GATED / PROVEN
+```
+python        [~] GATED    -> PROVEN when DONE-1 ships          calibrated: 2026-08-18
+rust          [~] GATED (clippy -D warnings; case exists)       calibrated: case, not re-run
+go            [~] GATED (golangci v2 + govulncheck source)      calibrated: 2026-08-18
+shell         [~] GATED (4 rules, noisy 5th documented out)     calibrated: case, not re-run
+kotlin-jvm    [ ] NOT GATED: detekt is configured and RUN NOWHERE; ktlint only  calib: none
+gdscript      [ ] INSTALLED, real gate is typed GDScript + headless compile
+typescript    [ ] CANDIDATE — deferred to the SaaS rung
+csharp        [ ] CANDIDATE — deferred
+cpp / sql / terraform / powershell  [ ] CANDIDATE
+```
+*A lane is not supported because it is listed. Listing is not support.*
+
+## 6. HARDWARE STORE
+```
+[x] structure real, two tiers — certified 22 entries, working shelf 104 parts (measured)
+[ ] Parts harvested from a real delivered product (zero so far)
+[ ] any Part with two genuine consumers — 13 of 104 name ANY consumer; none has two
+        with both proofs passing
+[ ] lane records exist for every GATED lane
+[ ] first Part extracted from the two dones (verify-then-commit is the candidate)
+```
+
+## 7. PRODUCTS DELIVERED
+```
+[ ] 1st Target Product delivered and running
+[ ] 2nd Target Product, different in kind
+[ ] any product a person other than the founder has run
+```
+**Current count: 0. This is the number that matters most.**
+
+## 8. OUTSIDE THE WORKSHOP
+```
+[ ] one artifact saved and shown to one human outside Matrym Labs
+[ ] one person has used something the factory built
+[ ] one public repo a stranger could read without embarrassment
+```
+Days since external contact: UNKNOWN — never recorded. The first honest act here is to
+start the counter, not to guess it.
+*Every other metric here is self-referential. This section is the only one that isn't.*
+
+## 9. STANDING DISCIPLINES — are they actually running?
+```
+[~] Codex queue never below 3 — held 3-5 through 2026-08-17, EMPTY right now
+[x] every order carries an anchor — 0 rows still labelled L0; packets gate READY 2/2
+[x] every return independently re-verified — every Codex return on 2026-08-17 was re-run,
+        and 3 of the day's claims did not survive it
+[x] full checks after every leg, no bypass flags — no gate was skipped or weakened; the one
+        gate scope change (evidence_gate) shipped with a test proving it still fires
+[x] IN PLAIN TERMS on every bench report — present on every report this session
+[ ] reverse-engineer pass, tiered, on completed work — NOT RUN. Zero passes so far
+[ ] two stamp windows, not per-item approval — still per-item in practice
+[~] ledger counts stated at day close, trending down — stated; day zero is today, so
+        nothing can yet be said about direction
+[x] zero new doctrine files while dones are unproven — LEDGER/PARKED/handoff are registers,
+        and the anchor system went on the board rather than into a new doctrine file
+```
+
+---
+
+## THE FOUR NUMBERS (say them out loud at every day close)
+```
+Products delivered:            0
+External users:                0
+Days since external contact:   UNKNOWN (never counted; the counter starts today)
+Ledger totals (noqa/mypy/kt):  734 / 181-in-64 / 16
+```
+
+## THE ONE QUESTION
+**What did the Workshop produce today that a stranger could use?**
+
+**2026-08-18: nothing.** Two days running, counting 2026-08-17, which produced no product either.
+By this document's own rule that is the stop condition. Everything built on both days was
+instruments, doctrine and the machine that builds the machine. The instruments are genuinely
+better and caught genuinely real defects; none of that is a product a stranger could use.
+
+If the answer is "nothing" more than two days running, the machine is building
+itself again. Stop and turn the crank.
