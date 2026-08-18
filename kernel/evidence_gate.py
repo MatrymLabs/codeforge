@@ -36,6 +36,16 @@ _SNAPSHOT_DIRS = frozenset(
     {"captains-log", "keel_records", "pioneer_experiments", "reports", "postmortems"}
 )
 
+# Externally-sourced material filed VERBATIM. A number here is someone else's general guidance,
+# not a claim CodeForge is making about itself, and it cannot drift because the file is never
+# edited to track the code. `docs/reference/windows-baseline.md` says "below ~50 tests,
+# parallelism is a net loss": a threshold from a tuning guide, matched by the same regex that
+# catches "the suite has 435 tests". The scan stays lexical on purpose, so the SCOPE carries the
+# distinction between a claim about this repo and a quotation from outside it.
+_VERBATIM_DIRS = frozenset({"reference"})
+
+_EXEMPT_DIRS = _SNAPSHOT_DIRS | _VERBATIM_DIRS
+
 
 # Drift-prone count claims: an exact figure in prose goes stale as the code moves. The CI /
 # codecov badges are the one live source. "94% branch coverage" and "435 tests" have both drifted.
@@ -49,7 +59,8 @@ _DRIFT_PATTERNS = (
 def _hardcoded_counts(root: Path) -> list[str]:
     """Drift-prone claims: an exact test count or coverage % in the README or living docs goes
     stale (both have). Scans README.md and every docs/**.md except dated snapshot dirs (where a
-    count is a point-in-time record, not a live claim). The CI/codecov badges are the live source.
+    count is a point-in-time record) and verbatim reference dirs (where it is a quotation from
+    outside this repo). The CI/codecov badges are the live source.
     """
     targets = [root / "README.md"]
     docs = root / "docs"
@@ -57,7 +68,7 @@ def _hardcoded_counts(root: Path) -> list[str]:
         targets += [
             p
             for p in sorted(docs.rglob("*.md"))
-            if not _SNAPSHOT_DIRS.intersection(p.relative_to(docs).parts)
+            if not _EXEMPT_DIRS.intersection(p.relative_to(docs).parts)
         ]
     hits: list[str] = []
     for path in targets:
