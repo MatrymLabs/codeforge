@@ -82,7 +82,7 @@ jobs:
       # the toolchain is the fix, not silencing it. Version pinned to match the terraform job.
       - name: Install Terraform so the lint gate can inspect it
         run: |
-          TF_VER=1.9.8
+          TF_VER=1.15.8
           mkdir -p "$HOME/.local/bin"
           curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
           unzip -o -q tf.zip -d "$HOME/.local/bin"
@@ -257,7 +257,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Install Terraform
         run: |
-          TF_VER=1.9.8
+          TF_VER=1.15.8
           mkdir -p "$HOME/.local/bin"
           curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
           unzip -o -q tf.zip -d "$HOME/.local/bin"
