@@ -290,11 +290,11 @@ fuzz:
 # read it as the mutation_kill_rate KPI (MEASURED, or NOT_COMPUTABLE + stale past its freshness
 # window). This keeps mutation off the PR path while still turning its number into tracked evidence.
 mutation:
-	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- installing it for this on-demand run"; python -m pip install cosmic-ray; }
+	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- installing it for this on-demand run"; $(PY) -m pip install cosmic-ray; }
 	cosmic-ray init cosmic-ray.toml .cosmic-ray-session.sqlite
 	cosmic-ray exec cosmic-ray.toml .cosmic-ray-session.sqlite
 	cr-rate .cosmic-ray-session.sqlite
-	cr-report .cosmic-ray-session.sqlite | python -m kernel.mutation_recorder
+	cr-report .cosmic-ray-session.sqlite | $(PY) -m kernel.mutation_recorder
 
 # Offline SAST for the pre-commit gate: bandit + the secret scan (both local, no network).
 # This is the local/CI parity fix: SRI hashes once passed `make check` locally and then failed
@@ -620,7 +620,7 @@ proto:
 # --- Contracts: regenerate the published Fleet Core contract authorities from the Pydantic models
 # (ship ADR 0003). The drift gate tests/test_contracts.py fails if the committed schema goes stale. ---
 contracts:
-	@python contracts/generate.py
+	@$(PY) contracts/generate.py
 
 # --- Trend: measure the engine tick, RECORD its median as a retained Chronicle metric point
 # (chronicle/ledger.jsonl, git-tracked), then render the series over time. `make bench` stays pure. ---
@@ -803,7 +803,7 @@ docs-build:
 
 # --- Re-record the README demo GIF from real aethryn gameplay (needs `agg`; see the script). ---
 demo-gif:
-	FORGE_SEED=aethryn python scripts/record_demo.py demo.cast
+	FORGE_SEED=aethryn $(PY) scripts/record_demo.py demo.cast
 	agg --theme dracula --font-size 15 --speed 1.5 --fps-cap 24 --last-frame-duration 4 demo.cast docs/demo.gif
 	@rm -f demo.cast && echo "docs/demo.gif re-recorded."
 
