@@ -136,9 +136,16 @@ jobs:
         run: make audit
         continue-on-error: true
 
-      - name: Static security scan
-        run: bandit -c pyproject.toml -r parts forge.py -q
-
+      # The static security scan lives in `make sast`, which `make check` above already runs.
+      #
+      # This step used to be `bandit -c pyproject.toml -r parts forge.py -q`, and `parts/` was
+      # retired on 2026-08-02 by the kernel/adapters restructure. bandit EXITS 0 ON A PATH THAT
+      # DOES NOT EXIST, so the step kept reporting success while scanning one file: forge.py.
+      # It was green for the same reason an unplugged smoke detector is silent.
+      #
+      # Restating the paths here would only recreate the drift, one rename later. `make sast`
+      # is the single definition of what gets scanned, and tests/test_ci_hygiene.py now fails
+      # if any path it names stops existing.
       - name: Secret scan
         run: make secrets
 
