@@ -10,7 +10,8 @@
 // gated. That is the property RF-001A owes.
 
 plugins {
-    kotlin("jvm") version "2.2.0"
+    id("org.jetbrains.intellij.platform")
+    kotlin("jvm") version "2.4.0"
     // KF-RF-1: the kotlin lane opened UNGOVERNED on 2026-08-13, a live toolchain with nothing
     // inspecting it. ktlint is the instrument. It runs from the wrapper, so CI needs a JDK and
     // nothing else, and `check` depends on it so a lint failure cannot be skipped by running tests.
@@ -21,10 +22,14 @@ plugins {
 group = "labs.matrym.retroforge"
 version = "0.1.0"
 
-repositories { mavenCentral() }
+repositories {
+    mavenCentral()
+    intellijPlatform { defaultRepositories() }
+}
 
 dependencies {
     testImplementation(kotlin("test"))
+    intellijPlatform { intellijIdea("2026.2") }
 }
 
 // The Kotlin lane is governed by a reproducible Java 21 toolchain. The foojay resolver in settings

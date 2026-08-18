@@ -1,0 +1,15 @@
+<idea-plugin>
+    <id>labs.matrym.retroforge</id>
+    <name>RetroForge</name>
+    <version>0.1.0</version>
+    <vendor email="engineering@matrymlabs.example" url="https://github.com/MatrymLabs">Matrym Labs</vendor>
+    <description>Read-only RetroForge tile projection preview.</description>
+    <idea-version since-build="262" until-build="262.*" />
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow
+            id="RetroForge"
+            anchor="bottom"
+            factoryClass="labs.matrym.retroforge.RetroForgeToolWindowFactory" />
+    </extensions>
+</idea-plugin>
