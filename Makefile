@@ -269,9 +269,9 @@ mutation:
 # CI's secret-scan step, because check did not run it. pip-audit stays out (needs network; CI's
 # blocking audit-runtime gate and `make doctor` cover it).
 sast:
-	bandit -c pyproject.toml -r kernel adapters content forge.py -q
-	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
-	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
+	$(PY) -m bandit -c pyproject.toml -r kernel adapters content forge.py -q
+	$(PY) -m bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
+	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs $(PY) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single
