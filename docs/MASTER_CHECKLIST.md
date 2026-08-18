@@ -243,3 +243,138 @@ Pi mirror schedule + last run   ssh skynet "systemctl list-timers --all; crontab
 5. Go: bench 1.26.5, CI 1.25, go.mod 1.24. Three numbers where there should be one.
 6. A `lua` CI job guards zero .lua files.
 ```
+
+---
+
+## 10. TOOL UTILIZATION REGISTRY
+*Road v3 §11: a tool is not integrated because it is installed. It counts only when
+invoked through a captured proof command. Same ladder as language lanes.*
+
+**Status per tool: `LISTED` → `INSTALLED` → `INVOCABLE` (proof command captured) →
+`REGISTERED` (a record exists with proof + inputs/outputs + lanes)**
+
+```
+[ ] Tool Utilization Registry file exists at all           <- currently missing entirely
+[ ] every tool a Blueprint depends on has a record
+[ ] every record carries: tool_id, executable, version_command, proof_command,
+    supported_inputs, supported_outputs, language_lanes, known_faults
+
+BUILD + PROVE TOOLS (in use now)
+Rider          [?] INSTALLED   no proof command: nothing in the tree invokes Rider headlessly
+uv/python      [x] INVOCABLE   make check (python 3.13.12, ruff 0.16.2, mypy 2.3.0, pytest 9.1.1)
+cargo          [x] INVOCABLE   make lint-rust -> cargo fmt --check && clippy -D warnings (1.97.1)
+go             [x] INVOCABLE   make lint-go / security-go (bench go 1.26.5; CI pins 1.25)
+gradle         [x] INVOCABLE   ./gradlew ktlintCheck  (wrapper, not a system install)
+node/npm       [ ] NOT PRESENT in this repo; no package.json, no JS/TS lane here
+git/gh         [x] INVOCABLE   used continuously; gh authenticated as MatrymLabs
+task/make      [x] INVOCABLE   make is the control panel; Task 3.52.0 installed and UNUSED here
+trivy/gitleaks/govulncheck  [x] INVOCABLE, PROVEN ON A PLANTED HIT (see section 2)
+
+REGISTERED count is still ZERO. Every [x] above is INVOCABLE, one rung below REGISTERED,
+because no registry file exists to hold a record. Invocable is not registered, exactly as
+installed is not invocable. The rung is the point of the ladder.
+
+RETROFORGE TOOLS (none required for DONE-2)
+Aseprite       [ ] DEFER — Stage 4, asset pipeline rung
+Tiled / LDtk   [ ] DEFER — map rung
+FCEUX/Mesen    [ ] DEFER — emulator integration, not in the read-only slice
+cc65/ca65/Asar [ ] DEFER — assembly/patch rung
+FLIPS/xdelta   [ ] DEFER — patch rung
+Ghidra/radare2 [ ] DEFER — reverse-engineering rung, wrap not build
+Godot          [ ] DEFER — Engine-2D rung
+```
+*Nothing above moves off DEFER without an intake that needs it.*
+
+---
+
+## 11. RETROFORGE — CodeForge capability status
+*RetroForge is a CodeForge module. The Rider plugin is one projection of it, not
+the thing itself.*
+
+### Platform ladder (same ladder as language lanes)
+```
+NES     [~] target of DONE-2 — core BUILT and TESTED, slice not yet proven end to end
+            kernel/retroforge: artifact, binary, codec, manifest, platforms/planar_2bpp
+            40 Python tests pass; Kotlin side has NesRom, AsciiTileProjection,
+            ManifestWriter, Seam with 4 test files. Fixtures are SYNTHETIC and built in
+            the tests (b"NES\x1a" headers, hand-made CHR), so the legal block holds:
+            no ROM is committed anywhere.                       proven: NOT YET
+SNES    [ ] DEFER — architecture may be discussed, not implemented
+Genesis [ ] DEFER — architecture may be discussed, not implemented
+GB / GBC / GBA / SMS / PCE / N64   [ ] DEFER — future only
+```
+
+### Rider integration ladder
+```
+L1  external tools / run configs invoking retroforge commands   [ ] nothing invokes it
+L2  CodeForge tool records for what L1 invokes                  [ ] no registry exists
+L3  RetroForge core                                             [x] BUILT AND TESTED
+      RomArtifact · ByteSource+OutOfRange · TileCodec · PaletteCodec · AddressMapper ·
+      RomPlatformModule · ExtractionManifest+ExtractedAsset · Planar2BppTileCodec ·
+      HeaderedCartridgeModule · InvalidCartridgeHeader.  40 tests, exit 0.
+      NAMING NOTE: the addendum lists `ByteRange`; the tree calls it `ByteSource`.
+      The tree wins, and the addendum's name resolves to nothing.
+L4  native Rider projection                                     [~] ASCII, not native UI
+      AsciiTileProjection.kt exists and is tested. That is a text projection, not the
+      hex view / tile grid / palette / offset linking this rung describes.
+```
+*L3 before L4, always: the core must be canonical and testable before any IDE
+surface projects it. A projection over an unproven core is a demo, not a capability.*
+
+### DONE-2 slice boundary (what ships, what explicitly does not)
+```
+IN     [x] iNES header detected            HeaderedCartridgeModule; InvalidCartridgeHeader
+                                           refuses bad magic (test: "invalid iNES magic is refused")
+       [x] CHR ROM located                 chr pages parsed from the header, offset computed
+       [x] NES 2bpp tiles decoded          Planar2BppTileCodec.decode_tile, both planes
+       [ ] tile grid displayed in Rider    ASCII projection only; no IDE surface
+       [ ] click -> tile index + ROM offset  requires the IDE surface; nothing exists
+       [x] extraction manifest emitted     ExtractionManifest + ExtractedAsset, traceable
+       [x] ROM bytes unmodified            provenance recorded "without mutation" (Kotlin test)
+       [~] decoder + parser proof runs     40 Python + 4 Kotlin test files pass. Fixtures are
+                                           SYNTHETIC and built in-test, deliberately NOT
+                                           committed, which the legal block requires.
+                                           NO END-TO-END SLICE PROOF EXISTS: there is no
+                                           equivalent of scripts/m2_pipeline_proof.py that
+                                           runs load -> decode -> manifest -> display as one
+                                           captured transcript. Six of eight IN items are
+                                           built and unit-tested; the slice has never been
+                                           run as a slice.
+
+OUT    editing · saving modified ROMs · SNES · Genesis · compression ·
+       disassembly · emulator integration · patch generation · game-specific hacks
+```
+*Anything in OUT that appears in a work order is drift, regardless of how small.*
+
+### Build-versus-wrap discipline (standing)
+```
+[ ] every RetroForge capability classified before work starts:
+    WRAP_EXISTING_TOOL · BUILD_IN_CORE · BUILD_IN_PROJECTION ·
+    HARDWARE_STORE_CANDIDATE · DEFER · REJECT · REQUIRES_RESEARCH
+[ ] mature external tools wrapped, not reimplemented
+[ ] core built only where CodeForge needs canonical, testable understanding
+```
+
+### ROM legal and safety (HARD — applies to every RetroForge order)
+```
+[x] only ROMs legally owned, homebrew, or synthetic test fixtures — VERIFIED: zero .nes
+        files tracked in any repo; every fixture is constructed in-test from b"NES\x1a"
+[x] no copyrighted ROM committed to any repo, ever — verified by the same search
+[x] test fixtures are synthetic — b"NES\x1a" + zeroed PRG + hand-made CHR, built at runtime
+[ ] source ROM never modified; inspection and editing stay separate paths
+[ ] checksums verify source ROM identity before and after every operation
+[ ] patches distributed, never modified ROMs
+[ ] editing capability gated behind undo/redo and safe-write, not before
+```
+*This block is closest to HARD LAW in the RetroForge lane. A ROM committed to a
+public repo is not revertible in the way a bad merge is — treat it as a
+never-automate item alongside publishing.*
+
+---
+
+## ADDENDUM NUMBERS (add to THE FOUR NUMBERS at day close)
+```
+Tools REGISTERED (not merely installed):   0     (7 INVOCABLE, 0 registered; no registry file)
+RetroForge platforms PROVEN:               0     (NES core built and tested, slice unproven)
+Rider integration level reached:           L3    (built and tested; L4 is ASCII, not native)
+```
