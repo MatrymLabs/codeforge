@@ -6,8 +6,9 @@
 or `[?]`. This document is worthless the moment it flatters.**
 
 Last updated: 2026-08-18  ·  Day: 230
-Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment). Section 1, the scanner
-fixture box and the lane toolchain half are Codex's and remain `[?]` until its report lands.
+Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment), merged with Codex's
+report (section 1, the scanner-fixture box, the lane toolchain half). Claude Code is the
+only bench that writes this file; Codex reports and does not edit it.
 
 ---
 
@@ -15,14 +16,36 @@ fixture box and the lane toolchain half are Codex's and remain `[?]` until its r
 ```
 [x] PC migrated from Pi, repos at C:\Projects\MatrymLabs
 [x] rig specs recorded (i9-13900KF / 32GB / RTX 4090 / 2TB NVMe / Win11 Home)
-[?] BIOS current on Z790-E (Raptor Lake microcode) + Intel Default power
-[?] Defender exclusions, long paths, Developer Mode, sleep-off, OneDrive clear
-[?] .gitattributes committed per repo, no committed .venv or abs-path symlinks
-[?] git globals: autocrlf/fileMode/fsmonitor/untrackedcache/symlinks
-[?] parallelism set: pytest -n auto, gradle workers.max 8
+[ ] BIOS NOT CURRENT on Z790-E — version 0816, released 2023-02-22, 1273 DAYS OLD
+        It predates every Intel Raptor Lake microcode fix for the Vmin Shift instability
+        (0x125 May 2024, 0x129 Aug 2024, 0x12B Sep 2024). The i9-13900KF is the part those
+        fixes exist for. This is a hardware-degradation risk, not a checkbox.
+    [?] Intel Default power limits — not exposed by ASUS/Windows WMI; needs a BIOS-screen read
+[~] Defender / paths / Developer Mode / sleep / OneDrive
+        DEFENDER IS NOT THE ACTIVE SCANNER. WinDefend is Stopped/Manual because AVIRA SECURITY
+        is the registered antivirus (SecurityCenter2 lists it, state 0x41000). Codex read the
+        Get-MpPreference failure as "unavailable"; the real answer is "superseded". The
+        exclusions question therefore belongs to Avira, not Defender, and is unanswered.
+    [x] long paths enabled (LongPathsEnabled=1)
+    [ ] Developer Mode NOT enabled (AllowDevelopmentWithoutDevLicense absent)
+    [x] sleep never (High performance, AC and DC standby idle = 0)
+    [x] OneDrive does not scope the repos (the OneDrive Projects path does not exist)
+[x] .gitattributes committed in all 7 registered repos; no committed .venv anywhere;
+        no absolute-path symlinks (no 120000 entries in any index)
+[x] git globals recorded: autocrlf=false, filemode=false, fsmonitor=true,
+        untrackedCache=true, symlinks=true
+[x] parallelism set: JOBS ?= auto driving pytest -n; gradle parallel=true, workers.max=8
 [ ] Tailscale on PC + Pi; NoMachine bound to it, no forwarded ports
-[ ] Pi mirroring via scheduled git pull
-[ ] winget DSC bootstrap file committed (machine reproducible from one command)
+        PC Tailscale is INSTALLED BUT LOGGED OUT (BackendState NeedsLogin, no IPs, Online false)
+        NoMachine listens on 0.0.0.0:4000 AND [::]:4000 — all interfaces, NOT Tailscale-bound.
+        No Windows portproxy entries exist, so nothing is forwarded, but the listener is open on
+        every interface the machine has. That is the finding, and it is a security one.
+    [?] Pi side unverified: SSH to skynet fails on host key verification (TCP 22 reachable)
+[?] Pi mirroring via scheduled git pull — UNVERIFIED, same SSH host-key failure.
+        Last run time unknown. Resolve: accept the host key, then
+        ssh skynet "systemctl list-timers --all; crontab -l" 
+[x] winget DSC bootstrap committed — machine-bootstrap/.winget/configuration.dsc.yaml,
+        blob 9582f60a, present in both the founder root and ship-claude
 ```
 
 ## 2. INSTRUMENTS — gates that actually catch things
@@ -41,8 +64,13 @@ fixture box and the lane toolchain half are Codex's and remain `[?]` until its r
         covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform
         NO CASE EXISTS for: detekt/kotlin, trivy, cargo-deny
 [x] security scanners on the merge path (caught a real Go stdlib panic)
-[~] scanners invocable — all four resolve on PATH (trivy gitleaks govulncheck cargo-deny),
-        verified 2026-08-18. The known-hit FIXTURE proof is Codex's box and stays `[?]`
+[x] scanners invocable AND PROVEN ON A PLANTED HIT (Codex 2026-08-18, fixtures removed)
+        gitleaks  generic-api-key on a fake token — NOTE: the FIRST fixture found nothing.
+                  A weak plant proves nothing; the box passed only after a realistic one
+        trivy     AWS-0107 HIGH, unrestricted ingress 0.0.0.0/0 in a terraform fixture.
+                  Also learned: this trivy build has no --scanners flag; the working form is
+                  trivy config --misconfig-scanners
+        govulncheck  GO-2026-5023 and GO-2022-0968 in x/crypto/ssh, reachability-aware
 [x] ledgers exist with day-zero counts + reproduce commands
         DAY ZERO 2026-08-18 on main 198c81f0: noqa 734 · mypy 181 across 64 modules ·
         detekt 16 · Gradle CC 0.  The 2026-08-17 figures are superseded: they were taken
@@ -97,10 +125,25 @@ rust          [~] GATED (clippy -D warnings; case exists)       calibrated: case
 go            [~] GATED (golangci v2 + govulncheck source)      calibrated: 2026-08-18
 shell         [~] GATED (4 rules, noisy 5th documented out)     calibrated: case, not re-run
 kotlin-jvm    [ ] NOT GATED: detekt is configured and RUN NOWHERE; ktlint only  calib: none
-gdscript      [ ] INSTALLED, real gate is typed GDScript + headless compile
-typescript    [ ] CANDIDATE — deferred to the SaaS rung
-csharp        [ ] CANDIDATE — deferred
-cpp / sql / terraform / powershell  [ ] CANDIDATE
+gdscript      [ ] CANDIDATE — 0 .gd files tracked. Toolchain installed ahead of its code
+typescript    [ ] CANDIDATE — 0 .ts/.tsx tracked, deferred to the SaaS rung
+csharp        [ ] CANDIDATE — 0 .cs tracked, deferred
+cpp / sql / powershell             [ ] CANDIDATE — 0 files tracked for each
+terraform     [~] GATED (terraform v1.15.8, fmt -check in lint) calibrated: case exists
+c             [~] GATED (gcc 16.1.0 / clang 22.1.8; cc absent, Makefile falls back correctly)
+lua           [ ] NO CODE AND A CI JOB. 0 .lua files tracked, yet ci.yml has a `lua` job.
+                  The inverse of an ungoverned language: a gate guarding nothing.
+
+TOOLCHAIN VERSIONS (Codex, 2026-08-18): python 3.13.12 · ruff 0.16.2 · mypy 2.3.0 ·
+pytest 9.1.1 · rustc/cargo 1.97.1 · clippy 0.1.97 · go 1.26.5 · golangci-lint 2.12.2 ·
+govulncheck v1.7.0 · shellcheck 0.11.0 · java 24.0.2 Temurin · terraform 1.15.8 ·
+gcc 16.1.0 · clang 22.1.8.  gradle/ktlint/detekt report ABSENT as bare tools, which is
+expected: the Kotlin lane runs through ./gradlew, not a system install.
+
+GO VERSION DIVERGENCE, unresolved: bench 1.26.5 · CI pins 1.25 · go.mod says 1.24. Three
+numbers. The bench compiles and scans with a toolchain CI does not use, which is the exact
+class the parity guard was built for and does not yet cover. (1.26.5 is safe for
+GO-2026-4971, which was reintroduced in 1.26.0 and fixed in 1.26.3.)
 ```
 *A lane is not supported because it is listed. Listing is not support.*
 
@@ -169,3 +212,34 @@ better and caught genuinely real defects; none of that is a product a stranger c
 
 If the answer is "nothing" more than two days running, the machine is building
 itself again. Stop and turn the crank.
+
+---
+
+## REMAINING `[?]`, each with the command that resolves it
+
+```
+Intel Default power limits      read it off the BIOS screen; no WMI class exposes it
+Avira exclusions                the AV is Avira, not Defender. Its exclusion list has never
+                                been read, and a scanner watching C:\Projects is a build-speed
+                                and file-lock question as much as a security one
+Pi Tailscale state              ssh skynet "tailscale status --json"   (blocked: host key)
+Pi NoMachine binding            ssh skynet "ss -ltnp | grep 4000"      (blocked: host key)
+Pi mirror schedule + last run   ssh skynet "systemctl list-timers --all; crontab -l"
+                                ALL THREE need the host key accepted first, once, by hand.
+                                That is a founder action: accepting a host key is a trust
+                                decision and not an agent's to make.
+```
+
+## FINDINGS THIS AUDIT PRODUCED, ranked by what they cost if ignored
+
+```
+1. BIOS 0816 is 1273 days old on an i9-13900KF, predating every Raptor Lake microcode fix
+   for the Vmin Shift degradation. Silicon damage is cumulative and not reversible by a
+   later update. This is the only finding on the page that gets worse while nobody looks.
+2. NoMachine listens on 0.0.0.0:4000 while Tailscale is LOGGED OUT. Remote access is open
+   on every interface and the private network that was supposed to carry it is off.
+3. detekt is configured, has a 16-entry burn-down ledger, and is invoked by nothing.
+4. DONE-2 (RF-001) has no orders, no bench, and nothing written. Half the launch.
+5. Go: bench 1.26.5, CI 1.25, go.mod 1.24. Three numbers where there should be one.
+6. A `lua` CI job guards zero .lua files.
+```
