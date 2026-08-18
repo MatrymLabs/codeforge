@@ -266,7 +266,7 @@ def _write_original_source(root: Path) -> Path:
         encoding="utf-8",
     )
     (package / "core.py").write_text(
-        "\n".join(
+        "\n".join(  # noqa: FLY002
             [
                 "from dataclasses import dataclass",
                 "",
@@ -285,7 +285,7 @@ def _write_original_source(root: Path) -> Path:
         encoding="utf-8",
     )
     (tests / "test_core.py").write_text(
-        "\n".join(
+        "\n".join(  # noqa: FLY002
             [
                 "from proof_workload.core import WorkItem, complete",
                 "",

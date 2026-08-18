@@ -19,8 +19,8 @@ def test_delivers_only_to_matching_type():
     bus = SignalBus()
     pings: list[Ping] = []
     pongs: list[Pong] = []
-    bus.subscribe(Ping, lambda s: pings.append(s))
-    bus.subscribe(Pong, lambda s: pongs.append(s))
+    bus.subscribe(Ping, lambda s: pings.append(s))  # noqa: PLW0108
+    bus.subscribe(Pong, lambda s: pongs.append(s))  # noqa: PLW0108
     bus.publish(Ping(7))
     bus.publish(Pong())
     assert len(pings) == 1

@@ -120,7 +120,7 @@ def admission_concerns(
     for pop in sorted(popular):
         if _edit_distance(canon, pop) == 1:
             return [
-                f"{canon!r} is one edit from the popular package {pop!r}: possible typo-squat or "
+                f"{canon!r} is one edit from the popular package {pop!r}: possible typo-squat or "  # noqa: ISC004
                 f"a hallucinated name. Verify it is the package you mean before trusting it."
             ]
     return []
@@ -173,7 +173,7 @@ def install_hook_concerns(source: str) -> list[str]:
         tree = ast.parse(source)
     except SyntaxError as exc:
         return [
-            f"install script does not parse as Python ({exc.msg}); cannot be screened safely - "
+            f"install script does not parse as Python ({exc.msg}); cannot be screened safely - "  # noqa: ISC004
             f"treat as suspicious"
         ]
     imported: set[str] = set()
@@ -311,7 +311,7 @@ def format_audit(audit: DependencyAudit) -> str:
     verdict = "PASS" if audit.passed else "FAIL"
     lines = [
         "DEPENDENCY GATE - every dependency earns its place (frameless Python)",
-        f"  {len(audit.ok)} justified, {len(audit.unjustified)} unjustified, "
+        f"  {len(audit.ok)} justified, {len(audit.unjustified)} unjustified, "  # noqa: ISC004
         f"{len(audit.stale)} stale  ->  {verdict}",
         "",
     ]
@@ -337,14 +337,14 @@ def render_dependencies(pyproject: Path = _PYPROJECT, ledger: Path = _LEDGER) ->
     return format_audit(audit_dependencies(pyproject, ledger))
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
     `python -m adapters.dependencies screen <name>`: run the name admission screen.
     `... screen-source <path>`: run the behavioral install-hook screen on a setup.py."""
     import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) >= 2 and args[0] == "screen-source":
+    if len(args) >= 2 and args[0] == "screen-source":  # noqa: PLR2004
         try:
             concerns = screen_source(Path(args[1]))
         except OSError as exc:
@@ -360,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
         for concern in concerns:
             print(f"  - {concern}")
         return 1
-    if len(args) >= 2 and args[0] == "screen":
+    if len(args) >= 2 and args[0] == "screen":  # noqa: PLR2004
         try:
             concerns = screen_name(args[1])
         except LedgerError as exc:

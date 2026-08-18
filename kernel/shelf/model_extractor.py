@@ -142,7 +142,7 @@ def _enclosing_setters(tree: ast.Module) -> dict[int, str]:
     return line_owner
 
 
-def analyze(source: str, *, module: str = "") -> ModelReport:
+def analyze(source: str, *, module: str = "") -> ModelReport:  # noqa: PLR0912, PLR0915
     """Extract the data model + state machines of one Python module. Never raises on
     dynamic code; it lowers confidence and records the reason in `unknowns`."""
     try:

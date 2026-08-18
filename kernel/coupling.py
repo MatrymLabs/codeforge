@@ -108,7 +108,7 @@ print(json.dumps(sorted({m.split(".")[1] for m in sys.modules if m.startswith("p
 def _real_tracer(commands: list[str]) -> set[str]:
     """Boot the engine in a fresh interpreter, drive `commands`, return the `parts/*` loaded."""
     # Fixed argv, no shell; used only to trace a boot + commands.
-    result = subprocess.run(  # nosec B603
+    result = subprocess.run(  # nosec B603  # noqa: S603
         [sys.executable, "-c", _TRACE_PROBE, json.dumps(commands)],
         cwd=_ROOT,
         capture_output=True,
@@ -135,7 +135,7 @@ print(json.dumps(sorted({m.split(".")[1] for m in sys.modules if m.startswith("p
 def _real_import_tracer(modules: list[str]) -> set[str]:
     """Boot the engine, then IMPORT `modules` (servers, not command-driven), return `parts/*`."""
     # Fixed argv, no shell; used only to trace a boot + imports.
-    result = subprocess.run(  # nosec B603
+    result = subprocess.run(  # nosec B603  # noqa: S603
         [sys.executable, "-c", _IMPORT_PROBE, json.dumps(modules)],
         cwd=_ROOT,
         capture_output=True,
@@ -239,10 +239,10 @@ def render_report(report: CouplingReport) -> str:
         lines.append(f"  +{surface} adds:                {len(mods)}  ({', '.join(mods)})")
     lines += [
         f"  unreached by the trace:       {len(report.unreached)}  <- detachment CANDIDATES only",
-        f"  server entry points:          {len(report.server_entrypoints)} "
+        f"  server entry points:          {len(report.server_entrypoints)} "  # noqa: ISC004
         f"({', '.join(report.server_entrypoints)}) - needed for multiplayer, not command-traceable",
         "",
-        f"  up to {candidates} of {report.total} modules are detachment candidates "
+        f"  up to {candidates} of {report.total} modules are detachment candidates "  # noqa: ISC004
         "(outside the solo runtime-core).",
         "  NOT a confirmed-safe cut: this is a command-trace closure, so a module reached only on",
         "  an untried path (e.g. db=save, login_guard=auth, terminal=tty) is a FALSE candidate.",
@@ -253,7 +253,7 @@ def render_report(report: CouplingReport) -> str:
     return "\n".join(lines)
 
 
-def coupling(arg: str = "") -> str:
+def coupling(arg: str = "") -> str:  # noqa: ARG001
     """The read-only `coupling` verb: the engine coupling report (detachment D1)."""
     try:
         return render_report(analyze())
@@ -261,7 +261,7 @@ def coupling(arg: str = "") -> str:
         return f"coupling: {exc}"
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`make coupling`: print the read-only engine coupling report."""
     print(coupling())
     return 0

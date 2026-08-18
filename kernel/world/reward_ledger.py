@@ -183,7 +183,7 @@ class GrantLedger:
         if not isinstance(key, str) or not key.strip():
             raise GrantIdentityError(f"key must be a non-empty string, got {key!r}")
         parts = key.split(_KEY_SEPARATOR)
-        if len(parts) == 3 and parts[2].isdigit():
+        if len(parts) == 3 and parts[2].isdigit():  # noqa: PLR2004
             return parts[0], parts[1], int(parts[2])
         return key, self.OPAQUE_SOURCE, 0
 

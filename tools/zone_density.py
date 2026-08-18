@@ -32,7 +32,7 @@ _SEED = BLUEPRINTS_ROOT / "aethryn"
 FLOOR = {"settlements": 2, "dungeons": 1, "quests": 1}
 
 # The quest fields whose values name a room; their stems tie a quest to a zone.
-_ROOM_REF = re.compile(r"(?:on_enter|on_take|on_defeat|on_give|^\s*id):\s*([a-z][a-z0-9_]+)", re.M)
+_ROOM_REF = re.compile(r"(?:on_enter|on_take|on_defeat|on_give|^\s*id):\s*([a-z][a-z0-9_]+)", re.M)  # noqa: FURB167
 
 
 def _load(name: str) -> dict:
@@ -81,7 +81,7 @@ def audit() -> list[dict]:
     }
 
     rows: list[dict] = []
-    for _zid, z in zones.items():
+    for _zid, z in zones.items():  # noqa: PERF102
         name = z["name"]
         hubs = list(z.get("rooms", []))
         setts = _by_zone(settlements, name)

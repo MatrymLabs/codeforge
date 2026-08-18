@@ -220,7 +220,7 @@ def render_artifact(artifact: GeneratedArtifact) -> str:
             f"  commands:     {', '.join(artifact.commands)}",
             f"  files ({len(artifact.files)}): {', '.join(artifact.files)}",
             f"  manifest sha: {artifact.manifest_hash[:16]}...",
-            f"  provenance:   {artifact.provenance.source_id} "
+            f"  provenance:   {artifact.provenance.source_id} "  # noqa: ISC004
             f"(owner: {artifact.provenance.owner}, {artifact.provenance.visibility})",
             f"  path:         {artifact.dest}",
         ]

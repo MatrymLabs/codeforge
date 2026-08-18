@@ -18,7 +18,7 @@ def test_every_live_demo_actually_runs() -> None:
 
 
 def test_report_writer_demo_prints_hello_world() -> None:
-    call, out = _DEMOS["report-writer"]()
+    call, out = _DEMOS["report-writer"]()  # noqa: RUF059
     assert "hello world" in out  # the part wrote it, for real, to a temp file
 
 

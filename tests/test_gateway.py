@@ -10,7 +10,7 @@ import time
 
 import pytest
 
-import adapters.gateway as gateway
+import adapters.gateway as gateway  # noqa: PLR0402
 from adapters.gateway import ForgeGateServer, _GateHandler, _sanitize
 from kernel.shelf.bulkhead import Bulkhead
 from kernel.world import doors, items, npcs
@@ -90,7 +90,7 @@ def _connect_player(srv: ForgeGateServer, who: str | None = None) -> socket.sock
     """Register a fresh character@account and step into the world. Anonymous
     'guest' access was removed -- login is required -- so tests that just need
     a body in the world register one here."""
-    global _acct_seq
+    global _acct_seq  # noqa: PLW0603
     if who is None:
         _acct_seq += 1
         who = f"hero{_acct_seq}"
@@ -1025,7 +1025,7 @@ def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path,
     sock.close()
 
 
-def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_path, monkeypatch):
+def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_path, monkeypatch):  # noqa: PLR0915
     """The first live SeedLab vertical slice: the Master Client's text commands and GMCP panels
     cross a real gateway, and the Seed remains addressable after a fresh gateway reads the same
     file-backed workspace. The source is deliberately tiny, but pytest is a real subprocess run.

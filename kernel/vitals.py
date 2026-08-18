@@ -22,6 +22,6 @@ def _build_registry() -> HealthRegistry:
     return registry
 
 
-def vitals(session: Session, arg: str = "") -> str:
+def vitals(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `vitals` verb: a health panel of the world's subsystems."""
     return _build_registry().report()

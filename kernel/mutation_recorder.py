@@ -99,7 +99,7 @@ def _main(argv: list[str]) -> int:
     path = argv[1] if len(argv) > 1 else DEFAULT_EVIDENCE_PATH
     text = sys.stdin.read()
     try:
-        result = record_cr_report(text, date.today(), path)
+        result = record_cr_report(text, date.today(), path)  # noqa: DTZ011
     except MutationKpiError as exc:
         print(f"mutation-recorder: refused a malformed cr-report: {exc}", file=sys.stderr)
         return 1

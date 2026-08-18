@@ -59,10 +59,10 @@ class StaticOracle:
     def exists(self, name: str) -> bool:
         return name in self.known
 
-    def critical_cve_count(self, name: str, version: str) -> int:
+    def critical_cve_count(self, name: str, version: str) -> int:  # noqa: ARG002
         return self.vulns.get(name, 0)
 
-    def license_of(self, name: str, version: str) -> str:
+    def license_of(self, name: str, version: str) -> str:  # noqa: ARG002
         return self.licenses.get(name, "UNKNOWN")
 
 

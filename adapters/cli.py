@@ -101,27 +101,27 @@ def _pop_seed(args: list[str]) -> str | None:
 Command = Callable[[list[str]], int]
 
 
-def _cmd_seeds(args: list[str]) -> int:
+def _cmd_seeds(args: list[str]) -> int:  # noqa: ARG001
     for name in _seeds_available():
         print(name)
     return 0
 
 
-def _cmd_serve(args: list[str]) -> int:
+def _cmd_serve(args: list[str]) -> int:  # noqa: ARG001
     from adapters.gateway import serve
 
     serve()
     return 0
 
 
-def _cmd_play(args: list[str]) -> int:
+def _cmd_play(args: list[str]) -> int:  # noqa: ARG001
     from forge import game_loop
 
     game_loop()
     return 0
 
 
-def _cmd_onboard(args: list[str]) -> int:
+def _cmd_onboard(args: list[str]) -> int:  # noqa: ARG001
     from kernel.onboarding import drive
 
     drive()  # the Workflow Engine's practical adapter: the same core as the game quest
@@ -129,7 +129,7 @@ def _cmd_onboard(args: list[str]) -> int:
 
 
 def _cmd_grant(args: list[str]) -> int:
-    if len(args) != 3:
+    if len(args) != 3:  # noqa: PLR2004
         print(USAGE)
         return 1
     from kernel.world.characters import set_rank
@@ -139,7 +139,7 @@ def _cmd_grant(args: list[str]) -> int:
 
 
 def _cmd_migrate(args: list[str]) -> int:
-    if len(args) != 3:
+    if len(args) != 3:  # noqa: PLR2004
         print(USAGE)
         return 1
     from kernel.world.accounts import migrate
@@ -148,29 +148,29 @@ def _cmd_migrate(args: list[str]) -> int:
     return 0
 
 
-def _cmd_api(args: list[str]) -> int:
+def _cmd_api(args: list[str]) -> int:  # noqa: ARG001
     import uvicorn
 
     from adapters.api import app
     from kernel.shelf.config import Settings
 
     # Honor $PORT like the web command does; Settings types + validates it.
-    uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)
+    uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)  # noqa: S104
     return 0
 
 
-def _cmd_web(args: list[str]) -> int:
+def _cmd_web(args: list[str]) -> int:  # noqa: ARG001
     import uvicorn
 
     from adapters.web_gateway import app as web_app
     from kernel.shelf.config import Settings
 
     # Hosts (Render/Fly) hand us the port on $PORT; Settings types + validates it.
-    uvicorn.run(web_app, host="0.0.0.0", port=Settings.load().port)
+    uvicorn.run(web_app, host="0.0.0.0", port=Settings.load().port)  # noqa: S104
     return 0
 
 
-def _cmd_migrate_db(args: list[str]) -> int:
+def _cmd_migrate_db(args: list[str]) -> int:  # noqa: ARG001
     from kernel.world.accounts import import_legacy_json
 
     print(import_legacy_json())
@@ -178,7 +178,7 @@ def _cmd_migrate_db(args: list[str]) -> int:
 
 
 def _cmd_passwd(args: list[str]) -> int:
-    if len(args) != 2:
+    if len(args) != 2:  # noqa: PLR2004
         print(USAGE)
         return 1
     import getpass
@@ -198,7 +198,7 @@ def _cmd_passwd(args: list[str]) -> int:
     return 0
 
 
-def _cmd_refactor(args: list[str]) -> int:
+def _cmd_refactor(args: list[str]) -> int:  # noqa: PLR0911
     """Scope-correct, verifier-gated rename of a local/param inside ONE function.
 
     `codeforge refactor <file> <func> <old> <new> [--apply] [--deep] [--samples N]`

@@ -27,7 +27,7 @@ except ImportError:
 
 
 def _words(n: int, length: int, seed: int) -> list[str]:
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # noqa: S311
     letters = "abcdefghijklmnopqrstuvwxyz"
     return ["".join(rng.choice(letters) for _ in range(length)) for _ in range(n)]
 

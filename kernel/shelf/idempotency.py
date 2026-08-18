@@ -30,7 +30,7 @@ class IdempotencyError(ValueError):
     """A malformed idempotency request (empty key or fingerprint): fail loud, store nothing."""
 
 
-class IdempotencyConflict(IdempotencyError):
+class IdempotencyConflict(IdempotencyError):  # noqa: N818
     """The same key was reused for a different request fingerprint: refuse, never return the wrong
     result. The key is the client's promise that two calls are the same call; a changed fingerprint
     breaks that promise."""

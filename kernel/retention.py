@@ -45,7 +45,7 @@ class Hold:
     reason: str
 
     def covers(self, record: Record) -> bool:
-        if self.scope == "all" or self.scope == record.kind:
+        if self.scope == "all" or self.scope == record.kind:  # noqa: PLR1714
             return True
         if self.scope.startswith("subject:"):
             prefix = self.scope.split(":", 1)[1]
@@ -107,7 +107,7 @@ def plan(
     """Partition records into active / hold-blocked / disposition-candidate. Reads only."""
     policy = policy if policy is not None else DEFAULT_POLICY
     holds = holds if holds is not None else []
-    when = today if today is not None else date.today()
+    when = today if today is not None else date.today()  # noqa: DTZ011
     active: list[Record] = []
     blocked: list[tuple[Record, Hold]] = []
     candidates: list[Record] = []
@@ -215,7 +215,7 @@ def load_holds(path: Path | None = None) -> list[Hold]:
     return holds
 
 
-def retention(arg: str = "") -> str:
+def retention(arg: str = "") -> str:  # noqa: ARG001
     """The read-only `retention` verb: the retention doctor over the current Chronicle (R1)."""
     from kernel import chronicle
 
@@ -223,10 +223,10 @@ def retention(arg: str = "") -> str:
         records = chronicle.read()
     except chronicle.ChronicleError as exc:
         return f"The Chronicle failed its integrity check: {exc}"
-    return render_doctor(plan(records, load_policy(), load_holds(), date.today()))
+    return render_doctor(plan(records, load_policy(), load_holds(), date.today()))  # noqa: DTZ011
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`make retention`: print the read-only retention doctor for the current Chronicle."""
     print(retention())
     return 0

@@ -108,12 +108,18 @@ func main() {
 			os.Exit(1)
 		}
 		frame := &pb.Frame{}
-		if err := proto.Unmarshal(raw, frame); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+		if unmarshalErr := proto.Unmarshal(raw, frame); unmarshalErr != nil {
+			fmt.Fprintln(os.Stderr, unmarshalErr)
 			os.Exit(1)
 		}
 		kind, payload := framePayload(frame)
-		out, _ := json.Marshal(map[string]any{"kind": kind, "payload": payload})
+		out, err := json.Marshal(
+			map[string]any{"kind": kind, "payload": payload},
+		)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 		fmt.Println(string(out))
 	default:
 		fmt.Fprintln(os.Stderr, "unknown command:", os.Args[1])

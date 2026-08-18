@@ -154,7 +154,7 @@ def test_room_report_on_an_unknown_location_renders_honestly():
 
 
 def test_room_report_carries_the_area_when_a_zone_owns_the_room(monkeypatch):
-    import kernel.world.zones as zones
+    import kernel.world.zones as zones  # noqa: PLR0402
 
     session = _hero()
     monkeypatch.setattr(
@@ -165,7 +165,7 @@ def test_room_report_carries_the_area_when_a_zone_owns_the_room(monkeypatch):
 
 
 def test_room_report_omits_the_area_for_a_room_in_no_zone(monkeypatch):
-    import kernel.world.zones as zones
+    import kernel.world.zones as zones  # noqa: PLR0402
 
     session = _hero()
     monkeypatch.setattr(zones, "zone_of", lambda room: None)  # a room outside every area

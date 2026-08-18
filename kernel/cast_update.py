@@ -130,8 +130,8 @@ def _resolve_commit(source_root: Path) -> str:
     """The source checkout's short commit via git; 'unknown' if it is not a repo. Never raises."""
     try:
         # Fixed argv, no shell; read-only git query.
-        done = subprocess.run(  # nosec B603 B607
-            ["git", "-C", str(source_root), "rev-parse", "--short", "HEAD"],
+        done = subprocess.run(  # nosec B603 B607  # noqa: S603
+            ["git", "-C", str(source_root), "rev-parse", "--short", "HEAD"],  # noqa: S607
             capture_output=True,
             text=True,
             timeout=10,
@@ -148,13 +148,13 @@ def _commit_present(source_root: Path, commit: str) -> bool:
         return False
     try:
         # Fixed argv, no shell; read-only existence check.
-        done = subprocess.run(  # nosec B603 B607
-            ["git", "-C", str(source_root), "cat-file", "-e", f"{commit}^{{commit}}"],
+        done = subprocess.run(  # nosec B603 B607  # noqa: S603
+            ["git", "-C", str(source_root), "cat-file", "-e", f"{commit}^{{commit}}"],  # noqa: S607
             capture_output=True,
             timeout=10,
             check=False,
         )
-        return done.returncode == 0
+        return done.returncode == 0  # noqa: TRY300
     except (OSError, subprocess.SubprocessError):
         return False
 
@@ -163,13 +163,13 @@ def _read_at_commit(source_root: Path, commit: str, relpath: str) -> bytes | Non
     """The bytes of <relpath> at <commit> via `git show`, or None if absent. Never raises."""
     try:
         # Fixed argv, no shell; read-only blob read.
-        done = subprocess.run(  # nosec B603 B607
-            ["git", "-C", str(source_root), "show", f"{commit}:{relpath}"],
+        done = subprocess.run(  # nosec B603 B607  # noqa: S603
+            ["git", "-C", str(source_root), "show", f"{commit}:{relpath}"],  # noqa: S607
             capture_output=True,
             timeout=10,
             check=False,
         )
-        return done.stdout if done.returncode == 0 else None
+        return done.stdout if done.returncode == 0 else None  # noqa: TRY300
     except (OSError, subprocess.SubprocessError):
         return None
 
@@ -361,8 +361,8 @@ def _pip_audit_runner(requirements: list[str]) -> str:
         reqfile = handle.name
     try:
         # Fixed argv, no shell; read-only dependency audit.
-        done = subprocess.run(  # nosec B603 B607
-            ["pip-audit", "-r", reqfile, "-f", "json"],
+        done = subprocess.run(  # nosec B603 B607  # noqa: S603
+            ["pip-audit", "-r", reqfile, "-f", "json"],  # noqa: S607
             capture_output=True,
             text=True,
             timeout=120,
@@ -370,7 +370,7 @@ def _pip_audit_runner(requirements: list[str]) -> str:
         )
         return done.stdout
     finally:
-        os.unlink(reqfile)
+        os.unlink(reqfile)  # noqa: PTH108
 
 
 def audit_requirements(requirements: list[str], *, runner=_pip_audit_runner) -> list[str]:
@@ -433,7 +433,7 @@ def _restore_engine(cast_dir: Path, backup: Path) -> None:
     shutil.copy2(backup / "forge.py", cast_dir / "forge.py")
 
 
-def _apply_update(
+def _apply_update(  # noqa: PLR0912
     cast_dir: Path,
     source_root: Path,
     drift: CastDrift,

@@ -29,7 +29,7 @@ class DeadlineError(ValueError):
     """A deadline was built with an invalid budget. Fails loud at construction."""
 
 
-class DeadlineExceeded(Exception):
+class DeadlineExceeded(Exception):  # noqa: N818
     """The budget is spent. Raised by `check()` so a caller can stop loud, not poll-and-branch."""
 
 

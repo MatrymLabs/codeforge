@@ -35,7 +35,7 @@ def town_files(directory: Path | None = None) -> list[Path]:
 def _load(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise BlueprintError(f"Authored town file not found: {path}")
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
         raise BlueprintError(f"Authored town file is not a mapping: {path}")
     for section in ("rooms", "hub", "npcs", "items"):

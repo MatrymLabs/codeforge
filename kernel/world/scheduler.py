@@ -40,7 +40,7 @@ def run_due(now_beat: int) -> int:
     A one-shot is removed; a recurring job re-arms for now_beat + its interval. A job that raises is
     dropped (a broken job never wedges the clock or crashes the tick)."""
     fired = 0
-    for job in list(_JOBS):
+    for job in list(_JOBS):  # noqa: PERF101
         if job.due > now_beat:
             continue
         try:

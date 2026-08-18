@@ -26,7 +26,7 @@ class ContractError(ValueError):
     """Raised when a contract or field is declared malformed."""
 
 
-class ContractViolation(AssertionError):
+class ContractViolation(AssertionError):  # noqa: N818
     """Raised by check() when a sample does not satisfy a contract (test-facing)."""
 
 

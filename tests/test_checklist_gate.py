@@ -96,7 +96,7 @@ def verify_ok(checklist, attestations) -> bool:
 
     try:
         verify(checklist, attestations)
-        return True
+        return True  # noqa: TRY300
     except GateBlocked:
         return False
 

@@ -49,10 +49,10 @@ def _zone_coverage(rooms: dict) -> dict:
     unzoned = sorted(set(rooms) - zoned)
     gaps: list[str] = []
     lvl = 1
-    while lvl <= 300:
+    while lvl <= 300:  # noqa: PLR2004
         if not covered[lvl]:
             start = lvl
-            while lvl <= 300 and not covered[lvl]:
+            while lvl <= 300 and not covered[lvl]:  # noqa: PLR2004
                 lvl += 1
             gaps.append(f"{start}-{lvl - 1}")
         else:

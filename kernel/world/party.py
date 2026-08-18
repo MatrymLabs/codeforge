@@ -72,7 +72,7 @@ def _here(player_id: str, room: str) -> bool:
     return session is not None and session.location == room
 
 
-def invite(actor: str, target_name: str) -> str:
+def invite(actor: str, target_name: str) -> str:  # noqa: PLR0911
     """Offer `target_name` a place in the actor's band (forming one, with the actor as leader, if
     they run alone). Fails loud (a returned message) on a self-invite, an offline target, a target
     already banded, or a full party."""

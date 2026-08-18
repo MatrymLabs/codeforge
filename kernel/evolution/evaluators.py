@@ -50,7 +50,7 @@ def evaluate_correctness(
     for args in inputs:
         try:
             got = fn(*args)
-        except Exception as exc:  # a candidate that raises is a correctness failure, not a crash
+        except Exception as exc:  # a candidate that raises is a correctness failure, not a crash  # noqa: BLE001, E501
             mismatches.append(f"call{args!r} raised {type(exc).__name__}: {exc}")
             continue
         want = oracle(*args)

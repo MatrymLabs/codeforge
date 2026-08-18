@@ -51,7 +51,7 @@ def _slug(text: str) -> str:
 def _is_number(value: str) -> bool:
     try:
         float(value)
-        return True
+        return True  # noqa: TRY300
     except (TypeError, ValueError):
         return False
 

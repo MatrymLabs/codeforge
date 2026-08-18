@@ -1,0 +1,14 @@
+# ShellCheck optional checks. The main branch carries the four checks below; this branch also
+# retains require-variable-braces because its six ritual/CVE scripts were repaired for SC2250.
+# Keeping the rule active prevents the repaired source from regressing.
+enable=add-default-case
+enable=require-variable-braces
+enable=quote-safe-variables
+enable=check-unassigned-uppercase
+enable=deprecate-which
+severity=style
+external-sources=true
+
+# Follow `source`d files so cross-file problems are visible. SC1091 stays excluded in the Makefile
+# invocation: it reports that the linter could not open a sourced file, never that the script is
+# wrong, and .venv/bin/activate exists on a bench and not in CI.

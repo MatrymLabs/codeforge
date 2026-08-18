@@ -101,7 +101,7 @@ def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
 
 
 def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
-    from kernel.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
+    from kernel.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session  # noqa: I001
     from kernel.world.job_progress import JobProgress
     from kernel.world.jobs import JOBS, bind_calling
     from kernel.world.session import Session

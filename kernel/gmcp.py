@@ -109,7 +109,7 @@ def _find_gmcp_sb(data: bytes) -> int | None:
     return None
 
 
-def read_gmcp_package(data: bytes) -> tuple[str, object] | None:
+def read_gmcp_package(data: bytes) -> tuple[str, object] | None:  # noqa: PLR0911
     """Read one inbound GMCP data package from raw client bytes: the inverse of `gmcp_frame`.
 
     Scans for a complete `IAC SB GMCP <package> <json> IAC SE` subnegotiation, un-escapes doubled

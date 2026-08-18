@@ -82,7 +82,7 @@ def test_returns_none_on_timeout_and_does_not_hang(tmp_path: Path) -> None:
         max_mutants: int,
     ) -> None:
         calls.append((workdir, config, per_mutant_timeout, whole_run_budget, max_mutants))
-        return None
+        return None  # noqa: PLR1711, RET501
 
     scorer = CosmicRayMutationScorer(
         runner=timed_out, per_mutant_timeout_seconds=0.01, whole_run_budget_seconds=120.0

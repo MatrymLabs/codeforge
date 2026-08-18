@@ -121,7 +121,7 @@ def _base_names(cls: ast.ClassDef) -> list[str]:
     return out
 
 
-def analyze(source: str, *, module: str = "") -> Model:
+def analyze(source: str, *, module: str = "") -> Model:  # noqa: PLR0912
     """Extract the intermediate model of one Python module. Never raises on dynamic code;
     it lowers confidence and records the reason in `unknowns`."""
     try:

@@ -8,7 +8,7 @@ def test_a_placed_order_fans_out_to_handlers():
     notifier = Notifier()
     seen: list[OrderPlaced] = []
     receipts: list[str] = []
-    notifier.on_order(lambda e: seen.append(e))
+    notifier.on_order(lambda e: seen.append(e))  # noqa: PLW0108
     notifier.on_order(lambda e: receipts.append(f"receipt for {e.order_id}"))
     notifier.place("A-1", 42.0)
     assert len(seen) == 1

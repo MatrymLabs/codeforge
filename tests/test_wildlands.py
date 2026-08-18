@@ -42,7 +42,7 @@ def _world_with(cfg):
 
 
 def test_region_expands_and_is_fully_reachable_from_the_attach_room():
-    world, rooms, npcs = _world_with(_CFG)
+    world, rooms, npcs = _world_with(_CFG)  # noqa: RUF059
     # BFS from the attach room reaches every generated room -- no orphans, no dead clouds.
     seen, q = {"anchor"}, deque(["anchor"])
     while q:
@@ -70,7 +70,7 @@ def test_branches_never_overwrite_the_trail_spine():
     # Regression: with the trail running `east`, a branch must not also leave `east` (it would
     # overwrite the spine and orphan the rooms ahead). Every trail room keeps its forward link.
     _, rooms, _ = _world_with(_CFG)
-    L = _CFG["trail_length"]
+    L = _CFG["trail_length"]  # noqa: N806
     for i in range(1, L):  # t1..t(L-1) must each keep an east link to the next trail room
         room = rooms[f"probe_wild_t{i}"]
         assert room["exits"].get("east") == f"probe_wild_t{i + 1}", f"t{i} lost its spine"
@@ -169,7 +169,7 @@ def test_regions_can_chain_off_earlier_generated_rooms():
     The chained region is fully reachable and its attach exit is reciprocal with the trail-head."""
     a = dict(_CFG, id="wa", attach="anchor", attach_dir="east", trail_length=10)
     b = dict(_CFG, id="wb", attach="wa_t5", attach_dir="north", trail_length=10)
-    rooms, npcs = generate_wildlands([a, b], {"anchor"})
+    rooms, npcs = generate_wildlands([a, b], {"anchor"})  # noqa: RUF059
     world = {"anchor": {"name": "A", "desc": "d", "exits": {}}}
     world.update(rooms)
     wire_attach_exits(world, [a, b])

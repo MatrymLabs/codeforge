@@ -26,14 +26,14 @@ _indexed_len: int = -1
 
 
 def _ensure_room_index() -> None:
-    global _indexed_len
+    global _indexed_len  # noqa: PLW0602
     if _indexed_len == len(NPCS):
         return
     _rebuild_room_index()
 
 
 def _rebuild_room_index() -> None:
-    global _indexed_len
+    global _indexed_len  # noqa: PLW0603
     _by_room.clear()
     for nid, npc in NPCS.items():
         _by_room.setdefault(npc["location"], []).append(nid)
@@ -45,7 +45,7 @@ def reindex_npcs() -> None:
     never changes membership, so it never needs this; call it only after mutating NPCS *in place*
     (adding, removing, or REPLACING an npc at an existing label) -- e.g. in a test -- because a
     same-size replacement is invisible to the automatic size check in _ensure_room_index."""
-    global _indexed_len
+    global _indexed_len  # noqa: PLW0603
     _indexed_len = -1
 
 

@@ -136,7 +136,7 @@ class WorldSizing:
         """The storage estimate in the largest sensible unit (KB/MB/GB/TB), one decimal place."""
         size = float(self.storage_bytes)
         for unit in ("B", "KB", "MB", "GB", "TB"):
-            if size < 1024.0 or unit == "TB":
+            if size < 1024.0 or unit == "TB":  # noqa: PLR2004
                 return f"{size:.1f} {unit}"
             size /= 1024.0
         return f"{size:.1f} TB"  # unreachable; the loop always returns

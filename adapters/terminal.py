@@ -32,7 +32,7 @@ _BAR = "+" + "=" * (_WIDTH - 2) + "+"
 
 def _sticky_note() -> str:
     """A post-it stuck to the corner of the screen: the few commands to drive the terminal."""
-    return "\n".join(
+    return "\n".join(  # noqa: FLY002
         [
             "        __________________________________",
             "       / STICKY NOTE  (how to drive me)   /|",
@@ -48,7 +48,7 @@ def _sticky_note() -> str:
     )
 
 
-def _run(name: str) -> str:
+def _run(name: str) -> str:  # noqa: PLR0911
     """Dispatch one program to its existing renderer (lazy imports avoid a load-time web)."""
     if name == "functions":
         from kernel.functions import render_functions

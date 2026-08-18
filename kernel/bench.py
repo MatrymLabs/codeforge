@@ -50,7 +50,9 @@ def benchmark(
     if not rotation:
         raise BenchError("rotation must name at least one command")
 
-    from forge import handle_command  # lazy: the tick is the top, parts do not import it eagerly
+    from forge import (
+        handle_command,
+    )  # lazy: the tick is the top, parts do not import it eagerly
     from kernel.world.session import Session
 
     session = Session(player_id="_bench")
@@ -88,7 +90,7 @@ def render_bench(result: BenchResult) -> str:
             f"  commands   : {', '.join(result.commands)}",
             f"  samples    : {result.samples:,}",
             f"  throughput : {result.throughput_per_s:,.0f} commands/sec",
-            f"  latency    : median {result.median_us:.1f}us  p95 {result.p95_us:.1f}us  "
+            f"  latency    : median {result.median_us:.1f}us  p95 {result.p95_us:.1f}us  "  # noqa: ISC004
             f"p99 {result.p99_us:.1f}us  max {result.max_us:.1f}us",
             "",
             "  Renders never mutate state (architecture law 1), so the rotation is repeatable.",
@@ -108,7 +110,7 @@ def write_bench_report(
     )
 
 
-def bench(arg: str = "") -> str:
+def bench(arg: str = "") -> str:  # noqa: ARG001
     """The in-game / terminal `bench`: a quick, responsive run (small sample)."""
     return render_bench(benchmark(iterations=5_000, warmup=200))
 

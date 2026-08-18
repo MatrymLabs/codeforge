@@ -176,6 +176,6 @@ def parse_cr_rate(text: str) -> float:
         pct = float(token)
     except ValueError as exc:
         raise MutationKpiError(f"cr-rate output not a number: {text!r}") from exc
-    if not 0.0 <= pct <= 100.0:
+    if not 0.0 <= pct <= 100.0:  # noqa: PLR2004
         raise MutationKpiError(f"cr-rate survival percent out of range: {pct}")
     return pct / 100.0

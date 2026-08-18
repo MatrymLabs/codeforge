@@ -17,6 +17,7 @@ from collections.abc import Iterator
 
 import pytest
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session as SqlSession
 from sqlalchemy.pool import StaticPool
 
@@ -45,7 +46,7 @@ _SEED = [
 ]
 
 
-def _seed_session(rows: list[tuple[str, int, int, str, int]]) -> SqlSession:
+def _seed_session(rows: list[tuple[str, int, int, str, int]]) -> tuple[SqlSession, Engine]:
     # A private in-memory SQLite; StaticPool keeps the one connection (and its schema) for the test.
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
@@ -57,14 +58,17 @@ def _seed_session(rows: list[tuple[str, int, int, str, int]]) -> SqlSession:
         for (n, lvl, xp, loc, c) in rows
     )
     session.commit()
-    return session
+    return session, engine
 
 
 @pytest.fixture
 def session() -> Iterator[SqlSession]:
-    s = _seed_session(_SEED)
-    yield s
-    s.close()
+    s, engine = _seed_session(_SEED)
+    try:
+        yield s
+    finally:
+        s.close()
+        engine.dispose()
 
 
 def test_read_rows_loads_every_character(session):
@@ -105,7 +109,7 @@ def test_wealth_sql_equals_the_python_reference(session):
 
 
 def test_an_empty_archive_is_handled_by_both_sides():
-    session = _seed_session([])
+    session, engine = _seed_session([])
     try:
         assert leaderboard_sql(session) == leaderboard_py([]) == []
         assert population_sql(session) == population_py([]) == []
@@ -114,6 +118,7 @@ def test_an_empty_archive_is_handled_by_both_sides():
         assert empty.mean == 0.0  # no divide-by-zero on an empty treasury
     finally:
         session.close()
+        engine.dispose()
 
 
 # --- portability: the same window-function SQL on real PostgreSQL ------------------------------

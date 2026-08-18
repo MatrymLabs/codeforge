@@ -159,7 +159,7 @@ def _git_tracked(root: Path) -> list[str] | None:
     if git is None:
         return None
     try:
-        done = subprocess.run(  # nosec B603 -- fixed argv, shell=False, read-only
+        done = subprocess.run(  # nosec B603 -- fixed argv, shell=False, read-only  # noqa: S603
             [git, "-C", str(root), "ls-files", "-z"],
             capture_output=True,
             text=True,

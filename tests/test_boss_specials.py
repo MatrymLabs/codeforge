@@ -196,7 +196,7 @@ def test_special_rejects_a_non_positive_mult(tmp_path):
     from kernel.world.seed import BlueprintError
 
     load = _load(tmp_path, "b:\n  location: a\n  hp: 10\n  special: {mult: 0}\n")
-    with pytest.raises(BlueprintError, match="special.mult"):
+    with pytest.raises(BlueprintError, match="special.mult"):  # noqa: RUF043
         load()
 
 

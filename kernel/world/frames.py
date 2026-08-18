@@ -15,7 +15,7 @@ State stays canonical; a Frame is a projection request, never a mutation.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, is_dataclass
-from typing import Any
+from typing import Any, cast
 
 from kernel.world.session import display_name
 
@@ -49,9 +49,13 @@ def register_frame(cls: type[Frame]) -> type[Frame]:
 def to_wire(frame: Frame) -> dict[str, Any]:
     """Serialise a frame to a JSON-safe dict for the bus. A non-dataclass or unregistered frame
     fails loud rather than crossing the wire half-formed."""
-    if not is_dataclass(frame) or type(frame).__name__ not in _WIRE_REGISTRY:
-        raise ValueError(f"frame {type(frame).__name__} is not registered for the wire")
-    return {"type": type(frame).__name__, "fields": asdict(frame)}
+    frame_type = type(frame)
+    dataclass_frame = is_dataclass(frame)
+    if not dataclass_frame:
+        raise ValueError(f"frame {frame_type.__name__} is not registered for the wire")
+    if frame_type.__name__ not in _WIRE_REGISTRY:
+        raise ValueError(f"frame {frame_type.__name__} is not registered for the wire")
+    return {"type": frame_type.__name__, "fields": asdict(cast(Any, frame))}
 
 
 def from_wire(payload: dict[str, Any]) -> Frame:
@@ -62,7 +66,7 @@ def from_wire(payload: dict[str, Any]) -> Frame:
         raise ValueError(f"unknown frame type {payload.get('type')!r}")
     fields = payload.get("fields")
     if not isinstance(fields, dict):
-        raise ValueError("frame wire payload missing its fields")
+        raise ValueError("frame wire payload missing its fields")  # noqa: TRY004
     return cls(**fields)
 
 
@@ -80,7 +84,7 @@ class SpeechFrame(Frame):
         if not self.words.strip():
             raise ValueError("SpeechFrame needs non-empty words")
 
-    def render_for(self, viewer_id: str) -> str:
+    def render_for(self, viewer_id: str) -> str:  # noqa: ARG002
         # The per-recipient seam: today every bystander sees the same third-person
         # line, but the projection now happens HERE, at delivery, so a viewer's own
         # perspective (name, tense, locale) can diverge later without touching the
@@ -112,7 +116,7 @@ class StrikeFrame(Frame):
         if self.amount <= 0:
             raise ValueError("StrikeFrame amount must be a positive blow")
 
-    def render_for(self, viewer_id: str) -> str:
+    def render_for(self, viewer_id: str) -> str:  # noqa: ARG002
         # Same seam as SpeechFrame: one third-person line today, per-viewer later.
         return (
             f"{self.attacker_name} {self.verb} at {display_name(self.target_id)} for {self.amount}."

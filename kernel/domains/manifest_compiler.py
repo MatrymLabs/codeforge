@@ -63,9 +63,9 @@ class AethrynRegionProfile:
             raise ManifestCompilerError("an Aethryn region needs an id and display name")
         if not self.biome.strip():
             raise ManifestCompilerError("an Aethryn region needs a biome")
-        if not 1 <= self.level_min <= self.level_max <= 300:
+        if not 1 <= self.level_min <= self.level_max <= 300:  # noqa: PLR2004
             raise ManifestCompilerError("an Aethryn region level band must be within 1-300")
-        if self.base_width < 8 or self.base_height < 8:
+        if self.base_width < 8 or self.base_height < 8:  # noqa: PLR2004
             raise ManifestCompilerError(
                 "an Aethryn region profile needs a base size of at least 8x8"
             )

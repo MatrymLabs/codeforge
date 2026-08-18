@@ -34,7 +34,7 @@ OnRetry = Callable[["Attempt"], None]
 
 # Default source of backoff jitter. Not security-sensitive (it spreads retries in time to avoid a
 # thundering herd), so a plain Random is right; callers inject a seeded one for deterministic tests.
-_JITTER_RNG = random.Random()  # nosec B311 -- backoff jitter, not a security decision
+_JITTER_RNG = random.Random()  # nosec B311 -- backoff jitter, not a security decision  # noqa: S311
 
 
 class RetryError(ValueError):

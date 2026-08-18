@@ -22,7 +22,7 @@ def _write(tmp_path: Path, text: str) -> Path:
 
 
 def _bump_mtime(path: Path) -> None:
-    st = os.stat(path)
+    st = os.stat(path)  # noqa: PTH116
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
 
 

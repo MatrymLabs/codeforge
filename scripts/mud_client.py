@@ -46,7 +46,7 @@ def _mask_feed(buffer: bytearray, data: bytes) -> tuple[bytes, bytes | None]:
             if buffer:
                 buffer.pop()
                 echo += b"\b \b"  # rub out one mask character
-        elif byte >= 0x20:
+        elif byte >= 0x20:  # noqa: PLR2004
             buffer.append(byte)
             echo += b"*"
         # other control characters are ignored
@@ -144,7 +144,7 @@ def _pump_from_server(chunk: bytes, out: int, echo_on, echo_off, leftover: bytes
 
 def main(argv: list[str]) -> int:
     host = argv[1] if len(argv) > 1 else "127.0.0.1"
-    port = int(argv[2]) if len(argv) > 2 else 4000
+    port = int(argv[2]) if len(argv) > 2 else 4000  # noqa: PLR2004
 
     stdin_fd = sys.stdin.fileno()
     saved = None

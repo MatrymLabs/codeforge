@@ -14,7 +14,7 @@ from kernel.hubble import autonomy as a
 
 class MaxAllowed(unittest.TestCase):
     def test_no_triggers_allows_executor(self):
-        mode, reasons = a.max_allowed(set())
+        mode, reasons = a.max_allowed(set())  # noqa: RUF059
         self.assertEqual(mode, a.EXECUTOR)
 
     def test_security_sensitive_caps_at_reviewer(self):

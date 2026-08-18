@@ -52,7 +52,7 @@ def _career_line() -> SystemFrame:
             f"{c.get('missing', 0)} missing (gaps tracked honestly)",
             gating=False,
         )
-    except Exception as exc:  # pragma: no cover - defensive; a broken board shouldn't crash inspect
+    except Exception as exc:  # pragma: no cover - defensive; a broken board shouldn't crash inspect  # noqa: BLE001, E501
         return SystemFrame("career board", YELLOW, f"unavailable: {exc}", gating=False)
 
 
@@ -62,7 +62,7 @@ def _pioneer_line() -> SystemFrame:
 
         n = len(list(_EXPERIMENTS.glob("*.md"))) if _EXPERIMENTS.is_dir() else 0
         return SystemFrame("pioneer mode", GREEN, f"{n} experiment(s) filed", gating=False)
-    except Exception as exc:  # pragma: no cover
+    except Exception as exc:  # pragma: no cover  # noqa: BLE001
         return SystemFrame("pioneer mode", YELLOW, f"unavailable: {exc}", gating=False)
 
 

@@ -78,7 +78,7 @@ def evaluate(
     """
     if threshold_us <= 0:
         raise SloError(f"threshold_us must be > 0, got {threshold_us}")
-    if not 0.0 < objective_pct < 100.0:
+    if not 0.0 < objective_pct < 100.0:  # noqa: PLR2004
         raise SloError(f"objective_pct must be in (0, 100), got {objective_pct}")
 
     budget_pct = 100.0 - objective_pct
@@ -137,7 +137,7 @@ def render(v: SloVerdict) -> str:
         return "\n".join(
             [
                 f"SLO - {v.sli_name}: NO DATA",
-                f"  objective  : >= {v.objective_pct:g}% of runs with median <= "
+                f"  objective  : >= {v.objective_pct:g}% of runs with median <= "  # noqa: ISC004
                 f"{v.threshold_us:g}us",
                 "  No SLI points are recorded yet; run `make trend` to file a measured run.",
                 "  (Absence reads as no-data, never a false pass.)",
@@ -165,7 +165,7 @@ def render(v: SloVerdict) -> str:
     return "\n".join(lines)
 
 
-def slo(arg: str = "") -> str:
+def slo(arg: str = "") -> str:  # noqa: ARG001
     """The read-only `slo` verb: evaluate the engine-tick SLI against its objective + error budget.
 
     Reads only. A tampered ledger surfaces its integrity failure honestly (via the Chronicle)

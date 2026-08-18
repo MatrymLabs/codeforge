@@ -53,7 +53,7 @@ def test_grant_spills_over_allies_and_rivals():
 
 def test_a_negative_grant_lowers_standing_and_flips_the_spillover():
     s = _hero()
-    allies, rivals = relations_of("making")
+    allies, rivals = relations_of("making")  # noqa: RUF059
     reputation.grant(s, "making", -100)
     assert reputation.standing_of(s, "making") == -100
     for rival in rivals:

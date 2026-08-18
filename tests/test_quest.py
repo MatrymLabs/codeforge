@@ -342,7 +342,7 @@ def test_grant_rep_effect_earns_standing_with_an_order():
 def test_register_then_unregister_round_trips():
     """A dynamically-registered quest fires while loaded, and is fully gone after unload: no route,
     no run, no registry entry -- so a persistent world can swap regions in and out cleanly."""
-    from kernel.world.quest import on_event, register_specs, save_state, unregister_specs
+    from kernel.world.quest import on_event, register_specs, save_state, unregister_specs  # noqa: I001
     from kernel.world.session import Session
 
     spec = {

@@ -16,7 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 
-class OutOfRange(ValueError):
+class OutOfRange(ValueError):  # noqa: N818
     """A read ran past the end of the source. Raised, never truncated.
 
     A short read is the dangerous failure: sixteen bytes requested, nine returned, and the decoder

@@ -78,7 +78,7 @@ def decode_cursor(token: str, *, key: bytes | None = None) -> Boundary:
             raise CursorError("unexpected signature on an unsigned cursor")
         payload = _b64url_decode(parts[0])
     else:
-        if len(parts) != 2:
+        if len(parts) != 2:  # noqa: PLR2004
             raise CursorError("signed cursor must be '<payload>.<sig>'")
         payload = _b64url_decode(parts[0])
         given = _b64url_decode(parts[1])
@@ -88,7 +88,7 @@ def decode_cursor(token: str, *, key: bytes | None = None) -> Boundary:
         decoded = json.loads(payload)
     except (json.JSONDecodeError, ValueError) as exc:
         raise CursorError("malformed cursor payload") from exc
-    if not isinstance(decoded, list) or len(decoded) != 2:
+    if not isinstance(decoded, list) or len(decoded) != 2:  # noqa: PLR2004
         raise CursorError("cursor payload must be [sort_value, tiebreaker]")
     return decoded[0], decoded[1]
 

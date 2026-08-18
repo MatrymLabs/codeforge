@@ -348,7 +348,7 @@ def test_a_raid_without_tier_boss_is_rejected_at_load(tmp_path):
         "impostor:\n  location: courtyard\n  hp: 30\n  atk: 5\n  level: 10\n"
         "  tier: elite\n  raid: true\n"
     )
-    with pytest.raises(BlueprintError, match="raid.*must be tier 'boss'"):
+    with pytest.raises(BlueprintError, match="raid.*must be tier 'boss'"):  # noqa: RUF043
         load_npcs(bad)
 
 
@@ -662,7 +662,7 @@ def test_an_aggressive_wanderer_is_rejected_at_load(tmp_path):
     bad.write_text(
         "beast:\n  location: cell\n  hp: 10\n  atk: 5\n  aggressive: true\n  wander: true\n"
     )
-    with pytest.raises(BlueprintError, match="wander.*peaceful|peaceful"):
+    with pytest.raises(BlueprintError, match="wander.*peaceful|peaceful"):  # noqa: RUF043
         load_npcs(bad)
 
 

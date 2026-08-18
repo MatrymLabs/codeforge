@@ -201,7 +201,7 @@ async def _world_loop(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
 
 @app.websocket("/ws")
 async def play(ws: WebSocket) -> None:
-    global _web_seats
+    global _web_seats  # noqa: PLW0603
     if _web_seats >= MAX_CONNECTIONS:
         await ws.accept()
         await ws.send_text("The forge is full right now. Try again shortly.")
@@ -265,7 +265,7 @@ async def engine_2d(ws: WebSocket) -> None:
             raise WireRefused("REFUSED: invalid JSON") from exc
         message = decode_wire(payload)
         if message["type"] != "hello":
-            raise WireRefused("REFUSED: hello is required before other messages")
+            raise WireRefused("REFUSED: hello is required before other messages")  # noqa: TRY301
         await ws.send_json(encode_wire(hello(session=message["session"])))
     except WireRefused as exc:
         await ws.send_json(encode_wire(refused(reason=str(exc))))

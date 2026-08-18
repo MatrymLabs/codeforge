@@ -27,11 +27,11 @@ class RepositoryError(Exception):
     """Base for repository lookup errors."""
 
 
-class DuplicateKey(RepositoryError):
+class DuplicateKey(RepositoryError):  # noqa: N818
     """Tried to add an entity whose key is already present."""
 
 
-class NotFound(RepositoryError):
+class NotFound(RepositoryError):  # noqa: N818
     """No entity exists for the requested key."""
 
 

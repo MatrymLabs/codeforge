@@ -31,7 +31,7 @@ def _routes(settlements: list[dict[str, Any]]) -> list[tuple[dict[str, Any], dic
     so every town consigns exactly one parcel to a distinct, level-adjacent neighbour."""
     ordered = sorted(settlements, key=lambda s: (int(s.get("level", 1)), str(s["room"])))
     n = len(ordered)
-    if n < 2:
+    if n < 2:  # noqa: PLR2004
         return []
     return [(ordered[i], ordered[(i + 1) % n]) for i in range(n)]
 

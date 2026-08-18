@@ -159,7 +159,7 @@ class SeamVerdict:
 
     def render(self) -> str:
         lines = [
-            f"Engine seam :: {self.commands_compared} comparison(s) across "
+            f"Engine seam :: {self.commands_compared} comparison(s) across "  # noqa: ISC004
             f"{len(self.aspects_covered)} aspect(s), "
             f"{len(self.falsifiable)} of them falsifiable"
         ]
@@ -180,12 +180,12 @@ def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
 
     return [
         ("inventory", "carry_limit", lambda e: e.carry_limit()),
-        ("inventory", "purse_renders", lambda e: coinage.purse(7)),
-        ("inventory", "module_is_position_free", lambda e: "location" not in dir(items)),
-        ("progression", "xp_for_level", lambda e: progression.cumulative_xp_for_level(5)),
-        ("progression", "jp_for_level", lambda e: progression.cumulative_jp_for_level(3)),
-        ("progression", "calling_gate", lambda e: callings.gate_calling("cleric", {}, {}).open),
-        ("permission", "rank_denies_admin", lambda e: _denies_admin(e)),
+        ("inventory", "purse_renders", lambda e: coinage.purse(7)),  # noqa: ARG005
+        ("inventory", "module_is_position_free", lambda e: "location" not in dir(items)),  # noqa: ARG005
+        ("progression", "xp_for_level", lambda e: progression.cumulative_xp_for_level(5)),  # noqa: ARG005
+        ("progression", "jp_for_level", lambda e: progression.cumulative_jp_for_level(3)),  # noqa: ARG005
+        ("progression", "calling_gate", lambda e: callings.gate_calling("cleric", {}, {}).open),  # noqa: ARG005
+        ("permission", "rank_denies_admin", lambda e: _denies_admin(e)),  # noqa: PLW0108
         (
             "permission",
             "player_denies_teleport",
@@ -196,14 +196,14 @@ def _battery_for_seed(seed: str) -> list[tuple[str, str, object]]:
             "wizard_denies_grant",
             lambda e: _permission_denial(e, "wizard", "@grant probe owner"),
         ),
-        ("permission", "workshop_barrier_denies_wizard", lambda e: _workshop_denial(e)),
+        ("permission", "workshop_barrier_denies_wizard", lambda e: _workshop_denial(e)),  # noqa: PLW0108
         ("movement", "go_north", lambda e: _movement(e, seed, "north")),
         ("movement", "go_south", lambda e: _movement(e, seed, "south")),
         ("movement", "go_east", lambda e: _movement(e, seed, "east")),
         ("movement", "go_down", lambda e: _movement(e, seed, "down")),
-        ("persistence", "grant_key_shape", lambda e: _grant_key()),
-        ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),
-        ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),
+        ("persistence", "grant_key_shape", lambda e: _grant_key()),  # noqa: ARG005
+        ("persistence", "save_restore_casefile", lambda e: _save_restore(e)),  # noqa: PLW0108
+        ("persistence", "gameplay_save_preserves_auth", lambda e: _gameplay_save()),  # noqa: ARG005
         ("coverage", "all_overlay_rooms", lambda e: _room_coverage(e, seed)),
     ]
 
@@ -378,10 +378,10 @@ def _saboteurs(seed: str = "first-forge") -> list[Engine]:
             def __init__(self) -> None:
                 super().__init__(saboteur_overlay)
 
-            def room_of(self, position: object) -> str:
+            def room_of(self, position: object) -> str:  # noqa: ARG002
                 return room
 
-            def place(self, target: str) -> ChunkPosition:
+            def place(self, target: str) -> ChunkPosition:  # noqa: ARG002
                 return super().place(room)
 
         return WrongRoom()
@@ -506,7 +506,9 @@ def run_differential(
         # dominant defect of this Workshop reproduced inside the instrument built to catch it.
         try:
             a, b = probe(left), probe(right)  # type: ignore[operator]
-        except Exception as exc:  # a probe that cannot run is UNMEASURED, never agreement
+        except (
+            Exception  # noqa: BLE001
+        ) as exc:  # a probe that cannot run is UNMEASURED, never agreement
             unmeasured.append(f"{aspect}/{name}: {type(exc).__name__}: {exc}")
             continue
         compared += 1

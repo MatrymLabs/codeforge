@@ -91,7 +91,7 @@ def test_flagship_template_that_stops_pouring_aethryn_is_refused(tmp_path: Path)
 
     class _Plan:
         verdict = "ready"
-        warnings: list[str] = []
+        warnings: list[str] = []  # noqa: RUF012
         manifest = _Manifest()
 
     with pytest.raises(CastError, match="must pour 'aethryn'"):
@@ -107,7 +107,7 @@ def test_flagship_template_that_stops_pouring_aethryn_is_refused(tmp_path: Path)
 def test_a_blocked_plan_is_refused_before_pouring(tmp_path: Path) -> None:
     class _Plan:
         verdict = "blocked"
-        warnings = ["seed pack not installed"]
+        warnings = ["seed pack not installed"]  # noqa: RUF012
         manifest = type("M", (), {"starter_seed_pack": AETHRYN_SEED})()
 
     with pytest.raises(CastError, match="BLOCKED"):

@@ -95,7 +95,7 @@ def _called_names(func: ast.AST) -> tuple[set[str], set[str], list[str]]:
     return bare, attrs, dynamic
 
 
-def analyze(source: str, *, module: str = "", hotspot_count: int = 5) -> CallGraphReport:
+def analyze(source: str, *, module: str = "", hotspot_count: int = 5) -> CallGraphReport:  # noqa: PLR0912
     """Reverse-engineer the internal call graph of one module. Never raises on dynamic
     dispatch; it lowers confidence and records where it cannot see the callee."""
     try:
@@ -142,18 +142,18 @@ def analyze(source: str, *, module: str = "", hotspot_count: int = 5) -> CallGra
     }
     attr_referenced: set[str] = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)}
 
-    in_deg = {q: 0 for q in defs}
-    out_deg = {q: 0 for q in defs}
+    in_deg = {q: 0 for q in defs}  # noqa: C420
+    out_deg = {q: 0 for q in defs}  # noqa: C420
     for _caller, callee in edges:
         in_deg[callee] += 1
     for caller in defs:
         out_deg[caller] = len({d for c, d in edges if c == caller})
 
     def is_public(q: str) -> bool:
-        return not q.split(".")[-1].startswith("_")
+        return not q.split(".")[-1].startswith("_")  # noqa: PLC0207
 
     def is_dunder(q: str) -> bool:
-        simple = q.split(".")[-1]
+        simple = q.split(".")[-1]  # noqa: PLC0207
         return simple.startswith("__") and simple.endswith("__")
 
     callables = tuple(
@@ -163,7 +163,7 @@ def analyze(source: str, *, module: str = "", hotspot_count: int = 5) -> CallGra
 
     def is_referenced(q: str) -> bool:
         """The callable's name appears somewhere beyond a resolved internal call edge."""
-        simple = q.split(".")[-1]
+        simple = q.split(".")[-1]  # noqa: PLC0207
         return simple in referenced or simple in attr_referenced
 
     entrypoints = tuple(sorted(q for q in defs if in_deg[q] == 0 and is_public(q)))

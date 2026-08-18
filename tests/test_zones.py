@@ -6,8 +6,8 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 
 import pytest
 
-import kernel.world.seed as seed  # reference BlueprintError via module: other suites reload it
-import kernel.world.zones as zones  # a class imported at collection must not match world.seed
+import kernel.world.seed as seed  # reference BlueprintError via module: other suites reload it  # noqa: E501, PLR0402
+import kernel.world.zones as zones  # a class imported at collection must not match world.seed  # noqa: E501, PLR0402
 from forge import handle_command
 from kernel.world import items
 from kernel.world.seed import BLUEPRINTS_ROOT, Item, Zone, load_rooms, load_zones
@@ -156,7 +156,7 @@ def test_shipped_aethryn_zones_cover_the_full_level_1_to_300_progression():
 # --- grouping queries -------------------------------------------------------------------
 def _install(monkeypatch, zmap: dict[str, Zone]) -> None:
     monkeypatch.setattr(zones, "ZONES", zmap)
-    monkeypatch.setattr(zones, "_beats", {label: 0 for label in zmap})
+    monkeypatch.setattr(zones, "_beats", {label: 0 for label in zmap})  # noqa: C420
 
 
 def test_zone_of_and_area_line(monkeypatch):
@@ -476,7 +476,7 @@ def _seasonal_wanderer(seasons: list[str]) -> Item:
 
 
 def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
-    import kernel.world.climate as climate
+    import kernel.world.climate as climate  # noqa: PLR0402
 
     _wander_world(monkeypatch, _seasonal_wanderer(["winter"]))
     monkeypatch.setattr(climate, "_beat", 0)  # beat 0 -> spring (not winter)
@@ -491,7 +491,7 @@ def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
 
 
 def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
-    import kernel.world.climate as climate
+    import kernel.world.climate as climate  # noqa: PLR0402
 
     _wander_world(monkeypatch, _wanderer())  # no seasons -> unconditional
     monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH)  # summer

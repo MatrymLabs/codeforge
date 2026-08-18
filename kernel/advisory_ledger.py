@@ -99,7 +99,7 @@ def load(path: Path | str) -> Store:
         return {}
     states: Store = {}
     for lineno, line in enumerate(p.read_text("utf-8").splitlines(), 1):
-        line = line.strip()
+        line = line.strip()  # noqa: PLW2901
         if not line:
             continue
         try:

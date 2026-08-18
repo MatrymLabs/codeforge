@@ -31,7 +31,7 @@ _VALIDATOR = Validator(
 )
 
 
-def name_check(session: Session, arg: str = "") -> str:
+def name_check(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `namecheck` verb: report whether a proposed name is valid, and why not if it isn't."""
     name = arg.strip().lower()
     result = _VALIDATOR.check({"name": name})

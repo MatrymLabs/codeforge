@@ -10,14 +10,14 @@
 set -uo pipefail   # deliberately NOT -e: run every check, then summarize the gate.
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$HERE/.." && pwd)"
-cd "$ROOT" || exit 1
+ROOT="$(cd "${HERE}/.." && pwd)"
+cd "${ROOT}" || exit 1
 # shellcheck source=scripts/lib.sh
-source "$HERE/lib.sh"
+source "${HERE}/lib.sh"
 [ -f ".venv/bin/activate" ] && source .venv/bin/activate
 
 printf '\n%b=== R I T U A L  ·  F A S T ===%b   %b~1s preflight (read-only)%b\n\n' \
-  "$BOLD" "$OFF" "$DIM" "$OFF"
+  "${BOLD}" "${OFF}" "${DIM}" "${OFF}"
 
 # Counters are named to NOT collide with the RED/YELLOW colour vars from lib.sh.
 BLOCKERS=0
@@ -28,7 +28,7 @@ spark_line "Imports -- compile the engine (fail fast before anything heavy)..."
 if python -c "import forge, parts.registry, parts.gateway, parts.commands" 2>/tmp/rfast-imports.log; then
   ok "Engine imports clean."
 else
-  printf '%b' "$DIM"; tail -5 /tmp/rfast-imports.log; printf '%b' "$OFF"
+  printf '%b' "${DIM}"; tail -5 /tmp/rfast-imports.log; printf '%b' "${OFF}"
   warn "Import/compile FAILED -- do not enter until fixed."
   BLOCKERS=$((BLOCKERS + 1))
 fi
@@ -52,22 +52,22 @@ if make truth >/dev/null 2>&1; then ok "Claims verified (VeritasGate)."; else wa
 spark_line "Workspace -- git state (informational)..."
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
 DIRTY="$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
-ok "On '$BRANCH' -- $DIRTY uncommitted file(s)."
+ok "On '${BRANCH}' -- ${DIRTY} uncommitted file(s)."
 
 # --- THE GATE -----------------------------------------------------------------
 echo ""
-if [ "$BLOCKERS" -gt 0 ]; then
+if [ "${BLOCKERS}" -gt 0 ]; then
   printf '%b⛔ RED -- do not enter the MUD coding session (%s blocker(s)). Fix, then rerun.%b\n\n' \
-    "$RED" "$BLOCKERS" "$OFF"
+    "${RED}" "${BLOCKERS}" "${OFF}"
   exit 1
-elif [ "$WARNINGS" -gt 0 ]; then
+elif [ "${WARNINGS}" -gt 0 ]; then
   # shellcheck disable=SC2016  # backticks here are MARKDOWN in user-facing output, not command substitution
   printf '%b🟡 YELLOW -- safe to code, with %s warning(s). Run `make ritual` before a push.%b\n\n' \
-    "$YELLOW" "$WARNINGS" "$OFF"
+    "${YELLOW}" "${WARNINGS}" "${OFF}"
   exit 0
 else
   # shellcheck disable=SC2016  # backticks here are MARKDOWN in user-facing output, not command substitution
   printf '%b🟢 GREEN -- safe to enter and code. Run `make ritual` / `-deep` before a push or demo.%b\n\n' \
-    "$GREEN" "$OFF"
+    "${GREEN}" "${OFF}"
   exit 0
 fi

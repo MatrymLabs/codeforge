@@ -48,7 +48,7 @@ def report_path(
     Creates the category dir if absent. `stamp` defaults to today (injectable for tests)."""
     base = (root or _ROOT) / "reports" / _clean_category(category)
     base.mkdir(parents=True, exist_ok=True)
-    tag = stamp or date.today().isoformat()
+    tag = stamp or date.today().isoformat()  # noqa: DTZ011
     name = f"{tag}-{slug}.md" if slug else f"{tag}.md"
     return base / name
 

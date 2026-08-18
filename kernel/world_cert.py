@@ -23,6 +23,6 @@ def _certify() -> EvidenceLedger:
     return ledger
 
 
-def certify(session: Session, arg: str = "") -> str:
+def certify(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `certify` verb: an honest readiness certificate for the current world."""
     return _certify().report()

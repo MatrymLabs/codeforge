@@ -135,7 +135,7 @@ def run_edge(listen: tuple[str, int], backend: tuple[str, int]) -> None:  # prag
     if binary is not None:
         # The exec target is our own resolved in-tree binary (native/edge), not untrusted input;
         # the args are the operator's chosen listen/backend addresses.
-        os.execv(  # nosec B606
+        os.execv(  # nosec B606  # noqa: S606
             str(binary),
             [
                 str(binary),

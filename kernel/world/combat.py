@@ -41,13 +41,13 @@ from kernel.world.session import Session, display_name, sentence_case
 
 # Loot-only randomness. A defeated foe's WEIGHTED loot table rolls here. A module-level RNG so tests
 # seed or replace it for exact draws.
-_LOOT_RNG = random.Random()  # nosec B311
+_LOOT_RNG = random.Random()  # nosec B311  # noqa: S311
 
 # Combat variance -- the ONE die on a blow. Damage MATH stays deterministic; this rolls whether a
 # blow whiffs, glances, crits, or lands normally. The test suite installs a NEUTRAL RNG (always a
 # normal hit, note below) so exact-number assertions hold; variance tests force an outcome. Live
 # play is stochastic -- fights breathe instead of reading off a table.
-_COMBAT_RNG = random.Random()  # nosec B311
+_COMBAT_RNG = random.Random()  # nosec B311  # noqa: S311
 
 MISS_CHANCE = 0.05  # a blow goes wide: 0 damage
 CRIT_CHANCE = 0.10  # a critical strike: CRIT_MULT times damage
@@ -266,7 +266,9 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     real, reversible stakes: scattered coins, battered gear (K2), and XP progress toward the next
     level (K5) -- but NEVER a level: the hero keeps every level they earned."""
     from kernel.world.progression_awards import apply_xp_debt
-    from kernel.world.world import START_ROOM  # lazy: world binds seed state at import
+    from kernel.world.world import (
+        START_ROOM,
+    )  # lazy: world binds seed state at import
 
     lost = _death_toll(session)
     battered = _death_gear_toll(session)  # K2: a real death batters your gear (mend it)
@@ -286,7 +288,7 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     )
 
 
-def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
+def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:  # noqa: PLR0912, PLR0915
     """One NPC blow against the player: damage, room broadcast (typed StrikeFrame),
     the Engineer's Emergency Repair reaction, and the training-ground failsafe. `verb`
     is the opening phrase ('strikes back', 'lunges') so a counter and an unprovoked
@@ -583,7 +585,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     return (True, rewards)
 
 
-def attack(session: Session, word: str) -> str:
+def attack(session: Session, word: str) -> str:  # noqa: PLR0911
     """One strike of the training loop."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you pick a fight."

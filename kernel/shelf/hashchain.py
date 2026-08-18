@@ -155,7 +155,7 @@ def verify(path: Path) -> bool:
     """True if the ledger reads clean end to end, False if the chain is broken or a line is bad."""
     try:
         read(path)
-        return True
+        return True  # noqa: TRY300
     except HashChainError:
         return False
 

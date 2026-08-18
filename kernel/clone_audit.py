@@ -157,7 +157,7 @@ def scan_paths(paths: Iterable[Path], *, min_statements: int = 3) -> CloneReport
 def render(report: CloneReport) -> str:
     """A human summary: the clone families, ranked, with the caveat attached."""
     lines = [
-        f"clone audit: {len(report.families)} clone families across "
+        f"clone audit: {len(report.families)} clone families across "  # noqa: ISC004
         f"{report.functions_scanned} functions in {report.files_scanned} files"
     ]
     for fam in report.families:

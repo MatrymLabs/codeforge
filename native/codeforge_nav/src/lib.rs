@@ -1,6 +1,6 @@
-//! codeforge_nav -- a native world-navigation kernel for CodeForge (Rust via PyO3).
+//! `codeforge_nav` -- a native world-navigation kernel for `CodeForge` (Rust via `PyO3`).
 //!
-//! CodeForge's world is a directed graph: rooms are nodes, exits are edges. Python builds and owns
+//! `CodeForge`'s world is a directed graph: rooms are nodes, exits are edges. Python builds and owns
 //! that world; this crate answers the *spatial* questions fast -- the shortest path between two
 //! rooms, and reachability (how much of a million-room world is connected from a point). It is the
 //! first organ of the polyglot "assimilation" build: Rust used exactly where memory-safe systems
@@ -11,6 +11,7 @@
 //! flat `Vec<Vec<u32>>`. The graph is built once from the world's edges and then queried many
 //! times, so the FFI cost (marshalling the edge list) is paid a single time, not per query.
 
+use pyo3::exceptions::PyOverflowError;
 use pyo3::prelude::*;
 use std::collections::{HashMap, VecDeque};
 
@@ -26,15 +27,17 @@ pub struct NavGraph {
 }
 
 impl NavGraph {
-    fn intern(&mut self, label: &str) -> u32 {
+    fn intern(&mut self, label: &str) -> PyResult<u32> {
         if let Some(&id) = self.ids.get(label) {
-            return id;
+            return Ok(id);
         }
-        let id = self.labels.len() as u32;
+        let id = u32::try_from(self.labels.len()).map_err(|_| {
+            PyOverflowError::new_err("navigation graph exceeds u32 room-id capacity")
+        })?;
         self.ids.insert(label.to_string(), id);
         self.labels.push(label.to_string());
         self.adj.push(Vec::new());
-        id
+        Ok(id)
     }
 
     /// Breadth-first shortest path (fewest exits) from `src` to `dst`; interned path, inclusive.
@@ -95,23 +98,24 @@ impl NavGraph {
 impl NavGraph {
     /// Build a directed graph from `(from_label, to_label)` exit edges. Unknown labels are interned
     /// on the fly, so the caller need not pre-declare nodes.
+    #[allow(clippy::needless_pass_by_value)] // PyO3 extracts constructor arguments by value; borrowing changes the Python API.
     #[new]
-    fn new(edges: Vec<(String, String)>) -> Self {
-        let mut graph = NavGraph {
+    fn new(edges: Vec<(String, String)>) -> PyResult<Self> {
+        let mut graph = Self {
             ids: HashMap::new(),
             labels: Vec::new(),
             adj: Vec::new(),
         };
         for (from, to) in &edges {
-            let a = graph.intern(from);
-            let b = graph.intern(to);
+            let a = graph.intern(from)?;
+            let b = graph.intern(to)?;
             graph.adj[a as usize].push(b);
         }
-        graph
+        Ok(graph)
     }
 
     /// Number of distinct rooms in the graph.
-    fn node_count(&self) -> usize {
+    const fn node_count(&self) -> usize {
         self.labels.len()
     }
 
@@ -119,8 +123,8 @@ impl NavGraph {
     /// ends; `None` if either room is unknown or `dst` is unreachable from `src`.
     fn path(&self, src: &str, dst: &str) -> Option<Vec<String>> {
         let source = *self.ids.get(src)?;
-        let dest = *self.ids.get(dst)?;
-        let hops = self.bfs_path(source, dest)?;
+        let destination = *self.ids.get(dst)?;
+        let hops = self.bfs_path(source, destination)?;
         Some(
             hops.into_iter()
                 .map(|i| self.labels[i as usize].clone())
@@ -156,7 +160,7 @@ fn codeforge_nav(m: &Bound<'_, PyModule>) -> PyResult<()> {
 mod tests {
     use super::*;
 
-    fn diamond() -> NavGraph {
+    fn diamond() -> PyResult<NavGraph> {
         // a -> b -> d, a -> c -> d ; plus a direct a -> d for the shortest path
         NavGraph::new(vec![
             ("a".into(), "b".into()),
@@ -168,32 +172,36 @@ mod tests {
     }
 
     #[test]
-    fn path_is_the_fewest_hops() {
-        let g = diamond();
+    fn path_is_the_fewest_hops() -> PyResult<()> {
+        let g = diamond()?;
         assert_eq!(g.path("a", "d"), Some(vec!["a".into(), "d".into()]));
         assert_eq!(g.distance("a", "d"), Some(1));
         assert_eq!(g.distance("a", "a"), Some(0));
+        Ok(())
     }
 
     #[test]
-    fn edges_are_directed() {
-        let g = NavGraph::new(vec![("a".into(), "b".into())]);
+    fn edges_are_directed() -> PyResult<()> {
+        let g = NavGraph::new(vec![("a".into(), "b".into())])?;
         assert_eq!(g.path("a", "b"), Some(vec!["a".into(), "b".into()]));
         assert_eq!(g.path("b", "a"), None); // no reverse edge
+        Ok(())
     }
 
     #[test]
-    fn unknown_rooms_are_none() {
-        let g = diamond();
+    fn unknown_rooms_are_none() -> PyResult<()> {
+        let g = diamond()?;
         assert_eq!(g.path("a", "zzz"), None);
         assert_eq!(g.reachable_count("zzz"), None);
+        Ok(())
     }
 
     #[test]
-    fn reachability_counts_the_component() {
-        let g = diamond();
+    fn reachability_counts_the_component() -> PyResult<()> {
+        let g = diamond()?;
         assert_eq!(g.node_count(), 4);
         assert_eq!(g.reachable_count("a"), Some(4)); // all of a,b,c,d
         assert_eq!(g.reachable_count("d"), Some(1)); // a sink reaches only itself
+        Ok(())
     }
 }

@@ -60,7 +60,7 @@ def _demo_validated_loader() -> tuple[str, str]:
         )  # duplicate key
         try:
             load_rooms(bad)
-            return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")
+            return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")  # noqa: TRY300
         except (BlueprintError, Exception) as exc:  # noqa: BLE001 - the point is it refuses, loudly
             kind = type(exc).__name__
             return ("load_rooms(<duplicate-key yaml>)", f"{kind} -- refuses a bad row (fails loud)")
@@ -92,7 +92,7 @@ def _demo_safe_runner() -> tuple[str, str]:
 
     try:
         run("rm -rf /")  # not on the allowlist
-        return ("run('rm -rf /')", "ran (unexpected -- allowlist bypass!)")
+        return ("run('rm -rf /')", "ran (unexpected -- allowlist bypass!)")  # noqa: TRY300
     except CommandRefused:
         sample = ", ".join(sorted(ALLOWLIST)[:3])
         return ("run('rm -rf /')", f"CommandRefused -- never ran (allowlist: {sample}, ...)")
@@ -162,7 +162,9 @@ def render_functions() -> str:
                 lines.append(f"  [runs]   {part.id:<18} {call}")
                 lines.append(f"           -> {out}")
                 ran += 1
-            except Exception as exc:  # a part whose demo breaks must surface, never hide
+            except (
+                Exception  # noqa: BLE001
+            ) as exc:  # a part whose demo breaks must surface, never hide
                 lines.append(f"  [BROKEN] {part.id:<18} demo raised: {exc}")
         else:
             twin = _test_twin(part.id, part.source)
@@ -178,6 +180,6 @@ def render_functions() -> str:
     return "\n".join(lines)
 
 
-def functions(arg: str = "") -> str:
+def functions(arg: str = "") -> str:  # noqa: ARG001
     """The `functions` command: the Hardware Store functions check."""
     return render_functions()

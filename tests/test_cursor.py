@@ -156,7 +156,7 @@ class Paginate(unittest.TestCase):
         page1 = self._page(data, 3)  # ids 1,2,3
         # insert a row that sorts before the boundary (earlier timestamp)
         inserted = Row(created="2026-08-01T00:00:00", id=999)
-        grown = sorted(data + [inserted], key=lambda r: (r.created, r.id))
+        grown = sorted(data + [inserted], key=lambda r: (r.created, r.id))  # noqa: RUF005
         page2 = self._page(grown, 3, after=page1.next_cursor)
         # boundary was id=3 @ ...:02; page 2 continues strictly after it
         self.assertEqual([r.id for r in page2.items], [4, 5, 6])

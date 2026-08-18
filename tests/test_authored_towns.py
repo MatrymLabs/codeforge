@@ -585,7 +585,7 @@ def test_an_exit_to_a_foreign_room_fails_loud(tmp_path: Path):
 
 def test_a_resident_outside_the_town_fails_loud(tmp_path: Path):
     body = _BASE.replace("location: harbor_market}}\nitems", "location: elsewhere}}\nitems")
-    with pytest.raises(BlueprintError, match="npc .*not a town room"):
+    with pytest.raises(BlueprintError, match="npc .*not a town room"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -594,7 +594,7 @@ def test_an_item_outside_the_town_fails_loud(tmp_path: Path):
         "{name: k, keywords: [k], location: harbor_market}",
         "{name: k, keywords: [k], location: elsewhere}",
     )
-    with pytest.raises(BlueprintError, match="item .*not a town room"):
+    with pytest.raises(BlueprintError, match="item .*not a town room"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -617,7 +617,7 @@ def test_an_npc_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: W, keywords: [w], location: harbor_market}", "{name: W, location: harbor_market}"
     )
-    with pytest.raises(BlueprintError, match="npc .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="npc .*needs a name and keywords"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 
@@ -625,7 +625,7 @@ def test_an_item_missing_keywords_fails_loud(tmp_path: Path):
     body = _BASE.replace(
         "{name: k, keywords: [k], location: harbor_market}", "{name: k, location: harbor_market}"
     )
-    with pytest.raises(BlueprintError, match="item .*needs a name and keywords"):
+    with pytest.raises(BlueprintError, match="item .*needs a name and keywords"):  # noqa: RUF043
         towns.raise_town(_write(tmp_path, body))
 
 

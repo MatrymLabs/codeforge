@@ -135,7 +135,7 @@ def test_real_engine_2d_passes_the_non_spatial_battery() -> None:
 
 def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> None:
     verdict = run_differential(seed=TRIVIAL_SEED, two_d=Engine2D())
-    probes = {aspect: 0 for aspect in verdict.aspects_covered}
+    probes = {aspect: 0 for aspect in verdict.aspects_covered}  # noqa: C420
     for aspect, _, _ in __import__("kernel.engine_seam", fromlist=["_battery"])._battery():
         probes[aspect] = probes.get(aspect, 0) + 1
     assert all(
@@ -223,7 +223,7 @@ def test_a_divergence_names_what_differed_and_under_which_engine() -> None:
 
 
 @pytest.mark.parametrize("aspect", ["inventory", "progression", "permission", "persistence"])
-def test_the_battery_actually_exercises_every_aspect_C1_names(aspect: str) -> None:
+def test_the_battery_actually_exercises_every_aspect_C1_names(aspect: str) -> None:  # noqa: N802
     """C1 names four aspects by name. A battery missing one silently proves less than it claims."""
     verdict = run_differential(seed=TRIVIAL_SEED)
     assert aspect in verdict.aspects_covered, (
@@ -231,7 +231,7 @@ def test_the_battery_actually_exercises_every_aspect_C1_names(aspect: str) -> No
     )
 
 
-def test_an_aspect_with_no_MEASURED_probe_is_not_reported_as_covered() -> None:
+def test_an_aspect_with_no_MEASURED_probe_is_not_reported_as_covered() -> None:  # noqa: N802
     """The hole this instrument had, closed.
 
     Three probes were bound to APIs that did not exist. They were correctly recorded as unmeasured,
@@ -261,13 +261,13 @@ def test_an_aspect_with_no_MEASURED_probe_is_not_reported_as_covered() -> None:
     assert verdict.unmeasured, "the failure must still be reported, never hidden"
 
 
-def test_a_battery_that_measures_nothing_is_INCONCLUSIVE_not_AGREED() -> None:
+def test_a_battery_that_measures_nothing_is_INCONCLUSIVE_not_AGREED() -> None:  # noqa: N802
     """UNVERIFIED is not PASS, applied to this instrument before anyone can round it up."""
     import kernel.engine_seam as seam
 
     original = seam._battery
     try:
-        seam._battery = lambda: []
+        seam._battery = lambda: []  # noqa: PIE807
         assert seam.run_differential().verdict == "INCONCLUSIVE"
     finally:
         seam._battery = original

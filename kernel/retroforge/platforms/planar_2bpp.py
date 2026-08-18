@@ -37,7 +37,7 @@ TILE_WIDTH = 8
 TILE_HEIGHT = 8
 
 
-class InvalidCartridgeHeader(ValueError):
+class InvalidCartridgeHeader(ValueError):  # noqa: N818
     """The source does not carry a valid 16-byte cartridge header."""
 
 
@@ -84,7 +84,7 @@ class HeaderedCartridgeModule:
 
     def detect(self, source: ByteSource) -> float:
         """Return full confidence only for data carrying the format signature."""
-        if len(source) < 4:
+        if len(source) < 4:  # noqa: PLR2004
             return 0.0
         return 1.0 if source.read(0, 4) == FORMAT_SIGNATURE else 0.0
 

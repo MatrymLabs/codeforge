@@ -189,7 +189,7 @@ def analyze_repo(modules: dict[str, str], *, package: str = "", hub_count: int =
     for src, dst in edges:
         adj[src].add(dst)
     fan_out = {m: len(adj[m]) for m in internal}
-    fan_in = {m: 0 for m in internal}
+    fan_in = {m: 0 for m in internal}  # noqa: C420
     for _src, dst in edges:
         fan_in[dst] += 1
 

@@ -99,7 +99,7 @@ def _ledger_path(root: Path | None) -> Path:
     return base / CHRONICLE_DIR / LEDGER_FILE
 
 
-def _validate_payload(kind: str, payload: object, where: str) -> None:
+def _validate_payload(kind: str, payload: object, where: str) -> None:  # noqa: PLR0912
     """Fail loud if a payload is not the shape its kind requires (checked on append AND on read)."""
     if not isinstance(payload, dict):
         raise ChronicleError(f"{where}: payload must be an object, got {type(payload).__name__}")
@@ -517,7 +517,7 @@ def render(records: list[Record]) -> str:
     return "\n".join(lines)
 
 
-def chronicle(arg: str = "") -> str:
+def chronicle(arg: str = "") -> str:  # noqa: PLR0911
     """The read-only `chronicle` verb: show the ship's filed memory.
 
     - `chronicle`                 all records, newest first
@@ -557,23 +557,23 @@ def chronicle(arg: str = "") -> str:
         return f"The Chronicle failed its integrity check: {exc}"
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """CLI: `python -m kernel.chronicle trend <name>` (render) or `record-metric <name> <value>
     <commit>` (append a point). Used by `make trend`; recording is a deliberate, evidenced act."""
     import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) >= 2 and args[0] == "trend":
+    if len(args) >= 2 and args[0] == "trend":  # noqa: PLR2004
         print(render_trend(args[1], trend(args[1])))
         return 0
-    if len(args) >= 2 and args[0] == "provenance":
+    if len(args) >= 2 and args[0] == "provenance":  # noqa: PLR2004
         print(render_provenance(args[1], provenance(args[1])))
         return 0
-    if len(args) >= 4 and args[0] == "record-metric":
+    if len(args) >= 4 and args[0] == "record-metric":  # noqa: PLR2004
         rec = record_metric(args[1], float(args[2]), commit=args[3])
         print(f"  recorded {rec.payload['name']}={rec.payload['value']} @ {rec.commit} (chronicle)")
         return 0
-    if len(args) >= 5 and args[0] == "record-edge":
+    if len(args) >= 5 and args[0] == "record-edge":  # noqa: PLR2004
         edge = record_edge(args[1], args[2], args[3], commit=args[4])
         p = edge.payload
         print(f"  recorded {p['from']} -{p['relation']}-> {p['to']} @ {edge.commit} (chronicle)")
@@ -589,13 +589,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if (
         # record-counterexample <source> <commit> <signature...>
-        len(args) >= 4 and args[0] == "record-counterexample"
+        len(args) >= 4 and args[0] == "record-counterexample"  # noqa: PLR2004
     ):
         ce = record_counterexample(args[1], " ".join(args[3:]), commit=args[2])
         print(f"  recorded counterexample [{ce.payload['source']}] {ce.payload['signature']}")
         return 0
     if (
-        len(args) >= 4 and args[0] == "record-incident"
+        len(args) >= 4 and args[0] == "record-incident"  # noqa: PLR2004
     ):  # record-incident <severity> <commit> <what...>
         inc = record_incident(" ".join(args[3:]), args[1], commit=args[2])
         print(f"  recorded incident [{inc.payload['severity']}] {inc.payload['what']} (chronicle)")

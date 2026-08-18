@@ -8,10 +8,10 @@ import os
 
 os.environ.setdefault("FORGE_SEED", "aethryn")
 
-from kernel.world.campaign import load_campaign, report  # noqa: E402
-from kernel.world.quest import all_ids  # noqa: E402
-from kernel.world.seed import BLUEPRINT_DIR, load_zones  # noqa: E402
-from kernel.world.world import NPCS, WORLD, _dungeons, _settlements  # noqa: E402
+from kernel.world.campaign import load_campaign, report  # noqa: E402, RUF100
+from kernel.world.quest import all_ids  # noqa: E402, RUF100
+from kernel.world.seed import BLUEPRINT_DIR, load_zones  # noqa: E402, RUF100
+from kernel.world.world import NPCS, WORLD, _dungeons, _settlements  # noqa: E402, RUF100
 
 
 def main() -> int:

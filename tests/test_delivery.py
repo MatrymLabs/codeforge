@@ -22,7 +22,7 @@ _TOWNS = [
 
 
 def test_one_delivery_per_town_to_its_level_neighbour():
-    specs, parcels = generate_deliveries(_TOWNS)
+    specs, parcels = generate_deliveries(_TOWNS)  # noqa: RUF059
     assert len(specs) == len(_TOWNS) and all(is_delivery(s["id"]) for s in specs)
     # sorted by level: greenhold(1) -> elderwatch(5) -> moltenhold(120) -> greenhold (wrap)
     routes = {s["id"]: s["name"] for s in specs}
@@ -31,7 +31,7 @@ def test_one_delivery_per_town_to_its_level_neighbour():
 
 
 def test_the_arc_is_take_then_arrive_with_the_reward_on_delivery():
-    specs, parcels = generate_deliveries(_TOWNS)
+    specs, parcels = generate_deliveries(_TOWNS)  # noqa: RUF059
     spec = next(s for s in specs if s["id"] == f"{DELIVERY_PREFIX}greenhold")
     take, deliver = spec["steps"]
     assert take["on_take"] == f"{PARCEL_PREFIX}greenhold", "beat 1 picks up the source's parcel"

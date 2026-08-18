@@ -132,7 +132,7 @@ def _server_version() -> str:
 
 
 def _next_player_id() -> str:
-    global _counter
+    global _counter  # noqa: PLW0603
     with _counter_lock:
         _counter += 1
         return f"player{_counter}"
@@ -276,7 +276,7 @@ def _read_message(reader: _ByteReader, max_bytes: int) -> tuple[bytes, bool]:
         # no newline, it is a standalone out-of-band package -- return it now, not at the next line.
         if (
             chunk == bytes([SE])
-            and len(buf) >= 2
+            and len(buf) >= 2  # noqa: PLR2004
             and buf[-2] == IAC
             and read_gmcp_package(bytes(buf)) is not None
         ):
@@ -679,7 +679,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self._send(response)  # a fixable password: nudge, then re-ask in place
         return response
 
-    def _front_desk(self, session: Session) -> bool:
+    def _front_desk(self, session: Session) -> bool:  # noqa: PLR0911, PLR0912
         """The classic connection ritual: authenticate BEFORE the world.
         The dialogue assembles login/register commands for the engine
         tick -- UX out here, but the tick stays the only door."""
@@ -740,7 +740,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         except BulkheadFull:
             self._send("The forge is full right now. Try again shortly.")
 
-    def _serve_player(self) -> None:
+    def _serve_player(self) -> None:  # noqa: PLR0912, PLR0915
         player_id = _next_player_id()
         session = Session(player_id=player_id)
         entered = False
@@ -820,7 +820,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             _LOG.info("connection_close", player=session.player_id, entered=entered)
 
 
-def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
+def serve(host: str = "0.0.0.0", port: int = 4000) -> None:  # noqa: S104
     # Power-on check: refuse to serve on a database whose columns are behind the models, rather
     # than crash the first login on `no such column`. Read-only; it names the fix, never migrates.
     from kernel.world.schema_guard import SchemaError, require_current_schema

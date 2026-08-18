@@ -154,7 +154,7 @@ def test_membership_write_does_not_invalidate_the_gameplay_integrity_scope():
 def test_the_character_doors_run_on_an_injected_store():
     """load_character / put_record / save_character / set_rank over a pure in-memory store, and the
     merge-save law holds through the public doors too: a save never wipes a stored password."""
-    from kernel.world.characters import load_character, put_record, save_character, set_rank
+    from kernel.world.characters import load_character, put_record, save_character, set_rank  # noqa: I001
     from kernel.world.session import Session
 
     mem = InMemoryCharacterStore()

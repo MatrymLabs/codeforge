@@ -22,7 +22,7 @@ class Resource:
             raise ValueError("Resource name must be a non-empty string")
         for label, value in (("current", self.current), ("maximum", self.maximum)):
             if not isinstance(value, int) or isinstance(value, bool):
-                raise ValueError(f"{label} must be an integer")
+                raise ValueError(f"{label} must be an integer")  # noqa: TRY004
         if self.maximum < 0:
             raise ValueError(f"maximum ({self.maximum}) cannot be negative")
         if not (0 <= self.current <= self.maximum):
@@ -49,6 +49,6 @@ class Resource:
     @staticmethod
     def _check_amount(amount: int) -> None:
         if not isinstance(amount, int) or isinstance(amount, bool):
-            raise ValueError("amount must be an integer")
+            raise ValueError("amount must be an integer")  # noqa: TRY004
         if amount < 0:
             raise ValueError(f"amount ({amount}) cannot be negative")

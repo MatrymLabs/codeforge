@@ -54,7 +54,7 @@ class CliAcceptanceCase:
     expected_exit: int = 0
 
 
-def cli_acceptance_tests(model: ProjectModel, cases: Sequence[CliAcceptanceCase]) -> TargetFiles:
+def cli_acceptance_tests(model: ProjectModel, cases: Sequence[CliAcceptanceCase]) -> TargetFiles:  # noqa: ARG001
     """Emit spec-derived tests (NOT self-affirming): one per case, each asserting the CLI's real
     stdout and exit code via capsys. Fails loud on no cases -- an empty suite is a vacuous pass."""
     if not cases:
@@ -81,7 +81,7 @@ def cli_goal(model: ProjectModel, cases: Sequence[CliAcceptanceCase]) -> str:
     `main(argv=None) -> int` for the project, and satisfy each behavioral case."""
     lines = [
         f"Build a Python CLI for the project '{model.identity}'.",
-        f"Provide a module `{_CLI_MODULE}.py` exposing `main(argv=None) -> int` "
+        f"Provide a module `{_CLI_MODULE}.py` exposing `main(argv=None) -> int` "  # noqa: ISC004
         "(argv defaults to sys.argv[1:]). It must satisfy these behavioral cases:",
     ]
     for case in cases:

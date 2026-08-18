@@ -20,17 +20,17 @@ _POLICY = RetryPolicy(max_attempts=4, base_delay=0.0)  # zero delay: never block
 _rng_override: Callable[[], float] | None = None
 
 
-class _CalibrationFault(Exception):
+class _CalibrationFault(Exception):  # noqa: N818
     """The instrument slipped this attempt (a transient failure the retry core will retry)."""
 
 
 def _calibrate_once(rng: Callable[[], float]) -> str:
-    if rng() < 0.6:  # transient failure most of the time
+    if rng() < 0.6:  # transient failure most of the time  # noqa: PLR2004
         raise _CalibrationFault("the coil slipped")
     return "aligned"
 
 
-def calibrate(session: Session, arg: str = "") -> str:
+def calibrate(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `calibrate` verb: retry a flaky instrument calibration and report the outcome."""
     rng = _rng_override or random.random
     tally = {"n": 0}
@@ -52,5 +52,5 @@ def _no_sleep(_delay: float) -> None:
 
 def set_calibration_rng(rng: Callable[[], float] | None = None) -> None:
     """Test hook: inject a deterministic 0..1 source (or None to restore real randomness)."""
-    global _rng_override
+    global _rng_override  # noqa: PLW0603
     _rng_override = rng

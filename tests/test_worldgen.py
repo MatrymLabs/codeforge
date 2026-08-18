@@ -287,7 +287,7 @@ def test_every_wild_cell_holds_exactly_one_creature_at_the_default_rate() -> Non
 
 
 def test_a_guardian_replaces_the_ambient_on_its_cell() -> None:
-    region, npcs = _living_vale()
+    region, npcs = _living_vale()  # noqa: RUF059
     guardian_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_lord_")}
     ambient_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_beast_")}
     assert guardian_cells, "there must be at least one guardian to check"

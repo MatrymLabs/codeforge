@@ -157,7 +157,7 @@ class CountMinSketchGuarantee(unittest.TestCase):
         for key, true_count in truth.items():
             self.assertGreaterEqual(cms.estimate(key), true_count)
 
-    def test_overestimate_stays_within_epsilon_N(self):
+    def test_overestimate_stays_within_epsilon_N(self):  # noqa: N802
         cms = CountMinSketch(epsilon=0.001, delta=0.001)
         truth: dict[str, int] = {}
         for i in range(20_000):

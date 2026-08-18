@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-import kernel.world.db as db
+import kernel.world.db as db  # noqa: PLR0402
 from kernel.world.characters import load_character, put_record, save_character
 from kernel.world.db import CharacterRow, _default_db_path, engine_url, open_archive_session
 from kernel.world.session import SESSIONS, Session

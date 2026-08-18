@@ -61,7 +61,7 @@ def xp_for_kill(player_level: int, enemy_level: int, tier: str = "normal") -> in
     """XP for one kill: enemy_level * XP_PER_LEVEL, scaled by tier and the PLvl gap (0 if gray)."""
     enemy_level = clamp_level(enemy_level)
     base = enemy_level * XP_PER_LEVEL
-    return int(round(base * _tier_multiplier(tier) * gap_multiplier(enemy_level - player_level)))
+    return int(round(base * _tier_multiplier(tier) * gap_multiplier(enemy_level - player_level)))  # noqa: RUF046
 
 
 def jp_for_kill(job_level: int, enemy_level: int, tier: str = "normal") -> int:
@@ -69,4 +69,4 @@ def jp_for_kill(job_level: int, enemy_level: int, tier: str = "normal") -> int:
     enemy_level = clamp_level(enemy_level)
     base = enemy_level * JP_PER_LEVEL
     scaled_gap = (enemy_level - job_level * ENEMY_LEVELS_PER_JOB_LEVEL) / ENEMY_LEVELS_PER_JOB_LEVEL
-    return int(round(base * _tier_multiplier(tier) * gap_multiplier(scaled_gap)))
+    return int(round(base * _tier_multiplier(tier) * gap_multiplier(scaled_gap)))  # noqa: RUF046

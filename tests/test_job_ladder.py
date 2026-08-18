@@ -44,7 +44,7 @@ def test_an_unarmed_calling_fails_loud(monkeypatch):
     roster = dict(jl.CALLINGS)
     roster["ghostwright"] = {"name": "Ghostwright", "description": "d", "stats": {}}
     monkeypatch.setattr(jl, "CALLINGS", roster)
-    with pytest.raises(BlueprintError, match="no ability kit.*ghostwright"):
+    with pytest.raises(BlueprintError, match="no ability kit.*ghostwright"):  # noqa: RUF043
         jl.validate()
 
 

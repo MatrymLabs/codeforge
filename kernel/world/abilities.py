@@ -98,7 +98,7 @@ def render_abilities(session: Session) -> str:
     return "\n".join(lines)
 
 
-def use_ability(session: Session, arg: str) -> str:
+def use_ability(session: Session, arg: str) -> str:  # noqa: PLR0911, PLR0912
     """Channel one ability: `use <ability> [on <target>]`. Fails loud, spends MP only on success."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you channel a skill."
@@ -341,7 +341,7 @@ def combat_tail(session: Session, npc: Npc) -> str:
     return f"({foe})" if mp is None else f"({foe}; MP {mp.current}/{mp.maximum})"
 
 
-def _channel_offense(
+def _channel_offense(  # noqa: PLR0911
     session: Session, ability: Ability, npc: Npc, nid: str, who: str, move: str
 ) -> str:
     """Resolve a target-facing ability (daze / weaken / brand / drain / strike) and return its line.

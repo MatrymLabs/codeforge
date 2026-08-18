@@ -74,7 +74,7 @@ def awaken_snapshot(path: Path = SAVE_PATH) -> tuple[str, str]:
     if version > SCHEMA_VERSION:
         return (
             START_ROOM,
-            f"The saved world is from a newer version (v{version} > v{SCHEMA_VERSION}). "
+            f"The saved world is from a newer version (v{version} > v{SCHEMA_VERSION}). "  # noqa: ISC004
             "Starting fresh; the save file was left untouched.",
         )
     _restore_items(snapshot.get("items", {}))

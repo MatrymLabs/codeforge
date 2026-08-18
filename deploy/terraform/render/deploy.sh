@@ -23,25 +23,25 @@ if [ -z "${RENDER_API_KEY:-}" ]; then
   echo
 fi
 export RENDER_API_KEY
-[ -n "$RENDER_API_KEY" ] || { echo "ERROR: no API key provided."; exit 1; }
+[ -n "${RENDER_API_KEY}" ] || { echo "ERROR: no API key provided."; exit 1; }
 
 # 2) Derive the workspace owner id. Fail with a clear message (not a traceback)
 #    if the key is rejected or the response is unexpected.
 owners_json="$(curl -fsS https://api.render.com/v1/owners \
-  -H "Authorization: Bearer $RENDER_API_KEY" 2>/dev/null || true)"
-RENDER_OWNER_ID="$(printf '%s' "$owners_json" | python3 -c '
+  -H "Authorization: Bearer ${RENDER_API_KEY}" 2>/dev/null || true)"
+RENDER_OWNER_ID="$(printf '%s' "${owners_json}" | python3 -c '
 import sys, json
 try:
     print(json.load(sys.stdin)[0]["owner"]["id"])
 except Exception:
     pass' 2>/dev/null)"
-if [ -z "$RENDER_OWNER_ID" ]; then
+if [ -z "${RENDER_OWNER_ID}" ]; then
   echo "ERROR: could not authenticate to Render with that key (no owner returned)."
   echo "Check the key at Render -> Account Settings -> API Keys, then re-run."
   exit 1
 fi
 export RENDER_OWNER_ID
-echo "Owner id: $RENDER_OWNER_ID"
+echo "Owner id: ${RENDER_OWNER_ID}"
 
 # 3) Provision. Plan to a file, then apply that exact plan -- no interactive
 #    "yes" prompt to fumble (a stray "yes" typed at the shell runs the Unix `yes`

@@ -125,7 +125,7 @@ def _sha256(text: str) -> str:
 def _dump(data: Any, *, sort_keys: bool = True) -> str:
     """Deterministic YAML block style -- same spec yields byte-identical output. `sort_keys` off
     preserves a caller's chosen order (rooms emit the start FIRST; the rest stay alphabetical)."""
-    import yaml  # a real dep (the loaders use it); imported here to keep the module light
+    import yaml  # a real dep (the loaders use it); imported here to keep the module light # noqa: E501
 
     return yaml.safe_dump(data, sort_keys=sort_keys, allow_unicode=True, default_flow_style=False)
 

@@ -238,7 +238,7 @@ def render_gate_all() -> str:
         tally[r.verdict] += 1
     lines = [
         "CodeForge Readiness: qa gate all",
-        f"{len(results)} object(s) audited -- "
+        f"{len(results)} object(s) audited -- "  # noqa: ISC004
         f"{tally[PASS]} pass, {tally['watch']} watch, {tally[FAIL]} fail.",
         "",
     ]

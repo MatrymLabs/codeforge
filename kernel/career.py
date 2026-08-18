@@ -224,7 +224,7 @@ def render_overview(board: dict | None = None) -> str:
         )
     lines += [
         "",
-        f"  TOTAL  proven {c.get(PROVEN, 0)} · partial {c.get(PARTIAL, 0)} · "
+        f"  TOTAL  proven {c.get(PROVEN, 0)} · partial {c.get(PARTIAL, 0)} · "  # noqa: ISC004
         f"missing {c.get(MISSING, 0)} of {len(skills)} skills",
         "",
         "  views:  career checklist · career gaps · career evidence · career ownership",
@@ -319,7 +319,7 @@ def render_ownership(board: dict | None = None, demonstrated: dict[str, int] | N
             lines.append(f"    [-] {s['skill']}")
         lines.append("")
     lines += [
-        f"  declared {len(declared)} · demonstrated {len(shown)} · undeclared {len(undeclared)} "
+        f"  declared {len(declared)} · demonstrated {len(shown)} · undeclared {len(undeclared)} "  # noqa: ISC004
         f"of {len(skills)} skills",
         "  Undeclared ownership is an honest gap, not a claim - Josh claims each as he",
         "  defends it. Level 4+ requires a real keel record (KeelGate).",
@@ -399,7 +399,7 @@ def render_resume(board: dict | None = None) -> str:
     return "\n".join(lines)
 
 
-def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
+def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:  # noqa: PLR0911
     """The `career` command: dispatch on the argument (mirrors `law <arg>`).
 
     `demonstrated` (skill_id -> level) is the caller's per-player Classroom unlocks, injected

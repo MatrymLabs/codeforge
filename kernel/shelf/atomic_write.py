@@ -50,7 +50,9 @@ def _atomic_write(target: Path, data: bytes, *, fsync: bool) -> None:
             if fsync:
                 handle.flush()
                 os.fsync(handle.fileno())
-        os.replace(tmp, target)  # atomic within one filesystem; never a half-written target
+        os.replace(  # noqa: PTH105
+            tmp, target
+        )  # atomic within one filesystem; never a half-written target
     except BaseException:
         tmp.unlink(missing_ok=True)  # a failed write leaves no orphan temp behind
         raise

@@ -248,7 +248,7 @@ class EngineeringForm:
         )
 
 
-def _coerce(question: Question, value: Any) -> Any:
+def _coerce(question: Question, value: Any) -> Any:  # noqa: PLR0911, PLR0912
     """Validate + normalize one answer to its question's kind, failing loud on anything unfit. The
     Form never silently accepts a wrong-shaped answer -- a bad classroom answer is not a game."""
     kind = question.kind

@@ -24,13 +24,13 @@ def test_every_message_carries_its_version() -> None:
     assert encode(hello(session="s1"))["v"] == WIRE_VERSION
 
 
-def test_a_message_from_an_unknown_version_is_REFUSED_not_parsed() -> None:
+def test_a_message_from_an_unknown_version_is_REFUSED_not_parsed() -> None:  # noqa: N802
     """A protocol that guesses will one day act on a message three versions ahead of it."""
     with pytest.raises(WireRefused):
         decode({"v": WIRE_VERSION + 999, "type": "hello", "session": "s1"})
 
 
-def test_a_message_with_NO_version_is_refused() -> None:
+def test_a_message_with_NO_version_is_refused() -> None:  # noqa: N802
     """Absent is not 'probably current'."""
     with pytest.raises(WireRefused):
         decode({"type": "hello", "session": "s1"})
@@ -66,7 +66,7 @@ def test_the_client_contract_is_satisfied_by_the_server_message() -> None:
             assert verify(contract, sample) == [], f"the server no longer satisfies {contract.name}"
 
 
-def test_dropping_a_field_the_client_reads_fails_HERE_not_in_the_client() -> None:
+def test_dropping_a_field_the_client_reads_fails_HERE_not_in_the_client() -> None:  # noqa: N802
     """The whole point of the packet. A server-side test must catch it."""
     from kernel.seam.wire import CLIENT_CONTRACTS
     from kernel.shelf.contract import verify

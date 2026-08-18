@@ -44,13 +44,13 @@ _CROWN_FIELDS = ("id", "map_name", "mythic_title", "region", "ancient_function",
 _REGION_FIELDS = ("id", "name", "threat_min", "threat_max")
 
 
-def load_canon(path: Path | None = None) -> dict[str, Any]:
+def load_canon(path: Path | None = None) -> dict[str, Any]:  # noqa: PLR0912
     """Read and VALIDATE the locked canon. Fails loud (BlueprintError) on any malformed record, so a
     canon file that could mislead a generator never loads silently. Returns the parsed mapping."""
     where = path if path is not None else _CANON_PATH
     if not where.exists():
         raise BlueprintError(f"Canon file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
         raise BlueprintError(f"Canon file is not a mapping: {where}")
 
@@ -67,7 +67,7 @@ def load_canon(path: Path | None = None) -> dict[str, Any]:
     _status(world, "world")
 
     crowns = data.get("seven_crowns")
-    if not isinstance(crowns, list) or len(crowns) != 7:
+    if not isinstance(crowns, list) or len(crowns) != 7:  # noqa: PLR2004
         raise BlueprintError(
             f"canon: 'seven_crowns' must list exactly 7 sites, got {len(crowns or [])}"
         )
@@ -83,7 +83,7 @@ def load_canon(path: Path | None = None) -> dict[str, Any]:
             )
 
     world_regions = data.get("regions")
-    if not isinstance(world_regions, list) or len(world_regions) != 14:
+    if not isinstance(world_regions, list) or len(world_regions) != 14:  # noqa: PLR2004
         raise BlueprintError(
             f"canon: 'regions' must list exactly 14 regions, got {len(world_regions or [])}"
         )
@@ -190,7 +190,7 @@ def _correspondence_violations(
 
 def _names_in(path: Path) -> set[str]:
     """The display names of every top-level record in a seed YAML file (skipping a template)."""
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
         return set()
     return {

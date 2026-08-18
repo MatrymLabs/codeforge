@@ -496,7 +496,7 @@ def form_schema(definition: FormDefinition, *, seed: str | None = None) -> dict[
         if question.choices:
             entry["choices"] = list(question.choices)
         if question.applies_when:
-            entry["applies_when"] = {key: value for key, value in question.applies_when}
+            entry["applies_when"] = {key: value for key, value in question.applies_when}  # noqa: C416
         questions[qid] = entry
     product_types = [
         {

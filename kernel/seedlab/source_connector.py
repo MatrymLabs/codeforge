@@ -122,7 +122,7 @@ class LocalSource:
         # bounds check below still refuses it, but a hostile absolute path must be named as one on
         # every platform rather than caught downstream by accident.
         if (
-            os.path.isabs(relpath)
+            os.path.isabs(relpath)  # noqa: PTH117
             or relpath.startswith(("/", "\\"))
             or os.path.splitdrive(relpath)[0]
         ):

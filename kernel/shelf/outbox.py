@@ -145,7 +145,7 @@ def relay(
     for record in outbox.unsent()[:batch]:
         try:
             publish(record)
-        except Exception:  # a failed publish is data, not a crash; retry next pass
+        except Exception:  # a failed publish is data, not a crash; retry next pass  # noqa: BLE001
             status = outbox.mark_failed(record.id, max_attempts=max_attempts)
             if status == DEAD:
                 summary.dead += 1

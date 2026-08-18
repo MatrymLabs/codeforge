@@ -20,22 +20,22 @@ _BREAKER = CircuitBreaker(failure_threshold=_THRESHOLD, reset_timeout=_RESET)
 _rng_override: Callable[[], float] | None = None
 
 
-class _RelayFault(Exception):
+class _RelayFault(Exception):  # noqa: N818
     """The relay surged and failed this draw (a transient failure the breaker counts)."""
 
 
 def _draw_once(rng: Callable[[], float]) -> str:
-    if rng() < 0.7:  # surges more often than not
+    if rng() < 0.7:  # surges more often than not  # noqa: PLR2004
         raise _RelayFault("surge")
     return "power flows"
 
 
-def channel(session: Session, arg: str = "") -> str:
+def channel(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `channel` verb: draw power through the relay, protected by a circuit breaker."""
     rng = _rng_override or random.random
     try:
         _BREAKER.call(lambda: _draw_once(rng))
-        return "You channel power through the relay. Power flows."
+        return "You channel power through the relay. Power flows."  # noqa: TRY300
     except CircuitOpen:
         return "The relay has tripped shut. Wait for it to cool before channeling again."
     except _RelayFault:
@@ -44,6 +44,6 @@ def channel(session: Session, arg: str = "") -> str:
 
 def reset_relay(clock: Clock | None = None, rng: Callable[[], float] | None = None) -> None:
     """Test hook: rebuild the relay's breaker with an injected clock and inject its rng."""
-    global _BREAKER, _rng_override
+    global _BREAKER, _rng_override  # noqa: PLW0603
     _BREAKER = CircuitBreaker(failure_threshold=_THRESHOLD, reset_timeout=_RESET, clock=clock)
     _rng_override = rng

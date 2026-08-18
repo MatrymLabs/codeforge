@@ -434,7 +434,7 @@ def validate_cast(
         env["FORGE_SEED"] = read_manifest(manifest_path).starter_seed_pack
     try:
         # Fixed argv, no shell; boots the poured cast.
-        result = subprocess.run(  # nosec B603
+        result = subprocess.run(  # nosec B603  # noqa: S603
             [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus), json.dumps(imports or [])],
             cwd=cast_dir,
             capture_output=True,
@@ -473,7 +473,7 @@ def _declared_deps(pyproject_path: Path) -> list[str]:
 def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
     """Default step runner for install_check: run one command, return (returncode, combined out)."""
     # Fixed argv, no shell; venv, pip, and boot only.
-    proc = subprocess.run(  # nosec B603
+    proc = subprocess.run(  # nosec B603  # noqa: S603
         cmd, cwd=cwd, capture_output=True, text=True, check=False
     )
     return proc.returncode, (proc.stdout + proc.stderr)
@@ -632,7 +632,7 @@ def render_forge(report: ForgeReport) -> str:
             f"  world (seed):     {report.seed_pack}",
             f"  surfaces:         {', '.join(report.surfaces)}",
             f"  engine strategy:  {report.engine_strategy}",
-            f"  engine modules:   {report.vendored_modules} vendored / "
+            f"  engine modules:   {report.vendored_modules} vendored / "  # noqa: ISC004
             f"{report.total_modules} total  ({shed} shed)",
             f"  declared deps:    {report.declared_deps}",
             f"  validated:        {verdict}",
@@ -645,7 +645,7 @@ def render_forge(report: ForgeReport) -> str:
     )
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911, PLR0912, PLR0915
     """CLI. Plan a cast (`<template> <name> [commit]`, `make cast-plan`) or pour one
     (`generate <template> <name> <dest> [commit]`, `make cast`).
 
@@ -657,13 +657,13 @@ def main(argv: list[str] | None = None) -> int:
     if args and args[0] == "diff":
         rest = [a for a in args[1:] if a != "--audit"]
         do_audit = "--audit" in args[1:]
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast diff <cast_dir> <source_root> [--audit]",
                 file=sys.stderr,
             )
             return 2
-        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift
+        from kernel.cast_update import audit_requirements, diff_cast, render_audit, render_drift  # noqa: I001
 
         try:
             drift = diff_cast(rest[0], rest[1])
@@ -681,7 +681,7 @@ def main(argv: list[str] | None = None) -> int:
     if args and args[0] == "update":
         rest = [a for a in args[1:] if a != "--force"]
         force = "--force" in args[1:]
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast update <cast_dir> <source_root> [--force]",
                 file=sys.stderr,
@@ -698,14 +698,14 @@ def main(argv: list[str] | None = None) -> int:
         # 0 when the cast is on the target (applied or in sync); 1 when a refusal needs action
         return 0 if outcome.applied or "already in sync" in outcome.reason else 1
     if args and args[0] == "generate":
-        if len(args) < 4:
+        if len(args) < 4:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast generate <template> <name> <dest> [commit]",
                 file=sys.stderr,
             )
             return 2
         template, name, dest = args[1], args[2], args[3]
-        commit = args[4] if len(args) > 4 else "unknown"
+        commit = args[4] if len(args) > 4 else "unknown"  # noqa: PLR2004
         try:
             plan = plan_cast(template, name, commit=commit)
             if plan.verdict != READY:
@@ -720,14 +720,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  {'validated (boots + ticks): ' + detail if ok else 'NOT validated: ' + detail}")
         return 0 if ok else 1
     if args and args[0] == "forge":
-        if len(args) < 5:
+        if len(args) < 5:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast forge <template> <name> <dest> <surfaces> [commit]",
                 file=sys.stderr,
             )
             return 2
         template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
-        commit = args[5] if len(args) > 5 else "unknown"
+        commit = args[5] if len(args) > 5 else "unknown"  # noqa: PLR2004
         surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
         from kernel.coupling import CouplingError
 
@@ -739,7 +739,7 @@ def main(argv: list[str] | None = None) -> int:
         print(render_forge(report))
         return 0 if report.validated else 1
     if args and args[0] == "generate-selective":
-        if len(args) < 5:
+        if len(args) < 5:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast generate-selective <template> <name> <dest> "
                 "<surfaces-csv> [commit]",
@@ -747,7 +747,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 2
         template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
-        commit = args[5] if len(args) > 5 else "unknown"
+        commit = args[5] if len(args) > 5 else "unknown"  # noqa: PLR2004
         surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
         from kernel.coupling import CouplingError
 
@@ -762,14 +762,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  {verdict}")
         return 0 if ok else 1
     if args and args[0] == "validate":
-        if len(args) < 2:
+        if len(args) < 2:  # noqa: PLR2004
             print("usage: python -m kernel.cast validate <cast-dir>", file=sys.stderr)
             return 2
         ok, detail = validate_cast(Path(args[1]))
         print(f"cast validate: {'OK - ' if ok else 'FAILED - '}{detail}")
         return 0 if ok else 1
     if args and args[0] == "install-check":
-        if len(args) < 3:
+        if len(args) < 3:  # noqa: PLR2004
             print(
                 "usage: python -m kernel.cast install-check <cast-dir> <workdir>", file=sys.stderr
             )
@@ -777,7 +777,7 @@ def main(argv: list[str] | None = None) -> int:
         ok, detail = install_check(Path(args[1]), Path(args[2]))
         print(f"cast install-check: {'OK - ' if ok else 'FAILED - '}{detail}")
         return 0 if ok else 1
-    if len(args) < 2:
+    if len(args) < 2:  # noqa: PLR2004
         print("usage: python -m kernel.cast <template> <name> [commit]", file=sys.stderr)
         print(
             "       python -m kernel.cast generate <template> <name> <dest> [commit]",
@@ -786,7 +786,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"templates: {', '.join(available_templates()) or '(none)'}", file=sys.stderr)
         return 2
     template, name = args[0], args[1]
-    commit = args[2] if len(args) > 2 else "unknown"
+    commit = args[2] if len(args) > 2 else "unknown"  # noqa: PLR2004
     try:
         plan = plan_cast(template, name, commit=commit)
     except CastError as exc:

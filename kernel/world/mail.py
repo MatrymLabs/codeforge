@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-import kernel.world.mail_store as mail_store
+import kernel.world.mail_store as mail_store  # noqa: PLR0402
 from kernel.world.characters import _default_store
 from kernel.world.events import announce_to
 from kernel.world.session import SESSIONS, Session, display_name
@@ -33,7 +33,7 @@ def send(session: Session, arg: str) -> str:
     """`mail send <player> <message>`: post a letter. Fails loud on a missing recipient/message, an
     over-long body, an unknown hero, or a full inbox."""
     parts = arg.split(maxsplit=1)
-    if len(parts) < 2:
+    if len(parts) < 2:  # noqa: PLR2004
         return "Write to whom, and what? (mail send <player> <message>)"
     target, message = parts[0].strip().lower(), parts[1].strip()
     if not message:
@@ -59,14 +59,14 @@ def render_inbox(session: Session) -> str:
     lines = [f"Your inbox ({len(letters)}/{MAX_INBOX}):"]
     for i, letter in enumerate(letters, 1):
         mark = " " if letter.read else "*"
-        snippet = letter.body[:40] + ("..." if len(letter.body) > 40 else "")
+        snippet = letter.body[:40] + ("..." if len(letter.body) > 40 else "")  # noqa: PLR2004
         parcel = f"  [+ {letter.attachment['name']}]" if letter.attachment else ""
         lines.append(f"  {mark}{i}. from {display_name(letter.sender)}: {snippet}{parcel}")
     lines.append("(mail read <n>, mail claim <n>, mail send/gift <player> ...)")
     return "\n".join(lines)
 
 
-def gift(session: Session, arg: str) -> str:
+def gift(session: Session, arg: str) -> str:  # noqa: PLR0911
     """`mail gift <player> <item>`: mail a carried item to a hero (online or not). It waits in their
     inbox as a parcel until they `mail claim` it. Fails loud on a bad target, a full inbox, an item
     you are not carrying, or a worn item."""
@@ -74,7 +74,7 @@ def gift(session: Session, arg: str) -> str:
     from kernel.world.items import ITEMS, carrier, trace_item
 
     parts = arg.split(maxsplit=1)
-    if len(parts) < 2:
+    if len(parts) < 2:  # noqa: PLR2004
         return "Gift whom, and what? (mail gift <player> <item>)"
     target, item_kw = parts[0].strip().lower(), parts[1].strip().lower()
     if not _character_exists(target):

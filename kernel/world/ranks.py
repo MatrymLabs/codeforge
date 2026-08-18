@@ -50,7 +50,7 @@ def teleport(session: Session, word: str) -> str:
 def grant(session: Session, words: str) -> str:
     """Owner verb: crown or demote a connected player. Persists."""
     parts = words.split()
-    if len(parts) != 2:
+    if len(parts) != 2:  # noqa: PLR2004
         return "Usage: @grant <player> <rank>   (ranks: player, wizard, owner)"
     target_name, rank = parts
     if rank not in RANK_ORDER:
@@ -71,7 +71,7 @@ def grant(session: Session, words: str) -> str:
     return f"{display_name(target_name)} is now rank: {rank}."
 
 
-def shutdown_world(session: Session) -> str:
+def shutdown_world(session: Session) -> str:  # noqa: ARG001
     """Owner verb: save every named soul, tell the world, stop the server."""
     broadcast("The world is going to sleep. Your deeds are remembered.")
     for player in SESSIONS.values():
@@ -83,7 +83,7 @@ def shutdown_world(session: Session) -> str:
     return "The world sleeps."
 
 
-def wizard_command(session: Session, raw: str, spine_admin_verbs: Sequence[str] = ()) -> str:
+def wizard_command(session: Session, raw: str, spine_admin_verbs: Sequence[str] = ()) -> str:  # noqa: PLR0911
     """Route the legacy @-verbs this module owns. Authorization happens HERE, before any verb
     runs. The spine's ADMIN verbs are dispatched upstream; they're passed in only so an unknown
     verb's "known" listing names the full admin surface instead of this module's slice of it."""

@@ -144,7 +144,7 @@ class HyperLogLog:
     """
 
     def __init__(self, precision: int = 14) -> None:
-        if not (4 <= precision <= 16):
+        if not (4 <= precision <= 16):  # noqa: PLR2004
             raise ProbabilisticError(f"precision must be in [4, 16], got {precision}")
         self.precision = precision
         self.num_registers = 1 << precision
@@ -157,11 +157,11 @@ class HyperLogLog:
 
     def _alpha(self) -> float:
         m = self.num_registers
-        if m == 16:
+        if m == 16:  # noqa: PLR2004
             return 0.673
-        if m == 32:
+        if m == 32:  # noqa: PLR2004
             return 0.697
-        if m == 64:
+        if m == 64:  # noqa: PLR2004
             return 0.709
         return 0.7213 / (1.0 + 1.079 / m)
 

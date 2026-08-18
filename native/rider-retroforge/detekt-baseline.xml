@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ArgumentListWrapping:AsciiTileProjection.kt$AsciiTileProjection$("palette index $pixel is outside the 2bpp range")</ID>
+    <ID>ArgumentListWrapping:AsciiTileProjection.kt$AsciiTileProjection$(pixel)</ID>
+    <ID>MagicNumber:AsciiTileProjection.kt$AsciiTileProjection$4</ID>
+    <ID>MagicNumber:ManifestWriter.kt$ManifestWriter$0x20</ID>
+    <ID>MagicNumber:ManifestWriter.kt$ManifestWriter$16</ID>
+    <ID>MagicNumber:ManifestWriter.kt$ManifestWriter$4</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$0x04</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$0xff</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$3</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$4</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$5</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$6</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$7</ID>
+    <ID>MagicNumber:NesRom.kt$NesRom.Companion$8</ID>
+    <ID>MaxLineLength:AsciiTileProjection.kt$AsciiTileProjection$symbols.getOrElse(pixel) { error("palette index $pixel is outside the 2bpp range") }.toString()</ID>
+    <ID>MaximumLineLength:AsciiTileProjection.kt$AsciiTileProjection$ </ID>
+  </CurrentIssues>
+</SmellBaseline>

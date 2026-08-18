@@ -247,5 +247,5 @@ def test_screen_source_finds_setup_py_in_a_directory(tmp_path: Path) -> None:
 
 
 def test_screen_source_missing_file_is_loud(tmp_path: Path) -> None:
-    with pytest.raises(OSError):  # noqa: PT011 - FileNotFoundError; a screen you cannot run is not "clean"
+    with pytest.raises(OSError):  # noqa: PT011, RUF100
         screen_source(tmp_path / "nope.py")

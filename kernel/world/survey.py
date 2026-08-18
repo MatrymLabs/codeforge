@@ -43,7 +43,8 @@ _COMMANDS = (
 def _records(filename: str) -> dict[str, dict[str, Any]]:
     """Every top-level record in an aethryn seed file, keyed by id (skipping a template block)."""
     data = yaml.load(
-        (canon.AETHRYN_DIR / filename).read_text(encoding="utf-8"), Loader=_UniqueKeyLoader
+        (canon.AETHRYN_DIR / filename).read_text(encoding="utf-8"),
+        Loader=_UniqueKeyLoader,  # noqa: S506
     )
     if not isinstance(data, dict):
         return {}
@@ -162,7 +163,7 @@ def _verdict(label: str, violations: list[str]) -> tuple[int, str]:
     return 1, f"{label}: {len(violations)} problem(s)\n{body}"
 
 
-def run(argv: list[str]) -> tuple[int, str]:
+def run(argv: list[str]) -> tuple[int, str]:  # noqa: PLR0911
     """Dispatch a `world` read-only subcommand to its check. Returns (exit_code, text). An unknown
     or not-yet-built subcommand is refused honestly (never faked) with the usage listing."""
     if not argv:
@@ -183,7 +184,7 @@ def run(argv: list[str]) -> tuple[int, str]:
     if command == "graph":
         return 0, worldgraph.graph_lines()
     if command == "inspect":
-        if len(argv) < 2:
+        if len(argv) < 2:  # noqa: PLR2004
             return 2, "usage: world inspect <region-id>"
         try:
             return 0, worldgraph.region_detail(argv[1])

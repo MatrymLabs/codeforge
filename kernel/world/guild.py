@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import re
 
-import kernel.world.guild_store as guild_store
+import kernel.world.guild_store as guild_store  # noqa: PLR0402
 from kernel.world.characters import _default_store, save_character
 from kernel.world.coinage import purse
 from kernel.world.events import announce_to, push_channel

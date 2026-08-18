@@ -24,7 +24,7 @@ from kernel.world.session import SESSIONS, Session
 
 
 def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         designation=designation,
         name="a part",
         status="active",
@@ -62,7 +62,7 @@ def test_run_gate_honors_the_shared_stat_cache() -> None:
 def test_gate_all_stats_each_path_once(monkeypatch: pytest.MonkeyPatch) -> None:
     # The whole self-audit stats any given proof path at most once, across all records and
     # across QG02/QG03/QG05 (which previously re-checked file+tests).
-    from pathlib import Path as _P
+    from pathlib import Path as _P  # noqa: N814
 
     seen: list[str] = []
     real_exists = _P.exists
