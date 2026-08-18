@@ -148,9 +148,12 @@ class SeamVerdict:
     #: divergence. The rest are regression guards: real, but not evidence of agreement today.
     falsifiable: tuple[str, ...] = field(default_factory=tuple)
     aspect_falsifiability: tuple[AspectFalsifiability, ...] = field(default_factory=tuple)
+    unmeasurable_reason: str | None = None
 
     @property
     def verdict(self) -> str:
+        if self.unmeasurable_reason is not None:
+            return "UNMEASURABLE"
         if self.divergences:
             return "DIVERGED"
         if self.commands_compared == 0:
@@ -165,6 +168,8 @@ class SeamVerdict:
         ]
         lines += [f"  DIVERGED {d.render()}" for d in self.divergences]
         lines += [f"  [unmeasured] {u}" for u in self.unmeasured]
+        if self.unmeasurable_reason is not None:
+            lines.append(f"  [unmeasurable] {self.unmeasurable_reason}")
         lines += [f"  [falsifiability] {record.render()}" for record in self.aspect_falsifiability]
         if not self.divergences:
             lines.append("  no divergence - the core did not ask where exactly you are")
@@ -493,7 +498,17 @@ def run_differential(
     # The thirteen non-coverage probes use the fixed synthetic ``forge`` room. Keep that probe
     # fixture available without making their answers depend on the Blueprint under test; only the
     # existing coverage probe reads ``seed``'s overlay.
-    right = Engine2D(_overlay_for_seed(seed)) if two_d is None else two_d
+    if two_d is None:
+        try:
+            right = Engine2D(_overlay_for_seed(seed))
+        except FileNotFoundError as exc:
+            return SeamVerdict(
+                unmeasurable_reason=(
+                    f"Blueprint {seed!r} is UNMEASURABLE: missing overlay file {exc.filename}"
+                )
+            )
+    else:
+        right = two_d
 
     divergences: list[Divergence] = []
     unmeasured: list[str] = []
