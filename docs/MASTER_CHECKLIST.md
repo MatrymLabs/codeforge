@@ -68,15 +68,28 @@ only bench that writes this file; Codex reports and does not edit it.
         version string; 1.23.8 is the newest release, so upgrading was not available.
         Closed by pinning the daemon JVM to 24 (`gradle/gradle-daemon-jvm.properties`),
         which is what CI already uses. Baseline holds at 16.
-[~] EVERY gate calibrated red-then-green — harness has 13 cases, 3 re-run 2026-08-18
-        covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform
-        detekt SHOWN TO FAIL 2026-08-18, once it could run at all: a planted probe (empty
-        catch block, generic caught exception, magic number) took it to BUILD FAILED with
-        `Analysis failed with 4 weighted issues`, naming EmptyCatchBlock,
-        TooGenericExceptionCaught and SwallowedException with file:line; green again on
-        removal. Canon 13 is satisfied by demonstration, but this was a hand-planted probe,
-        NOT a harness case - nothing re-proves it, so it decays like any unrepeated run.
-        NO HARNESS CASE EXISTS for: detekt/kotlin, trivy, cargo-deny
+[~] EVERY gate calibrated red-then-green - harness has 14 cases, 4 re-run 2026-08-18
+        covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform detekt
+        detekt JOINED THE HARNESS 2026-08-18 as CX-DETEKT-CAL-1, written by Codex. It could
+        not pass while the gate could not run at all, and Codex's harness refused it for
+        exactly the right reason: "the gate was ALREADY red before planting". A harness that
+        had certified it there would have been worse than no harness. With the daemon-JVM
+        fix in place the same case reports:
+            [PASS] detekt-TooGenericExceptionCaught
+                   green -> RED on TooGenericExceptionCaught -> green
+            1 calibrated, 0 FAILED, 0 skipped (toolchain absent)
+        That is canon 13 met by a REPEATABLE case. A hand-planted probe was run first and is
+        NOT the same evidence: a hand probe decays the moment the session ends, a case does
+        not. This is also a genuine two-bench proof, the first of the day: Codex wrote the
+        case and hit the blocker, Claude Code found the cause and fixed it, and neither half
+        proves anything alone.
+        NO HARNESS CASE EXISTS for: trivy, cargo-deny
+    [~] the harness itself was wired to NO make target and NO CI job, the same defect class
+        detekt just had: the instrument that proves the instruments was reachable by memory
+        alone. `make calibrate` (and `make calibrate ONLY=<case>`) now exists and runs it.
+        Still NOT in `check`, on purpose: it plants violations in the working tree and runs
+        whole gates, which is minutes of work and the wrong thing in front of every commit.
+        So it is findable now, and still not automatic. Half the gap, closed honestly.
 [x] security scanners on the merge path (caught a real Go stdlib panic)
 [x] scanners invocable AND PROVEN ON A PLANTED HIT (Codex 2026-08-18, fixtures removed)
         gitleaks  generic-api-key on a fake token — NOTE: the FIRST fixture found nothing.
@@ -98,11 +111,17 @@ only bench that writes this file; Codex reports and does not edit it.
         UNVERIFIABLE and lint targets report UNVERIFIED, but no shared vocabulary or type
         spans them. One instance is a precedent, not a convention.
 [x] differential test EXECUTABLE on all 4 Blueprints — fixed by CX-2D5-1, re-measured here
-        first-forge AGREED · seam-probe AGREED · aethryn UNMEASURABLE · spiral-ascent
-        UNMEASURABLE. No traceback. A missing world_overlay.json is now a NAMED VERDICT with
-        the file in the reason, not an exception.
-    [ ] the two UNMEASURABLE Blueprints still lack an overlay. Executable is not measurable:
-        the gate now reports honestly about a Blueprint it still cannot measure
+        No traceback. A missing world_overlay.json is a NAMED VERDICT with the file in the
+        reason, not an exception.
+    [x] and now MEASURABLE on all four, which was never the same claim. Both missing
+        overlays landed 2026-08-18 and regenerate byte-identically from their rooms.yaml,
+        with a drift test pinning that so a stale overlay cannot pass quietly. Re-measured
+        after Codex's CX-PROBE-4 landed:
+            first-forge AGREED · seam-probe AGREED · aethryn AGREED · spiral-ascent AGREED
+    [x] every unfalsifiable probe records WHY it cannot be falsified (CX-PROBE-4):
+        7 of 18 falsifiable, and 11 of 11 unfalsifiable probes carry a structural reason,
+        none blank. The count is asserted beside the reasons on purpose, because otherwise a
+        probe could go dark and make the expected set match by shrinking.
 ```
 
 ## 3. DOCTRINE — installed and honest

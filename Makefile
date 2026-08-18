@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -153,6 +153,19 @@ lint-c:
 # target to `build` would put a known-broken command in every commit's path.
 lint-kotlin:
 	@cd native/rider-retroforge && ./gradlew ktlintCheck detektMain --no-daemon
+
+# Calibration: prove the gates redden for what they claim to catch (canon 13).
+#
+# Deliberately NOT part of `check`, and deliberately a target anyway. It is not in `check`
+# because it plants violations into the working tree and runs whole gates to do it, which is
+# minutes of work and the wrong thing to put in front of every commit. It IS a target because
+# until now `scripts/calibrate_gates.py` was reachable by memory alone: no make target, no CI
+# job, nothing naming it. That is precisely the shape of defect it exists to catch, aimed at
+# itself. An instrument nobody can find is an instrument nobody runs.
+#
+# `make calibrate ONLY=detekt-TooGenericExceptionCaught` runs a single case.
+calibrate:
+	$(PY) scripts/calibrate_gates.py $(if $(ONLY),--only $(ONLY),)
 
 kotlin-lint: lint-kotlin
 
