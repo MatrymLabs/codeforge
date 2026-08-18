@@ -64,12 +64,20 @@ native/edge/codeforge-edge
 # the named build, so a 3.4MB compiled binary was one `git add -A` from landing in history.
 # gitignore has no trailing comments: a `#` on a pattern line becomes part of the pattern.
 native/edge/edge
+# ...and the Windows name for the same binary. Every pattern above is POSIX-only: `go build` on
+# Windows appends .exe, so `native/edge/edge` never matched what this bench actually produces.
+# Found on 2026-08-18 when `make stranded` reported a 3.6MB untracked native/edge/edge.exe that
+# no ignore rule covered. Same shape as the GOCACHE defect fixed in the same change: a rule
+# written on Linux, correct there, and quietly inert on the machine the work happens on.
+native/edge/edge.exe
+native/edge/codeforge-edge.exe
 
 # Protocol spine: generated bindings (rebuilt via `make proto`; keep the .proto source + go.sum)
 proto/telemetry_pb2.py
 proto/*_pb2.pyi
 native/spine/telemetrypb/
 native/spine/xcheck/xcheck
+native/spine/xcheck/xcheck.exe
 
 # C text kernel (build artifacts; keep the source in native/textkernel/src)
 native/textkernel/build/

@@ -11,9 +11,24 @@ RUFF_CACHE_DIR ?= /tmp/matrymlabs-codeforge-ruff-cache
 MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 # GOCACHE joined them 2026-08-15, for the same reason and one lane over. Go defaults to
 # ~/.cache/go-build, which a Bench sandbox denied, and `go build` then failed in a way lint-go
-# reported as missing generated code. Every gate cache is now explicit and writable anywhere.
+# reported as missing generated code.
+#
+# IT MUST NOT BE SET TO A POSIX PATH ON WINDOWS. `go` is a native Windows binary; it does not
+# read /tmp as absolute and refuses outright:
+#     build cache is required, but could not be located: GOCACHE is not an absolute path
+# The comment here used to read "writable anywhere", and that was false on this bench from the
+# day it was written. lint-go probed the cache for WRITABILITY, which /tmp passes under Git Bash
+# because MSYS maps it to a real directory, so the probe went green and the build failed anyway.
+# Writable and usable are different questions and only one of them was being asked.
+#
+# On Windows, Go's own default (%LocalAppData%\go-build) is already absolute and writable, so the
+# correct action is to leave it alone. The sandbox problem this override exists for is a POSIX one.
+ifeq ($(OS),Windows_NT)
+export RUFF_CACHE_DIR MYPY_CACHE_DIR
+else
 GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
 export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
+endif
 
 # UTF-8, everywhere, on every platform. This is a CORRECTION, not a preference.
 #
@@ -206,9 +221,13 @@ lint-go:
 		exit 1; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
-			if ! ( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./... >/dev/null 2>&1; rc=$$?; rm -rf "$$out"; exit $$rc ); then \
-				echo "lint-go: $$m UNVERIFIED - it does not build. Generated code absent?"; \
-				echo "          run \`make proto\` (ADR-0012: the bindings are git-ignored)."; \
+			if ! err=$$( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./... 2>&1; rc=$$?; rm -rf "$$out"; exit $$rc ); then \
+				echo "lint-go: $$m UNVERIFIED - it does not build. The compiler said:"; \
+				echo "$$err" | sed 's/^/            /'; \
+				echo "          Missing generated code is ONE cause and \`make proto\` fixes only that one."; \
+				echo "          Read the message above before running it. On 2026-08-18 this target"; \
+				echo "          swallowed the real error and guessed; the actual fault was a GOCACHE"; \
+				echo "          set to a POSIX path that a native Windows go binary rejects."; \
 				exit 1; \
 			fi; \
 			echo "lint-go: $$m"; \
