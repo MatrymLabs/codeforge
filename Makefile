@@ -152,7 +152,7 @@ lint-c:
 # `:test` dies with UnsupportedClassVersionError. `ktlintCheck` from clean is green. Widening this
 # target to `build` would put a known-broken command in every commit's path.
 lint-kotlin:
-	@cd native/rider-retroforge && ./gradlew ktlintCheck
+	@cd native/rider-retroforge && ./gradlew ktlintCheck detektMain
 
 kotlin-lint: lint-kotlin
 
