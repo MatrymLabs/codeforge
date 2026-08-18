@@ -177,23 +177,17 @@ lint-go:
 		done; \
 	fi
 
-# `lint-imports` lives in the venv and is invoked by BARE NAME, so it is a PATH fault when it is
-# absent, never a missing package. On 2026-08-14 a Bench read "No such file or directory" as "that
-# executable is not installed" and filed it in a Bench Report that way. That is the same
-# misdiagnosis lint-go used to make about the Go toolchain, one target down.
+# Resolve the import-linter console entry point through the same repository interpreter as the
+# Python gate. This keeps the target independent of whether a Windows Scripts or POSIX bin
+# directory happens to be on PATH.
 imports:  ## Enforce the style-guide section-2 dependency direction (import-linter).
-	@command -v lint-imports >/dev/null 2>&1 || { \
-		echo "imports: UNVERIFIED - \`lint-imports\` is not on PATH."; \
-		echo "         It IS installed, at .venv/bin/lint-imports. This is a PATH fault, not a"; \
-		echo "         missing package; do not pip install anything."; \
-		echo "         export PATH=\"\$$PWD/.venv/bin:\$$HOME/.local/go/bin:\$$HOME/go/bin:\$$HOME/.local/bin:\$$PATH\""; \
-		echo "         See AGENTS.md, \"Bench toolchain\"."; exit 1; }
-	lint-imports
+	$(PY) -c "from importlinter.cli import lint_imports_command; lint_imports_command()"
+
 
 typecheck: typecheck-python typecheck-native  ## Python via mypy; Rust and Go via their compilers.
 
 typecheck-python:
-	mypy kernel adapters content tests forge.py
+	$(PY) -m mypy
 
 # Per the practices reference section 15: for Rust and Go the COMPILER is the type gate.
 typecheck-native:
