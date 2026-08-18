@@ -278,15 +278,15 @@ jobs:
         with:
           fetch-depth: 0  # gitleaks reads HISTORY; a shallow clone would scan almost nothing
 
-      # Go 1.25, and this job is why. The FIRST run of this gate found GO-2026-4971 reachable from
+      # Go 1.26.5, and this job is why. The FIRST run of this gate found GO-2026-4971 reachable from
       # our own code: `edge.handleConn calls net.Dial`, a NUL-byte panic in net on Windows, present
       # in go1.24.13 and fixed in go1.25.10. The bench is a Windows host, so this was reachable on
-      # the machine that builds it. Every Go job moved together -- scanning one toolchain while
+      # the machine that builds it. Every Go job uses this exact toolchain -- scanning one version while
       # shipping another is how a scan reports green about an artifact nobody built.
-      # If these ever move to 1.26, the floor is 1.26.3: the same bug was reintroduced in 1.26.0.
+      # Go 1.26.5 is above the 1.26.3 floor: the same bug was reintroduced in 1.26.0.
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.25"
+          go-version: "1.26.5"
 
       - name: Install the scanners, pinned to the versions the bench verified
         run: |
@@ -410,7 +410,7 @@ jobs:
           java-version: "24"
 
       - name: ktlint, the kotlin lane's instrument
-        run: ./gradlew ktlintCheck --no-daemon
+        run: ./gradlew ktlintCheck detektMain --no-daemon
 
       - name: Build and test the projection
         run: ./gradlew build --no-daemon
@@ -426,7 +426,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
+          go-version: "1.26.5"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
 
       - name: Vet, race-test + build the Go edge
         run: |
@@ -458,7 +458,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.25"  # >= 1.25.10: see GO-2026-4971 note in the security-scanners job
+          go-version: "1.26.5"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
 
       - name: Install protoc + protoc-gen-go (pinned)
         run: |
@@ -525,24 +525,8 @@ jobs:
       - name: Benchmark evidence (non-fatal)
         run: python -u benchmarks/bench_textmatch.py 20000 || true
 
-  # Polyglot embedded scripting (sandboxed Lua via lupa): install the [lua] extra and run the SAFETY
-  # suite -- every dangerous capability denied, runaway loops bounded. Evidence for a scripting organ
-  # is safety, not a benchmark. NOT a required check -- the base gate runs on the "scripting
-  # unavailable" fallback, so a Lua-runtime hiccup never blocks a merge (ADR-0014).
-  lua:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
-
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
-        with:
-          python-version: "3.13"
-
-      - name: Install with the Lua extra
-        run: pip install -e ".[dev,lua]"
-
-      - name: The sandbox safety suite (capabilities denied, loops bounded)
-        run: python -m pytest tests/test_scripting.py "tests/test_commands.py::test_owner_runs_a_sandboxed_script_through_the_tick" "tests/test_commands.py::test_a_sandbox_violation_returns_a_script_error_not_a_crash" -q
+  # No Lua lane is declared: the repository has zero tracked .lua files. Reintroduce a dedicated
+  # job only when Lua source is added and its contract is written.
 
   # Pour drift gate (ship audit 2026-07-28, debt #2): codeforge-shelf is generated from
   # kernel/shelf via kernel.shelf_pour. This clones the published shelf and asserts a fresh pour
