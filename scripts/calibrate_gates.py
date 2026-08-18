@@ -443,6 +443,11 @@ def main() -> int:
     args = ap.parse_args()
 
     cases = [c for c in CASES if not args.only or args.only in c.name]
+    if args.only and not cases:
+        available = ", ".join(case.name for case in CASES)
+        print(f"No calibration case matches {args.only!r}.")
+        print(f"Available cases: {available}")
+        return 2
     if args.list:
         for case in cases:
             print(f"  {case.name:<32} gate: {' '.join(case.gate)}")
