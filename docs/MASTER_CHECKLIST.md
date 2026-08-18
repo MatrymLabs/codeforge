@@ -455,5 +455,151 @@ RetroForge platforms PROVEN:               0     (NES slice runs end to end and 
 Rider integration level reached:           L1+L3 (L1 built: a committed .run config invokes
                                                  the viewer inside the IDE. L2 records exist
                                                  in tools_registry.toml. L3 built and tested.
-                                                 L4 unbuilt: no plugin exists to build on.)
+                                                 L4 SCAFFOLDED 2026-08-18 by CX-L4-SCAFFOLD-1:
+                                                 a plugin now exists and packages, with
+                                                 META-INF/plugin.xml and a tool window in the
+                                                 archive. Rider LOADING it has not been
+                                                 observed, so this is scaffold, not L4 reached.)
 ```
+
+---
+
+# MASTER CHECKLIST — ADDENDUM 2: ENGINEERING STANDARDS AND COMPLIANCE
+## Sections 12-15.
+## `DEFER` = correctly not started. `TRIGGER` = the fact that would activate it.
+
+**Governing principle (standing law, from the standards document):**
+> A language is not supported because CodeForge knows its syntax. A tool is not
+> integrated because it is installed. A control is not satisfied because a flag is
+> checked. A Part supporting a control does not grant that control to the product.
+> No Proof Run is invented after seeing the result.
+
+---
+
+## 12. EVIDENCE STANDARD *(P0 — adopt now, cheap, upgrades what exists)*
+
+```
+[ ] four verdicts exist everywhere: PASS · FAIL · UNMEASURABLE · NOT_APPLICABLE
+        (day 229 proved the third; a tool crash must never read as PASS)
+[ ] every gate emits or is wrapped by an evidence artifact, not just console text
+[ ] evidence manifest carries: blueprint_id + version, work_order_id, proof_run_id,
+        tool + version, commit SHA, exact command, exit code, result, artifact SHA-256
+[ ] producing bench and verifying bench both recorded on every artifact
+[ ] evidence/ bundle layout exists: manifest, tests, sca, secrets, sbom, limitations
+[ ] artifacts hashed so the receiving bench can verify the identical result
+[ ] exceptions carry owner, reason, and expiration — never open-ended
+```
+*This is the smallest high-value piece of the standards document and the only part
+that belongs in the tree today.*
+
+## 13. UNIVERSAL ENGINEERING CONTROLS *(P0 — most exist; the blanks are the gaps)*
+
+```
+HAVE (verify, don't assume)
+[?] source identity: repo, branch, commit SHA on every proof run
+[?] tool/runtime versions explicit, not inherited
+[?] formatter gate per lane
+[?] lint / static analysis gate per lane
+[?] type or compiler gate per lane
+[?] unit tests
+[?] dependency lock strategy per lane
+[?] SCA (dependency vulnerability scan)
+[?] secret scanning (gitleaks in gate)
+
+GAPS (named, not yet built)
+[ ] contract tests — Blueprint invariants executable as tests
+[ ] SBOM generated for any deliverable software        <- required at first delivery
+[ ] threat analysis recorded for products with real attack surface
+[ ] fuzzing on untrusted-input boundaries              <- see Section 15, RF-001
+[ ] integration tests against realistic resources
+[ ] error handling: failures controlled, no internal disclosure (negative tests)
+[ ] logging: security events logged without leaking secrets
+[ ] backup/restore proven for stateful systems         <- DONE-1 restart is the seed
+[ ] vulnerability response: findings carry severity, owner, disposition, retest
+[ ] optimization claims carry before AND after measurements
+
+DEFER (no product needs these yet)
+[ ] DAST — no HTTP surface exists
+[ ] container scanning — nothing containerized
+[ ] IaC scanning — no Terraform in tree
+[ ] artifact provenance / attestation — nothing released
+```
+
+## 14. COMPLIANCE OVERLAY READINESS *(ALL DEFER — P1, after Stage 4)*
+
+**None are active. This section records what would activate each, so applicability
+is a resolved fact rather than a guess when a real intake arrives.**
+
+```
+[ ] compliance is resolved at CONFIGURE from intake FACTS, never declared as a boolean
+[ ] intake asks facts, not legal determinations
+        BAD:  "Are you subject to HIPAA?"
+        GOOD: "Will the product create, receive, maintain, or transmit health
+               information associated with identifiable individuals?"
+[ ] every overlay carries: applicability · framework_version · engineering_status ·
+        organizational_status · assessor_status — four separate fields, never one
+[ ] authoritative catalogs are versioned imports, never paraphrased into product code
+
+FRAMEWORK              STATUS   TRIGGER (the fact that activates it)
+NIST 800-53            DEFER    federal/FISMA system or selected org baseline
+NIST 800-171 (Rev 3)   DEFER    system processes/stores/transmits CUI
+FedRAMP                DEFER    targeting a federal cloud authorization
+PCI DSS 4.0.1          DEFER    stores/processes/transmits PAN, or can impact a CDE
+HIPAA / HITECH         DEFER    ePHI + regulated entity or business associate
+GDPR                   DEFER    personal data of EU/EEA persons
+CCPA / CPRA            DEFER    California PI + business meets applicability
+OWASP ASVS 5.0.0       DEFER    first product with a web/service attack surface
+OSCAL export adapter   DEFER    first NIST/FedRAMP engagement
+```
+*A Blueprint may state `engineering_status: EVIDENCED` at most. Legal or certification
+determination is always outside the factory.*
+
+## 15. COMPLIANCE THAT IS LIVE TODAY *(not deferred — real exposure now)*
+
+```
+ROM LEGALITY (RetroForge — see Section 11)
+[ ] only owned, homebrew, or synthetic fixtures — never a commercial dump
+[ ] no copyrighted ROM in any repo, ever (history is not revertible like a merge)
+[ ] patches distributed, never modified ROMs
+
+FUZZING — RF-001 IS A PARSER TAKING UNTRUSTED BINARY INPUT
+[x] the standards doc mandates fuzzing on parser/binary-decoder boundaries.
+        RF-001 qualifies: iNES header parser and CHR tile decoder.
+[x] minimum viable version for DONE-2: BUILT 2026-08-18, all three classes, in
+        tests/test_retroforge_hostile_input.py. 15 cases, 15 passing:
+          truncated        4 header truncations (0/1/4/15 bytes) + a CHR bank cut short
+          garbage bytes    5 payloads: zeroes, 0xff, wrong magic, counting bytes, a PDF
+          oversized header a header claiming 255 PRG + 255 CHR banks in a 64-byte file
+        THE PARSER PASSED ALL THREE WITHOUT REPAIR. That is the honest finding: the
+        oversized-header case computes an offset past the end of the buffer, and the
+        read refuses instead of wandering off it. Nothing was fixed because nothing
+        was broken, and the fixtures exist now so that stays true.
+        The one real defect found was in the TEST, not the parser: the first draft
+        handed extract_chr_tiles a ByteSource where it takes a RomArtifact.
+[ ] full fuzz harness: DEFER until the slice ships
+
+FIRST OUTSIDE USER (Stage 2)
+[ ] when the Excel-to-PDF converter reaches a real user, re-read Section 14 triggers.
+        A converter handling someone else's spreadsheet is the first time data
+        questions become facts rather than hypotheticals.
+```
+
+---
+
+## ADDENDUM 2 NUMBERS
+```
+Compliance overlays ACTIVE:                    0    (correct at this stage)
+Universal control gaps named:                  10   (Section 13 GAPS; 4 more correctly DEFER)
+Evidence artifacts with full manifest:         0    (Section 12 is entirely unbuilt. Gates
+                                                    print verdicts to a console today; no
+                                                    manifest, no hash, no producing/verifying
+                                                    bench recorded. This is the honest zero.)
+Parser boundaries with negative-input tests:   3    (target for DONE-2: 3 -- MET 2026-08-18)
+                                                    truncated · garbage · oversized header,
+                                                    15 cases, all passing, parser unmodified
+```
+
+## THE RESTRAINT THIS SECTION ENFORCES
+Everything in Section 14 is real, well-researched, and correctly deferred. It becomes
+work when an intake produces a fact that triggers it — not before. The factory earns
+compliance capability the same way it earns language lanes: one real product at a time.

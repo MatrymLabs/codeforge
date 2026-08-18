@@ -1,3 +1,55 @@
+# THE UNIVERSAL CLAUSE
+
+**Everything in this document applies to all of Matrym Labs.**
+
+Every repository. Every Blueprint. Every Target Product. Every language lane. Every
+tool. Every bench. Every session. Every work order. Every line of code produced by
+Codex, by Claude Code, or by the Principal Engineer himself.
+
+CodeForge, Aethryn, RetroForge, the Hardware Store, a one-file script, a spike, a
+prototype, a demo, a favor, a five-minute fix — the same standard governs all of it.
+The Workshop has one methodology. It does not fork per project.
+
+**No exemption is granted for:**
+- size — a ten-line script obeys the same law as the engine
+- novelty — a new project inherits the standard automatically and does not opt in
+- urgency — "we needed it fast" is not a proof run
+- authorship — work written by the founder is verified exactly like work written by a bench
+- familiarity — a repeat finding is not a smaller finding
+- language — a lane that is new to the Workshop is not a lane that is exempt from it
+- product type — a game, a converter, a plugin, and a service are held identically
+
+**The only legitimate variation is applicability, and applicability is resolved, never
+assumed.** A control that does not apply is marked `NOT_APPLICABLE` with a recorded
+reason. It is never silently skipped. "This didn't seem relevant" is not a resolution;
+it is an unmeasured claim, and unmeasured claims are the defect class this Workshop
+exists to eliminate.
+
+**The one bounded exception is the R&D Tech Lab.** Uncertain ideas, unfamiliar
+languages, outside references, and experiments may run there without full proof —
+that is the Lab's purpose. But nothing leaves the Lab. An experiment becomes a
+capability only by entering the factory at INTAKE and earning its way through the
+standard like anything else. Work that graduates from the Lab carries no credit for
+having worked there.
+
+**This clause binds the Principal Engineer.** The founder may change the standard —
+deliberately, in writing, with a dated reason — but he may not step around it. A rule
+the owner exempts himself from is not a rule; it is a preference, and the benches will
+learn to read it as one.
+
+**It binds anyone who joins later.** Any future person, agent, contractor, or tool
+inherits this clause on arrival. It is not onboarding material to be absorbed
+gradually. It is the condition of touching the tree.
+
+---
+
+One Workshop. One methodology. One standard, applied everywhere, to everyone,
+including the person who wrote it.
+
+Execute. Prove. Capture. Reverse engineer. Harvest. Optimize. Continue.
+
+---
+
 # WORKSHOP.md — THE ONE OPERATING DOCUMENT
 ## Matrym Labs. Install once, then this governs every session.
 ## Companion files: ROAD_TO_THE_FACTORY.md (the vision) and CLAUDE.md (the card).
