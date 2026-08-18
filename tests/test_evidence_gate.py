@@ -73,7 +73,30 @@ def test_a_hardcoded_test_count_in_living_docs_is_flagged_but_snapshots_are_exem
     assert any("scorecard.md" in h and "1234 tests" in h for h in hits)
     assert any("scorecard.md" in h and "coverage" in h for h in hits)
     assert not any("2026-07-13" in h for h in hits)  # the dated snapshot stays exempt
-    assert not any("2026-07-13" in h for h in hits)
+
+
+def test_verbatim_reference_material_is_exempt_but_living_docs_still_are_not(
+    tmp_path: Path,
+) -> None:
+    """The scan is lexical, so SCOPE carries the distinction between a claim this repo makes and
+    a number quoted from outside it. docs/reference holds externally-sourced files kept verbatim:
+    a tuning guide saying "below ~50 tests, parallelism is a net loss" is not CodeForge claiming
+    a suite size, and it cannot drift because the file is never edited to track the code.
+
+    The second half is the calibration and matters more than the first: the exemption must not
+    have quietly turned the check off everywhere.
+    """
+    from kernel.evidence_gate import _hardcoded_counts
+
+    (tmp_path / "README.md").write_text("a clean readme with no counts")
+    docs = tmp_path / "docs"
+    (docs / "reference").mkdir(parents=True)
+    (docs / "reference" / "tuning.md").write_text("below ~50 tests, parallelism is a net loss")
+    (docs / "living.md").write_text("the suite has 4321 tests at 77% coverage")
+    hits = _hardcoded_counts(tmp_path)
+    assert not any("tuning.md" in h for h in hits)  # quoted from outside -> exempt
+    assert any("living.md" in h and "4321 tests" in h for h in hits)  # still caught
+    assert any("living.md" in h and "coverage" in h for h in hits)
 
 
 @pytest.fixture(autouse=True)
