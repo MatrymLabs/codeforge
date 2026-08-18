@@ -29,7 +29,7 @@ _COMPLETE = {
     "classification": "PYTHON_PACKAGE",
     "language": "python",
     "decision": "approved",
-    **{req: "answered" for req in REQUIRED},
+    **{req: "answered" for req in REQUIRED},  # noqa: C420
 }
 
 

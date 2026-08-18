@@ -13,7 +13,7 @@ from kernel.hubble import incident as inc
 
 
 def _incident(**overrides):
-    base = dict(
+    base = dict(  # noqa: C408
         incident_id="INC-001",
         severity="sev2_high",
         type="regression",

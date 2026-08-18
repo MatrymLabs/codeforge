@@ -22,7 +22,7 @@ def _build_log() -> ChangeLedger:
     return ledger
 
 
-def maintenance(session: Session, arg: str = "") -> str:
+def maintenance(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `maintenance` verb: the world's change log and each entry's lifecycle state."""
     ledger = _build_log()
     lines = ["World maintenance log:"]

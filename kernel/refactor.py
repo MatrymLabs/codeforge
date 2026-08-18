@@ -108,7 +108,7 @@ def scoped_rename(source: str, func_name: str, old: str, new: str) -> str:  # pr
     targets: set[int] = set()
     found_func = False
 
-    for _node, scope in scopes.items():
+    for _node, scope in scopes.items():  # noqa: PERF102
         if not (isinstance(scope, func_scope) and getattr(scope, "name", None) == func_name):
             continue
         found_func = True
@@ -131,7 +131,7 @@ def scoped_rename(source: str, func_name: str, old: str, new: str) -> str:  # pr
         raise RefactorError(f"function {func_name!r} not found")
 
     class _Rename(cst.CSTTransformer):  # type: ignore[name-defined]
-        def leave_Name(self, original_node: Any, updated_node: Any) -> Any:
+        def leave_Name(self, original_node: Any, updated_node: Any) -> Any:  # noqa: N802
             if id(original_node) in targets:
                 return updated_node.with_changes(value=new)
             return updated_node

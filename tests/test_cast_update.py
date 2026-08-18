@@ -810,7 +810,7 @@ def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
         return (True, "ran clean")
 
     monkeypatch.setattr(cu, "validate_cast", _fake_validate)
-    ok, detail = cu._selective_validator(["solo"])(Path("/nonexistent"))
+    ok, detail = cu._selective_validator(["solo"])(Path("/nonexistent"))  # noqa: RUF059
     assert ok and calls["commands"] == ["look"] and calls["imports"] == ["adapters.gateway"]
 
 

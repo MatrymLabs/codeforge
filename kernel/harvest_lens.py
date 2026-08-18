@@ -97,7 +97,7 @@ def render_candidates(candidates: list[Candidate]) -> str:
     return "\n".join(lines)
 
 
-def harvest(arg: str = "") -> str:
+def harvest(arg: str = "") -> str:  # noqa: ARG001
     """The `harvest` verb: scan the parts library for patterns not yet stocked in the store."""
     from pathlib import Path
 

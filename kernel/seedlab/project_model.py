@@ -148,7 +148,7 @@ def _relationships(spec: dict) -> list[Relationship]:
         raise BlueprintLabError(f"'relationships' must be a list, got {type(raw).__name__}")
     rels: list[Relationship] = []
     for triple in raw:
-        if not isinstance(triple, (list, tuple)) or len(triple) != 3:
+        if not isinstance(triple, (list, tuple)) or len(triple) != 3:  # noqa: PLR2004
             raise BlueprintLabError(
                 f"each relationship must be a [subject, verb, object] triple: {triple!r}"
             )

@@ -14,7 +14,7 @@ from adapters.stewardship.risk import assess_risk
 
 
 def _clean(**over: object) -> ChangeDescriptor:
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         change_id="chg-001",
         title="tidy a docstring",
         files_touched=("kernel/world/score_sheet.py",),
@@ -81,7 +81,7 @@ def test_risk_tracks_the_security_surface_touched() -> None:
 
 
 def test_a_high_risk_change_needs_more_approvals() -> None:
-    risky = dict(
+    risky = dict(  # noqa: C408
         files_touched=(".github/workflows/ci.yml",),
         ai_assisted=True,
         dependencies_added=("some-pkg",),

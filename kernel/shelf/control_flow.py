@@ -83,11 +83,11 @@ def _direct_yield(func: ast.AST) -> bool:
         def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
             pass
 
-        def visit_Yield(self, node: ast.Yield) -> None:
+        def visit_Yield(self, node: ast.Yield) -> None:  # noqa: ARG002
             nonlocal found
             found = True
 
-        def visit_YieldFrom(self, node: ast.YieldFrom) -> None:
+        def visit_YieldFrom(self, node: ast.YieldFrom) -> None:  # noqa: ARG002
             nonlocal found
             found = True
 
@@ -109,9 +109,9 @@ def _guard_style(
             isinstance(s, (ast.Return, ast.Raise)) for s in stmt.body
         ):
             early_returns += 1
-    if early_returns >= 1 and max_depth <= 2:
+    if early_returns >= 1 and max_depth <= 2:  # noqa: PLR2004
         return "guard-clauses"
-    return "nested" if max_depth >= 3 else "linear"
+    return "nested" if max_depth >= 3 else "linear"  # noqa: PLR2004
 
 
 def _profile(func: ast.FunctionDef | ast.AsyncFunctionDef, qual: str) -> FlowProfile:

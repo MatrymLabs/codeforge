@@ -21,7 +21,7 @@ _ROOMS = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
 
 
 def test_generation_chains_marches_from_attach_east_to_the_far_end():
-    rooms, npcs, first = generate_spiral(_CONFIG, _ROOMS)
+    rooms, npcs, first = generate_spiral(_CONFIG, _ROOMS)  # noqa: RUF059
     assert first == "coil_4_ascent"
     # the attach room's east should point at the first march (the caller wires it; we report it)
     assert rooms["coil_4_ascent"]["exits"]["west"] == "base"

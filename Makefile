@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -15,6 +15,9 @@ MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
 export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
 
+# Resolve the repository interpreter when the Makefile is parsed; CI uses the system fallback.
+PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe                  || (test -x .venv/bin/python && echo .venv/bin/python || echo python3))
+
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
 # 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
@@ -26,23 +29,10 @@ env: hooks
 		uv sync --extra dev --python 3.13; \
 	else \
 		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
-		python3 -m venv .venv; \
-		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); \
-		$$bin/pip install -q --upgrade pip; \
-		$$bin/pip install -q -e ".[dev]"; \
-	fi
-	@# The venv layout is platform-dependent: POSIX puts executables in `bin`, Windows in
-	@# `Scripts`. This was hardcoded to `bin`, so `make env` could not build an environment on
-	@# Windows at all. That is how an agent worktree ended up with NO venv, which made `make`
-	@# there run every gate against a bare system interpreter and report failures belonging to
-	@# the interpreter rather than the code. Detected after creation, never assumed.
-	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); \
-	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
-	@if [ -d .venv/Scripts ]; then \
-		echo "✓ .venv ready - activate with: source .venv/Scripts/activate"; \
-	else \
-		echo "✓ .venv ready - activate with: source .venv/bin/activate"; \
-	fi
+		$(PY) -m venv .venv; 		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 		$$bin/pip install -q --upgrade pip; 		$$bin/pip install -q -e ".[dev]"; 	fi
+	@# The venv layout is platform-dependent: Windows uses Scripts and POSIX uses bin.
+	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
+	@if [ -d .venv/Scripts ]; then 		echo "venv ready - activate with: source .venv/Scripts/activate"; 	else 		echo "venv ready - activate with: source .venv/bin/activate"; 	fi
 
 # --- Mutators: run these while working ---
 fix:
@@ -111,7 +101,7 @@ lint-c:
 		echo "lint-c: no C sources in this tree, nothing to inspect"; \
 	elif command -v gcc >/dev/null 2>&1 || command -v clang >/dev/null 2>&1; then \
 		cc=$$(command -v gcc >/dev/null 2>&1 && echo gcc || echo clang); \
-		inc=$$(python3 -c "import sysconfig; print(sysconfig.get_paths()['include'])"); \
+		inc=$$($(PY) -c "import sysconfig; print(sysconfig.get_paths()['include'])"); \
 		echo "lint-c: $$(git ls-files '*.c' | tr '\n' ' ') [$$cc]"; \
 		$$cc -fsyntax-only -Wall -Wextra -Werror -I"$$inc" $$(git ls-files '*.c'); \
 	else \
@@ -187,23 +177,17 @@ lint-go:
 		done; \
 	fi
 
-# `lint-imports` lives in the venv and is invoked by BARE NAME, so it is a PATH fault when it is
-# absent, never a missing package. On 2026-08-14 a Bench read "No such file or directory" as "that
-# executable is not installed" and filed it in a Bench Report that way. That is the same
-# misdiagnosis lint-go used to make about the Go toolchain, one target down.
+# Resolve the import-linter console entry point through the same repository interpreter as the
+# Python gate. This keeps the target independent of whether a Windows Scripts or POSIX bin
+# directory happens to be on PATH.
 imports:  ## Enforce the style-guide section-2 dependency direction (import-linter).
-	@command -v lint-imports >/dev/null 2>&1 || { \
-		echo "imports: UNVERIFIED - \`lint-imports\` is not on PATH."; \
-		echo "         It IS installed, at .venv/bin/lint-imports. This is a PATH fault, not a"; \
-		echo "         missing package; do not pip install anything."; \
-		echo "         export PATH=\"\$$PWD/.venv/bin:\$$HOME/.local/go/bin:\$$HOME/go/bin:\$$HOME/.local/bin:\$$PATH\""; \
-		echo "         See AGENTS.md, \"Bench toolchain\"."; exit 1; }
-	lint-imports
+	$(PY) -c "from importlinter.cli import lint_imports_command; lint_imports_command()"
+
 
 typecheck: typecheck-python typecheck-native  ## Python via mypy; Rust and Go via their compilers.
 
 typecheck-python:
-	mypy kernel adapters content tests forge.py
+	$(PY) -m mypy
 
 # Per the practices reference section 15: for Rust and Go the COMPILER is the type gate.
 typecheck-native:
@@ -226,15 +210,18 @@ typecheck-native:
 JOBS ?= auto
 
 test:
-	pytest -n $(JOBS) -m "not property and not fuzz"
+	$(PY) -m pytest -n $(JOBS) -m "not property and not fuzz"
+
+test-order:
+	$(PY) -m pytest -p randomly --randomly-seed=1 -m "not property and not fuzz"
 
 property:
-	pytest -m property
+	$(PY) -m pytest -m property
 
 # Fuzz the trust-boundary gates (hostile input: seed/catalog/manifest YAML). The law:
 # a gate refuses with its own error type, never crashes. Hypothesis-driven, no new deps.
 fuzz:
-	pytest -m fuzz
+	$(PY) -m pytest -m fuzz
 
 # Mutation testing (cosmic-ray) - the "Mutate" rung. On-demand ONLY: one test run per mutant is
 # slow, so this is never a PR/CI gate. cosmic-ray is not in the default dev deps (its aiohttp/git
@@ -270,52 +257,52 @@ check: lint imports typecheck exit-integrity coverage sast
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
-	@python3 -c "import sys; from kernel.registry import load_collective, validate, unfiled_modules, untwinned_modules; from kernel.coverage import unexercised_capabilities; from kernel.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
+	@$(PY) -c "import sys; from kernel.registry import load_collective, validate, unfiled_modules, untwinned_modules; from kernel.coverage import unexercised_capabilities; from kernel.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
 
 # --- ARC verdicts: run the release checks and FILE the runtime dimensions' verdicts as dated
 # evidence under arc-evidence/ (git-ignored, reproducible from the recorded commit), so ARC can
 # compose release + evidence from real outcomes. Human-run, not on the inner loop; ARC only READS
 # what this files (`arc status`). change/patch have no store yet and stay honestly MISSING. ---
 arc-verdicts:
-	@python3 -m kernel.arc_ledger emit $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.arc_ledger emit $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@echo "✓ ARC verdicts filed -> arc-evidence/ (see: arc status)"
 
 # --- Repo integrity: one honest repo-health report (code quality + security +
 # provenance + registry + docs + truth), composed from checks we already own.
 # Detects tools; a missing one is reported not_configured, never faked. ---
 repo-integrity:
-	@python3 -m kernel.integrity
+	@$(PY) -m kernel.integrity
 
 # --- Cast: plan a standalone game project ("cast") poured from a seed pack + the engine.
 # Dry run -- lists what it WOULD copy and the manifest it WOULD write; writes nothing.
 # Usage: make cast-plan TEMPLATE=fantasy_mud NAME=Aethris (see docs/seed_architecture.md). ---
 cast-plan:
-	@python3 -m kernel.cast $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.cast $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast (Phase 2): POUR a standalone project to DEST (engine vendored + seed pack + scaffold).
 # Assembles a package; it is not yet detached/proven to boot independently (manifest: generated).
 # Usage: make cast TEMPLATE=blank_mud NAME=Demo DEST=../codeforge-cast-demo ---
 cast:
-	@python3 -m kernel.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Deploy-proof: pour the REAL Aethryn game Seed (whole engine + world), boot it in a fresh
 # subprocess, and prove it serves play commands over its own world - the honest proof the game
 # Seed's deployment is real, at the scale the platform is capable of creating. Heavy (whole-engine
 # vendor), so it is a standalone proof, not a unit gate. Usage: make deploy-proof ---
 deploy-proof:
-	@python3 scripts/deploy_aethryn_seed.py
+	@$(PY) scripts/deploy_aethryn_seed.py
 
 # --- Forge: the manufacturing capstone. ONE command forges a standalone game - plan, selectively
 # vendor the surfaces' closure, prove it with the broad harness - and prints the summary.
 # Usage: make forge NAME=SlimGame SURFACES=solo,save DEST=../my-game ---
 forge:
-	@python3 -m kernel.cast forge $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-forged-game) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.cast forge $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-forged-game) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast (Phase D2): pour a SELECTIVE cast - vendor ONLY the target surfaces' module closure,
 # then validate by running every surface command against it. Falls back honestly (not_validated)
 # if the closure is insufficient. Usage: make cast-selective SURFACES=solo,save NAME=Demo DEST=.. ---
 cast-selective:
-	@python3 -m kernel.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast diff (package-update U1): read-only drift report between a poured cast's vendored engine
 # and this checkout (the target source). Names changed / upstream-only / cast-only engine files, the
@@ -323,67 +310,67 @@ cast-selective:
 # is a separate step. AUDIT=1 adds a pip-audit CVE scan (needs network). Usage:
 # make cast-diff DIR=../codeforge-forged-game SOURCE=. [AUDIT=1] ---
 cast-diff:
-	@python3 -m kernel.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
+	@$(PY) -m kernel.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
 
 # --- Cast update (package-update U2): APPLY an engine update to a poured cast, guarded by the broad
 # harness. Backs up, re-vendors from this checkout, re-validates, rolls back on failure; never
 # commits (the owner commits). Refuses local edits / selective casts unless FORCE=1. Usage:
 # make cast-update DIR=../codeforge-forged-game SOURCE=. [FORCE=1] ---
 cast-update:
-	@python3 -m kernel.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
+	@$(PY) -m kernel.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
 
 # --- Plugins: list the third-party command plugins loaded from plugins/ at boot, and any that were
 # rejected (loud, never silent). The plugin boundary (D3): SEED verbs only, no collision. ---
 plugins:
-	@python3 -c "import forge; from kernel.plugins import render_plugins; print(render_plugins(forge.PLUGIN_LOAD))"
+	@$(PY) -c "import forge; from kernel.plugins import render_plugins; print(render_plugins(forge.PLUGIN_LOAD))"
 
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
 coupling:
-	@python3 -m kernel.coupling
+	@$(PY) -m kernel.coupling
 
 # --- Shelf-pour: pour the Hardware Store shelf as a standalone installable package (renamed off
 # `parts`, deps auto-declared) and PROVE it imports every core with zero engine present. Changes
 # nothing in the repo; writes into DEST (git-ignored). Usage: make shelf-pour DEST=../codeforge-shelf ---
 shelf-pour:
-	@python3 -m kernel.shelf_pour $(or $(DEST),workspace/shelf-pour)
+	@$(PY) -m kernel.shelf_pour $(or $(DEST),workspace/shelf-pour)
 
 # --- Shelf-build: the release-grade proof. Pour, then build the wheel and install it into a FRESH
 # venv -- proving `pip install codeforge-shelf` works for a stranger. Needs network (pip). Then
 # `twine upload` (your PyPI trigger). Usage: make shelf-build DEST=.. WORK=.. ---
 shelf-build:
-	@python3 -m kernel.shelf_pour build $(or $(DEST),workspace/shelf-pour) $(or $(WORK),workspace/shelf-build)
+	@$(PY) -m kernel.shelf_pour build $(or $(DEST),workspace/shelf-pour) $(or $(WORK),workspace/shelf-build)
 
 # --- Cast install-check: the FRESH-INSTALL proof. Creates a clean venv, installs ONLY the cast's
 # declared deps, and boots it there - so the cast runs with zero dependency on CodeForge's env.
 # Needs network (pip). Usage: make cast-install-check DIR=../codeforge-cast-demo WORK=/tmp/ci ---
 cast-install-check:
-	@python3 -m kernel.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
+	@$(PY) -m kernel.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
 
 # --- Truth: EvidenceGate -- check the project's claims correspond to reality
 # (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any
 # FLAGGED claim, so the ritual and CI fail loud on drift. Same as the in-MUD
 # `truth check`, reachable from a script. ---
 truth:
-	@python3 -m kernel.evidence_gate
+	@$(PY) -m kernel.evidence_gate
 
 # --- Smoke: the whole engine end-to-end over a live socket -- start -> log in
 # -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
 # DB) and timed. Exit 0 == every live step passed. ---
 smoke:
-	@python3 scripts/e2e_smoke.py
+	@$(PY) scripts/e2e_smoke.py
 
 # Blueprint Evolution Lab: run the demo bake-off and file evidence to reports/evolution/.
 # The authorized execution path (the MUD `evolution` command is read-only). Nothing is promoted.
 evolution:
-	@python3 scripts/evolution_demo.py
+	@$(PY) scripts/evolution_demo.py
 
 # --- Extra inspections (One-Button Rule) ---
 # `-n auto` fans the suite across cores (pytest-xdist); pytest-cov combines the per-worker
 # data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
 # inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	$(PY) -m pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
@@ -580,43 +567,43 @@ contracts:
 # --- Trend: measure the engine tick, RECORD its median as a retained Chronicle metric point
 # (chronicle/ledger.jsonl, git-tracked), then render the series over time. `make bench` stays pure. ---
 trend:
-	@python3 -m kernel.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
-	@python3 -m kernel.chronicle trend engine_tick.median_us
+	@$(PY) -m kernel.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.chronicle trend engine_tick.median_us
 
 # --- SLO: evaluate the recorded engine-tick SLI against its objective + error budget
 # (docs/reports/slo/engine-tick-slo.md). Read-only over the Chronicle; exits 1 on a breach so a
 # pipeline can act. NOT in `make check` (the SLI is host-relative and sparse). ---
 slo:
-	@python3 -m kernel.slo
+	@$(PY) -m kernel.slo
 
 # --- Loadtest: drive the tick from many concurrent sessions and file a latency-distribution
 # artifact (p50/p95/p99). Read-only rotation; localhost/in-process only. NOT in make check. ---
 loadtest:
-	@python3 -m kernel.loadtest
+	@$(PY) -m kernel.loadtest
 
 # --- Artifact: stamp a portfolio-artifact repo skeleton (README/ADR/design-doc/api-spec/
 # test-plan/CI/compose) into git-ignored workspace/artifacts/. Structure + boilerplate only. ---
 artifact:
-	@python3 -m kernel.artifact_forge "$(NAME)" "$(KIND)"
+	@$(PY) -m kernel.artifact_forge "$(NAME)" "$(KIND)"
 
 # --- AI eval: score the offline LocalArchitect against a rubric, RECORD it as a Chronicle
 # ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real
 # ClaudeAdvisor through the same seam to evaluate the LLM. ---
 ai-eval:
-	@python3 -m adapters.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
-	@python3 -m kernel.chronicle evals
+	@$(PY) -m adapters.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@$(PY) -m kernel.chronicle evals
 
 # --- Retention doctor (read-only, R1): show what the Chronicle keeps, what is eligible for
 # review, and what a hold protects. Disposition is not deletion; R1 writes and removes nothing. ---
 retention:
-	@python3 -m kernel.retention
+	@$(PY) -m kernel.retention
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 env-parity:
-	@python3 -m kernel.env_parity
+	@$(PY) -m kernel.env_parity
 
 doctor: env-parity
-	python3 scripts/doctor.py
+	$(PY) scripts/doctor.py
 
 # --- Security patches: scan deps for CVEs, apply available fixes, then RE-VERIFY.
 # Files a dated audit under security-evidence/. Detect + fix are best-effort
@@ -679,15 +666,15 @@ ship: check
 
 # --- Conveniences ---
 run:
-	python3 forge.py
+	$(PY) forge.py
 
 world:
-	python3 -m kernel.catalog
+	$(PY) -m kernel.catalog
 
 # The Surveyor: read-only validation of the Aethryn world map (duplicate ids, broken region
 # references, canon drift). Exit non-zero on any problem, so it can gate a script.
 world-check:
-	@python3 -m tools.world validate
+	@$(PY) -m tools.world validate
 
 exit-integrity:
 	@python -m kernel.world.exit_integrity
@@ -695,21 +682,21 @@ exit-integrity:
 # The Cartographer's tally: read-only per-zone content-density audit of the Aethryn world.
 # Ranks zones by content score and flags any below the launch floor (settlements/dungeons/quests).
 zone-density:
-	@python3 tools/zone_density.py
+	@$(PY) tools/zone_density.py
 
 # The Assayer: read-only audit of the DESIGNED coin economy (faucets vs sinks) over the
 # assembled Aethryn world, so live-ops can read the balance without instrumenting the server.
 economy-audit:
-	@FORGE_SEED=aethryn python3 -c "import kernel.world.world; from kernel.world.npcs import NPCS; from kernel.coin_flow import render_audit; print(render_audit(NPCS))"
+	@FORGE_SEED=aethryn $(PY) -c "import kernel.world.world; from kernel.world.npcs import NPCS; from kernel.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
-	python3 -m kernel.store
+	$(PY) -m kernel.store
 
 hardware:
-	python3 -m kernel.hardware
+	$(PY) -m kernel.hardware
 
 loop:
-	@python3 -m kernel.loop trace $(or $(PART),workflow-engine)
+	@$(PY) -m kernel.loop trace $(or $(PART),workflow-engine)
 
 clean:
 	rm -rf $(RUFF_CACHE_DIR) $(MYPY_CACHE_DIR) .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ kernel/__pycache__ adapters/__pycache__ tests/__pycache__
@@ -731,14 +718,14 @@ serve-mmo:
 # (git-ignored). Safe to run while the server is up (online .backup). Restore: see
 # docs/database.md. For PostgreSQL use pg_dump. ---
 backup:
-	@python3 -c "from kernel.world.db import backup_db; print('backed up ->', backup_db())"
+	@$(PY) -c "from kernel.world.db import backup_db; print('backed up ->', backup_db())"
 
 # Restore a SQLite snapshot over the live database (recovery). Usage: make restore BACKUP=<path>.
 # Disposes the cached engine so the server reopens the restored file. The restore is TESTED end to
 # end in tests/test_db.py (untested backups are not backups). For PostgreSQL use pg_restore.
 restore:
 	@test -n "$(BACKUP)" || (echo "usage: make restore BACKUP=<path-to-.db>" && exit 2)
-	@python3 -c "from pathlib import Path; from kernel.world.db import restore_db; print('restored ->', restore_db(Path('$(BACKUP)')))"
+	@$(PY) -c "from pathlib import Path; from kernel.world.db import restore_db; print('restored ->', restore_db(Path('$(BACKUP)')))"
 
 db-up:
 	docker compose up -d db
@@ -765,7 +752,7 @@ demo-gif:
 # --- E2E: drive the live dashboard with a real browser (isolated from `make check`). ---
 e2e:
 	@python -m playwright install chromium
-	pytest e2e -q
+	$(PY) -m pytest e2e -q
 
 # --- The Ritual: one command lights the whole workshop -- gates run, GitHub
 # mirrors, the forge lights, the MUD window opens at the front desk. Bound to

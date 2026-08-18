@@ -158,7 +158,7 @@ def _track_from_dict(name, raw):
         raise ProgressionError(f"{name!r} track: 'tiers' must be a non-empty list")
     tiers = []
     for tier in tiers_raw:
-        if not isinstance(tier, (list, tuple)) or len(tier) != 3:
+        if not isinstance(tier, (list, tuple)) or len(tier) != 3:  # noqa: PLR2004
             raise ProgressionError(f"{name!r} track: each tier must be [start, end, multiplier]")
         start, end, mult = tier
         if not all(isinstance(x, int) and not isinstance(x, bool) for x in (start, end, mult)):

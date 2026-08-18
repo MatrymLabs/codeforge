@@ -74,7 +74,7 @@ def test_a_stranger_can_play_aethryn_cradle_to_the_summit(tmp_path):
         "FORGE_SEED": "aethryn",
         "CODEFORGE_DB": str(tmp_path / "playthrough.db"),
     }
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: PLW1510
         [sys.executable, "-c", _PLAYTHROUGH],
         env=env,
         cwd=str(_REPO),

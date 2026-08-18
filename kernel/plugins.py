@@ -81,7 +81,7 @@ def load_plugins(
         name = path.stem
         try:
             module = importer(path)
-        except Exception as exc:  # a broken plugin never bricks the engine; the error is recorded
+        except Exception as exc:  # a broken plugin never bricks the engine; the error is recorded  # noqa: BLE001, E501
             errors.append(f"{name}: import failed: {exc}")
             continue
         hook = getattr(module, PLUGIN_HOOK, None)
@@ -90,7 +90,7 @@ def load_plugins(
             continue
         try:
             provided = list(hook())
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             errors.append(f"{name}: {PLUGIN_HOOK}() raised: {exc}")
             continue
         reason = _reject(provided, existing, added)

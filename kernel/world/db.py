@@ -17,6 +17,7 @@ transfers straight to PostgreSQL when the world outgrows one file.
 
 import os
 from pathlib import Path
+from threading import Lock
 
 from sqlalchemy import Engine, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -42,6 +43,7 @@ def _default_db_path() -> Path:
 DB_PATH = _default_db_path()
 
 _ENGINES: dict[str, Engine] = {}
+_ENGINE_LOCK = Lock()
 
 
 class ArchiveBase(DeclarativeBase):
@@ -225,11 +227,12 @@ def open_archive_session() -> SqlSession:
     For SQLite the tables are created on first contact (idempotent); for PostgreSQL
     Alembic owns the schema, but create_all is a harmless checkfirst no-op if migrated."""
     url = engine_url()
-    engine = _ENGINES.get(url)
-    if engine is None:
-        engine = create_engine(url)
-        ArchiveBase.metadata.create_all(engine)  # checkfirst=True: a no-op once migrated
-        _ENGINES[url] = engine
+    with _ENGINE_LOCK:
+        engine = _ENGINES.get(url)
+        if engine is None:
+            engine = create_engine(url)
+            ArchiveBase.metadata.create_all(engine)  # checkfirst=True: a no-op once migrated
+            _ENGINES[url] = engine
     return SqlSession(engine)
 
 

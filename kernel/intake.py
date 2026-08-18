@@ -214,7 +214,7 @@ def render_intake(ledger: Path = _LEDGER) -> str:
     return "\n".join(lines)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`python -m kernel.intake` / `make intake`: print the report, exit non-zero on a FAIL."""
     print(render_intake())
     return 0 if audit_intake().passed else 1

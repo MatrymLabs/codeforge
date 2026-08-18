@@ -145,7 +145,7 @@ def render_proposal(proposal: PatchProposal) -> str:
     ]
     preview = proposal.content.splitlines()[:8]
     lines += [f"  | {line}" for line in preview]
-    if len(proposal.content.splitlines()) > 8:
+    if len(proposal.content.splitlines()) > 8:  # noqa: PLR2004
         lines.append("  | ...")
     lines += [
         "",
@@ -178,7 +178,7 @@ def scaffold_part(name: str) -> str:
     )
 
 
-def forge_command(session: object, arg: str = "", root: Path | None = None) -> str:
+def forge_command(session: object, arg: str = "", root: Path | None = None) -> str:  # noqa: ARG001, PLR0911
     """The owner-only `@forge` verb: propose a part skeleton, then approve to generate it into
     the sandbox. Rank is enforced by the command spine (ADMIN verb, min_rank owner)."""
     parts = arg.split(maxsplit=1)
@@ -308,7 +308,7 @@ def preview_seed(seed_name: str, seeds_root: Path | None = None) -> str:
     )
 
 
-def arch_command(session: object, arg: str = "", root: Path | None = None) -> str:
+def arch_command(session: object, arg: str = "", root: Path | None = None) -> str:  # noqa: ARG001
     """The owner-only `@arch` verb: step into the Proving Ground. With no argument, review the
     forged candidates; `@arch preview <seed>` looks read-only at a built game. Rank is enforced by
     the command spine (ADMIN, min_rank owner)."""

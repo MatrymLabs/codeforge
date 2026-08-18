@@ -19,11 +19,11 @@ class RecordingSleep:
         self.delays.append(delay)
 
 
-class Transient(Exception):
+class Transient(Exception):  # noqa: N818
     pass
 
 
-class Permanent(Exception):
+class Permanent(Exception):  # noqa: N818
     pass
 
 

@@ -43,7 +43,7 @@ def per_stat_cap(level: int) -> int:
     return MAX_ALLOC_PER_STAT_PER_LEVEL * max(0, level - 1)
 
 
-def allocate(session: Session, arg: str) -> str:
+def allocate(session: Session, arg: str) -> str:  # noqa: PLR0911
     """`allocate <stat> [n]` -- spend n (default 1) into an attribute; bare `allocate` shows the
     pool. Fails loud on no calling, a bad attribute, too few points, or the per-stat cap."""
     if session.stats is None:
@@ -95,7 +95,7 @@ def _pool(session: Session) -> str:
     """The bare `allocate` view: unspent points, the per-stat cap, and each attribute's standing."""
     assert session.stats is not None
     lines = [
-        f"Attribute points: {unspent(session)} unspent "
+        f"Attribute points: {unspent(session)} unspent "  # noqa: ISC004
         f"({STAT_POINTS_PER_LEVEL}/level; up to {per_stat_cap(session.level)} per attribute now)."
     ]
     for attr in ATTRIBUTES:

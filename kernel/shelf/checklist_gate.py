@@ -19,7 +19,7 @@ class ChecklistError(ValueError):
     """Raised when a checklist is declared malformed."""
 
 
-class GateBlocked(Exception):
+class GateBlocked(Exception):  # noqa: N818
     """Raised when required attestations are missing or unchecked (the gate holds)."""
 
     def __init__(self, phase: str, failures: tuple[str, ...]) -> None:
@@ -58,7 +58,7 @@ class Checklist:
             raise ChecklistError("checklist item keys must be unique")
 
 
-def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str = "") -> None:
+def verify(checklist: Checklist, attestations: Mapping[str, bool], *, actor: str = "") -> None:  # noqa: ARG001
     """Raise GateBlocked unless every REQUIRED item is attested True.
 
     An optional item may be absent. An unknown attestation key is ignored (the

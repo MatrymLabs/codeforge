@@ -15,6 +15,7 @@ plugins {
     // inspecting it. ktlint is the instrument. It runs from the wrapper, so CI needs a JDK and
     // nothing else, and `check` depends on it so a lint failure cannot be skipped by running tests.
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
 group = "labs.matrym.retroforge"
@@ -26,26 +27,31 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-// Bytecode is pinned at 24, which is the highest Kotlin 2.2.0 emits, while compiling ON JBR 25.
-// Left unpinned, javac targeted 25 and kotlinc targeted 24 and Gradle refused the mismatch. It was
-// right to: two halves of one artifact compiled for different JVMs is the kind of thing that runs
-// fine until the one class that does not.
+// The Kotlin lane is governed by a reproducible Java 21 toolchain. The foojay resolver in settings
+// provisions the requested JDK when it is not already installed.
 java {
-    sourceCompatibility = JavaVersion.VERSION_24
-    targetCompatibility = JavaVersion.VERSION_24
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 kotlin {
-    compilerOptions { jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_24 }
+    compilerOptions { jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21 }
 }
 
-// NO jvmToolchain() pin, deliberately. This is a RIDER projection, so its runtime should follow
-// the JBR Rider actually ships: today JBR 25.0.3, and the only JDK on this host. A pinned 21 was
-// the first thing written here and it failed exactly as it should have, with Gradle refusing to
-// invent a toolchain it could not find. Pinning a version the IDE does not ship would mean either
-// downloading a second JDK to satisfy a number, or a build that breaks whenever Rider updates.
-
 tasks.test { useJUnitPlatform() }
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("detekt.yml"))
+    baseline = file("detekt-baseline.xml")
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
+}
 
 ktlint {
     version.set("1.3.1")

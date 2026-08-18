@@ -114,7 +114,7 @@ def test_at_least_once_consumer_flow() -> None:
         for _attempt in range(1, max_attempts + 1):
             try:
                 process(msg)
-                return  # success
+                return  # success  # noqa: TRY300
             except Exception as exc:  # noqa: BLE001 - the consumer decides retry vs bury
                 last_reason = str(exc)
         dlq.bury(msg, last_reason, attempts=max_attempts)  # retries exhausted -> dead-letter

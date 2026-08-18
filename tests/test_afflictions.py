@@ -198,7 +198,7 @@ def test_inflicts_must_name_a_status(tmp_path):
     from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {chance: 2}\n")
-    with pytest.raises(BlueprintError, match="inflicts.status"):
+    with pytest.raises(BlueprintError, match="inflicts.status"):  # noqa: RUF043
         load()
 
 
@@ -218,7 +218,7 @@ def test_inflicts_rejects_a_non_positive_number(tmp_path):
     load = _npc_yaml(
         tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {status: venom, damage: 0}\n"
     )
-    with pytest.raises(BlueprintError, match="inflicts.damage"):
+    with pytest.raises(BlueprintError, match="inflicts.damage"):  # noqa: RUF043
         load()
 
 
@@ -246,7 +246,7 @@ def test_special_rejects_an_unknown_kind(tmp_path):
     from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: explode}\n")
-    with pytest.raises(BlueprintError, match="special.kind"):
+    with pytest.raises(BlueprintError, match="special.kind"):  # noqa: RUF043
         load()
 
 
@@ -262,7 +262,7 @@ def test_special_rejects_a_non_positive_heal(tmp_path):
     from kernel.world.seed import BlueprintError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 0}\n")
-    with pytest.raises(BlueprintError, match="special.heal"):
+    with pytest.raises(BlueprintError, match="special.heal"):  # noqa: RUF043
         load()
 
 

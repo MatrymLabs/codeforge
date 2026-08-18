@@ -80,7 +80,7 @@ def test_a_declared_one_way_is_clean() -> None:
     assert verdict.clean
 
 
-def test_a_declared_one_way_is_still_REPORTED_as_declared() -> None:
+def test_a_declared_one_way_is_still_REPORTED_as_declared() -> None:  # noqa: N802
     """Clean is not the same as invisible. The world should be able to list its one-way drops."""
     verdict = inspect_exits(
         _rooms(
@@ -132,7 +132,7 @@ def test_the_report_names_room_direction_and_destination() -> None:
     assert "cellar" in rendered and "west" in rendered and "workshop" in rendered
 
 
-def test_a_reverse_pointing_at_a_DIFFERENT_room_is_still_accidental() -> None:
+def test_a_reverse_pointing_at_a_DIFFERENT_room_is_still_accidental() -> None:  # noqa: N802
     """b goes south, but not back to a. The player cannot retrace their step."""
     verdict = inspect_exits(
         _rooms(
@@ -152,7 +152,7 @@ def test_loader_refuses_a_stale_one_way_declaration(tmp_path) -> None:
 
     path = tmp_path / "rooms.yaml"
     path.write_text("cellar:\n  exits: {west: workshop}\n  one_way: [east]\nworkshop:\n")
-    with pytest.raises(BlueprintError, match="cellar.*east"):
+    with pytest.raises(BlueprintError, match="cellar.*east"):  # noqa: RUF043
         load_rooms(path)
 
 

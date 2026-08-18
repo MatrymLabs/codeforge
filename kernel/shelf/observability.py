@@ -36,7 +36,7 @@ _configured = False
 
 def configure_logging() -> None:
     """Configure structlog to emit JSON events (idempotent). Called once at app start."""
-    global _configured
+    global _configured  # noqa: PLW0603
     if _configured:
         return
     structlog.configure(

@@ -31,7 +31,7 @@ class Routing(unittest.TestCase):
         self.assertFalse(v.escalated)
 
     def test_mid_confidence_revises(self):
-        checks = passing("static", 7) + [Check("s1", "static", False), Check("s2", "static", False)]
+        checks = passing("static", 7) + [Check("s1", "static", False), Check("s2", "static", False)]  # noqa: RUF005
         v = decide(checks)  # 7/9 ~= 0.78 -> between revise(0.6) and proceed(0.85)
         self.assertEqual(v.decision, REVISE)
 
@@ -44,7 +44,7 @@ class Routing(unittest.TestCase):
 class NonOverridableEscalation(unittest.TestCase):
     def test_one_failed_security_check_escalates_despite_high_confidence(self):
         # 99 passing + 1 failed security: confidence ~0.99 but MUST escalate
-        checks = passing("static", 99) + [Check("authz", "security", False)]
+        checks = passing("static", 99) + [Check("authz", "security", False)]  # noqa: RUF005
         v = decide(checks)
         self.assertEqual(v.decision, ESCALATE)
         self.assertTrue(v.escalated)
@@ -52,20 +52,20 @@ class NonOverridableEscalation(unittest.TestCase):
         self.assertTrue(any("security" in r for r in v.reasons))
 
     def test_blocking_escalation_class_stops(self):
-        checks = passing("static", 50) + [Check("sandbox", "sandbox", False, severity="blocking")]
+        checks = passing("static", 50) + [Check("sandbox", "sandbox", False, severity="blocking")]  # noqa: RUF005
         self.assertEqual(decide(checks).decision, STOP)
 
     def test_grounding_failure_escalates(self):
-        checks = passing("static", 10) + [Check("citations", "grounding", False)]
+        checks = passing("static", 10) + [Check("citations", "grounding", False)]  # noqa: RUF005
         self.assertEqual(decide(checks).decision, ESCALATE)
 
     def test_custom_escalation_classes(self):
-        checks = passing("static", 10) + [Check("data", "data", False)]
+        checks = passing("static", 10) + [Check("data", "data", False)]  # noqa: RUF005
         v = decide(checks, escalation_classes=frozenset({"data"}))
         self.assertEqual(v.decision, ESCALATE)
 
     def test_blocking_non_escalation_failure_stops(self):
-        checks = passing("static", 10) + [Check("build", "static", False, severity="blocking")]
+        checks = passing("static", 10) + [Check("build", "static", False, severity="blocking")]  # noqa: RUF005
         v = decide(checks)
         self.assertEqual(v.decision, STOP)
         self.assertFalse(v.escalated)  # a hard stop, not an escalation

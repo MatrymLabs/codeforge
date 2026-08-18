@@ -132,9 +132,9 @@ def test_planning_blocks_when_the_starter_pack_is_missing(tmp_path: Path) -> Non
 
 
 def test_the_plan_writes_nothing(tmp_path: Path) -> None:
-    before = set(p.name for p in tmp_path.iterdir())
+    before = set(p.name for p in tmp_path.iterdir())  # noqa: C401
     plan_cast("blank_mud", "Sandbox")
-    after = set(p.name for p in tmp_path.iterdir())
+    after = set(p.name for p in tmp_path.iterdir())  # noqa: C401
     assert before == after  # a dry run touches nothing on disk
 
 
@@ -355,7 +355,7 @@ def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
         steps.append("venv" if "venv" in cmd else "install" if "install" in cmd else "boot")
         return 0, "ok"
 
-    ok, detail = install_check(out, tmp_path / "work", runner=fake)
+    ok, detail = install_check(out, tmp_path / "work", runner=fake)  # noqa: RUF059
     assert ok and steps == ["venv", "install", "boot"]
     assert read_manifest(out / "cast_manifest.json").isolation_proven is True
 

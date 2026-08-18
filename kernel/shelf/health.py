@@ -62,7 +62,7 @@ class HealthRegistry:
         for name, check in self._checks.items():
             try:
                 value = check()
-            except Exception as exc:  # a broken check must not crash the report
+            except Exception as exc:  # a broken check must not crash the report  # noqa: BLE001
                 results.append(HealthResult(name, UNKNOWN, f"check raised: {exc!r}"))
                 continue
             if value in _STATUSES:

@@ -190,7 +190,7 @@ def check_world(seed_name: str, root: Path | None = None) -> list[str]:
     real_spawn = _first_room(_seeds_root(root) / seed_name)
     if real_spawn and manifest.start_room != real_spawn:
         return [
-            f"{seed_name}: manifest start_room '{manifest.start_room}' != the seed's first room "
+            f"{seed_name}: manifest start_room '{manifest.start_room}' != the seed's first room "  # noqa: ISC004
             f"'{real_spawn}' (the engine spawns at the first room; update world.yaml)"
         ]
     return []

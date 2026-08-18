@@ -38,7 +38,7 @@ def load_graph(path: Path | None = None) -> dict[str, Any]:
     where = path if path is not None else _GRAPH_PATH
     if not where.exists():
         raise BlueprintError(f"World graph file not found: {where}")
-    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(where.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict):
         raise BlueprintError(f"World graph file is not a mapping: {where}")
 
@@ -139,7 +139,7 @@ def region_detail(region_id: str, graph: dict[str, Any] | None = None) -> str:
     return "\n".join(
         [
             f"{region['name']}  [{region_id}]",
-            f"  canon_status {region['canon_status']} | "
+            f"  canon_status {region['canon_status']} | "  # noqa: ISC004
             f"threat {region['threat_min']}-{region['threat_max']}",
             f"  land neighbours: {', '.join(land) if land else '(none)'}",
             f"  reachable by sea: {', '.join(sea_kin) if sea_kin else '(none)'}",

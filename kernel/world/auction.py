@@ -34,7 +34,7 @@ def list_item(session: Session, arg: str) -> str:
     from kernel.world.items import ITEMS, carrier, trace_item
 
     parts = arg.rsplit(maxsplit=1)
-    if len(parts) < 2 or not parts[1].strip().lstrip("-").isdigit():
+    if len(parts) < 2 or not parts[1].strip().lstrip("-").isdigit():  # noqa: PLR2004
         return "List what, for how much? (auction list <item> <price>)"
     item_kw, price = parts[0].strip().lower(), int(parts[1])
     if price <= 0:

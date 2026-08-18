@@ -34,7 +34,7 @@ def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
 
     game_engine = quest._QUESTS["coilward_contract"].engine  # the game quest (the built-in arc)
     assert isinstance(game_engine, WorkflowEngine)
-    biz_engine, biz_run = new_onboarding()  # the practical workflow
+    biz_engine, biz_run = new_onboarding()  # the practical workflow  # noqa: RUF059
     assert isinstance(biz_engine, WorkflowEngine)
     assert type(game_engine) is type(biz_engine)
     # And they are genuinely different workflows sharing one engine.

@@ -107,7 +107,7 @@ def test_each_tier_feeds_the_next(aethryn):
     it is two disconnected recipes, not a RAW -> REFINED -> PRODUCT climb."""
     recipes = aethryn["recipes"]
     for name, steps in _CHAINS.items():
-        for (label, output), (next_label, _) in zip(steps, steps[1:], strict=False):
+        for (label, output), (next_label, _) in zip(steps, steps[1:], strict=False):  # noqa: RUF007
             assert output in recipes[next_label]["inputs"], (
                 f"{name} chain break: {label} makes {output}, but {next_label} does not use it"
             )

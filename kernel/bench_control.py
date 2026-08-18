@@ -235,7 +235,7 @@ def render_controlled(verdict: Comparison, control: ControlReport) -> str:
         [
             f"controlled bench verdict: {verdict.label.upper()}",
             f"  {verdict.detail}",
-            f"  conditions: {control.note}; governor={control.governor} "
+            f"  conditions: {control.note}; governor={control.governor} "  # noqa: ISC004
             f"(controlled={'yes' if control.governor_controlled else 'no'})",
             f"  affinity achieved: {list(control.achieved_affinity)}",
             f"  defensible (pinned AND fixed governor): {defensible}",

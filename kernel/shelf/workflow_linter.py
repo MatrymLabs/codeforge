@@ -94,7 +94,7 @@ def _check_permissions(doc: Mapping[str, object], findings: list[Finding]) -> No
 
 
 def _check_uses(where: str, uses: str, budget: Budget, findings: list[Finding]) -> None:
-    if uses.startswith("./") or uses.startswith("."):
+    if uses.startswith("./") or uses.startswith("."):  # noqa: PIE810
         return  # a local action, no SHA to pin
     m = _USES_REF.match(uses.strip())
     if not m:

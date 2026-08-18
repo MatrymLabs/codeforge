@@ -42,6 +42,6 @@ def shout(session: Session, message: str) -> str:
 
 def reset_throttles(clock: Clock | None = None) -> None:
     """Test hook: clear all per-player buckets and optionally inject a clock for new ones."""
-    global _clock_override
+    global _clock_override  # noqa: PLW0603
     _clock_override = clock
     _BUCKETS.clear()

@@ -105,7 +105,7 @@ def test_missing_taxonomy_fails_loud(tmp_path):
         ("domains:\n  - code: '01'\n    name: A\n  - code: '01'\n    name: B", "not unique"),
         ("domains:\n  - code: '01'\n    name: A\n    categories: notalist", "must be a list"),
         (
-            "domains:\n  - code: '01'\n    name: A\n    categories: [v]\n"
+            "domains:\n  - code: '01'\n    name: A\n    categories: [v]\n"  # noqa: ISC004
             "  - code: '02'\n    name: B\n    categories: [v]",
             "claimed by both",
         ),

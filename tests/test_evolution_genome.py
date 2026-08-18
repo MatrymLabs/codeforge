@@ -26,7 +26,7 @@ def _seed() -> bp.Blueprint:
 
 
 def _genome(**over: object) -> BlueprintGenome:
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         genome_id="score_sheet_renderer",
         seed=_seed(),
         purpose="Evolve a readable, fast score-sheet renderer.",

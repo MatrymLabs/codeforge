@@ -38,17 +38,17 @@ _CHAMBER_STAGES = (
     ),
     (
         "the mid-depths",
-        "Deeper beneath {name}, the passage narrows and the air turns stale and close. "
+        "Deeper beneath {name}, the passage narrows and the air turns stale and close. "  # noqa: ISC004
         "{note} {mood}",
     ),
     (
         "the deep",
-        "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "
+        "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "  # noqa: ISC004
         "{note} {mood}",
     ),
     (
         "the lair",
-        "The way opens into a great vault at the root of {name}, where the deep thing makes its "
+        "The way opens into a great vault at the root of {name}, where the deep thing makes its "  # noqa: ISC004
         "lair. {note} {mood}",
     ),
 )
@@ -93,7 +93,7 @@ def load_dungeons(path: Path) -> list[dict[str, Any]] | None:
             if key not in merged:
                 raise BlueprintError(f"dungeon {room!r} is missing required key {key!r}.")
         level = merged["level"]
-        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
+        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:  # noqa: PLR2004
             raise BlueprintError(f"dungeon {room!r}: 'level' must be an int 1..300, got {level!r}.")
         configs.append(merged)
     return configs

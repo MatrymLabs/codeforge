@@ -132,7 +132,7 @@ def _bridges(adj: dict[str, set[str]]) -> set[frozenset[str]]:
     low: dict[str, int] = {}
     bridges: set[frozenset[str]] = set()
     timer = 0
-    for root in adj:
+    for root in adj:  # noqa: PLC0206
         if root in disc:
             continue
         # iterative DFS; the stack holds (node, parent, iterator over neighbours)
@@ -179,7 +179,7 @@ def audit_topology(
     n = len(exits)
     degrees = [len(outs) for outs in exits.values()]
     mean_degree = sum(degrees) / n
-    linearity = sum(1 for d in degrees if d == 2) / n
+    linearity = sum(1 for d in degrees if d == 2) / n  # noqa: PLR2004
 
     adj = _undirected(exits)
     bridges = _bridges(adj)
@@ -194,7 +194,7 @@ def audit_topology(
     # >= 2), so it separates two real areas -- not a leaf-spur to a deliberate dead end.
     undeclared: list[tuple[str, str]] = []
     for edge in bridges:
-        if all(len(adj[node]) >= 2 for node in edge) and edge not in declared:
+        if all(len(adj[node]) >= 2 for node in edge) and edge not in declared:  # noqa: PLR2004
             a, b = sorted(edge)
             undeclared.append((a, b))
     undeclared.sort()

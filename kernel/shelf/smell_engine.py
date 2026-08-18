@@ -250,7 +250,7 @@ def _check_duplicates(tree: ast.Module, out: list[Smell]) -> None:
     for node in ast.walk(tree):
         if (
             isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-            and _count_statements(node) >= 4
+            and _count_statements(node) >= 4  # noqa: PLR2004
         ):
             body_key = "".join(ast.dump(s, annotate_fields=False) for s in node.body)
             if body_key in seen:

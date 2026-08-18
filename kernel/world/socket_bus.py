@@ -34,6 +34,7 @@ class SocketBus:
         self._conn = conn
         self._rfile = conn.makefile("rb")
         self._send_lock = threading.Lock()
+        self._close_lock = threading.Lock()
         self._subs_lock = threading.Lock()
         self._subs: dict[str, list[Handler]] = {}
         self._alive = True
@@ -95,23 +96,38 @@ class SocketBus:
                     # One bad handler must not break delivery.
                     with suppress(Exception):  # nosec B110
                         handler(payload)
-        except OSError:
-            pass  # the broker went away; close() handles the rest
+        except (OSError, ValueError):
+            pass  # the broker went away; the finally block closes the rest
+        finally:
+            self.close()
 
     def close(self) -> None:
-        """Stop the reader and drop the broker connection."""
-        self._alive = False
-        with suppress(OSError):
-            self._conn.shutdown(socket.SHUT_RDWR)
-        with suppress(OSError):
-            self._conn.close()
+        """Stop the reader and drop the broker connection, safely and idempotently."""
+        with self._close_lock:
+            if not self._alive:
+                return
+            self._alive = False
+            with suppress(OSError):
+                self._conn.shutdown(socket.SHUT_RDWR)
+            with suppress(OSError, ValueError):
+                self._rfile.close()
+            with suppress(OSError):
+                self._conn.close()
+
+        if threading.current_thread() is not self._reader:
+            self._reader.join(timeout=1.0)
 
 
 def connect(host: str = "127.0.0.1", port: int = 4900, timeout: float = 5.0) -> SocketBus:
     """Open a SocketBus to the broker at host:port. The caller injects it with bus.set_bus."""
     conn = socket.create_connection((host, port), timeout=timeout)
-    conn.settimeout(None)  # blocking reads for the reader thread
-    return SocketBus(conn)
+    try:
+        conn.settimeout(None)  # blocking reads for the reader thread
+        return SocketBus(conn)
+    except Exception:
+        with suppress(OSError):
+            conn.close()
+        raise
 
 
 def maybe_wire_broker(env: dict[str, str] | None = None) -> SocketBus | None:

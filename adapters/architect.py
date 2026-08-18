@@ -28,7 +28,7 @@ class Advisor(Protocol):
 
 def _matching_parts(text: str) -> list[Part]:
     """Catalog parts whose haystack shares a meaningful word with the prompt."""
-    words = {word for word in re.findall(r"[a-z]{4,}", text.lower())}
+    words = {word for word in re.findall(r"[a-z]{4,}", text.lower())}  # noqa: C416
     if not words:
         return []
     return [part for part in load_catalog() if words & set(part_haystack(part).split())]

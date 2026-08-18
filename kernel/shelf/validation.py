@@ -57,7 +57,7 @@ class ValidationResult:
             raise ValidationFailed(self)
 
 
-class ValidationFailed(ValueError):
+class ValidationFailed(ValueError):  # noqa: N818
     """Raised by `raise_if_invalid` when a value did not validate; carries the result."""
 
     def __init__(self, result: ValidationResult) -> None:

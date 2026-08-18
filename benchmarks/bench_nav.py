@@ -21,7 +21,7 @@ from collections.abc import Callable
 def build_edges(n: int, seed: int = 7) -> list[tuple[str, str]]:
     """A large directed graph: a connected spine plus deterministic cross-links (a stand-in for a
     real generated world's exit graph)."""
-    rng = random.Random(seed)
+    rng = random.Random(seed)  # noqa: S311
     edges: list[tuple[str, str]] = []
     for i in range(n - 1):
         edges.append((f"r{i}", f"r{i + 1}"))
@@ -41,7 +41,7 @@ def _median_ms(fn: Callable[[], object], runs: int) -> float:
 
 def bench_backend(name: str, graph_factory: Callable[[list[tuple[str, str]]], object], edges, n):
     graph = graph_factory(edges)
-    rng = random.Random(99)
+    rng = random.Random(99)  # noqa: S311
     pairs = [(f"r{rng.randint(0, n - 1)}", f"r{rng.randint(0, n - 1)}") for _ in range(2000)]
     reach = _median_ms(lambda: graph.reachable_count("r0"), runs=25)
 

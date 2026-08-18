@@ -17,7 +17,7 @@ class FakeClock:
         self.t += dt
 
 
-class Down(Exception):
+class Down(Exception):  # noqa: N818
     pass
 
 

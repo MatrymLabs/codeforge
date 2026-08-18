@@ -21,7 +21,7 @@ _WORKFLOWS = str(Path(__file__).resolve().parent.parent / ".github" / "workflows
 
 def test_our_workflows_have_no_high_findings():
     highs = []
-    for path in sorted(glob.glob(_WORKFLOWS)):
+    for path in sorted(glob.glob(_WORKFLOWS)):  # noqa: PTH207
         doc = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
         for finding in lint_workflow(doc, name=Path(path).name):
             if finding.severity == "high":
@@ -33,4 +33,4 @@ def test_our_workflows_have_no_high_findings():
 
 def test_the_linter_actually_scanned_workflows():
     # guard against the test passing vacuously if the glob ever breaks
-    assert glob.glob(_WORKFLOWS), "no workflows found to lint"
+    assert glob.glob(_WORKFLOWS), "no workflows found to lint"  # noqa: PTH207

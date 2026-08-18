@@ -98,4 +98,4 @@ def test_main_is_callable_offline(monkeypatch) -> None:
 
 
 class _Stub:
-    payload = {"subject": SAMPLE[0], "score": 1.0, "model": "LocalArchitect", "passed": True}
+    payload = {"subject": SAMPLE[0], "score": 1.0, "model": "LocalArchitect", "passed": True}  # noqa: RUF012

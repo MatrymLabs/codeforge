@@ -28,7 +28,7 @@ from kernel.world.seed import Npc
 from kernel.world.session import sentence_case
 
 #: Runtime RNG for the charge cadence: encounter variety, not security. Tests monkeypatch it.
-_SPECIAL_RNG = random.Random()  # nosec B311
+_SPECIAL_RNG = random.Random()  # nosec B311  # noqa: S311
 
 DEFAULT_MULT = 2  # how much harder a `strike` unleash lands, atop any enrage scaling
 DEFAULT_CADENCE = 3  # begin a wind-up on at most 1-in-this of an enraged boss's beats

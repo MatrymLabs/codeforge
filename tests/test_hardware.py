@@ -192,7 +192,7 @@ def test_an_on_disk_edit_invalidates_the_cache(tmp_path):
     path = _write(tmp_path, _one_part("alpha"))
     assert load_catalog(path)[0].id == "alpha"
     _write(tmp_path, _one_part("beta"))  # rewrite with different content
-    st = os.stat(path)
+    st = os.stat(path)  # noqa: PTH116
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))  # guarantee a new mtime
     assert load_catalog(path)[0].id == "beta"  # sees the edit, never the stale cache
 
@@ -203,7 +203,7 @@ def test_a_bad_edit_never_poisons_the_cache(tmp_path):
     _write(tmp_path, "- {id: bad}\n")  # missing required fields
     import os
 
-    st = os.stat(path)
+    st = os.stat(path)  # noqa: PTH116
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
     with pytest.raises(CatalogError):
         load_catalog(path)  # fails loud on the edit, and does not cache the bad catalog

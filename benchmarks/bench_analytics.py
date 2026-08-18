@@ -33,7 +33,7 @@ from kernel.world.db import ArchiveBase, CharacterRow
 
 
 def _seed(session: SqlSession, n: int) -> None:
-    rng = random.Random(7)
+    rng = random.Random(7)  # noqa: S311
     locations = [f"room_{i}" for i in range(50)]
     rows = [
         {

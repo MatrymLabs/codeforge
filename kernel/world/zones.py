@@ -55,7 +55,7 @@ ZONES.update(FIELD_ZONES)
 
 # Per-area beat counter: world beats since this area last came due. Runtime state, never
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.
-_beats: dict[str, int] = {label: 0 for label in ZONES}
+_beats: dict[str, int] = {label: 0 for label in ZONES}  # noqa: C420
 
 # Reverse index: room label -> its owning area label. Built once from ZONES so `zone_of` is an O(1)
 # lookup instead of a linear scan over every area's room list. At aethryn scale (28 areas spanning
@@ -70,7 +70,7 @@ def _room_zone_index() -> dict[str, str]:
     """The room -> area-label index, rebuilt only when ZONES has been swapped for a different dict.
     First area wins on the (undocumented) overlap case, exactly matching the old scan's
     first-match-returns behaviour, so this is a pure speedup with no change in what is returned."""
-    global _room_zone, _room_zone_source
+    global _room_zone, _room_zone_source  # noqa: PLW0603
     if _room_zone_source is not ZONES:
         index: dict[str, str] = {}
         for label, zone in ZONES.items():

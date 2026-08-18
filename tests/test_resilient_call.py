@@ -11,7 +11,7 @@ class NoSleep:
         pass
 
 
-class Flaky(Exception):
+class Flaky(Exception):  # noqa: N818
     pass
 
 

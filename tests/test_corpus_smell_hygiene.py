@@ -25,7 +25,7 @@ _HAZARDS = {"SMELL.BARE_EXCEPT", "SMELL.SWALLOWED_EXCEPTION", "SMELL.MUTABLE_DEF
 
 def test_shelf_is_free_of_error_swallowing_smells():
     offenders = []
-    for path in sorted(glob.glob(_SHELF)):
+    for path in sorted(glob.glob(_SHELF)):  # noqa: PTH207
         for smell in analyze(Path(path).read_text(encoding="utf-8"), path=path):
             if smell.smell_id in _HAZARDS:
                 offenders.append((Path(path).name, smell.smell_id, smell.line))

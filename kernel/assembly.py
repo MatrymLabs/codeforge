@@ -90,7 +90,7 @@ def resolve_parts(imports: list[str], catalog: list[Part]) -> list[str]:
 def assemble(manifest: PartManifest, root: Path | None = None) -> Assembly:
     """Build an Assembly from a manifest: discover imports, resolve parts, verify files."""
     base = root or _ROOT
-    stamp = date.today().isoformat()
+    stamp = date.today().isoformat()  # noqa: DTZ011
 
     # verify source file exists
     source_path = base / manifest.source
@@ -98,7 +98,7 @@ def assemble(manifest: PartManifest, root: Path | None = None) -> Assembly:
         raise AssemblyError(f"source file missing: {manifest.source}")
 
     # discover imports from the main source + all adapters
-    all_sources = [manifest.source] + list(manifest.adapters)
+    all_sources = [manifest.source] + list(manifest.adapters)  # noqa: RUF005
     all_imports: set[str] = set()
     source_files: list[str] = []
     for src in all_sources:

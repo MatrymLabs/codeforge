@@ -90,7 +90,7 @@ def _keeper(inn_label: str, town: str) -> tuple[str, Npc]:
         topics={
             "rest": ["Take a seat by the fire. The road is long and the beasts do not sleep."],
             "roads": [
-                f"The Forgeward Road runs on past {town}. Bands of heroes pass through daily; "
+                f"The Forgeward Road runs on past {town}. Bands of heroes pass through daily; "  # noqa: ISC004
                 "many find their party over a cup here before they set out."
             ],
             "inn": ["A bed, a fire, and news from every road. What more does a traveller need?"],

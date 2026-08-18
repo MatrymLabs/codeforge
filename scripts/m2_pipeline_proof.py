@@ -69,7 +69,7 @@ def _bootstrap() -> None:
     a child launched with cwd=<target> would still import the engine that poured the product. The
     insert is what makes ISOLATION a real question rather than a foregone one.
     """
-    sys.path.insert(0, os.getcwd())
+    sys.path.insert(0, os.getcwd())  # noqa: PTH109
 
 
 def _planted_in(expected: dict[str, object]) -> dict[str, object]:
@@ -117,7 +117,7 @@ def stage_persist(sabotage: bool) -> dict[str, object]:
     # Take a calling THIS Blueprint actually ships. Sorted for determinism, so a rerun on the same
     # Blueprint plants the same hero and a divergence means the pipeline moved, not the probe.
     if JOBS:
-        calling = sorted(JOBS)[0]
+        calling = sorted(JOBS)[0]  # noqa: FURB192
         planted["job"] = calling
         session.job = calling
 
@@ -125,7 +125,7 @@ def stage_persist(sabotage: bool) -> dict[str, object]:
     # world has only one room the spawn is the only honest answer and the proof says so.
     rooms = [r for r in WORLD if r != session.location]
     if rooms:
-        session.location = sorted(rooms)[0]
+        session.location = sorted(rooms)[0]  # noqa: FURB192
 
     if sabotage:
         # Write nothing. Everything downstream reads an empty store, which is the whole point:
@@ -220,20 +220,20 @@ def stage_survive(expected: dict[str, object], sabotage: bool) -> dict[str, obje
 # --- the child dispatcher ----------------------------------------------------------------------
 
 _STAGES = {
-    "isolation": lambda payload, sab: stage_isolation(sab),
-    "persist": lambda payload, sab: stage_persist(sab),
-    "restart": lambda payload, sab: stage_restart(payload, sab),
-    "survive": lambda payload, sab: stage_survive(payload, sab),
+    "isolation": lambda payload, sab: stage_isolation(sab),  # noqa: ARG005
+    "persist": lambda payload, sab: stage_persist(sab),  # noqa: ARG005
+    "restart": lambda payload, sab: stage_restart(payload, sab),  # noqa: PLW0108
+    "survive": lambda payload, sab: stage_survive(payload, sab),  # noqa: PLW0108
 }
 
 
 def _run_child() -> int:
     stage = sys.argv[2]
-    payload = json.loads(sys.argv[3]) if len(sys.argv) > 3 else {}
+    payload = json.loads(sys.argv[3]) if len(sys.argv) > 3 else {}  # noqa: PLR2004
     sabotage = os.environ.get("M2_SABOTAGE") == stage
     try:
         result = _STAGES[stage](payload, sabotage)
-    except Exception as blast:  # a stage that explodes is a FAIL with a reason, never a traceback
+    except Exception as blast:  # a stage that explodes is a FAIL with a reason, never a traceback  # noqa: BLE001, E501
         result = {"error": f"{type(blast).__name__}: {blast}"}
     print("---M2JSON---")
     print(json.dumps(result))
@@ -251,7 +251,7 @@ def _spawn(target: Path, stage: str, payload: dict[str, object], sabotage: str |
     if sabotage:
         env["M2_SABOTAGE"] = sabotage
 
-    proc = subprocess.run(
+    proc = subprocess.run(  # noqa: PLW1510, S603
         [sys.executable, str(Path(__file__).resolve()), "--child", stage, json.dumps(payload)],
         cwd=str(target),
         env=env,

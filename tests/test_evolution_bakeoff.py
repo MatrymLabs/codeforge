@@ -27,7 +27,7 @@ def _genome(**over: object) -> BlueprintGenome:
     seed = bp.Blueprint(
         "fit_column", "Fit Column", "Fit text to a fixed width.", ("pure",), ("no untrusted input",)
     )
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         genome_id="fit_column",
         seed=seed,
         purpose="Evolve a fixed-width column formatter.",
@@ -100,7 +100,7 @@ def test_the_counterexample_bank_dedups_a_repeat() -> None:
 def test_too_many_candidates_is_refused() -> None:
     genome = _genome()
     pairs = build_score_sheet_pairs("fit_column")
-    extra = pairs + [
+    extra = pairs + [  # noqa: RUF005
         (Candidate("cand_x", "fit_column", "x", "candidate_minimal"), candidate_minimal)
     ]
     assert len(extra) > MAX_CANDIDATES

@@ -10,7 +10,7 @@ import copy
 
 import pytest
 
-import forge  # noqa: F401 -- boot the world (inspect_world_links) BEFORE the fixture injects a merchant
+import forge  # noqa: F401, RUF100
 from kernel.world import items, npcs
 from kernel.world.jobs import bind_calling
 from kernel.world.session import SESSIONS, Session

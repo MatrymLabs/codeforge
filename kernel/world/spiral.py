@@ -83,7 +83,7 @@ def _ordinal(n: int) -> str:
     """A display ordinal for a march number (Fourth, Fifth, ... then plain '12th' past named)."""
     if n in _ORDINALS:
         return _ORDINALS[n]
-    suffix = "th" if 11 <= n % 100 <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    suffix = "th" if 11 <= n % 100 <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")  # noqa: PLR2004
     return f"{n}{suffix}"
 
 

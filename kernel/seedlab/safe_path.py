@@ -31,7 +31,7 @@ __all__ = ["PathEscape", "contained_path", "safe_segment"]
 _SEGMENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,254}")
 
 
-class PathEscape(ValueError):
+class PathEscape(ValueError):  # noqa: N818
     """A caller-supplied segment is not a plain name, or would leave its root."""
 
 

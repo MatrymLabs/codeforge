@@ -76,17 +76,17 @@ def now() -> int:
 
 def advance() -> None:
     """Take one world beat. Called on the tick beside the zone and menace clocks."""
-    global _beat
+    global _beat  # noqa: PLW0603
     _beat += 1
 
 
-def tick_climate(session: object) -> str:
+def tick_climate(session: object) -> str:  # noqa: ARG001
     """Advance the climate one beat on the world's tick. Silent (the sky is read with `weather`, not
     announced every step), so it returns '' and composes into the beat like the other tickers."""
     advance()
     return ""
 
 
-def weather_view(session: object) -> str:
+def weather_view(session: object) -> str:  # noqa: ARG001
     """`weather` -- the season and sky over the world right now."""
     return climate_line(_beat)

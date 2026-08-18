@@ -26,7 +26,7 @@ def _band(*names: str) -> None:
 def _drop_in(room: str, iid: str, name: str) -> str:
     items.ITEMS[iid] = {
         "name": name,
-        "keywords": [name.split()[-1]],
+        "keywords": [name.split()[-1]],  # noqa: PLC0207
         "location": f"room:{room}",
         "slot": "",
         "mods": {},

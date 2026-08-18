@@ -130,7 +130,7 @@ def _is_road(cell: Cell | None) -> bool:
     return cell is not None and cell.terrain in ("road", "ford", "bridge")
 
 
-def build_field(
+def build_field(  # noqa: PLR0912
     name: str,
     cells: dict[tuple[int, int], Cell],
     *,

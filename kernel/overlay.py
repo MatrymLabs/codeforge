@@ -47,7 +47,7 @@ def _grid(rooms: Mapping[str, Mapping[str, object]]) -> dict[str, tuple[int, int
     """Lay out rooms from exits, with stable ordering and no label hashing."""
     if not rooms:
         return {}
-    root = sorted(rooms)[0]
+    root = sorted(rooms)[0]  # noqa: FURB192
     positions: dict[str, tuple[int, int]] = {root: (0, 0)}
     occupied = {(0, 0)}
     queue = [root]
@@ -106,11 +106,11 @@ def load_overlay(path: Path) -> Overlay:
     """Load a generated overlay as an immutable runtime mapping."""
     payload = json.loads(path.read_bytes())
     if not isinstance(payload, dict):
-        raise ValueError("overlay root must be an object")
+        raise ValueError("overlay root must be an object")  # noqa: TRY004
     entries: dict[str, OverlayEntry] = {}
     for room, value in payload.items():
         if not isinstance(room, str) or not isinstance(value, dict):
-            raise ValueError("overlay entries must map room labels to objects")
+            raise ValueError("overlay entries must map room labels to objects")  # noqa: TRY004
         entries[room] = {
             "chunk_x": int(value["chunk_x"]),
             "chunk_y": int(value["chunk_y"]),

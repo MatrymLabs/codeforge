@@ -26,7 +26,7 @@ from kernel.registry import (
 
 
 def _rec(designation: str = "RM-03.001", **over: object) -> Designation:
-    base: dict[str, object] = dict(
+    base: dict[str, object] = dict(  # noqa: C408
         designation=designation,
         name="Classroom of Practical Arts",
         status="prototype",

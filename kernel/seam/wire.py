@@ -10,7 +10,7 @@ from kernel.shelf.contract import Contract, Field
 WIRE_VERSION = 1
 
 
-class WireRefused(ValueError):
+class WireRefused(ValueError):  # noqa: N818
     """A frame was not a message this version of the protocol can safely use."""
 
     verdict = "REFUSED"

@@ -34,7 +34,7 @@ def _clear_pending():
 
 
 def _good(**over):
-    kw = dict(
+    kw = dict(  # noqa: C408
         proposal_id="my_part",
         target="generated/my_part.py",
         content="print('hi')\n",

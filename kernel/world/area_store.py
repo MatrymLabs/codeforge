@@ -120,7 +120,7 @@ def preview(area: dict[str, Any]) -> str:
 _COMMANDS = ("generate-area", "preview-area", "promote", "export", "list-areas")
 
 
-def run(argv: list[str], area_dir: Path | None = None) -> tuple[int, str]:
+def run(argv: list[str], area_dir: Path | None = None) -> tuple[int, str]:  # noqa: PLR0911
     """Dispatch a mutating `world` subcommand. Returns (exit_code, text): 0 ok, 1 refused, 2 usage.
     A bad argument or a failed store op is reported honestly, never swallowed."""
     if not argv:
@@ -139,7 +139,7 @@ def run(argv: list[str], area_dir: Path | None = None) -> tuple[int, str]:
             area = promote(rest[0], area_dir)
             return 0, f"promoted {area['id']} -> {area['canon_status']} (version {area['version']})"
         if command == "export":
-            if len(rest) < 2:
+            if len(rest) < 2:  # noqa: PLR2004
                 return 2, "usage: world export <area-id> <dest-file>"
             path = export_area(rest[0], Path(rest[1]), area_dir)
             return 0, f"exported {rest[0]} -> {path}"

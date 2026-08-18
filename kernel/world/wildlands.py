@@ -425,7 +425,7 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
                 raise BlueprintError(
                     f"wildlands region {rid!r}: {key!r} must be a positive integer, got {value!r}."
                 )
-        if not merged["level_min"] <= merged["level_max"] <= 300:
+        if not merged["level_min"] <= merged["level_max"] <= 300:  # noqa: PLR2004
             raise BlueprintError(
                 f"wildlands region {rid!r}: need level_min <= level_max <= 300 "
                 f"(got {merged['level_min']}-{merged['level_max']})."
@@ -493,7 +493,7 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     rid = cfg["id"]
     on = cfg["attach_dir"]
     back = _OPPOSITE[on]
-    L = cfg["trail_length"]
+    L = cfg["trail_length"]  # noqa: N806
     every = cfg["branch_every"]
     blen = cfg["branch_length"]
     rooms: dict[str, Room] = {}
@@ -537,27 +537,28 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
         # flank must never reuse the trail's own axis (`on`/`back`) or it would overwrite the spine
         # and orphan the rooms ahead -- so branches leave strictly perpendicular to the trail.
         branch_head: str | None = None
-        flanks = [d for d in _FLANKS if d != on and d != back]
+        flank: str | None = None
+        flanks = [d for d in _FLANKS if d != on and d != back]  # noqa: PLR1714
         if i > 0 and i % every == 0 and i + 1 < L:
             flank = flanks[(i // every) % len(flanks)]
             branch_head = f"{rid}_b{i}_1"
             exits[flank] = branch_head
         name = f"{cfg['name']} - {_place_word(cfg, i)}"
         add(room, name, _describe(cfg, i, back, on if i + 1 < L else None, None), exits)
-        if branch_head:
+        if branch_head and flank is not None:
             _branch(cfg, i, flank, room, blen, claimed, rooms, npcs, add)
     return rooms, npcs
 
 
-def _branch(
+def _branch(  # noqa: PLR0917
     cfg: dict[str, Any],
     trail_i: int,
     flank: str,
     trunk: str,
     blen: int,
-    claimed: set[str],
+    claimed: set[str],  # noqa: ARG001
     rooms: dict[str, Room],
-    npcs: dict[str, Npc],
+    npcs: dict[str, Npc],  # noqa: ARG001
     add: Any,
 ) -> None:
     """A short side-trail off the main way, ending in a landmark pocket -- so the region reads as a
@@ -610,7 +611,7 @@ _PLACE_WORDS = (
 )
 
 
-def _place_word(cfg: dict[str, Any], idx: int) -> str:
+def _place_word(cfg: dict[str, Any], idx: int) -> str:  # noqa: ARG001
     """A varied local place-name so a generated room reads as a place, not `room 214`."""
     return _PLACE_WORDS[idx % len(_PLACE_WORDS)]
 
@@ -687,7 +688,7 @@ def wildlands_zones(configs: list[dict[str, Any]]) -> dict[str, Zone]:
     generated room belongs to geography (the audit reports it, like the hand-authored zones)."""
     zones: dict[str, Zone] = {}
     for cfg in configs:
-        L = cfg["trail_length"]
+        L = cfg["trail_length"]  # noqa: N806
         every, blen = cfg["branch_every"], cfg["branch_length"]
         members = [f"{cfg['id']}_t{i}" for i in range(1, L + 1)]
         for i in range(1, L):

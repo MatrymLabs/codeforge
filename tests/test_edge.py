@@ -149,4 +149,6 @@ def test_go_edge_matches_the_python_reference_byte_for_byte():
         except subprocess.TimeoutExpired:
             proc.kill()
         backend.stop()
+        if proc.stdout is not None:
+            proc.stdout.close()
         time.sleep(0.05)

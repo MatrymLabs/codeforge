@@ -66,11 +66,11 @@ _USAGE = (
 GmcpPush = Callable[[str, str, object], None]
 
 
-def _drop_frame(player_id: str, package: str, data: object) -> None:
+def _drop_frame(player_id: str, package: str, data: object) -> None:  # noqa: ARG001
     """Default transport: drop the frame. A domain-neutral platform verb cannot reach into the game
     world for a bus, so with no transport injected (plain-text caller, tests) the frame is a no-op;
     a text client has no GMCP sink anyway. The game tick supplies the real push at dispatch."""
-    return None
+    return None  # noqa: RET501
 
 
 def _push_frame(session: Any, push: GmcpPush, package: str, payload: dict[str, object]) -> None:
@@ -118,7 +118,7 @@ def _actor(session: Any) -> str:
     return getattr(session, "account", "") or getattr(session, "player_id", "owner")
 
 
-def workspace_command(
+def workspace_command(  # noqa: PLR0911, PLR0912, PLR0915
     session: Any,
     arg: str,
     *,
@@ -144,7 +144,7 @@ def workspace_command(
     rest = parts[1:]
 
     if sub in ("list", "ls"):
-        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed
+        from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed  # noqa: I001
 
         ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
         lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
@@ -206,7 +206,7 @@ def workspace_command(
         return "Models:\n" + "\n".join(f"  - {model_label(m)}" for m in models)
 
     if sub == "connect":
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             return "usage: workspace connect <seed_id> <path>"
         seed_id, path = rest[0], " ".join(rest[1:])
         try:
@@ -259,7 +259,7 @@ def workspace_command(
         )
 
     if sub == "run":
-        if len(rest) < 3:
+        if len(rest) < 3:  # noqa: PLR2004
             return "usage: workspace run <seed_id> <path> <profile>"
         seed_id, path, profile = rest[0], rest[1], rest[2]
         try:
@@ -373,7 +373,7 @@ def workspace_command(
         return "\n".join(lines)
 
     if sub == "restore":
-        if len(rest) < 2:
+        if len(rest) < 2:  # noqa: PLR2004
             return "usage: workspace restore <seed_id> <backup_id>"
         from kernel.seedlab.backup import BackupError, restore
 

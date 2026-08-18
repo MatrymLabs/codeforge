@@ -53,7 +53,7 @@ def _split[T](seq: list[T], n: int) -> list[list[T]]:
     return chunks
 
 
-def ddmin[T](
+def ddmin[T](  # noqa: PLR0912, PLR0915
     sequence: Sequence[T],
     still_fails: Callable[[list[T]], bool],
     *,
@@ -80,7 +80,7 @@ def ddmin[T](
     notes: list[str] = []
     capped = False
     n = 2
-    while len(seq) >= 2:
+    while len(seq) >= 2:  # noqa: PLR2004
         if calls >= max_calls:
             capped = True
             break

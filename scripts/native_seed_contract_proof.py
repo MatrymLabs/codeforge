@@ -49,7 +49,7 @@ def _load_client(src: Path):
     return build, model, project, source
 
 
-def main() -> int:
+def main() -> int:  # noqa: PLR0912, PLR0915
     src = Path(os.environ.get("CODEFORGE_CLIENT_SRC", _DEFAULT_CLIENT_SRC))
     client = _load_client(src)
     if client is None:
@@ -106,7 +106,7 @@ def main() -> int:
         "Source.Tree",
         eng.SOURCE_TREE_PACKAGE,
         cli_source.SOURCE_TREE_PACKAGE,
-        parsed_tree.repository == "job-tracker" and len(parsed_tree.files) == 2,
+        parsed_tree.repository == "job-tracker" and len(parsed_tree.files) == 2,  # noqa: PLR2004
         f"repo={parsed_tree.repository!r} files={len(parsed_tree.files)}",
     )
 
@@ -294,7 +294,7 @@ def main() -> int:
             "Deploy.Manifest",
             eng.DEPLOY_MANIFEST_PACKAGE,
             cli_deploy.DEPLOY_MANIFEST_PACKAGE,
-            parsed_deploy.tier_id == "prototype" and parsed_deploy.sizing.target_players == 500,
+            parsed_deploy.tier_id == "prototype" and parsed_deploy.sizing.target_players == 500,  # noqa: PLR2004
             f"tier={parsed_deploy.tier_id} players={parsed_deploy.sizing.target_players}",
         )
 
@@ -318,7 +318,7 @@ def main() -> int:
             "Deploy.Status",
             eng.DEPLOY_STATUS_PACKAGE,
             cli_status.DEPLOY_STATUS_PACKAGE,
-            parsed_status.version == "0.1.0" and parsed_status.connections_max == 128,
+            parsed_status.version == "0.1.0" and parsed_status.connections_max == 128,  # noqa: PLR2004
             f"version={parsed_status.version} conns={parsed_status.connections_max}",
         )
 

@@ -28,7 +28,7 @@ class BulkheadError(ValueError):
     """A bulkhead was built with an invalid limit. Fails loud at construction."""
 
 
-class BulkheadFull(Exception):
+class BulkheadFull(Exception):  # noqa: N818
     """A slot was requested but the compartment is full. Fail-fast rejection; do not run the op."""
 
 

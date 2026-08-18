@@ -28,7 +28,7 @@ _LEDGER = Path(__file__).resolve().parent.parent / "addie_ledger.toml"
 
 def _full(**overrides) -> object:
     """A major self-check with every phase filled; overrides blank a phase to test refusals."""
-    fields = dict(
+    fields = dict(  # noqa: C408
         subject="a subsystem",
         scale="major",
         analyze="the gap",

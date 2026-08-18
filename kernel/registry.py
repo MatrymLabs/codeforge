@@ -178,7 +178,7 @@ def mint_designation(
     ordinal = 1
     while ordinal in used:
         ordinal += 1
-    if ordinal > 999:
+    if ordinal > 999:  # noqa: PLR2004
         raise RegistryError(f"domain {type_}-{domain} is full (999 ordinals)")
     return f"{type_}-{domain}.{ordinal:03d}"
 
@@ -317,7 +317,7 @@ def _is_live(record: Designation) -> bool:
     )
 
 
-def validate(
+def validate(  # noqa: PLR0912
     records: list[Designation], root: Path | None = None, check_files: bool = True
 ) -> list[str]:
     """Report every filing problem (empty list == clean). No dupes, no orphans, no

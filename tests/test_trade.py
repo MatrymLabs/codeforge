@@ -25,7 +25,7 @@ def _give(name: str, iid: str, item_name: str) -> None:
     """Put an item straight into a hero's hands."""
     items.ITEMS[iid] = {
         "name": item_name,
-        "keywords": [item_name.split()[-1]],
+        "keywords": [item_name.split()[-1]],  # noqa: PLC0207
         "location": carrier(name),
         "slot": "",
         "mods": {},

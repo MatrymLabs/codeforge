@@ -301,7 +301,7 @@ class Job(TypedDict):
     resistances: dict[str, str]  # element/status code -> level (Normal/Weak/Resist/Immune/Absorb)
     power_cells: int  # size of the job's custom resource pool (0 = none, runs on MP)
     power_regen: int  # power cells regained per combat tick
-    milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
+    milestone_perks: list[dict[str, Any]]  # ordered passive perks unlocked at each TP milestone
     requires: dict[str, int]  # calling label -> minimum job_level; empty means open to all
 
 
@@ -524,7 +524,7 @@ def _open_seed_bin(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], di
     Returns (entries, file_template)."""
     if not path.exists():
         raise BlueprintError(f"Seed file not found: {path}")
-    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)  # noqa: S506
     if not isinstance(data, dict) or not data:
         raise BlueprintError(f"Seed file is empty or not a mapping: {path}")
     file_template = data.pop("template", None) or {}
@@ -534,7 +534,7 @@ def _open_seed_bin(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], di
     for label, raw in data.items():
         _check_label(label, what)
         if raw is None:
-            raw = {}  # a bare label is valid: all defaults
+            raw = {}  # a bare label is valid: all defaults  # noqa: PLW2901
         if not isinstance(raw, dict):
             raise BlueprintError(f"{what} '{label}' is not a mapping.")
         entries[label] = raw
@@ -590,7 +590,7 @@ def load_rooms(path: Path) -> dict[str, Room]:
     return rooms
 
 
-def load_items(path: Path) -> dict[str, Item]:
+def load_items(path: Path) -> dict[str, Item]:  # noqa: PLR0912, PLR0915
     """Read items.yaml, validate it, return items with tagged locations."""
     entries, file_template = _open_seed_bin(path, "Item")
     items: dict[str, Item] = {}
@@ -710,7 +710,7 @@ def load_items(path: Path) -> dict[str, Item]:
     return items
 
 
-def load_npcs(path: Path) -> dict[str, Npc]:
+def load_npcs(path: Path) -> dict[str, Npc]:  # noqa: PLR0912, PLR0915
     """Read npcs.yaml, validate it, return NPCs. next_line is runtime state."""
     entries, file_template = _open_seed_bin(path, "NPC")
     npcs: dict[str, Npc] = {}
@@ -996,7 +996,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
     return npcs
 
 
-def inspect_world_links(
+def inspect_world_links(  # noqa: PLR0912
     rooms: dict[str, Room], items: dict[str, Item], npcs: dict[str, Npc]
 ) -> None:
     """The cross-component gate: everything placed somewhere must be
@@ -1038,7 +1038,7 @@ def inspect_world_links(
                 )
 
 
-def load_jobs(path: Path) -> dict[str, Job]:
+def load_jobs(path: Path) -> dict[str, Job]:  # noqa: PLR0912
     """Load and gate the job pack: every job gets name, description, stats."""
     entries, template = _open_seed_bin(path, "job")
     jobs: dict[str, Job] = {}
@@ -1148,7 +1148,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 raise BlueprintError(f"job '{label}': requires unknown calling '{needed}'")
     cycles = prerequisite_cycles(jobs)
     if cycles:
-        drawn = "; ".join(" -> ".join(cycle + (cycle[0],)) for cycle in cycles)
+        drawn = "; ".join(" -> ".join(cycle + (cycle[0],)) for cycle in cycles)  # noqa: RUF005
         raise BlueprintError(f"job prerequisites form a cycle no character can enter: {drawn}")
     return jobs
 
@@ -1222,7 +1222,7 @@ def load_doors(path: Path) -> dict[str, Door]:
         blocks = merged["blocks"]
         if not (
             isinstance(blocks, list)
-            and len(blocks) == 2
+            and len(blocks) == 2  # noqa: PLR2004
             and all(isinstance(part, str) for part in blocks)
         ):
             raise BlueprintError(f"door '{label}': 'blocks' must be [room_label, direction]")
@@ -1300,7 +1300,7 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        _KINDS = (
+        _KINDS = (  # noqa: N806
             "strike",
             "heal",
             "brand",
@@ -1497,7 +1497,7 @@ def load_sets(path: Path) -> dict[str, "GearSet"]:
         merged.update(fields)
         _inspect_required_types(label, merged, (("name", str), ("pieces", list), ("bonus", dict)))
         pieces = merged["pieces"]
-        if len(pieces) < 2 or not all(isinstance(p, str) for p in pieces):
+        if len(pieces) < 2 or not all(isinstance(p, str) for p in pieces):  # noqa: PLR2004
             raise BlueprintError(f"set '{label}': 'pieces' must list at least two item prototypes.")
         bonus = merged["bonus"]
         if not bonus or not all(
@@ -1594,11 +1594,11 @@ def _attach_zone_metadata(label: str, merged: dict[str, Any], zone: Zone) -> Non
         if value is not None and (isinstance(value, bool) or not isinstance(value, int)):
             raise BlueprintError(f"zone '{label}': '{name}' must be an integer.")
     if lo is not None:
-        if lo < 1 or lo > 300:
+        if lo < 1 or lo > 300:  # noqa: PLR2004
             raise BlueprintError(f"zone '{label}': 'level_min' must be within 1-300, got {lo}.")
         zone["level_min"] = lo
     if hi is not None:
-        if hi < 1 or hi > 300:
+        if hi < 1 or hi > 300:  # noqa: PLR2004
             raise BlueprintError(f"zone '{label}': 'level_max' must be within 1-300, got {hi}.")
         zone["level_max"] = hi
     if lo is not None and hi is not None and hi < lo:

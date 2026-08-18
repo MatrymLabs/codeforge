@@ -154,7 +154,7 @@ def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> T
     from kernel.shelf.reporting import write_report
 
     base = root or _ROOT
-    tag = stamp or date.today().isoformat()
+    tag = stamp or date.today().isoformat()  # noqa: DTZ011
     stages: list[StageResult] = []
 
     # Stage 1: Manifest
@@ -236,7 +236,7 @@ def render_trace(report: TraceReport) -> str:
 def main(argv: list[str] | None = None) -> int:
     """CLI: python -m kernel.loop trace <part-id>"""
     args = argv if argv is not None else sys.argv[1:]
-    if len(args) < 2 or args[0] != "trace":
+    if len(args) < 2 or args[0] != "trace":  # noqa: PLR2004
         print("Usage: python -m kernel.loop trace <part-id>")
         print("  Trace a part through every manufacturing stage.")
         return 1

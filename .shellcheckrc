@@ -1,25 +1,14 @@
-# ShellCheck optional checks. `severity=style` is already the most verbose level, so the real
-# lever here is `enable=` -- these checks are OFF by default and each one is opted into by name.
-#
-# Deliberately NOT enabled: require-variable-braces (SC2250). It was in the first draft of this
-# file and it alone produced 150 of the 153 findings on this tree, taking `make lint-shell` from
-# 0 to 103. It asks for ${var} instead of $var. That is a preference about punctuation; it catches
-# no defect, and a gate that shouts 150 times about brace style is a gate people learn to skip.
-# ShellCheck's own documentation is explicit that its optional checks are "subjective rather than
-# more comprehensive", which is why they ship off and why enabling all of them is the wrong move.
-#
-# The four below are kept because each corresponds to a real failure:
-#   add-default-case          - a `case` with no default silently does nothing on unmatched input
-#   quote-safe-variables      - unquoted expansion, the word-splitting/globbing family (SC2086)
-#   check-unassigned-uppercase - reading an env var that was never set, usually a typo
-#   deprecate-which           - `which` is not portable and lies about exit status; use `command -v`
+# ShellCheck optional checks. The main branch carries the four checks below; this branch also
+# retains require-variable-braces because its six ritual/CVE scripts were repaired for SC2250.
+# Keeping the rule active prevents the repaired source from regressing.
 enable=add-default-case
+enable=require-variable-braces
 enable=quote-safe-variables
 enable=check-unassigned-uppercase
 enable=deprecate-which
 severity=style
+external-sources=true
 
 # Follow `source`d files so cross-file problems are visible. SC1091 stays excluded in the Makefile
-# invocation: it reports that the LINTER could not open a sourced file, never that the script is
+# invocation: it reports that the linter could not open a sourced file, never that the script is
 # wrong, and .venv/bin/activate exists on a bench and not in CI.
-external-sources=true

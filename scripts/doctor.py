@@ -89,7 +89,7 @@ def main() -> int:
     warnings: list[str] = []
     for label, cmd, meaning, fix, blocking in GATES:
         print(f"\n$ {' '.join(cmd)}")
-        failed = subprocess.run(cmd).returncode != 0
+        failed = subprocess.run(cmd).returncode != 0  # noqa: PLW1510, S603
         if not failed:
             continue
         if blocking:

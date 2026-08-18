@@ -103,7 +103,7 @@ def to_dict(bp: Blueprint) -> dict[str, Any]:
         "requirements": list(bp.requirements),
         "security": list(bp.security),
         "tasks": list(bp.tasks),
-        "stack": {layer: choice for layer, choice in bp.stack},
+        "stack": {layer: choice for layer, choice in bp.stack},  # noqa: C416
         "status": bp.status,
     }
 

@@ -129,7 +129,7 @@ class ProjectHub:
         return "\n".join(lines)
 
     # --- command dispatch (the Seed location's verbs) ------------------------------------------
-    def command(self, seed_id: str, text: str, state: ProjectState | None = None) -> str:
+    def command(self, seed_id: str, text: str, state: ProjectState | None = None) -> str:  # noqa: PLR0911
         """Dispatch a Project Hub command to its text projection. Verbs mirror the directive:
         look · show status · list <facet> · show risks · show history. Unknown verbs return help."""
         verb = " ".join(text.lower().split())

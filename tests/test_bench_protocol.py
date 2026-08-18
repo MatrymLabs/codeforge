@@ -73,7 +73,7 @@ class Verdict(unittest.TestCase):
 class Measure(unittest.TestCase):
     def test_measure_discards_warmup_and_uses_injected_timer(self):
         # a scripted clock: each timer() call returns the next value; each measured run consumes two
-        ticks = iter(range(0, 1000))
+        ticks = iter(range(0, 1000))  # noqa: PIE808
         timer = lambda: next(ticks)  # noqa: E731
         samples = bp.measure(lambda: None, repeats=4, warmup=2, timer=timer)
         self.assertEqual(len(samples), 4)  # warmup runs excluded

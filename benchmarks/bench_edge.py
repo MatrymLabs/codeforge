@@ -96,7 +96,7 @@ def bench_python(backend: tuple[str, int], levels: list[int]) -> dict[int, float
 
 
 def bench_go(binary: str, backend: tuple[str, int], levels: list[int]) -> dict[int, float]:
-    proc = subprocess.Popen(
+    proc = subprocess.Popen(  # noqa: S603
         [binary, "-listen", "127.0.0.1:0", "-backend", f"{backend[0]}:{backend[1]}"],
         stdout=subprocess.PIPE,
         text=True,

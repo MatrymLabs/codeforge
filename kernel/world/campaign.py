@@ -24,7 +24,7 @@ from kernel.world.seed import BlueprintError, Npc
 _MINIMUM_KEYS = ("zones", "dungeons", "settlements", "combatants", "npcs", "quests")
 
 
-def load_campaign(path: Path) -> dict[str, Any] | None:
+def load_campaign(path: Path) -> dict[str, Any] | None:  # noqa: PLR0912
     """Load and validate an optional campaign contract.
 
     Seeds without ``campaign.yaml`` remain unchanged. A campaign contract is intentionally small:
@@ -43,7 +43,7 @@ def load_campaign(path: Path) -> dict[str, Any] | None:
     if not isinstance(raw["name"], str) or not raw["name"].strip():
         raise BlueprintError("campaign.yaml: 'name' must be a non-empty string.")
     cap = raw["level_cap"]
-    if isinstance(cap, bool) or not isinstance(cap, int) or not 1 <= cap <= 300:
+    if isinstance(cap, bool) or not isinstance(cap, int) or not 1 <= cap <= 300:  # noqa: PLR2004
         raise BlueprintError(f"campaign.yaml: 'level_cap' must be an int 1..300, got {cap!r}.")
 
     checkpoints = raw["checkpoints"]
@@ -98,7 +98,7 @@ def report(
         zone_quest_ids = [
             quest_id
             for quest_id in quest_ids
-            if quest_id in story_ids
+            if quest_id in story_ids  # noqa: PIE810
             or quest_id.startswith(f"cull_{label}_")
             or quest_id.startswith(f"forage_{label}_")
         ]

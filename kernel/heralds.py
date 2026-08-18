@@ -20,7 +20,7 @@ _REGISTRY.register(PluginInfo("crier", "1.0"), lambda: "Hear ye! The forge is li
 _REGISTRY.register(PluginInfo("bard", "1.0"), lambda: "A song drifts from the courtyard.")
 
 
-def heralds(session: Session, arg: str = "") -> str:
+def heralds(session: Session, arg: str = "") -> str:  # noqa: ARG001
     """The `heralds` verb: every active herald's proclamation."""
     lines = [herald() for herald in _REGISTRY.active()]
     if not lines:

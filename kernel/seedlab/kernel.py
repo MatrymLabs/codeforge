@@ -56,7 +56,7 @@ class BlueprintKernelError(Exception):
     """Base for every Seed Kernel failure. The Kernel fails loud, never mis-states a Seed."""
 
 
-class SeedNotFound(BlueprintKernelError):
+class SeedNotFound(BlueprintKernelError):  # noqa: N818
     """No Seed with the requested id exists in the store."""
 
 
@@ -333,7 +333,7 @@ class BlueprintKernel:
         now = self._clock()
         reinstated = replace(
             record,
-            audit=record.audit + (AuditEvent(now, actor, "reinstated", detail),),
+            audit=record.audit + (AuditEvent(now, actor, "reinstated", detail),),  # noqa: RUF005
         )
         self._store.save(reinstated)
         return reinstated
@@ -359,7 +359,7 @@ class BlueprintKernel:
             status=new_status,
             started_at=now if started else record.started_at,
             stopped_at=now if stopped else record.stopped_at,
-            audit=record.audit + (AuditEvent(now, actor, action, f"-> {new_status}"),),
+            audit=record.audit + (AuditEvent(now, actor, action, f"-> {new_status}"),),  # noqa: RUF005
         )
         self._store.save(evolved)
         return evolved
@@ -381,7 +381,7 @@ def render_status(record: BlueprintRecord) -> str:
         f"== Seed: {i.name}  [{i.seed_id}] ==",
         f"owner: {i.owner}  version: {i.version}  status: {record.status.upper()}",
         f"purpose: {i.purpose or '-'}",
-        f"created: {i.created_at or '-'}  last start: {record.started_at or '-'}  "
+        f"created: {i.created_at or '-'}  last start: {record.started_at or '-'}  "  # noqa: ISC004
         f"last stop: {record.stopped_at or '-'}",
         "recent activity:",
     ]
@@ -396,7 +396,7 @@ def _open_kernel(home: str | None = None) -> BlueprintKernel:
     return BlueprintKernel(FileSeedStore(root))
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: PLR0911
     """CLI: make the Seed lifecycle real and inspectable from the shell (no hidden state).
 
     Usage:
@@ -415,10 +415,10 @@ def main(argv: list[str] | None = None) -> int:
     cmd, rest = args[0], args[1:]
     try:
         if cmd == "create":
-            if len(rest) < 2:
+            if len(rest) < 2:  # noqa: PLR2004
                 print("usage: create <name> <owner> [purpose]", file=sys.stderr)
                 return 2
-            record = kernel.create_seed(rest[0], rest[1], rest[2] if len(rest) > 2 else "")
+            record = kernel.create_seed(rest[0], rest[1], rest[2] if len(rest) > 2 else "")  # noqa: PLR2004
             print(f"created {record.identity.seed_id}")
             return 0
         if cmd == "list":
@@ -433,14 +433,14 @@ def main(argv: list[str] | None = None) -> int:
             print(kernel.status(rest[0]))
             return 0
         if cmd in ("start", "stop", "archive"):
-            if len(rest) < 2:
+            if len(rest) < 2:  # noqa: PLR2004
                 print(f"usage: {cmd} <seed_id> <actor>", file=sys.stderr)
                 return 2
             record = getattr(kernel, cmd)(rest[0], rest[1])
             print(f"{rest[0]} -> {record.status.upper()}")
             return 0
         print(f"unknown command {cmd!r}", file=sys.stderr)
-        return 2
+        return 2  # noqa: TRY300
     except BlueprintKernelError as exc:
         print(f"seed-kernel: {exc}", file=sys.stderr)
         return 1

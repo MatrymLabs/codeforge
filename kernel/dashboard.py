@@ -103,7 +103,7 @@ def _qa_card(root: Path) -> Card:
     return Card("qa", "QualityGate audit", status, f"{passed}/{len(results)} pass", detail, rows)
 
 
-def _hardware_card(root: Path) -> Card:
+def _hardware_card(root: Path) -> Card:  # noqa: ARG001
     """The reusable-parts catalog: how many parts, and across how many domains."""
     from kernel.hardware import load_catalog
 
@@ -145,7 +145,7 @@ def build_snapshot(root: Path | None = None) -> Snapshot:
     for key, title, builder in _BUILDERS:
         try:
             cards.append(builder(base))  # type: ignore[operator]
-        except Exception as exc:  # a dashboard must never 500; it must tell the truth instead
+        except Exception as exc:  # a dashboard must never 500; it must tell the truth instead  # noqa: BLE001, E501
             cards.append(_fail_card(key, title, exc))
     return Snapshot(tuple(cards))
 
@@ -186,7 +186,7 @@ def status_payload(snapshot: Snapshot) -> StatusPayload:
                 status=c.status,
                 headline=c.headline,
                 detail=c.detail,
-                rows={label: value for label, value in c.rows},
+                rows={label: value for label, value in c.rows},  # noqa: C416
             )
             for c in snapshot.cards
         ],

@@ -27,7 +27,7 @@ class FakeClock:
         self.t += dt
 
 
-class Boom(Exception):
+class Boom(Exception):  # noqa: N818
     pass
 
 

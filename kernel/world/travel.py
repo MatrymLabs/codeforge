@@ -42,7 +42,7 @@ def load_waystones(path: Path) -> dict[str, dict[str, Any]] | None:
         if not isinstance(cfg, dict) or "name" not in cfg or "level" not in cfg:
             raise BlueprintError(f"waystone {room!r} needs a 'name' and a 'level'.")
         level = cfg["level"]
-        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:
+        if not isinstance(level, int) or isinstance(level, bool) or not 1 <= level <= 300:  # noqa: PLR2004
             raise BlueprintError(
                 f"waystone {room!r}: 'level' must be an int 1..300, got {level!r}."
             )
@@ -140,7 +140,7 @@ def route(session: Session, arg: str) -> str:
     if not path:
         return f"You can find no route on foot from here to {target}."
     steps: list[str] = []
-    for here, nxt in zip(path, path[1:], strict=False):
+    for here, nxt in zip(path, path[1:], strict=False):  # noqa: RUF007
         exits = WORLD[here]["exits"]  # every path node is a real room (built from the world graph)
         steps.append(next((direction for direction, dest in exits.items() if dest == nxt), "?"))
     return f"Route to {target} ({len(steps)} steps): " + ", ".join(steps)

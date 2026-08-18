@@ -46,7 +46,7 @@ class CircuitBreakerError(ValueError):
     """A circuit breaker was built with invalid settings. Fails loud at construction."""
 
 
-class CircuitOpen(Exception):
+class CircuitOpen(Exception):  # noqa: N818
     """A call was rejected because the breaker is open (fail fast, do not run the operation)."""
 
 

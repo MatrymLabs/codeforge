@@ -87,7 +87,9 @@ def run_load(
     if not rotation:
         raise LoadError("rotation must name at least one command")
 
-    from forge import handle_command  # lazy: the tick is the top; parts do not import it eagerly
+    from forge import (
+        handle_command,
+    )  # lazy: the tick is the top; parts do not import it eagerly
     from kernel.world.session import Session
 
     # Warm up single-threaded so first-call import/cache building never races across the workers.
@@ -163,11 +165,11 @@ def render_load(result: LoadResult) -> str:
         [
             "ENGINE TICK LOAD TEST - handle_command under concurrent sessions (read-only rotation)",
             f"  commands    : {', '.join(result.commands)}",
-            f"  concurrency : {result.concurrency} sessions x {result.per_worker} calls each "
+            f"  concurrency : {result.concurrency} sessions x {result.per_worker} calls each "  # noqa: ISC004
             f"= {result.total_calls:,} calls",
             f"  duration    : {result.duration_s:.3f}s",
             f"  throughput  : {result.throughput_per_s:,.0f} commands/sec (aggregate)",
-            f"  latency     : p50 {result.p50_us:.1f}us  p95 {result.p95_us:.1f}us  "
+            f"  latency     : p50 {result.p50_us:.1f}us  p95 {result.p95_us:.1f}us  "  # noqa: ISC004
             f"p99 {result.p99_us:.1f}us  max {result.max_us:.1f}us",
             f"  errors      : {result.errors}",
             compare_to_slo(result),
@@ -190,7 +192,7 @@ def write_load_report(
     )
 
 
-def loadtest(arg: str = "") -> str:
+def loadtest(arg: str = "") -> str:  # noqa: ARG001
     """The in-game / terminal `loadtest`: a quick, responsive concurrent run (small sample)."""
     return render_load(run_load(concurrency=4, per_worker=500, warmup=100))
 

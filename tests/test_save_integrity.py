@@ -27,7 +27,7 @@ def test_a_changed_field_changes_the_checksum() -> None:
     assert checksum_of(base) != checksum_of({**base, "xp": 825})
 
 
-def test_field_ORDER_does_not_change_the_checksum() -> None:
+def test_field_ORDER_does_not_change_the_checksum() -> None:  # noqa: N802
     """A dict's insertion order is not part of the record. If it were, a harmless reordering
     anywhere upstream would corrupt every save in the world at once."""
     assert checksum_of({"a": 1, "b": 2}) == checksum_of({"b": 2, "a": 1})
@@ -38,14 +38,14 @@ def test_an_intact_record_verifies() -> None:
     assert verify_record(record, checksum_of(record)) is IntegrityVerdict.INTACT
 
 
-def test_a_corrupted_record_is_CORRUPT_not_intact() -> None:
+def test_a_corrupted_record_is_CORRUPT_not_intact() -> None:  # noqa: N802
     record = {"name": "hero", "level": 7}
     stored = checksum_of(record)
     record["level"] = 70  # a single mutated field
     assert verify_record(record, stored) is IntegrityVerdict.CORRUPT
 
 
-def test_a_record_with_NO_checksum_is_UNVERIFIED_not_intact() -> None:
+def test_a_record_with_NO_checksum_is_UNVERIFIED_not_intact() -> None:  # noqa: N802
     """A legacy row predates the column. Unknown is not intact, and this is the assertion that
     stops "we could not check" from being rounded up to "we checked and it was fine"."""
     assert verify_record({"name": "hero"}, None) is IntegrityVerdict.UNVERIFIED

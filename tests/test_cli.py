@@ -276,7 +276,7 @@ def test_seedlab_proof_writes_a_report_artifact(tmp_path, capsys, monkeypatch):
     )
     monkeypatch.setattr(
         "kernel.seedlab.audit.audit_seedlab_modules",
-        lambda: type("Audit", (), {"to_dict": lambda self: {"root": "seedlab", "entries": []}})(),
+        lambda: type("Audit", (), {"to_dict": lambda self: {"root": "seedlab", "entries": []}})(),  # noqa: PLW0108
     )
     report = tmp_path / "proof.json"
     assert main(["seedlab", "proof", "--root", str(tmp_path), "--report", str(report)]) == 0

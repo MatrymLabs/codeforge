@@ -88,7 +88,7 @@ def test_the_recorded_facts_outlive_the_process(tmp_path: Path) -> None:
 
     from kernel.seedlab import repository_proof
 
-    branch, commit = _real_repo(tmp_path / "repo")
+    branch, commit = _real_repo(tmp_path / "repo")  # noqa: RUF059
     first = model_repository(tmp_path / "repo")
     store = tmp_path / "store"
     repository_proof.persist(first, store)

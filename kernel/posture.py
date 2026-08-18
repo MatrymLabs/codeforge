@@ -141,7 +141,7 @@ KPI_CATALOG: tuple[KpiSpec, ...] = (
 _BY_ID = {s.id: s for s in KPI_CATALOG}
 
 
-def _measured(spec_id: str, value: float | int, detail: str, breaches: bool) -> Kpi:
+def _measured(spec_id: str, value: float | int, detail: str, breaches: bool) -> Kpi:  # noqa: PYI041
     return Kpi(_BY_ID[spec_id], MEASURED, value, detail, breaches)
 
 
@@ -149,7 +149,7 @@ def _not_computable(spec_id: str, why: str) -> Kpi:
     return Kpi(_BY_ID[spec_id], NOT_COMPUTABLE, None, why, breaches_target=False)
 
 
-def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
+def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:  # noqa: PLR0912
     """Compute the posture scorecard from injected evidence: each KPI measured or honestly not."""
     out: list[Kpi] = []
 
@@ -196,7 +196,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
                 "oldest_open_advisory_days",
                 age,
                 f"oldest open advisory exposed {age}d",
-                breaches=age > 7,
+                breaches=age > 7,  # noqa: PLR2004
             )
         )
 
@@ -214,7 +214,7 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
                 "mean_time_to_remediate_days",
                 mttr,
                 f"MTTR {mttr}d over {len(evidence.remediation_days)} fixes",
-                breaches=mttr > 7,
+                breaches=mttr > 7,  # noqa: PLR2004
             )
         )
 
@@ -299,7 +299,7 @@ def scorecard(evidence: PostureEvidence, today: date) -> Scorecard:
 
 def load_evidence(
     security_evidence_dir: Path | str,
-    today: date,
+    today: date,  # noqa: ARG001
     *,
     cadence_days: int = 1,
     advisory_ledger_path: Path | str | None = None,
@@ -339,7 +339,7 @@ def load_evidence(
     try:
         scan_date = date.fromisoformat(newest.name[:10])
     except ValueError:
-        scan_date = date.fromtimestamp(newest.stat().st_mtime)
+        scan_date = date.fromtimestamp(newest.stat().st_mtime)  # noqa: DTZ012
 
     oldest_first_seen: date | None = None
     remediation: tuple[int, ...] | None = None

@@ -82,7 +82,7 @@ def test_a_reordered_chain_is_detected(tmp_path: Path) -> None:
     append(p, {"n": 2})
     first, second = p.read_text().splitlines()
     p.write_text(second + "\n" + first + "\n", encoding="utf-8")  # swap the two records
-    with pytest.raises(HashChainError, match="out of order|broken chain"):
+    with pytest.raises(HashChainError, match="out of order|broken chain"):  # noqa: RUF043
         read(p)
 
 
@@ -93,7 +93,7 @@ def test_deleting_a_middle_record_breaks_the_chain(tmp_path: Path) -> None:
     append(p, {"n": 3})
     lines = p.read_text().splitlines()
     p.write_text(lines[0] + "\n" + lines[2] + "\n", encoding="utf-8")  # drop the middle record
-    with pytest.raises(HashChainError, match="out of order|broken chain"):
+    with pytest.raises(HashChainError, match="out of order|broken chain"):  # noqa: RUF043
         read(p)
 
 

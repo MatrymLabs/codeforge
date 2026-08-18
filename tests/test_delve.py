@@ -29,7 +29,7 @@ _CFG = [
 
 
 def test_a_dungeon_sinks_a_connected_descent_of_chambers():
-    rooms, npcs = generate_delves(_CFG)
+    rooms, npcs = generate_delves(_CFG)  # noqa: RUF059
     assert len(rooms) == _DEPTH + 1  # one chamber per depth, plus the treasure-vault pocket
     # every chamber is reachable walking `down` from the mouth once the mouth is wired
     world = {"black_hollow": {"name": "mouth", "desc": "d", "exits": {}}}

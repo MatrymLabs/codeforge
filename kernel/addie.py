@@ -220,7 +220,7 @@ def addie(arg: str = "") -> str:
     return "Unknown addie action. Try: addie status"
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:  # noqa: ARG001
     """`python -m kernel.addie` / `make addie`: print the report, exit non-zero on a FAIL."""
     print(render_addie())
     return 0 if audit_addie().passed else 1

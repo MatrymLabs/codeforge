@@ -29,7 +29,7 @@ class PreconditionError(ValueError):
     """Raised when an ETag or conditional header is malformed."""
 
 
-class PreconditionFailed(Exception):
+class PreconditionFailed(Exception):  # noqa: N818
     """The precondition did not hold. Maps to HTTP 412 Precondition Failed."""
 
 

@@ -143,7 +143,7 @@ def model_from_source(source: LocalSource, *, identity: str | None = None) -> Pr
     if entities:
         unknowns = [
             ident_note,
-            "entities, fields, relationships, and states extracted from code (shelf "
+            "entities, fields, relationships, and states extracted from code (shelf "  # noqa: ISC004
             "model_extractor); actions, inputs, and outputs are not inferred",
             *notes,
         ]
@@ -153,9 +153,9 @@ def model_from_source(source: LocalSource, *, identity: str | None = None) -> Pr
         relationships, states = [], []
         unknowns = [
             ident_note,
-            "no parseable python entities found: entities inferred from file/directory "
+            "no parseable python entities found: entities inferred from file/directory "  # noqa: ISC004
             "names, not from code analysis",
-            "relationships, states, actions, inputs, and outputs are not inferred "
+            "relationships, states, actions, inputs, and outputs are not inferred "  # noqa: ISC004
             "(no behavioral analysis performed)",
             *notes,
         ]

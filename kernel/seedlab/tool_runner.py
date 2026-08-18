@@ -48,7 +48,7 @@ DEFAULT_PROFILE: dict[str, list[str]] = {
 
 # Patterns scrubbed from captured output before it is stored or shown.
 _REDACTIONS = (
-    re.compile(r"-----BEGIN [^-]+-----.*?-----END [^-]+-----", re.S),
+    re.compile(r"-----BEGIN [^-]+-----.*?-----END [^-]+-----", re.S),  # noqa: FURB167
     re.compile(r"(?i)\b(token|secret|password|passwd|api[_-]?key)\b\s*[=:]\s*\S+"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
 )
@@ -65,7 +65,7 @@ def _utcnow() -> str:
     return datetime.now(UTC).isoformat()
 
 
-class CommandRefused(ValueError):
+class CommandRefused(ValueError):  # noqa: N818
     """The requested profile is not on the approved allowlist -- it never ran."""
 
 
@@ -135,7 +135,7 @@ def run_tool(
     started = time.monotonic()
     try:
         # Fixed allowlisted argv, shell=False, cwd-bounded.
-        proc = subprocess.run(  # nosec B603
+        proc = subprocess.run(  # nosec B603  # noqa: S603
             argv, cwd=root, capture_output=True, text=True, timeout=timeout, check=False
         )
         output = (proc.stdout or "") + (proc.stderr or "")

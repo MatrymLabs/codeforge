@@ -32,7 +32,7 @@ class JobQueueError(ValueError):
     """Raised on malformed input or an unknown job."""
 
 
-class StaleLease(JobQueueError):
+class StaleLease(JobQueueError):  # noqa: N818
     """Raised when an ack/nack presents a token that is no longer the job's claim."""
 
 

@@ -52,7 +52,7 @@ def sanitize(text: str, rule: SanitizeRule = DEFAULT) -> str:
     out = text
     if rule.strip_controls:
         out = out.replace("\t", " ").replace("\n", " ").replace("\r", " ")
-        out = "".join(c for c in out if ord(c) >= 32 and ord(c) != 127)
+        out = "".join(c for c in out if ord(c) >= 32 and ord(c) != 127)  # noqa: PLR2004
     if rule.collapse_whitespace:
         out = _WHITESPACE.sub(" ", out)
     if rule.lowercase:
