@@ -254,10 +254,15 @@ invoked through a captured proof command. Same ladder as language lanes.*
 `REGISTERED` (a record exists with proof + inputs/outputs + lanes)**
 
 ```
-[ ] Tool Utilization Registry file exists at all           <- currently missing entirely
-[ ] every tool a Blueprint depends on has a record
-[ ] every record carries: tool_id, executable, version_command, proof_command,
-    supported_inputs, supported_outputs, language_lanes, known_faults
+[x] Tool Utilization Registry file exists — tools_registry.toml, 8 records, gated by
+    kernel/tools_registry.py with a test twin. `python -m kernel.tools_registry` exit 0
+[~] every tool a Blueprint depends on has a record — 8 filed: python, ruff, mypy, cargo,
+    go, gradle, security-scanners, git. Rider has NO record: nothing in the tree invokes
+    it headlessly, so it has no proof command and cannot be registered honestly
+[x] every record carries all eight fields — enforced, not asked for. The gate refuses a
+    record missing any field, refuses a blank known_faults, refuses a duplicate tool_id,
+    and REFUSES A PROOF_COMMAND THAT IS ONLY A VERSION CHECK, which is the rule the whole
+    file exists for: --version proves installed and nothing about working
 
 BUILD + PROVE TOOLS (in use now)
 Rider          [?] INSTALLED   no proof command: nothing in the tree invokes Rider headlessly
@@ -295,7 +300,7 @@ the thing itself.*
 ```
 NES     [~] target of DONE-2 — core BUILT and TESTED, slice not yet proven end to end
             kernel/retroforge: artifact, binary, codec, manifest, platforms/planar_2bpp
-            40 Python tests pass; Kotlin side has NesRom, AsciiTileProjection,
+            the Python suite passes; Kotlin side has NesRom, AsciiTileProjection,
             ManifestWriter, Seam with 4 test files. Fixtures are SYNTHETIC and built in
             the tests (b"NES\x1a" headers, hand-made CHR), so the legal block holds:
             no ROM is committed anywhere.                       proven: NOT YET
@@ -311,7 +316,7 @@ L2  CodeForge tool records for what L1 invokes                  [ ] no registry 
 L3  RetroForge core                                             [x] BUILT AND TESTED
       RomArtifact · ByteSource+OutOfRange · TileCodec · PaletteCodec · AddressMapper ·
       RomPlatformModule · ExtractionManifest+ExtractedAsset · Planar2BppTileCodec ·
-      HeaderedCartridgeModule · InvalidCartridgeHeader.  40 tests, exit 0.
+      HeaderedCartridgeModule · InvalidCartridgeHeader.  Suite green, exit 0.
       NAMING NOTE: the addendum lists `ByteRange`; the tree calls it `ByteSource`.
       The tree wins, and the addendum's name resolves to nothing.
 L4  native Rider projection                                     [~] ASCII, not native UI
@@ -372,7 +377,7 @@ never-automate item alongside publishing.*
 
 ## ADDENDUM NUMBERS (add to THE FOUR NUMBERS at day close)
 ```
-Tools REGISTERED (not merely installed):   0     (7 INVOCABLE, 0 registered; no registry file)
+Tools REGISTERED (not merely installed):   8     (was 0; the ladder's last rung now exists)
 RetroForge platforms PROVEN:               0     (NES slice runs end to end and is calibrated;
                                                  PROVEN needs the Rider tile grid, 1 of the 2
                                                  remaining IN items)
