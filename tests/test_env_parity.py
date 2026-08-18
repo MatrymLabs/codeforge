@@ -108,3 +108,52 @@ def test_signal_absence_and_skipping_are_not_passes() -> None:
     messages = _messages(report)
     assert any("codeql" in message and "skipping" in message for message in messages)
     assert any("security" in message and "missing" in message for message in messages)
+
+
+# --- platform divergence: what package parity cannot see ----------------------------------------
+
+
+def test_a_non_utf8_default_encoding_is_reported_as_divergence() -> None:
+    """cp1252 here, UTF-8 in CI. Two defects on 2026-08-17 came from exactly this and were
+    repaired one at a time, because nothing named the class."""
+    from kernel.env_parity import check_platform_divergence
+
+    report = check_platform_divergence("cp1252", None, [])
+    assert not report.clean
+    assert any(f.kind == "encoding-divergence" for f in report.findings)
+
+
+def test_utf8_mode_clears_the_encoding_divergence() -> None:
+    """PYTHONUTF8=1 is the correction, so setting it must actually silence the finding."""
+    from kernel.env_parity import check_platform_divergence
+
+    assert check_platform_divergence("cp1252", "1", []).clean
+    assert check_platform_divergence("utf-8", None, []).clean
+
+
+def test_a_shebang_without_the_exec_bit_is_reported_on_any_platform() -> None:
+    """ruff's EXE001 is SKIPPED on Windows, so nine Python files and three shell scripts sat
+    unmarked and only CI could see them. This reads the git index, which is platform-independent."""
+    from kernel.env_parity import check_platform_divergence
+
+    report = check_platform_divergence("utf-8", "1", ["scripts/thing.sh"])
+    assert not report.clean
+    finding = next(f for f in report.findings if f.kind == "exec-bit-divergence")
+    assert "scripts/thing.sh" in finding.message
+    assert "chmod=+x" in finding.fix_command
+
+
+def test_the_real_repo_has_no_unmarked_shebang_scripts(tmp_path: Path) -> None:
+    """The calibration against reality: this repo is clean now, and stays clean."""
+    from kernel.env_parity import shebang_scripts_missing_exec_bit
+
+    root = Path(__file__).resolve().parents[1]
+    assert shebang_scripts_missing_exec_bit(root) == []
+
+
+def test_the_scanner_reads_git_not_the_filesystem(tmp_path: Path) -> None:
+    """A directory that is not a git checkout yields nothing rather than raising: the check must
+    degrade to silence off-repo, never to a crash inside a gate."""
+    from kernel.env_parity import shebang_scripts_missing_exec_bit
+
+    assert shebang_scripts_missing_exec_bit(tmp_path) == []

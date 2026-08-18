@@ -10,6 +10,7 @@ import importlib.metadata
 import os
 import platform
 import re
+import subprocess  # nosec B404 - reads the git index, no untrusted input
 import sys
 import tomllib
 from collections.abc import Callable, Mapping, Sequence
@@ -271,6 +272,87 @@ def _ci_python_minor(workflow_dir: Path) -> tuple[int, int] | None:
     return None
 
 
+def check_platform_divergence(
+    default_encoding: str, utf8_mode: str | None, unmarked_scripts: list[str]
+) -> ParityReport:
+    """Differences between THIS platform and the Linux CI runs on, that nothing else reports.
+
+    Package parity answers "do we have the same libraries". It does not answer "will the same
+    command behave the same way", and on 2026-08-17 that gap cost three separate defects, each
+    found by a different accident:
+
+      1. `_git` in the stranded gate decoded subprocess output with the process locale (cp1252
+         here, UTF-8 in CI). An em dash came back mangled, so a search pattern built from it
+         matched nothing and safe content reported as stranded.
+      2. The integrity ritual crashed writing its own report, because the report contains a
+         checkmark and stdout was cp1252. It could not run on this bench at all, all day.
+      3. Nine files carried a shebang without the executable bit. Ruff's EXE001 is SKIPPED on
+         Windows, so the bench reported green while CI failed, and no amount of re-running here
+         would ever have shown it.
+
+    All three are one thing: the bench cannot see what CI sees, and nothing said so. These checks
+    say so. Report-only, like the rest of this module -- it names the divergence and the fix.
+    """
+    report = ParityReport()
+    if default_encoding.lower() not in {"utf-8", "utf8"} and not utf8_mode:
+        report.add(
+            "encoding-divergence",
+            f"default text encoding is {default_encoding!r}, CI runs UTF-8. Subprocess output and "
+            f"file writes containing any non-ASCII character will differ from CI, silently",
+            "set PYTHONUTF8=1 (the Makefile exports it for every gate target)",
+        )
+    for path in unmarked_scripts:
+        report.add(
+            "exec-bit-divergence",
+            f"{path} declares a shebang and is not executable in the git index. ruff EXE001 skips "
+            f"this check on Windows, so only CI can see it",
+            f"git update-index --chmod=+x {path}",
+        )
+    return report
+
+
+_MODE_AND_PATH = 2  # `git ls-files -s` emits "<mode> <sha> <stage>	<path>"
+
+
+def shebang_scripts_missing_exec_bit(repo_root: Path) -> list[str]:
+    """Tracked files that claim to be runnable and are not, read from GIT rather than the disk.
+
+    The git index carries the mode, so this answers the same question ruff answers on Linux and
+    cannot answer on Windows. Reading the index instead of the filesystem is the whole trick: it
+    is the same data CI will check out.
+    """
+    try:
+        listing = subprocess.run(  # nosec B603 B607 - fixed argv, local checkout
+            ["git", "ls-files", "-s", "--", "*.py", "*.sh"],  # noqa: S607
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return []
+    if listing.returncode != 0:
+        return []
+
+    unmarked: list[str] = []
+    for line in listing.stdout.splitlines():
+        parts = line.split("	", 1)
+        if len(parts) != _MODE_AND_PATH or not parts[0].startswith("100644"):
+            continue
+        name = parts[1].strip()
+        candidate = repo_root / name
+        try:
+            first = candidate.read_text(encoding="utf-8", errors="replace").splitlines()[:1]
+        except OSError:
+            continue
+        if first and first[0].startswith("#!"):
+            unmarked.append(name)
+    return unmarked
+
+
 def build_report(repo_root: Path) -> ParityReport:
     report = run_parity(
         local_query=installed_packages,
@@ -281,6 +363,13 @@ def build_report(repo_root: Path) -> ParityReport:
         report.extend(check_interpreter(sys.version_info[:2], ci_minor))
     fleet_root = os.environ.get("FLEET_ROOT")
     report.extend(check_checkout_location(repo_root, Path(fleet_root) if fleet_root else None))
+    report.extend(
+        check_platform_divergence(
+            sys.getdefaultencoding() if sys.stdout.encoding is None else sys.stdout.encoding,
+            os.environ.get("PYTHONUTF8"),
+            shebang_scripts_missing_exec_bit(repo_root),
+        )
+    )
     return report
 
 

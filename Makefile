@@ -15,6 +15,19 @@ MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
 export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
 
+# UTF-8, everywhere, on every platform. This is a CORRECTION, not a preference.
+#
+# Windows defaults to the ANSI code page (cp1252 on this bench); CI runs UTF-8. On 2026-08-17 that
+# single difference produced two defects that looked unrelated: the integrity ritual crashed
+# writing its own report because the report contains a checkmark, and the stranded gate decoded
+# git output as cp1252, mangled an em dash, and reported already-merged work as living on one
+# disk. Both were repaired one at a time. Neither repair prevented the next one.
+#
+# PYTHONUTF8=1 is the switch that prevents the class: it makes the default text encoding UTF-8 for
+# every Python process a gate starts, which is what CI already has. `make env-parity` reports the
+# divergence when this is unset, so the guard and the fix name each other.
+export PYTHONUTF8 := 1
+
 # Resolve the repository interpreter when the Makefile is parsed; CI uses the system fallback.
 PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe                  || (test -x .venv/bin/python && echo .venv/bin/python || echo python3))
 
