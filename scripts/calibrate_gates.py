@@ -172,6 +172,15 @@ _OK_MYPY = (
 )
 _OK_DEAD = _HEAD + "\n\n# calibration control, no defect\ndef forge() -> int:\n    return 1\n"
 
+_DETEKT_GENERIC_EXCEPTION = (
+    "package labs.matrym.retroforge\n\n"
+    "internal fun detektCalibrationProbe(): String =\n"
+    "    try {\n"
+    '        "ok"\n'
+    "    } catch (exception: Exception) {\n"
+    '        "fallback"\n'
+    "    }\n"
+)
 # The battery. Each case names a defect class the Workshop has actually shipped or expects from
 # an AI bench, per the toolkit reference's agent-defect table.
 #
@@ -181,6 +190,18 @@ _OK_DEAD = _HEAD + "\n\n# calibration control, no defect\ndef forge() -> int:\n 
 # as "the gate does not catch unwrap" when the truth was "the probe was never compiled". A
 # calibration harness that mis-reports WHY a gate stayed green is worse than none.
 CASES: list[Case] = [
+    Case(
+        name="detekt-TooGenericExceptionCaught",
+        gate=["make", "lint-kotlin"],
+        probe="native/rider-retroforge/src/main/kotlin/labs/matrym/retroforge/CalibProbe.kt",
+        violation=_DETEKT_GENERIC_EXCEPTION,
+        signal="TooGenericExceptionCaught",
+        needs=("java",),
+        extra_note=(
+            "Proves the configured detekt exception rule is active through the real Kotlin "
+            + "gate."
+        ),
+    ),
     Case(
         name="ruff-ARG-unused-argument",
         gate=["make", "lint-python"],
