@@ -93,6 +93,35 @@ def _sast_recipe() -> list[str]:
     return recipe
 
 
+def test_no_ci_step_installs_a_tool_at_a_moving_version():
+    """`go install ...@latest` is unpinned, and CI had one while claiming to pin that same tool.
+
+    Until 2026-08-18 `protoc-gen-go` was installed THREE times in ci.yml at TWO versions: the
+    `check` job took `@latest`, while two other jobs took `@v1.34.2` under a step literally named
+    "Install protoc + protoc-gen-go (pinned)".
+
+    Two costs, and the second is the quiet one. `@latest` is a moving target for a supply-chain
+    attacker and makes the build irreproducible. But the `check` job also runs `make proto` and
+    then verifies published contracts, so the generator that produced the bindings could differ
+    from the one every other job used, and `make contracts` could flip red on a day nobody
+    committed anything.
+
+    The workflow linter already refuses a moving tag on an ACTION. This is the same rule for the
+    tools a step shells out to install.
+    """
+    moving = []
+    for path in sorted(glob.glob(_WORKFLOWS)):  # noqa: PTH207
+        for number, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
+            if "go install " in line and (
+                "@latest" in line or "@main" in line or "@master" in line
+            ):
+                moving.append(f"{Path(path).name}:{number}")
+    assert moving == [], (
+        "these CI steps install a tool at a moving version, so the build is not reproducible "
+        f"and the pin is decorative: {moving}"
+    )
+
+
 def test_every_job_is_bounded_by_a_timeout():
     """No job may run unbounded. A required check that hangs blocks EVERY merge.
 
