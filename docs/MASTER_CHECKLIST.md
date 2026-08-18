@@ -5,7 +5,7 @@
 **The rule: a box is `[x]` only when a command proved it. Anything else is `[~]`
 or `[?]`. This document is worthless the moment it flatters.**
 
-Last updated: 2026-08-18  ·  Day: 230
+Last updated: 2026-08-18 (evening re-audit)  ·  Day: 230
 Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment), merged with Codex's
 report (section 1, the scanner-fixture box, the lane toolchain half). Claude Code is the
 only bench that writes this file; Codex reports and does not edit it.
@@ -57,9 +57,9 @@ only bench that writes this file; Codex reports and does not edit it.
         code present: py 883 · kt 8 · tf 8 · sh 6 · go 4 · rs 1 · c 1
         `lint` wires: python rust go shell terraform c.  KOTLIN IS NOT IN IT (standalone by
         a recorded 2026-08-14 decision; CI's `jvm` job runs ktlintCheck, so it is governed)
-    [ ] DETEKT IS CONFIGURED AND INVOKED NOWHERE. detekt.yml is on main with a 16-entry
-        baseline; 0 occurrences in ci.yml, and `make lint-kotlin` runs ktlintCheck only.
-        A gate that exists and is never run is the defect class this line names.
+    [x] detekt is INVOKED — wired by CX-DETEKT-2 into `make lint-kotlin` and into `check`
+        via build.gradle.kts. Measured on main: 1 occurrence in the Makefile, 1 in ci.yml.
+        Baseline holds at 16.
 [~] EVERY gate calibrated red-then-green — harness has 13 cases, 3 re-run 2026-08-18
         covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform
         NO CASE EXISTS for: detekt/kotlin, trivy, cargo-deny
@@ -73,13 +73,22 @@ only bench that writes this file; Codex reports and does not edit it.
         govulncheck  GO-2026-5023 and GO-2022-0968 in x/crypto/ssh, reachability-aware
 [x] ledgers exist with day-zero counts + reproduce commands
         DAY ZERO 2026-08-18 on main 198c81f0: noqa 734 · mypy 181 across 64 modules ·
-        detekt 16 · Gradle CC 0.  The 2026-08-17 figures are superseded: they were taken
-        against an unmerged branch that landed the same evening
-[ ] UNMEASURABLE reported as a first-class verdict across all gates
-[ ] differential test executable on all 4 Blueprints — CONFIRMED BROKEN 2026-08-17
-        run_differential('aethryn') raises FileNotFoundError on a missing world_overlay.json;
-        aethryn and spiral-ascent have none, first-forge and seam-probe do. It raises rather
-        than reporting, so it has read as a broken environment rather than a broken gate
+        detekt 16 · Gradle CC 0.  The 2026-08-17 figures are superseded: taken against an
+        unmerged branch that landed the same evening.
+        EVENING READING, same day: noqa 738 (+4), detekt 16, mypy 181 across 64. The rise is
+        four E402 directives on the slice proof's deferred imports, which sit after the
+        sys.path bootstrap that must run before `kernel` is importable. A rise with a reason
+        is permitted; a rise without one is not, and this is the reason.
+[~] UNMEASURABLE reported as a first-class verdict — FIRST REAL INSTANCE exists, in
+        run_differential. It is one gate, not "all gates": the stranded gate reports
+        UNVERIFIABLE and lint targets report UNVERIFIED, but no shared vocabulary or type
+        spans them. One instance is a precedent, not a convention.
+[x] differential test EXECUTABLE on all 4 Blueprints — fixed by CX-2D5-1, re-measured here
+        first-forge AGREED · seam-probe AGREED · aethryn UNMEASURABLE · spiral-ascent
+        UNMEASURABLE. No traceback. A missing world_overlay.json is now a NAMED VERDICT with
+        the file in the reason, not an exception.
+    [ ] the two UNMEASURABLE Blueprints still lack an overlay. Executable is not measurable:
+        the gate now reports honestly about a Blueprint it still cannot measure
 ```
 
 ## 3. DOCTRINE — installed and honest
@@ -104,12 +113,19 @@ only bench that writes this file; Codex reports and does not edit it.
 ```
 [x] STAGE 0  Baseline held — BASELINE HELD declared 2026-08-18, 10 of 10 boxes
 [ ] STAGE 1  Crank turns once: one Blueprint -> one working output
-       [ ] DONE-1  Blueprint: produce · persist · emit · restart · survives
-                   BLOCKED FIRST: the flagship Blueprint has no world_overlay.json, so the
-                   differential is UNMEASURABLE on it. Part 4 names this as a DONE-1 blocker
-       [ ] DONE-2  RF-001: load · decode · manifest · display · bytes untouched
-                   NO ORDERS, NO BENCH ASSIGNED, NOTHING WRITTEN. Half the launch has no
-                   work behind it. This is the largest hole on the board
+       [~] DONE-1  Blueprint: produce · persist · emit · restart · survives
+                   The pipeline proof exists (scripts/m2_pipeline_proof.py, #1006) and was
+                   NOT re-run this session, so by the Completion Law it is a claim.
+                   The blocker Part 4 names is HALF cleared: the differential no longer
+                   crashes on the flagship, but aethryn and spiral-ascent still have no
+                   world_overlay.json and remain UNMEASURABLE. Executable is not measurable.
+       [~] DONE-2  RF-001: load · decode · manifest · display · bytes untouched
+                   7 of 8 IN items proven. The slice runs end to end and is CALIBRATED
+                   (scripts/rf001_slice_proof.py, 4 of 4 sabotage paths fail correctly), and
+                   the grid displays at Rider ladder L1 via a committed run configuration.
+                   REMAINING: click -> tile index + ROM offset, which needs the L4 native
+                   projection. native/rider-retroforge is a plain Kotlin LIBRARY, with no
+                   IntelliJ plugin and no entry point, so L4 is unbuilt rather than unproven.
 [ ] STAGE 2  Generality proof: a second, non-game product (Excel-to-PDF)
        [ ] built through the same loop
        [ ] used once by someone who is not the founder
@@ -124,15 +140,16 @@ python        [~] GATED    -> PROVEN when DONE-1 ships          calibrated: 2026
 rust          [~] GATED (clippy -D warnings; case exists)       calibrated: case, not re-run
 go            [~] GATED (golangci v2 + govulncheck source)      calibrated: 2026-08-18
 shell         [~] GATED (4 rules, noisy 5th documented out)     calibrated: case, not re-run
-kotlin-jvm    [ ] NOT GATED: detekt is configured and RUN NOWHERE; ktlint only  calib: none
+kotlin-jvm    [~] GATED: ktlint + detekt, both invoked by `make lint-kotlin` and `check`
+                  calibrated: NO detekt case exists in the harness (13 cases, none Kotlin)
 gdscript      [ ] CANDIDATE — 0 .gd files tracked. Toolchain installed ahead of its code
 typescript    [ ] CANDIDATE — 0 .ts/.tsx tracked, deferred to the SaaS rung
 csharp        [ ] CANDIDATE — 0 .cs tracked, deferred
 cpp / sql / powershell             [ ] CANDIDATE — 0 files tracked for each
 terraform     [~] GATED (terraform v1.15.8, fmt -check in lint) calibrated: case exists
 c             [~] GATED (gcc 16.1.0 / clang 22.1.8; cc absent, Makefile falls back correctly)
-lua           [ ] NO CODE AND A CI JOB. 0 .lua files tracked, yet ci.yml has a `lua` job.
-                  The inverse of an ungoverned language: a gate guarding nothing.
+lua           [x] RESOLVED by CX-LUA-1: 0 .lua files tracked and the empty CI job removed.
+                  The lane returns when tracked Lua source and its contract exist.
 
 TOOLCHAIN VERSIONS (Codex, 2026-08-18): python 3.13.12 · ruff 0.16.2 · mypy 2.3.0 ·
 pytest 9.1.1 · rustc/cargo 1.97.1 · clippy 0.1.97 · go 1.26.5 · golangci-lint 2.12.2 ·
@@ -140,10 +157,11 @@ govulncheck v1.7.0 · shellcheck 0.11.0 · java 24.0.2 Temurin · terraform 1.15
 gcc 16.1.0 · clang 22.1.8.  gradle/ktlint/detekt report ABSENT as bare tools, which is
 expected: the Kotlin lane runs through ./gradlew, not a system install.
 
-GO VERSION DIVERGENCE, unresolved: bench 1.26.5 · CI pins 1.25 · go.mod says 1.24. Three
-numbers. The bench compiles and scans with a toolchain CI does not use, which is the exact
-class the parity guard was built for and does not yet cover. (1.26.5 is safe for
-GO-2026-4971, which was reintroduced in 1.26.0 and fixed in 1.26.3.)
+GO VERSIONS, RESOLVED — and the resolution corrected the question. There should be TWO
+numbers, not one: go.mod declares 1.25, the MINIMUM language version a consumer needs; CI
+compiles and scans with 1.26.5, above the 1.26.3 floor for GO-2026-4971. Collapsing them
+broke the build once: golangci-lint is itself built with go1.25 and refuses a module
+targeting 1.26.5. The bench passed that the whole time; only CI caught it.
 ```
 *A lane is not supported because it is listed. Listing is not support.*
 
@@ -377,9 +395,15 @@ never-automate item alongside publishing.*
 
 ## ADDENDUM NUMBERS (add to THE FOUR NUMBERS at day close)
 ```
-Tools REGISTERED (not merely installed):   8     (was 0; the ladder's last rung now exists)
+Tools REGISTERED (not merely installed):   8     (was 0; the ladder's last rung now exists.
+                                                 Rider is now REGISTRABLE: the viewer is a
+                                                 real proof command with a committed run
+                                                 configuration that invokes it)
 RetroForge platforms PROVEN:               0     (NES slice runs end to end and is calibrated;
                                                  PROVEN needs the Rider tile grid, 1 of the 2
                                                  remaining IN items)
-Rider integration level reached:           L3    (built and tested; L4 is ASCII, not native)
+Rider integration level reached:           L1+L3 (L1 built: a committed .run config invokes
+                                                 the viewer inside the IDE. L2 records exist
+                                                 in tools_registry.toml. L3 built and tested.
+                                                 L4 unbuilt: no plugin exists to build on.)
 ```
