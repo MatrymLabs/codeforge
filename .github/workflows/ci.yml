@@ -64,7 +64,7 @@ jobs:
           go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck protobuf-compiler
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2  # pinned: must match the other two install sites
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12  # pinned: must match the other two install sites
           shellcheck --version | head -2
           protoc --version
 
@@ -336,7 +336,7 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler
           # v1.34.2 matches the protobuf RUNTIME in native/spine/go.mod, and matches the pinned
           # install the `spine` job already uses. Generate with the version you link against.
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
           make proto
 
       - name: Secrets, across the whole of git history
@@ -490,7 +490,7 @@ jobs:
             "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/protoc-${PROTOC_VER}-linux-x86_64.zip"
           sudo unzip -q -o /tmp/protoc.zip -d /usr/local bin/protoc 'include/*'
           protoc --version
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Install the Python deps (dev + the optional protobuf runtime)
