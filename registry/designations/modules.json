@@ -1211,7 +1211,7 @@
     "designation": "MOD-10.007",
     "name": "cast",
     "status": "active",
-    "function": "Seed\u2192cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
+    "function": "Seed→cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
     "label": "cast",
     "file": "kernel/cast.py",
     "type": "MOD",
@@ -10210,7 +10210,9 @@
     "docs": "docs/architecture.md",
     "tests": "tests/test_engine.py",
     "depends_on": [],
-    "related": ["MOD-10.152"],
+    "related": [
+      "MOD-10.152"
+    ],
     "reuse": "",
     "tags": [
       "module",
@@ -10221,5 +10223,75 @@
     "aliases": [],
     "created": "2026-08-15",
     "updated": "2026-08-15"
+  },
+  {
+    "designation": "MOD-10.159",
+    "name": "tools_registry",
+    "status": "active",
+    "function": "refuse a tool record that cannot prove the tool works",
+    "label": "tools_registry",
+    "file": "kernel/tools_registry.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_tools_registry.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Road v3 s11 ladder: installed -> invocable -> registered. Refuses a proof_command that is only a version check.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-18",
+    "updated": "2026-08-18"
+  },
+  {
+    "designation": "MOD-10.160",
+    "name": "retroforge_view",
+    "status": "active",
+    "function": "render a ROM's tiles where a human can look at them (Rider ladder L1)",
+    "label": "retroforge_view",
+    "file": "kernel/retroforge/view.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_retroforge_view.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "L1 console surface, invoked by .run/RetroForge Tile Grid.run.xml. L4 native projection is unbuilt.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-18",
+    "updated": "2026-08-18"
+  },
+  {
+    "designation": "MOD-10.161",
+    "name": "currency",
+    "status": "active",
+    "function": "the declared inventory of pinned tools, read from where they are pinned, so an audit cannot drift from the pins",
+    "label": "currency",
+    "file": "kernel/currency.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_currency.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "gate"
+    ],
+    "notes": "consumed by scripts/currency_audit.py (make currency); the ecosystem field is load-bearing, since the canonical source of latest-version truth differs per ecosystem",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-18",
+    "updated": "2026-08-18"
   }
 ]

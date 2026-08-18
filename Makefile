@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -11,9 +11,37 @@ RUFF_CACHE_DIR ?= /tmp/matrymlabs-codeforge-ruff-cache
 MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 # GOCACHE joined them 2026-08-15, for the same reason and one lane over. Go defaults to
 # ~/.cache/go-build, which a Bench sandbox denied, and `go build` then failed in a way lint-go
-# reported as missing generated code. Every gate cache is now explicit and writable anywhere.
+# reported as missing generated code.
+#
+# IT MUST NOT BE SET TO A POSIX PATH ON WINDOWS. `go` is a native Windows binary; it does not
+# read /tmp as absolute and refuses outright:
+#     build cache is required, but could not be located: GOCACHE is not an absolute path
+# The comment here used to read "writable anywhere", and that was false on this bench from the
+# day it was written. lint-go probed the cache for WRITABILITY, which /tmp passes under Git Bash
+# because MSYS maps it to a real directory, so the probe went green and the build failed anyway.
+# Writable and usable are different questions and only one of them was being asked.
+#
+# On Windows, Go's own default (%LocalAppData%\go-build) is already absolute and writable, so the
+# correct action is to leave it alone. The sandbox problem this override exists for is a POSIX one.
+ifeq ($(OS),Windows_NT)
+export RUFF_CACHE_DIR MYPY_CACHE_DIR
+else
 GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
 export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
+endif
+
+# UTF-8, everywhere, on every platform. This is a CORRECTION, not a preference.
+#
+# Windows defaults to the ANSI code page (cp1252 on this bench); CI runs UTF-8. On 2026-08-17 that
+# single difference produced two defects that looked unrelated: the integrity ritual crashed
+# writing its own report because the report contains a checkmark, and the stranded gate decoded
+# git output as cp1252, mangled an em dash, and reported already-merged work as living on one
+# disk. Both were repaired one at a time. Neither repair prevented the next one.
+#
+# PYTHONUTF8=1 is the switch that prevents the class: it makes the default text encoding UTF-8 for
+# every Python process a gate starts, which is what CI already has. `make env-parity` reports the
+# divergence when this is unset, so the guard and the fix name each other.
+export PYTHONUTF8 := 1
 
 # Resolve the repository interpreter when the Makefile is parsed; CI uses the system fallback.
 PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe                  || (test -x .venv/bin/python && echo .venv/bin/python || echo python3))
@@ -139,7 +167,33 @@ lint-c:
 # `:test` dies with UnsupportedClassVersionError. `ktlintCheck` from clean is green. Widening this
 # target to `build` would put a known-broken command in every commit's path.
 lint-kotlin:
-	@cd native/rider-retroforge && ./gradlew ktlintCheck detektMain
+	@cd native/rider-retroforge && ./gradlew ktlintCheck detektMain --no-daemon
+
+# Calibration: prove the gates redden for what they claim to catch (canon 13).
+#
+# Deliberately NOT part of `check`, and deliberately a target anyway. It is not in `check`
+# because it plants violations into the working tree and runs whole gates to do it, which is
+# minutes of work and the wrong thing to put in front of every commit. It IS a target because
+# until now `scripts/calibrate_gates.py` was reachable by memory alone: no make target, no CI
+# job, nothing naming it. That is precisely the shape of defect it exists to catch, aimed at
+# itself. An instrument nobody can find is an instrument nobody runs.
+#
+# `make calibrate ONLY=detekt-TooGenericExceptionCaught` runs a single case.
+calibrate:
+	$(PY) scripts/calibrate_gates.py $(if $(ONLY),--only $(ONLY),)
+
+# Currency: is every pinned tool still the current one, and can we prove it.
+#
+# NOT in `check`, for the same reason `calibrate` is not: it needs the network, and a gate that
+# fails because GitHub had a bad afternoon teaches the team to ignore it. The logic itself is
+# tested offline through an injected fetch seam (tests/test_currency.py), so the part that can
+# be wrong is covered without the part that can be flaky.
+#
+# Default exit is 0 when tools are merely BEHIND: being behind is a decision for a human, not a
+# build failure. UNVERIFIABLE always exits non-zero, because "I could not check" must never read
+# as "fine". `make currency STRICT=1` fails on BEHIND too, for a scheduled sweep.
+currency:
+	$(PY) scripts/currency_audit.py $(if $(STRICT),--strict,)
 
 kotlin-lint: lint-kotlin
 
@@ -167,9 +221,13 @@ lint-go:
 		exit 1; \
 	else \
 		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
-			if ! ( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./... >/dev/null 2>&1; rc=$$?; rm -rf "$$out"; exit $$rc ); then \
-				echo "lint-go: $$m UNVERIFIED - it does not build. Generated code absent?"; \
-				echo "          run \`make proto\` (ADR-0012: the bindings are git-ignored)."; \
+			if ! err=$$( cd $$m && out=$$(mktemp -d) && go build -o "$$out/" ./... 2>&1; rc=$$?; rm -rf "$$out"; exit $$rc ); then \
+				echo "lint-go: $$m UNVERIFIED - it does not build. The compiler said:"; \
+				echo "$$err" | sed 's/^/            /'; \
+				echo "          Missing generated code is ONE cause and \`make proto\` fixes only that one."; \
+				echo "          Read the message above before running it. On 2026-08-18 this target"; \
+				echo "          swallowed the real error and guessed; the actual fault was a GOCACHE"; \
+				echo "          set to a POSIX path that a native Windows go binary rejects."; \
 				exit 1; \
 			fi; \
 			echo "lint-go: $$m"; \
@@ -243,9 +301,9 @@ mutation:
 # CI's secret-scan step, because check did not run it. pip-audit stays out (needs network; CI's
 # blocking audit-runtime gate and `make doctor` cover it).
 sast:
-	bandit -c pyproject.toml -r kernel adapters content forge.py -q
-	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
-	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
+	$(PY) -m bandit -c pyproject.toml -r kernel adapters content forge.py -q
+	$(PY) -m bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
+	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs $(PY) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single

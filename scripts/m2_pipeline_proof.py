@@ -283,6 +283,24 @@ def main() -> int:
         print(f"FAIL: {target} does not look like a poured product (no forge.py)")
         return 2
 
+    # REFUSE A TARGET THAT IS THE ENGINE ITSELF. The isolation stage asks "did the product import
+    # its OWN engine", and when the target IS the engine that question answers itself: the stage
+    # passes trivially and, worse, `--sabotage isolation` becomes a NO-OP, because putting the
+    # engine ahead of a target that is already the engine changes nothing on sys.path.
+    #
+    # Found 2026-08-18 by Codex running the sabotage battery and stopping on the result rather
+    # than repairing it. The stage reported PASS under sabotage, which by canon 13 makes it
+    # decoration: a check that cannot fail for the bad state it claims to catch.
+    #
+    # UNMEASURABLE, not FAIL. Nothing is broken here; the question simply cannot be asked of this
+    # target, and saying so is the honest verdict. Reporting a pass would be the defect.
+    engine_root = Path(__file__).resolve().parent.parent
+    if target == engine_root:
+        print(f"UNMEASURABLE: target {target} IS the engine repository.")
+        print("  Isolation cannot be measured against itself, and --sabotage isolation would be")
+        print("  a no-op. Pour the product elsewhere and point --target at the pour.")
+        return 2
+
     print("M2 pipeline proof")
     print(f"  target    {target}")
     print(f"  python    {sys.executable}")

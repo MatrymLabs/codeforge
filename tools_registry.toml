@@ -1,0 +1,126 @@
+# TOOL UTILIZATION REGISTRY
+#
+# Road v3 section 11: a tool is not integrated because it is installed. It counts only when it is
+# invoked through a captured proof command. Same ladder as the language lanes:
+#
+#     LISTED  ->  INSTALLED  ->  INVOCABLE (a proof command is captured)  ->  REGISTERED (a record
+#                                                                             exists, with proof,
+#                                                                             inputs, outputs, lanes)
+#
+# The rung is the point. Before this file existed, seven tools were INVOCABLE and none was
+# REGISTERED, because there was nowhere for a record to live. "Installed is not invocable" and
+# "invocable is not registered" are the same sentence one rung apart, and this ship has now been
+# caught by the first one three times in a week: trivy and gitleaks installed and off PATH, the
+# suite runner resolving to the system interpreter, and detekt configured with a burn-down ledger
+# and invoked by nothing at all.
+#
+# EVERY record must carry all eight fields. A record missing one is not a record; `make tools`
+# refuses the file rather than reporting a clean registry with a hole in it.
+#
+#   tool_id           stable identifier, lowercase
+#   executable        what is actually invoked; a wrapper counts and is named as one
+#   version_command   proves it is present, and which one
+#   proof_command     proves it WORKS on this repo. Not `--version` again: a command that fails
+#                     when the tool is broken
+#   supported_inputs  what it reads
+#   supported_outputs what it emits
+#   language_lanes    which lanes depend on it
+#   known_faults      what has actually gone wrong, or "none observed". Never blank.
+
+[[tool]]
+tool_id = "python"
+executable = ".venv/Scripts/python.exe (Windows) / .venv/bin/python (POSIX)"
+version_command = "$(PY) --version"
+proof_command = "make check"
+supported_inputs = ["*.py", "pyproject.toml"]
+supported_outputs = ["test results", "coverage.xml"]
+language_lanes = ["python"]
+known_faults = """The Makefile invoked a bare `pytest` for six targets, which resolved to the
+SYSTEM interpreter on this bench and ran with none of the declared dependencies. It reported
+"no tests ran" while the same command through the venv passed 5,288. Fixed 2026-08-18; the
+targets now use $(PY) -m pytest."""
+
+[[tool]]
+tool_id = "ruff"
+executable = "$(PY) -m ruff"
+version_command = "$(PY) -m ruff --version"
+proof_command = "make lint-python"
+supported_inputs = ["*.py"]
+supported_outputs = ["lint findings", "formatted source"]
+language_lanes = ["python"]
+known_faults = """EXE001 (shebang without the executable bit) is SKIPPED on Windows entirely, so
+nine Python files were flagged only by CI and the bench reported green forever. `make env-parity`
+now reports the same defect from the git index, which is platform-independent."""
+
+[[tool]]
+tool_id = "mypy"
+executable = "$(PY) -m mypy"
+version_command = "$(PY) -m mypy --version"
+proof_command = "make typecheck-python"
+supported_inputs = ["kernel/**", "adapters/**", "forge.py"]
+supported_outputs = ["type errors"]
+language_lanes = ["python"]
+known_faults = """Reports green across 401 files while 181 findings across 64 modules sit behind
+`disable_error_code` overrides. That is the sanctioned ratchet and the count is recorded in
+.ai/LEDGER.md, but "mypy is green" means "green with 64 modules exempted"."""
+
+[[tool]]
+tool_id = "cargo"
+executable = "cargo"
+version_command = "cargo --version"
+proof_command = "make lint-rust"
+supported_inputs = ["*.rs", "Cargo.toml"]
+supported_outputs = ["clippy findings", "formatted source"]
+language_lanes = ["rust"]
+known_faults = """clippy `pedantic` + `unwrap_used` is written but NOT enabled on main: it is red
+on the current source (similar_names, doc_markdown, cast_possible_truncation) and needs a
+burn-down first."""
+
+[[tool]]
+tool_id = "go"
+executable = "go / golangci-lint / govulncheck"
+version_command = "go version && golangci-lint --version && govulncheck -version"
+proof_command = "make lint-go && make security-go"
+supported_inputs = ["*.go", "go.mod"]
+supported_outputs = ["lint findings", "reachable-vulnerability report"]
+language_lanes = ["go"]
+known_faults = """THREE VERSIONS WHERE THERE SHOULD BE ONE: the bench runs go 1.26.5, CI pins
+1.25, and go.mod declares 1.24. govulncheck source mode reports stdlib vulnerabilities against
+the toolchain in use, so the bench and CI can disagree about the same code. Open."""
+
+[[tool]]
+tool_id = "gradle"
+executable = "./gradlew (wrapper, not a system install)"
+version_command = "./gradlew --version"
+proof_command = "make lint-kotlin"
+supported_inputs = ["*.kt", "build.gradle.kts"]
+supported_outputs = ["ktlint findings", "built jar", "test results"]
+language_lanes = ["kotlin-jvm"]
+known_faults = """detekt is configured with a 16-entry baseline and invoked NOWHERE: zero
+occurrences in ci.yml, and `make lint-kotlin` runs ktlintCheck only. A gate that exists and is
+never run. Ordered as CX-DETEKT-2."""
+
+[[tool]]
+tool_id = "security-scanners"
+executable = "gitleaks / trivy / govulncheck / cargo-deny"
+version_command = "gitleaks version && trivy --version && govulncheck -version && cargo deny --version"
+proof_command = "make security-secrets-history && make security-fs && make security-go && make security-rust"
+supported_inputs = ["git history", "filesystem", "go modules", "Cargo.lock"]
+supported_outputs = ["secret findings", "CVE findings", "licence and ban verdicts"]
+language_lanes = ["python", "go", "rust", "shell", "terraform"]
+known_faults = """Installed via winget and NOT on PATH: WinGet\\Links is absent from it, so the
+targets reported UNVERIFIED on this bench while passing in CI. Also: gitleaks found NOTHING on the
+first planted fixture during calibration. A weak plant proves nothing, and the fixture had to be
+made realistic before the proof meant anything."""
+
+[[tool]]
+tool_id = "git"
+executable = "git / gh"
+version_command = "git --version && gh --version"
+proof_command = "make stranded && make claims"
+supported_inputs = ["working trees", "remotes"]
+supported_outputs = ["stranded-work verdict", "claim-board verdict"]
+language_lanes = ["all"]
+known_faults = """`git status --porcelain` is fixed-width and its leading space broke two parsing
+attempts in the stranded gate. Subprocess output decoded with the process locale (cp1252) mangled
+UTF-8 content and produced false stranded findings. Both fixed 2026-08-18."""

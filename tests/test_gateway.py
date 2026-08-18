@@ -48,9 +48,25 @@ def server():
     srv.server_close()
 
 
+#: Socket deadline for the live gateway tests.
+#:
+#: Was 3 seconds, and that is a race rather than a limit. These tests boot a real server thread and
+#: drive it over a real socket, and the suite runs at `-n auto` -- 24 workers on this bench, all
+#: competing for the scheduler. A captured 12-run hunt on 2026-08-18 caught
+#: `test_live_master_client_workspace_flow_survives_gateway_restart` failing once with a bare
+#: `TimeoutError: timed out`, which is the "distributed assertions race" pattern this repository
+#: already has written down: poll with a deadline, never assert an instant.
+#:
+#: Raised rather than removed, deliberately. A timeout that cannot be exceeded is not a timeout,
+#: and a hung gateway must still fail this suite rather than hang it. 15s is far outside any
+#: healthy response on this hardware (the whole live flow completes in well under a second) while
+#: leaving a genuine hang detectable.
+_SOCKET_DEADLINE = 15.0
+
+
 def _connect(srv: ForgeGateServer) -> socket.socket:
-    sock = socket.create_connection(("127.0.0.1", srv.server_address[1]), timeout=3)
-    sock.settimeout(3)
+    sock = socket.create_connection(("127.0.0.1", srv.server_address[1]), timeout=_SOCKET_DEADLINE)
+    sock.settimeout(_SOCKET_DEADLINE)
     return sock
 
 

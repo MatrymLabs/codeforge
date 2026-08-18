@@ -8,11 +8,13 @@ runs the real suite.
 """
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
 import pytest
 
+from kernel import integrity
 from kernel.integrity import (
     build_report,
     career_currency_gaps,
@@ -211,3 +213,63 @@ def test_run_repo_integrity_writes_a_real_report():
     path = run_repo_integrity()  # builds + saves under reports/repo_integrity/ (gitignored)
     assert path.exists()
     assert "CodeForge Repo Integrity Report" in path.read_text()
+
+
+# --- the report must survive a console that cannot encode what the repo's own docs contain ------
+
+
+def test_echo_survives_a_console_that_cannot_encode_the_report(capsys, monkeypatch):
+    """The report quotes source documents verbatim, and those documents carry status glyphs.
+
+    A default Windows console is cp1252, which cannot encode any of them, so `make repo-integrity`
+    died mid-report with `UnicodeEncodeError: 'charmap' codec can't encode character '\u2705'`.
+    The FILE was already written by then: the ritual reported a crash while its real output sat on
+    disk intact. Degrading beats crashing, and the words the glyphs stand for are already adjacent,
+    so a replaced character costs decoration and not meaning.
+    """
+
+    class Cp1252Stream:
+        """Stdout that refuses anything outside cp1252, the way a default Windows console does."""
+
+        encoding = "cp1252"
+
+        def __init__(self) -> None:
+            self.written: list[str] = []
+
+        def write(self, data: str) -> int:
+            data.encode("cp1252")  # raises UnicodeEncodeError on a glyph, exactly like the console
+            self.written.append(data)
+            return len(data)
+
+        def flush(self) -> None:
+            return None
+
+    stream = Cp1252Stream()
+    monkeypatch.setattr("sys.stdout", stream)
+    integrity._echo("verdict: ✅ done and \U0001f528 in progress")
+
+    printed = "".join(stream.written)
+    assert "done" in printed, "the meaning must survive even when the glyph cannot"
+    assert "in progress" in printed
+    assert "✅" not in printed, "an unencodable glyph must be replaced, not smuggled through"
+
+
+def test_echo_keeps_the_glyphs_when_the_console_can_encode_them():
+    """The fallback must be a FALLBACK. A UTF-8 terminal still gets the real characters.
+
+    Degrading unconditionally would be the easy fix and the wrong one: it would strip the glyphs
+    on every machine to satisfy the one that cannot render them.
+    """
+    import io
+
+    buffer = io.TextIOWrapper(io.BytesIO(), encoding="utf-8", newline="")
+    original = sys.stdout
+    sys.stdout = buffer
+    try:
+        integrity._echo("verdict: ✅ done")
+        buffer.flush()
+        rendered = buffer.buffer.getvalue().decode("utf-8")
+    finally:
+        sys.stdout = original
+
+    assert "✅" in rendered, "a console that CAN encode the glyph must still receive it"

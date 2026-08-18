@@ -556,6 +556,11 @@ def run_differential(
     # The thirteen non-coverage probes use the fixed synthetic ``forge`` room. Keep that probe
     # fixture available without making their answers depend on the Blueprint under test; only the
     # existing coverage probe reads ``seed``'s overlay.
+    #
+    # ANNOTATED, not inferred. Without this, mypy takes `right`'s type from the first branch
+    # (Engine2D) and then refuses the `else` branch, which assigns the caller's `Engine`. The
+    # variable genuinely holds either, so it says so.
+    right: Engine
     if two_d is None:
         try:
             right = Engine2D(_overlay_for_seed(seed))
