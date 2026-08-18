@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test test-order property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -426,11 +426,98 @@ sbom:
 # findings like B105/B106), plus the WHOLE repo at medium+ (matches forge-audit's bar, so the
 # flagship's own gate catches whole-repo medium issues -- e.g. a hardcoded /tmp in a test -- before
 # the proof-tool does). Both must pass.
-security:
+security: security-python security-secrets-history security-go security-rust security-fs
+
+# Python: bandit for code, pip-audit for the dependency graph, detect-secrets for the working tree.
+# This was the WHOLE of `security` until 2026-08-17, on a repository with four other languages.
+security-python:
 	bandit -c pyproject.toml -r kernel adapters content forge.py -q
 	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	pip-audit --skip-editable
 	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
+
+# Four scanners were installed on 2026-08-16/17 and NONE of them was ever invoked by a target.
+# `security` audited Python and called itself the security gate while Go, Rust, the container
+# surface and the whole of git history went uninspected. Same shape as `lint` claiming "every
+# language present" while Terraform and C sat outside it.
+#
+# Every target below follows lint-go's contract: nothing to scan is a clean pass, a MISSING
+# TOOLCHAIN is UNVERIFIED and exits non-zero. A scanner that is absent must never read as a clean
+# result, because "we did not look" and "we looked and it was fine" are the two answers this whole
+# baseline exists to keep apart.
+
+# gitleaks reads git HISTORY; detect-secrets (in security-python) reads the working tree. They are
+# not redundant: a secret committed and then deleted is invisible to the working-tree scan forever,
+# and that is the one that actually costs you, because it is still in every clone.
+security-secrets-history:
+	@if ! command -v gitleaks >/dev/null 2>&1; then \
+		echo "security-secrets-history: UNVERIFIED - no \`gitleaks\` on PATH. Git history is NOT"; \
+		echo "          being scanned. detect-secrets covers the working tree only, so a secret"; \
+		echo "          that was committed and later deleted is invisible without this."; \
+		echo "          Install: winget install --id Gitleaks.Gitleaks --scope user"; \
+		exit 1; \
+	fi
+	gitleaks git --no-banner --redact
+
+# SOURCE mode, deliberately. govulncheck builds a call graph and reports only vulnerabilities the
+# code can actually REACH; `-mode binary` cannot, and reports every advisory touching any module in
+# the graph. The reachability question is the one worth answering.
+security-go:
+	@if [ -z "$$(git ls-files '*.go')" ]; then \
+		echo "security-go: no Go modules in this tree, nothing to inspect"; \
+	elif ! command -v govulncheck >/dev/null 2>&1; then \
+		echo "security-go: UNVERIFIED - no \`govulncheck\` on PATH. Install:"; \
+		echo "          go install golang.org/x/vuln/cmd/govulncheck@v1.7.0"; \
+		echo "       (pinned to match CI. It needs Go 1.25+, which is also this repo's floor:"; \
+		echo "        1.24 ships a reachable net panic, GO-2026-4971.)"; \
+		exit 1; \
+	else \
+		for m in $$(git ls-files '*/go.mod' | xargs -r -n1 dirname); do \
+			echo "security-go: $$m"; \
+			( cd $$m && govulncheck ./... ) || exit 1; \
+		done; \
+	fi
+
+# cargo-deny covers advisories, licences, banned crates and source registries in one pass, which
+# is why it is here rather than cargo-audit: RustSec's own maintainer records in cargo-deny #194
+# that its reporting "has definitely eclipsed what's in cargo-audit".
+#
+# It MUST run from the crate directory. There is no Cargo.toml at the repository root, so a root
+# invocation dies with "the directory ... doesn't contain a Cargo.toml file" - which reads like a
+# tool fault and is really a working-directory fault.
+security-rust:
+	@if [ -z "$$(git ls-files '*.rs')" ]; then \
+		echo "security-rust: no Rust crates in this tree, nothing to inspect"; \
+	elif ! command -v cargo-deny >/dev/null 2>&1; then \
+		echo "security-rust: UNVERIFIED - no \`cargo-deny\` on PATH. Install:"; \
+		echo "          cargo install cargo-deny --locked"; \
+		exit 1; \
+	else \
+		for m in $$(git ls-files '*/Cargo.toml' | xargs -r -n1 dirname); do \
+			if [ ! -f deny.toml ] && [ ! -f $$m/deny.toml ]; then \
+				echo "security-rust: UNVERIFIED - no deny.toml. cargo-deny would fall back to its"; \
+				echo "          DEFAULT licence policy, which rejects licences this crate legitimately"; \
+				echo "          uses (measured: 15 rejections, all of them MIT/Apache-2.0 family)."; \
+				echo "          A wall of false rejections is not a security finding; it is a missing"; \
+				echo "          config, and reporting it as a finding would teach everyone to ignore"; \
+				echo "          this gate."; \
+				exit 1; \
+			fi; \
+			echo "security-rust: $$m"; \
+			( cd $$m && cargo deny check ) || exit 1; \
+		done; \
+	fi
+
+# Trivy over the filesystem: dependency vulnerabilities, secrets and misconfiguration in one pass.
+# `--ignore-unfixed` is deliberate: a vulnerability with no available patch is real but not
+# actionable today, and a gate that blocks on it blocks forever.
+security-fs:
+	@if ! command -v trivy >/dev/null 2>&1; then \
+		echo "security-fs: UNVERIFIED - no \`trivy\` on PATH. Install:"; \
+		echo "          winget install --id AquaSecurity.Trivy --scope user"; \
+		exit 1; \
+	fi
+	trivy fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 .
 
 # --- Secret scan: fail on any tracked secret not in the audited baseline.
 # Regenerate the baseline after auditing: detect-secrets scan --exclude-files '\.venv/' > .secrets.baseline ---
