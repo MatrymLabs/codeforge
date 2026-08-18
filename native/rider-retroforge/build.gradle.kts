@@ -49,6 +49,10 @@ detekt {
     baseline = file("detekt-baseline.xml")
 }
 
+tasks.named("check") {
+    dependsOn("detektMain")
+}
+
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8")
 }

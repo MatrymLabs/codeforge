@@ -2,4 +2,4 @@
 // Standard library only -- no third-party modules, so there is no go.sum to vendor.
 module codeforge/edge
 
-go 1.24
+go 1.26.5
