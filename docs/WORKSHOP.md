@@ -144,6 +144,57 @@ Heavy builds sequenced, never stacked (32GB): gradle workers.max 8, cargo cap 16
 if swapping, pytest -n auto. 4090 is for Godot and optional local models — it does
 nothing for builds. Sleep stays off (NoMachine). Pi mirrors via scheduled git pull.
 
+
+## MERGE AUTHORITY (delegated)
+
+Claude Code merges routine work without a stamp. The gates are the check; the
+founder reviews the digest, not each merge.
+
+**AUTO-MERGE when ALL of these are true:**
+- every required status check is green, no bypass flags, no skipped gate
+- the change carries one anchor and touches one language
+- the other bench independently re-ran the proof and it passed
+- no contract, schema, wire-protocol, public API, or CLI surface changed
+- no dependency added, removed, or version-bumped
+- no file deleted that the same change did not create
+- no new suppression (noqa/allow/ignore) without a reason comment
+- single repository
+- diff under 400 changed lines
+
+Merge it, log it, keep building. Do not ask.
+
+**STAMP REQUIRED — stop and queue for the founder:**
+- contract, schema, wire-protocol, public API, or CLI surface change
+- competing candidates or any fork with two viable directions
+- deletion of pre-existing files, or history rewrite of any kind
+- new, removed, or bumped dependency
+- anything touching authentication, secrets, or permissions
+- cross-repository change
+- a gate that reddened and was then made green by changing the gate
+- diff over 400 lines
+- anything the agent is uncertain about — uncertainty itself is the trigger
+
+**NEVER automated, regardless of gates:**
+- publishing, releasing, or tagging a version (a merge is revertible; a published
+  artifact is not)
+- force-push, history rewrite, branch deletion
+- anything spending money
+- deleting a remote repository or its issues
+
+**Required safeguards, all three:**
+1. Branch protection on main: PR required (0 approvals), all status checks
+   required, linear history, no force-push, no deletions. The ruleset is what
+   makes delegation safe — configure it before merging anything automatically.
+2. `.ai/MERGE_LOG.md`: one line per auto-merge — date, PR, anchor, one-line
+   summary, the checks that passed. Presented at the close stamp window as the
+   day's merge digest. The founder sees everything, just not one at a time.
+3. Any auto-merge that later causes a defect is recorded as a Case, and its
+   criteria tighten. The list above is a floor that ratchets up, never down.
+
+**The rule underneath:** automate the merges that require no judgment, keep the
+founder for the merges that are entirely judgment. If an agent has to weigh two
+reasonable options, that is a stamp, not a merge.
+
 ---
 
 # PART 4 — THE ACTIVE PLAN
