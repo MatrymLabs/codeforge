@@ -11,11 +11,11 @@
 
 plugins {
     id("org.jetbrains.intellij.platform")
-    kotlin("jvm") version "2.4.0"
+    kotlin("jvm") version "2.4.10"
     // KF-RF-1: the kotlin lane opened UNGOVERNED on 2026-08-13, a live toolchain with nothing
     // inspecting it. ktlint is the instrument. It runs from the wrapper, so CI needs a JDK and
     // nothing else, and `check` depends on it so a lint failure cannot be skipped by running tests.
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
 }
 
