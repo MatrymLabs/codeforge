@@ -331,15 +331,13 @@ IN     [x] iNES header detected            HeaderedCartridgeModule; InvalidCartr
        [ ] click -> tile index + ROM offset  requires the IDE surface; nothing exists
        [x] extraction manifest emitted     ExtractionManifest + ExtractedAsset, traceable
        [x] ROM bytes unmodified            provenance recorded "without mutation" (Kotlin test)
-       [~] decoder + parser proof runs     40 Python + 4 Kotlin test files pass. Fixtures are
-                                           SYNTHETIC and built in-test, deliberately NOT
-                                           committed, which the legal block requires.
-                                           NO END-TO-END SLICE PROOF EXISTS: there is no
-                                           equivalent of scripts/m2_pipeline_proof.py that
-                                           runs load -> decode -> manifest -> display as one
-                                           captured transcript. Six of eight IN items are
-                                           built and unit-tested; the slice has never been
-                                           run as a slice.
+       [x] decoder + parser proof runs     scripts/rf001_slice_proof.py, exit 0.
+                                           synthesize -> load -> decode -> manifest ->
+                                           display -> integrity as ONE chain, and CALIBRATED:
+                                           all 4 sabotage paths correctly fail. Two of them
+                                           did NOT at first; fixing that is what makes this
+                                           box worth anything. Fixtures stay synthetic and
+                                           in-memory; no ROM is read from disk or committed.
 
 OUT    editing · saving modified ROMs · SNES · Genesis · compression ·
        disassembly · emulator integration · patch generation · game-specific hacks
@@ -375,6 +373,8 @@ never-automate item alongside publishing.*
 ## ADDENDUM NUMBERS (add to THE FOUR NUMBERS at day close)
 ```
 Tools REGISTERED (not merely installed):   0     (7 INVOCABLE, 0 registered; no registry file)
-RetroForge platforms PROVEN:               0     (NES core built and tested, slice unproven)
+RetroForge platforms PROVEN:               0     (NES slice runs end to end and is calibrated;
+                                                 PROVEN needs the Rider tile grid, 1 of the 2
+                                                 remaining IN items)
 Rider integration level reached:           L3    (built and tested; L4 is ASCII, not native)
 ```
