@@ -1,0 +1,45 @@
+<component name="ProjectRunConfigurationManager">
+  <!--
+    L1 of the Rider integration ladder: an external command invoked from inside the IDE.
+
+    This is committed to `.run/` on purpose. A run configuration living only in one developer's
+    IDE settings is not integration, it is a personal shortcut; `.run/` is the directory JetBrains
+    IDEs read from the project itself, so the configuration travels with the repository and every
+    checkout gets the same one.
+
+    It is L1 and it is labelled L1. The tiles appear in Rider's console, which is a real surface
+    and is not the tile grid with click-to-offset that L4 describes. That rung needs the IntelliJ
+    Platform SDK and a plugin; `native/rider-retroforge` is presently a plain Kotlin library with
+    no plugin and no entry point.
+
+    PROMPT-ON-RUN, not a hardcoded path. The ROM is supplied at run time and no cartridge image is
+    committed to this repository, which the RetroForge legal block treats as a never-automate item
+    alongside publishing. A default path here would be an invitation to commit one.
+  -->
+  <configuration default="false" name="RetroForge Tile Grid" type="PythonConfigurationType"
+                 factoryName="Python" nameIsGenerated="false">
+    <module name="codeforge" />
+    <option name="ENV_FILES" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <!-- The bench default encoding is cp1252 and the repository is UTF-8. Without this the
+           console mangles any non-ASCII the report carries, which is the same defect class the
+           Makefile fixes with `export PYTHONUTF8 := 1` for every gate target. -->
+      <env name="PYTHONUTF8" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="$PROJECT_DIR$/.venv/Scripts/python.exe" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="SCRIPT_NAME" value="" />
+    <option name="PARAMETERS" value="$Prompt$" />
+    <option name="MODULE_MODE" value="true" />
+    <option name="MODULE_NAME" value="kernel.retroforge.view" />
+    <option name="SHOW_COMMAND_LINE" value="true" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -10246,5 +10246,28 @@
     "aliases": [],
     "created": "2026-08-18",
     "updated": "2026-08-18"
+  },
+  {
+    "designation": "MOD-10.160",
+    "name": "retroforge_view",
+    "status": "active",
+    "function": "render a ROM's tiles where a human can look at them (Rider ladder L1)",
+    "label": "retroforge_view",
+    "file": "kernel/retroforge/view.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_retroforge_view.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "L1 console surface, invoked by .run/RetroForge Tile Grid.run.xml. L4 native projection is unbuilt.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-18",
+    "updated": "2026-08-18"
   }
 ]
