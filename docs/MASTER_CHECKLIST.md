@@ -6,8 +6,9 @@
 or `[?]`. This document is worthless the moment it flatters.**
 
 Last updated: 2026-08-18  ·  Day: 230
-Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment). Section 1, the scanner
-fixture box and the lane toolchain half are Codex's and remain `[?]` until its report lands.
+Filled by: Claude Code (sections 2,3,4,6,7,8,9 + lane judgment), merged with Codex's
+report (section 1, the scanner-fixture box, the lane toolchain half). Claude Code is the
+only bench that writes this file; Codex reports and does not edit it.
 
 ---
 
@@ -15,14 +16,36 @@ fixture box and the lane toolchain half are Codex's and remain `[?]` until its r
 ```
 [x] PC migrated from Pi, repos at C:\Projects\MatrymLabs
 [x] rig specs recorded (i9-13900KF / 32GB / RTX 4090 / 2TB NVMe / Win11 Home)
-[?] BIOS current on Z790-E (Raptor Lake microcode) + Intel Default power
-[?] Defender exclusions, long paths, Developer Mode, sleep-off, OneDrive clear
-[?] .gitattributes committed per repo, no committed .venv or abs-path symlinks
-[?] git globals: autocrlf/fileMode/fsmonitor/untrackedcache/symlinks
-[?] parallelism set: pytest -n auto, gradle workers.max 8
+[ ] BIOS NOT CURRENT on Z790-E — version 0816, released 2023-02-22, 1273 DAYS OLD
+        It predates every Intel Raptor Lake microcode fix for the Vmin Shift instability
+        (0x125 May 2024, 0x129 Aug 2024, 0x12B Sep 2024). The i9-13900KF is the part those
+        fixes exist for. This is a hardware-degradation risk, not a checkbox.
+    [?] Intel Default power limits — not exposed by ASUS/Windows WMI; needs a BIOS-screen read
+[~] Defender / paths / Developer Mode / sleep / OneDrive
+        DEFENDER IS NOT THE ACTIVE SCANNER. WinDefend is Stopped/Manual because AVIRA SECURITY
+        is the registered antivirus (SecurityCenter2 lists it, state 0x41000). Codex read the
+        Get-MpPreference failure as "unavailable"; the real answer is "superseded". The
+        exclusions question therefore belongs to Avira, not Defender, and is unanswered.
+    [x] long paths enabled (LongPathsEnabled=1)
+    [ ] Developer Mode NOT enabled (AllowDevelopmentWithoutDevLicense absent)
+    [x] sleep never (High performance, AC and DC standby idle = 0)
+    [x] OneDrive does not scope the repos (the OneDrive Projects path does not exist)
+[x] .gitattributes committed in all 7 registered repos; no committed .venv anywhere;
+        no absolute-path symlinks (no 120000 entries in any index)
+[x] git globals recorded: autocrlf=false, filemode=false, fsmonitor=true,
+        untrackedCache=true, symlinks=true
+[x] parallelism set: JOBS ?= auto driving pytest -n; gradle parallel=true, workers.max=8
 [ ] Tailscale on PC + Pi; NoMachine bound to it, no forwarded ports
-[ ] Pi mirroring via scheduled git pull
-[ ] winget DSC bootstrap file committed (machine reproducible from one command)
+        PC Tailscale is INSTALLED BUT LOGGED OUT (BackendState NeedsLogin, no IPs, Online false)
+        NoMachine listens on 0.0.0.0:4000 AND [::]:4000 — all interfaces, NOT Tailscale-bound.
+        No Windows portproxy entries exist, so nothing is forwarded, but the listener is open on
+        every interface the machine has. That is the finding, and it is a security one.
+    [?] Pi side unverified: SSH to skynet fails on host key verification (TCP 22 reachable)
+[?] Pi mirroring via scheduled git pull — UNVERIFIED, same SSH host-key failure.
+        Last run time unknown. Resolve: accept the host key, then
+        ssh skynet "systemctl list-timers --all; crontab -l" 
+[x] winget DSC bootstrap committed — machine-bootstrap/.winget/configuration.dsc.yaml,
+        blob 9582f60a, present in both the founder root and ship-claude
 ```
 
 ## 2. INSTRUMENTS — gates that actually catch things
@@ -41,8 +64,13 @@ fixture box and the lane toolchain half are Codex's and remain `[?]` until its r
         covered: ruff(3) mypy(2) pytest bandit gitleaks c go rust shellcheck terraform
         NO CASE EXISTS for: detekt/kotlin, trivy, cargo-deny
 [x] security scanners on the merge path (caught a real Go stdlib panic)
-[~] scanners invocable — all four resolve on PATH (trivy gitleaks govulncheck cargo-deny),
-        verified 2026-08-18. The known-hit FIXTURE proof is Codex's box and stays `[?]`
+[x] scanners invocable AND PROVEN ON A PLANTED HIT (Codex 2026-08-18, fixtures removed)
+        gitleaks  generic-api-key on a fake token — NOTE: the FIRST fixture found nothing.
+                  A weak plant proves nothing; the box passed only after a realistic one
+        trivy     AWS-0107 HIGH, unrestricted ingress 0.0.0.0/0 in a terraform fixture.
+                  Also learned: this trivy build has no --scanners flag; the working form is
+                  trivy config --misconfig-scanners
+        govulncheck  GO-2026-5023 and GO-2022-0968 in x/crypto/ssh, reachability-aware
 [x] ledgers exist with day-zero counts + reproduce commands
         DAY ZERO 2026-08-18 on main 198c81f0: noqa 734 · mypy 181 across 64 modules ·
         detekt 16 · Gradle CC 0.  The 2026-08-17 figures are superseded: they were taken
@@ -97,10 +125,25 @@ rust          [~] GATED (clippy -D warnings; case exists)       calibrated: case
 go            [~] GATED (golangci v2 + govulncheck source)      calibrated: 2026-08-18
 shell         [~] GATED (4 rules, noisy 5th documented out)     calibrated: case, not re-run
 kotlin-jvm    [ ] NOT GATED: detekt is configured and RUN NOWHERE; ktlint only  calib: none
-gdscript      [ ] INSTALLED, real gate is typed GDScript + headless compile
-typescript    [ ] CANDIDATE — deferred to the SaaS rung
-csharp        [ ] CANDIDATE — deferred
-cpp / sql / terraform / powershell  [ ] CANDIDATE
+gdscript      [ ] CANDIDATE — 0 .gd files tracked. Toolchain installed ahead of its code
+typescript    [ ] CANDIDATE — 0 .ts/.tsx tracked, deferred to the SaaS rung
+csharp        [ ] CANDIDATE — 0 .cs tracked, deferred
+cpp / sql / powershell             [ ] CANDIDATE — 0 files tracked for each
+terraform     [~] GATED (terraform v1.15.8, fmt -check in lint) calibrated: case exists
+c             [~] GATED (gcc 16.1.0 / clang 22.1.8; cc absent, Makefile falls back correctly)
+lua           [ ] NO CODE AND A CI JOB. 0 .lua files tracked, yet ci.yml has a `lua` job.
+                  The inverse of an ungoverned language: a gate guarding nothing.
+
+TOOLCHAIN VERSIONS (Codex, 2026-08-18): python 3.13.12 · ruff 0.16.2 · mypy 2.3.0 ·
+pytest 9.1.1 · rustc/cargo 1.97.1 · clippy 0.1.97 · go 1.26.5 · golangci-lint 2.12.2 ·
+govulncheck v1.7.0 · shellcheck 0.11.0 · java 24.0.2 Temurin · terraform 1.15.8 ·
+gcc 16.1.0 · clang 22.1.8.  gradle/ktlint/detekt report ABSENT as bare tools, which is
+expected: the Kotlin lane runs through ./gradlew, not a system install.
+
+GO VERSION DIVERGENCE, unresolved: bench 1.26.5 · CI pins 1.25 · go.mod says 1.24. Three
+numbers. The bench compiles and scans with a toolchain CI does not use, which is the exact
+class the parity guard was built for and does not yet cover. (1.26.5 is safe for
+GO-2026-4971, which was reintroduced in 1.26.0 and fixed in 1.26.3.)
 ```
 *A lane is not supported because it is listed. Listing is not support.*
 
@@ -169,3 +212,174 @@ better and caught genuinely real defects; none of that is a product a stranger c
 
 If the answer is "nothing" more than two days running, the machine is building
 itself again. Stop and turn the crank.
+
+---
+
+## REMAINING `[?]`, each with the command that resolves it
+
+```
+Intel Default power limits      read it off the BIOS screen; no WMI class exposes it
+Avira exclusions                the AV is Avira, not Defender. Its exclusion list has never
+                                been read, and a scanner watching C:\Projects is a build-speed
+                                and file-lock question as much as a security one
+Pi Tailscale state              ssh skynet "tailscale status --json"   (blocked: host key)
+Pi NoMachine binding            ssh skynet "ss -ltnp | grep 4000"      (blocked: host key)
+Pi mirror schedule + last run   ssh skynet "systemctl list-timers --all; crontab -l"
+                                ALL THREE need the host key accepted first, once, by hand.
+                                That is a founder action: accepting a host key is a trust
+                                decision and not an agent's to make.
+```
+
+## FINDINGS THIS AUDIT PRODUCED, ranked by what they cost if ignored
+
+```
+1. BIOS 0816 is 1273 days old on an i9-13900KF, predating every Raptor Lake microcode fix
+   for the Vmin Shift degradation. Silicon damage is cumulative and not reversible by a
+   later update. This is the only finding on the page that gets worse while nobody looks.
+2. NoMachine listens on 0.0.0.0:4000 while Tailscale is LOGGED OUT. Remote access is open
+   on every interface and the private network that was supposed to carry it is off.
+3. detekt is configured, has a 16-entry burn-down ledger, and is invoked by nothing.
+4. DONE-2 (RF-001) has no orders, no bench, and nothing written. Half the launch.
+5. Go: bench 1.26.5, CI 1.25, go.mod 1.24. Three numbers where there should be one.
+6. A `lua` CI job guards zero .lua files.
+```
+
+---
+
+## 10. TOOL UTILIZATION REGISTRY
+*Road v3 §11: a tool is not integrated because it is installed. It counts only when
+invoked through a captured proof command. Same ladder as language lanes.*
+
+**Status per tool: `LISTED` → `INSTALLED` → `INVOCABLE` (proof command captured) →
+`REGISTERED` (a record exists with proof + inputs/outputs + lanes)**
+
+```
+[x] Tool Utilization Registry file exists — tools_registry.toml, 8 records, gated by
+    kernel/tools_registry.py with a test twin. `python -m kernel.tools_registry` exit 0
+[~] every tool a Blueprint depends on has a record — 8 filed: python, ruff, mypy, cargo,
+    go, gradle, security-scanners, git. Rider has NO record: nothing in the tree invokes
+    it headlessly, so it has no proof command and cannot be registered honestly
+[x] every record carries all eight fields — enforced, not asked for. The gate refuses a
+    record missing any field, refuses a blank known_faults, refuses a duplicate tool_id,
+    and REFUSES A PROOF_COMMAND THAT IS ONLY A VERSION CHECK, which is the rule the whole
+    file exists for: --version proves installed and nothing about working
+
+BUILD + PROVE TOOLS (in use now)
+Rider          [?] INSTALLED   no proof command: nothing in the tree invokes Rider headlessly
+uv/python      [x] INVOCABLE   make check (python 3.13.12, ruff 0.16.2, mypy 2.3.0, pytest 9.1.1)
+cargo          [x] INVOCABLE   make lint-rust -> cargo fmt --check && clippy -D warnings (1.97.1)
+go             [x] INVOCABLE   make lint-go / security-go (bench go 1.26.5; CI pins 1.25)
+gradle         [x] INVOCABLE   ./gradlew ktlintCheck  (wrapper, not a system install)
+node/npm       [ ] NOT PRESENT in this repo; no package.json, no JS/TS lane here
+git/gh         [x] INVOCABLE   used continuously; gh authenticated as MatrymLabs
+task/make      [x] INVOCABLE   make is the control panel; Task 3.52.0 installed and UNUSED here
+trivy/gitleaks/govulncheck  [x] INVOCABLE, PROVEN ON A PLANTED HIT (see section 2)
+
+REGISTERED count is still ZERO. Every [x] above is INVOCABLE, one rung below REGISTERED,
+because no registry file exists to hold a record. Invocable is not registered, exactly as
+installed is not invocable. The rung is the point of the ladder.
+
+RETROFORGE TOOLS (none required for DONE-2)
+Aseprite       [ ] DEFER — Stage 4, asset pipeline rung
+Tiled / LDtk   [ ] DEFER — map rung
+FCEUX/Mesen    [ ] DEFER — emulator integration, not in the read-only slice
+cc65/ca65/Asar [ ] DEFER — assembly/patch rung
+FLIPS/xdelta   [ ] DEFER — patch rung
+Ghidra/radare2 [ ] DEFER — reverse-engineering rung, wrap not build
+Godot          [ ] DEFER — Engine-2D rung
+```
+*Nothing above moves off DEFER without an intake that needs it.*
+
+---
+
+## 11. RETROFORGE — CodeForge capability status
+*RetroForge is a CodeForge module. The Rider plugin is one projection of it, not
+the thing itself.*
+
+### Platform ladder (same ladder as language lanes)
+```
+NES     [~] target of DONE-2 — core BUILT and TESTED, slice not yet proven end to end
+            kernel/retroforge: artifact, binary, codec, manifest, platforms/planar_2bpp
+            the Python suite passes; Kotlin side has NesRom, AsciiTileProjection,
+            ManifestWriter, Seam with 4 test files. Fixtures are SYNTHETIC and built in
+            the tests (b"NES\x1a" headers, hand-made CHR), so the legal block holds:
+            no ROM is committed anywhere.                       proven: NOT YET
+SNES    [ ] DEFER — architecture may be discussed, not implemented
+Genesis [ ] DEFER — architecture may be discussed, not implemented
+GB / GBC / GBA / SMS / PCE / N64   [ ] DEFER — future only
+```
+
+### Rider integration ladder
+```
+L1  external tools / run configs invoking retroforge commands   [ ] nothing invokes it
+L2  CodeForge tool records for what L1 invokes                  [ ] no registry exists
+L3  RetroForge core                                             [x] BUILT AND TESTED
+      RomArtifact · ByteSource+OutOfRange · TileCodec · PaletteCodec · AddressMapper ·
+      RomPlatformModule · ExtractionManifest+ExtractedAsset · Planar2BppTileCodec ·
+      HeaderedCartridgeModule · InvalidCartridgeHeader.  Suite green, exit 0.
+      NAMING NOTE: the addendum lists `ByteRange`; the tree calls it `ByteSource`.
+      The tree wins, and the addendum's name resolves to nothing.
+L4  native Rider projection                                     [~] ASCII, not native UI
+      AsciiTileProjection.kt exists and is tested. That is a text projection, not the
+      hex view / tile grid / palette / offset linking this rung describes.
+```
+*L3 before L4, always: the core must be canonical and testable before any IDE
+surface projects it. A projection over an unproven core is a demo, not a capability.*
+
+### DONE-2 slice boundary (what ships, what explicitly does not)
+```
+IN     [x] iNES header detected            HeaderedCartridgeModule; InvalidCartridgeHeader
+                                           refuses bad magic (test: "invalid iNES magic is refused")
+       [x] CHR ROM located                 chr pages parsed from the header, offset computed
+       [x] NES 2bpp tiles decoded          Planar2BppTileCodec.decode_tile, both planes
+       [ ] tile grid displayed in Rider    ASCII projection only; no IDE surface
+       [ ] click -> tile index + ROM offset  requires the IDE surface; nothing exists
+       [x] extraction manifest emitted     ExtractionManifest + ExtractedAsset, traceable
+       [x] ROM bytes unmodified            provenance recorded "without mutation" (Kotlin test)
+       [x] decoder + parser proof runs     scripts/rf001_slice_proof.py, exit 0.
+                                           synthesize -> load -> decode -> manifest ->
+                                           display -> integrity as ONE chain, and CALIBRATED:
+                                           all 4 sabotage paths correctly fail. Two of them
+                                           did NOT at first; fixing that is what makes this
+                                           box worth anything. Fixtures stay synthetic and
+                                           in-memory; no ROM is read from disk or committed.
+
+OUT    editing · saving modified ROMs · SNES · Genesis · compression ·
+       disassembly · emulator integration · patch generation · game-specific hacks
+```
+*Anything in OUT that appears in a work order is drift, regardless of how small.*
+
+### Build-versus-wrap discipline (standing)
+```
+[ ] every RetroForge capability classified before work starts:
+    WRAP_EXISTING_TOOL · BUILD_IN_CORE · BUILD_IN_PROJECTION ·
+    HARDWARE_STORE_CANDIDATE · DEFER · REJECT · REQUIRES_RESEARCH
+[ ] mature external tools wrapped, not reimplemented
+[ ] core built only where CodeForge needs canonical, testable understanding
+```
+
+### ROM legal and safety (HARD — applies to every RetroForge order)
+```
+[x] only ROMs legally owned, homebrew, or synthetic test fixtures — VERIFIED: zero .nes
+        files tracked in any repo; every fixture is constructed in-test from b"NES\x1a"
+[x] no copyrighted ROM committed to any repo, ever — verified by the same search
+[x] test fixtures are synthetic — b"NES\x1a" + zeroed PRG + hand-made CHR, built at runtime
+[ ] source ROM never modified; inspection and editing stay separate paths
+[ ] checksums verify source ROM identity before and after every operation
+[ ] patches distributed, never modified ROMs
+[ ] editing capability gated behind undo/redo and safe-write, not before
+```
+*This block is closest to HARD LAW in the RetroForge lane. A ROM committed to a
+public repo is not revertible in the way a bad merge is — treat it as a
+never-automate item alongside publishing.*
+
+---
+
+## ADDENDUM NUMBERS (add to THE FOUR NUMBERS at day close)
+```
+Tools REGISTERED (not merely installed):   8     (was 0; the ladder's last rung now exists)
+RetroForge platforms PROVEN:               0     (NES slice runs end to end and is calibrated;
+                                                 PROVEN needs the Rider tile grid, 1 of the 2
+                                                 remaining IN items)
+Rider integration level reached:           L3    (built and tested; L4 is ASCII, not native)
+```
