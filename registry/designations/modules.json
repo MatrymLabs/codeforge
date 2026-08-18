@@ -10269,5 +10269,29 @@
     "aliases": [],
     "created": "2026-08-18",
     "updated": "2026-08-18"
+  },
+  {
+    "designation": "MOD-10.161",
+    "name": "currency",
+    "status": "active",
+    "function": "the declared inventory of pinned tools, read from where they are pinned, so an audit cannot drift from the pins",
+    "label": "currency",
+    "file": "kernel/currency.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_currency.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "gate"
+    ],
+    "notes": "consumed by scripts/currency_audit.py (make currency); the ecosystem field is load-bearing, since the canonical source of latest-version truth differs per ecosystem",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-18",
+    "updated": "2026-08-18"
   }
 ]

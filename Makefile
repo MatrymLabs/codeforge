@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -166,6 +166,19 @@ lint-kotlin:
 # `make calibrate ONLY=detekt-TooGenericExceptionCaught` runs a single case.
 calibrate:
 	$(PY) scripts/calibrate_gates.py $(if $(ONLY),--only $(ONLY),)
+
+# Currency: is every pinned tool still the current one, and can we prove it.
+#
+# NOT in `check`, for the same reason `calibrate` is not: it needs the network, and a gate that
+# fails because GitHub had a bad afternoon teaches the team to ignore it. The logic itself is
+# tested offline through an injected fetch seam (tests/test_currency.py), so the part that can
+# be wrong is covered without the part that can be flaky.
+#
+# Default exit is 0 when tools are merely BEHIND: being behind is a decision for a human, not a
+# build failure. UNVERIFIABLE always exits non-zero, because "I could not check" must never read
+# as "fine". `make currency STRICT=1` fails on BEHIND too, for a scheduled sweep.
+currency:
+	$(PY) scripts/currency_audit.py $(if $(STRICT),--strict,)
 
 kotlin-lint: lint-kotlin
 
