@@ -1,0 +1,541 @@
+{
+  "ancient_overlook": {
+    "chunk_x": 0,
+    "chunk_y": 0,
+    "room": "ancient_overlook",
+    "x": 0,
+    "y": 0
+  },
+  "ashen_monoliths": {
+    "chunk_x": 2,
+    "chunk_y": 3,
+    "room": "ashen_monoliths",
+    "x": 0,
+    "y": 0
+  },
+  "ashen_wastes": {
+    "chunk_x": 1,
+    "chunk_y": 2,
+    "room": "ashen_wastes",
+    "x": 0,
+    "y": 0
+  },
+  "aurelian_city": {
+    "chunk_x": 15,
+    "chunk_y": 16,
+    "room": "aurelian_city",
+    "x": 0,
+    "y": 0
+  },
+  "blackreef_citadel": {
+    "chunk_x": 18,
+    "chunk_y": 19,
+    "room": "blackreef_citadel",
+    "x": 0,
+    "y": 0
+  },
+  "boulderfall": {
+    "chunk_x": 2,
+    "chunk_y": 4,
+    "room": "boulderfall",
+    "x": 0,
+    "y": 0
+  },
+  "brightwater": {
+    "chunk_x": 9,
+    "chunk_y": 10,
+    "room": "brightwater",
+    "x": 0,
+    "y": 0
+  },
+  "caeloria": {
+    "chunk_x": 6,
+    "chunk_y": 7,
+    "room": "caeloria",
+    "x": 0,
+    "y": 0
+  },
+  "caeloria_city": {
+    "chunk_x": 11,
+    "chunk_y": 12,
+    "room": "caeloria_city",
+    "x": 0,
+    "y": 0
+  },
+  "celestial_observatory": {
+    "chunk_x": 16,
+    "chunk_y": 17,
+    "room": "celestial_observatory",
+    "x": 0,
+    "y": 0
+  },
+  "cragfire": {
+    "chunk_x": 3,
+    "chunk_y": 4,
+    "room": "cragfire",
+    "x": 0,
+    "y": 0
+  },
+  "dark_expanse": {
+    "chunk_x": 22,
+    "chunk_y": 22,
+    "room": "dark_expanse",
+    "x": 0,
+    "y": 0
+  },
+  "deepforge_city": {
+    "chunk_x": 3,
+    "chunk_y": 2,
+    "room": "deepforge_city",
+    "x": 0,
+    "y": 0
+  },
+  "dreadmaw_hold": {
+    "chunk_x": 3,
+    "chunk_y": 5,
+    "room": "dreadmaw_hold",
+    "x": 0,
+    "y": 0
+  },
+  "duskwood_vale": {
+    "chunk_x": 14,
+    "chunk_y": 14,
+    "room": "duskwood_vale",
+    "x": 0,
+    "y": 0
+  },
+  "elderwatch": {
+    "chunk_x": 8,
+    "chunk_y": 10,
+    "room": "elderwatch",
+    "x": 0,
+    "y": 0
+  },
+  "eldryn_city": {
+    "chunk_x": 11,
+    "chunk_y": 11,
+    "room": "eldryn_city",
+    "x": 0,
+    "y": 0
+  },
+  "eldryn_forest": {
+    "chunk_x": 4,
+    "chunk_y": 4,
+    "room": "eldryn_forest",
+    "x": 0,
+    "y": 0
+  },
+  "frosthold": {
+    "chunk_x": 1,
+    "chunk_y": 4,
+    "room": "frosthold",
+    "x": 0,
+    "y": 0
+  },
+  "frostspire_peaks": {
+    "chunk_x": 0,
+    "chunk_y": 3,
+    "room": "frostspire_peaks",
+    "x": 0,
+    "y": 0
+  },
+  "glacial_bastion": {
+    "chunk_x": 2,
+    "chunk_y": 5,
+    "room": "glacial_bastion",
+    "x": 0,
+    "y": 0
+  },
+  "greenhold": {
+    "chunk_x": 9,
+    "chunk_y": 11,
+    "room": "greenhold",
+    "x": 0,
+    "y": 0
+  },
+  "greenmist": {
+    "chunk_x": 13,
+    "chunk_y": 13,
+    "room": "greenmist",
+    "x": 0,
+    "y": 0
+  },
+  "heart_of_xilnath": {
+    "chunk_x": 26,
+    "chunk_y": 26,
+    "room": "heart_of_xilnath",
+    "x": 0,
+    "y": 0
+  },
+  "highreach": {
+    "chunk_x": 2,
+    "chunk_y": 2,
+    "room": "highreach",
+    "x": 0,
+    "y": 0
+  },
+  "irondeep_mines": {
+    "chunk_x": 4,
+    "chunk_y": 6,
+    "room": "irondeep_mines",
+    "x": 0,
+    "y": 0
+  },
+  "ironwall_pass": {
+    "chunk_x": 3,
+    "chunk_y": 6,
+    "room": "ironwall_pass",
+    "x": 0,
+    "y": 0
+  },
+  "khazgor_peaks": {
+    "chunk_x": 5,
+    "chunk_y": 7,
+    "room": "khazgor_peaks",
+    "x": 0,
+    "y": 0
+  },
+  "korvash_crater": {
+    "chunk_x": 3,
+    "chunk_y": 3,
+    "room": "korvash_crater",
+    "x": 0,
+    "y": 0
+  },
+  "korvash_highlands": {
+    "chunk_x": 1,
+    "chunk_y": 1,
+    "room": "korvash_highlands",
+    "x": 0,
+    "y": 0
+  },
+  "lumengrotto": {
+    "chunk_x": 4,
+    "chunk_y": 3,
+    "room": "lumengrotto",
+    "x": 0,
+    "y": 0
+  },
+  "mistvale": {
+    "chunk_x": 27,
+    "chunk_y": 27,
+    "room": "mistvale",
+    "x": 0,
+    "y": 0
+  },
+  "moltenhold": {
+    "chunk_x": 5,
+    "chunk_y": 6,
+    "room": "moltenhold",
+    "x": 0,
+    "y": 0
+  },
+  "moonshade": {
+    "chunk_x": 31,
+    "chunk_y": 31,
+    "room": "moonshade",
+    "x": 0,
+    "y": 0
+  },
+  "netharions_throne": {
+    "chunk_x": 23,
+    "chunk_y": 23,
+    "room": "netharions_throne",
+    "x": 0,
+    "y": 0
+  },
+  "ravenwatch": {
+    "chunk_x": 32,
+    "chunk_y": 32,
+    "room": "ravenwatch",
+    "x": 0,
+    "y": 0
+  },
+  "red_dunes": {
+    "chunk_x": 18,
+    "chunk_y": 18,
+    "room": "red_dunes",
+    "x": 0,
+    "y": 0
+  },
+  "riverbend": {
+    "chunk_x": 10,
+    "chunk_y": 12,
+    "room": "riverbend",
+    "x": 0,
+    "y": 0
+  },
+  "rotwood_deep": {
+    "chunk_x": 15,
+    "chunk_y": 15,
+    "room": "rotwood_deep",
+    "x": 0,
+    "y": 0
+  },
+  "saltwind_harbor": {
+    "chunk_x": 20,
+    "chunk_y": 21,
+    "room": "saltwind_harbor",
+    "x": 0,
+    "y": 0
+  },
+  "sandspire_ruins": {
+    "chunk_x": 19,
+    "chunk_y": 19,
+    "room": "sandspire_ruins",
+    "x": 0,
+    "y": 0
+  },
+  "scorchstone_keep": {
+    "chunk_x": 20,
+    "chunk_y": 20,
+    "room": "scorchstone_keep",
+    "x": 0,
+    "y": 0
+  },
+  "shadowfissure": {
+    "chunk_x": 5,
+    "chunk_y": 4,
+    "room": "shadowfissure",
+    "x": 0,
+    "y": 0
+  },
+  "shattered_isles": {
+    "chunk_x": 10,
+    "chunk_y": 11,
+    "room": "shattered_isles",
+    "x": 0,
+    "y": 0
+  },
+  "shifting_canopy": {
+    "chunk_x": 28,
+    "chunk_y": 28,
+    "room": "shifting_canopy",
+    "x": 0,
+    "y": 0
+  },
+  "shunderhold": {
+    "chunk_x": 6,
+    "chunk_y": 6,
+    "room": "shunderhold",
+    "x": 0,
+    "y": 0
+  },
+  "silverwatch": {
+    "chunk_x": 12,
+    "chunk_y": 13,
+    "room": "silverwatch",
+    "x": 0,
+    "y": 0
+  },
+  "skyward_spires": {
+    "chunk_x": 8,
+    "chunk_y": 9,
+    "room": "skyward_spires",
+    "x": 0,
+    "y": 0
+  },
+  "starfall_temple": {
+    "chunk_x": 13,
+    "chunk_y": 14,
+    "room": "starfall_temple",
+    "x": 0,
+    "y": 0
+  },
+  "stonefang_keep": {
+    "chunk_x": 6,
+    "chunk_y": 8,
+    "room": "stonefang_keep",
+    "x": 0,
+    "y": 0
+  },
+  "stonehelm": {
+    "chunk_x": 8,
+    "chunk_y": 8,
+    "room": "stonehelm",
+    "x": 0,
+    "y": 0
+  },
+  "stormreach": {
+    "chunk_x": 21,
+    "chunk_y": 22,
+    "room": "stormreach",
+    "x": 0,
+    "y": 0
+  },
+  "sunmeadow": {
+    "chunk_x": 12,
+    "chunk_y": 14,
+    "room": "sunmeadow",
+    "x": 0,
+    "y": 0
+  },
+  "sunscar_city": {
+    "chunk_x": 21,
+    "chunk_y": 21,
+    "room": "sunscar_city",
+    "x": 0,
+    "y": 0
+  },
+  "thalorin": {
+    "chunk_x": 1,
+    "chunk_y": 3,
+    "room": "thalorin",
+    "x": 0,
+    "y": 0
+  },
+  "the_black_hollow": {
+    "chunk_x": 30,
+    "chunk_y": 30,
+    "room": "the_black_hollow",
+    "x": 0,
+    "y": 0
+  },
+  "the_crystal_labyrinth": {
+    "chunk_x": 2,
+    "chunk_y": 1,
+    "room": "the_crystal_labyrinth",
+    "x": 0,
+    "y": 0
+  },
+  "the_deepreach": {
+    "chunk_x": 1,
+    "chunk_y": 0,
+    "room": "the_deepreach",
+    "x": 0,
+    "y": 0
+  },
+  "the_flamewrought_forge": {
+    "chunk_x": 4,
+    "chunk_y": 5,
+    "room": "the_flamewrought_forge",
+    "x": 0,
+    "y": 0
+  },
+  "the_great_tree": {
+    "chunk_x": 12,
+    "chunk_y": 12,
+    "room": "the_great_tree",
+    "x": 0,
+    "y": 0
+  },
+  "the_maelstrom_rise": {
+    "chunk_x": 19,
+    "chunk_y": 20,
+    "room": "the_maelstrom_rise",
+    "x": 0,
+    "y": 0
+  },
+  "the_obsidian_pit": {
+    "chunk_x": 17,
+    "chunk_y": 17,
+    "room": "the_obsidian_pit",
+    "x": 0,
+    "y": 0
+  },
+  "the_rifted_abyss": {
+    "chunk_x": 24,
+    "chunk_y": 24,
+    "room": "the_rifted_abyss",
+    "x": 0,
+    "y": 0
+  },
+  "the_scorched_gate": {
+    "chunk_x": 7,
+    "chunk_y": 8,
+    "room": "the_scorched_gate",
+    "x": 0,
+    "y": 0
+  },
+  "the_spire_nexus": {
+    "chunk_x": 17,
+    "chunk_y": 18,
+    "room": "the_spire_nexus",
+    "x": 0,
+    "y": 0
+  },
+  "the_sunken_barrow": {
+    "chunk_x": 11,
+    "chunk_y": 13,
+    "room": "the_sunken_barrow",
+    "x": 0,
+    "y": 0
+  },
+  "the_voidscar": {
+    "chunk_x": 7,
+    "chunk_y": 7,
+    "room": "the_voidscar",
+    "x": 0,
+    "y": 0
+  },
+  "thunderhold": {
+    "chunk_x": 9,
+    "chunk_y": 9,
+    "room": "thunderhold",
+    "x": 0,
+    "y": 0
+  },
+  "twilight_grove": {
+    "chunk_x": 33,
+    "chunk_y": 33,
+    "room": "twilight_grove",
+    "x": 0,
+    "y": 0
+  },
+  "veridia": {
+    "chunk_x": 7,
+    "chunk_y": 9,
+    "room": "veridia",
+    "x": 0,
+    "y": 0
+  },
+  "voidspire": {
+    "chunk_x": 25,
+    "chunk_y": 25,
+    "room": "voidspire",
+    "x": 0,
+    "y": 0
+  },
+  "westgate": {
+    "chunk_x": 14,
+    "chunk_y": 15,
+    "room": "westgate",
+    "x": 0,
+    "y": 0
+  },
+  "wildgrowth": {
+    "chunk_x": 16,
+    "chunk_y": 16,
+    "room": "wildgrowth",
+    "x": 0,
+    "y": 0
+  },
+  "winters_grasp": {
+    "chunk_x": 4,
+    "chunk_y": 7,
+    "room": "winters_grasp",
+    "x": 0,
+    "y": 0
+  },
+  "xilnath_jungle": {
+    "chunk_x": 10,
+    "chunk_y": 10,
+    "room": "xilnath_jungle",
+    "x": 0,
+    "y": 0
+  },
+  "zhaar_desert": {
+    "chunk_x": 5,
+    "chunk_y": 5,
+    "room": "zhaar_desert",
+    "x": 0,
+    "y": 0
+  },
+  "zulkarak": {
+    "chunk_x": 29,
+    "chunk_y": 29,
+    "room": "zulkarak",
+    "x": 0,
+    "y": 0
+  }
+}
