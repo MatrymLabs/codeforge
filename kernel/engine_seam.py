@@ -129,11 +129,22 @@ class AspectFalsifiability:
     aspect: str
     probes: tuple[str, ...] = ()
     reason: str = ""
+    unfalsifiable_reasons: tuple[tuple[str, str], ...] = ()
 
     def render(self) -> str:
         if self.probes:
-            return f"{self.aspect}: falsifiable by {', '.join(self.probes)}"
-        return f"{self.aspect}: structurally unfalsifiable - {self.reason}"
+            rendered = f"{self.aspect}: falsifiable by {', '.join(self.probes)}"
+            if self.unfalsifiable_reasons:
+                details = "; ".join(
+                    f"{name}: {reason}" for name, reason in self.unfalsifiable_reasons
+                )
+                rendered += f"; structurally unfalsifiable - {details}"
+            return rendered
+        rendered = f"{self.aspect}: structurally unfalsifiable - {self.reason}"
+        if self.unfalsifiable_reasons:
+            details = "; ".join(f"{name}: {reason}" for name, reason in self.unfalsifiable_reasons)
+            rendered += f"; probes: {details}"
+        return rendered
 
 
 @dataclass
@@ -455,8 +466,49 @@ _STRUCTURAL_UNFALSIFIABLE_REASONS = {
     "permission": (
         "Permission is above the engine seam under D1; a divergence would itself prove a leak."
     ),
+    "progression/xp_for_level": (
+        "Progression is above the engine seam under D1; "
+        "this pure level table never receives an Engine."
+    ),
+    "progression/jp_for_level": (
+        "Progression is above the engine seam under D1; "
+        "this pure level table never receives an Engine."
+    ),
+    "progression/calling_gate": (
+        "Progression is above the engine seam under D1; this calling gate never receives an Engine."
+    ),
+    "permission/rank_denies_admin": (
+        "Permission is above the engine seam under D1; rank evaluation does not consult position."
+    ),
+    "permission/player_denies_teleport": (
+        "Permission is above the engine seam under D1; "
+        "command authorization does not consult position."
+    ),
+    "permission/wizard_denies_grant": (
+        "Permission is above the engine seam under D1; "
+        "command authorization does not consult position."
+    ),
+    "permission/workshop_barrier_denies_wizard": (
+        "Permission is above the engine seam under D1; "
+        "the workshop ownership barrier does not consult position."
+    ),
+    "inventory/purse_renders": (
+        "Pure coinage presentation; purse rendering has no Engine input "
+        "and cannot observe engine state."
+    ),
+    "inventory/module_is_position_free": (
+        "Module-boundary introspection only; it checks that item definitions "
+        "do not expose position and never consults an Engine."
+    ),
+    "persistence/grant_key_shape": (
+        "Persistence identity schema only; grant-key construction has no Engine input "
+        "and cannot observe engine state."
+    ),
+    "persistence/gameplay_save_preserves_auth": (
+        "Persistence-store merge semantics only; gameplay/auth preservation has no Engine input "
+        "and cannot observe engine state."
+    ),
 }
-
 _NO_MEASURED_PROBE_REASON = (
     "No measured probe survived this battery run; falsifiability is unverified."
 )
@@ -465,21 +517,27 @@ _NO_MEASURED_PROBE_REASON = (
 def _aspect_falsifiability(
     probes: tuple[str, ...], seed: str = "first-forge"
 ) -> tuple[AspectFalsifiability, ...]:
-    """Classify every battery aspect from the measured probe names and D1 boundaries."""
-    aspects = tuple(dict.fromkeys(aspect for aspect, _, _ in _selected_battery(seed)))
-    by_aspect = {
-        aspect: tuple(entry.split("/", 1)[1] for entry in probes if entry.startswith(f"{aspect}/"))
-        for aspect in aspects
-    }
+    """Classify every battery aspect and name every unfalsifiable probe."""
+    entries = _selected_battery(seed)
+    aspects = tuple(dict.fromkeys(aspect for aspect, _, _ in entries))
+    falsifiable = set(probes)
     records: list[AspectFalsifiability] = []
     for aspect in aspects:
-        aspect_probes = by_aspect[aspect]
-        reason = (
-            ""
-            if aspect_probes
-            else _STRUCTURAL_UNFALSIFIABLE_REASONS.get(aspect, _NO_MEASURED_PROBE_REASON)
+        names = tuple(name for entry_aspect, name, _ in entries if entry_aspect == aspect)
+        aspect_probes = tuple(name for name in names if f"{aspect}/{name}" in falsifiable)
+        unfalsifiable = tuple(
+            (
+                name,
+                _STRUCTURAL_UNFALSIFIABLE_REASONS.get(
+                    f"{aspect}/{name}",
+                    _STRUCTURAL_UNFALSIFIABLE_REASONS.get(aspect, _NO_MEASURED_PROBE_REASON),
+                ),
+            )
+            for name in names
+            if f"{aspect}/{name}" not in falsifiable
         )
-        records.append(AspectFalsifiability(aspect, aspect_probes, reason))
+        reason = _STRUCTURAL_UNFALSIFIABLE_REASONS.get(aspect, _NO_MEASURED_PROBE_REASON)
+        records.append(AspectFalsifiability(aspect, aspect_probes, reason, unfalsifiable))
     return tuple(records)
 
 

@@ -1,0 +1,37 @@
+{
+  "ascent_gate": {
+    "chunk_x": 0,
+    "chunk_y": 0,
+    "room": "ascent_gate",
+    "x": 0,
+    "y": 0
+  },
+  "first_coil": {
+    "chunk_x": 0,
+    "chunk_y": 1,
+    "room": "first_coil",
+    "x": 0,
+    "y": 0
+  },
+  "gate_chamber": {
+    "chunk_x": 0,
+    "chunk_y": 2,
+    "room": "gate_chamber",
+    "x": 0,
+    "y": 0
+  },
+  "spiral_landing": {
+    "chunk_x": 0,
+    "chunk_y": -1,
+    "room": "spiral_landing",
+    "x": 0,
+    "y": 0
+  },
+  "warden_hall": {
+    "chunk_x": 1,
+    "chunk_y": -1,
+    "room": "warden_hall",
+    "x": 0,
+    "y": 0
+  }
+}
