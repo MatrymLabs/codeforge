@@ -24,6 +24,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
@@ -154,9 +155,13 @@ jobs:
 
   # Proves the ORM + Alembic migrations work against a REAL PostgreSQL, not just SQLite.
   # The unit suite (check job) stays SQLite-isolated; this job is a focused integration
-  # proof, so it is intentionally NOT a required check (it cannot deadlock a merge).
+  # proof. This comment used to end "so it is intentionally NOT a required check (it cannot
+  # deadlock a merge)". Both halves were false: branch protection requires `postgres`, and a
+  # required job with no timeout is exactly how a merge deadlocks. It is required, and it is
+  # now bounded.
   postgres:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:17
@@ -188,9 +193,13 @@ jobs:
         run: pytest tests/test_postgres_integration.py tests/test_analytics.py -v
 
   # Drives the live HTMX dashboard with a real Chromium browser (isolated in e2e/, never in
-  # `make check`). A focused front-to-back proof, so it is intentionally NOT a required check.
+  # `make check`). A focused front-to-back proof. This comment used to end "so it is
+  # intentionally NOT a required check"; branch protection requires `e2e`, and on 2026-08-18
+  # this job hung in `playwright install` and blocked a one-line .gitignore PR from merging.
+  # It is required, and the timeout below is what turns that hang into a fast failure.
   e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
@@ -206,6 +215,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Build the image
@@ -235,6 +245,7 @@ jobs:
   # the published image); the live demo runs on Render via render.yaml.
   terraform:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
       - name: Install Terraform
@@ -273,6 +284,7 @@ jobs:
   # and a job everyone learns to ignore protects nothing. It joins when the config lands.
   security-scanners:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
@@ -348,6 +360,7 @@ jobs:
   # (ADR-0010: Python-first, native-optional).
   native:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
@@ -395,6 +408,7 @@ jobs:
   # gated. The platform dependency arrives with the order that needs an editor.
   jvm:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: native/rider-retroforge
@@ -417,6 +431,7 @@ jobs:
 
   go-edge:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
@@ -449,6 +464,7 @@ jobs:
   # runs on the JSON fallback, so a protobuf-toolchain hiccup never blocks a merge (ADR-0012).
   spine:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
@@ -497,6 +513,7 @@ jobs:
   # (ADR-0010: Python-first, native-optional).
   c-kernel:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
@@ -536,6 +553,7 @@ jobs:
   # shelf-touching merge to main); this gate is the safety net that catches a sync that did not run.
   shelf-drift:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
