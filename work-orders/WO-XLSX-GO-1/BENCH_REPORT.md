@@ -10,6 +10,17 @@ The reader is a third-product shape: a standalone converter component, unlike th
 the cartridge tool. It is not yet a PROVEN lane record by itself until the Principal Engineer accepts
 and merges the product.
 
+## Amendment 2: XML recursion reachability
+
+Yes: a deeply nested XML bomb inside a `.xlsx` reaches `GO-2026-6088` in this reader. The workbook
+bytes are untrusted at `ReadSheet`; `reader.go` constructs four `xml.Decoder` instances over
+workbook, relationships, shared-strings, and worksheet bytes. Cell parsing also calls
+`Decoder.DecodeElement`. Go 1.26.5 has no sufficient recursion-depth guard for this path, so a
+deeply nested XML member can exhaust the stack before the reader returns a named error. This fixture
+was missing from the original hostile-input suite and is a blocking security finding, not a reason
+to add a dependency. The advisory is fixed in Go 1.26.6; the verification environment used Go
+1.26.5 (`go.mod` currently declares Go 1.25 and does not itself upgrade the toolchain).
+
 ## Generality proof from Intake Form v1 and Blueprint v1
 
 Fields that broke or were missing for this product:
@@ -75,6 +86,34 @@ Go-shaped fact the two Python-derived drafts could not supply.
 - **generalizable:** a stdlib-only bounded ZIP/XML reader with named refusal errors.
 - **friction:** the nested Go module boundary makes the requested root `go test ./native/sheets/...`
   command invalid without a repository-level workspace file; adding one was outside scope.
+
+## Narrowed Python-native inventory
+
+The amended six-file break test is clean. Remaining tracked occurrences outside that allowlist are
+listed here as findings only and were not edited:
+
+```text
+Workshop/FLEET_OVERVIEW_FOR_REVIEW.md:20
+Workshop/rd/01-claims/master-corpus-2026-08-01.md:36
+Workshop/rd/02-experiments/bench-parts-forging/EXP-14-smell-engine/hardware-card.md:23
+Workshop/rd/02-experiments/bench-parts-forging/EXP-14-smell-engine/smell_engine.py:10
+Workshop/rd/04-verdicts/TECHNOLOGY_WATCHLIST.yaml:92
+codeforge/Makefile:586
+codeforge/README.md:12
+codeforge/adapters/web/index.html:36
+codeforge/catalog/parts.yaml:1739, 1757, 1775, 1793, 1811, 1829, 1847, 1865, 1883
+codeforge/docs/architecture_c4.md:20
+codeforge/docs/frameless_python.md:11, 19
+codeforge/docs/project_management.md:14
+codeforge/docs/technology_intake.md:4
+codeforge/intake_ledger.toml:1
+codeforge/kernel/intake.py:1, 3
+codeforge/kernel/shelf/smell_engine.py:10
+codeforge/registry/designations/modules.json:5048
+```
+
+The two pre-existing untracked self-proof trees also contain occurrences; they remain outside this
+order and are not edited.
 
 ## Awaiting Principal Engineer
 
