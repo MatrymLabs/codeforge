@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 
 import pytest
@@ -87,6 +88,15 @@ def test_tool_crash_cannot_be_serialized_as_pass() -> None:
 def test_sha256_file_is_the_artifact_hash(tmp_path) -> None:
     artifact = tmp_path / "artifact.txt"
     artifact.write_bytes(b"proof\n")
-    assert (
-        sha256_file(artifact) == "f6ed42a9d765eeb230a069bbc3d5dc346b2669594bb0b83cc6d14d5d967b8961"
-    )
+    # The literal digest was replaced with an independent oracle rather than allowlisted.
+    #
+    # detect-secrets flagged the hardcoded value as a Hex High Entropy String, which is the correct
+    # default: 64 hex characters are indistinguishable from a key, and a scanner that guessed would
+    # be worse. The options were to allowlist it, baseline it, or remove it. Removing it is the only
+    # one that leaves no secret to reason about.
+    #
+    # It is also the stronger assertion. A frozen constant only catches "the value changed" and has
+    # to be re-copied whenever the fixture bytes do. Hashing the same bytes with the stdlib proves
+    # the contract that actually matters: sha256_file(path) equals the digest of the file's
+    # contents, which is what a chunked reader can get wrong.
+    assert sha256_file(artifact) == hashlib.sha256(b"proof\n").hexdigest()

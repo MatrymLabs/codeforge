@@ -203,19 +203,52 @@ def main() -> int:  # noqa: PLR0911
         if foreign:
             return _refusal(f"engine repository remains on sys.path: {foreign[0]}")
 
+        # THE PERSIST STAGE ALWAYS RUNS. It used to be skipped whenever a marker from a previous
+        # run existed, reading `expected` out of that file and jumping straight to restart.
+        #
+        # That turned the proof into a different, easier question. On a product that had ever
+        # succeeded once, `save_character` was never called again, so a product whose persistence
+        # was completely broken still reported:
+        #
+        #     [PASS] restart    a fresh product interpreter restored the persisted fields
+        #     VERDICT: PASS
+        #
+        # Measured 2026-08-19 by renaming `save_character` out of the poured engine. A VIRGIN pour
+        # refused correctly with the AttributeError; the same sabotage on a pour that had run once
+        # before passed, because the marker skipped the only stage that would have touched the
+        # missing function. The gate was answering "does the old database still match the old
+        # marker", which is not what it printed.
+        #
+        # The marker is now written as EVIDENCE and never read as a reason to skip. A proof that
+        # can be satisfied by residue from an earlier run is not a proof of persistence.
+        #
+        # The marker is still READ for one thing, and that check was already here and is kept: a
+        # marker whose database has vanished means the product LOST state between runs, which is
+        # the failure this proof exists to detect. It is checked BEFORE persisting, because
+        # persisting would recreate the database and destroy the evidence. Always-run persist and
+        # this pre-check answer different questions, and both are worth asking.
         if marker.exists():
             if not database.exists():
                 return _refusal(f"persisted database is missing: {database.name}")
-            expected = json.loads(marker.read_text(encoding="utf-8"))
-        else:
-            persisted = _spawn(root, "persist", {})
-            if not persisted.get("saved"):
-                return _refusal(str(persisted.get("error") or "persist stage did not save"))
-            expected = dict(persisted["expected"])
-            marker.write_text(
-                json.dumps(expected, sort_keys=True, indent=2) + "\n", encoding="utf-8"
-            )
-            print(f"  [PASS] persist    {PROBE} written to the product database")
+            # And if the database is still there, it must still AGREE with the marker. Checked
+            # here, before persisting, because persisting would overwrite the very corruption
+            # this is looking for. A product whose stored state drifted between runs is a finding
+            # even though the run about to happen would have papered over it.
+            prior = json.loads(marker.read_text(encoding="utf-8"))
+            drifted = _spawn(root, "restart", prior)
+            prior_mismatches = drifted.get("mismatches") or []
+            if drifted.get("error") or prior_mismatches:
+                detail = drifted.get("error") or "; ".join(prior_mismatches)
+                return _refusal(f"persisted field mismatch: {detail}")
+
+        persisted = _spawn(root, "persist", {})
+        if not persisted.get("saved"):
+            return _refusal(str(persisted.get("error") or "persist stage did not save"))
+        expected = dict(persisted["expected"])
+        marker.write_text(json.dumps(expected, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        if not database.exists():
+            return _refusal(f"persist reported success but no database exists: {database.name}")
+        print(f"  [PASS] persist    {PROBE} written to the product database")
 
         restarted = _spawn(root, "restart", expected)
         mismatches = restarted.get("mismatches") or []
