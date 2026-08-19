@@ -198,6 +198,14 @@ numbers, not one: go.mod declares 1.25, the MINIMUM language version a consumer 
 compiles and scans with 1.26.5, above the 1.26.3 floor for GO-2026-4971. Collapsing them
 broke the build once: golangci-lint is itself built with go1.25 and refuses a module
 targeting 1.26.5. The bench passed that the whole time; only CI caught it.
+
+[?] KF-GO-1 — NOT REPRODUCIBLE, DO NOT CLOSE. Observed 2026-08-14 while verifying WO-BP-3B:
+        lint-go blamed missing generated code for a VCS-stamp fault. Re-measured 2026-08-19
+        independently by both benches: `make proto` exit 0, `make lint-go` exit 0 with
+        native/edge 0 issues and native/spine 0 issues, and `go build ./...` exit 0 with
+        `go env GOFLAGS` empty. Cause unknown. Reopen on sight. Close only after the original
+        VCS-stamp fault is reproduced with its exact red output and a root-cause correction is
+        proven by the same commands on both benches.
 ```
 *A lane is not supported because it is listed. Listing is not support.*
 

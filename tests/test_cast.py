@@ -39,6 +39,8 @@ def _fixture_engine(root: Path) -> None:
     (root / "parts" / "__pycache__").mkdir()
     (root / "parts" / "__pycache__" / "junk.pyc").write_text("cache")
     (root / "forge.py").write_text("# engine\n")
+    (root / "scripts").mkdir()
+    (root / "scripts" / "cast_selfproof.py").write_text("# self-proof\n")
     for pack in ("first-forge", "other-pack"):
         (root / "content" / "blueprints" / pack).mkdir(parents=True)
         (root / "content" / "blueprints" / pack / "rooms.yaml").write_text("a: {}\n")
@@ -231,10 +233,17 @@ def test_generate_via_the_cli(tmp_path: Path) -> None:
     assert read_manifest(out / "cast_manifest.json").seed_name == "CliCast"
 
 
+def test_generate_pours_the_product_selfproof(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "ProofCast", commit="c", root=tmp_path)
+    out = generate_cast(plan, tmp_path / "out", root=tmp_path)
+    assert (out / "scripts" / "cast_selfproof.py").read_text() == "# self-proof\n"
+
+
 # --- Phase 2 (validate): a poured cast smoke-boots and ticks (proof a package RUNS) -------------
 
 
-def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
+def _bootable_stub(cast_dir: Path, ok: bool = True, broken_command: str | None = None) -> None:
     """A minimal cast dir the validator can boot in a subprocess, without the 122-module engine."""
     (cast_dir / "kernel" / "world").mkdir(parents=True)  # the World Package is a subpackage now
     (cast_dir / "parts").mkdir()
@@ -247,11 +256,17 @@ def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
     (cast_dir / "kernel" / "world" / "world.py").write_text(
         "START_ROOM = 'start'\n"
     )  # validate probe needs it
-    body = (
-        "def handle_command(session, text):\n    return 'Commands: help, look'\n"
-        if ok
-        else "def handle_command(session, text):\n    raise RuntimeError('boom')\n"
-    )
+    if not ok:
+        body = "def handle_command(session, text):\n    raise RuntimeError('boom')\n"
+    elif broken_command is None:
+        body = "def handle_command(session, text):\n    return 'Commands: help, look'\n"
+    else:
+        body = (
+            "def handle_command(session, text):\n"
+            f"    if text == {broken_command!r}:\n"
+            "        raise RuntimeError('boom')\n"
+            "    return 'Commands: help, look'\n"
+        )
     (cast_dir / "forge.py").write_text(body)
     write_manifest(
         replace(plan_cast("blank_mud", "Stub").manifest, status=GENERATED),
@@ -265,8 +280,18 @@ def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) ->
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
     ok, detail = validate_cast(cast)
-    assert ok and "commands ran clean" in detail  # default corpus is a single tick
+    assert ok and "4 commands ran clean" in detail
     assert read_manifest(cast / "cast_manifest.json").status == VALIDATED
+
+
+def test_validate_default_corpus_refuses_one_broken_command(tmp_path: Path) -> None:
+    from kernel.cast import NOT_VALIDATED, validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, broken_command="inventory")
+    ok, detail = validate_cast(cast)
+    assert ok is False and "COMMAND FAILED: 'inventory'" in detail
+    assert read_manifest(cast / "cast_manifest.json").status == NOT_VALIDATED
 
 
 def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:

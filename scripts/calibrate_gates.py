@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -279,7 +280,7 @@ CASES: list[Case] = [
     ),
     Case(
         name="pytest-filterwarnings-error",
-        gate=["python", "-m", "pytest", "tests/test_calib_probe.py", "-q", "--no-header"],
+        gate=[sys.executable, "-m", "pytest", "tests/test_calib_probe.py", "-q", "--no-header"],
         probe="tests/test_calib_probe.py",
         violation=_PY_WARNS,
         signal="DeprecationWarning",
@@ -289,6 +290,8 @@ CASES: list[Case] = [
     Case(
         name="bandit-insecure-tls",
         gate=[
+            sys.executable,
+            "-m",
             "bandit",
             "-c",
             "pyproject.toml",
@@ -303,7 +306,7 @@ CASES: list[Case] = [
         violation=_BANDIT_INSECURE,
         signal="B501",
         benign=_OK_BANDIT,
-        needs=("bandit",),
+        needs=("python-module:bandit",),
         extra_note="Separate pass from ruff S; the two can disagree and both are wired.",
     ),
     Case(
@@ -339,6 +342,16 @@ CASES: list[Case] = [
 
 def _tool_missing(case: Case) -> str | None:
     for tool in case.needs:
+        if tool.startswith("python-module:"):
+            module = tool.removeprefix("python-module:")
+            probe = subprocess.run(  # noqa: S603 - module name is fixed in CASES
+                [sys.executable, "-c", f"import {module}"],
+                capture_output=True,
+                check=False,
+            )
+            if probe.returncode:
+                return module
+            continue
         if shutil.which(tool) is None:
             return tool
     return None
@@ -443,6 +456,11 @@ def main() -> int:
     args = ap.parse_args()
 
     cases = [c for c in CASES if not args.only or args.only in c.name]
+    if args.only and not cases:
+        available = ", ".join(case.name for case in CASES)
+        print(f"No calibration case matches {args.only!r}.")
+        print(f"Available cases: {available}")
+        return 2
     if args.list:
         for case in cases:
             print(f"  {case.name:<32} gate: {' '.join(case.gate)}")
