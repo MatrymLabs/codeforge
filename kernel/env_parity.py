@@ -373,10 +373,40 @@ def build_report(repo_root: Path) -> ParityReport:
     return report
 
 
+#: The one divergence kind that is not advisory. Everything else this module reports is a
+#: difference a human should weigh; this one is a CI failure that has already happened and is
+#: merely waiting to be observed.
+BLOCKING_KINDS = frozenset({"exec-bit-divergence"})
+
+
 def main() -> int:
+    """Report drift. Exit non-zero ONLY for a divergence that is a certain CI failure.
+
+    This target was REPORT ONLY and returned 0 unconditionally, which was right for most of what
+    it finds: a Python minor mismatch or an odd checkout location is a difference to weigh, not a
+    defect to block on.
+
+    Exec-bit divergence is not that. On 2026-08-19 a new script with a shebang and no exec bit was
+    pushed, and CI died at `lint-python` on `EXE001 Shebang is present but file is not executable`.
+    THIS MODULE HAD ALREADY DETECTED IT, named the file, and explained that "ruff EXE001 skips this
+    check on Windows, so only CI can see it". Then it exited 0 and the push proceeded.
+
+    A Windows bench CANNOT see EXE001: there is no executable bit to inspect, so ruff skips the
+    rule entirely. That makes this check the ONLY thing standing between the bench and a guaranteed
+    red on the merge path, and an advisory verdict on a guaranteed failure is the wrong verdict.
+    An instrument that knows the answer and shrugs is worth less than one that never looked, because
+    it produces a record saying somebody checked.
+    """
     repo_root = Path(__file__).resolve().parents[1]
     report = build_report(repo_root)
     print(report.render())
+    blocking = [finding for finding in report.findings if finding.kind in BLOCKING_KINDS]
+    if blocking:
+        print(
+            f"\nBLOCKING: {len(blocking)} divergence(s) that CI will certainly fail on. "
+            "Everything else above is advisory."
+        )
+        return 1
     return 0
 
 
