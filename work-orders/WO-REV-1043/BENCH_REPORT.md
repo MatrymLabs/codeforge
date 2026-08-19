@@ -129,3 +129,78 @@ IN PLAIN TERMS
 - I independently stress-tested the combined branch and reran its important repairs plus the whole build gate.
 - That matters because the branch was assembled by resolving conflicts, and a clean-looking merge can silently drop working fixes.
 - The useful concept here is verification against behavior: tests and gates answer whether the merged machine still works, not whether the conflict markers merely disappeared.
+
+## FOLLOW-UP 2026-08-19: XML-BOMB FIXTURE AND CURRENT-MAIN RECHECK
+
+status: READY_FOR_REVIEW
+merge_commit: b14fb952
+branch_state: `origin/main` is an ancestor of this branch; the branch carries the reconciled review history.
+
+### Changed
+
+- Merged `origin/main` with `git merge origin/main`; Git reported an automatic merge with no
+  conflicts. This brought in Go 1.26.6 and the self-proof/env-parity fixes.
+- Added an explicit XML nesting limit to the native XLSX reader. Cell values are now token-scanned
+  instead of delegated to `DecodeElement` so deeply nested unknown elements cannot pass silently.
+- Added `TestHostileXLSXInputsRejectDeeplyNestedXML`, a 10,001-level nested workbook cell fixture.
+
+### Failure before repair
+
+`go test ./... -run 'TestHostileXLSXInputs' -count=1` failed first with:
+
+```text
+--- FAIL: TestHostileXLSXInputsRejectDeeplyNestedXML
+    reader_test.go:111: error = <nil>, want ErrInvalidXML
+FAIL
+```
+
+### Proof runs
+
+- `go test ./... -run 'TestHostileXLSXInputs' -count=1` -> PASS.
+- `go test ./... -count=1` from `native/sheets` -> `ok codeforge/sheets`; proof package has no tests.
+- `make proto` -> regenerated protobuf bindings successfully.
+- `GOFLAGS=-buildvcs=false make check` -> exit 0; `5434 passed, 55 skipped, 1 xfailed`; coverage
+  `93.37%`.
+
+The full-gate count differs from the scratch measurement (`5431 passed, 58 skipped, 1 xfailed`,
+`93.36%`). This is the required measurement finding; the optional local tool surface and worker
+environment explain the small delta, but the difference is recorded rather than normalized away.
+
+### Hardware Store search
+
+Certified Tier (`hardware-store/catalog/`): no exact XML/XLSX hostile-input or nesting-limit Part.
+Working Shelf (`codeforge/catalog/parts.yaml`): no exact XML/XLSX hostile-input or nesting-limit
+Part. Adjacent hostile-input and parser/resource-limit patterns were reviewed; none was consumed.
+
+### Pattern screen
+
+lane_echo: persistence, commands, events, transactions, world graph, and integration were screened;
+this change is isolated to the native XLSX parser and its hostile-input fixture.
+
+catalogue_match: no exact Certified Tier or Working Shelf Part matched bounded XML token scanning;
+adjacent hostile-input patterns were not drop-in implementations.
+
+recurrence_check: hostile-input refusal and generated-artifact/toolchain state recur in this branch;
+the nested XML refusal is a new concrete parser boundary.
+
+verdict_note: XML bomb fixture and parser refusal are proven; current-main reconciliation and full
+gate are green. Ready for independent review, not self-certified for merge.
+
+### Reusable Part signals
+
+reimplemented: none observed; no existing Hardware Store Part covered XML nesting refusal.
+
+recurrence: hostile-input refusal tests and generated-artifact preconditions recur across parser and
+cross-language verification work.
+
+generalizable: token-scan bounded XML element text before materializing values; pair parser limits
+with a fixture beyond the limit and an `errors.Is` contract.
+
+friction: the Windows patch helper required direct invocation because its batch wrapper dropped the
+multiline patch terminator; the scratch/full-gate count differed by three passes and three skips.
+
+### Boundary
+
+`git diff --check` is clean. Current source changes are limited to `native/sheets/reader.go` and
+`native/sheets/reader_test.go`; this report is the only additional path. No merge to main was
+performed.

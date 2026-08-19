@@ -26,6 +26,7 @@ rather than an implementation:
    (`kernel.telemetry.JsonCodec`), always available. The protobuf codec is *optional*: when the
    generated binding is not built, the spine still encodes/decodes via JSON and `make check` is green
    with no protobuf toolchain.
+   This rule governs accelerating an existing capability; it does not choose the lane for a new Target Product, which follows the omnicode rule in `CLAUDE.md` where a Blueprint builds in whatever language its Target Product requires.
 2. **A narrow, identical interface.** Both codecs expose the same `(kind, payload) <-> bytes`
    contract, so protobuf is a drop-in swap (`default_codec()` prefers it when built).
 3. **A parity test.** When the binding is built, a test pins the protobuf codec to the JSON reference

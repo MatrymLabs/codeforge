@@ -26,6 +26,7 @@ nothing to build.
 1. **Python-first with a fallback.** Each analytic ships as a pure-Python reference over rows in
    memory (`leaderboard_py`, `population_py`, `wealth_py`) -- always correct, and the behaviour the SQL
    is proven against.
+   This rule governs accelerating an existing capability; it does not choose the lane for a new Target Product, which follows the omnicode rule in `CLAUDE.md` where a Blueprint builds in whatever language its Target Product requires.
 2. **A narrow, identical interface.** The SQL query (`*_sql`) returns the *same* typed result as the
    Python reference for the same data (`Standing`, a population spread, `WealthStats`).
 3. **A parity test.** On a seeded archive, each SQL result is pinned equal to the Python reference,

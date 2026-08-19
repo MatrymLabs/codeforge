@@ -26,6 +26,7 @@ ADR-0010 guarantees, re-read for a process boundary:
 1. **Python-first with a fallback.** The capability ships as a pure-Python reference first. The
    service is *optional*: when its binary is not built, the game runs on the Python reference and the
    full `make check` is green. Nothing in the game hard-depends on a compiled binary.
+   This rule governs accelerating an existing capability; it does not choose the lane for a new Target Product, which follows the omnicode rule in `CLAUDE.md` where a Blueprint builds in whatever language its Target Product requires.
 2. **A narrow, identical contract.** The service and the Python reference expose the *same*
    behavioural contract (same wire behaviour, same inputs/outputs), so the accelerator is a drop-in
    swap -- chosen at **process launch** (`resolve_*_binary()` -> exec the binary, else run the

@@ -1,6 +1,6 @@
 # AGENTS.md - codeforge
 
-the flagship: a Python-native multiplayer MUD engine and self-auditing engineering stack.
+the flagship: a Python core with native lanes at different evidence stages and a self-auditing engineering stack.
 
 <!-- MATRYM:DOCTRINE:BEGIN - synced from ship docs/AGENTS_DOCTRINE_BLOCK.md. Do not edit here. -->
 
