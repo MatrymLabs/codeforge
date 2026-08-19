@@ -10293,5 +10293,29 @@
     "aliases": [],
     "created": "2026-08-18",
     "updated": "2026-08-18"
+  },
+  {
+    "designation": "MOD-10.162",
+    "name": "evidence_manifest",
+    "status": "active",
+    "function": "validate and write complete, four-valued proof-run evidence manifests",
+    "label": "evidence_manifest",
+    "file": "kernel/evidence_manifest.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_evidence_manifest.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "evidence"
+    ],
+    "notes": "WO-EVIDENCE-1; consumer wiring is intentionally deferred.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-19",
+    "updated": "2026-08-19"
   }
 ]
