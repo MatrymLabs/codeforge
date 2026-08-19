@@ -297,15 +297,27 @@ jobs:
         with:
           fetch-depth: 0  # gitleaks reads HISTORY; a shallow clone would scan almost nothing
 
-      # Go 1.26.5, and this job is why. The FIRST run of this gate found GO-2026-4971 reachable from
-      # our own code: `edge.handleConn calls net.Dial`, a NUL-byte panic in net on Windows, present
-      # in go1.24.13 and fixed in go1.25.10. The bench is a Windows host, so this was reachable on
-      # the machine that builds it. Every Go job uses this exact toolchain -- scanning one version while
-      # shipping another is how a scan reports green about an artifact nobody built.
-      # Go 1.26.5 is above the 1.26.3 floor: the same bug was reintroduced in 1.26.0.
+      # Go 1.26.6, and this job is why, TWICE now.
+      #
+      # The FIRST run of this gate found GO-2026-4971 reachable from our own code:
+      # `edge.handleConn calls net.Dial`, a NUL-byte panic in net on Windows, present in go1.24.13
+      # and fixed in go1.25.10. The bench is a Windows host, so it was reachable on the machine
+      # that builds it. That set the >= 1.26.3 floor, since the same bug was reintroduced in 1.26.0.
+      #
+      # The SECOND, 2026-08-19, is why this now reads 1.26.6 rather than 1.26.5. govulncheck
+      # reported GO-2026-6088 (CVE-2026-56859) in encoding/xml: "DecodeElement would reset the
+      # depth counter causing it to never fire", so deeply nested XML can exhaust the stack. It was
+      # reachable the day it was found. The new stdlib-only XLSX reader
+      # (native/sheets/reader.go) opens FOUR xml.Decoder instances over bytes taken straight out of
+      # an untrusted workbook and calls DecodeElement on one of them, and a .xlsx is a ZIP of XML
+      # supplied by whoever hands the tool a file. Fixed in 1.26.6.
+      #
+      # Both findings came from a scanner nobody was required to believe, on code written the same
+      # week. Every Go job uses this exact toolchain: scanning one version while shipping another is
+      # how a scan reports green about an artifact nobody built.
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.26.5"
+          go-version: "1.26.6"
 
       - name: Install the scanners, pinned to the versions the bench verified
         run: |
@@ -448,7 +460,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.26.5"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
+          go-version: "1.26.6"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
 
       - name: Vet, race-test + build the Go edge
         run: |
@@ -481,7 +493,7 @@ jobs:
 
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e  # v7.0.0
         with:
-          go-version: "1.26.5"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
+          go-version: "1.26.6"  # >= 1.26.3: see GO-2026-4971 note in the security-scanners job
 
       - name: Install protoc + protoc-gen-go (pinned)
         run: |
