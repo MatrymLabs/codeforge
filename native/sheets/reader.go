@@ -61,6 +61,32 @@ type relationship struct {
 	External bool
 }
 
+type boundedXMLDecoder struct {
+	decoder *xml.Decoder
+	depth   int
+}
+
+func newBoundedXMLDecoder(reader io.Reader) *boundedXMLDecoder {
+	return &boundedXMLDecoder{decoder: xml.NewDecoder(reader)}
+}
+
+func (decoder *boundedXMLDecoder) Token() (xml.Token, error) {
+	token, err := decoder.decoder.Token()
+	if err != nil {
+		return nil, err
+	}
+	switch token.(type) {
+	case xml.StartElement:
+		decoder.depth++
+		if decoder.depth > maxXMLNestingDepth {
+			return nil, fmt.Errorf("%w: XML nesting depth exceeds limit %d", ErrInvalidXML, maxXMLNestingDepth)
+		}
+	case xml.EndElement:
+		decoder.depth--
+	}
+	return token, nil
+}
+
 // ReadSheet reads one named worksheet from an XLSX byte sequence.
 func ReadSheet(data []byte, sheetName string) ([]Cell, error) {
 	if int64(len(data)) > MaxWorkbookBytes {
@@ -187,7 +213,7 @@ func readMember(member *zip.File) ([]byte, error) {
 }
 
 func parseWorkbook(data []byte) ([]workbookSheet, error) {
-	decoder := xml.NewDecoder(bytes.NewReader(data))
+	decoder := newBoundedXMLDecoder(bytes.NewReader(data))
 	var result []workbookSheet
 	for {
 		token, err := decoder.Token()
@@ -218,7 +244,7 @@ func parseWorkbook(data []byte) ([]workbookSheet, error) {
 }
 
 func parseRelationships(data []byte) (map[string]relationship, error) {
-	decoder := xml.NewDecoder(bytes.NewReader(data))
+	decoder := newBoundedXMLDecoder(bytes.NewReader(data))
 	result := make(map[string]relationship)
 	for {
 		token, err := decoder.Token()
@@ -285,7 +311,7 @@ func readSharedStrings(parts map[string]*zip.File) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	decoder := xml.NewDecoder(bytes.NewReader(data))
+	decoder := newBoundedXMLDecoder(bytes.NewReader(data))
 	var result []string
 	var current strings.Builder
 	insideItem := false
@@ -317,7 +343,7 @@ func readSharedStrings(parts map[string]*zip.File) ([]string, error) {
 }
 
 func parseWorksheet(data []byte, sharedStrings []string) ([]Cell, error) {
-	decoder := xml.NewDecoder(bytes.NewReader(data))
+	decoder := newBoundedXMLDecoder(bytes.NewReader(data))
 	var result []Cell
 	for {
 		token, err := decoder.Token()
@@ -339,7 +365,7 @@ func parseWorksheet(data []byte, sharedStrings []string) ([]Cell, error) {
 	}
 }
 
-func parseCell(decoder *xml.Decoder, start xml.StartElement, sharedStrings []string) (Cell, error) {
+func parseCell(decoder *boundedXMLDecoder, start xml.StartElement, sharedStrings []string) (Cell, error) {
 	var reference, cellType string
 	for _, attr := range start.Attr {
 		switch attr.Name.Local {
@@ -366,11 +392,8 @@ func parseCell(decoder *xml.Decoder, start xml.StartElement, sharedStrings []str
 		switch item := token.(type) {
 		case xml.StartElement:
 			depth++
-			if depth > maxXMLNestingDepth {
-				return Cell{}, fmt.Errorf("%w: cell %s exceeds XML nesting limit %d", ErrInvalidXML, reference, maxXMLNestingDepth)
-			}
 			if item.Name.Local == "v" || (cellType == "inlineStr" && item.Name.Local == "t") {
-				text, err := readElementText(decoder, item)
+				text, err := readElementText(decoder)
 				if err != nil {
 					return Cell{}, fmt.Errorf("%w: cell %s value: %w", ErrInvalidXML, reference, err)
 				}
@@ -399,7 +422,7 @@ func parseCell(decoder *xml.Decoder, start xml.StartElement, sharedStrings []str
 	return Cell{Reference: reference, Row: row, Column: column, Value: value}, nil
 }
 
-func readElementText(decoder *xml.Decoder, start xml.StartElement) (string, error) {
+func readElementText(decoder *boundedXMLDecoder) (string, error) {
 	depth := 1
 	var text strings.Builder
 	for depth > 0 {
@@ -410,9 +433,6 @@ func readElementText(decoder *xml.Decoder, start xml.StartElement) (string, erro
 		switch item := token.(type) {
 		case xml.StartElement:
 			depth++
-			if depth > maxXMLNestingDepth {
-				return "", fmt.Errorf("XML element %q exceeds nesting limit %d", start.Name.Local, maxXMLNestingDepth)
-			}
 		case xml.CharData:
 			text.Write([]byte(item))
 		case xml.EndElement:

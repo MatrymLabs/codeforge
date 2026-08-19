@@ -15,6 +15,12 @@ func testWorkbook(t *testing.T) []byte {
 }
 
 func testWorkbookWithWorksheet(t *testing.T, worksheet string) []byte {
+	return testWorkbookWithParts(t, map[string]string{
+		"xl/worksheets/sheet1.xml": worksheet,
+	})
+}
+
+func testWorkbookWithParts(t *testing.T, overrides map[string]string) []byte {
 	t.Helper()
 	var output bytes.Buffer
 	archive := zip.NewWriter(&output)
@@ -23,7 +29,10 @@ func testWorkbookWithWorksheet(t *testing.T, worksheet string) []byte {
 		"xl/workbook.xml":            `<?xml version="1.0"?><workbook xmlns:r="urn:r"><sheets><sheet name="Data" r:id="rId1"/></sheets></workbook>`,
 		"xl/_rels/workbook.xml.rels": `<?xml version="1.0"?><Relationships><Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>`,
 		"xl/sharedStrings.xml":       `<?xml version="1.0"?><sst><si><t>shared</t></si></sst>`,
-		"xl/worksheets/sheet1.xml":   worksheet,
+		"xl/worksheets/sheet1.xml":   `<worksheet><sheetData/></worksheet>`,
+	}
+	for name, contents := range overrides {
+		parts[name] = contents
 	}
 	for name, contents := range parts {
 		writer, err := archive.Create(name)
@@ -94,22 +103,64 @@ func TestHostileXLSXInputsFailCleanly(t *testing.T) {
 }
 
 func TestHostileXLSXInputsRejectDeeplyNestedXML(t *testing.T) {
-	const nesting = 10001
-	var xml strings.Builder
-	xml.WriteString(`<worksheet><sheetData><row r="1"><c r="A1"><v>`)
-	for index := 0; index < nesting; index++ {
-		fmt.Fprint(&xml, "<n>")
-	}
-	xml.WriteString("1")
-	for index := 0; index < nesting; index++ {
-		xml.WriteString("</n>")
-	}
-	xml.WriteString(`</v></c></row></sheetData></worksheet>`)
+	data := deeplyNestedCellWorkbook(t)
 
-	_, err := ReadSheet(testWorkbookWithWorksheet(t, xml.String()), "Data")
+	_, err := ReadSheet(data, "Data")
 	if !errors.Is(err, ErrInvalidXML) {
 		t.Fatalf("error = %v, want ErrInvalidXML", err)
 	}
+}
+
+func TestHostileXLSXInputsRejectDeepNestingOnEveryMember(t *testing.T) {
+	deep := deeplyNestedXML(`<nests/>`)
+	tests := []struct {
+		name string
+		data []byte
+	}{
+		{
+			name: "worksheet skeleton",
+			data: testWorkbookWithParts(t, map[string]string{
+				"xl/worksheets/sheet1.xml": `<worksheet><sheetData>` + deep + `</sheetData></worksheet>`,
+			}),
+		},
+		{
+			name: "workbook",
+			data: testWorkbookWithParts(t, map[string]string{
+				"xl/workbook.xml": `<?xml version="1.0"?><workbook xmlns:r="urn:r">` + deep + `<sheets><sheet name="Data" r:id="rId1"/></sheets></workbook>`,
+			}),
+		},
+		{
+			name: "shared strings",
+			data: testWorkbookWithParts(t, map[string]string{
+				"xl/sharedStrings.xml": `<?xml version="1.0"?><sst>` + deep + `<si><t>shared</t></si></sst>`,
+			}),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := ReadSheet(test.data, "Data")
+			if !errors.Is(err, ErrInvalidXML) {
+				t.Fatalf("error = %v, want ErrInvalidXML", err)
+			}
+		})
+	}
+}
+
+func deeplyNestedCellWorkbook(t *testing.T) []byte {
+	return testWorkbookWithWorksheet(t, `<worksheet><sheetData><row r="1"><c r="A1"><v>`+deeplyNestedXML("1")+`</v></c></row></sheetData></worksheet>`)
+}
+
+func deeplyNestedXML(inner string) string {
+	const nesting = maxXMLNestingDepth + 1
+	var xml strings.Builder
+	for index := 0; index < nesting; index++ {
+		fmt.Fprint(&xml, "<n>")
+	}
+	xml.WriteString(inner)
+	for index := 0; index < nesting; index++ {
+		xml.WriteString("</n>")
+	}
+	return xml.String()
 }
 
 func declaredSizeLie(t *testing.T) []byte {
