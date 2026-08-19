@@ -41,6 +41,7 @@ BLOCKED = "blocked"
 GENERATED = "generated"  # poured to disk (Phase 2), not yet booted
 VALIDATED = "validated"  # poured AND smoke-booted (boots + ticks in the current environment)
 NOT_VALIDATED = "not_validated"  # poured but failed its smoke boot
+DEFAULT_VALIDATION_COMMANDS = ["look", "score", "inventory", "help"]
 VENDORED_WHOLE = "vendored-whole"  # the cast carries every parts/ module (default, honest interim)
 VENDORED_SELECTIVE = "vendored-selective"  # the cast carries only its surfaces' module closure (D2)
 
@@ -58,6 +59,7 @@ _CAST_GITIGNORE = (
     "# A CodeForge cast. Runtime state, secrets, and caches never live in the repo.\n"
     "*.db\nsave.json\ncharacters.json\naccounts.json\n*.kdbx\n"
     ".env\n.venv/\n__pycache__/\n*.pyc\nreports/\nsecurity-evidence/\n"
+    "backups/\ncast_selfproof.json\n"
 )
 
 # What a cast must NEVER carry out of the forge -- state, secrets, evidence, flagship
@@ -357,6 +359,11 @@ def generate_cast(
         dest / BLUEPRINTS_ROOT.relative_to(BLUEPRINTS_ROOT.parents[1]) / starter,
         ignore=ignore,
     )
+    selfproof_src = base / "scripts" / "cast_selfproof.py"
+    if selfproof_src.is_file():
+        selfproof_dest = dest / "scripts"
+        selfproof_dest.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(selfproof_src, selfproof_dest / selfproof_src.name)
     # 3. the fresh scaffold + manifest, marked generated (record the surfaces of a selective cut,
     #    so `cast update` can recompute the closure later without re-guessing what the cast was for)
     generated = replace(
@@ -424,7 +431,7 @@ def validate_cast(
     Honest scope: proves the cast boots + runs in the CURRENT environment; `install_check` is the
     dependency-isolated fresh-install proof.
     """
-    corpus = commands if commands is not None else ["help"]
+    corpus = commands if commands is not None else DEFAULT_VALIDATION_COMMANDS
     # A cast carries ONLY its own world, so the probe must boot THAT seed, not the engine's
     # default (first-forge). Read the cast's starter pack and pin FORGE_SEED for the subprocess;
     # otherwise kernel.world.world falls back to a seed cast deliberately shed and boots blow up.
