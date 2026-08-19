@@ -10317,5 +10317,30 @@
     "aliases": [],
     "created": "2026-08-19",
     "updated": "2026-08-19"
+  },
+  {
+    "designation": "MOD-10.163",
+    "name": "cast_selfproof",
+    "status": "active",
+    "function": "prove a poured Target Product persists, restarts, and survives database recovery without the engine repository",
+    "label": "cast_selfproof",
+    "file": "scripts/cast_selfproof.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/MASTER_CHECKLIST.md",
+    "tests": "tests/test_cast_selfproof.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "proof",
+      "detachment"
+    ],
+    "notes": "WO-CAST-3; poured into every cast so the Target Product can run its own persistence proof.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-19",
+    "updated": "2026-08-19"
   }
 ]
