@@ -5,10 +5,16 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
+	"strings"
 	"testing"
 )
 
 func testWorkbook(t *testing.T) []byte {
+	return testWorkbookWithWorksheet(t, `<worksheet><sheetData><row r="1"><c r="A1" t="inlineStr"><is><t>hello</t></is></c><c r="B1" t="s"><v>0</v></c></row><row r="2"><c r="A2"><v>42</v></c><c r="B2" t="b"><v>1</v></c></row></sheetData></worksheet>`)
+}
+
+func testWorkbookWithWorksheet(t *testing.T, worksheet string) []byte {
 	t.Helper()
 	var output bytes.Buffer
 	archive := zip.NewWriter(&output)
@@ -17,7 +23,7 @@ func testWorkbook(t *testing.T) []byte {
 		"xl/workbook.xml":            `<?xml version="1.0"?><workbook xmlns:r="urn:r"><sheets><sheet name="Data" r:id="rId1"/></sheets></workbook>`,
 		"xl/_rels/workbook.xml.rels": `<?xml version="1.0"?><Relationships><Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>`,
 		"xl/sharedStrings.xml":       `<?xml version="1.0"?><sst><si><t>shared</t></si></sst>`,
-		"xl/worksheets/sheet1.xml":   `<?xml version="1.0"?><worksheet><sheetData><row r="1"><c r="A1" t="inlineStr"><is><t>hello</t></is></c><c r="B1" t="s"><v>0</v></c></row><row r="2"><c r="A2"><v>42</v></c><c r="B2" t="b"><v>1</v></c></row></sheetData></worksheet>`,
+		"xl/worksheets/sheet1.xml":   worksheet,
 	}
 	for name, contents := range parts {
 		writer, err := archive.Create(name)
@@ -84,6 +90,25 @@ func TestHostileXLSXInputsFailCleanly(t *testing.T) {
 				t.Fatalf("error = %v, want %v", err, test.want)
 			}
 		})
+	}
+}
+
+func TestHostileXLSXInputsRejectDeeplyNestedXML(t *testing.T) {
+	const nesting = 10001
+	var xml strings.Builder
+	xml.WriteString(`<worksheet><sheetData><row r="1"><c r="A1"><v>`)
+	for index := 0; index < nesting; index++ {
+		fmt.Fprint(&xml, "<n>")
+	}
+	xml.WriteString("1")
+	for index := 0; index < nesting; index++ {
+		xml.WriteString("</n>")
+	}
+	xml.WriteString(`</v></c></row></sheetData></worksheet>`)
+
+	_, err := ReadSheet(testWorkbookWithWorksheet(t, xml.String()), "Data")
+	if !errors.Is(err, ErrInvalidXML) {
+		t.Fatalf("error = %v, want ErrInvalidXML", err)
 	}
 }
 

@@ -25,6 +25,8 @@ const (
 	MaxMemberUncompressedBytes uint64 = 32 << 20
 	// MaxTotalUncompressedBytes bounds the sum of declared member sizes.
 	MaxTotalUncompressedBytes uint64 = 128 << 20
+	// maxXMLNestingDepth bounds recursive XML structure inside a workbook member.
+	maxXMLNestingDepth = 10000
 )
 
 var (
@@ -364,9 +366,12 @@ func parseCell(decoder *xml.Decoder, start xml.StartElement, sharedStrings []str
 		switch item := token.(type) {
 		case xml.StartElement:
 			depth++
+			if depth > maxXMLNestingDepth {
+				return Cell{}, fmt.Errorf("%w: cell %s exceeds XML nesting limit %d", ErrInvalidXML, reference, maxXMLNestingDepth)
+			}
 			if item.Name.Local == "v" || (cellType == "inlineStr" && item.Name.Local == "t") {
-				var text string
-				if err := decoder.DecodeElement(&text, &item); err != nil {
+				text, err := readElementText(decoder, item)
+				if err != nil {
 					return Cell{}, fmt.Errorf("%w: cell %s value: %w", ErrInvalidXML, reference, err)
 				}
 				value = text
@@ -392,6 +397,29 @@ func parseCell(decoder *xml.Decoder, start xml.StartElement, sharedStrings []str
 		}
 	}
 	return Cell{Reference: reference, Row: row, Column: column, Value: value}, nil
+}
+
+func readElementText(decoder *xml.Decoder, start xml.StartElement) (string, error) {
+	depth := 1
+	var text strings.Builder
+	for depth > 0 {
+		token, err := decoder.Token()
+		if err != nil {
+			return "", err
+		}
+		switch item := token.(type) {
+		case xml.StartElement:
+			depth++
+			if depth > maxXMLNestingDepth {
+				return "", fmt.Errorf("XML element %q exceeds nesting limit %d", start.Name.Local, maxXMLNestingDepth)
+			}
+		case xml.CharData:
+			text.Write([]byte(item))
+		case xml.EndElement:
+			depth--
+		}
+	}
+	return text.String(), nil
 }
 
 func parseReference(reference string) (int, int, error) {
