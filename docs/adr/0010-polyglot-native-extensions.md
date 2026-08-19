@@ -20,6 +20,7 @@ A native (or other-language) component is adopted only when it satisfies **all**
 1. **Python-first with a fallback.** The capability ships as a pure-Python reference first. The
    native accelerator is *optional*: when it is not built, the game runs on the Python fallback and
    the full `make check` is green. Nothing in the game hard-depends on a compiled artifact.
+   This rule governs accelerating an existing capability; it does not choose the lane for a new Target Product, which follows the omnicode rule in `CLAUDE.md` where a Blueprint builds in whatever language its Target Product requires.
 2. **A narrow, identical interface.** The native and Python implementations expose the *same* API,
    so the accelerator is a drop-in swap chosen at import time (`try: import <native>` else fallback).
 3. **A parity test.** When the native module is present, a test pins it to byte-identical behaviour
