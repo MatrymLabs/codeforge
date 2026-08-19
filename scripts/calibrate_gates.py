@@ -280,7 +280,7 @@ CASES: list[Case] = [
     ),
     Case(
         name="pytest-filterwarnings-error",
-        gate=["python", "-m", "pytest", "tests/test_calib_probe.py", "-q", "--no-header"],
+        gate=[sys.executable, "-m", "pytest", "tests/test_calib_probe.py", "-q", "--no-header"],
         probe="tests/test_calib_probe.py",
         violation=_PY_WARNS,
         signal="DeprecationWarning",
