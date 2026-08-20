@@ -110,3 +110,7 @@ native/rider-retroforge/build/
 # it is a scratch build tree plus a report, not evidence. The report worth keeping goes in
 # reports/, dated, like every other measurement.
 mutants.out/
+
+# golangci-lint cache, scoped to THIS tree. The machine-global default is shared by every
+# checkout and on 2026-08-20 replayed codeforge-codex findings inside codeforge-claude.
+.golangci-cache/
