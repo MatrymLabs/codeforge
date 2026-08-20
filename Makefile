@@ -7,6 +7,10 @@
 # record them in its return. An order naming `make check` while one bench decorates it has two
 # commands wearing one name, so the location is declared here instead. `?=`, never `=`: a caller
 # that still needs to redirect must be able to, and must be able to tell if it failed to.
+# MEASURED 2026-08-20 across codeforge-codex and codeforge-claude: CLEAN. Ruff cache records
+# carry the absolute source path, and mypy's SQLite files2 cache validates the module filename
+# against the source and options hash. A deleted probe in one checkout produced no finding in
+# the other, so the name-scoped locations do not cross-contaminate these lanes.
 RUFF_CACHE_DIR ?= /tmp/matrymlabs-codeforge-ruff-cache
 MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 # GOCACHE joined them 2026-08-15, for the same reason and one lane over. Go defaults to
