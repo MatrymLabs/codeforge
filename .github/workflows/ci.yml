@@ -437,7 +437,7 @@ jobs:
       # Temurin 24, matching the bytecode target the build pins. The maker's host compiles on
       # Rider's JBR 25 and targets 24; a runner on 21 would fail the same mismatch Gradle already
       # refused once, correctly.
-      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00  # v4.7.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961  # v5.7.0
         with:
           distribution: temurin
           java-version: "24"
