@@ -23,11 +23,35 @@ MYPY_CACHE_DIR ?= /tmp/matrymlabs-codeforge-mypy-cache
 #
 # On Windows, Go's own default (%LocalAppData%\go-build) is already absolute and writable, so the
 # correct action is to leave it alone. The sandbox problem this override exists for is a POSIX one.
+# GOLANGCI_LINT_CACHE joined them 2026-08-20, and it is scoped DIFFERENTLY on purpose: to the
+# TREE, not to the repository name. That difference is the whole fix.
+#
+# MEASURED. Running `golangci-lint run ./...` inside codeforge-claude/native/sheets reported:
+#     ..\codeforge-codex\native\sheets\reader.go:78:15: G304 (gosec)
+#     ..\codeforge-codex\native\sheets\reader_test.go:72:13: fieldalignment (govet)
+# Another bench's tree, from inside this one, with source lines that matched neither file. This
+# tree's reader.go:78 carries a `//nolint:gosec` that would have suppressed that finding. After
+# `golangci-lint cache clean` the same command reported `0 issues`. The cache was the whole fault.
+#
+# golangci-lint defaults to a MACHINE-GLOBAL cache (%LocalAppData%\golangci-lint here), shared by
+# every checkout on the workstation. A run in one tree seeds it; a run in another replays it.
+#
+# WHY NOT /tmp/matrymlabs-codeforge-golangci-cache, matching the two lines above: because that
+# would not have fixed it. codeforge-claude and codeforge-codex are BOTH "codeforge", so a
+# name-scoped cache is shared by exactly the two trees that collided. The repository name cannot
+# distinguish two checkouts of the same repository, which is the situation this Workshop is
+# permanently in. Only the tree path can.
+#
+# $(CURDIR) is absolute on both platforms, which also sidesteps the POSIX-path trap documented
+# above for GOCACHE: golangci-lint is a native Windows binary here and would reject /tmp the same
+# way `go` does. In-tree, gitignored, and structurally impossible to share.
+GOLANGCI_LINT_CACHE ?= $(CURDIR)/.golangci-cache
+
 ifeq ($(OS),Windows_NT)
-export RUFF_CACHE_DIR MYPY_CACHE_DIR
+export RUFF_CACHE_DIR MYPY_CACHE_DIR GOLANGCI_LINT_CACHE
 else
 GOCACHE ?= /tmp/matrymlabs-codeforge-go-cache
-export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE
+export RUFF_CACHE_DIR MYPY_CACHE_DIR GOCACHE GOLANGCI_LINT_CACHE
 endif
 
 # UTF-8, everywhere, on every platform. This is a CORRECTION, not a preference.
