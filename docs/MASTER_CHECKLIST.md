@@ -611,3 +611,185 @@ Parser boundaries with negative-input tests:   3    (target for DONE-2: 3 -- MET
 Everything in Section 14 is real, well-researched, and correctly deferred. It becomes
 work when an intake produces a fact that triggers it — not before. The factory earns
 compliance capability the same way it earns language lanes: one real product at a time.
+
+---
+
+## 16. THE QUARRY BOARD *(the build backlog, anchored, with the Parts consumer map)*
+
+The queue below is ordered. What it adds over a backlog is the ability to predict a Part's
+SECOND consumer before building the first, so Parts get extracted correctly the first time
+instead of being generalised backwards from one use.
+
+### 16.1 The queue (first ten, anchored)
+
+```
+#   BUILD                          ANCHOR      STATUS
+1   Evidence Runner                L3          IN FLIGHT
+2   M2 Blueprint pipeline          DONE-1      IN FLIGHT
+3   RF-001 NES inspector           DONE-2      IN FLIGHT
+4   Excel/CSV -> PDF utility       FACTORY-S2  NEXT - the generality proof
+5   Developer CLI / scaffolder     FACTORY-S3  after intake exists
+6   Repository health inspector    L3          crank 2, already scoped
+7   API platform                   PARKED      first distributed-systems build
+8   Background job queue           PARKED
+9   Event ingestion pipeline       PARKED
+10  Game asset validator           PARKED      first game-tools build
+```
+
+Nothing below #4 gets an anchor until #2 and #3 are captured. Anchors follow the launch; the
+launch does not follow the backlog.
+
+### 16.2 The Parts consumer map (the pull rule, run forward)
+
+A Part needs two genuine consumers with PASSING PROOFS. Knowing the second consumer in advance
+means the first build extracts it correctly instead of guessing.
+
+**LIVE TODAY - verified, two real consumers, both proofs passing**
+
+```
+PART                 1st CONSUMER                    2nd CONSUMER
+ChecksumVerifier     RF-001 artifact.py:34           Evidence Runner model.py:27
+                     sha256 hexdigest of source      Artifact.sha256
+                     bytes, cited as identity
+```
+
+Verified 2026-08-20 by running both sides: RF-001 `tests/test_retroforge_artifact.py` and
+`test_retroforge_manifest.py`, 10 passed; the Evidence Runner envelope in ship's workshop
+sprint. Same invariant, same semantics, same failure behaviour. This one qualifies.
+
+**NEXT WAVE - second consumer predicted, extract when it arrives**
+
+```
+PART                 1st CONSUMER              PREDICTED 2nd
+ArtifactManifest     RF-001 ExtractionManifest Evidence Runner EvidenceEnvelope
+CommandRunner        Evidence Runner           Developer CLI (#5)
+SchemaValidator      Intake Form (#5)          Excel->PDF input validation (#4)
+ConfigLoader         Workshop CLI              Repository health inspector (#6)
+StructuredLogger     Evidence Runner           every service build (#7-9)
+VerifyThenCommit     used 3x in 3 languages    config sync, any mutation flow
+```
+
+**ArtifactManifest was moved here from LIVE TODAY, and the reason is the whole point of this
+section.** The board first listed it as qualifying now. Measured, the two manifests answer
+different questions: `ExtractionManifest.traceable()` asserts every extracted asset cites the
+source ROM checksum, which is provenance of DERIVED artifacts; `EvidenceEnvelope` records
+Execution, Assessment and Environment, with artifacts as one field of a RUN record. They share
+"a list of things with hashes". They do not share an invariant. `traceable()` has no
+counterpart in the envelope, and Execution/Assessment have none in the manifest.
+
+Extracting it today would produce a Part whose contract is the INTERSECTION of two unrelated
+purposes, which is exactly the junk drawer 16.5 refuses. The pull rule asks four questions,
+same invariant, same semantics, same failure behaviour, same proof, and this pair fails the
+first. A Part with one consumer is a library. A Part with none is a guess.
+
+**LATER - named, not built speculatively**
+
+```
+RetryPolicy - BackoffPolicy - RateLimiter - PaginationContract - JobQueue -
+WebhookDispatcher - AuditEvent - HealthCheck - MetricsEmitter - AuthorizationPolicy
+```
+
+Each has an obvious future consumer and zero present ones. They stay on the watch list.
+
+### 16.3 The archetype question (what the factory actually learns)
+
+Every build is classified by PROBLEM CLASS, never by product name. The Excel-to-PDF converter
+is not an ExcelToPdfConverter. It is:
+
+```
+FILE INGESTION -> STRUCTURED PARSING -> TRANSFORMATION -> RENDERING ->
+FILE OUTPUT -> ERROR REPORTING
+```
+
+Which means CSV to HTML, JSON to PDF, Markdown to DOCX and image-batch to PDF do not start
+from zero. That is the entire thesis of the factory, and #4 is where it gets tested for the
+first time.
+
+Four questions per build, recorded in the reverse-engineering pass:
+
+```
+[ ] what problem class is this?
+[ ] where is the source truth?
+[ ] what are the invariants?
+[ ] what failure will we deliberately cause, and does the instrument notice?
+```
+
+The fourth is the one that decides whether the build taught the factory anything. An
+instrument that has never been shown to redden is decoration, and this checklist already says
+so in Section 13.
+
+### 16.4 Intake, build #4 (filled after the dones land, not before)
+
+```yaml
+request_id: REQ-CONVERT-001
+request_title: Spreadsheet to PDF converter
+requester: Josh Evans
+plain_language_request: >
+  Convert a spreadsheet into a readable PDF from the command line.
+expected_output: runnable CLI converter
+acceptable_80_percent_solution: >
+  Given a one-sheet .xlsx, produce a readable PDF at the given output path,
+  with the source file unmodified.
+output_type:
+  category: utility
+  delivery_format: CLI tool
+language_lanes:
+  preferred: [python]
+size_estimate: S
+inputs:
+  files: [.xlsx]
+  user_inputs: [source path, output path]
+outputs:
+  files: [.pdf]
+hardware_store:
+  required_search_terms:
+    [file converter, schema validator, path validation, checksum, CLI wrapper]
+  parts_to_consume: [ChecksumVerifier]
+contracts:
+  required_behaviors:
+    - accepts and validates input path
+    - writes PDF to the explicit output path
+    - reports a useful error on an invalid or corrupt file
+  invariants:
+    - source file is not modified
+    - output path is always explicit, never inferred
+  proof_run: convert the sample workbook; diff the source hash before and after
+delivery:
+  output_location: dist/
+  outside_user_possible: true
+harvest:
+  archetype: ingest -> parse -> transform -> render -> output
+  expected_signals: [file handling, schema validation, error reporting]
+```
+
+The `parts_to_consume` line names ChecksumVerifier only. SchemaValidator is NEXT WAVE and has
+no second consumer yet; listing it here would be a plan to consume something that does not
+exist.
+
+### 16.5 What this board refuses
+
+```
+No build enters the queue without an anchor when its turn comes.
+No Part extracted before a second genuine consumer exists.
+No language claimed because a build was listed in it.
+No re-planning of the queue while builds 1-3 are unproven.
+```
+
+Explicitly NOT on the board: calculators, todo lists, weather apps, URL shorteners, custom
+crypto, generic AI wrappers, engine replacements. Too shallow or too large to teach the
+factory anything.
+
+### 16.6 The standard for every quarry build
+
+Not "can we make this?" but: can CodeForge understand the problem class, choose the
+architecture, choose the language, find existing Parts, build it, let another bench verify it,
+deliberately break it, explain the failure, repair it, measure it, harvest something reusable,
+and build the next related product faster?
+
+**Each build should contain less genuinely new engineering than the one before it. That is how
+you will know the factory is real.**
+
+The market research behind this ordering is filed separately and dated, at
+`docs/research/QUARRY_RESEARCH_2026-08-20.md`. It informs this section; it does not govern it.
+Research ages and a checklist does not, and research pasted into a live checklist quietly
+becomes doctrine.
