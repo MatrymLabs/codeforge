@@ -36,7 +36,7 @@ jobs:
       # CI-only tooling; not a runtime or pyproject dependency. Installs into the
       # setup-python interpreter via --system.
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d  # v10.0.1
 
       # The pinned graph must match pyproject.toml: editing dependencies without
       # re-running `uv lock` fails here, loud, before anything installs (<1s).
@@ -191,7 +191,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.13"
-      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d  # v10.0.1
       - name: Install dependencies (with the postgres extra)
         run: uv pip install --system -e ".[dev,postgres]"
       - name: Build the schema with Alembic (upgrade head)
@@ -212,7 +212,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: "3.13"
-      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d  # v10.0.1
       - name: Install dependencies
         run: uv pip install --system -e ".[dev]"
       - name: Install the Chromium browser (+ OS deps)
