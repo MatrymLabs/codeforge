@@ -141,11 +141,17 @@ def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> 
     assert all(
         probes[aspect] > 1 for aspect in ("inventory", "progression", "permission", "persistence")
     )
+    import kernel.engine_seam as seam
     from kernel.overlay import load_overlay
 
     overlay = load_overlay(Path("content/blueprints/first-forge/world_overlay.json"))
-    assert len(overlay) == 12
-    import kernel.engine_seam as seam
+    # KF-S4-2. This was `== 12`, a literal pinned to first-forge's CONTENT, so editing the
+    # Blueprint reddened a seam test that has no opinion about how many rooms a world has.
+    # Derived instead: the direct loader and the seam's own accessor must see the same overlay.
+    # That is an invariant about the seam, which is what this file is for, and it cannot be
+    # broken by adding a room.
+    assert overlay, "first-forge overlay loaded empty"
+    assert len(overlay) == len(seam._overlay_rooms("first-forge"))
 
     coverage = cast(
         Callable[[Engine2D], object],
@@ -325,8 +331,11 @@ def test_overlay_room_calibration_distinguishes_blueprints() -> None:
     first_forge = seam._overlay_rooms("first-forge")
     seam_probe = seam._overlay_rooms("seam-probe")
     assert first_forge != seam_probe, "the two Blueprint overlays are byte-identical"
-    assert len(first_forge) == 12
-    assert len(seam_probe) == 2
+    # KF-S4-2. The two `== 12` / `== 2` literals are gone. The property this test states is that
+    # the overlay source CHANGES with the Blueprint under test, and the inequality above says
+    # exactly that. The counts said nothing further and broke whenever either world was edited.
+    assert first_forge, "first-forge overlay rooms empty"
+    assert seam_probe, "seam-probe overlay rooms empty"
 
 
 def test_seam_probe_runs_the_same_battery_as_first_forge() -> None:
