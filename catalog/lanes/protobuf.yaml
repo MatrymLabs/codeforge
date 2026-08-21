@@ -1,0 +1,11 @@
+lane: protobuf
+ecosystem: Protocol Buffers
+provisioning_status: DOCUMENTED
+commands:
+  - command: protoc --version
+    purpose: Confirm the Protocol Buffers compiler before generating bindings.
+  - command: buf --version
+    purpose: Validate protobuf schemas when the lane gains a second consumer.
+verified_on: null
+verification_output: null
+notes: Reference provisioning only; no protobuf installation or generation was performed.

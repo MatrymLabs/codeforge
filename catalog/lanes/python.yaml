@@ -1,0 +1,11 @@
+lane: python
+ecosystem: Python
+provisioning_status: DOCUMENTED
+commands:
+  - command: .venv/Scripts/python.exe --version
+    purpose: Resolve the repository's pinned Windows Python interpreter.
+  - command: .venv/Scripts/python.exe -m pip --version
+    purpose: Confirm package installation is attached to that interpreter.
+verified_on: null
+verification_output: null
+notes: The recipe is documented; this pass could not launch the bench's broken Python 3.13 venv.

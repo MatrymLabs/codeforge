@@ -1,0 +1,10 @@
+lane: go
+ecosystem: Go
+provisioning_status: INSTALLED
+commands:
+  - command: go version
+    purpose: Confirm the Go compiler and target platform on PATH.
+verified_on: 2026-08-21
+verification_output: |
+  go version go1.26.5 windows/amd64
+notes: The existing userspace toolchain is installed; this order performed no installation.

@@ -1,0 +1,11 @@
+lane: sql-sqlite
+ecosystem: SQLite
+provisioning_status: DOCUMENTED
+commands:
+  - command: sqlite3 --version
+    purpose: Inspect the SQLite CLI for local database work.
+  - command: .venv/Scripts/python.exe -c "import sqlite3; print(sqlite3.sqlite_version)"
+    purpose: Confirm the SQLite runtime embedded in the repository Python lane.
+verified_on: null
+verification_output: null
+notes: Governed SQL lane; no database installation or provisioning was performed in this pass.

@@ -1,0 +1,12 @@
+lane: shell
+ecosystem: POSIX shell tooling
+provisioning_status: INSTALLED
+commands:
+  - command: shellcheck --version
+    purpose: Confirm the shell linter used by the repository gate.
+verified_on: 2026-08-21
+verification_output: |
+  ShellCheck - shell script analysis tool
+  version: 0.11.0
+  license: GNU General Public License version 3
+notes: The existing userspace toolchain is installed; this order performed no installation.

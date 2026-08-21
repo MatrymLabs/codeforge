@@ -1,0 +1,9 @@
+lane: sql-sqlserver
+ecosystem: Microsoft SQL Server
+provisioning_status: CANDIDATE
+commands:
+  - command: sqlcmd --version
+    purpose: Reference the client provisioning check if this engine becomes a Workshop lane.
+verified_on: null
+verification_output: null
+notes: Candidate engine only; the Workshop does not use SQL Server today.

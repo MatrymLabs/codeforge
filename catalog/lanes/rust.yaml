@@ -1,0 +1,13 @@
+lane: rust
+ecosystem: Rust
+provisioning_status: INSTALLED
+commands:
+  - command: rustc --version
+    purpose: Confirm the Rust compiler on PATH.
+  - command: cargo --version
+    purpose: Confirm the Cargo package tool on PATH.
+verified_on: 2026-08-21
+verification_output: |
+  rustc 1.97.1 (8bab26f4f 2026-07-14)
+  cargo 1.97.1 (c980f4866 2026-06-30)
+notes: The existing userspace toolchain is installed; this order performed no installation.
