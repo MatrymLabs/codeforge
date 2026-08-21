@@ -68,7 +68,16 @@ endif
 export PYTHONUTF8 := 1
 
 # Resolve the repository interpreter when the Makefile is parsed; CI uses the system fallback.
-PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe                  || (test -x .venv/bin/python && echo .venv/bin/python || echo python3))
+# The uv path is pinned to Python 3.13, so the fallback must select a candidate with the same
+# major.minor rather than accepting whichever `python3` alias happens to be first on PATH. On this
+# Windows bench `python` is 3.13 and `python3` is 3.14; the old fallback silently chose the latter.
+PY ?= $(shell \
+	if test -x .venv/Scripts/python.exe; then echo .venv/Scripts/python.exe; \
+	elif test -x .venv/bin/python; then echo .venv/bin/python; \
+	elif command -v python3.13 >/dev/null 2>&1; then echo python3.13; \
+	elif command -v python >/dev/null 2>&1 && python -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 13) else 1)" >/dev/null 2>&1; then echo python; \
+	elif command -v python3 >/dev/null 2>&1 && python3 -c "import sys; raise SystemExit(0 if sys.version_info[:2] == (3, 13) else 1)" >/dev/null 2>&1; then echo python3; \
+	else echo python3; fi)
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -87,7 +96,7 @@ env: hooks
 		echo "-> uv unavailable or failed; building with venv + pip. For a faster env see https://docs.astral.sh/uv/"; \
 		$(PY) -m venv .venv; 		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 		$$bin/pip install -q --upgrade pip; 		$$bin/pip install -q -e ".[dev]"; 	fi
 	@# The venv layout is platform-dependent: Windows uses Scripts and POSIX uses bin.
-	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
+	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 	$$bin/python -c "import sys; print(f'venv interpreter: {sys.executable} ({sys.version_info.major}.{sys.version_info.minor})'); assert sys.version_info[:2] == (3, 13), 'need Python 3.13'"
 	@if [ -d .venv/Scripts ]; then 		echo "venv ready - activate with: source .venv/Scripts/activate"; 	else 		echo "venv ready - activate with: source .venv/bin/activate"; 	fi
 
 # Snapshot uncommitted work before a branch or path operation. The script is copied from Ship and
