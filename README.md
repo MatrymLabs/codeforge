@@ -7,6 +7,38 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
+## See it run (11 seconds)
+
+Two commands. No account, no config, no database.
+
+```bash
+git clone https://github.com/MatrymLabs/codeforge && cd codeforge
+make env && make deploy-proof
+```
+
+You get:
+
+```
+REAL GAME-SEED DEPLOYMENT PROOF
+  boot verdict:   BOOTED + SERVED
+  world at boot:  10681 rooms  (spawn: veridia)
+  label:          DEPLOYABLE
+```
+
+CodeForge packaged the whole engine plus a world into a standalone program, launched it as a
+**fresh process**, and served real play commands (`look`, `score`, `inventory`, `help`) against
+its own world. The 10,681 rooms are generated at boot from 77 hand-authored rooms.
+
+It is genuinely standalone: rename the source directory afterwards and the packaged copy still
+boots. Measured 2026-08-21 from a clean public clone: clone 2s, `make env` 6s, `make
+deploy-proof` 3s.
+
+Requires Python 3.13 and `make`. `make env` uses [uv](https://docs.astral.sh/uv/) if present and
+falls back to `venv` + `pip`.
+
+---
+
+
 **Matrym Labs builds living workshops that turn understanding into software. Through CodeForge, we study how systems work, preserve what we learn as reusable engineering, and grow persistent environments - Seeds - where anyone can design, build, operate, and evolve real products, from persistent worlds to classrooms. Every product we complete makes the next one easier to build.** (Canonical mission: [docs/mission.md](docs/mission.md).)
 
 A Python-native platform you can play in your browser today, built as a workshop of small, tested, reusable parts. Under the game, those same parts compose a second output: a Hardware Store of patterns proven in play and translated into real software.
@@ -98,11 +130,10 @@ provision the same container anywhere with the portable Terraform module in
 ## Quick start
 
 ```bash
-git clone git@github.com:MatrymLabs/codeforge.git
+git clone https://github.com/MatrymLabs/codeforge.git
 cd codeforge
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-make check       # lint + typecheck + the full test suite
+make env         # creates .venv from the locked dependency set
+make check       # lint + typecheck + the full test suite (several minutes)
 spark            # ignite the multiplayer server on port 4000
 ```
 
