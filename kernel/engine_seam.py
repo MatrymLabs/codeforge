@@ -158,6 +158,9 @@ class SeamVerdict:
     #: Probes whose answer CHANGES when the engine misbehaves, so they can actually report a
     #: divergence. The rest are regression guards: real, but not evidence of agreement today.
     falsifiable: tuple[str, ...] = field(default_factory=tuple)
+    #: Baseline answers for probes that can actually diverge. Agreement is only auditable when
+    #: the values read by both engines are printed, not merely when their comparison is counted.
+    observations: tuple[tuple[str, object, object], ...] = field(default_factory=tuple)
     aspect_falsifiability: tuple[AspectFalsifiability, ...] = field(default_factory=tuple)
     unmeasurable_reason: str | None = None
 
@@ -178,6 +181,10 @@ class SeamVerdict:
             f"{len(self.falsifiable)} of them falsifiable"
         ]
         lines += [f"  DIVERGED {d.render()}" for d in self.divergences]
+        lines += [
+            f"  [observed] {name}: 0D said {zero_d!r}, 2D said {two_d!r}"
+            for name, zero_d, two_d in self.observations
+        ]
         lines += [f"  [unmeasured] {u}" for u in self.unmeasured]
         if self.unmeasurable_reason is not None:
             lines.append(f"  [unmeasurable] {self.unmeasurable_reason}")
@@ -574,6 +581,8 @@ def run_differential(
         right = two_d
 
     divergences: list[Divergence] = []
+    falsifiable = falsifiable_probes(seed)
+    observations: list[tuple[str, object, object]] = []
     unmeasured: list[str] = []
     aspects: list[str] = []
     compared = 0
@@ -592,12 +601,14 @@ def run_differential(
         compared += 1
         if aspect not in aspects:
             aspects.append(aspect)
+        if f"{aspect}/{name}" in falsifiable:
+            observations.append((f"{aspect}/{name}", a, b))
         if a != b:
             divergences.append(Divergence(aspect=aspect, command=name, zero_d=a, two_d=b))
 
-    falsifiable = falsifiable_probes(seed)
     return SeamVerdict(
         falsifiable=falsifiable,
+        observations=tuple(observations),
         aspect_falsifiability=_aspect_falsifiability(falsifiable, seed),
         commands_compared=compared,
         aspects_covered=tuple(aspects),

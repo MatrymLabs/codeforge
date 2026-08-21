@@ -406,3 +406,13 @@ def test_render_shows_each_aspect_falsifiability_record() -> None:
     rendered = run_differential(two_d=Engine2D()).render()
     assert "[falsifiability] progression: structurally unfalsifiable" in rendered
     assert "[falsifiability] inventory: falsifiable by" in rendered
+
+
+@pytest.mark.parametrize("seed", ["first-forge", "seam-probe", "spiral-ascent"])
+def test_agreed_render_shows_each_falsifiable_observation(seed: str) -> None:
+    verdict = run_differential(seed=seed)
+    assert verdict.verdict == "AGREED"
+    rendered = verdict.render()
+    for probe in verdict.falsifiable:
+        assert f"[observed] {probe}: 0D said " in rendered
+        assert f"[observed] {probe}:" in rendered
