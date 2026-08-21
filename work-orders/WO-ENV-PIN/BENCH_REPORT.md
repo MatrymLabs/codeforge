@@ -4,6 +4,7 @@
 packet_id: WO-ENV-PIN
 status: COMPLETE
 branch: codex/wo-env-pin
+pr_url: https://github.com/MatrymLabs/codeforge/pull/1065
 allowlist:
   - Makefile
   - work-orders/WO-ENV-PIN/BENCH_REPORT.md
