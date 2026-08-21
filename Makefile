@@ -76,11 +76,15 @@ PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe 
 # With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
 # the pip fallback still resolves fresh -- best-effort without the resolver. ---
 env: hooks
-	@if command -v uv >/dev/null 2>&1; then \
-		echo "→ uv found - fast env build (pinned from uv.lock)"; \
-		uv sync --locked --extra dev --python 3.13; \
+	@# BRANCHES ON SUCCESS, NOT PRESENCE. This tested `command -v uv` alone, so an uv that was
+	@# INSTALLED BUT UNABLE TO RUN killed `make env` outright with no fallback. Found 2026-08-21 by
+	@# clean-room Tier 1: uv was present and its cache directory was access-denied, so the SECOND
+	@# command of the README's two-command demo failed for the exact reader it was written for.
+	@# The README already promised "falls back to venv + pip"; this makes that sentence true.
+	@if command -v uv >/dev/null 2>&1 && uv sync --locked --extra dev --python 3.13; then \
+		echo "-> uv env built (pinned from uv.lock)"; \
 	else \
-		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
+		echo "-> uv unavailable or failed; building with venv + pip. For a faster env see https://docs.astral.sh/uv/"; \
 		$(PY) -m venv .venv; 		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 		$$bin/pip install -q --upgrade pip; 		$$bin/pip install -q -e ".[dev]"; 	fi
 	@# The venv layout is platform-dependent: Windows uses Scripts and POSIX uses bin.
 	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
