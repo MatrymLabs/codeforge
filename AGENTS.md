@@ -4,6 +4,25 @@ the flagship: a Python core with native lanes at different evidence stages and a
 
 <!-- MATRYM:DOCTRINE:BEGIN - synced from ship docs/AGENTS_DOCTRINE_BLOCK.md. Do not edit here. -->
 
+<!--
+RULING 2026-08-20: A SHARED BLOCK, NOT A BYTE-IDENTICAL FILE.
+
+An audit item asked that "AGENTS.md is byte-identical across every repo copy". Measured, it is
+not: ship, codeforge, forge-audit and hardware-store carry four different hashes. That is
+CORRECT AS BUILT and the expectation is the thing that was wrong.
+
+This file is the shared DOCTRINE BLOCK, inserted into each repository's AGENTS.md.
+`scripts/doctrine_block.py` enforces THE BLOCK, not the file. Everything outside it is
+repo-local by design: stack, gate command, allowlist conventions, bench toolchain. Those
+genuinely differ - codeforge-console runs npm scripts where the others run make, forge-audit
+grades in a target's own ecosystem - and forcing byte-identical files would mean either
+deleting that context or copying every repo's specifics into every other repo.
+
+So the invariant is: THE BLOCK IS IDENTICAL EVERYWHERE AND GATED. The file is not, and must not
+be. If a future audit reports four different hashes as a defect, it is measuring the wrong
+thing; run `make doctrine` instead, which measures the thing that matters.
+-->
+
 ## Required Reading
 
 Before any work, every session, read these in order and confirm by stating one line from each.
@@ -138,6 +157,33 @@ The ladder, and you take the highest rung that achieves the goal:
 thing being deleted, and you re-verified that IMMEDIATELY BEFORE the act rather than earlier in the
 session.** State the count. "It should be fine" is not a proof and neither is a check from twenty
 minutes ago.
+
+### `git checkout <ref> -- <path>` is on this ladder, and it does not look like it
+
+It overwrites the working tree with no prompt, no backup and no record, and **git has no
+pre-checkout hook**, so git itself cannot be made to refuse it. It reads like a read, which is
+exactly why it gets typed without thought.
+
+It destroyed uncommitted work **twice on 2026-08-20**, the second time an hour after the first was
+written down as a lesson: 182 lines of `MASTER_CHECKLIST.md`, then 35 lines of `WORK_REGISTER.md`.
+The second survived only because an unrelated rebase minutes earlier had left an autostash that
+happened to hold the file. That is luck, and luck is not a control.
+
+**Use `make take` instead. Always.**
+
+```bash
+make take FROM=<ref> FILE=<path> CHECK=1     # look first: what would be overwritten
+make take FROM=<ref> FILE=<path>             # snapshot, then take, and print the recovery command
+```
+
+It snapshots first and **REFUSES THE TAKE if the snapshot fails**, because a guard that proceeds
+when its own safety net has failed is decoration. Untracked files count as the MORE dangerous case,
+not the lesser: a modified tracked file usually has some blob in the object database, while an
+untracked one has never had a blob written and nothing can recover it.
+
+Lives in `ship`, at `scripts/safe_take.py`, and consumes `wip_net.py` rather than reimplementing
+the snapshot. **Naming a failure mode does not install a guard against it**, which is the general
+lesson and the reason this is a command rather than another paragraph.
 
 **A Bench never performs step 5 without a per-item Principal Engineer stamp.** Not per batch. Per
 item. A stamp for a list is a stamp nobody read.
