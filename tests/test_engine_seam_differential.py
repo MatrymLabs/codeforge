@@ -141,9 +141,8 @@ def test_widened_battery_has_multiple_probes_per_aspect_and_covers_overlay() -> 
     assert all(
         probes[aspect] > 1 for aspect in ("inventory", "progression", "permission", "persistence")
     )
-    from kernel.overlay import load_overlay
-
     import kernel.engine_seam as seam
+    from kernel.overlay import load_overlay
 
     overlay = load_overlay(Path("content/blueprints/first-forge/world_overlay.json"))
     # KF-S4-2. This was `== 12`, a literal pinned to first-forge's CONTENT, so editing the
