@@ -78,7 +78,7 @@ PY ?= $(shell test -x .venv/Scripts/python.exe && echo .venv/Scripts/python.exe 
 env: hooks
 	@if command -v uv >/dev/null 2>&1; then \
 		echo "→ uv found - fast env build (pinned from uv.lock)"; \
-		uv sync --extra dev --python 3.13; \
+		uv sync --locked --extra dev --python 3.13; \
 	else \
 		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
 		$(PY) -m venv .venv; 		bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 		$$bin/pip install -q --upgrade pip; 		$$bin/pip install -q -e ".[dev]"; 	fi
