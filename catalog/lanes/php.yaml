@@ -1,0 +1,11 @@
+lane: php
+ecosystem: PHP
+provisioning_status: CANDIDATE
+commands:
+  - command: php --version
+    purpose: Confirm the PHP runtime on PATH.
+  - command: composer --version
+    purpose: Confirm Composer for PHP dependency provisioning.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

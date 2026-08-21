@@ -7,6 +7,7 @@ Workshop's census-backed `hardware-store/LANGUAGE_LANES.yaml` register; `provisi
 separate vocabulary and must not be renamed to `status`.
 
 `verified_on` is evidence, not a promise. It is populated only when the commands in that record
-were actually run on this Bench. Candidate and deferred ecosystems retain a null date. The
-registry intentionally has records for the 13 current governance lanes plus candidate SQL Server
-and MySQL engines; the contract is one-way from governed lanes to provisioning records.
+were actually run on this Bench. Documented and candidate ecosystems retain a null date. The
+registry carries the required records for the 13 governance lanes, candidate SQL Server and MySQL
+engines, and the 16 ecosystems reserved for future Blueprint lookups; the contract is one-way
+from governed lanes to provisioning records.

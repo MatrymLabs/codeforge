@@ -1,9 +1,9 @@
 lane: csharp
 ecosystem: C# and .NET
-provisioning_status: DEFERRED
+provisioning_status: DOCUMENTED
 commands:
   - command: dotnet --info
     purpose: Inspect the .NET SDK when a C# Build is opened.
 verified_on: null
 verification_output: null
-notes: Deferred until a C# or .NET Active Build requires the toolchain.
+notes: Commands are transcribed for future C# and .NET provisioning; no verification was run.

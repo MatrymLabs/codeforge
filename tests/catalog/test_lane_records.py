@@ -7,6 +7,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 LANE_DIR = Path(__file__).resolve().parents[2] / "catalog" / "lanes"
@@ -45,6 +46,7 @@ def _records() -> dict[str, dict[str, Any]]:
     }
 
 
+@pytest.mark.workshop
 def test_every_governed_language_has_a_provisioning_record() -> None:
     governance = _governance_register()
     records = _records()
@@ -93,6 +95,15 @@ def test_each_record_matches_the_schema() -> None:
             assert isinstance(verified_on, date), lane
             assert record["provisioning_status"] == "INSTALLED", lane
             assert isinstance(output, str) and output.strip(), lane
+
+
+def test_schema_status_vocabulary_is_exact() -> None:
+    schema = _mapping(LANE_DIR / "_schema.yaml")
+    assert set(schema["provisioning_status_values"]) == {
+        "INSTALLED",
+        "DOCUMENTED",
+        "CANDIDATE",
+    }
 
 
 def test_verified_date_cannot_be_claimed_without_installed_evidence() -> None:

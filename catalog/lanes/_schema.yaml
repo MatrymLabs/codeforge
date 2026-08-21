@@ -9,7 +9,6 @@ provisioning_status_values:
   - INSTALLED
   - DOCUMENTED
   - CANDIDATE
-  - DEFERRED
 
 required_fields:
   - lane

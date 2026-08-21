@@ -1,0 +1,11 @@
+lane: rider-plugin
+ecosystem: JetBrains Rider plugin development
+provisioning_status: CANDIDATE
+commands:
+  - command: java --version
+    purpose: Confirm the JVM used by the Rider plugin toolchain.
+  - command: gradle --version
+    purpose: Confirm the Gradle build tool used by plugin projects.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

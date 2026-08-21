@@ -1,0 +1,11 @@
+lane: ruby
+ecosystem: Ruby
+provisioning_status: CANDIDATE
+commands:
+  - command: ruby --version
+    purpose: Confirm the Ruby runtime on PATH.
+  - command: bundle --version
+    purpose: Confirm Bundler for Ruby dependency provisioning.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.
