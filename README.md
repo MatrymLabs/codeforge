@@ -7,7 +7,7 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
-## See it run (11 seconds)
+## See it run (two commands, ~11s with uv)
 
 Two commands. No account, no config, no database.
 
@@ -30,8 +30,18 @@ CodeForge packaged the whole engine plus a world into a standalone program, laun
 its own world. The 10,681 rooms are generated at boot from 77 hand-authored rooms.
 
 It is genuinely standalone: rename the source directory afterwards and the packaged copy still
-boots. Measured 2026-08-21 from a clean public clone: clone 2s, `make env` 6s, `make
-deploy-proof` 3s.
+boots.
+
+**Measured from clean public clones, 2026-08-21:**
+
+| Machine | Total | Notes |
+| --- | --- | --- |
+| Windows 11, i9, uv present | **~11s** | clone 2s, `make env` 6s, `make deploy-proof` 3s |
+| Raspberry Pi, Debian aarch64, no uv | **~98s** | `make env` falls back to venv + pip, which is the slow path |
+
+The eleven seconds is the fast path, not the only path. Both boot the same world and both report
+`BOOTED + SERVED`; the Pi simply builds its environment with pip because uv is not installed
+there. If your machine has no uv, expect the second number.
 
 Requires Python 3.13 and `make`. `make env` uses [uv](https://docs.astral.sh/uv/) if present and
 falls back to `venv` + `pip`.
