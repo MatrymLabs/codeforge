@@ -261,7 +261,7 @@ start the counter, not to guess it.
 Products delivered:            0
 External users:                0
 Days since external contact:   UNKNOWN (never counted; the counter starts today)
-Ledger totals (noqa/mypy/kt):  734 / 181-in-64 / 16
+Ledger totals (noqa/mypy/kt):  764 / 181-in-64 / 16
 ```
 
 ## THE ONE QUESTION

@@ -14,7 +14,13 @@ SCRIPT = Path(__file__).resolve().with_name("wip_net.py")
 
 
 def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=False)
+    return subprocess.run(  # noqa: S603  # tests exercise the git-backed instrument
+        ["git", *args],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
 
 def _repo(tmp_path: Path) -> Path:
@@ -30,8 +36,12 @@ def _repo(tmp_path: Path) -> Path:
 
 
 def _run(root: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        [sys.executable, str(SCRIPT)], cwd=root, capture_output=True, text=True, check=False
+    return subprocess.run(  # noqa: S603  # tests exercise the wipnet instrument
+        [sys.executable, str(SCRIPT)],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
     )
 
 

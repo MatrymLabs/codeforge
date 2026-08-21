@@ -30,11 +30,12 @@ from pathlib import Path
 
 # A snapshotter returns the snapshot sha, or "" when it could not make one.
 Snapshotter = Callable[[Path], str]
+STATUS_PATH_OFFSET = 3
 
 
 def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
+    return subprocess.run(  # noqa: S603  # git is the instrument's intended subprocess
+        ["git", *args],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
         cwd=root,
         capture_output=True,
         encoding="utf-8",
@@ -51,7 +52,7 @@ def wipnet_snapshot(root: Path) -> str:
     Calling it rather than copying its temporary-index logic keeps one implementation of the
     snapshot, which is the point of having it.
     """
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603  # wipnet is the instrument's intended subprocess
         [sys.executable, str(Path(__file__).with_name("wip_net.py"))],
         cwd=root,
         capture_output=True,
@@ -82,40 +83,18 @@ def at_risk(root: Path, paths: list[str]) -> list[str]:
         return []
     found: list[str] = []
     for line in result.stdout.splitlines():
-        if len(line) > 3:
-            found.append(line[3:].strip().strip('"'))
+        if len(line) > STATUS_PATH_OFFSET:
+            found.append(line[STATUS_PATH_OFFSET:].strip().strip('"'))
     return found
 
 
-def take(
+def _take_exposed(
     root: Path,
     ref: str,
     paths: list[str],
-    *,
-    check_only: bool = False,
-    snapshot: Snapshotter = wipnet_snapshot,
+    exposed: list[str],
+    snapshot: Snapshotter,
 ) -> int:
-    """Snapshot, then take. Refuse the take if the snapshot fails."""
-    exposed = at_risk(root, paths)
-
-    if check_only:
-        if not exposed:
-            print(f"SAFE-TAKE: CLEAN no uncommitted content at {', '.join(paths)}")
-            return 0
-        print(f"SAFE-TAKE: AT RISK {len(exposed)} path(s) would be overwritten by `{ref}`:")
-        for path in exposed:
-            print(f"    {path}")
-        print("SAFE-TAKE: nothing was changed; this was a check")
-        return 1
-
-    if not exposed:
-        result = _git(root, "checkout", ref, "--", *paths)
-        if result.returncode != 0:
-            print(f"SAFE-TAKE: FAIL checkout refused: {result.stderr.strip()}")
-            return 2
-        print(f"SAFE-TAKE: took {', '.join(paths)} from {ref}; nothing was at risk")
-        return 0
-
     sha = snapshot(root)
     if not sha:
         # THE REFUSAL. The net failed, so the fall does not happen.
@@ -138,6 +117,39 @@ def take(
         print(f"    {path}")
     print(f"SAFE-TAKE: RECOVER with `git checkout {sha} -- {' '.join(exposed)}`")
     return 0
+
+
+def take(
+    root: Path,
+    ref: str,
+    paths: list[str],
+    *,
+    check_only: bool = False,
+    snapshot: Snapshotter = wipnet_snapshot,
+) -> int:
+    """Snapshot, then take. Refuse the take if the snapshot fails."""
+    exposed = at_risk(root, paths)
+    exit_code = 0
+
+    if check_only:
+        if not exposed:
+            print(f"SAFE-TAKE: CLEAN no uncommitted content at {', '.join(paths)}")
+        else:
+            print(f"SAFE-TAKE: AT RISK {len(exposed)} path(s) would be overwritten by `{ref}`:")
+            for path in exposed:
+                print(f"    {path}")
+            print("SAFE-TAKE: nothing was changed; this was a check")
+            exit_code = 1
+    elif not exposed:
+        result = _git(root, "checkout", ref, "--", *paths)
+        if result.returncode != 0:
+            print(f"SAFE-TAKE: FAIL checkout refused: {result.stderr.strip()}")
+            exit_code = 2
+        else:
+            print(f"SAFE-TAKE: took {', '.join(paths)} from {ref}; nothing was at risk")
+    else:
+        exit_code = _take_exposed(root, ref, paths, exposed, snapshot)
+    return exit_code
 
 
 def main(argv: list[str] | None = None) -> int:

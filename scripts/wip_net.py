@@ -12,8 +12,8 @@ ROOT = Path.cwd()
 
 
 def _git(*args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["git", *args],
+    return subprocess.run(  # noqa: S603  # git is the instrument's intended subprocess
+        ["git", *args],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
         cwd=ROOT,
         capture_output=True,
         encoding="utf-8",
@@ -36,8 +36,8 @@ def _snapshot_with_temporary_index() -> subprocess.CompletedProcess[str]:
     env["GIT_INDEX_FILE"] = str(index)
     try:
         for args in (("read-tree", "HEAD"), ("add", "--all", "--", ".")):
-            result = subprocess.run(
-                ["git", *args],
+            result = subprocess.run(  # noqa: S603  # git is the instrument's intended subprocess
+                ["git", *args],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
                 cwd=ROOT,
                 env=env,
                 capture_output=True,
@@ -49,7 +49,7 @@ def _snapshot_with_temporary_index() -> subprocess.CompletedProcess[str]:
             if result.returncode != 0:
                 return result
         tree = subprocess.run(
-            ["git", "write-tree"],
+            ["git", "write-tree"],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
             cwd=ROOT,
             env=env,
             capture_output=True,
@@ -60,8 +60,8 @@ def _snapshot_with_temporary_index() -> subprocess.CompletedProcess[str]:
         )
         if tree.returncode != 0:
             return tree
-        return subprocess.run(
-            ["git", "commit-tree", tree.stdout.strip(), "-p", "HEAD", "-m", "WIPNET snapshot"],
+        return subprocess.run(  # noqa: S603  # git is the instrument's intended subprocess
+            ["git", "commit-tree", tree.stdout.strip(), "-p", "HEAD", "-m", "WIPNET snapshot"],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
             cwd=ROOT,
             capture_output=True,
             encoding="utf-8",

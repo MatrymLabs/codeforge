@@ -13,9 +13,17 @@ from pathlib import Path
 import pytest
 from safe_take import at_risk, take
 
+CHECKOUT_FAILURE = 2
+SHA_HEX_LENGTH = 40
+
 
 def _git(root: Path, *args: str) -> None:
-    subprocess.run(["git", *args], cwd=root, check=True, capture_output=True)
+    subprocess.run(  # noqa: S603  # tests exercise the git-backed instrument
+        ["git", *args],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
 
 
 @pytest.fixture
@@ -64,7 +72,7 @@ def test_takes_and_prints_a_working_recovery_command(repo: Path, capsys) -> None
     assert take(repo, "other", ["tracked.txt"]) == 0
     assert (repo / "tracked.txt").read_text(encoding="utf-8") == "other branch content\n"
 
-    recover = [line for line in capsys.readouterr().out.splitlines() if "RECOVER with" in line][0]
+    recover = next(line for line in capsys.readouterr().out.splitlines() if "RECOVER with" in line)
     sha = recover.split("git checkout ")[1].split(" -- ")[0]
     _git(repo, "checkout", sha, "--", "tracked.txt")
     assert (repo / "tracked.txt").read_text(encoding="utf-8") == "about to be overwritten\n"
@@ -102,7 +110,7 @@ def test_bad_ref_leaves_the_tree_alone(repo: Path) -> None:
     """A checkout that git itself refuses must not be reported as a take."""
     (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
 
-    assert take(repo, "no-such-ref", ["tracked.txt"]) == 2
+    assert take(repo, "no-such-ref", ["tracked.txt"]) == CHECKOUT_FAILURE
     assert (repo / "tracked.txt").read_text(encoding="utf-8") == "dirty\n"
 
 
@@ -126,8 +134,12 @@ def test_wipnet_snapshot_returns_a_sha_for_a_dirty_tree(repo: Path) -> None:
     (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
     sha = safe_take.wipnet_snapshot(repo)
 
-    assert len(sha) == 40
-    subprocess.run(["git", "cat-file", "-e", sha], cwd=repo, check=True)
+    assert len(sha) == SHA_HEX_LENGTH
+    subprocess.run(  # noqa: S603  # tests exercise the git-backed instrument
+        ["git", "cat-file", "-e", sha],  # noqa: S607  # resolve git from PATH; absolute paths recreate KF-WIN-2
+        cwd=repo,
+        check=True,
+    )
 
 
 def test_wipnet_snapshot_reports_clean_rather_than_failure(repo: Path) -> None:
