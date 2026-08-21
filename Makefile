@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz lanes coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz lanes coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts wipnet take
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -85,6 +85,17 @@ env: hooks
 	@# The venv layout is platform-dependent: Windows uses Scripts and POSIX uses bin.
 	@bin=$$(test -d .venv/Scripts && echo .venv/Scripts || echo .venv/bin); 	$$bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
 	@if [ -d .venv/Scripts ]; then 		echo "venv ready - activate with: source .venv/Scripts/activate"; 	else 		echo "venv ready - activate with: source .venv/bin/activate"; 	fi
+
+# Snapshot uncommitted work before a branch or path operation. The script is copied from Ship and
+# owns the snapshot semantics; this target only adapts the repository interpreter variable.
+wipnet:
+	$(PY) scripts/wip_net.py
+
+# Safe replacement for `git checkout <ref> -- <path>`: snapshot first, then refuse the take if the
+# snapshot cannot be created. Use FROM=<ref> FILE=<path> and optionally CHECK=1.
+take:
+	@test -n "$(FROM)" && test -n "$(FILE)" || { echo "usage: make take FROM=<ref> FILE=<path> [CHECK=1]"; exit 2; }
+	$(PY) scripts/safe_take.py --from $(FROM) $(if $(CHECK),--check,) $(FILE)
 
 # --- Mutators: run these while working ---
 fix:
