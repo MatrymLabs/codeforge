@@ -19,6 +19,8 @@ lint policy without changing behavior, the port also names the status offset
 and test constants, extracts the exposed-take branch to avoid a complexity
 suppression, and adds 17 reasoned subprocess suppressions. Every suppression
 explains why PATH-resolved `git` and the subprocess calls are intentional.
+The two shebang-bearing entrypoints retain executable mode (`100755`), as
+required by CodeForge's `EXE001` check.
 
 The Makefile adds `wipnet` and `take`, both invoking codeforge's `$(PY)`:
 
@@ -115,5 +117,10 @@ second run with GOFLAGS=-buildvcs=false: Go edge/sheets/spine 0 issues; C and
 
 The full local `make check` is therefore not green on this bench because its
 pre-existing Python environment lacks `importlinter`; CI remains the arbiter.
+
+The first CI run found and proved one additional host-repository requirement:
+Ruff rejected both shebang-bearing scripts as non-executable (`EXE001`). The
+mode-only repair was applied and the twin/refusal proofs were rerun. A new CI
+run is pending for that repair.
 
 status: READY_FOR_CI
