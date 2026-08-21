@@ -9,6 +9,10 @@
 
 ## See it run (two commands, ~11s with uv)
 
+**CodeForge is a Python engine that generates and runs persistent multiplayer worlds, and
+harvests the reusable parts it proves along the way.** The command below packages one of those
+worlds into a standalone program and boots it.
+
 Two commands. No account, no config, no database.
 
 ```bash
@@ -43,8 +47,16 @@ The eleven seconds is the fast path, not the only path. Both boot the same world
 `BOOTED + SERVED`; the Pi simply builds its environment with pip because uv is not installed
 there. If your machine has no uv, expect the second number.
 
-Requires Python 3.13 and `make`. `make env` uses [uv](https://docs.astral.sh/uv/) if present and
-falls back to `venv` + `pip`.
+**You need Python 3.13+ and `make`.** `make env` uses [uv](https://docs.astral.sh/uv/) if it is
+present and falls back to `venv` + `pip` if it is not.
+
+| Platform | Getting the two requirements |
+| --- | --- |
+| Linux / macOS | `make` is normally present. Python 3.13+ from your package manager, [pyenv](https://github.com/pyenv/pyenv), or [python.org](https://www.python.org/downloads/) |
+| Windows | **`make` does not ship with Windows.** `winget install ezwinports.make`, or use [Git Bash](https://git-scm.com/downloads) + `choco install make`. Python 3.13+ from [python.org](https://www.python.org/downloads/) |
+
+Verified on Windows 11 and on Debian aarch64 (Raspberry Pi). The commands are shown for a POSIX
+shell; on Windows use Git Bash or WSL.
 
 ---
 
