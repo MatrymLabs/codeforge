@@ -1,0 +1,11 @@
+lane: swift
+ecosystem: Swift
+provisioning_status: CANDIDATE
+commands:
+  - command: swift --version
+    purpose: Confirm the Swift toolchain on PATH.
+  - command: swift package --version
+    purpose: Confirm Swift Package Manager availability.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

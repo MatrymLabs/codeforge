@@ -199,6 +199,7 @@ pythonpath = ["."]
 markers = [
     "property: Hypothesis property-based tests (run via `make property`)",
     "fuzz: hostile-input fuzz tests for trust-boundary gates (run via `make fuzz`)",
+    "workshop: cross-repository governance checks (run via `make lanes`)",
 ]
 
 [tool.coverage.run]

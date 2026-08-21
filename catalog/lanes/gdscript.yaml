@@ -1,0 +1,9 @@
+lane: gdscript
+ecosystem: Godot and GDScript
+provisioning_status: DOCUMENTED
+commands:
+  - command: godot --version
+    purpose: Inspect the Godot editor/runtime when the graphical client is opened.
+verified_on: null
+verification_output: null
+notes: Commands are transcribed for future Godot provisioning; no verification was run.

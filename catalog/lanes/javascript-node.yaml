@@ -1,0 +1,11 @@
+lane: javascript-node
+ecosystem: JavaScript and Node.js
+provisioning_status: CANDIDATE
+commands:
+  - command: node --version
+    purpose: Confirm the Node.js runtime on PATH.
+  - command: npm --version
+    purpose: Confirm the npm package tool on PATH.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

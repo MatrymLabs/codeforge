@@ -1,0 +1,11 @@
+lane: kotlin-jvm
+ecosystem: Kotlin/JVM
+provisioning_status: DOCUMENTED
+commands:
+  - command: java --version
+    purpose: Confirm the JVM used by the Rider projection.
+  - command: native/rider-retroforge/gradlew.bat --version
+    purpose: Resolve the tracked Gradle wrapper without a system Gradle install.
+verified_on: null
+verification_output: null
+notes: Java was present, but the Gradle wrapper proof was blocked by its unavailable C:\.gradle lock directory; no download or installation was attempted.

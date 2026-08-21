@@ -1,0 +1,11 @@
+lane: vbnet
+ecosystem: Visual Basic and .NET
+provisioning_status: CANDIDATE
+commands:
+  - command: dotnet --info
+    purpose: Inspect the .NET SDK used to provision Visual Basic projects.
+  - command: dotnet new list
+    purpose: Confirm the installed .NET templates available for Visual Basic.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

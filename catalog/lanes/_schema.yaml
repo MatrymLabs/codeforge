@@ -1,0 +1,24 @@
+schema_version: 1
+record_kind: ecosystem_provisioning
+
+# LANGUAGE_LANES.yaml owns governance (census-backed governed/partial/ungoverned/deferred).
+# These records describe reproducible ecosystem provisioning only; they never assert governance.
+governance_register: hardware-store/LANGUAGE_LANES.yaml
+
+provisioning_status_values:
+  - INSTALLED
+  - DOCUMENTED
+  - CANDIDATE
+
+required_fields:
+  - lane
+  - ecosystem
+  - provisioning_status
+  - commands
+  - verified_on
+  - verification_output
+  - notes
+
+command_required_fields:
+  - command
+  - purpose

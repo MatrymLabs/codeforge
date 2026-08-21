@@ -1,0 +1,9 @@
+lane: csharp
+ecosystem: C# and .NET
+provisioning_status: DOCUMENTED
+commands:
+  - command: dotnet --info
+    purpose: Inspect the .NET SDK when a C# Build is opened.
+verified_on: null
+verification_output: null
+notes: Commands are transcribed for future C# and .NET provisioning; no verification was run.

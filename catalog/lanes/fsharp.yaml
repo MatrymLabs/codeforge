@@ -1,0 +1,11 @@
+lane: fsharp
+ecosystem: F# and .NET
+provisioning_status: CANDIDATE
+commands:
+  - command: dotnet --info
+    purpose: Inspect the .NET SDK used to provision F# projects.
+  - command: dotnet new list
+    purpose: Confirm the installed .NET templates available for F#.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

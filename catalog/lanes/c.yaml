@@ -1,0 +1,11 @@
+lane: c
+ecosystem: C
+provisioning_status: DOCUMENTED
+commands:
+  - command: cmake --version
+    purpose: Configure a portable C build when a C consumer is opened.
+  - command: cl
+    purpose: Use the Visual C compiler from a configured developer shell.
+verified_on: null
+verification_output: null
+notes: Reference provisioning only; the current Bench did not claim a C compiler proof.

@@ -1,0 +1,11 @@
+lane: godot-csharp
+ecosystem: Godot with C# and .NET
+provisioning_status: CANDIDATE
+commands:
+  - command: godot --version
+    purpose: Confirm the Godot editor/runtime on PATH.
+  - command: dotnet --info
+    purpose: Inspect the .NET SDK used by Godot C# projects.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

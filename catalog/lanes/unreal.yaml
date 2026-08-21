@@ -1,0 +1,11 @@
+lane: unreal
+ecosystem: Unreal Engine
+provisioning_status: CANDIDATE
+commands:
+  - command: UnrealEditor.exe -version
+    purpose: Confirm the Unreal Engine editor CLI available to the project.
+  - command: dotnet --info
+    purpose: Inspect the .NET SDK used by Unreal tooling and integrations.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

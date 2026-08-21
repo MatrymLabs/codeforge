@@ -1,0 +1,11 @@
+lane: elixir
+ecosystem: Elixir and Mix
+provisioning_status: CANDIDATE
+commands:
+  - command: elixir --version
+    purpose: Confirm the Elixir runtime on PATH.
+  - command: mix --version
+    purpose: Confirm Mix for Elixir project provisioning.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

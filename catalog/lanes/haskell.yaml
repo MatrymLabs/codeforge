@@ -1,0 +1,11 @@
+lane: haskell
+ecosystem: Haskell
+provisioning_status: CANDIDATE
+commands:
+  - command: ghc --version
+    purpose: Confirm the Glasgow Haskell Compiler on PATH.
+  - command: cabal --version
+    purpose: Confirm Cabal for Haskell project provisioning.
+verified_on: null
+verification_output: null
+notes: Candidate ecosystem documented from the provisioning reference; no verification or installation was performed.

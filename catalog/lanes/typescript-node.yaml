@@ -1,0 +1,13 @@
+lane: typescript-node
+ecosystem: TypeScript and Node.js
+provisioning_status: INSTALLED
+commands:
+  - command: node --version
+    purpose: Confirm the Node.js runtime on PATH.
+  - command: npm --version
+    purpose: Confirm the npm package tool on PATH.
+verified_on: 2026-08-21
+verification_output: |
+  v24.19.0
+  11.17.0
+notes: The existing userspace toolchain is installed; this order performed no installation.

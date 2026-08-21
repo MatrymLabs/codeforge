@@ -1,4 +1,4 @@
-.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env env-parity fix lint lint-terraform lint-c lint-kotlin kotlin-lint calibrate currency typecheck test test-order property fuzz lanes coverage audit audit-runtime security security-python security-secrets-history security-go security-rust security-fs sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check exit-integrity zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 
 # --- Gate caches: explicit, writable anywhere, identical for both benches.
@@ -292,10 +292,10 @@ typecheck-native:
 JOBS ?= auto
 
 test:
-	$(PY) -m pytest -n $(JOBS) -m "not property and not fuzz"
+	$(PY) -m pytest -n $(JOBS) -m "not property and not fuzz and not workshop"
 
 test-order:
-	$(PY) -m pytest -p randomly --randomly-seed=1 -m "not property and not fuzz"
+	$(PY) -m pytest -p randomly --randomly-seed=1 -m "not property and not fuzz and not workshop"
 
 property:
 	$(PY) -m pytest -m property
@@ -304,6 +304,9 @@ property:
 # a gate refuses with its own error type, never crashes. Hypothesis-driven, no new deps.
 fuzz:
 	$(PY) -m pytest -m fuzz
+
+lanes:
+	$(PY) -m pytest -m workshop
 
 # Mutation testing (cosmic-ray) - the "Mutate" rung. On-demand ONLY: one test run per mutant is
 # slow, so this is never a PR/CI gate. cosmic-ray is not in the default dev deps (its aiohttp/git
@@ -329,11 +332,11 @@ sast:
 	$(PY) -m bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs $(PY) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline
 
-# The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
-# instrumentation and the threshold -- so `check` covers, tests, and gates in a single
-# suite run instead of two. `sast` mirrors CI's offline security steps so a green local
-# check cannot fail CI's bandit/secret scan. `test`/`property` remain as fast, focused,
-# no-coverage targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
+# The full gate. `coverage` runs the whole self-contained suite (property included) once,
+# excluding cross-repository workshop checks, WITH instrumentation and the threshold -- so
+# `check` covers, tests, and gates in a single suite run instead of two. `sast` mirrors CI's
+# offline security steps so a green local check cannot fail CI's bandit/secret scan.
+# `test`/`property`/`lanes` remain focused targets for the inner loop and rack-and-stack.
 check: lint imports typecheck exit-integrity coverage sast
 
 # --- Readiness: the global self-audit -- registry validates (gates), then the
@@ -452,7 +455,7 @@ evolution:
 # data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
 # inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	$(PY) -m pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	$(PY) -m pytest -n auto -m "not workshop" --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable

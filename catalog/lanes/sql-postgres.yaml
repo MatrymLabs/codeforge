@@ -1,0 +1,11 @@
+lane: sql-postgres
+ecosystem: PostgreSQL
+provisioning_status: DOCUMENTED
+commands:
+  - command: psql --version
+    purpose: Inspect the PostgreSQL client for the separate CI database lane.
+  - command: .venv/Scripts/python.exe -c "import sqlalchemy; print(sqlalchemy.__version__)"
+    purpose: Confirm the repository's SQLAlchemy integration surface.
+verified_on: null
+verification_output: null
+notes: Governed SQL lane; PostgreSQL is intentionally not interchangeable with SQLite.
